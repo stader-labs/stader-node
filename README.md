@@ -1,1 +1,2 @@
-### Stader Eth Client Node
+# stader-node
+Stader Eth Node
