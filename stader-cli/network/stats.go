@@ -24,6 +24,7 @@ func getStats(c *cli.Context) error {
 
 	// Check and assign the EC status
 	err = cliutils.CheckClientStatus(staderClient)
+
 	if err != nil {
 		return err
 	}

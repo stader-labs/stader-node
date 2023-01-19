@@ -1,0 +1,60 @@
+package wallet
+
+import (
+	"errors"
+
+	"github.com/urfave/cli"
+
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/services/wallet"
+	"github.com/stader-labs/stader-node/shared/types/api"
+)
+
+func initWallet(c *cli.Context) (*api.InitWalletResponse, error) {
+
+	// Get services
+	if err := services.RequireNodePassword(c); err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Response
+	response := api.InitWalletResponse{}
+
+	// Check if wallet is already initialized
+	if w.IsInitialized() {
+		return nil, errors.New("The wallet is already initialized")
+	}
+
+	// Get the derivation path
+	path := c.String("derivation-path")
+	switch path {
+	case "":
+		path = wallet.DefaultNodeKeyPath
+	case "ledgerLive":
+		path = wallet.LedgerLiveNodeKeyPath
+	case "mew":
+		path = wallet.MyEtherWalletNodeKeyPath
+	}
+
+	// Initialize wallet but don't save it
+	mnemonic, err := w.Initialize(path, 0)
+	if err != nil {
+		return nil, err
+	}
+	response.Mnemonic = mnemonic
+
+	// Get node account
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+	response.AccountAddress = nodeAccount.Address
+
+	// Return response
+	return &response, nil
+
+}

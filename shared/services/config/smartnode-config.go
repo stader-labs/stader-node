@@ -12,9 +12,9 @@ import (
 
 // Constants
 const (
-	smartnodeTag                       string = "rocketpool/smartnode:v" + shared.RocketPoolVersion
-	pruneProvisionerTag                string = "rocketpool/eth1-prune-provision:v0.0.1"
-	ecMigratorTag                      string = "rocketpool/ec-migrator:v1.0.0"
+	smartnodeTag                       string = "rahuljaguste/stader:v" + shared.RocketPoolVersion
+	pruneProvisionerTag                string = "stader/eth1-prune-provision:v0.0.1"
+	ecMigratorTag                      string = "stader/ec-migrator:v1.0.0"
 	NetworkID                          string = "network"
 	ProjectNameID                      string = "projectName"
 	SnapshotID                         string = "rocketpool-dao.eth"

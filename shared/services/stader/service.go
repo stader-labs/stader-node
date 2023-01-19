@@ -27,6 +27,7 @@ func (c *Client) TerminateDataFolder() (api.TerminateDataFolderResponse, error) 
 // Gets the status of the configured Execution and Beacon clients
 func (c *Client) GetClientStatus() (api.ClientStatusResponse, error) {
 	responseBytes, err := c.callAPI("service get-client-status")
+
 	if err != nil {
 		return api.ClientStatusResponse{}, fmt.Errorf("Could not get client status: %w", err)
 	}
