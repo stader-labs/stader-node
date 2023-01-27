@@ -19,5 +19,3 @@ rocketpool-cli/*
 rocketpool/*
 .vscode
 .DS_Store
-docker
-docker/*

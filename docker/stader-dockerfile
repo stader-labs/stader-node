@@ -1,0 +1,9 @@
+FROM debian:bullseye-slim
+
+ARG TARGETARCH
+COPY ./stader/stader-daemon-linux-${TARGETARCH} /go/bin/stader
+
+RUN apt update && apt install ca-certificates -y
+
+# Container entry point
+ENTRYPOINT ["/go/bin/stader"]
