@@ -517,18 +517,18 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 	// Get RP client
-	rp, err := stader.NewClientFromCtx(c)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
 	}
-	defer rp.Close()
+	defer staderClient.Close()
 
 	// Update the Prometheus template with the assigned ports
-	cfg, isNew, err := rp.LoadConfig()
+	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
 		return fmt.Errorf("Error loading user settings: %w", err)
 	}
-
+	println("step 1")
 	// Check for unsupported clients
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
 		selectedEc := cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)
@@ -542,17 +542,19 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		}
 	}
 
+	println("step 2")
+
 	// Force all Docker or all Hybrid
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External {
 		fmt.Printf("%sYou are using a locally-managed Execution client and an externally-managed Consensus client.\nThis configuration is not compatible with The Merge; please select either locally-managed or externally-managed for both the EC and CC.%s\n", colorRed, colorReset)
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
 		fmt.Printf("%sYou are using an externally-managed Execution client and a locally-managed Consensus client.\nThis configuration is not compatible with The Merge; please select either locally-managed or externally-managed for both the EC and CC.%s\n", colorRed, colorReset)
 	}
-
+	println("step 3")
 	isMigration := false
 	if isNew {
 		// Look for a legacy config to migrate
-		migratedConfig, err := rp.LoadLegacyConfigFromBackup()
+		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
 		if err != nil {
 			return err
 		}
@@ -561,41 +563,43 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			isMigration = true
 		}
 	}
+	println("step 4")
 
 	if isMigration {
 		return fmt.Errorf("You must upgrade your configuration before starting the Smartnode.\nPlease run `rocketpool service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
 	} else if isNew {
 		return fmt.Errorf("No configuration detected. Please run `rocketpool service config` to set up your Smartnode before running it.")
 	}
-
+	println("step 5")
 	// Check if this is a new install
-	isUpdate, err := rp.IsFirstRun()
+	isUpdate, err := staderClient.IsFirstRun()
 	if err != nil {
 		return fmt.Errorf("error checking for first-run status: %w", err)
 	}
+	println("step 6")
 	if isUpdate && !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Smartnode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 			}
-			rp.SaveConfig(cfg)
+			staderClient.SaveConfig(cfg)
 			fmt.Printf("%sUpdated settings successfully.%s\n", colorGreen, colorReset)
 		} else {
 			fmt.Println("Cancelled.")
 			return nil
 		}
 	}
-
+	println("step 7")
 	// Update the Prometheus template with the assigned ports
 	metricsEnabled := cfg.EnableMetrics.Value.(bool)
 	if metricsEnabled {
-		err := rp.UpdatePrometheusConfiguration(cfg.GenerateEnvironmentVariables())
+		err := staderClient.UpdatePrometheusConfiguration(cfg.GenerateEnvironmentVariables())
 		if err != nil {
 			return err
 		}
 	}
-
+	println("step 8")
 	// Validate the config
 	errors := cfg.Validate()
 	if len(errors) > 0 {
@@ -606,10 +610,10 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		fmt.Println(colorReset)
 		return nil
 	}
-
+	println("step 9")
 	if !c.Bool("ignore-slash-timer") {
 		// Do the client swap check
-		err := checkForValidatorChange(rp, cfg)
+		err := checkForValidatorChange(staderClient, cfg)
 		if err != nil {
 			fmt.Printf("%sWarning: couldn't verify that the validator container can be safely restarted:\n\t%s\n", colorYellow, err.Error())
 			fmt.Println("If you are changing to a different ETH2 client, it may resubmit an attestation you have already submitted.")
@@ -624,13 +628,13 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	} else {
 		fmt.Printf("%sIgnoring anti-slashing safety delay.%s\n", colorYellow, colorReset)
 	}
-
+	println("step 10")
 	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
 	isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
 	isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
 	if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
 		previousVersion := "0.0.0"
-		backupCfg, err := rp.LoadBackupConfig()
+		backupCfg, err := staderClient.LoadBackupConfig()
 		if err != nil {
 			fmt.Printf("WARNING: Couldn't determine previous Smartnode version from backup settings: %s\n", err.Error())
 		} else if backupCfg != nil {
@@ -645,12 +649,14 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 		vulnerableConstraint, _ := version.NewConstraint("<= 1.3.0")
 		if vulnerableConstraint.Check(oldVersion) {
-			err = handleTekuSlashProtectionMigrationDelay(rp, cfg)
+			err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
 			if err != nil {
 				return err
 			}
 		}
 	}
+
+	println("step 11")
 
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
@@ -660,14 +666,18 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		fmt.Printf("%sNOTE: You currently have Doppelganger Protection enabled.\nYour validator will miss up to 3 attestations when it starts.\nThis is *intentional* and does not indicate a problem with your node.%s\n\n", colorYellow, colorReset)
 	}
 
+	println("Starting Stader Service")
+	println("step 12")
 	// Start service
-	err = rp.StartService(getComposeFiles(c))
+	err = staderClient.StartService(getComposeFiles(c))
 	if err != nil {
 		return err
 	}
 
+	println("step 13")
+
 	// Remove the upgrade flag if it's there
-	return rp.RemoveUpgradeFlagFile()
+	return staderClient.RemoveUpgradeFlagFile()
 
 }
 

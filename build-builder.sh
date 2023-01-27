@@ -23,8 +23,8 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo -n "Building Docker image... "
-docker build -t rahuljaguste/stader:$VERSION -f docker/smartnode-builder .
-docker tag rahuljaguste/stader:$VERSION rahuljaguste/stader:latest
-docker push rahuljaguste/stader:$VERSION
-docker push rahuljaguste/stader:latest
+docker build -t staderdev/stader-node:$VERSION -f docker/smartnode-builder .
+docker tag staderdev/stader-node:$VERSION staderdev/stader-node:latest
+docker push staderdev/stader-node:$VERSION
+docker push staderdev/stader-node:latestx  x64
 echo "done!"
