@@ -11,7 +11,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	rpsvc "github.com/stader-labs/stader-node/shared/services/rocketpool"
+	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	rputils "github.com/stader-labs/stader-node/shared/utils/rp"

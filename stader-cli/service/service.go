@@ -18,7 +18,6 @@ import (
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	"github.com/stader-labs/stader-node/shared/services/rocketpool"
 	cliconfig "github.com/stader-labs/stader-node/stader-cli/service/config"
 
 	// "github.com/stader-labs/stader-node/shared/services/rocketpool"
@@ -1062,14 +1061,14 @@ func pruneExecutionClient(c *cli.Context) error {
 func pauseService(c *cli.Context) error {
 
 	// Get RP client
-	rp, err := rocketpool.NewClientFromCtx(c)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
 	}
-	defer rp.Close()
+	defer staderClient.Close()
 
 	// Get the config
-	cfg, _, err := rp.LoadConfig()
+	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
 		return err
 	}
@@ -1089,7 +1088,7 @@ func pauseService(c *cli.Context) error {
 	}
 
 	// Pause service
-	return rp.PauseService(getComposeFiles(c))
+	return staderClient.PauseService(getComposeFiles(c))
 
 }
 
@@ -1103,14 +1102,14 @@ func stopService(c *cli.Context) error {
 	}
 
 	// Get RP client
-	rp, err := rocketpool.NewClientFromCtx(c)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
 	}
-	defer rp.Close()
+	defer staderClient.Close()
 
 	// Stop service
-	return rp.StopService(getComposeFiles(c))
+	return staderClient.StopService(getComposeFiles(c))
 
 }
 
@@ -1118,14 +1117,14 @@ func stopService(c *cli.Context) error {
 func serviceLogs(c *cli.Context, serviceNames ...string) error {
 
 	// Get RP client
-	rp, err := rocketpool.NewClientFromCtx(c)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
 	}
-	defer rp.Close()
+	defer staderClient.Close()
 
 	// Print service logs
-	return rp.PrintServiceLogs(getComposeFiles(c), c.String("tail"), serviceNames...)
+	return staderClient.PrintServiceLogs(getComposeFiles(c), c.String("tail"), serviceNames...)
 
 }
 
