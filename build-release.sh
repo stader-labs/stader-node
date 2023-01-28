@@ -27,7 +27,7 @@ build_cli() {
     cd stader-node || fail "Directory ${PWD}/stader-node/stader-cli does not exist or you don't have permissions to access it."
 
     echo -n "Building CLI binaries... "
-    docker run --rm -v $PWD:/stader-node staderdev/stader-node-cli:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
+    docker run --rm -v $PWD:/stader-node rocketpool/smartnode-builder:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
     mv stader-cli/stader-cli-* ../$VERSION
     echo "done!"
 
