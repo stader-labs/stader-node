@@ -12,7 +12,7 @@ import (
 
 // Constants
 const (
-	smartnodeTag                       string = "rocketpool/smartnode:v" + shared.RocketPoolVersion
+	smartnodeTag                       string = "staderdev/stader-node:v" + shared.RocketPoolVersion
 	pruneProvisionerTag                string = "rocketpool/eth1-prune-provision:v0.0.1"
 	ecMigratorTag                      string = "rocketpool/ec-migrator:v1.0.0"
 	NetworkID                          string = "network"
@@ -170,7 +170,7 @@ func NewSmartnodeConfig(cfg *RocketPoolConfig) *SmartnodeConfig {
 			Name:                 "Watchtower Path",
 			Description:          "The absolute path of the watchtower state folder that contains persistent state that is used by the watchtower process on trusted nodes. **Only relevant for trusted nodes.**",
 			Type:                 config.ParameterType_String,
-			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.rocketpool/watchtower"},
+			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stader/watchtower"},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower},
 			EnvironmentVariables: []string{"ROCKETPOOL_WATCHTOWER_FOLDER"},
 			CanBeBlank:           false,
