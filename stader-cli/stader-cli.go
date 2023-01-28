@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-cli/network"
 	"github.com/stader-labs/stader-node/stader-cli/node"
 	"github.com/stader-labs/stader-node/stader-cli/service"
+	"github.com/stader-labs/stader-node/stader-cli/wallet"
 	"github.com/urfave/cli"
 )
 
@@ -110,7 +111,7 @@ func main() {
 	node.RegisterCommands(app, "node", []string{"n"})
 	// odao.RegisterCommands(app, "odao", []string{"o"})
 	service.RegisterCommands(app, "service", []string{"s"})
-	// wallet.RegisterCommands(app, "wallet", []string{"w"})
+	wallet.RegisterCommands(app, "wallet", []string{"w"})
 
 	app.Before = func(c *cli.Context) error {
 		// Check user ID
