@@ -45,7 +45,7 @@ const (
 	PrometheusFile           string = "prometheus.yml"
 
 	APIContainerSuffix string = "_api"
-	APIBinPath         string = "/go/bin/rocketpool"
+	APIBinPath         string = "/go/bin/stader"
 
 	templatesDir                  string = "templates"
 	overrideDir                   string = "override"
@@ -133,7 +133,7 @@ func NewClient(configPath string, daemonPath string, maxFee float64, maxPrioFee 
 		originalGasLimit:   gasLimit,
 		customNonce:        customNonceBigInt,
 		client:             sshClient,
-		debugPrint:         debug,
+		debugPrint:         true,
 		forceFallbacks:     false,
 		ignoreSyncCheck:    false,
 	}
