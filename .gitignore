@@ -19,3 +19,4 @@ rocketpool-cli/*
 rocketpool/*
 .vscode
 .DS_Store
+stader-cli/stader-cli
