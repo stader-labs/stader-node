@@ -540,25 +540,25 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				UsageText: "rocketpool api node can-deposit amount min-fee salt",
 				Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 3); err != nil {
-						return err
-					}
-					amountWei, err := cliutils.ValidateDepositWeiAmount("deposit amount", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-					minNodeFee, err := cliutils.ValidateFraction("minimum node fee", c.Args().Get(1))
-					if err != nil {
-						return err
-					}
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(2))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(canNodeDeposit(c, amountWei, minNodeFee, salt))
+					//// Validate args
+					//if err := cliutils.ValidateArgCount(c, 3); err != nil {
+					//	return err
+					//}
+					//amountWei, err := cliutils.ValidateDepositWeiAmount("deposit amount", c.Args().Get(0))
+					//if err != nil {
+					//	return err
+					//}
+					//minNodeFee, err := cliutils.ValidateFraction("minimum node fee", c.Args().Get(1))
+					//if err != nil {
+					//	return err
+					//}
+					//salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(2))
+					//if err != nil {
+					//	return err
+					//}
+					//
+					//// Run
+					//api.PrintResponse(canNodeDeposit(c, amountWei, minNodeFee, salt))
 					return nil
 
 				},

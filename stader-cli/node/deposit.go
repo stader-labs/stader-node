@@ -3,7 +3,7 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	"github.com/stader-labs/stader-minipool-go/utils/eth"
 	"github.com/urfave/cli"
 	"math/big"
 

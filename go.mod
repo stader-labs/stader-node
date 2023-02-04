@@ -7,13 +7,12 @@ require (
 	github.com/alessio/shellescape v1.4.1
 	github.com/blang/semver/v4 v4.0.0
 	github.com/btcsuite/btcd v0.23.1
-	github.com/btcsuite/btcd/btcec/v2 v2.2.1 // indirect
 	github.com/btcsuite/btcd/btcutil v1.1.2
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.18+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/dustin/go-humanize v1.0.0
-	github.com/ethereum/go-ethereum v1.10.25
+	github.com/ethereum/go-ethereum v1.10.26
 	github.com/fatih/color v1.13.0
 	github.com/ferranbt/fastssz v0.1.2
 	github.com/gdamore/tcell/v2 v2.5.3
@@ -37,6 +36,7 @@ require (
 	github.com/rocket-pool/rocketpool-go v1.4.1
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
+	github.com/stader-labs/stader-minipool-go v0.0.0-20230204183640-b1447eda2256
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-ens/v3 v3.5.5
@@ -45,10 +45,9 @@ require (
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
 	github.com/wealdtech/go-merkletree v1.0.1-0.20190605192610-2bb163c2ea2a
 	github.com/web3-storage/go-w3s-client v0.0.6
-	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b
+	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0
-	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
-	golang.org/x/term v0.0.0-20220919170432-7a66f970e087
+	golang.org/x/term v0.4.0
 	google.golang.org/grpc v1.49.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect

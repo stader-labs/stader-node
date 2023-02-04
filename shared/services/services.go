@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -94,6 +95,19 @@ func GetEthClient(c *cli.Context) (*ExecutionClientManager, error) {
 		return nil, err
 	}
 	return ec, nil
+}
+
+func GetEthxPermisionlessPoolManager(c *cli.Context) (*stader.EthxContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewEthxPermisionlessPool(ec, common.BytesToAddress([]byte("REPLACE_WITH_ACTUAL_CONTRACT")))
 }
 
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
