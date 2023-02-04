@@ -322,8 +322,8 @@ func (m *BeaconClientManager) CheckStatus() *api.ClientManagerStatus {
 	}
 
 	// Flag the ready clients
-	m.primaryReady = (status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced)
-	m.fallbackReady = (status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced)
+	m.primaryReady = status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced
+	m.fallbackReady = status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced
 
 	return status
 

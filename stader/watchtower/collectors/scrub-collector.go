@@ -6,7 +6,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const namespace = "rocketpool"
+const namespace = "stader"
 
 // Represents the collector for the scrub check metrics
 type ScrubCollector struct {

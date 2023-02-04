@@ -96,8 +96,8 @@ func setWithdrawalAddress(c *cli.Context, withdrawalAddress common.Address, conf
 		return nil, err
 	}
 	if currentAddress != nodeAccount.Address {
-		return nil, fmt.Errorf("This wallet's current withdrawal address is %s, "+
-			"so you cannot call set-withdrawal-address from the node.", currentAddress.String())
+		return nil, fmt.Errorf("this wallet's current withdrawal address is %s, "+
+			"so you cannot call set-withdrawal-address from the node", currentAddress.String())
 	}
 
 	// Set withdrawal address

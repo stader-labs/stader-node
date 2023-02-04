@@ -4,13 +4,10 @@ import (
 	"fmt"
 
 	"github.com/rocket-pool/rocketpool-go/node"
-	"github.com/rocket-pool/rocketpool-go/settings/protocol"
-	"github.com/urfave/cli"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
+	"github.com/urfave/cli"
 )
 
 func canRegisterNode(c *cli.Context, timezoneLocation string) (*api.CanRegisterNodeResponse, error) {
@@ -22,11 +19,11 @@ func canRegisterNode(c *cli.Context, timezoneLocation string) (*api.CanRegisterN
 	if err := services.RequireRocketStorage(c); err != nil {
 		return nil, err
 	}
-	w, err := services.GetWallet(c)
+	_, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	_, err = services.GetRocketPool(c)
 	if err != nil {
 		return nil, err
 	}
@@ -35,51 +32,52 @@ func canRegisterNode(c *cli.Context, timezoneLocation string) (*api.CanRegisterN
 	response := api.CanRegisterNodeResponse{}
 
 	// Sync
-	var wg errgroup.Group
+	//var wg errgroup.Group
 
 	// Check node is not already registered
-	wg.Go(func() error {
-		nodeAccount, err := w.GetNodeAccount()
-		if err != nil {
-			return err
-		}
-		exists, err := node.GetNodeExists(rp, nodeAccount.Address, nil)
-		if err != nil {
-			return err
-		}
-		response.AlreadyRegistered = exists
-		return nil
-	})
+	//wg.Go(func() error {
+	//	nodeAccount, err := w.GetNodeAccount()
+	//	if err != nil {
+	//		return err
+	//	}
+	//	exists, err := node.GetNodeExists(rp, nodeAccount.Address, nil)
+	//	if err != nil {
+	//		return err
+	//	}
+	//	response.AlreadyRegistered = exists
+	//	return nil
+	//})
 
 	// Check node registrations are enabled
-	wg.Go(func() error {
-		registrationEnabled, err := protocol.GetNodeRegistrationEnabled(rp, nil)
-		if err == nil {
-			response.RegistrationDisabled = !registrationEnabled
-		}
-		return err
-	})
+	//wg.Go(func() error {
+	//	registrationEnabled, err := protocol.GetNodeRegistrationEnabled(rp, nil)
+	//	if err == nil {
+	//		response.RegistrationDisabled = !registrationEnabled
+	//	}
+	//	return err
+	//})
 
 	// Get gas estimate
-	wg.Go(func() error {
-		opts, err := w.GetNodeAccountTransactor()
-		if err != nil {
-			return err
-		}
-		gasInfo, err := node.EstimateRegisterNodeGas(rp, timezoneLocation, opts)
-		if err == nil {
-			response.GasInfo = gasInfo
-		}
-		return err
-	})
+	//wg.Go(func() error {
+	//	opts, err := w.GetNodeAccountTransactor()
+	//	if err != nil {
+	//		return err
+	//	}
+	//	gasInfo, err := node.EstimateRegisterNodeGas(rp, timezoneLocation, opts)
+	//	if err == nil {
+	//		response.GasInfo = gasInfo
+	//	}
+	//	return err
+	//})
 
 	// Wait for data
-	if err := wg.Wait(); err != nil {
-		return nil, err
-	}
+	//if err := wg.Wait(); err != nil {
+	//	return nil, err
+	//}
 
 	// Update & return response
-	response.CanRegister = !(response.AlreadyRegistered || response.RegistrationDisabled)
+	//response.CanRegister = !(response.AlreadyRegistered || response.RegistrationDisabled)
+	response.CanRegister = true
 	return &response, nil
 
 }

@@ -4,9 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 	"fmt"
-	"math/big"
-	"time"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/prysmaticlabs/prysm/v3/beacon-chain/core/signing"
 	tndao "github.com/rocket-pool/rocketpool-go/dao/trustednode"
@@ -14,12 +11,12 @@ import (
 	"github.com/rocket-pool/rocketpool-go/network"
 	"github.com/rocket-pool/rocketpool-go/node"
 	"github.com/rocket-pool/rocketpool-go/settings/protocol"
-	"github.com/rocket-pool/rocketpool-go/settings/trustednode"
 	tnsettings "github.com/rocket-pool/rocketpool-go/settings/trustednode"
 	rptypes "github.com/rocket-pool/rocketpool-go/types"
 	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/urfave/cli"
 	"golang.org/x/sync/errgroup"
+	"math/big"
 
 	prdeposit "github.com/prysmaticlabs/prysm/v3/contracts/deposit"
 	ethpb "github.com/prysmaticlabs/prysm/v3/proto/prysm/v1alpha1"
@@ -258,9 +255,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt
 func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *big.Int, submit bool) (*api.NodeDepositResponse, error) {
 
 	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
+	//if err := services.RequireNodeRegistered(c); err != nil {
+	//	return nil, err
+	//}
+
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -303,26 +301,26 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	}
 
 	// Make sure ETH2 is on the correct chain
-	depositContractInfo, err := getDepositContractInfo(c)
-	if err != nil {
-		return nil, err
-	}
-	if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
-		depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
-		return nil, fmt.Errorf("Beacon network mismatch! Expected %s on chain %d, but beacon is using %s on chain %d.",
-			depositContractInfo.RPDepositContract.Hex(),
-			depositContractInfo.RPNetwork,
-			depositContractInfo.BeaconDepositContract.Hex(),
-			depositContractInfo.BeaconNetwork)
-	}
+	//depositContractInfo, err := getDepositContractInfo(c)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
+	//	depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
+	//	return nil, fmt.Errorf("Beacon network mismatch! Expected %s on chain %d, but beacon is using %s on chain %d.",
+	//		depositContractInfo.RPDepositContract.Hex(),
+	//		depositContractInfo.RPNetwork,
+	//		depositContractInfo.BeaconDepositContract.Hex(),
+	//		depositContractInfo.BeaconNetwork)
+	//}
 
 	// Get the scrub period
-	scrubPeriodUnix, err := trustednode.GetScrubPeriod(rp, nil)
-	if err != nil {
-		return nil, err
-	}
-	scrubPeriod := time.Duration(scrubPeriodUnix) * time.Second
-	response.ScrubPeriod = scrubPeriod
+	//scrubPeriodUnix, err := trustednode.GetScrubPeriod(rp, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//scrubPeriod := time.Duration(scrubPeriodUnix) * time.Second
+	//response.ScrubPeriod = scrubPeriod
 
 	// Get transactor
 	opts, err := w.GetNodeAccountTransactor()
@@ -332,10 +330,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	opts.Value = amountWei
 
 	// Get the deposit type
-	depositType, err := node.GetDepositType(rp, amountWei, nil)
-	if err != nil {
-		return nil, err
-	}
+	//depositType, err := node.GetDepositType(rp, amountWei, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	// Create and save a new validator key
 	validatorKey, err := w.CreateValidatorKey()
@@ -344,7 +342,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	}
 
 	// Get the next minipool address and withdrawal credentials
-	minipoolAddress, err := utils.GenerateAddress(rp, nodeAccount.Address, depositType, salt, nil, nil)
+	minipoolAddress, err := utils.GenerateAddress(rp, nodeAccount.Address, rptypes.MinipoolDeposit(5), salt, nil, nil)
 	if err != nil {
 		return nil, err
 	}
