@@ -409,7 +409,12 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	opts.NoSend = !submit
 
 	// Deposit
-	tx, err := node.Deposit(ethxcm, minNodeFee, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, salt, minipoolAddress, opts)
+	//tx, err := node.Deposit(ethxcm, minNodeFee, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, salt, minipoolAddress, opts)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	tx, err := node.StaderNodeDeposit(ethxcm, minNodeFee, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, common.BytesToAddress([]byte("0x1Dd8f12e17519732b56bdcFaea9D10FB55E2cb6C")), "Test Validator", opts)
 	if err != nil {
 		return nil, err
 	}
