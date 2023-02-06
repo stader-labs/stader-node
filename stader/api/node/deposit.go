@@ -253,7 +253,7 @@ type minipoolCreated struct {
 //
 //}
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *big.Int, submit bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName string, operatorRewardAddress common.Address, submit bool) (*api.NodeDepositResponse, error) {
 
 	// Get services
 	//if err := services.RequireNodeRegistered(c); err != nil {
@@ -414,7 +414,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	//	return nil, err
 	//}
 
-	tx, err := node.StaderNodeDeposit(ethxcm, minNodeFee, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, common.BytesToAddress([]byte("0x1Dd8f12e17519732b56bdcFaea9D10FB55E2cb6C")), "Test Validator", opts)
+	tx, err := node.StaderNodeDeposit(ethxcm, 0.01, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, operatorRewardAddress, operatorName, opts)
 	if err != nil {
 		return nil, err
 	}

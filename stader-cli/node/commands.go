@@ -338,6 +338,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "salt, l",
 						Usage: "An optional seed to use when generating the new minipool's address. Use this if you want it to have a custom vanity address.",
 					},
+					cli.StringFlag{
+						Name:  "operator-name, on",
+						Usage: "Name of the operator",
+					},
+					cli.StringFlag{
+						Name:  "operator-rewarder-address, ora",
+						Usage: "EL Address where operator will get rewards",
+					},
 				},
 				Action: func(c *cli.Context) error {
 

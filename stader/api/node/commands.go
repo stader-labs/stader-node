@@ -578,21 +578,30 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					if err != nil {
 						return err
 					}
-					minNodeFee, err := cliutils.ValidateFraction("minimum node fee", c.Args().Get(1))
+					//minNodeFee, err := cliutils.ValidateFraction("minimum node fee", c.Args().Get(1))
+					//if err != nil {
+					//	return err
+					//}
+
+					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(2))
+
+					operatorName := c.Args().Get(2)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator reward address", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
+
 					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, minNodeFee, salt, submit)
+					response, err := nodeDeposit(c, amountWei, salt, operatorName, operatorRewardAddress, submit)
 					if submit {
 						api.PrintResponse(response, err)
 					} // else nodeDeposit already printed the encoded transaction

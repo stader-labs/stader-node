@@ -121,7 +121,7 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	*/
 
-	// Force 16 ETH minipools as the only option after much community discussion
+	// Force 4 ETH minipools as the only option after much community discussion
 	amountWei := eth.EthToWei(4.0)
 
 	//// Get network node fees
@@ -249,15 +249,18 @@ func nodeDeposit(c *cli.Context) error {
 		"You are about to deposit %.6f ETH to create a minipool with a minimum possible commission rate of %f%%.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a minipool is a long-term commitment, and this action cannot be undone!%s",
 		math.RoundDown(eth.WeiToEth(amountWei), 6),
-		0.15*100,
+		0.0,
 		colorYellow,
 		colorReset))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
+	operatorName := c.String("operator-name")
+	// TODO: validate this address
+	operatorRewardAddress := c.String("operator-rewarder-address")
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, 0.15, salt, true)
+	response, err := staderClient.NodeDeposit(amountWei, salt, operatorName, operatorRewardAddress, true)
 	if err != nil {
 		return err
 	}
