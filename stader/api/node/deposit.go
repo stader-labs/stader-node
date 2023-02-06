@@ -12,9 +12,9 @@ import (
 	_ "github.com/rocket-pool/rocketpool-go/settings/protocol"
 	_ "github.com/rocket-pool/rocketpool-go/settings/trustednode"
 	rptypes "github.com/rocket-pool/rocketpool-go/types"
-	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-minipool-go/types"
+	"github.com/stader-labs/stader-minipool-go/utils"
 	"github.com/urfave/cli"
 	_ "golang.org/x/sync/errgroup"
 	"math/big"
@@ -344,7 +344,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, minNodeFee float64, salt *b
 	}
 
 	// Get the next minipool address and withdrawal credentials
-	minipoolAddress, err := utils.GenerateAddress(rp, nodeAccount.Address, rptypes.MinipoolDeposit(5), salt, nil, nil)
+	minipoolAddress, err := utils.GenerateAddress(ethxcm, nodeAccount.Address, 5, salt, nil, nil)
 	if err != nil {
 		return nil, err
 	}
