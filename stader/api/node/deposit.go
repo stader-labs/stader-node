@@ -7,7 +7,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/prysmaticlabs/prysm/v3/beacon-chain/core/signing"
 	_ "github.com/rocket-pool/rocketpool-go/dao/trustednode"
-	"github.com/rocket-pool/rocketpool-go/minipool"
 	_ "github.com/rocket-pool/rocketpool-go/network"
 	_ "github.com/rocket-pool/rocketpool-go/settings/protocol"
 	_ "github.com/rocket-pool/rocketpool-go/settings/trustednode"
@@ -272,7 +271,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -348,10 +346,13 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	withdrawalCredentials, err := minipool.GetMinipoolWithdrawalCredentials(rp, minipoolAddress, nil)
-	if err != nil {
-		return nil, err
-	}
+	//utils.g
+	//withdrawalCredentials, err := minipool.GetMinipoolWithdrawalCredentials(rp, minipoolAddress, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	withdrawalCredentials := common.BytesToHash([]byte("mock-withdrawal-creds"))
 
 	// Get validator deposit data and associated parameters
 	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config)
