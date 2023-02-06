@@ -326,10 +326,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "amount, a",
 						Usage: "The amount of ETH to deposit (0, 16 or 32)",
 					},*/
-					cli.StringFlag{
-						Name:  "max-slippage, s",
-						Usage: "The maximum acceptable slippage in node commission rate for the deposit (or 'auto'). Only relevant when the commission rate is not fixed.",
-					},
+					//cli.StringFlag{
+					//	Name:  "max-slippage, s",
+					//	Usage: "The maximum acceptable slippage in node commission rate for the deposit (or 'auto'). Only relevant when the commission rate is not fixed.",
+					//},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm deposit",
