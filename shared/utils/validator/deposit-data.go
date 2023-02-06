@@ -9,7 +9,7 @@ import (
 )
 
 // Deposit settings
-const DepositAmount = 16000000000 // gwei
+const DepositAmount = 4000000000 // gwei
 
 // Get deposit data & root for a given validator key and withdrawal credentials
 func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials common.Hash, eth2Config beacon.Eth2Config) (eth2.DepositData, common.Hash, error) {
