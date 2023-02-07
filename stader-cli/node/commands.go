@@ -326,10 +326,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "amount, a",
 						Usage: "The amount of ETH to deposit (0, 16 or 32)",
 					},*/
-					cli.StringFlag{
-						Name:  "max-slippage, s",
-						Usage: "The maximum acceptable slippage in node commission rate for the deposit (or 'auto'). Only relevant when the commission rate is not fixed.",
-					},
+					//cli.StringFlag{
+					//	Name:  "max-slippage, s",
+					//	Usage: "The maximum acceptable slippage in node commission rate for the deposit (or 'auto'). Only relevant when the commission rate is not fixed.",
+					//},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm deposit",
@@ -337,6 +337,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "salt, l",
 						Usage: "An optional seed to use when generating the new minipool's address. Use this if you want it to have a custom vanity address.",
+					},
+					cli.StringFlag{
+						Name:  "operator-name, on",
+						Usage: "Name of the operator",
+					},
+					cli.StringFlag{
+						Name:  "operator-rewarder-address, ora",
+						Usage: "EL Address where operator will get rewards",
 					},
 				},
 				Action: func(c *cli.Context) error {

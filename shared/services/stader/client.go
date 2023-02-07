@@ -45,7 +45,7 @@ const (
 	PrometheusFile           string = "prometheus.yml"
 
 	APIContainerSuffix string = "_api"
-	APIBinPath         string = "/go/bin/rocketpool"
+	APIBinPath         string = "/go/bin/stader"
 
 	templatesDir                  string = "templates"
 	overrideDir                   string = "override"
@@ -133,7 +133,7 @@ func NewClient(configPath string, daemonPath string, maxFee float64, maxPrioFee 
 		originalGasLimit:   gasLimit,
 		customNonce:        customNonceBigInt,
 		client:             sshClient,
-		debugPrint:         debug,
+		debugPrint:         true,
 		forceFallbacks:     false,
 		ignoreSyncCheck:    false,
 	}
@@ -615,9 +615,9 @@ fi
 
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://github.com/rocket-pool/smartnode-install/releases/latest/download/rp-smartnode-install.tar.xz"
+    PACKAGE_URL="https://stadernode.s3.amazonaws.com/stader-install.tar.xz"
 else
-    PACKAGE_URL="https://github.com/rocket-pool/smartnode-install/releases/download/$PACKAGE_VERSION/rp-smartnode-install.tar.xz"
+    PACKAGE_URL="https://stadernode.s3.amazonaws.com/stader-install.tar.xz"
 fi
 
 
@@ -906,7 +906,7 @@ progress 6 "Creating Stader user data directory..."
 
 # Download and extract package files
 progress 7 "DownloadingStader package files..."
-{ curl -L "$PACKAGE_URL" | tar -xJ -C "$TEMPDIR" || fail "Could not download and extract theStader package files."; } >&2
+{ curl -L "$PACKAGE_URL" | tar -xJ -C "$TEMPDIR" || fail "Could not download and extract the Stader package files."; } >&2
 { test -d "$PACKAGE_FILES_PATH" || fail "Could not extract theStader package files."; } >&2
 
 

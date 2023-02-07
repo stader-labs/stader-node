@@ -67,12 +67,12 @@ build_daemon() {
 
     echo "Building Docker Smartnode image..."
     docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Smartnode image."
-    docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Smartnode image."
+    #docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Smartnode image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
     docker push staderdev/stader-node:$VERSION-amd64 || fail "Error pushing amd64 Docker Smartnode image to Docker Hub."
-    docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Smartnode image to Docker Hub."
+    #docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Smartnode image to Docker Hub."
     rm -f stader/stader-daemon-*
     echo "done!"
     
