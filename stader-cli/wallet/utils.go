@@ -11,13 +11,13 @@ import (
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/rocket-pool/rocketpool-go/types"
-	"github.com/stader-labs/stader-node/rocketpool-cli/wallet/bip39"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
+	"github.com/stader-labs/stader-node/stader-cli/wallet/bip39"
 	"gopkg.in/yaml.v2"
 )
 
