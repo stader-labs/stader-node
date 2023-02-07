@@ -125,6 +125,20 @@ func GetStaderOperatorRegistry(c *cli.Context) (*stader.StaderOperatorRegistryCo
 	return stader.NewStaderOperatorRegistry(ec, staderOperatorRegistryAddr)
 }
 
+func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistryContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	staderValidatorRegistryAddr := common.HexToAddress("0x1D65EAad8f7A5aba35E68792caEeFf82602BEE56")
+	return stader.NewStaderValidatorRegistry(ec, staderValidatorRegistryAddr)
+}
+
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

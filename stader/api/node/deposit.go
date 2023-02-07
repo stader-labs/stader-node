@@ -270,7 +270,11 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	sor, err := services.GetStaderOperatorRegistry(c)
+	//sor, err := services.GetStaderOperatorRegistry(c)
+	//if err != nil {
+	//	return nil, err
+	//}
+	svr, err := services.GetStaderValidatorRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -418,7 +422,12 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	//	return nil, err
 	//}
 
-	tx, err := node.OnboardNodeOperator(sor, true, 0, operatorName, operatorRewardAddress, opts)
+	//tx, err := node.OnboardNodeOperator(sor, true, 0, operatorName, operatorRewardAddress, opts)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	tx, err := node.AddValidatorKeys(svr, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, opts)
 	if err != nil {
 		return nil, err
 	}
