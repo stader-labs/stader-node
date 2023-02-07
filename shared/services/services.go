@@ -111,6 +111,20 @@ func GetEthxPermisionlessPoolManager(c *cli.Context) (*stader.EthxContractManage
 	return stader.NewEthxPermisionlessPool(ec, ethPermisionlessPoolAddr)
 }
 
+func GetStaderOperatorRegistry(c *cli.Context) (*stader.StaderOperatorRegistryContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	staderOperatorRegistryAddr := common.HexToAddress("0x797906646088185AE52187036C28C91E2EDD5f84")
+	return stader.NewStaderOperatorRegistry(ec, staderOperatorRegistryAddr)
+}
+
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
