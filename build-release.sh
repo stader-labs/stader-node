@@ -136,6 +136,11 @@ build_docker_prune_provision_manifest() {
     echo "done!"
 }
 
+send_slack() {
+    # curl -X POST --data-urlencode 'payload={"channel": "'${SLACK_CHAN}'", "username": "'${SLACK_USERNAME}'", "text": "'"${*}"'", "icon_emoji": "'${SLACK_ICON}'"}' ${URL} > /dev/null 2>&1
+    curl -X POST --data-urlencode "payload={\"channel\": \"#stader-node-build-alerts\", \"username\": \"webhookbot\", \"text\": \"${*}\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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 > /dev/null 2>&1
+}
+
 
 # Print usage
 usage() {
@@ -213,3 +218,13 @@ fi
 if [ "$PRUNE_MANIFEST" = true ]; then
     build_docker_prune_provision_manifest
 fi
+# if all successful, send slack message
+if [ $? -eq 0 ]; then
+    send_slack "Stader Node $VERSION has been built and pushed to Docker Hub."
+fi
+# else send failure message
+else
+    send_slack "Stader Node $VERSION has failed to build and push to Docker Hub."
+fi
+
+
