@@ -414,7 +414,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	//	return nil, err
 	//}
 
-	fmt.Printf("ethx contract manager is %+v\n", ethxcm)
 	tx, err := node.StaderNodeDeposit(ethxcm, 0.01, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, operatorRewardAddress, operatorName, opts)
 	if err != nil {
 		return nil, err
