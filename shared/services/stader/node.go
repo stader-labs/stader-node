@@ -433,7 +433,7 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, minFee float64, salt *big.In
 func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, operatorName string, operatorRewardedAddress string, submit bool) (api.NodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %s %s %t", amountWei.String(), salt.String(), operatorName, operatorRewardedAddress, submit))
 	if err != nil {
-		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit: %w", err)
+		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit as error is : %w", err)
 	}
 	var response api.NodeDepositResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
