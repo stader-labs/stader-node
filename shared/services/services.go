@@ -107,7 +107,7 @@ func GetEthxPermisionlessPoolManager(c *cli.Context) (*stader.EthxContractManage
 		return nil, err
 	}
 
-	ethPermisionlessPoolAddr := common.BytesToAddress([]byte("0x2E9D0b1b10380DDB45DDc28B57B4A72E2d6b2782"))
+	ethPermisionlessPoolAddr := common.HexToAddress("0x2E9D0b1b10380DDB45DDc28B57B4A72E2d6b2782")
 	fmt.Printf("eth permisionless pool address is [%s]", ethPermisionlessPoolAddr)
 	return stader.NewEthxPermisionlessPool(ec, ethPermisionlessPoolAddr)
 }
