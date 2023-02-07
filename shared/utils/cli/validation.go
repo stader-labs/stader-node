@@ -170,8 +170,8 @@ func ValidateDepositWeiAmount(name, value string) (*big.Int, error) {
 	if err != nil {
 		return nil, err
 	}
-	if ether := strings.Repeat("0", 18); !(val.String() == "0" || val.String() == "16"+ether || val.String() == "32"+ether) {
-		return nil, fmt.Errorf("Invalid %s '%s' - valid values are 0, 16 and 32 ether", name, value)
+	if ether := strings.Repeat("0", 18); !(val.String() == "0" || val.String() == "4"+ether || val.String() == "32"+ether) {
+		return nil, fmt.Errorf("Invalid %s '%s' - valid values are 0, 4 and 32 ether", name, value)
 	}
 	return val, nil
 }
