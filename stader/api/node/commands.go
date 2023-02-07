@@ -595,7 +595,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
+					submit, err := cliutils.ValidateBool("submit", c.Args().Get(4))
 					if err != nil {
 						return err
 					}
