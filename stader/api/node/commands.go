@@ -567,11 +567,11 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a minipool, or just make and sign the transaction (when submit = false)",
-				UsageText: "rocketpool api node deposit amount min-fee salt submit",
+				UsageText: "rocketpool api node deposit amount salt operatorName operatorRewarderAddress submit",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 5); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateDepositWeiAmount("deposit amount", c.Args().Get(0))
