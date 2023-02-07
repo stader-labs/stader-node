@@ -38,7 +38,7 @@ func RequireNodePassword(c *cli.Context) error {
 		return err
 	}
 	if !nodePasswordSet {
-		return errors.New("The node password has not been set. Please run 'rocketpool wallet init' and try again.")
+		return errors.New("The node password has not been set. Please run './stader-cli wallet init' and try again.")
 	}
 	return nil
 }
@@ -52,7 +52,7 @@ func RequireNodeWallet(c *cli.Context) error {
 		return err
 	}
 	if !nodeWalletInitialized {
-		return errors.New("The node wallet has not been initialized. Please run 'rocketpool wallet init' and try again.")
+		return errors.New("The node wallet has not been initialized. Please run './stader-cli wallet init' and try again.")
 	}
 	return nil
 }
