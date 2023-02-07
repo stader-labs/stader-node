@@ -270,6 +270,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
+	sor, err := services.GetStaderOperatorRegistry(c)
+	if err != nil {
+		return nil, err
+	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -326,7 +330,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	opts.Value = amountWei
+	opts.Value = big.NewInt(0)
 
 	// Get the deposit type
 	//depositType, err := node.GetDepositType(rp, amountWei, nil)
@@ -414,10 +418,11 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	//	return nil, err
 	//}
 
-	tx, err := node.StaderNodeDeposit(ethxcm, 0.01, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, operatorRewardAddress, operatorName, opts)
+	tx, err := node.OnboardNodeOperator(sor, true, 0, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
+	_, _ = node.StaderNodeDeposit(ethxcm, 0.01, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, operatorRewardAddress, operatorName, opts)
 
 	// Save wallet
 	if err := w.Save(); err != nil {
