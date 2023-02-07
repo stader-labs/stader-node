@@ -334,7 +334,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	opts.Value = big.NewInt(0)
+	opts.Value = amountWei
 
 	// Get the deposit type
 	//depositType, err := node.GetDepositType(rp, amountWei, nil)
