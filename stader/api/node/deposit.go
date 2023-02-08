@@ -373,7 +373,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("withdraw creds is %v\n", withdrawCredentials)
+	fmt.Printf("withdraw creds is %v\n", common.Bytes2Hex(withdrawCredentials))
 
 	// Get validator deposit data and associated parameters
 	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, common.BytesToHash(withdrawCredentials), eth2Config)
