@@ -135,7 +135,7 @@ func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistry
 		return nil, err
 	}
 
-	staderValidatorRegistryAddr := common.HexToAddress("0x1D65EAad8f7A5aba35E68792caEeFf82602BEE56")
+	staderValidatorRegistryAddr := common.HexToAddress("0x1d65eaad8f7a5aba35e68792caeeff82602bee56")
 	return stader.NewStaderValidatorRegistry(ec, staderValidatorRegistryAddr)
 }
 
