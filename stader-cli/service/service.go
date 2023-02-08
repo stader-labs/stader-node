@@ -147,7 +147,7 @@ func printPatchNotes(c *cli.Context) {
  |_____/ \__\__,_|\__,_|\___|_|    |______\__,_|_.__/|___/
 
 `, "\033[34m")
-	fmt.Printf("%s=== Smartnode v%s ===%s\n\n", colorGreen, shared.RocketPoolVersion, colorReset)
+	fmt.Printf("%s=== Smartnode v%s ===%s\n\n", colorGreen, shared.StaderVersion, colorReset)
 	fmt.Printf("Changes you should be aware of before starting:\n\n")
 
 	fmt.Printf("%s=== MEV-Boost Updates ===%s\n", colorGreen, colorReset)

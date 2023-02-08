@@ -135,7 +135,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "version, v",
 						Usage: "The smart node package version to install",
-						Value: fmt.Sprintf("v%s", shared.RocketPoolVersion),
+						Value: fmt.Sprintf("v%s", shared.StaderVersion),
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -371,7 +371,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "version, v",
 						Usage: "The update tracker package version to install",
-						Value: fmt.Sprintf("v%s", shared.RocketPoolVersion),
+						Value: fmt.Sprintf("v%s", shared.StaderVersion),
 					},
 				},
 				Action: func(c *cli.Context) error {

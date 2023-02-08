@@ -47,7 +47,7 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.RocketPoolCon
 		SetRows(1, 1, 1, 0, 1) // Also 1-unit border
 
 	grid.SetBorder(true).
-		SetTitle(fmt.Sprintf(" Stader Node %s Configuration ", shared.RocketPoolVersion)).
+		SetTitle(fmt.Sprintf(" Stader Node %s Configuration ", shared.StaderVersion)).
 		SetBorderColor(tcell.ColorOrange).
 		SetTitleColor(tcell.ColorOrange).
 		SetBackgroundColor(tcell.ColorBlack)

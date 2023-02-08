@@ -12,7 +12,7 @@ import (
 
 // Constants
 const (
-	smartnodeTag                       string = "staderdev/stader-node:v" + shared.RocketPoolVersion
+	smartnodeTag                       string = "staderdev/stader-node:v" + shared.StaderVersion
 	pruneProvisionerTag                string = "rocketpool/eth1-prune-provision:v0.0.1"
 	ecMigratorTag                      string = "rocketpool/ec-migrator:v1.0.0"
 	NetworkID                          string = "network"
@@ -615,7 +615,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 	}
 
-	if strings.HasSuffix(shared.RocketPoolVersion, "-dev") {
+	if strings.HasSuffix(shared.StaderVersion, "-dev") {
 		options = append(options, config.ParameterOption{
 			Name:        "Devnet",
 			Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",

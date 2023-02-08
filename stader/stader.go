@@ -22,7 +22,7 @@ func main() {
 	// Set application info
 	app.Name = "Stader"
 	app.Usage = "Stader service"
-	app.Version = shared.RocketPoolVersion
+	app.Version = shared.StaderVersion
 	app.Authors = []cli.Author{
 		{
 			Name:  "Rahul Jaguste",
