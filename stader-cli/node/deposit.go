@@ -3,9 +3,7 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-minipool-go/utils/eth"
-	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
 	"math/big"
 
@@ -241,13 +239,13 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  100,
-		SafeGasLimit: 100,
-	}, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
-	}
+	//err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
+	//	EstGasLimit:  10,
+	//	SafeGasLimit: 5,
+	//}, staderClient, c.Bool("yes"))
+	//if err != nil {
+	//	return err
+	//}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
