@@ -373,10 +373,15 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("withdraw creds is %v\n", common.Bytes2Hex(withdrawCredentials))
+
+	// append 0x
+	withdrawCredsHex := common.Bytes2Hex(withdrawCredentials)
+	withdrawCredsHexWith0x := "0" + "x" + string(withdrawCredsHex)
+
+	fmt.Printf("withdraw creds is %v\n", withdrawCredsHexWith0x)
 
 	// Get validator deposit data and associated parameters
-	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, common.BytesToHash(withdrawCredentials), eth2Config)
+	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, common.HexToHash(withdrawCredsHexWith0x), eth2Config)
 	if err != nil {
 		return nil, err
 	}
