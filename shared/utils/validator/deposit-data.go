@@ -48,7 +48,7 @@ func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials
 		Signature:             validatorKey.Sign(srHash[:]).Marshal(),
 	}
 
-	fmt.Printf("GetDepositData: withdraw credentials is %v\n", common.Bytes2Hex(dd.WithdrawalCredentials))
+	fmt.Printf("GetDepositData: withdraw credentials is %v\n", dd.WithdrawalCredentials)
 
 	// Get deposit data root
 	depositDataRoot, err := depositData.HashTreeRoot()
