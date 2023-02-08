@@ -2086,6 +2086,8 @@ github.com/stader-labs/stader-minipool-go v0.0.0-20230208182916-11ea34f5d02d h1:
 github.com/stader-labs/stader-minipool-go v0.0.0-20230208182916-11ea34f5d02d/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
 github.com/stader-labs/stader-minipool-go v0.0.0-20230208192443-235ebca9a6d7 h1:WJ4JxtMaIixQWHBafObk7tAUA31LHpjcaOyyeDEbgfo=
 github.com/stader-labs/stader-minipool-go v0.0.0-20230208192443-235ebca9a6d7/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230208193246-14fad50a35dd h1:OeC+Vmfp/jZdU39wHRxWTFnQwIM0uf0wwoIg66iYmrw=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230208193246-14fad50a35dd/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
 github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 h1:Oo2KZNP70KE0+IUJSidPj/BFS/RXNHmKIJOdckzml2E=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
