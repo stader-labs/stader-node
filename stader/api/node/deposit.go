@@ -377,7 +377,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	fmt.Printf("bharath-build: withdraw creds is %v\n", withdrawCredentials)
 
 	// Get validator deposit data and associated parameters
-	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, common.HexToHash(withdrawCredentials.Hex()), eth2Config)
+	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config)
 	if err != nil {
 		return nil, err
 	}
