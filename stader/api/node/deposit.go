@@ -12,7 +12,6 @@ import (
 	rptypes "github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-minipool-go/types"
-	"github.com/stader-labs/stader-minipool-go/utils"
 	"github.com/urfave/cli"
 	_ "golang.org/x/sync/errgroup"
 	"math/big"
@@ -270,11 +269,15 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	if err != nil {
 		return nil, err
 	}
-	//sor, err := services.GetStaderOperatorRegistry(c)
-	//if err != nil {
-	//	return nil, err
-	//}
+	sor, err := services.GetStaderOperatorRegistry(c)
+	if err != nil {
+		return nil, err
+	}
 	svr, err := services.GetStaderValidatorRegistry(c)
+	if err != nil {
+		return nil, err
+	}
+	srcf, err := services.GetStaderRewardContractFactory(c)
 	if err != nil {
 		return nil, err
 	}
@@ -348,21 +351,32 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 		return nil, err
 	}
 
-	// Get the next minipool address and withdrawal credentials
-	minipoolAddress, err := utils.GenerateAddress(ethxcm, nodeAccount.Address, 5, salt, nil, nil)
+	nodeAccount, err = w.GetNodeAccount()
+	// get the vault address and vault credential
+	fmt.Printf("node account is %s\n", nodeAccount.Address)
+	operatorRegistryInfo, err := node.GetOperatorRegistry(sor, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	//utils.g
-	//withdrawalCredentials, err := minipool.GetMinipoolWithdrawalCredentials(rp, minipoolAddress, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	withdrawalCredentials := common.BytesToHash([]byte("mock-withdrawal-creds"))
+	fmt.Printf("operator registry info is %v\n", operatorRegistryInfo)
+	validatorKeyCount, err := node.GetTotalValidatorKeys(sor, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("validator key count is %v\n", validatorKeyCount)
+	rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("reward withdraw vault is %v\n", rewardWithdrawVault)
+	withdrawCredentials, err := node.GetValidatorWithdrawalCredential(srcf, rewardWithdrawVault, nil)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("withdraw creds is %v\n", withdrawCredentials)
 
 	// Get validator deposit data and associated parameters
-	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config)
+	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, common.BytesToHash(withdrawCredentials), eth2Config)
 	if err != nil {
 		return nil, err
 	}
@@ -380,7 +394,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 			"This key is already in use by validator %d on the Beacon chain!\n"+
 			"Rocket Pool will not allow you to deposit this validator for your own safety so you do not get slashed.\n"+
 			"PLEASE REPORT THIS TO THE ROCKET POOL DEVELOPERS.\n"+
-			"***************\n", minipoolAddress.Hex(), pubKey.Hex(), status.Index)
+			"***************\n", operatorRegistryInfo.OperatorRewardAddress.Hex(), pubKey.Hex(), status.Index)
 	}
 
 	// Do a final sanity check
@@ -448,7 +462,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, operatorName
 	}
 
 	response.TxHash = tx.Hash()
-	response.MinipoolAddress = minipoolAddress
+	//response.MinipoolAddress = minipoolAddress
 	response.ValidatorPubkey = pubKey
 
 	// Return response
