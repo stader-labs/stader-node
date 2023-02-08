@@ -36,7 +36,7 @@ require (
 	github.com/rocket-pool/rocketpool-go v1.4.1
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/stader-minipool-go v0.0.0-20230208111309-fcdcce01da45
+	github.com/stader-labs/stader-minipool-go v0.0.0-20230208133932-79a0ba29beec
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-ens/v3 v3.5.5
