@@ -15,7 +15,7 @@ func createLocalMevStep(wiz *wizard, currentStep int, totalSteps int) *checkBoxW
 	unregulatedAllLabel := strings.TrimPrefix(wiz.md.Config.MevBoost.EnableUnregulatedAllMev.Name, "Enable ")
 	unregulatedNoSandwichLabel := strings.TrimPrefix(wiz.md.Config.MevBoost.EnableUnregulatedNoSandwich.Name, "Enable ")
 
-	helperText := "Select the profiles you would like to enable below. Read the descriptions carefully! Leave all options unchecked if you wish to opt out of MEV-Boost for now, [orange]but it will be required in the future.[white]\n\n[lime]Please read our guide to learn more about MEV:\nhttps://docs.rocketpool.net/guides/node/mev.html\n"
+	helperText := "Select the profiles you would like to enable below. Read the descriptions carefully! Leave all options unchecked if you wish to opt out of MEV-Boost for now, [orange]but it will be required in the future.[white]\n\n"
 
 	show := func(modal *checkBoxModalLayout) {
 		labels, descriptions, selections := getMevChoices(wiz.md.Config.MevBoost)

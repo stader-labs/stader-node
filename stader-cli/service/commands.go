@@ -155,7 +155,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "config",
 				Aliases:   []string{"c"},
 				Usage:     "Configure the Stader service",
-				UsageText: "rocketpool service config",
+				UsageText: "stader-cli service config",
 				Flags:     configFlags,
 				Action: func(c *cli.Context) error {
 
@@ -174,7 +174,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "status",
 				Aliases:   []string{"u"},
 				Usage:     "View the Stader service status",
-				UsageText: "rocketpool service status",
+				UsageText: "stader-cli service status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -192,7 +192,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "start",
 				Aliases:   []string{"s"},
 				Usage:     "Start the Stader service",
-				UsageText: "rocketpool service start",
+				UsageText: "stader-cli service start",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "ignore-slash-timer",
@@ -220,7 +220,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "pause",
 				Aliases:   []string{"p"},
 				Usage:     "Pause the Stader service",
-				UsageText: "rocketpool service pause [options]",
+				UsageText: "stader-cli service pause [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -242,8 +242,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "stop",
 				Aliases:   []string{"o"},
-				Usage:     "Pause the Stader service (alias of 'rocketpool service pause')",
-				UsageText: "rocketpool service stop [options]",
+				Usage:     "Pause the Stader service (alias of 'stader-cli service pause')",
+				UsageText: "stader-cli service stop [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -267,7 +267,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "logs",
 				Aliases:   []string{"l"},
 				Usage:     "View the Stader service logs",
-				UsageText: "rocketpool service logs [options] [services...]",
+				UsageText: "stader-cli service logs [options] [services...]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "tail, t",
@@ -287,7 +287,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "stats",
 				Aliases:   []string{"a"},
 				Usage:     "View the Stader service stats",
-				UsageText: "rocketpool service stats",
+				UsageText: "stader-cli service stats",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -304,7 +304,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "compose",
 				Usage:     "View the Stader service docker compose config",
-				UsageText: "rocketpool service compose",
+				UsageText: "stader-cli service compose",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -322,7 +322,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "version",
 				Aliases:   []string{"v"},
 				Usage:     "View the Stader service version information",
-				UsageText: "rocketpool service version",
+				UsageText: "stader-cli service version",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -340,7 +340,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "prune-eth1",
 				Aliases:   []string{"n"},
 				Usage:     "Shuts down the main ETH1 client and prunes its database, freeing up disk space, then restarts it when it's done.",
-				UsageText: "rocketpool service prune-eth1",
+				UsageText: "stader-cli service prune-eth1",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -358,7 +358,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "install-update-tracker",
 				Aliases:   []string{"d"},
 				Usage:     "Install the update tracker that provides the available system update count to the metrics dashboard",
-				UsageText: "rocketpool service install-update-tracker [options]",
+				UsageText: "stader-cli service install-update-tracker [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -391,7 +391,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "check-cpu-features",
 				Aliases:   []string{"ccf"},
 				Usage:     "Checks if your CPU supports all of the features required by the \"modern\" version of certain client images. If not, it prints what features are missing.",
-				UsageText: "rocketpool service check-cpu-features",
+				UsageText: "stader-cli service check-cpu-features",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -408,7 +408,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "get-config-yaml",
 				Usage:     "Generate YAML that shows the current configuration schema, including all of the parameters and their descriptions",
-				UsageText: "rocketpool service get-config-yaml",
+				UsageText: "stader-cli service get-config-yaml",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -425,7 +425,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "export-eth1-data",
 				Usage:     "Exports the execution client (eth1) chain data to an external folder. Use this if you want to back up your chain data before switching execution clients.",
-				UsageText: "rocketpool service export-eth1-data target-folder",
+				UsageText: "stader-cli service export-eth1-data target-folder",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "force",
@@ -449,7 +449,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "import-eth1-data",
 				Usage:     "Imports execution client (eth1) chain data from an external folder. Use this if you want to restore the data from an execution client that you previously backed up.",
-				UsageText: "rocketpool service import-eth1-data source-folder",
+				UsageText: "stader-cli service import-eth1-data source-folder",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -467,7 +467,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "resync-eth1",
 				Usage:     fmt.Sprintf("%sDeletes the main ETH1 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
-				UsageText: "rocketpool service resync-eth1",
+				UsageText: "stader-cli service resync-eth1",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -484,7 +484,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "resync-eth2",
 				Usage:     fmt.Sprintf("%sDeletes the ETH2 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
-				UsageText: "rocketpool service resync-eth2",
+				UsageText: "stader-cli service resync-eth2",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -502,7 +502,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "terminate",
 				Aliases:   []string{"t"},
 				Usage:     fmt.Sprintf("%sDeletes all of the Stader Docker containers and volumes, including your ETH1 and ETH2 chain data and your Prometheus database (if metrics are enabled). Only use this if you are cleaning up the Smartnode and want to start over!%s", colorRed, colorReset),
-				UsageText: "rocketpool service terminate [options]",
+				UsageText: "stader-cli service terminate [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
