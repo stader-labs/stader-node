@@ -242,8 +242,8 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Assign max fees
 	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  1000,
-		SafeGasLimit: 1000,
+		EstGasLimit:  100,
+		SafeGasLimit: 100,
 	}, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
