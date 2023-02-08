@@ -63,7 +63,7 @@ func (w *Wallet) GetNodeAccountTransactor() (*bind.TransactOpts, error) {
 	transactor, err := bind.NewKeyedTransactorWithChainID(privateKey, w.chainID)
 	transactor.GasFeeCap = w.maxFee
 	transactor.GasTipCap = w.maxPriorityFee
-	transactor.GasLimit = 100000
+	transactor.GasLimit = 600000
 	transactor.Context = context.Background()
 	return transactor, err
 
