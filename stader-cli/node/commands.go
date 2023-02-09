@@ -79,9 +79,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					fmt.Printf("c is %v\n", c.Args())
 
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+					// TODO - fix this validation issue
+					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					//	return err
+					//}
 
 					// Validate flags
 					if c.String("operator-name") == "" {
