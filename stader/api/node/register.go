@@ -63,8 +63,6 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 		return nil, err
 	}
 
-	// TODO - bchain - check if the validator has already been registered
-
 	// Response
 	response := api.RegisterNodeResponse{}
 
@@ -83,6 +81,7 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 	// Register node
 	//hash, err := node.RegisterNode(rp, timezoneLocation, opts)
 	tx, err := node.OnboardNodeOperator(sor, mevSocialize, 0, operatorName, operatorRewardAddress, opts)
+	tx.Data()
 	if err != nil {
 		return nil, err
 	}
