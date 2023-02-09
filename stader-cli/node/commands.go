@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"github.com/urfave/cli"
 
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -53,26 +54,40 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with Rocket Pool",
-				UsageText: "rocketpool node register [options]",
+				Usage:     "Register the node with Stader",
+				UsageText: "stader-cli node register [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "timezone, t",
-						Usage: "The timezone location to register the node with (in the format 'Country/City')",
+						Name:  "operator-name, on",
+						Usage: "The name of the operator",
+					},
+					cli.StringFlag{
+						Name:  "operator-reward-address, ora",
+						Usage: "The address at which operator will get rewards",
+					},
+					cli.BoolFlag{
+						Name:  "socialize-mev, sm",
+						Usage: "Should Mev be socialized",
 					},
 				},
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 
 					// Validate flags
-					if c.String("timezone") != "" {
-						if _, err := cliutils.ValidateTimezoneLocation("timezone location", c.String("timezone")); err != nil {
+					if c.String("operator-name") == "" {
+						return fmt.Errorf("operator-name is required")
+					}
+
+					if c.String("operator-reward-address") != "" {
+						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
 							return err
 						}
+					} else {
+						return fmt.Errorf("operator-reward-address is required")
 					}
 
 					// Run
@@ -322,14 +337,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Usage:     "Make a deposit and create a minipool",
 				UsageText: "rocketpool node deposit [options]",
 				Flags: []cli.Flag{
-					/*cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of ETH to deposit (0, 16 or 32)",
-					},*/
-					//cli.StringFlag{
-					//	Name:  "max-slippage, s",
-					//	Usage: "The maximum acceptable slippage in node commission rate for the deposit (or 'auto'). Only relevant when the commission rate is not fixed.",
-					//},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm deposit",
@@ -337,14 +344,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "salt, l",
 						Usage: "An optional seed to use when generating the new minipool's address. Use this if you want it to have a custom vanity address.",
-					},
-					cli.StringFlag{
-						Name:  "operator-name, on",
-						Usage: "Name of the operator",
-					},
-					cli.StringFlag{
-						Name:  "operator-rewarder-address, ora",
-						Usage: "EL Address where operator will get rewards",
 					},
 				},
 				Action: func(c *cli.Context) error {

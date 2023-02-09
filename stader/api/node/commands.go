@@ -60,16 +60,12 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					timezoneLocation, err := cliutils.ValidateTimezoneLocation("timezone location", c.Args().Get(0))
-					if err != nil {
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
 						return err
 					}
 
 					// Run
-					api.PrintResponse(canRegisterNode(c, timezoneLocation))
+					api.PrintResponse(canRegisterNode(c))
 					return nil
 
 				},
@@ -77,21 +73,30 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with Rocket Pool",
-				UsageText: "rocketpool api node register timezone-location",
+				Usage:     "Register the node with Stader",
+				UsageText: "stader-cli api node register operator-name operator-reward-address socialize-mev",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
-					timezoneLocation, err := cliutils.ValidateTimezoneLocation("timezone location", c.Args().Get(0))
+					//timezoneLocation, err := cliutils.ValidateTimezoneLocation("timezone location", c.Args().Get(0))
+					//if err != nil {
+					//	return err
+					//}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
+					socializeMev, err := cliutils.ValidateBool("socialize-mev", c.Args().Get(2))
+
 					// Run
-					api.PrintResponse(registerNode(c, timezoneLocation))
+					api.PrintResponse(registerNode(c, operatorName, operatorRewardAddress, socializeMev))
 					return nil
 
 				},
@@ -567,44 +572,33 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a minipool, or just make and sign the transaction (when submit = false)",
-				UsageText: "rocketpool api node deposit amount salt operatorName operatorRewarderAddress submit",
+				UsageText: "rocketpool api node deposit amount salt submit",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 5); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateDepositWeiAmount("deposit amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
-					//minNodeFee, err := cliutils.ValidateFraction("minimum node fee", c.Args().Get(1))
-					//if err != nil {
-					//	return err
-					//}
 
 					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					operatorName := c.Args().Get(2)
-
-					operatorRewardAddress, err := cliutils.ValidateAddress("operator reward address", c.Args().Get(3))
-					if err != nil {
-						return err
-					}
-
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(4))
+					submit, err := cliutils.ValidateBool("submit", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, salt, operatorName, operatorRewardAddress, submit)
+					response, err := nodeDeposit(c, amountWei, salt, submit)
 					if submit {
 						api.PrintResponse(response, err)
-					} // else nodeDeposit already printed the encoded transaction
+					}
 					return nil
 
 				},

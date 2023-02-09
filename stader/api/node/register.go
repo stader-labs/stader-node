@@ -2,28 +2,30 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/rocket-pool/rocketpool-go/node"
+	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/urfave/cli"
 )
 
-func canRegisterNode(c *cli.Context, timezoneLocation string) (*api.CanRegisterNodeResponse, error) {
+func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireRocketStorage(c); err != nil {
 		return nil, err
 	}
 	_, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	_, err = services.GetRocketPool(c)
+	sor, err := services.GetStaderOperatorRegistry(c)
+	if err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
@@ -31,74 +33,36 @@ func canRegisterNode(c *cli.Context, timezoneLocation string) (*api.CanRegisterN
 	// Response
 	response := api.CanRegisterNodeResponse{}
 
-	// Sync
-	//var wg errgroup.Group
+	nodeAccount, err := w.GetNodeAccount()
 
-	// Check node is not already registered
-	//wg.Go(func() error {
-	//	nodeAccount, err := w.GetNodeAccount()
-	//	if err != nil {
-	//		return err
-	//	}
-	//	exists, err := node.GetNodeExists(rp, nodeAccount.Address, nil)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	response.AlreadyRegistered = exists
-	//	return nil
-	//})
+	operatorRegistry, err := node.GetOperatorRegistry(sor, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
 
-	// Check node registrations are enabled
-	//wg.Go(func() error {
-	//	registrationEnabled, err := protocol.GetNodeRegistrationEnabled(rp, nil)
-	//	if err == nil {
-	//		response.RegistrationDisabled = !registrationEnabled
-	//	}
-	//	return err
-	//})
+	fmt.Printf("canRegisterNode: Operator registry is %v\n", operatorRegistry)
+	if operatorRegistry.OperatorId == nil {
+		response.AlreadyRegistered = true
+		response.CanRegister = false
+	}
 
-	// Get gas estimate
-	//wg.Go(func() error {
-	//	opts, err := w.GetNodeAccountTransactor()
-	//	if err != nil {
-	//		return err
-	//	}
-	//	gasInfo, err := node.EstimateRegisterNodeGas(rp, timezoneLocation, opts)
-	//	if err == nil {
-	//		response.GasInfo = gasInfo
-	//	}
-	//	return err
-	//})
-
-	// Wait for data
-	//if err := wg.Wait(); err != nil {
-	//	return nil, err
-	//}
-
-	// Update & return response
-	//response.CanRegister = !(response.AlreadyRegistered || response.RegistrationDisabled)
-	response.CanRegister = true
 	return &response, nil
 
 }
 
-func registerNode(c *cli.Context, timezoneLocation string) (*api.RegisterNodeResponse, error) {
+func registerNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, mevSocialize bool) (*api.RegisterNodeResponse, error) {
 
 	// Get services
-	if err := services.RequireNodeWallet(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireRocketStorage(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sor, err := services.GetStaderOperatorRegistry(c)
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO - bchain - check if the validator has already been registered
 
 	// Response
 	response := api.RegisterNodeResponse{}
@@ -116,11 +80,12 @@ func registerNode(c *cli.Context, timezoneLocation string) (*api.RegisterNodeRes
 	}
 
 	// Register node
-	hash, err := node.RegisterNode(rp, timezoneLocation, opts)
+	//hash, err := node.RegisterNode(rp, timezoneLocation, opts)
+	tx, err := node.OnboardNodeOperator(sor, mevSocialize, 0, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
-	response.TxHash = hash
+	response.TxHash = tx.Hash()
 
 	// Return response
 	return &response, nil

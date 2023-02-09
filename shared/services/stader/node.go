@@ -62,8 +62,8 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 }
 
 // Check whether the node can be registered
-func (c *Client) CanRegisterNode(timezoneLocation string) (api.CanRegisterNodeResponse, error) {
-	responseBytes, err := c.callAPI("node can-register", timezoneLocation)
+func (c *Client) CanRegisterNode() (api.CanRegisterNodeResponse, error) {
+	responseBytes, err := c.callAPI("node can-register")
 	if err != nil {
 		return api.CanRegisterNodeResponse{}, fmt.Errorf("Could not get can register node status: %w", err)
 	}
@@ -78,8 +78,8 @@ func (c *Client) CanRegisterNode(timezoneLocation string) (api.CanRegisterNodeRe
 }
 
 // Register the node
-func (c *Client) RegisterNode(timezoneLocation string) (api.RegisterNodeResponse, error) {
-	responseBytes, err := c.callAPI("node register", timezoneLocation)
+func (c *Client) RegisterNode(operatorName string, operatorRewardAddress common.Address, socializeMev bool) (api.RegisterNodeResponse, error) {
+	responseBytes, err := c.callAPI("node register", operatorName, operatorRewardAddress.Hex(), strconv.FormatBool(socializeMev))
 	if err != nil {
 		return api.RegisterNodeResponse{}, fmt.Errorf("Could not register node: %w", err)
 	}
@@ -433,7 +433,7 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, minFee float64, salt *big.In
 func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, operatorName string, operatorRewardedAddress string, submit bool) (api.NodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %s %s %t", amountWei.String(), salt.String(), operatorName, operatorRewardedAddress, submit))
 	if err != nil {
-		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit as error is : %w", err)
+		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit as er: %w", err)
 	}
 	var response api.NodeDepositResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
