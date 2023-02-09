@@ -43,6 +43,8 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 	if operatorRegistry.OperatorName != "" {
 		response.AlreadyRegistered = true
 		response.CanRegister = false
+	} else {
+		response.CanRegister = true
 	}
 
 	return &response, nil

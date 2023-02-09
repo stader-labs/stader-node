@@ -35,7 +35,7 @@ func registerNode(c *cli.Context) error {
 	if !canRegister.CanRegister {
 		fmt.Println("The node cannot be registered:")
 		if canRegister.AlreadyRegistered {
-			fmt.Println("The node is already registered with Rocket Pool.")
+			fmt.Println("The node is already registered with Stader.")
 		}
 		if canRegister.RegistrationDisabled {
 			fmt.Println("Node registrations are currently disabled.")
