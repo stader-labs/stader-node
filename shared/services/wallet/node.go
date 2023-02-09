@@ -112,7 +112,6 @@ func (w *Wallet) getNodePrivateKey() (*ecdsa.PrivateKey, string, error) {
 	// Cache node key
 	w.nodeKey = privateKeyECDSA
 	w.nodeKeyPath = path
-	fmt.Printf("private key is %s\n", privateKey)
 	// Return
 	return privateKeyECDSA, path, nil
 
