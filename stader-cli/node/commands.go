@@ -54,7 +54,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with Stader",
+				Usage:     "Register the node with stader",
 				UsageText: "stader-cli node register [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{

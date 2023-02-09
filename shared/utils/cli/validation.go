@@ -26,6 +26,7 @@ const (
 
 // Validate command argument count
 func ValidateArgCount(c *cli.Context, count int) error {
+	fmt.Printf("No of args is %d\n", len(c.Args()))
 	if len(c.Args()) != count {
 		return fmt.Errorf("Incorrect argument count; usage: %s", c.Command.UsageText)
 	}
