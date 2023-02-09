@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/stader-labs/stader-node/shared/services"
-
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
@@ -15,10 +13,10 @@ import (
 
 func registerNode(c *cli.Context) error {
 
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return err
-	}
+	//w, err := services.GetWallet(c)
+	//if err != nil {
+	//	return err
+	//}
 	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
