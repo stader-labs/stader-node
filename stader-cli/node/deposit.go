@@ -32,32 +32,7 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	//// Make sure ETH2 is on the correct chain
-	//depositContractInfo, err := staderClient.DepositContractInfo()
-	//if err != nil {
-	//	return err
-	//}
-	//if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
-	//	depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
-	//	cliutils.PrintDepositMismatchError(
-	//		depositContractInfo.RPNetwork,
-	//		depositContractInfo.BeaconNetwork,
-	//		depositContractInfo.RPDepositContract,
-	//		depositContractInfo.BeaconDepositContract)
-	//	return nil
-	//}
-
 	fmt.Println("Your eth2 client is on the correct network.\n")
-
-	// Check if the fee distributor has been initialized
-	//isInitializedResponse, err := staderClient.IsFeeDistributorInitialized()
-	//if err != nil {
-	//	return err
-	//}
-	//if !isInitializedResponse.IsInitialized {
-	//	fmt.Println("Your fee distributor has not been initialized yet so you cannot create a new minipool.\nPlease run `rocketpool node initialize-fee-distributor` to initialize it first.")
-	//	return nil
-	//}
 
 	// Post a warning about fee distribution
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new minipool, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new minipool.%s\nWould you like to continue?", colorYellow, colorReset))) {
@@ -242,8 +217,8 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Assign max fees
 	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  1000,
-		SafeGasLimit: 1000,
+		EstGasLimit:  10000000,
+		SafeGasLimit: 25000000,
 	}, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err

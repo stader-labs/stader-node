@@ -2,6 +2,8 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/rocket-pool/rocketpool-go/rocketpool"
 
 	"github.com/urfave/cli"
 
@@ -25,16 +27,8 @@ func registerNode(c *cli.Context) error {
 		return err
 	}
 
-	// Prompt for timezone location
-	var timezoneLocation string
-	if c.String("timezone") != "" {
-		timezoneLocation = c.String("timezone")
-	} else {
-		timezoneLocation = promptTimezone()
-	}
-
 	// Check node can be registered
-	canRegister, err := staderClient.CanRegisterNode(timezoneLocation)
+	canRegister, err := staderClient.CanRegisterNode()
 	if err != nil {
 		return err
 	}
@@ -50,7 +44,10 @@ func registerNode(c *cli.Context) error {
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canRegister.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
+		EstGasLimit:  10000000,
+		SafeGasLimit: 25000000,
+	}, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
@@ -61,8 +58,14 @@ func registerNode(c *cli.Context) error {
 		return nil
 	}
 
+	operatorName := c.String("operator-name")
+	operatorRewardAddress := c.String("operator-reward-address")
+	socializeMev := c.Bool("socialize-mev")
+
+	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
+
 	// Register node
-	response, err := staderClient.RegisterNode(timezoneLocation)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMev)
 	if err != nil {
 		return err
 	}
