@@ -93,11 +93,11 @@ type NodeCollector struct {
 	handledIntervals map[uint64]bool
 
 	// The Rocket Pool config
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 }
 
 // Create a new NodeCollector instance
-func NewNodeCollector(rp *rocketpool.RocketPool, bc beacon.Client, nodeAddress common.Address, cfg *config.RocketPoolConfig) *NodeCollector {
+func NewNodeCollector(rp *rocketpool.RocketPool, bc beacon.Client, nodeAddress common.Address, cfg *config.StaderConfig) *NodeCollector {
 
 	// Get the event log interval
 	eventLogInterval, err := cfg.GetEventLogInterval()

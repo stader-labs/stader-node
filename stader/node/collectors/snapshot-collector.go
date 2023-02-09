@@ -33,7 +33,7 @@ type SnapshotCollector struct {
 	delegateVotingPower *prometheus.Desc
 
 	// The Rocket Pool config
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 
 	// the node wallet address
 	nodeAddress common.Address
@@ -43,7 +43,7 @@ type SnapshotCollector struct {
 }
 
 // Create a new SnapshotCollector instance
-func NewSnapshotCollector(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, nodeAddress common.Address, delegateAddres common.Address) *SnapshotCollector {
+func NewSnapshotCollector(rp *rocketpool.RocketPool, cfg *config.StaderConfig, nodeAddress common.Address, delegateAddres common.Address) *SnapshotCollector {
 	subsystem := "snapshot"
 	return &SnapshotCollector{
 		activeProposals: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "proposals_active"),

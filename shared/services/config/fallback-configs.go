@@ -30,7 +30,7 @@ type FallbackPrysmConfig struct {
 }
 
 // Generates a new FallbackNormalConfig configuration
-func NewFallbackNormalConfig(cfg *RocketPoolConfig) *FallbackNormalConfig {
+func NewFallbackNormalConfig(cfg *StaderConfig) *FallbackNormalConfig {
 	return &FallbackNormalConfig{
 		Title: "Fallback Client Settings",
 
@@ -61,7 +61,7 @@ func NewFallbackNormalConfig(cfg *RocketPoolConfig) *FallbackNormalConfig {
 }
 
 // Generates a new FallbackPrysmConfig configuration
-func NewFallbackPrysmConfig(cfg *RocketPoolConfig) *FallbackPrysmConfig {
+func NewFallbackPrysmConfig(cfg *StaderConfig) *FallbackPrysmConfig {
 	return &FallbackPrysmConfig{
 		Title: "Fallback Prysm Settings",
 

@@ -356,7 +356,7 @@ func getNodeTrusted(c *cli.Context) (bool, error) {
 // timeout of 0 indicates no timeout
 var ethClientSyncLock sync.Mutex
 
-func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.RocketPoolConfig) (bool, rocketpool.ExecutionClient, error) {
+func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.StaderConfig) (bool, rocketpool.ExecutionClient, error) {
 
 	// Check the EC status
 	mgrStatus := ecMgr.CheckStatus(cfg)

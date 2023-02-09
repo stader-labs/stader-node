@@ -16,7 +16,7 @@ const (
 )
 
 // Loads a config without updating it if it exists
-func LoadConfigFromFile(path string) (*config.RocketPoolConfig, error) {
+func LoadConfigFromFile(path string) (*config.StaderConfig, error) {
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return nil, nil
@@ -31,7 +31,7 @@ func LoadConfigFromFile(path string) (*config.RocketPoolConfig, error) {
 }
 
 // Saves a config and removes the upgrade flag file
-func SaveConfig(cfg *config.RocketPoolConfig, path string) error {
+func SaveConfig(cfg *config.StaderConfig, path string) error {
 
 	settings := cfg.Serialize()
 	configBytes, err := yaml.Marshal(settings)

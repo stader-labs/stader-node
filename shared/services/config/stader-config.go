@@ -49,7 +49,7 @@ const defaultWatchtowerMetricsPort uint16 = 9104
 const defaultEcMetricsPort uint16 = 9105
 
 // The master configuration struct
-type RocketPoolConfig struct {
+type StaderConfig struct {
 	Title string `yaml:"-"`
 
 	Version string `yaml:"-"`
@@ -124,7 +124,7 @@ type RocketPoolConfig struct {
 }
 
 // Load configuration settings from a file
-func LoadFromFile(path string) (*RocketPoolConfig, error) {
+func LoadFromFile(path string) (*StaderConfig, error) {
 
 	// Return nil if the file doesn't exist
 	_, err := os.Stat(path)
@@ -145,7 +145,7 @@ func LoadFromFile(path string) (*RocketPoolConfig, error) {
 	}
 
 	// Deserialize it into a config object
-	cfg := NewRocketPoolConfig(filepath.Dir(path), false)
+	cfg := NewStaderConfig(filepath.Dir(path), false)
 	err = cfg.Deserialize(settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not deserialize settings file: %w", err)
@@ -156,7 +156,7 @@ func LoadFromFile(path string) (*RocketPoolConfig, error) {
 }
 
 // Creates a new Stader configuration instance
-func NewRocketPoolConfig(rpDir string, isNativeMode bool) *RocketPoolConfig {
+func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 
 	clientModes := []config.ParameterOption{{
 		Name:        "Locally Managed",
@@ -168,7 +168,7 @@ func NewRocketPoolConfig(rpDir string, isNativeMode bool) *RocketPoolConfig {
 		Value:       config.Mode_External,
 	}}
 
-	cfg := &RocketPoolConfig{
+	cfg := &StaderConfig{
 		Title:               "Top-level Settings",
 		RocketPoolDirectory: rpDir,
 		IsNativeMode:        isNativeMode,
@@ -476,8 +476,8 @@ func getAugmentedEcDescription(client config.ExecutionClient, originalDescriptio
 }
 
 // Create a copy of this configuration.
-func (cfg *RocketPoolConfig) CreateCopy() *RocketPoolConfig {
-	newConfig := NewRocketPoolConfig(cfg.RocketPoolDirectory, cfg.IsNativeMode)
+func (cfg *StaderConfig) CreateCopy() *StaderConfig {
+	newConfig := NewStaderConfig(cfg.RocketPoolDirectory, cfg.IsNativeMode)
 
 	// Set the network
 	network := cfg.Smartnode.Network.Value.(config.Network)
@@ -502,7 +502,7 @@ func (cfg *RocketPoolConfig) CreateCopy() *RocketPoolConfig {
 }
 
 // Get the parameters for this config
-func (cfg *RocketPoolConfig) GetParameters() []*config.Parameter {
+func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 	return []*config.Parameter{
 		&cfg.ExecutionClientMode,
 		&cfg.ExecutionClient,
@@ -525,7 +525,7 @@ func (cfg *RocketPoolConfig) GetParameters() []*config.Parameter {
 }
 
 // Get the subconfigurations for this config
-func (cfg *RocketPoolConfig) GetSubconfigs() map[string]config.Config {
+func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 	return map[string]config.Config{
 		"smartnode":          cfg.Smartnode,
 		"executionCommon":    cfg.ExecutionCommon,
@@ -554,7 +554,7 @@ func (cfg *RocketPoolConfig) GetSubconfigs() map[string]config.Config {
 }
 
 // Handle a network change on all of the parameters
-func (cfg *RocketPoolConfig) ChangeNetwork(newNetwork config.Network) {
+func (cfg *StaderConfig) ChangeNetwork(newNetwork config.Network) {
 
 	// Get the current network
 	oldNetwork, ok := cfg.Smartnode.Network.Value.(config.Network)
@@ -583,7 +583,7 @@ func (cfg *RocketPoolConfig) ChangeNetwork(newNetwork config.Network) {
 }
 
 // Get the configuration for the selected execution client
-func (cfg *RocketPoolConfig) GetEventLogInterval() (int, error) {
+func (cfg *StaderConfig) GetEventLogInterval() (int, error) {
 	if cfg.IsNativeMode {
 		return gethEventLogInterval, nil
 	}
@@ -612,7 +612,7 @@ func (cfg *RocketPoolConfig) GetEventLogInterval() (int, error) {
 }
 
 // Get the selected CC and mode
-func (cfg *RocketPoolConfig) GetSelectedConsensusClient() (config.ConsensusClient, config.Mode) {
+func (cfg *StaderConfig) GetSelectedConsensusClient() (config.ConsensusClient, config.Mode) {
 	mode := cfg.ConsensusClientMode.Value.(config.Mode)
 	var cc config.ConsensusClient
 	if mode == config.Mode_Local {
@@ -624,7 +624,7 @@ func (cfg *RocketPoolConfig) GetSelectedConsensusClient() (config.ConsensusClien
 }
 
 // Get the configuration for the selected consensus client
-func (cfg *RocketPoolConfig) GetSelectedConsensusClientConfig() (config.ConsensusConfig, error) {
+func (cfg *StaderConfig) GetSelectedConsensusClientConfig() (config.ConsensusConfig, error) {
 	if cfg.IsNativeMode {
 		return nil, fmt.Errorf("consensus config is not available in native mode")
 	}
@@ -665,7 +665,7 @@ func (cfg *RocketPoolConfig) GetSelectedConsensusClientConfig() (config.Consensu
 }
 
 // Check if doppelganger protection is enabled
-func (cfg *RocketPoolConfig) IsDoppelgangerEnabled() (bool, error) {
+func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 	if cfg.IsNativeMode {
 		return false, fmt.Errorf("consensus config is not available in native mode")
 	}
@@ -706,7 +706,7 @@ func (cfg *RocketPoolConfig) IsDoppelgangerEnabled() (bool, error) {
 }
 
 // Serializes the configuration into a map of maps, compatible with a settings file
-func (cfg *RocketPoolConfig) Serialize() map[string]map[string]string {
+func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 
 	masterMap := map[string]map[string]string{}
 
@@ -733,7 +733,7 @@ func (cfg *RocketPoolConfig) Serialize() map[string]map[string]string {
 }
 
 // Deserializes a settings file into this config
-func (cfg *RocketPoolConfig) Deserialize(masterMap map[string]map[string]string) error {
+func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) error {
 
 	// Upgrade the config to the latest version
 	err := migration.UpdateConfig(masterMap)
@@ -789,7 +789,7 @@ func (cfg *RocketPoolConfig) Deserialize(masterMap map[string]map[string]string)
 }
 
 // Generates a collection of environment variables based on this config's settings
-func (cfg *RocketPoolConfig) GenerateEnvironmentVariables() map[string]string {
+func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 
 	envVars := map[string]string{}
 
@@ -976,12 +976,12 @@ func (cfg *RocketPoolConfig) GenerateEnvironmentVariables() map[string]string {
 }
 
 // The the title for the config
-func (cfg *RocketPoolConfig) GetConfigTitle() string {
+func (cfg *StaderConfig) GetConfigTitle() string {
 	return cfg.Title
 }
 
 // Update the default settings for all overwrite-on-upgrade parameters
-func (cfg *RocketPoolConfig) UpdateDefaults() error {
+func (cfg *StaderConfig) UpdateDefaults() error {
 	// Update the root params
 	currentNetwork := cfg.Smartnode.Network.Value.(config.Network)
 	for _, param := range cfg.GetParameters() {
@@ -1011,7 +1011,7 @@ func (cfg *RocketPoolConfig) UpdateDefaults() error {
 }
 
 // Get all of the settings that have changed between an old config and this config, and get all of the containers that are affected by those changes - also returns whether or not the selected network was changed
-func (cfg *RocketPoolConfig) GetChanges(oldConfig *RocketPoolConfig) (map[string][]config.ChangedSetting, map[config.ContainerID]bool, bool) {
+func (cfg *StaderConfig) GetChanges(oldConfig *StaderConfig) (map[string][]config.ChangedSetting, map[config.ContainerID]bool, bool) {
 	// Get the map of changed settings by category
 	changedSettings := getChangedSettingsMap(oldConfig, cfg)
 
@@ -1036,7 +1036,7 @@ func (cfg *RocketPoolConfig) GetChanges(oldConfig *RocketPoolConfig) (map[string
 }
 
 // Checks to see if the current configuration is valid; if not, returns a list of errors
-func (cfg *RocketPoolConfig) Validate() []string {
+func (cfg *StaderConfig) Validate() []string {
 	errors := []string{}
 
 	// Check for illegal blank strings
@@ -1089,7 +1089,7 @@ func (cfg *RocketPoolConfig) Validate() []string {
 				errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
 			}
 		default:
-			errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `rocketpool service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
+			errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `stader-cli service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
 		}
 	}
 
@@ -1097,7 +1097,7 @@ func (cfg *RocketPoolConfig) Validate() []string {
 }
 
 // Applies all of the defaults to all of the settings that have them defined
-func (cfg *RocketPoolConfig) applyAllDefaults() error {
+func (cfg *StaderConfig) applyAllDefaults() error {
 	for _, param := range cfg.GetParameters() {
 		err := param.SetToDefault(cfg.Smartnode.Network.Value.(config.Network))
 		if err != nil {
@@ -1118,7 +1118,7 @@ func (cfg *RocketPoolConfig) applyAllDefaults() error {
 }
 
 // Get all of the changed settings between an old and new config
-func getChangedSettingsMap(oldConfig *RocketPoolConfig, newConfig *RocketPoolConfig) map[string][]config.ChangedSetting {
+func getChangedSettingsMap(oldConfig *StaderConfig, newConfig *StaderConfig) map[string][]config.ChangedSetting {
 	changedSettings := map[string][]config.ChangedSetting{}
 
 	// Root settings
@@ -1140,7 +1140,7 @@ func getChangedSettingsMap(oldConfig *RocketPoolConfig, newConfig *RocketPoolCon
 // Get all of the settings that have changed between the given parameter lists.
 // Assumes the parameter lists represent identical parameters (e.g. they have the same number of elements and
 // each element has the same ID).
-func getChangedSettings(oldParams []*config.Parameter, newParams []*config.Parameter, newConfig *RocketPoolConfig) []config.ChangedSetting {
+func getChangedSettings(oldParams []*config.Parameter, newParams []*config.Parameter, newConfig *StaderConfig) []config.ChangedSetting {
 	changedSettings := []config.ChangedSetting{}
 
 	for i, param := range newParams {
@@ -1160,7 +1160,7 @@ func getChangedSettings(oldParams []*config.Parameter, newParams []*config.Param
 }
 
 // Handles custom container overrides
-func getAffectedContainers(param *config.Parameter, cfg *RocketPoolConfig) map[config.ContainerID]bool {
+func getAffectedContainers(param *config.Parameter, cfg *StaderConfig) map[config.ContainerID]bool {
 
 	affectedContainers := map[config.ContainerID]bool{}
 

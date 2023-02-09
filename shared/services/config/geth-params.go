@@ -41,7 +41,7 @@ type GethConfig struct {
 }
 
 // Generates a new Geth configuration
-func NewGethConfig(cfg *RocketPoolConfig) *GethConfig {
+func NewGethConfig(cfg *StaderConfig) *GethConfig {
 	return &GethConfig{
 		Title: "Geth Settings",
 

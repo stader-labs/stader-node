@@ -43,7 +43,7 @@ type BesuConfig struct {
 }
 
 // Generates a new Besu configuration
-func NewBesuConfig(cfg *RocketPoolConfig) *BesuConfig {
+func NewBesuConfig(cfg *StaderConfig) *BesuConfig {
 	return &BesuConfig{
 		Title: "Besu Settings",
 

@@ -30,7 +30,7 @@ const MinipoolStatusBatchSize = 20
 type dissolveTimedOutMinipools struct {
 	c   *cli.Context
 	log log.ColorLogger
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 	w   *wallet.Wallet
 	ec  rocketpool.ExecutionClient
 	rp  *rocketpool.RocketPool

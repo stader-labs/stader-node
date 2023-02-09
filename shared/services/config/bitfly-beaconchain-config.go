@@ -23,7 +23,7 @@ type BitflyNodeMetricsConfig struct {
 }
 
 // Generates a new Bitfly Node Metrics config
-func NewBitflyNodeMetricsConfig(cfg *RocketPoolConfig) *BitflyNodeMetricsConfig {
+func NewBitflyNodeMetricsConfig(cfg *StaderConfig) *BitflyNodeMetricsConfig {
 	return &BitflyNodeMetricsConfig{
 		Title: "Bitfly Node Metrics Settings",
 

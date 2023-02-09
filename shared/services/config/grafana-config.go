@@ -22,7 +22,7 @@ type GrafanaConfig struct {
 }
 
 // Generates a new Grafana config
-func NewGrafanaConfig(cfg *RocketPoolConfig) *GrafanaConfig {
+func NewGrafanaConfig(cfg *StaderConfig) *GrafanaConfig {
 	return &GrafanaConfig{
 		Title: "Grafana Settings",
 

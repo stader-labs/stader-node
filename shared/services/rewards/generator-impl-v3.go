@@ -34,7 +34,7 @@ type treeGeneratorImpl_v3 struct {
 	log                  log.ColorLogger
 	logPrefix            string
 	rp                   *rocketpool.RocketPool
-	cfg                  *config.RocketPoolConfig
+	cfg                  *config.StaderConfig
 	bc                   beacon.Client
 	opts                 *bind.CallOpts
 	nodeAddresses        []common.Address
@@ -95,7 +95,7 @@ func (r *treeGeneratorImpl_v3) getRulesetVersion() uint64 {
 	return r.rewardsFile.RulesetVersion
 }
 
-func (r *treeGeneratorImpl_v3) generateTree(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, bc beacon.Client) (*RewardsFile, error) {
+func (r *treeGeneratorImpl_v3) generateTree(rp *rocketpool.RocketPool, cfg *config.StaderConfig, bc beacon.Client) (*RewardsFile, error) {
 
 	r.log.Printlnf("%s Generating tree using Ruleset v%d.", r.logPrefix, r.rewardsFile.RulesetVersion)
 
@@ -163,7 +163,7 @@ func (r *treeGeneratorImpl_v3) generateTree(rp *rocketpool.RocketPool, cfg *conf
 
 // Quickly calculates an approximate of the staker's share of the smoothing pool balance without processing Beacon performance
 // Used for approximate returns in the rETH ratio update
-func (r *treeGeneratorImpl_v3) approximateStakerShareOfSmoothingPool(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, bc beacon.Client) (*big.Int, error) {
+func (r *treeGeneratorImpl_v3) approximateStakerShareOfSmoothingPool(rp *rocketpool.RocketPool, cfg *config.StaderConfig, bc beacon.Client) (*big.Int, error) {
 	r.log.Printlnf("%s Approximating tree using Ruleset v%d.", r.logPrefix, r.rewardsFile.RulesetVersion)
 
 	r.rp = rp

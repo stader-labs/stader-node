@@ -47,7 +47,7 @@ type ConsensusCommonConfig struct {
 }
 
 // Create a new ConsensusCommonParams struct
-func NewConsensusCommonConfig(cfg *RocketPoolConfig) *ConsensusCommonConfig {
+func NewConsensusCommonConfig(cfg *StaderConfig) *ConsensusCommonConfig {
 	return &ConsensusCommonConfig{
 		Title: "Common Consensus Client Settings",
 

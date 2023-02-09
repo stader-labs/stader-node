@@ -31,7 +31,7 @@ type NimbusConfig struct {
 }
 
 // Generates a new Nimbus configuration
-func NewNimbusConfig(cfg *RocketPoolConfig) *NimbusConfig {
+func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 	return &NimbusConfig{
 		Title: "Nimbus Settings",
 

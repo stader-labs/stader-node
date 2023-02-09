@@ -19,7 +19,7 @@ import (
 type respondChallenges struct {
 	c   *cli.Context
 	log log.ColorLogger
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 	w   *wallet.Wallet
 	rp  *rocketpool.RocketPool
 }

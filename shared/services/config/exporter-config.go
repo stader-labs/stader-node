@@ -25,7 +25,7 @@ type ExporterConfig struct {
 }
 
 // Generates a new Exporter config
-func NewExporterConfig(cfg *RocketPoolConfig) *ExporterConfig {
+func NewExporterConfig(cfg *StaderConfig) *ExporterConfig {
 	return &ExporterConfig{
 		Title: "Node Exporter Settings",
 

@@ -23,7 +23,7 @@ const BeaconContainerSuffix = "_eth2"
 var validatorRestartTimeout, _ = time.ParseDuration("5s")
 
 // Restart validator process
-func RestartValidator(cfg *config.RocketPoolConfig, bc beacon.Client, log *log.ColorLogger, d *client.Client) error {
+func RestartValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.ColorLogger, d *client.Client) error {
 
 	// Restart validator container
 	if !cfg.IsNativeMode {
@@ -104,7 +104,7 @@ func RestartValidator(cfg *config.RocketPoolConfig, bc beacon.Client, log *log.C
 }
 
 // Stops the validator process
-func StopValidator(cfg *config.RocketPoolConfig, bc beacon.Client, log *log.ColorLogger, d *client.Client) error {
+func StopValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.ColorLogger, d *client.Client) error {
 
 	// Stop validator container
 	if !cfg.IsNativeMode {

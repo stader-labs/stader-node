@@ -42,7 +42,7 @@ type SmartnodeConfig struct {
 	Title string `yaml:"-"`
 
 	// The parent config
-	parent *RocketPoolConfig
+	parent *StaderConfig
 
 	////////////////////////////
 	// User-editable settings //
@@ -135,7 +135,7 @@ type SmartnodeConfig struct {
 }
 
 // Generates a new Smartnode configuration
-func NewSmartnodeConfig(cfg *RocketPoolConfig) *SmartnodeConfig {
+func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 
 	return &SmartnodeConfig{
 		Title:  "Smartnode Settings",
@@ -530,7 +530,7 @@ func (cfg *SmartnodeConfig) GetRethAddress() common.Address {
 	return common.HexToAddress(cfg.rethAddress[cfg.Network.Value.(config.Network)])
 }
 
-func getDefaultDataDir(config *RocketPoolConfig) string {
+func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.RocketPoolDirectory, "data")
 }
 

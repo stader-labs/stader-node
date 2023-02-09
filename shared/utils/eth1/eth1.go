@@ -63,7 +63,7 @@ func CheckForNonceOverride(c *cli.Context, opts *bind.TransactOpts) error {
 }
 
 // Determines if the primary EC can be used for historical queries, or if the Archive EC is required
-func GetBestApiClient(primary *rocketpool.RocketPool, cfg *config.RocketPoolConfig, printMessage func(string), blockNumber *big.Int) (*rocketpool.RocketPool, error) {
+func GetBestApiClient(primary *rocketpool.RocketPool, cfg *config.StaderConfig, printMessage func(string), blockNumber *big.Int) (*rocketpool.RocketPool, error) {
 
 	client := primary
 

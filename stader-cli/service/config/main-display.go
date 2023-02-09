@@ -26,15 +26,15 @@ type mainDisplay struct {
 	isNative            bool
 	previousWidth       int
 	previousHeight      int
-	PreviousConfig      *config.RocketPoolConfig
-	Config              *config.RocketPoolConfig
+	PreviousConfig      *config.StaderConfig
+	Config              *config.StaderConfig
 	ShouldSave          bool
 	ContainersToRestart []cfgtypes.ContainerID
 	ChangeNetworks      bool
 }
 
 // Creates a new MainDisplay instance.
-func NewMainDisplay(app *tview.Application, previousConfig *config.RocketPoolConfig, config *config.RocketPoolConfig, isNew bool, isMigration bool, isUpdate bool, isNative bool) *mainDisplay {
+func NewMainDisplay(app *tview.Application, previousConfig *config.StaderConfig, config *config.StaderConfig, isNew bool, isMigration bool, isUpdate bool, isNative bool) *mainDisplay {
 
 	// Create a copy of the original config for comparison purposes
 	if previousConfig == nil {
@@ -48,9 +48,9 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.RocketPoolCon
 
 	grid.SetBorder(true).
 		SetTitle(fmt.Sprintf(" Stader Node %s Configuration ", shared.StaderVersion)).
-		SetBorderColor(tcell.ColorOrange).
-		SetTitleColor(tcell.ColorOrange).
-		SetBackgroundColor(tcell.ColorBlack)
+		SetBorderColor(tcell.ColorPapayaWhip).
+		SetTitleColor(tcell.ColorPapayaWhip).
+		SetBackgroundColor(tcell.ColorDarkOliveGreen.TrueColor())
 
 	// Create the navigation header
 	navHeader := tview.NewTextView().

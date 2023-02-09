@@ -46,7 +46,7 @@ type ExecutionCommonConfig struct {
 }
 
 // Create a new ExecutionCommonConfig struct
-func NewExecutionCommonConfig(cfg *RocketPoolConfig) *ExecutionCommonConfig {
+func NewExecutionCommonConfig(cfg *StaderConfig) *ExecutionCommonConfig {
 	return &ExecutionCommonConfig{
 		Title: "Common Execution Client Settings",
 

@@ -37,7 +37,7 @@ type TekuConfig struct {
 }
 
 // Generates a new Teku configuration
-func NewTekuConfig(cfg *RocketPoolConfig) *TekuConfig {
+func NewTekuConfig(cfg *StaderConfig) *TekuConfig {
 	return &TekuConfig{
 		Title: "Teku Settings",
 

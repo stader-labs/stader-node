@@ -1,6 +1,7 @@
 package shared
 
 const StaderVersion string = "1.7.2-dev"
+const IntVersion = "1.7.2-dev"
 
 const Logo string = `  
    _____ _            _             _           _         

@@ -17,7 +17,7 @@ const (
 
 // Checks if the fee recipient file exists and has the correct distributor address in it.
 // The first return value is for file existence, the second is for validation of the fee recipient address inside.
-func CheckFeeRecipientFile(feeRecipient common.Address, cfg *config.RocketPoolConfig) (bool, bool, error) {
+func CheckFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfig) (bool, bool, error) {
 
 	// Check if the file exists
 	path := cfg.Smartnode.GetFeeRecipientFilePath()
@@ -45,7 +45,7 @@ func CheckFeeRecipientFile(feeRecipient common.Address, cfg *config.RocketPoolCo
 }
 
 // Writes the given address to the fee recipient file. The VC should be restarted to pick up the new file.
-func UpdateFeeRecipientFile(feeRecipient common.Address, cfg *config.RocketPoolConfig) error {
+func UpdateFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfig) error {
 
 	// Create the distributor address string for the node
 	expectedString := getFeeRecipientFileContents(feeRecipient, cfg)
@@ -62,7 +62,7 @@ func UpdateFeeRecipientFile(feeRecipient common.Address, cfg *config.RocketPoolC
 }
 
 // Gets the expected contents of the fee recipient file
-func getFeeRecipientFileContents(feeRecipient common.Address, cfg *config.RocketPoolConfig) string {
+func getFeeRecipientFileContents(feeRecipient common.Address, cfg *config.StaderConfig) string {
 	if !cfg.IsNativeMode {
 		// Docker mode
 		return feeRecipient.Hex()

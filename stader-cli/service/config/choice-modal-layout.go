@@ -56,16 +56,16 @@ func newChoiceModalLayout(app *tview.Application, title string, width int, text 
 		SetWordWrap(true).
 		SetDynamicColors(true).
 		SetTextColor(tview.Styles.PrimaryTextColor)
-	textView.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	textView.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	textView.SetBorderPadding(0, 0, 1, 1)
 
 	// Row spacers with the correct background color
 	spacer1 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 	spacer2 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 	spacer3 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 	// The main content grid
 	contentGrid := tview.NewGrid().
@@ -76,7 +76,7 @@ func newChoiceModalLayout(app *tview.Application, title string, width int, text 
 		AddItem(layout.buttonGrid, 3, 0, 1, 1, 0, 0, true).
 		AddItem(spacer3, 4, 0, 1, 1, 0, 0, false)
 	contentGrid.
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
+		SetBackgroundColor(tcell.ColorRebeccaPurple).
 		SetBorder(true).
 		SetTitle(" " + title + " ")
 	layout.buttonGrid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -144,7 +144,7 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 
 	buttonGrid := tview.NewGrid().
 		SetRows(0)
-	buttonGrid.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	buttonGrid.SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 	// This tracks the length of the buttons themselves
 	buttonsWidth := 0
@@ -161,7 +161,7 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 			SetButtonBackgroundActivatedColor(tcell.Color46).
 			SetButtonTextActivatedColor(tcell.ColorBlack)
 		form.
-			SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
+			SetBackgroundColor(tcell.ColorRebeccaPurple).
 			SetBorderPadding(0, 0, 0, 0)
 
 		// Create the buttons and add listeners
@@ -191,8 +191,8 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 		// Create the columns, including the left and right spacers
 		buttonsWidth -= 2
 		buttonGrid.SetColumns(0, buttonsWidth, 0)
-		leftSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
-		rightSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		leftSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+		rightSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 		buttonGrid.
 			AddItem(leftSpacer, 0, 0, 1, 1, 0, 0, false).
 			AddItem(form, 0, 1, 1, 1, 0, 0, true).
@@ -207,7 +207,7 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 			SetDirection(tview.FlexRow)
 		if len(buttonDescriptions) > 0 {
 			// Add a spacing row to make the first button line up with the description box
-			spacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+			spacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 			formsFlex.AddItem(spacer, 1, 1, false)
 		}
 
@@ -225,7 +225,7 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 					SetButtonTextColor(tcell.ColorLightGray).
 					SetButtonBackgroundActivatedColor(tcell.Color46).
 					SetButtonTextActivatedColor(tcell.ColorBlack)
-				form.SetBackgroundColor(tview.Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
+				form.SetBackgroundColor(tcell.ColorRebeccaPurple).SetBorderPadding(0, 0, 0, 0)
 				form.AddButton(label, func() {
 					if layout.done != nil {
 						layout.done(i, l)
@@ -270,12 +270,12 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 				// Add the form to the layout's list of forms
 				layout.forms = append(layout.forms, form)
 				formsFlex.AddItem(form, 1, 1, true)
-				spacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+				spacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 				formsFlex.AddItem(spacer, 1, 1, false)
 			}(index, label)
 		}
 
-		bottomFormSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		bottomFormSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 		formsFlex.AddItem(bottomFormSpacer, 0, 2, false)
 
 		// Create the columns, including the left and right spacers
@@ -283,8 +283,8 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 		if len(buttonDescriptions) == 0 {
 			buttonGrid.SetColumns(0, buttonsWidth, 0)
 
-			leftSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
-			rightSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+			leftSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+			rightSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 			buttonGrid.AddItem(leftSpacer, 0, 0, 1, 1, 0, 0, false)
 			buttonGrid.AddItem(formsFlex, 0, 1, 1, 1, 0, 0, true)
@@ -298,12 +298,12 @@ func (layout *choiceModalLayout) createButtonGrid(buttonLabels []string, buttonD
 				SetDynamicColors(true)
 			layout.descriptionBox.SetBorder(true)
 			layout.descriptionBox.SetBorderPadding(0, 0, 1, 1)
-			layout.descriptionBox.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+			layout.descriptionBox.SetBackgroundColor(tcell.ColorRebeccaPurple)
 			layout.descriptionBox.SetTitle("Description")
 
-			leftSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
-			midSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
-			rightSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+			leftSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+			midSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+			rightSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 			buttonGrid.SetColumns(1, -2, 1, -5, 1)
 			buttonGrid.AddItem(leftSpacer, 0, 0, 1, 1, 0, 0, false)

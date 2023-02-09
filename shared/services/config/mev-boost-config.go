@@ -83,13 +83,13 @@ type MevBoostConfig struct {
 	// Non-editable settings //
 	///////////////////////////
 
-	parentConfig *RocketPoolConfig                     `yaml:"-"`
+	parentConfig *StaderConfig                         `yaml:"-"`
 	relays       []config.MevRelay                     `yaml:"-"`
 	relayMap     map[config.MevRelayID]config.MevRelay `yaml:"-"`
 }
 
 // Generates a new MEV-Boost configuration
-func NewMevBoostConfig(cfg *RocketPoolConfig) *MevBoostConfig {
+func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 	// Generate the relays
 	relays := createDefaultRelays()
 	relayMap := map[config.MevRelayID]config.MevRelay{}

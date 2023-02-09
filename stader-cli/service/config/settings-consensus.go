@@ -11,7 +11,7 @@ type ConsensusConfigPage struct {
 	home                    *settingsHome
 	page                    *page
 	layout                  *standardLayout
-	masterConfig            *config.RocketPoolConfig
+	masterConfig            *config.StaderConfig
 	ccModeDropdown          *parameterizedFormItem
 	ccDropdown              *parameterizedFormItem
 	externalCcDropdown      *parameterizedFormItem

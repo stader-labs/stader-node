@@ -29,7 +29,7 @@ type PrometheusConfig struct {
 }
 
 // Generates a new Prometheus config
-func NewPrometheusConfig(cfg *RocketPoolConfig) *PrometheusConfig {
+func NewPrometheusConfig(cfg *StaderConfig) *PrometheusConfig {
 	return &PrometheusConfig{
 		Title: "Prometheus Settings",
 

@@ -150,7 +150,7 @@ func (c *Client) Close() {
 }
 
 // Load the config
-func (c *Client) LoadConfig() (*config.RocketPoolConfig, bool, error) {
+func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 	settingsFilePath := filepath.Join(c.configPath, SettingsFile)
 	expandedPath, err := homedir.Expand(settingsFilePath)
 	if err != nil {
@@ -164,14 +164,14 @@ func (c *Client) LoadConfig() (*config.RocketPoolConfig, bool, error) {
 
 	isNew := false
 	if cfg == nil {
-		cfg = config.NewRocketPoolConfig(c.configPath, c.daemonPath != "")
+		cfg = config.NewStaderConfig(c.configPath, c.daemonPath != "")
 		isNew = true
 	}
 	return cfg, isNew, nil
 }
 
 // Load the backup config
-func (c *Client) LoadBackupConfig() (*config.RocketPoolConfig, error) {
+func (c *Client) LoadBackupConfig() (*config.StaderConfig, error) {
 	settingsFilePath := filepath.Join(c.configPath, BackupSettingsFile)
 	expandedPath, err := homedir.Expand(settingsFilePath)
 	if err != nil {
@@ -182,7 +182,7 @@ func (c *Client) LoadBackupConfig() (*config.RocketPoolConfig, error) {
 }
 
 // Save the config
-func (c *Client) SaveConfig(cfg *config.RocketPoolConfig) error {
+func (c *Client) SaveConfig(cfg *config.StaderConfig) error {
 	settingsFilePath := filepath.Join(c.configPath, SettingsFile)
 	expandedPath, err := homedir.Expand(settingsFilePath)
 	if err != nil {
@@ -210,7 +210,7 @@ func (c *Client) IsFirstRun() (bool, error) {
 }
 
 // Load the legacy config if one exists
-func (c *Client) LoadLegacyConfigFromBackup() (*config.RocketPoolConfig, error) {
+func (c *Client) LoadLegacyConfigFromBackup() (*config.StaderConfig, error) {
 	// Check if the backup config file exists
 	configPath, err := homedir.Expand(filepath.Join(c.configPath, LegacyBackupFolder, LegacyConfigFile))
 	if err != nil {
@@ -283,7 +283,7 @@ func (c *Client) UpdatePrometheusConfiguration(settings map[string]string) error
 }
 
 // Migrate a legacy configuration (pre-v1.3) to a modern post-v1.3 one
-func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettingsFilePath string) (*config.RocketPoolConfig, error) {
+func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettingsFilePath string) (*config.StaderConfig, error) {
 
 	// Check if the files exist
 	_, err := os.Stat(legacyConfigFilePath)
@@ -301,7 +301,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	if err != nil {
 		return nil, fmt.Errorf("error loading legacy configuration: %w", err)
 	}
-	cfg := config.NewRocketPoolConfig(c.configPath, isNative)
+	cfg := config.NewStaderConfig(c.configPath, isNative)
 
 	// Do the conversion
 
@@ -1656,7 +1656,7 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 }
 
 // Deploys all of the appropriate docker compose template files and provisions them based on the provided configuration
-func (c *Client) deployTemplates(cfg *config.RocketPoolConfig, rocketpoolDir string, settings map[string]string) ([]string, error) {
+func (c *Client) deployTemplates(cfg *config.StaderConfig, rocketpoolDir string, settings map[string]string) ([]string, error) {
 
 	// Check for the folders
 	runtimeFolder := filepath.Join(rocketpoolDir, runtimeDir)
@@ -1864,7 +1864,7 @@ func (c *Client) deployTemplates(cfg *config.RocketPoolConfig, rocketpoolDir str
 }
 
 // Handle composing for addons
-func (c *Client) composeAddons(cfg *config.RocketPoolConfig, rocketpoolDir string, settings map[string]string, deployedContainers []string) ([]string, error) {
+func (c *Client) composeAddons(cfg *config.StaderConfig, rocketpoolDir string, settings map[string]string, deployedContainers []string) ([]string, error) {
 
 	// GWW
 	if cfg.GraffitiWallWriter.GetEnabledParameter().Value == true {

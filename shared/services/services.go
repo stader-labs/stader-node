@@ -35,7 +35,7 @@ const (
 
 // Service instances & initializers
 var (
-	cfg                *config.RocketPoolConfig
+	cfg                *config.StaderConfig
 	passwordManager    *passwords.PasswordManager
 	nodeWallet         *wallet.Wallet
 	ecManager          *ExecutionClientManager
@@ -64,7 +64,7 @@ var (
 // Service providers
 //
 
-func GetConfig(c *cli.Context) (*config.RocketPoolConfig, error) {
+func GetConfig(c *cli.Context) (*config.StaderConfig, error) {
 	return getConfig(c)
 }
 
@@ -218,7 +218,7 @@ func GetDocker(c *cli.Context) (*client.Client, error) {
 // Service instance getters
 //
 
-func getConfig(c *cli.Context) (*config.RocketPoolConfig, error) {
+func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 	var err error
 	initCfg.Do(func() {
 		settingsFile := os.ExpandEnv(c.GlobalString("settings"))
@@ -230,14 +230,14 @@ func getConfig(c *cli.Context) (*config.RocketPoolConfig, error) {
 	return cfg, err
 }
 
-func getPasswordManager(cfg *config.RocketPoolConfig) *passwords.PasswordManager {
+func getPasswordManager(cfg *config.StaderConfig) *passwords.PasswordManager {
 	initPasswordManager.Do(func() {
 		passwordManager = passwords.NewPasswordManager(os.ExpandEnv(cfg.Smartnode.GetPasswordPath()))
 	})
 	return passwordManager
 }
 
-func getWallet(c *cli.Context, cfg *config.RocketPoolConfig, pm *passwords.PasswordManager) (*wallet.Wallet, error) {
+func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordManager) (*wallet.Wallet, error) {
 	var err error
 	initNodeWallet.Do(func() {
 		var maxFee *big.Int
@@ -278,7 +278,7 @@ func getWallet(c *cli.Context, cfg *config.RocketPoolConfig, pm *passwords.Passw
 	return nodeWallet, err
 }
 
-func getEthClient(c *cli.Context, cfg *config.RocketPoolConfig) (*ExecutionClientManager, error) {
+func getEthClient(c *cli.Context, cfg *config.StaderConfig) (*ExecutionClientManager, error) {
 	var err error
 	initECManager.Do(func() {
 		// Create a new client manager
@@ -296,7 +296,7 @@ func getEthClient(c *cli.Context, cfg *config.RocketPoolConfig) (*ExecutionClien
 	return ecManager, err
 }
 
-func getRocketPool(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClient) (*rocketpool.RocketPool, error) {
+func getRocketPool(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*rocketpool.RocketPool, error) {
 	var err error
 	initRocketPool.Do(func() {
 		rocketPool, err = rocketpool.NewRocketPool(client, common.HexToAddress(cfg.Smartnode.GetStorageAddress()))
@@ -304,7 +304,7 @@ func getRocketPool(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClie
 	return rocketPool, err
 }
 
-func getOneInchOracle(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClient) (*contracts.OneInchOracle, error) {
+func getOneInchOracle(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.OneInchOracle, error) {
 	var err error
 	initOneInchOracle.Do(func() {
 		oneInchOracle, err = contracts.NewOneInchOracle(common.HexToAddress(cfg.Smartnode.GetOneInchOracleAddress()), client)
@@ -312,7 +312,7 @@ func getOneInchOracle(cfg *config.RocketPoolConfig, client rocketpool.ExecutionC
 	return oneInchOracle, err
 }
 
-func getRplFaucet(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClient) (*contracts.RPLFaucet, error) {
+func getRplFaucet(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.RPLFaucet, error) {
 	var err error
 	initRplFaucet.Do(func() {
 		rplFaucet, err = contracts.NewRPLFaucet(common.HexToAddress(cfg.Smartnode.GetRplFaucetAddress()), client)
@@ -320,7 +320,7 @@ func getRplFaucet(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClien
 	return rplFaucet, err
 }
 
-func getSnapshotDelegation(cfg *config.RocketPoolConfig, client rocketpool.ExecutionClient) (*contracts.SnapshotDelegation, error) {
+func getSnapshotDelegation(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.SnapshotDelegation, error) {
 	var err error
 	initSnapshotDelegation.Do(func() {
 		snapshotDelegation, err = contracts.NewSnapshotDelegation(common.HexToAddress(cfg.Smartnode.GetSnapshotDelegationAddress()), client)
@@ -328,7 +328,7 @@ func getSnapshotDelegation(cfg *config.RocketPoolConfig, client rocketpool.Execu
 	return snapshotDelegation, err
 }
 
-func getBeaconClient(c *cli.Context, cfg *config.RocketPoolConfig) (*BeaconClientManager, error) {
+func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientManager, error) {
 	var err error
 	initBCManager.Do(func() {
 		// Create a new client manager

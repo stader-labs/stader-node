@@ -33,7 +33,7 @@ const MinipoolWithdrawableDetailsBatchSize = 20
 type submitWithdrawableMinipools struct {
 	c   *cli.Context
 	log log.ColorLogger
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 	w   *wallet.Wallet
 	rp  *rocketpool.RocketPool
 	bc  beacon.Client

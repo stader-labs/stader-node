@@ -34,7 +34,7 @@ type bcFunction1 func(beacon.Client) (interface{}, error)
 type bcFunction2 func(beacon.Client) (interface{}, interface{}, error)
 
 // Creates a new BeaconClientManager instance based on the Stader config
-func NewBeaconClientManager(cfg *config.RocketPoolConfig) (*BeaconClientManager, error) {
+func NewBeaconClientManager(cfg *config.StaderConfig) (*BeaconClientManager, error) {
 
 	// Primary CC
 	var primaryProvider string

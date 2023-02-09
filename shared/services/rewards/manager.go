@@ -79,7 +79,7 @@ func GetClaimStatus(rp *rocketpool.RocketPool, nodeAddress common.Address) (uncl
 }
 
 // Gets the information for an interval including the file status, the validity, and the node's rewards
-func GetIntervalInfo(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, nodeAddress common.Address, interval uint64) (info IntervalInfo, err error) {
+func GetIntervalInfo(rp *rocketpool.RocketPool, cfg *config.StaderConfig, nodeAddress common.Address, interval uint64) (info IntervalInfo, err error) {
 	info.Index = interval
 	var event rewards.RewardsEvent
 
@@ -146,7 +146,7 @@ func GetIntervalInfo(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, no
 }
 
 // Get the event for a rewards snapshot
-func GetRewardSnapshotEvent(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, interval uint64) (rewards.RewardsEvent, error) {
+func GetRewardSnapshotEvent(rp *rocketpool.RocketPool, cfg *config.StaderConfig, interval uint64) (rewards.RewardsEvent, error) {
 
 	var event rewards.RewardsEvent
 	var err error
@@ -330,7 +330,7 @@ func GetELBlockHeaderForTime(targetTime time.Time, rp *rocketpool.RocketPool) (*
 }
 
 // Downloads a single rewards file
-func DownloadRewardsFile(cfg *config.RocketPoolConfig, interval uint64, cid string, isDaemon bool) error {
+func DownloadRewardsFile(cfg *config.StaderConfig, interval uint64, cid string, isDaemon bool) error {
 
 	// Determine file name and path
 	rewardsTreePath, err := homedir.Expand(cfg.Smartnode.GetRewardsTreePath(interval, isDaemon))

@@ -34,7 +34,7 @@ type LighthouseConfig struct {
 }
 
 // Generates a new Lighthouse configuration
-func NewLighthouseConfig(cfg *RocketPoolConfig) *LighthouseConfig {
+func NewLighthouseConfig(cfg *StaderConfig) *LighthouseConfig {
 	return &LighthouseConfig{
 		Title: "Lighthouse Settings",
 

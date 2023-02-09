@@ -52,7 +52,7 @@ type NethermindConfig struct {
 }
 
 // Generates a new Nethermind configuration
-func NewNethermindConfig(cfg *RocketPoolConfig) *NethermindConfig {
+func NewNethermindConfig(cfg *StaderConfig) *NethermindConfig {
 	return &NethermindConfig{
 		Title: "Nethermind Settings",
 

@@ -55,7 +55,7 @@ func PrintAndCheckGasInfo(gasInfo rocketpool.GasInfo, checkThreshold bool, gasTh
 }
 
 // Print a TX's details to the logger and waits for it to validated.
-func PrintAndWaitForTransaction(cfg *config.RocketPoolConfig, hash common.Hash, ec rocketpool.ExecutionClient, logger log.ColorLogger) error {
+func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec rocketpool.ExecutionClient, logger log.ColorLogger) error {
 
 	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
 	hashString := hash.String()

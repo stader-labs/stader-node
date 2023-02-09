@@ -35,7 +35,7 @@ type ExecutionClientManager struct {
 type ecFunction func(*ethclient.Client) (interface{}, error)
 
 // Creates a new ExecutionClientManager instance based on the Stader config
-func NewExecutionClientManager(cfg *config.RocketPoolConfig) (*ExecutionClientManager, error) {
+func NewExecutionClientManager(cfg *config.StaderConfig) (*ExecutionClientManager, error) {
 
 	var primaryEcUrl string
 	var fallbackEcUrl string
@@ -332,7 +332,7 @@ func (p *ExecutionClientManager) SyncProgress(ctx context.Context) (*ethereum.Sy
 /// Internal functions
 /// ==================
 
-func (p *ExecutionClientManager) CheckStatus(cfg *config.RocketPoolConfig) *api.ClientManagerStatus {
+func (p *ExecutionClientManager) CheckStatus(cfg *config.StaderConfig) *api.ClientManagerStatus {
 
 	status := &api.ClientManagerStatus{
 		FallbackEnabled: p.fallbackEc != nil,

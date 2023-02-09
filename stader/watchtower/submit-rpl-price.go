@@ -64,7 +64,7 @@ const BlocksPerTurn = 75 // Approx. 15 minutes
 type submitRplPrice struct {
 	c   *cli.Context
 	log log.ColorLogger
-	cfg *config.RocketPoolConfig
+	cfg *config.StaderConfig
 	ec  rocketpool.ExecutionClient
 	w   *wallet.Wallet
 	rp  *rocketpool.RocketPool

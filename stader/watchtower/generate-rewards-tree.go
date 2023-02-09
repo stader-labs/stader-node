@@ -32,7 +32,7 @@ type generateRewardsTree struct {
 	c         *cli.Context
 	log       log.ColorLogger
 	errLog    log.ColorLogger
-	cfg       *config.RocketPoolConfig
+	cfg       *config.StaderConfig
 	rp        *rocketpool.RocketPool
 	ec        rocketpool.ExecutionClient
 	bc        beacon.Client

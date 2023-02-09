@@ -311,7 +311,7 @@ func claimAndStakeRewards(c *cli.Context, indicesString string, stakeAmount *big
 }
 
 // Get the rewards for the provided interval indices
-func getRewardsForIntervals(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, nodeAddress common.Address, indicesString string) ([]*big.Int, []*big.Int, []*big.Int, [][]common.Hash, error) {
+func getRewardsForIntervals(rp *rocketpool.RocketPool, cfg *config.StaderConfig, nodeAddress common.Address, indicesString string) ([]*big.Int, []*big.Int, []*big.Int, [][]common.Hash, error) {
 
 	// Get the indices
 	seenIndices := map[uint64]bool{}

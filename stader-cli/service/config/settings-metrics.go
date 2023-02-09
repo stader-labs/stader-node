@@ -12,7 +12,7 @@ type MetricsConfigPage struct {
 	home                       *settingsHome
 	page                       *page
 	layout                     *standardLayout
-	masterConfig               *config.RocketPoolConfig
+	masterConfig               *config.StaderConfig
 	enableMetricsBox           *parameterizedFormItem
 	enableOdaoMetricsBox       *parameterizedFormItem
 	ecMetricsPortBox           *parameterizedFormItem

@@ -50,7 +50,7 @@ type PrysmConfig struct {
 }
 
 // Generates a new Prysm configuration
-func NewPrysmConfig(cfg *RocketPoolConfig) *PrysmConfig {
+func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 	return &PrysmConfig{
 		Title: "Prysm Settings",
 

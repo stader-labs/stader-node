@@ -29,6 +29,8 @@ build_cli() {
     echo -n "Building CLI binaries... "
     docker run --rm -v $PWD:/stader-node rocketpool/smartnode-builder:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
     mv stader-cli/stader-cli-* ../$VERSION
+    # push to S3 bucket
+    aws s3 cp ../$VERSION s3://stadernode/$VERSION --recursive
     echo "done!"
 
     cd ..

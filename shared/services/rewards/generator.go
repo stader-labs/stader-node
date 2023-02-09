@@ -31,7 +31,7 @@ type TreeGenerator struct {
 	logger               log.ColorLogger
 	logPrefix            string
 	rp                   *rocketpool.RocketPool
-	cfg                  *config.RocketPoolConfig
+	cfg                  *config.StaderConfig
 	bc                   beacon.Client
 	index                uint64
 	startTime            time.Time
@@ -44,12 +44,12 @@ type TreeGenerator struct {
 }
 
 type treeGeneratorImpl interface {
-	generateTree(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, bc beacon.Client) (*RewardsFile, error)
-	approximateStakerShareOfSmoothingPool(rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, bc beacon.Client) (*big.Int, error)
+	generateTree(rp *rocketpool.RocketPool, cfg *config.StaderConfig, bc beacon.Client) (*RewardsFile, error)
+	approximateStakerShareOfSmoothingPool(rp *rocketpool.RocketPool, cfg *config.StaderConfig, bc beacon.Client) (*big.Int, error)
 	getRulesetVersion() uint64
 }
 
-func NewTreeGenerator(logger log.ColorLogger, logPrefix string, rp *rocketpool.RocketPool, cfg *config.RocketPoolConfig, bc beacon.Client, index uint64, startTime time.Time, endTime time.Time, consensusBlock uint64, elSnapshotHeader *types.Header, intervalsPassed uint64) (*TreeGenerator, error) {
+func NewTreeGenerator(logger log.ColorLogger, logPrefix string, rp *rocketpool.RocketPool, cfg *config.StaderConfig, bc beacon.Client, index uint64, startTime time.Time, endTime time.Time, consensusBlock uint64, elSnapshotHeader *types.Header, intervalsPassed uint64) (*TreeGenerator, error) {
 	t := &TreeGenerator{
 		logger:           logger,
 		logPrefix:        logPrefix,

@@ -27,7 +27,7 @@ type NativeConfig struct {
 }
 
 // Generates a new Smartnode configuration
-func NewNativeConfig(cfg *RocketPoolConfig) *NativeConfig {
+func NewNativeConfig(cfg *StaderConfig) *NativeConfig {
 
 	return &NativeConfig{
 		Title: "Native Settings",
@@ -123,11 +123,11 @@ func (cfg *NativeConfig) GetParameters() []*config.Parameter {
 	}
 }
 
-func getDefaultValidatorRestartCommand(config *RocketPoolConfig) string {
+func getDefaultValidatorRestartCommand(config *StaderConfig) string {
 	return filepath.Join(config.RocketPoolDirectory, "restart-vc.sh")
 }
 
-func getDefaultValidatorStopCommand(config *RocketPoolConfig) string {
+func getDefaultValidatorStopCommand(config *StaderConfig) string {
 	return filepath.Join(config.RocketPoolDirectory, "stop-validator.sh")
 }
 

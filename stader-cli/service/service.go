@@ -245,7 +245,7 @@ func configureService(c *cli.Context) error {
 	defer staderClient.Close()
 
 	// Load the config, checking to see if it's new (hasn't been installed before)
-	var oldCfg *config.RocketPoolConfig
+	var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
@@ -374,7 +374,7 @@ func configureService(c *cli.Context) error {
 }
 
 // Updates a configuration from the provided CLI arguments headlessly
-func configureHeadless(c *cli.Context, cfg *config.RocketPoolConfig) error {
+func configureHeadless(c *cli.Context, cfg *config.StaderConfig) error {
 
 	// Root params
 	for _, param := range cfg.GetParameters() {
@@ -399,7 +399,7 @@ func configureHeadless(c *cli.Context, cfg *config.RocketPoolConfig) error {
 }
 
 // Updates a config parameter from a CLI flag
-func updateConfigParamFromCliArg(c *cli.Context, sectionName string, param *cfgtypes.Parameter, cfg *config.RocketPoolConfig) error {
+func updateConfigParamFromCliArg(c *cli.Context, sectionName string, param *cfgtypes.Parameter, cfg *config.StaderConfig) error {
 
 	var paramName string
 	if sectionName == "" {
@@ -680,7 +680,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 }
 
 // Versions prior to v1.3.1 didn't preserve Teku's slashing DB, so force a delay when upgrading to ensure the user doesn't get slashed by accident
-func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *config.RocketPoolConfig) error {
+func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *config.StaderConfig) error {
 
 	fmt.Printf("%s=== NOTICE ===\n", colorYellow)
 	fmt.Printf("You are currently using Teku as your Consensus client.\nv1.3.1+ fixes an issue that would cause Teku's slashing protection database to be lost after an upgrade.\nIt will now be rebuilt.\n\nFor the absolute safety of your funds, your node will wait for 15 minutes before starting.\nYou will miss a few attestations during this process; this is expected.\n\nThis delay only needs to happen the first time you start the Smartnode after upgrading to v1.3.1 or higher.%s\n\nIf you are installing the Smartnode for the first time or don't have any validators yet, you can skip this with `stader-cli service start --ignore-slash-timer`. Otherwise, we strongly recommend you wait for the full delay.\n\n", colorReset)
@@ -752,7 +752,7 @@ func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *c
 	return nil
 }
 
-func checkForValidatorChange(rp *stader.Client, cfg *config.RocketPoolConfig) error {
+func checkForValidatorChange(rp *stader.Client, cfg *config.StaderConfig) error {
 
 	// Get the container prefix
 	prefix, err := getContainerPrefix(rp)
@@ -1484,7 +1484,7 @@ func resyncEth2(c *cli.Context) error {
 
 // Generate a YAML file that shows the current configuration schema, including all of the parameters and their descriptions
 func getConfigYaml(c *cli.Context) error {
-	cfg := config.NewRocketPoolConfig("", false)
+	cfg := config.NewStaderConfig("", false)
 	bytes, err := yaml.Marshal(cfg)
 	if err != nil {
 		return fmt.Errorf("error serializing configuration schema: %w", err)

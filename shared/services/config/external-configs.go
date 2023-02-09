@@ -76,7 +76,7 @@ type ExternalTekuConfig struct {
 }
 
 // Generates a new ExternalExecutionConfig configuration
-func NewExternalExecutionConfig(cfg *RocketPoolConfig) *ExternalExecutionConfig {
+func NewExternalExecutionConfig(cfg *StaderConfig) *ExternalExecutionConfig {
 	return &ExternalExecutionConfig{
 		Title: "External Execution Client Settings",
 
@@ -107,7 +107,7 @@ func NewExternalExecutionConfig(cfg *RocketPoolConfig) *ExternalExecutionConfig 
 }
 
 // Generates a new ExternalLighthouseClient configuration
-func NewExternalLighthouseConfig(cfg *RocketPoolConfig) *ExternalLighthouseConfig {
+func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 	return &ExternalLighthouseConfig{
 		Title: "External Lighthouse Settings",
 
@@ -179,7 +179,7 @@ func NewExternalLighthouseConfig(cfg *RocketPoolConfig) *ExternalLighthouseConfi
 }
 
 // Generates a new ExternalPrysmConfig configuration
-func NewExternalPrysmConfig(cfg *RocketPoolConfig) *ExternalPrysmConfig {
+func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 	return &ExternalPrysmConfig{
 		Title: "External Prysm Settings",
 
@@ -263,7 +263,7 @@ func NewExternalPrysmConfig(cfg *RocketPoolConfig) *ExternalPrysmConfig {
 }
 
 // Generates a new ExternalTekuClient configuration
-func NewExternalTekuConfig(cfg *RocketPoolConfig) *ExternalTekuConfig {
+func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 	return &ExternalTekuConfig{
 		Title: "External Teku Settings",
 
