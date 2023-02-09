@@ -359,11 +359,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 							return err
 						}
 					}
-					if c.String("max-slippage") != "" && c.String("max-slippage") != "auto" {
-						if _, err := cliutils.ValidatePercentage("maximum commission rate slippage", c.String("max-slippage")); err != nil {
-							return err
-						}
-					}
 					if c.String("salt") != "" {
 						if _, err := cliutils.ValidateBigInt("salt", c.String("salt")); err != nil {
 							return err
