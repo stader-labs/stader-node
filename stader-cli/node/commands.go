@@ -73,6 +73,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
+					fmt.Printf("Operator name is %s\n", c.String("operator-name"))
+					fmt.Printf("Operator reward address is %s\n", c.String("operator-reward-address"))
+					fmt.Printf("socialize mev is %s\n", c.String("socialize-mev"))
+
 					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
