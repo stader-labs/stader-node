@@ -65,7 +65,7 @@ func registerNode(c *cli.Context) error {
 	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
 
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMev)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), false)
 	if err != nil {
 		return err
 	}

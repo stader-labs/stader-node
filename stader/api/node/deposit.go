@@ -85,7 +85,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 
 	nodeAccount, err = w.GetNodeAccount()
 	// get the vault address and vault credential
-	fmt.Printf("node account is %s\n", nodeAccount.Address)
 	operatorRegistryInfo, err := node.GetOperatorRegistry(sor, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -102,13 +101,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("reward withdraw vault is %v\n", rewardWithdrawVault)
 	withdrawCredentials, err := node.GetValidatorWithdrawalCredential(srcf, rewardWithdrawVault, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("bharath-build: withdraw creds is %v\n", withdrawCredentials)
 
 	// Get validator deposit data and associated parameters
 	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config)
