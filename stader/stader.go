@@ -23,12 +23,12 @@ func main() {
 	app.Name = "Stader"
 	app.Usage = "Stader service"
 	app.Version = shared.StaderVersion
-	app.Authors = []cli.Author{
-		{
-			Name:  "Rahul Jaguste",
-			Email: "rahul@staderlabs.com",
-		},
-	}
+	// app.Authors = []cli.Author{
+	// 	{
+	// 		Name:  "Rahul Jaguste",
+	// 		Email: "rahul@staderlabs.com",
+	// 	},
+	// }
 	app.Copyright = "(c) 2023 Stader labs"
 
 	// Set application flags

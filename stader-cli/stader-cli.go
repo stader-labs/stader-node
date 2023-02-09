@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/mitchellh/go-homedir"
+	"github.com/stader-labs/stader-node/shared"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/stader-cli/network"
 	"github.com/stader-labs/stader-node/stader-cli/node"
@@ -33,13 +34,13 @@ func main() {
 	// Set application info
 	app.Name = "Stader-node"
 	app.Usage = "Stader Node CLI"
-	app.Version = "0.1.0"
-	app.Authors = []cli.Author{
-		{
-			Name:  "Rahul Jaguste",
-			Email: "rahul@staderlabs.com",
-		},
-	}
+	app.Version = shared.StaderVersion
+	// app.Authors = []cli.Author{
+	// 	{
+	// 		Name:  "Rahul Jaguste",
+	// 		Email: "rahul@staderlabs.com",
+	// 	},
+	// }
 	app.Copyright = "(c) 2022 Stader Labs"
 
 	// Set application flags
