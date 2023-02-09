@@ -400,8 +400,8 @@ func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 
 		WatchtowerMetricsPort: config.Parameter{
 			ID:                   "watchtowerMetricsPort",
-			Name:                 "Watchtower Metrics Port",
-			Description:          "The port your Watchtower container should expose its metrics on.\nThis is only relevant for Oracle Nodes.",
+			Name:                 "Guardian Oracle Port",
+			Description:          "The port your Guardian Oracle container should expose its metrics on.\nThis is only relevant for Oracle Nodes.",
 			Type:                 config.ParameterType_Uint16,
 			Default:              map[config.Network]interface{}{config.Network_All: defaultWatchtowerMetricsPort},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower, config.ContainerID_Prometheus},

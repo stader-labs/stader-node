@@ -27,7 +27,7 @@ func (gww *GraffitiWallWriter) GetName() string {
 }
 
 func (gww *GraffitiWallWriter) GetDescription() string {
-	return "This addon adds support for drawing on the Beaconcha.in graffiti wall (https://beaconcha.in/graffitiwall) by replacing your validator's static graffiti message with a special message indicating a pixel to draw on the wall.\n\nMade with love by BenV and RamiRond!"
+	return "This addon adds support for drawing on the Beaconcha.in graffiti wall (https://beaconcha.in/graffitiwall) by replacing your validator's static graffiti message with a special message indicating a pixel to draw on the wall."
 }
 
 func (gww *GraffitiWallWriter) GetConfig() cfgtypes.Config {

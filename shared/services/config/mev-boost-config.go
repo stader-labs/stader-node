@@ -490,7 +490,7 @@ func createDefaultRelays() []config.MevRelay {
 // Generate one of the profile parameters
 func generateProfileParameter(id string, relays []config.MevRelay, regulated bool, noSandwiching bool) config.Parameter {
 	name := "Enable "
-	description := fmt.Sprintf("[lime]NOTE: You can enable multiple options.\n\nTo learn more about MEV, please visit %s.\n\n[white]", mevDocsUrl)
+	description := fmt.Sprintf("[lime]NOTE: You can enable multiple options.")
 
 	if regulated {
 		name += "Regulated "
@@ -555,7 +555,7 @@ func generateProfileParameter(id string, relays []config.MevRelay, regulated boo
 
 // Generate one of the relay parameters
 func generateRelayParameter(id string, relay config.MevRelay) config.Parameter {
-	description := fmt.Sprintf("[lime]NOTE: You can enable multiple options.\n\nTo learn more about MEV, please visit %s.\n\n[white]%s\n\n", mevDocsUrl, relay.Description)
+	description := fmt.Sprintf("[lime]NOTE: You can enable multiple options.")
 
 	if relay.Regulated {
 		description += "Complies with Regulations: YES\n"

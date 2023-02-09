@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared"
@@ -156,7 +155,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		DataPath: config.Parameter{
 			ID:                   "dataPath",
 			Name:                 "Data Path",
-			Description:          "The absolute path of the `data` folder that contains your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for your minipools. You may use environment variables in this string.",
+			Description:          "The absolute path of the `data` folder that contains your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for your validators. You may use environment variables in this string.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: getDefaultDataDir(cfg)},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Validator},
@@ -180,7 +179,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		Network: config.Parameter{
 			ID:                   NetworkID,
 			Name:                 "Network",
-			Description:          "The Ethereum network you want to use - select Prater Testnet to practice with fake ETH, or Mainnet to stake on the real network using real ETH.",
+			Description:          "The Ethereum network you want to use - select Goerli Testnet to practice with Goerli ETH, or Mainnet to stake on the real network using real ETH.",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.Network_Mainnet},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator},
@@ -193,7 +192,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		ManualMaxFee: config.Parameter{
 			ID:                   "manualMaxFee",
 			Name:                 "Manual Max Fee",
-			Description:          "Set this if you want all of the Smartnode's transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will show you the current suggested max fee based on the current network conditions and let you specify it each time you do a transaction.\n\nAny other value will ignore the recommended max fee and explicitly use this value instead.\n\nThis applies to automated transactions (such as claiming RPL and staking minipools) as well.",
+			Description:          "Set this if you want all of the Smartnode's transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will show you the current suggested max fee based on the current network conditions and let you specify it each time you do a transaction.\n\nAny other value will ignore the recommended max fee and explicitly use this value instead.\n\nThis applies to automated transactions as well.",
 			Type:                 config.ParameterType_Float,
 			Default:              map[config.Network]interface{}{config.Network_All: float64(0)},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Watchtower},
@@ -216,8 +215,8 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 
 		MinipoolStakeGasThreshold: config.Parameter{
 			ID:   "minipoolStakeGasThreshold",
-			Name: "Minipool Stake Gas Threshold",
-			Description: "Once a newly created minipool passes the scrub check and is ready to perform its second 16 ETH deposit (the `stake` transaction), your node will try to do so automatically using the `Rapid` suggestion from the gas estimator as its max fee. This threshold is a limit (in gwei) you can put on that suggestion; your node will not `stake` the new minipool until the suggestion is below this limit.\n\n" +
+			Name: "Contract Stake Gas Threshold",
+			Description: "Once a newly created validator passes the scrub check and is ready to perform its second 4 ETH deposit (the `stake` transaction), your node will try to do so automatically using the `Rapid` suggestion from the gas estimator as its max fee. This threshold is a limit (in gwei) you can put on that suggestion; your node will not `stake` the new validator until the suggestion is below this limit.\n\n" +
 				"Note that to ensure your minipool does not get dissolved, the node will ignore this limit and automatically execute the `stake` transaction at whatever the suggested fee happens to be once too much time has passed since its first deposit (currently 7 days).",
 			Type:                 config.ParameterType_Float,
 			Default:              map[config.Network]interface{}{config.Network_All: float64(150)},
@@ -606,22 +605,22 @@ func getNetworkOptions() []config.ParameterOption {
 	options := []config.ParameterOption{
 		{
 			Name:        "Ethereum Mainnet",
-			Description: "This is the real Ethereum main network, using real ETH and real RPL to make real validators.",
+			Description: "This is the real Ethereum main network, using real ETH to make real validators.",
 			Value:       config.Network_Mainnet,
 		}, {
-			Name:        "Prater Testnet",
-			Description: "This is the Prater test network, using free fake ETH and free fake RPL to make fake validators.\nUse this if you want to practice running the Smartnode in a free, safe environment before moving to Mainnet.",
+			Name:        "Goerli Testnet",
+			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Smartnode in a free, safe environment before moving to Mainnet.",
 			Value:       config.Network_Prater,
 		},
 	}
 
-	if strings.HasSuffix(shared.StaderVersion, "-dev") {
-		options = append(options, config.ParameterOption{
-			Name:        "Devnet",
-			Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",
-			Value:       config.Network_Devnet,
-		})
-	}
+	// if strings.HasSuffix(shared.StaderVersion, "-dev") {
+	// 	options = append(options, config.ParameterOption{
+	// 		Name:        "Devnet",
+	// 		Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",
+	// 		Value:       config.Network_Devnet,
+	// 	})
+	// }
 
 	return options
 }

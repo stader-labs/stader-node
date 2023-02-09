@@ -44,7 +44,7 @@ func NewMevBoostConfigPage(home *settingsHome) *MevBoostConfigPage {
 		home.homePage,
 		"settings-mev-boost",
 		"MEV-Boost",
-		"Select this to configure the settings for the Flashbots MEV-Boost client, the source of blocks with MEV rewards for your minipools.\n\nFor more information on Flashbots, MEV, and MEV-Boost, please see https://writings.flashbots.net/writings/why-run-mevboost/",
+		"Select this to configure the settings for the Flashbots MEV-Boost client, the source of blocks with MEV rewards for your validators.\n\nFor more information on Flashbots, MEV, and MEV-Boost, please see https://writings.flashbots.net/writings/why-run-mevboost/",
 		configPage.layout.grid,
 	)
 

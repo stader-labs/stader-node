@@ -17,7 +17,7 @@ func createMevModeStep(wiz *wizard, currentStep int, totalSteps int) *choiceWiza
 		modeDescriptions = append(modeDescriptions, mode.Description)
 	}
 
-	helperText := "By default, your Smartnode has MEV-Boost enabled. This allows you to capture extra profits from block proposals. Would you like Staderl to manage MEV-Boost for you, or would you like to manage it yourself?\n\n"
+	helperText := "By default, your Smartnode has MEV-Boost enabled. This allows you to capture extra profits from block proposals. Would you like Stader to manage MEV-Boost for you, or would you like to manage it yourself?\n\n"
 
 	show := func(modal *choiceModalLayout) {
 		wiz.md.setPage(modal.page)

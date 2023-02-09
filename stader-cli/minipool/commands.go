@@ -129,8 +129,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "exit",
 				Aliases:   []string{"e"},
-				Usage:     "Exit staking minipools from the beacon chain",
-				UsageText: "rocketpool minipool exit [options]",
+				Usage:     "Exit validators from the beacon chain",
+				UsageText: "stader-cli validator exit [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",

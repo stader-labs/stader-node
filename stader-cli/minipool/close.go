@@ -115,7 +115,7 @@ func closeMinipools(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to close %d minipools?", len(selectedMinipools)))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to close %d validators?", len(selectedMinipools)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -125,13 +125,13 @@ func closeMinipools(c *cli.Context) error {
 
 		canResponse, err := staderClient.CanCloseMinipool(minipool.Address)
 		if err != nil {
-			fmt.Printf("Could not check closing status for minipool %s: %s.\n", minipool.Address.Hex(), err)
+			fmt.Printf("Could not check closing status for Validator %s: %s.\n", minipool.Address.Hex(), err)
 			continue
 		}
 		if !canResponse.CanClose {
 			fmt.Printf("Cannot close minipool %s:\n", minipool.Address.Hex())
 			if canResponse.InvalidStatus {
-				fmt.Println("The minipool is not in a closeable state.")
+				fmt.Println("The validator is not in a closeable state.")
 			}
 			if !canResponse.InConsensus {
 				fmt.Println("The RPL price and total effective staked RPL of the network are still being voted on by the Oracle DAO.\nPlease try again in a few minutes.")
@@ -141,16 +141,16 @@ func closeMinipools(c *cli.Context) error {
 
 		response, err := staderClient.CloseMinipool(minipool.Address)
 		if err != nil {
-			fmt.Printf("Could not close minipool %s: %s.\n", minipool.Address.Hex(), err)
+			fmt.Printf("Could not close validator %s: %s.\n", minipool.Address.Hex(), err)
 			continue
 		}
 
-		fmt.Printf("Closing minipool %s...\n", minipool.Address.Hex())
+		fmt.Printf("Closing validator %s...\n", minipool.Address.Hex())
 		cliutils.PrintTransactionHash(staderClient, response.TxHash)
 		if _, err = staderClient.WaitForTransaction(response.TxHash); err != nil {
-			fmt.Printf("Could not close minipool %s: %s.\n", minipool.Address.Hex(), err)
+			fmt.Printf("Could not close validator %s: %s.\n", minipool.Address.Hex(), err)
 		} else {
-			fmt.Printf("Successfully closed minipool %s.\n", minipool.Address.Hex())
+			fmt.Printf("Successfully closed validator %s.\n", minipool.Address.Hex())
 		}
 	}
 

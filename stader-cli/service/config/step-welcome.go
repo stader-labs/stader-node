@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+
+	"github.com/stader-labs/stader-node/shared"
 )
 
 func createWelcomeStep(wiz *wizard, currentStep int, totalSteps int) *choiceWizardStep {
@@ -15,7 +17,7 @@ func createWelcomeStep(wiz *wizard, currentStep int, totalSteps int) *choiceWiza
 		intro = "You've already configured Stader, so we'll highlight all of the settings you're already using for convenience. You're welcome to make changes as you go through the wizard."
 	}
 
-	helperText := fmt.Sprintf("\n\nWelcome to the Stader Smartnode configuration wizard!\n\n%s\n\n", intro)
+	helperText := fmt.Sprintf("%s\n\nWelcome to the Stader Smartnode configuration wizard!\n\n%s\n\n", shared.Logo, intro)
 
 	show := func(modal *choiceModalLayout) {
 		wiz.md.setPage(modal.page)
@@ -40,7 +42,7 @@ func createWelcomeStep(wiz *wizard, currentStep int, totalSteps int) *choiceWiza
 		helperText,
 		[]string{"Quit", "Next"},
 		nil,
-		60,
+		90,
 		"Welcome",
 		DirectionalModalHorizontal,
 		show,
