@@ -78,6 +78,7 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
 
+	fmt.Printf("mev socialize is %d\n", mevSocialize)
 	// Register node
 	tx, err := node.OnboardNodeOperator(sor, mevSocialize, 0, operatorName, operatorRewardAddress, opts)
 	if err != nil {
