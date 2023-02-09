@@ -75,7 +75,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					// Validate args
 					fmt.Printf("Operator name is %s\n", c.String("operator-name"))
 					fmt.Printf("Operator reward address is %s\n", c.String("operator-reward-address"))
-					fmt.Printf("socialize mev is %d\n", c.Bool("socialize-mev"))
+					fmt.Printf("socialize mev is %s\n", c.String("socialize-mev"))
 
 					fmt.Printf("c is %v\n", c.Args())
 
@@ -97,7 +97,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return fmt.Errorf("operator-reward-address is required")
 					}
 
-					if c.String("socialize-mev") != "true" || c.String("socialize-mev") != "false" {
+					if c.String("socialize-mev") != "true" && c.String("socialize-mev") != "false" {
 						return fmt.Errorf("invalid value for socialize mev, it should be exactly true or false")
 					}
 
