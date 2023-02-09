@@ -13,16 +13,17 @@ import (
 
 func registerNode(c *cli.Context) error {
 
-	//w, err := services.GetWallet(c)
-	//if err != nil {
-	//	return err
-	//}
 	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
 	}
 	defer staderClient.Close()
+
+	walletStatus, err := staderClient.WalletStatus()
+	if err != nil {
+		return err
+	}
 
 	// Check and assign the EC status
 	err = cliutils.CheckClientStatus(staderClient)
@@ -63,13 +64,9 @@ func registerNode(c *cli.Context) error {
 
 	operatorName := c.String("operator-name")
 	operatorRewardAddressString := c.String("operator-reward-address")
-	//if operatorRewardAddressString == "" {
-	//	nodeAccount, err := w.GetNodeAccount()
-	//	if err != nil {
-	//		return err
-	//	}
-	//	operatorRewardAddressString = nodeAccount.Address.String()
-	//}
+	if operatorRewardAddressString == "" {
+		operatorRewardAddressString = walletStatus.AccountAddress.String()
+	}
 	socializeMev := c.String("socialize-mev")
 	// default socialize mev to true
 	if socializeMev == "" {
