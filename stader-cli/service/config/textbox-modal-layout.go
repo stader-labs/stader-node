@@ -46,16 +46,16 @@ func newTextBoxModalLayout(app *tview.Application, title string, width int, text
 		SetWordWrap(true).
 		SetTextColor(tview.Styles.PrimaryTextColor).
 		SetDynamicColors(true)
-	textView.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	textView.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	textView.SetBorderPadding(0, 0, 1, 1)
 
 	// Row spacers with the correct background color
 	spacer1 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 	spacer2 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 	spacer3 := tview.NewBox().
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 	// The main content grid
 	contentGrid := tview.NewGrid().
@@ -66,7 +66,7 @@ func newTextBoxModalLayout(app *tview.Application, title string, width int, text
 		AddItem(layout.controlGrid, 3, 0, 1, 1, 0, 0, true).
 		AddItem(spacer3, 4, 0, 1, 1, 0, 0, false)
 	contentGrid.
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
+		SetBackgroundColor(tcell.ColorRebeccaPurple).
 		SetBorder(true).
 		SetTitle(" " + title + " ")
 	layout.controlGrid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -135,7 +135,7 @@ func (layout *textBoxModalLayout) createControlGrid(labels []string, maxLengths 
 	controlGrid := tview.NewGrid().
 		SetRows(0).
 		SetColumns(-1, -5, -1)
-	controlGrid.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	controlGrid.SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 	// Create the form for the controls
 	form := NewForm().
@@ -144,7 +144,7 @@ func (layout *textBoxModalLayout) createControlGrid(labels []string, maxLengths 
 		SetButtonTextColor(tview.Styles.PrimaryTextColor).
 		SetFieldBackgroundColor(tcell.ColorBlack)
 	form.
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
+		SetBackgroundColor(tcell.ColorRebeccaPurple).
 		SetBorderPadding(0, 0, 0, 0)
 	layout.form = form
 
@@ -183,8 +183,8 @@ func (layout *textBoxModalLayout) createControlGrid(labels []string, maxLengths 
 		SetButtonTextActivatedColor(tcell.ColorBlack)
 
 	// Create the columns, including the left and right spacers
-	leftSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
-	rightSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	leftSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	rightSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
 	controlGrid.
 		AddItem(leftSpacer, 0, 0, 1, 1, 0, 0, false).
 		AddItem(form, 0, 1, 1, 1, 0, 0, true).

@@ -88,7 +88,7 @@ func (home *settingsHome) createContent() {
 			}
 			layout.descriptionBox.SetText(home.settingsSubpages[index].getPage().description)
 		})
-	categoryList.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	categoryList.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	categoryList.SetBorderPadding(0, 0, 1, 1)
 	home.categoryList = categoryList
 

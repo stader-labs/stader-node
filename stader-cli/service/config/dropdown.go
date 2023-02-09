@@ -92,7 +92,7 @@ func NewDropDown() *DropDown {
 		SetSelectedTextColor(tview.Styles.PrimitiveBackgroundColor).
 		SetSelectedBackgroundColor(tview.Styles.PrimaryTextColor).
 		SetHighlightFullLine(true).
-		SetBackgroundColor(tview.Styles.MoreContrastBackgroundColor)
+		SetBackgroundColor(tcell.ColorRebeccaPurple)
 
 	d := &DropDown{
 		Box:                  tview.NewBox(),

@@ -60,7 +60,7 @@ func NewDirectionalModal(direction int, app *tview.Application) *DirectionalModa
 			SetButtonsAlign(tview.AlignCenter).
 			SetButtonBackgroundColor(tview.Styles.PrimitiveBackgroundColor).
 			SetButtonTextColor(tview.Styles.PrimaryTextColor)
-		form.SetBackgroundColor(tview.Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
+		form.SetBackgroundColor(tcell.ColorRebeccaPurple).SetBorderPadding(0, 0, 0, 0)
 		form.SetCancelFunc(func() {
 			if m.done != nil {
 				m.done(-1, "")
@@ -72,7 +72,7 @@ func NewDirectionalModal(direction int, app *tview.Application) *DirectionalModa
 		m.frame = tview.NewFrame(form).SetBorders(0, 0, 1, 0, 0, 0)
 	}
 	m.frame.SetBorder(true).
-		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
+		SetBackgroundColor(tcell.ColorRebeccaPurple).
 		SetBorderPadding(1, 1, 1, 1)
 	return m
 }
@@ -151,7 +151,7 @@ func (m *DirectionalModal) AddButtons(labels []string) *DirectionalModal {
 					SetButtonsAlign(tview.AlignCenter).
 					SetButtonBackgroundColor(tview.Styles.PrimitiveBackgroundColor).
 					SetButtonTextColor(tview.Styles.PrimaryTextColor)
-				form.SetBackgroundColor(tview.Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
+				form.SetBackgroundColor(tcell.ColorRebeccaPurple).SetBorderPadding(0, 0, 0, 0)
 				form.SetCancelFunc(func() {
 					if m.done != nil {
 						m.done(-1, "")
