@@ -94,12 +94,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 		return nil, fmt.Errorf("node is not registered")
 	}
 
-	fmt.Printf("operator registry info is %v\n", operatorRegistryInfo)
 	validatorKeyCount, err := node.GetTotalValidatorKeys(sor, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("validator key count is %v\n", validatorKeyCount)
 	rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
 	if err != nil {
 		return nil, err
