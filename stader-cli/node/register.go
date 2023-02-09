@@ -65,13 +65,13 @@ func registerNode(c *cli.Context) error {
 
 	operatorName := c.String("operator-name")
 	operatorRewardAddressString := c.String("operator-reward-address")
-	if operatorRewardAddressString == "" {
-		nodeAccount, err := w.GetNodeAccount()
-		if err != nil {
-			return err
-		}
-		operatorRewardAddressString = nodeAccount.Address.String()
-	}
+	//if operatorRewardAddressString == "" {
+	//	nodeAccount, err := w.GetNodeAccount()
+	//	if err != nil {
+	//		return err
+	//	}
+	//	operatorRewardAddressString = nodeAccount.Address.String()
+	//}
 	socializeMev := c.String("socialize-mev")
 	// default socialize mev to true
 	if socializeMev == "" {
