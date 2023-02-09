@@ -60,12 +60,13 @@ func registerNode(c *cli.Context) error {
 
 	operatorName := c.String("operator-name")
 	operatorRewardAddress := c.String("operator-reward-address")
-	//socializeMev := c.Bool("socialize-mev")
+	socializeMev := c.String("socialize-mev")
+	socializeMevBool := parseToBool(socializeMev)
 
 	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
-
+	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), false)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMevBool)
 	if err != nil {
 		return err
 	}
@@ -80,4 +81,12 @@ func registerNode(c *cli.Context) error {
 	fmt.Println("The node was successfully registered with Rocket Pool.")
 	return nil
 
+}
+
+func parseToBool(c string) bool {
+	if c == "true" {
+		return true
+	}
+
+	return false
 }
