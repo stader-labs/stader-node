@@ -41,7 +41,7 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 	}
 
 	fmt.Printf("canRegisterNode: Operator registry is %v\n", operatorRegistry)
-	if operatorRegistry.OperatorId == nil {
+	if operatorRegistry.OperatorName != "" {
 		response.AlreadyRegistered = true
 		response.CanRegister = false
 	}
