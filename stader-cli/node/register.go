@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
+	"github.com/stader-labs/stader-node/shared/services"
 
 	"github.com/urfave/cli"
 
@@ -14,6 +15,10 @@ import (
 
 func registerNode(c *cli.Context) error {
 
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
 	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -59,14 +64,25 @@ func registerNode(c *cli.Context) error {
 	}
 
 	operatorName := c.String("operator-name")
-	operatorRewardAddress := c.String("operator-reward-address")
+	operatorRewardAddressString := c.String("operator-reward-address")
+	if operatorRewardAddressString == "" {
+		nodeAccount, err := w.GetNodeAccount()
+		if err != nil {
+			return err
+		}
+		operatorRewardAddressString = nodeAccount.Address.String()
+	}
 	socializeMev := c.String("socialize-mev")
+	// default socialize mev to true
+	if socializeMev == "" {
+		socializeMev = "true"
+	}
 	socializeMevBool := parseToBool(socializeMev)
 
-	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
+	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddressString))
 	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMevBool)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeMevBool)
 	if err != nil {
 		return err
 	}
