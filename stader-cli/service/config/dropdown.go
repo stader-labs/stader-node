@@ -99,7 +99,7 @@ func NewDropDown() *DropDown {
 		currentOption:        -1,
 		list:                 list,
 		labelColor:           tview.Styles.SecondaryTextColor,
-		fieldBackgroundColor: tview.Styles.ContrastBackgroundColor,
+		fieldBackgroundColor: tcell.ColorRebeccaPurple,
 		fieldTextColor:       tview.Styles.PrimaryTextColor,
 		prefixTextColor:      tview.Styles.ContrastSecondaryTextColor,
 	}
