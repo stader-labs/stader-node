@@ -159,7 +159,9 @@ func (home *settingsHome) createFooter() (tview.Primitive, int) {
 
 	// Save and Quit buttons
 	saveButton := tview.NewButton("Review Changes and Save")
+	saveButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	wizardButton := tview.NewButton("Open the Config Wizard")
+	wizardButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	home.saveButton = saveButton
 	home.wizardButton = wizardButton
 
