@@ -133,7 +133,7 @@ func NewClient(configPath string, daemonPath string, maxFee float64, maxPrioFee 
 		originalGasLimit:   gasLimit,
 		customNonce:        customNonceBigInt,
 		client:             sshClient,
-		debugPrint:         true,
+		debugPrint:         debug,
 		forceFallbacks:     false,
 		ignoreSyncCheck:    false,
 	}
