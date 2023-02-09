@@ -60,7 +60,7 @@ func registerNode(c *cli.Context) error {
 
 	operatorName := c.String("operator-name")
 	operatorRewardAddress := c.String("operator-reward-address")
-	socializeMev := c.Bool("socialize-mev")
+	//socializeMev := c.Bool("socialize-mev")
 
 	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
 
