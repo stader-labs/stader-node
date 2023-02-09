@@ -54,7 +54,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with Stader",
+				Usage:     "Register the node with stader",
 				UsageText: "stader-cli node register [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
@@ -65,17 +65,24 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-reward-address, ora",
 						Usage: "The address at which operator will get rewards",
 					},
-					cli.BoolFlag{
+					cli.StringFlag{
 						Name:  "socialize-mev, sm",
-						Usage: "Should Mev be socialized",
+						Usage: "Should Mev be socialized (Can be be only true or false)",
 					},
 				},
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 3); err != nil {
-						return err
-					}
+					fmt.Printf("Operator name is %s\n", c.String("operator-name"))
+					fmt.Printf("Operator reward address is %s\n", c.String("operator-reward-address"))
+					fmt.Printf("socialize mev is %s\n", c.String("socialize-mev"))
+
+					fmt.Printf("c is %v\n", c.Args())
+
+					// TODO - fix this validation issue
+					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					//	return err
+					//}
 
 					// Validate flags
 					if c.String("operator-name") == "" {
@@ -88,6 +95,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					} else {
 						return fmt.Errorf("operator-reward-address is required")
+					}
+
+					if c.String("socialize-mev") != "true" && c.String("socialize-mev") != "false" {
+						return fmt.Errorf("invalid value for socialize mev, it should be exactly true or false")
 					}
 
 					// Run

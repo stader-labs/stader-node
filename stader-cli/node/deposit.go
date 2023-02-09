@@ -19,7 +19,6 @@ const DefaultMaxNodeFeeSlippage = 0.01 // 1% below current network fee
 
 func nodeDeposit(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -32,7 +31,7 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Your eth2 client is on the correct network.\n")
+	fmt.Println("Your eth2 client is on the correct network.")
 
 	// Post a warning about fee distribution
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new minipool, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new minipool.%s\nWould you like to continue?", colorYellow, colorReset))) {
@@ -40,109 +39,8 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 
-	// Get deposit amount
-	/*
-		var amount float64
-		if c.String("amount") != "" {
-
-			// Parse amount
-			depositAmount, err := strconv.ParseFloat(c.String("amount"), 64)
-			if err != nil {
-				return fmt.Errorf("Invalid deposit amount '%s': %w", c.String("amount"), err)
-			}
-			amount = depositAmount
-
-		} else {
-
-			// Get deposit amount options
-			amountOptions := []string{
-				"32 ETH (minipool begins staking immediately)",
-				"16 ETH (minipool begins staking after ETH is assigned)",
-			}
-
-			// Prompt for amount
-			selected, _ := cliutils.Select("Please choose an amount of ETH to deposit:", amountOptions)
-			switch selected {
-			case 0:
-				amount = 32
-			case 1:
-				amount = 16
-			}
-
-			// Get node status
-			status, err := rp.NodeStatus()
-			if err != nil {
-				return err
-			}
-
-			// Get deposit amount options
-			amountOptions := []string{
-				"32 ETH (minipool begins staking immediately)",
-				"16 ETH (minipool begins staking after ETH is assigned)",
-			}
-			if status.Trusted {
-				amountOptions = append(amountOptions, "0 ETH  (minipool begins staking after ETH is assigned)")
-			}
-
-			// Prompt for amount
-			selected, _ := cliutils.Select("Please choose an amount of ETH to deposit:", amountOptions)
-			switch selected {
-			case 0:
-				amount = 32
-			case 1:
-				amount = 16
-			case 2:
-				amount = 0
-			}
-
-		}
-	*/
-
 	// Force 4 ETH minipools as the only option after much community discussion
 	amountWei := eth.EthToWei(4.0)
-
-	//// Get network node fees
-	//nodeFees, err := staderClient.NodeFee()
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//// Get minimum node fee
-	//var minNodeFee float64
-	//if c.String("max-slippage") == "auto" {
-	//
-	//	// Use default max slippage
-	//	minNodeFee = nodeFees.NodeFee - DefaultMaxNodeFeeSlippage
-	//	if minNodeFee < nodeFees.MinNodeFee {
-	//		minNodeFee = nodeFees.MinNodeFee
-	//	}
-	//
-	//} else if c.String("max-slippage") != "" {
-	//
-	//	// Parse max slippage
-	//	maxNodeFeeSlippagePerc, err := strconv.ParseFloat(c.String("max-slippage"), 64)
-	//	if err != nil {
-	//		return fmt.Errorf("Invalid maximum commission rate slippage '%s': %w", c.String("max-slippage"), err)
-	//	}
-	//	maxNodeFeeSlippage := maxNodeFeeSlippagePerc / 100
-	//
-	//	// Calculate min node fee
-	//	minNodeFee = nodeFees.NodeFee - maxNodeFeeSlippage
-	//	if minNodeFee < nodeFees.MinNodeFee {
-	//		minNodeFee = nodeFees.MinNodeFee
-	//	}
-	//
-	//} else {
-	//
-	//	// Prompt for min node fee
-	//	if nodeFees.MinNodeFee == nodeFees.MaxNodeFee {
-	//		fmt.Printf("Your minipool will use the current fixed commission rate of %.2f%%.\n", nodeFees.MinNodeFee*100)
-	//		minNodeFee = nodeFees.MinNodeFee
-	//	} else {
-	//		minNodeFee = promptMinNodeFee(nodeFees.NodeFee, nodeFees.MinNodeFee)
-	//	}
-	//
-	//}
 
 	// Get minipool salt
 	var salt *big.Int
@@ -160,38 +58,6 @@ func nodeDeposit(c *cli.Context) error {
 		}
 		salt = big.NewInt(0).SetBytes(buffer)
 	}
-
-	// Check deposit can be made
-	//canDeposit, err := staderClient.CanNodeDeposit(amountWei, minNodeFee, salt)
-	//if err != nil {
-	//	return err
-	//}
-	//if !canDeposit.CanDeposit {
-	//	fmt.Println("Cannot make node deposit:")
-	//	if canDeposit.InsufficientBalance {
-	//		fmt.Println("The node's ETH balance is insufficient.")
-	//	}
-	//	if canDeposit.InsufficientRplStake {
-	//		fmt.Println("The node has not staked enough RPL to collateralize a new minipool.")
-	//	}
-	//	if canDeposit.InvalidAmount {
-	//		fmt.Println("The deposit amount is invalid.")
-	//	}
-	//	if canDeposit.UnbondedMinipoolsAtMax {
-	//		fmt.Println("The node cannot create any more unbonded minipools.")
-	//	}
-	//	if canDeposit.DepositDisabled {
-	//		fmt.Println("Node deposits are currently disabled.")
-	//	}
-	//	if !canDeposit.InConsensus {
-	//		fmt.Println("The RPL price and total effective staked RPL of the network are still being voted on by the Oracle DAO.\nPlease try again in a few minutes.")
-	//	}
-	//	return nil
-	//}
-
-	//if c.String("salt") != "" {
-	//	fmt.Printf("Using custom salt %s, your minipool address will be %s.\n\n", c.String("salt"), canDeposit.MinipoolAddress.Hex())
-	//}
 
 	// Check to see if eth2 is synced
 	colorReset := "\033[0m"
@@ -217,8 +83,8 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Assign max fees
 	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  10000000,
-		SafeGasLimit: 25000000,
+		EstGasLimit:  25000000,
+		SafeGasLimit: 30000000,
 	}, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -236,11 +102,8 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 
-	operatorName := c.String("operator-name")
-	// TODO: validate this address
-	operatorRewardAddress := c.String("operator-rewarder-address")
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, salt, operatorName, operatorRewardAddress, true)
+	response, err := staderClient.NodeDeposit(amountWei, salt, true)
 	if err != nil {
 		return err
 	}

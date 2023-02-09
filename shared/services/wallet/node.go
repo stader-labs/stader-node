@@ -63,7 +63,7 @@ func (w *Wallet) GetNodeAccountTransactor() (*bind.TransactOpts, error) {
 	transactor, err := bind.NewKeyedTransactorWithChainID(privateKey, w.chainID)
 	transactor.GasFeeCap = w.maxFee
 	transactor.GasTipCap = w.maxPriorityFee
-	transactor.GasLimit = 600000
+	transactor.GasLimit = 1200000
 	transactor.Context = context.Background()
 	return transactor, err
 
@@ -112,7 +112,6 @@ func (w *Wallet) getNodePrivateKey() (*ecdsa.PrivateKey, string, error) {
 	// Cache node key
 	w.nodeKey = privateKeyECDSA
 	w.nodeKeyPath = path
-	fmt.Printf("private key is %s\n", privateKey)
 	// Return
 	return privateKeyECDSA, path, nil
 

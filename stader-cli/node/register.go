@@ -35,7 +35,7 @@ func registerNode(c *cli.Context) error {
 	if !canRegister.CanRegister {
 		fmt.Println("The node cannot be registered:")
 		if canRegister.AlreadyRegistered {
-			fmt.Println("The node is already registered with Rocket Pool.")
+			fmt.Println("The node is already registered with Stader.")
 		}
 		if canRegister.RegistrationDisabled {
 			fmt.Println("Node registrations are currently disabled.")
@@ -45,8 +45,8 @@ func registerNode(c *cli.Context) error {
 
 	// Assign max fees
 	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  10000000,
-		SafeGasLimit: 25000000,
+		EstGasLimit:  25000000,
+		SafeGasLimit: 30000000,
 	}, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -60,12 +60,13 @@ func registerNode(c *cli.Context) error {
 
 	operatorName := c.String("operator-name")
 	operatorRewardAddress := c.String("operator-reward-address")
-	socializeMev := c.Bool("socialize-mev")
+	socializeMev := c.String("socialize-mev")
+	socializeMevBool := parseToBool(socializeMev)
 
 	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddress))
-
+	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMev)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddress), socializeMevBool)
 	if err != nil {
 		return err
 	}
@@ -80,4 +81,12 @@ func registerNode(c *cli.Context) error {
 	fmt.Println("The node was successfully registered with Rocket Pool.")
 	return nil
 
+}
+
+func parseToBool(c string) bool {
+	if c == "true" {
+		return true
+	}
+
+	return false
 }

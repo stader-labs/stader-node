@@ -40,10 +40,11 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 		return nil, err
 	}
 
-	fmt.Printf("canRegisterNode: Operator registry is %v\n", operatorRegistry)
-	if operatorRegistry.OperatorId == nil {
+	if operatorRegistry.OperatorName != "" {
 		response.AlreadyRegistered = true
 		response.CanRegister = false
+	} else {
+		response.CanRegister = true
 	}
 
 	return &response, nil
@@ -62,8 +63,6 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 		return nil, err
 	}
 
-	// TODO - bchain - check if the validator has already been registered
-
 	// Response
 	response := api.RegisterNodeResponse{}
 
@@ -79,8 +78,8 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
 
+	//fmt.Printf("mev socialize is %d\n", mevSocialize)
 	// Register node
-	//hash, err := node.RegisterNode(rp, timezoneLocation, opts)
 	tx, err := node.OnboardNodeOperator(sor, mevSocialize, 0, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err

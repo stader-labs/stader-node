@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/types/eth2"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
@@ -14,8 +13,6 @@ const DepositAmount = 32000000000 // gwei
 
 // Get deposit data & root for a given validator key and withdrawal credentials
 func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials common.Hash, eth2Config beacon.Eth2Config) (eth2.DepositData, common.Hash, error) {
-	fmt.Printf("GetDepositDataTop: withdraw credentials is %v\n", withdrawalCredentials)
-
 	// Build deposit data
 	dd := eth2.DepositDataNoSignature{
 		PublicKey:             validatorKey.PublicKey().Marshal(),
@@ -47,8 +44,6 @@ func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials
 		Amount:                dd.Amount,
 		Signature:             validatorKey.Sign(srHash[:]).Marshal(),
 	}
-
-	fmt.Printf("GetDepositData: withdraw credentials is %v\n", common.Bytes2Hex(dd.WithdrawalCredentials))
 
 	// Get deposit data root
 	depositDataRoot, err := depositData.HashTreeRoot()
