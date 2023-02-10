@@ -79,11 +79,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					fmt.Printf("c is %v\n", c.Args())
 
-					// TODO - fix this validation issue
-					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
-					//	return err
-					//}
-
 					// Validate flags
 					if c.String("operator-name") == "" {
 						return fmt.Errorf("operator-name is required")
@@ -93,11 +88,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
 							return err
 						}
-					} else {
-						return fmt.Errorf("operator-reward-address is required")
 					}
 
-					if c.String("socialize-mev") != "true" && c.String("socialize-mev") != "false" {
+					if c.String("socialize-mev") != "" && c.String("socialize-mev") != "true" && c.String("socialize-mev") != "false" {
 						return fmt.Errorf("invalid value for socialize mev, it should be exactly true or false")
 					}
 
