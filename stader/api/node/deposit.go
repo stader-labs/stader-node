@@ -97,7 +97,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 	if err != nil {
 		return nil, err
 	}
-	rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
+	rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
 	if err != nil {
 		return nil, err
 	}

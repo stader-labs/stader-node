@@ -1,4 +1,4 @@
-#!/bin/sh
+ #!/bin/sh
 
 EC_CHAINDATA_DIR=/ethclient
 EXTERNAL_DIR=/mnt/external

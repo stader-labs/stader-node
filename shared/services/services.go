@@ -121,7 +121,8 @@ func GetStaderOperatorRegistry(c *cli.Context) (*stader.StaderOperatorRegistryCo
 		return nil, err
 	}
 
-	staderOperatorRegistryAddr := common.HexToAddress("0x797906646088185AE52187036C28C91E2EDD5f84")
+	// TODO - update the address when sanjay updates
+	staderOperatorRegistryAddr := common.HexToAddress("0x43AdBC333aa3cd7d937559da2a5574A1bC99C7e7")
 	return stader.NewStaderOperatorRegistry(ec, staderOperatorRegistryAddr)
 }
 
@@ -135,7 +136,8 @@ func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistry
 		return nil, err
 	}
 
-	staderValidatorRegistryAddr := common.HexToAddress("0x1d65eaad8f7a5aba35e68792caeeff82602bee56")
+	// TODO - update the address when sanjay updates
+	staderValidatorRegistryAddr := common.HexToAddress("0x8fA48cEA24D8c8f3524C0a7B93D3C921e1A3f88f")
 	return stader.NewStaderValidatorRegistry(ec, staderValidatorRegistryAddr)
 }
 
@@ -149,7 +151,8 @@ func GetStaderRewardContractFactory(c *cli.Context) (*stader.StaderRewardContrac
 		return nil, err
 	}
 
-	staderRewardContractFactoryAddress := common.HexToAddress("0xBbF98fb83128b6869300b0194a3A896d532ce6da")
+	// TODO - update the address when sanjay updates
+	staderRewardContractFactoryAddress := common.HexToAddress("0x1F339648C179032fc627A7a97B5F8F88dE43d86e")
 	return stader.NewStaderRewardContractFactory(ec, staderRewardContractFactoryAddress)
 }
 

@@ -80,7 +80,7 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 
 	//fmt.Printf("mev socialize is %d\n", mevSocialize)
 	// Register node
-	tx, err := node.OnboardNodeOperator(sor, mevSocialize, 0, operatorName, operatorRewardAddress, opts)
+	tx, err := node.OnboardNodeOperator(sor, mevSocialize, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

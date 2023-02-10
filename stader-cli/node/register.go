@@ -89,7 +89,7 @@ func registerNode(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Println("The node was successfully registered with Rocket Pool.")
+	fmt.Println("The node was successfully registered with Stader.")
 	return nil
 
 }

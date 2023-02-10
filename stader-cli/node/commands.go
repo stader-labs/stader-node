@@ -63,11 +63,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.StringFlag{
 						Name:  "operator-reward-address, ora",
-						Usage: "The address at which operator will get rewards",
+						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
 					cli.StringFlag{
 						Name:  "socialize-mev, sm",
-						Usage: "Should Mev be socialized (Can be be only true or false)",
+						Usage: "Should Mev be socialized (will default to true, can be be only true or false)",
 					},
 				},
 				Action: func(c *cli.Context) error {
