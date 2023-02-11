@@ -74,7 +74,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 		Name:      "wait",
 		Aliases:   []string{"t"},
 		Usage:     "Wait for a transaction to complete",
-		UsageText: "rocketpool api wait tx-hash",
+		UsageText: "stader api wait tx-hash",
 		Action: func(c *cli.Context) error {
 			// Validate args
 			if err := cliutils.ValidateArgCount(c, 1); err != nil {

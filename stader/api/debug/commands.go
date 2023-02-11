@@ -20,7 +20,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "export-validators",
 				Aliases:   []string{"x"},
 				Usage:     "Exports a TSV file of validators",
-				UsageText: "rocketpool api debug export-validators",
+				UsageText: "Stader api debug export-validators",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

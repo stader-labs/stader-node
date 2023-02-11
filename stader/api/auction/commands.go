@@ -12,14 +12,14 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 	command.Subcommands = append(command.Subcommands, cli.Command{
 		Name:    name,
 		Aliases: aliases,
-		Usage:   "Manage Rocket Pool RPL auctions",
+		Usage:   "Manage Stader SD auctions",
 		Subcommands: []cli.Command{
 
 			{
 				Name:      "status",
 				Aliases:   []string{"s"},
-				Usage:     "Get RPL auction status",
-				UsageText: "rocketpool api auction status",
+				Usage:     "Get SD auction status",
+				UsageText: "stader api auction status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
