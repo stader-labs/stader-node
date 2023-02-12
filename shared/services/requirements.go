@@ -133,7 +133,7 @@ func RequireNodeRegistered(c *cli.Context) error {
 		return err
 	}
 	if !nodeRegistered {
-		return errors.New("The node is not registered with Stader. Please run 'rocketpool node register' and try again.")
+		return errors.New("The node is not registered with Stader. Please run 'stader-cli node register' and try again.")
 	}
 	return nil
 }

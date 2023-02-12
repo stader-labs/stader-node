@@ -3,7 +3,6 @@ package node
 import (
 	"bytes"
 	"fmt"
-	"math/big"
 	"sort"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -59,15 +58,14 @@ func getStatus(c *cli.Context) error {
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", colorGreen, colorReset)
 	fmt.Printf(
-		"The node %s%s%s has a balance of %.6f ETH and %.6f RPL.\n",
+		"The node %s%s%s has a balance of %.6f ETH.\n",
 		colorBlue,
 		status.AccountAddressFormatted,
 		colorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6),
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.RPL), 6))
-	if status.AccountBalances.FixedSupplyRPL.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The node has a balance of %.6f old RPL which can be swapped for new RPL.\n", math.RoundDown(eth.WeiToEth(status.AccountBalances.FixedSupplyRPL), 6))
-	}
+		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
+	// if status.AccountBalances.FixedSupplyRPL.Cmp(big.NewInt(0)) > 0 {
+	// 	fmt.Printf("The node has a balance of %.6f old RPL which can be swapped for new RPL.\n", math.RoundDown(eth.WeiToEth(status.AccountBalances.FixedSupplyRPL), 6))
+	// }
 
 	// Registered node details
 	if status.Registered {
@@ -153,12 +151,12 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("%s=== Withdrawal Address ===%s\n", colorGreen, colorReset)
 		if !bytes.Equal(status.AccountAddress.Bytes(), status.WithdrawalAddress.Bytes()) {
 			fmt.Printf(
-				"The node's withdrawal address %s%s%s has a balance of %.6f ETH and %.6f RPL.\n",
+				"The node's withdrawal address %s%s%s has a balance of %.6f ETH.\n",
 				colorBlue,
 				status.WithdrawalAddressFormatted,
 				colorReset,
 				math.RoundDown(eth.WeiToEth(status.WithdrawalBalances.ETH), 6),
-				math.RoundDown(eth.WeiToEth(status.WithdrawalBalances.RPL), 6))
+			)
 		} else {
 			fmt.Printf("%sThe node's withdrawal address has not been changed, so rewards and withdrawals will be sent to the node itself.\n", colorYellow)
 			fmt.Printf("Consider changing this to a cold wallet address that you control using the `set-withdrawal-address` command.\n%s", colorReset)

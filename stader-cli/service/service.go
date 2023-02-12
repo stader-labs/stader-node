@@ -526,7 +526,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	if err != nil {
 		return fmt.Errorf("Error loading user settings: %w", err)
 	}
-	println("step 1")
+
 	// Check for unsupported clients
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
 		selectedEc := cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)
@@ -540,15 +540,13 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		}
 	}
 
-	println("step 2")
-
 	// Force all Docker or all Hybrid
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External {
 		fmt.Printf("%sYou are using a locally-managed Execution client and an externally-managed Consensus client.\nThis configuration is not compatible with The Merge; please select either locally-managed or externally-managed for both the EC and CC.%s\n", colorRed, colorReset)
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
 		fmt.Printf("%sYou are using an externally-managed Execution client and a locally-managed Consensus client.\nThis configuration is not compatible with The Merge; please select either locally-managed or externally-managed for both the EC and CC.%s\n", colorRed, colorReset)
 	}
-	println("step 3")
+
 	isMigration := false
 	if isNew {
 		// Look for a legacy config to migrate
@@ -561,20 +559,19 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			isMigration = true
 		}
 	}
-	println("step 4")
 
 	if isMigration {
 		return fmt.Errorf("You must upgrade your configuration before starting the Smartnode.\nPlease run `stader-cli service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
 	} else if isNew {
 		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Smartnode before running it.")
 	}
-	println("step 5")
+
 	// Check if this is a new install
 	isUpdate, err := staderClient.IsFirstRun()
 	if err != nil {
 		return fmt.Errorf("error checking for first-run status: %w", err)
 	}
-	println("step 6")
+
 	if isUpdate && !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Smartnode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
 			err = cfg.UpdateDefaults()
@@ -588,7 +585,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			return nil
 		}
 	}
-	println("step 7")
+
 	// Update the Prometheus template with the assigned ports
 	metricsEnabled := cfg.EnableMetrics.Value.(bool)
 	if metricsEnabled {
@@ -597,7 +594,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			return err
 		}
 	}
-	println("step 8")
+
 	// Validate the config
 	errors := cfg.Validate()
 	if len(errors) > 0 {
@@ -608,7 +605,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		fmt.Println(colorReset)
 		return nil
 	}
-	println("step 9")
+
 	if !c.Bool("ignore-slash-timer") {
 		// Do the client swap check
 		err := checkForValidatorChange(staderClient, cfg)
@@ -626,7 +623,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	} else {
 		fmt.Printf("%sIgnoring anti-slashing safety delay.%s\n", colorYellow, colorReset)
 	}
-	println("step 10")
+
 	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
 	isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
 	isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
@@ -654,8 +651,6 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		}
 	}
 
-	println("step 11")
-
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
 	if err != nil {
@@ -665,14 +660,12 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	println("Starting Stader Service")
-	println("step 12")
+
 	// Start service
 	err = staderClient.StartService(getComposeFiles(c))
 	if err != nil {
 		return err
 	}
-
-	println("step 13")
 
 	// Remove the upgrade flag if it's there
 	return staderClient.RemoveUpgradeFlagFile()
@@ -1081,7 +1074,7 @@ func pauseService(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm("Are you sure you want to pause the Stader service? Any validators will be penalized!")) {
+	if !(c.Bool("yes") || cliutils.Confirm("Are you sure you want to pause the Stader service? Any staking validators will be penalized!")) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

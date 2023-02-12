@@ -3,11 +3,12 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
+	"math/big"
+
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-minipool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -34,7 +35,7 @@ func nodeDeposit(c *cli.Context) error {
 	fmt.Println("Your eth2 client is on the correct network.")
 
 	// Post a warning about fee distribution
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new minipool, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new minipool.%s\nWould you like to continue?", colorYellow, colorReset))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new validator, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new minipool.%s\nWould you like to continue?", colorYellow, colorReset))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -92,8 +93,8 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %.6f ETH to create a minipool with a minimum possible commission rate of %f%%.\n"+
-			"%sARE YOU SURE YOU WANT TO DO THIS? Running a minipool is a long-term commitment, and this action cannot be undone!%s",
+		"You are about to deposit %.6f ETH to create a validator with a minimum possible commission rate of %f%%.\n"+
+			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
 		math.RoundDown(eth.WeiToEth(amountWei), 6),
 		0.0,
 		colorYellow,
@@ -109,7 +110,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log and wait for the minipool address
-	fmt.Printf("Creating minipool...\n")
+	fmt.Printf("Creating validator...\n")
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
 	if err != nil {
@@ -118,13 +119,13 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Log & return
 	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-	fmt.Printf("Your new minipool's address is: %s\n", response.MinipoolAddress)
+	// fmt.Printf("Your new validator's address is: %s\n", response.MinipoolAddress)
 	fmt.Printf("The validator pubkey is: %s\n\n", response.ValidatorPubkey.Hex())
 
-	fmt.Println("Your minipool is now in Initialized status.")
+	fmt.Println("Your validator is now in Initialized status.")
 	fmt.Println("Once the 4 ETH deposit has been matched by the staking pool, it will move to Prelaunch status.")
-	fmt.Printf("After that, it will move to Staking status once %s have passed.\n", response.ScrubPeriod)
-	fmt.Println("You can watch its progress using `rocketpool service logs node`.")
+	// fmt.Printf("After that, it will move to Staking status once %s have passed.\n", response.ScrubPeriod)
+	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
 
 	return nil
 

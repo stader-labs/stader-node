@@ -68,9 +68,9 @@ func run(c *cli.Context) error {
 	configureHTTP()
 
 	// Wait until node is registered
-	if err := services.WaitNodeRegistered(c, true); err != nil {
-		return err
-	}
+	// if err := services.WaitNodeRegistered(c, true); err != nil {
+	// 	return err
+	// }
 
 	// Initialize tasks
 	manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
