@@ -7,7 +7,6 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/stader-cli/network"
 	"github.com/stader-labs/stader-node/stader-cli/node"
 	"github.com/stader-labs/stader-node/stader-cli/service"
 	"github.com/stader-labs/stader-node/stader-cli/wallet"
@@ -108,7 +107,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	network.RegisterCommands(app, "network", []string{"e"})
+	// network.RegisterCommands(app, "network", []string{"e"})
 	node.RegisterCommands(app, "node", []string{"n"})
 	// odao.RegisterCommands(app, "odao", []string{"o"})
 	service.RegisterCommands(app, "service", []string{"s"})

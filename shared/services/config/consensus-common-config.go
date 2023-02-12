@@ -13,7 +13,7 @@ const OpenApiPortID string = "openApiPort"
 const DoppelgangerDetectionID string = "doppelgangerDetection"
 
 // Defaults
-const defaultGraffiti string = "Stader Labs"
+const defaultGraffiti string = "StaderLabs"
 const defaultCheckpointSyncProvider string = ""
 const defaultP2pPort uint16 = 9001
 const defaultBnApiPort uint16 = 5052

@@ -29,7 +29,7 @@ func main() {
 	// 		Email: "rahul@staderlabs.com",
 	// 	},
 	// }
-	app.Copyright = "(c) 2023 Stader labs"
+	app.Copyright = "(c) 2023 Stader Labs"
 
 	// Set application flags
 	app.Flags = []cli.Flag{

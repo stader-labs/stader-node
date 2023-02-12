@@ -529,10 +529,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 
 			{
-				Name:      "leave-smoothing-pool",
+				Name:      "leave-el-rewards-pool",
 				Aliases:   []string{"ls"},
-				Usage:     "Leave the el-cli Pool",
-				UsageText: "stader-cli node leave-el-cli-pool",
+				Usage:     "Leave the el-rewards Pool",
+				UsageText: "stader-cli node leave-el-rewards-pool",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",

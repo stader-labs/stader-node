@@ -257,11 +257,11 @@ func getStatus(c *cli.Context) error {
 			}
 
 		} else {
-			fmt.Println("The node does not have any minipools yet.")
+			fmt.Println("The node does not have any validators yet.")
 		}
 
 	} else {
-		fmt.Println("The node is not registered with Rocket Pool.")
+		fmt.Println("The node is not registered with Stader.")
 	}
 
 	// Return
