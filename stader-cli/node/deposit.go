@@ -35,7 +35,7 @@ func nodeDeposit(c *cli.Context) error {
 	fmt.Println("Your eth2 client is on the correct network.")
 
 	// Post a warning about fee distribution
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new validator, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new minipool.%s\nWould you like to continue?", colorYellow, colorReset))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new validator, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new validator.%s\nWould you like to continue?", colorYellow, colorReset))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -49,7 +49,7 @@ func nodeDeposit(c *cli.Context) error {
 		var success bool
 		salt, success = big.NewInt(0).SetString(c.String("salt"), 0)
 		if !success {
-			return fmt.Errorf("Invalid minipool salt: %s", c.String("salt"))
+			return fmt.Errorf("Invalid validator salt: %s", c.String("salt"))
 		}
 	} else {
 		buffer := make([]byte, 32)
@@ -66,19 +66,19 @@ func nodeDeposit(c *cli.Context) error {
 	colorYellow := "\033[33m"
 	syncResponse, err := staderClient.NodeSync()
 	if err != nil {
-		fmt.Printf("%s**WARNING**: Can't verify the sync status of your consensus client.\nYOU WILL LOSE ETH if your minipool is activated before it is fully synced.\n"+
+		fmt.Printf("%s**WARNING**: Can't verify the sync status of your consensus client.\nYOU WILL LOSE ETH if your validator is activated before it is fully synced.\n"+
 			"Reason: %s\n%s", colorRed, err, colorReset)
 	} else {
 		if syncResponse.BcStatus.PrimaryClientStatus.IsSynced {
-			fmt.Printf("Your consensus client is synced, you may safely create a minipool.\n")
+			fmt.Printf("Your consensus client is synced, you may safely create a validator.\n")
 		} else if syncResponse.BcStatus.FallbackEnabled {
 			if syncResponse.BcStatus.FallbackClientStatus.IsSynced {
-				fmt.Printf("Your fallback consensus client is synced, you may safely create a minipool.\n")
+				fmt.Printf("Your fallback consensus client is synced, you may safely create a validator.\n")
 			} else {
-				fmt.Printf("%s**WARNING**: neither your primary nor fallback consensus clients are fully synced.\nYOU WILL LOSE ETH if your minipool is activated before they are fully synced.\n%s", colorRed, colorReset)
+				fmt.Printf("%s**WARNING**: neither your primary nor fallback consensus clients are fully synced.\nYOU WILL LOSE ETH if your validator is activated before they are fully synced.\n%s", colorRed, colorReset)
 			}
 		} else {
-			fmt.Printf("%s**WARNING**: your primary consensus client is either not fully synced or offline and you do not have a fallback client configured.\nYOU WILL LOSE ETH if your minipool is activated before it is fully synced.\n%s", colorRed, colorReset)
+			fmt.Printf("%s**WARNING**: your primary consensus client is either not fully synced or offline and you do not have a fallback client configured.\nYOU WILL LOSE ETH if your validator is activated before it is fully synced.\n%s", colorRed, colorReset)
 		}
 	}
 
