@@ -96,7 +96,7 @@ func nodeDeposit(c *cli.Context) error {
 		"You are about to deposit %.6f ETH to create a validator with a minimum possible commission rate of %f%%.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
 		math.RoundDown(eth.WeiToEth(amountWei), 6),
-		0.0,
+		5.0,
 		colorYellow,
 		colorReset))) {
 		fmt.Println("Cancelled.")
