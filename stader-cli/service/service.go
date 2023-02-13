@@ -642,7 +642,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			oldVersion, _ = version.NewVersion("0.0.0")
 		}
 
-		vulnerableConstraint, _ := version.NewConstraint("<= 1.3.0")
+		vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
 		if vulnerableConstraint.Check(oldVersion) {
 			err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
 			if err != nil {

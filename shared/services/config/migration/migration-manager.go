@@ -21,7 +21,7 @@ func UpdateConfig(serializedConfig map[string]map[string]string) error {
 	}
 
 	// Create versions
-	v131, err := parseVersion("0.0.1")
+	v131, err := parseVersion("0.0.0")
 	if err != nil {
 		return err
 	}
