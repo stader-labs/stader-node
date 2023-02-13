@@ -119,89 +119,89 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			// 	},
 			// },
 
-			{
-				Name:      "set-withdrawal-address",
-				Aliases:   []string{"w"},
-				Usage:     "Set the node's withdrawal address",
-				UsageText: "stader-cli node set-withdrawal-address [options] address",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm setting withdrawal address",
-					},
-					cli.BoolFlag{
-						Name:  "force",
-						Usage: "Force update the withdrawal address, bypassing the 'pending' state that requires a confirmation transaction from the new address",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "set-withdrawal-address",
+			// 	Aliases:   []string{"w"},
+			// 	Usage:     "Set the node's withdrawal address",
+			// 	UsageText: "stader-cli node set-withdrawal-address [options] address",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm setting withdrawal address",
+			// 		},
+			// 		cli.BoolFlag{
+			// 			Name:  "force",
+			// 			Usage: "Force update the withdrawal address, bypassing the 'pending' state that requires a confirmation transaction from the new address",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					withdrawalAddress := c.Args().Get(0)
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 1); err != nil {
+			// 			return err
+			// 		}
+			// 		withdrawalAddress := c.Args().Get(0)
 
-					// Run
-					return setWithdrawalAddress(c, withdrawalAddress)
+			// 		// Run
+			// 		return setWithdrawalAddress(c, withdrawalAddress)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "confirm-withdrawal-address",
-				Aliases:   []string{"f"},
-				Usage:     "Confirm the node's pending withdrawal address if it has been set back to the node's address itself",
-				UsageText: "stader-cli node confirm-withdrawal-address [options]",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm withdrawal address",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "confirm-withdrawal-address",
+			// 	Aliases:   []string{"f"},
+			// 	Usage:     "Confirm the node's pending withdrawal address if it has been set back to the node's address itself",
+			// 	UsageText: "stader-cli node confirm-withdrawal-address [options]",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm withdrawal address",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Run
-					return confirmWithdrawalAddress(c)
+			// 		// Run
+			// 		return confirmWithdrawalAddress(c)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "set-timezone",
-				Aliases:   []string{"t"},
-				Usage:     "Set the node's timezone location",
-				UsageText: "stader-cli node set-timezone [options]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "timezone, t",
-						Usage: "The timezone location to set for the node (in the format 'Country/City')",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "set-timezone",
+			// 	Aliases:   []string{"t"},
+			// 	Usage:     "Set the node's timezone location",
+			// 	UsageText: "stader-cli node set-timezone [options]",
+			// 	Flags: []cli.Flag{
+			// 		cli.StringFlag{
+			// 			Name:  "timezone, t",
+			// 			Usage: "The timezone location to set for the node (in the format 'Country/City')",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Validate flags
-					if c.String("timezone") != "" {
-						if _, err := cliutils.ValidateTimezoneLocation("timezone location", c.String("timezone")); err != nil {
-							return err
-						}
-					}
+			// 		// Validate flags
+			// 		if c.String("timezone") != "" {
+			// 			if _, err := cliutils.ValidateTimezoneLocation("timezone location", c.String("timezone")); err != nil {
+			// 				return err
+			// 			}
+			// 		}
 
-					// Run
-					return setTimezoneLocation(c)
+			// 		// Run
+			// 		return setTimezoneLocation(c)
 
-				},
-			},
+			// 	},
+			// },
 
 			// {
 			// 	Name:      "swap-rpl",
@@ -456,118 +456,118 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			// 	},
 			// },
 
-			{
-				Name:      "initialize-fee-distributor",
-				Aliases:   []string{"z"},
-				Usage:     "Create the fee distributor contract for your node, so you can withdraw priority fees and MEV rewards after the merge",
-				UsageText: "stader-cli node initialize-fee-distributor",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm initialization gas costs",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "initialize-fee-distributor",
+			// 	Aliases:   []string{"z"},
+			// 	Usage:     "Create the fee distributor contract for your node, so you can withdraw priority fees and MEV rewards after the merge",
+			// 	UsageText: "stader-cli node initialize-fee-distributor",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm initialization gas costs",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Run
-					return initializeFeeDistributor(c)
+			// 		// Run
+			// 		return initializeFeeDistributor(c)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "distribute-fees",
-				Aliases:   []string{"b"},
-				Usage:     "Distribute the priority fee and MEV rewards from your fee distributor to your withdrawal address  (based on your node's average commission)",
-				UsageText: "stader-cli node distribute-fees",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm distribution",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "distribute-fees",
+			// 	Aliases:   []string{"b"},
+			// 	Usage:     "Distribute the priority fee and MEV rewards from your fee distributor to your withdrawal address  (based on your node's average commission)",
+			// 	UsageText: "stader-cli node distribute-fees",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm distribution",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Run
-					return distribute(c)
+			// 		// Run
+			// 		return distribute(c)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "join-el-rewards-pool",
-				Aliases:   []string{"js"},
-				Usage:     "Opt your node into the el-rewards Pool",
-				UsageText: "stader-cli node join-el-rewards-pool",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm opt-in",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "join-el-rewards-pool",
+			// 	Aliases:   []string{"js"},
+			// 	Usage:     "Opt your node into the el-rewards Pool",
+			// 	UsageText: "stader-cli node join-el-rewards-pool",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm opt-in",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Run
-					return joinSmoothingPool(c)
+			// 		// Run
+			// 		return joinSmoothingPool(c)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "leave-el-rewards-pool",
-				Aliases:   []string{"ls"},
-				Usage:     "Leave the el-rewards Pool",
-				UsageText: "stader-cli node leave-el-rewards-pool",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm opt-out",
-					},
-				},
-				Action: func(c *cli.Context) error {
+			// {
+			// 	Name:      "leave-el-rewards-pool",
+			// 	Aliases:   []string{"ls"},
+			// 	Usage:     "Leave the el-rewards Pool",
+			// 	UsageText: "stader-cli node leave-el-rewards-pool",
+			// 	Flags: []cli.Flag{
+			// 		cli.BoolFlag{
+			// 			Name:  "yes, y",
+			// 			Usage: "Automatically confirm opt-out",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
+			// 		// Validate args
+			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
+			// 			return err
+			// 		}
 
-					// Run
-					return leaveSmoothingPool(c)
+			// 		// Run
+			// 		return leaveSmoothingPool(c)
 
-				},
-			},
+			// 	},
+			// },
 
-			{
-				Name:      "sign-message",
-				Aliases:   []string{"sm"},
-				Usage:     "Sign an arbitrary message with the node's private key",
-				UsageText: "stader-cli node sign-message [-m message]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "message, m",
-						Usage: "The 'quoted message' to be signed",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					// Run
-					return signMessage(c)
-				},
-			},
+			// {
+			// 	Name:      "sign-message",
+			// 	Aliases:   []string{"sm"},
+			// 	Usage:     "Sign an arbitrary message with the node's private key",
+			// 	UsageText: "stader-cli node sign-message [-m message]",
+			// 	Flags: []cli.Flag{
+			// 		cli.StringFlag{
+			// 			Name:  "message, m",
+			// 			Usage: "The 'quoted message' to be signed",
+			// 		},
+			// 	},
+			// 	Action: func(c *cli.Context) error {
+			// 		// Run
+			// 		return signMessage(c)
+			// 	},
+			// },
 		},
 	})
 }

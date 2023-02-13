@@ -97,14 +97,14 @@ func (c *Client) RegisterNode(operatorName string, operatorRewardAddress common.
 func (c *Client) CanSetNodeWithdrawalAddress(withdrawalAddress common.Address, confirm bool) (api.CanSetNodeWithdrawalAddressResponse, error) {
 	responseBytes, err := c.callAPI("node can-set-withdrawal-address", withdrawalAddress.Hex(), strconv.FormatBool(confirm))
 	if err != nil {
-		return api.CanSetNodeWithdrawalAddressResponse{}, fmt.Errorf("Could not get can set node withdrawal address: %w", err)
+		return api.CanSetNodeWithdrawalAddressResponse{}, fmt.Errorf("Could not set node withdrawal address: %w", err)
 	}
 	var response api.CanSetNodeWithdrawalAddressResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.CanSetNodeWithdrawalAddressResponse{}, fmt.Errorf("Could not decode can set node withdrawal address response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanSetNodeWithdrawalAddressResponse{}, fmt.Errorf("Could not get can set node withdrawal address: %s", response.Error)
+		return api.CanSetNodeWithdrawalAddressResponse{}, fmt.Errorf("Could not set node withdrawal address: %s", response.Error)
 	}
 	return response, nil
 }
