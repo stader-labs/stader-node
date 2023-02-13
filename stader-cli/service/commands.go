@@ -105,7 +105,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 		},
 		Subcommands: []cli.Command{
-
 			{
 				Name:      "install",
 				Aliases:   []string{"i"},

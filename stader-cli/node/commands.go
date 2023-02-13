@@ -339,7 +339,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "deposit",
 				Aliases:   []string{"d"},
-				Usage:     "Make a deposit and create a minipool",
+				Usage:     "Make a deposit and create a validator",
 				UsageText: "stader-cli node deposit [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
