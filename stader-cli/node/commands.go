@@ -357,8 +357,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
+					fmt.Printf("Args are %v\n", c.Args())
+					fmt.Printf("num-validator is %d\n", c.Int("num-validator"))
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
 						return err
 					}
 

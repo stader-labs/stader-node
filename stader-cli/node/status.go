@@ -59,6 +59,8 @@ func getStatus(c *cli.Context) error {
 		colorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
 
+	fmt.Printf("%s=== Operator Registration Details ===%s\n", colorGreen, colorReset)
+
 	if status.Registered {
 		fmt.Printf("The node is registered with Stader. Below are node details:\n")
 		fmt.Printf("Operator Id: %d\n", status.OperatorId)
