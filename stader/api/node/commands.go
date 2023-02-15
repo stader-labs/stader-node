@@ -589,12 +589,12 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(2))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(3))
+					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
