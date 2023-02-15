@@ -8,7 +8,6 @@ import (
 
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/tokens"
-	rptypes "github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/shared/services/rewards"
 	"github.com/stader-labs/stader-node/shared/utils/rp"
 )
@@ -210,12 +209,9 @@ type CanNodeDepositResponse struct {
 	GasInfo                rocketpool.GasInfo `json:"gasInfo"`
 }
 type NodeDepositResponse struct {
-	Status          string                  `json:"status"`
-	Error           string                  `json:"error"`
-	TxHash          common.Hash             `json:"txHash"`
-	MinipoolAddress common.Address          `json:"minipoolAddress"`
-	ValidatorPubkey rptypes.ValidatorPubkey `json:"validatorPubkey"`
-	ScrubPeriod     time.Duration           `json:"scrubPeriod"`
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
 }
 
 type CanNodeSendResponse struct {

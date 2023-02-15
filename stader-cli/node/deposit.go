@@ -40,6 +40,8 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 
+	numValidators := c.Uint64("num-validators")
+
 	// Force 4 ETH minipools as the only option after much community discussion
 	amountWei := eth.EthToWei(4.0)
 
@@ -91,11 +93,13 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
+	totalDeposited := amountWei.Mul(amountWei, big.NewInt(int64(numValidators)))
+
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %.6f ETH to create a validator with a minimum possible commission rate of %f%%.\n"+
+		"You are about to deposit %.6f ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
-		math.RoundDown(eth.WeiToEth(amountWei), 6),
+		math.RoundDown(eth.WeiToEth(totalDeposited), 6), numValidators,
 		5.0,
 		colorYellow,
 		colorReset))) {
@@ -104,13 +108,13 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, salt, true)
+	response, err := staderClient.NodeDeposit(amountWei, salt, numValidators, true)
 	if err != nil {
 		return err
 	}
 
 	// Log and wait for the minipool address
-	fmt.Printf("Creating validator...\n")
+	fmt.Printf("Creating %d validators...\n", numValidators)
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
 	if err != nil {
@@ -118,13 +122,13 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(totalDeposited), 6))
 	// fmt.Printf("Your new validator's address is: %s\n", response.MinipoolAddress)
-	fmt.Printf("The validator pubkey is: %s\n\n", response.ValidatorPubkey.Hex())
+	fmt.Printf("Total %d validators were created\n", numValidators)
+	//fmt.Printf("The validator pubkey is: %s\n\n", response.ValidatorPubkey.Hex())
 
-	fmt.Println("Your validator is now in Initialized status.")
-	fmt.Println("Once the 4 ETH deposit has been matched by the staking pool, it will move to Prelaunch status.")
-	// fmt.Printf("After that, it will move to Staking status once %s have passed.\n", response.ScrubPeriod)
+	fmt.Println("Your validators are now in Initialized status.")
+	fmt.Println("Once the 4 ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
 	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
 
 	return nil
