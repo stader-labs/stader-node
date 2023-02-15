@@ -108,7 +108,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, salt, numValidators, true)
+	response, err := staderClient.NodeDeposit(amountWei, salt, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}

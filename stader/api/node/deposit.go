@@ -19,7 +19,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators uint64, submit bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.NodeDepositResponse, error) {
 
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -66,16 +66,16 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, fmt.Errorf("node is not registered with stader")
 	}
 
-	validatorPubKeys := make([][]byte, numValidators)
-	validatorSignatures := make([][]byte, numValidators)
-	depositDataRoots := make([][32]byte, numValidators)
+	validatorPubKeys := make([][]byte, numValidators.Int64())
+	validatorSignatures := make([][]byte, numValidators.Int64())
+	depositDataRoots := make([][32]byte, numValidators.Int64())
 
 	// Get transactor
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
-	opts.Value = amountWei.Mul(amountWei, big.NewInt(int64(numValidators)))
+	opts.Value = amountWei.Mul(amountWei, numValidators)
 
 	nodeAccount, err = w.GetNodeAccount()
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, nodeAccount.Address, nil)
@@ -83,18 +83,18 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, err
 	}
 
-	// bchain - TODO - convert numValidators to int64
-	for i := uint64(0); i < numValidators; i++ {
-		// Adjust the salt
-		if salt.Cmp(big.NewInt(0)) == 0 {
-			nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
-			if err != nil {
-				return nil, err
-			}
-			salt.SetUint64(nonce)
+	// Adjust the salt
+	if salt.Cmp(big.NewInt(0)) == 0 {
+		nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
 		}
+		salt.SetUint64(nonce)
+	}
 
-		nextValidatorKeyCount := validatorKeyCount.Abs(big.NewInt(int64(i)))
+	// bchain - TODO - convert numValidators to big int
+	for i := int64(0); i < numValidators.Int64(); i++ {
+		nextValidatorKeyCount := validatorKeyCount.Abs(big.NewInt(i))
 
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
