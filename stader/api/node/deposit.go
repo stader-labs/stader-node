@@ -30,11 +30,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 	if err != nil {
 		return nil, err
 	}
-	sor, err := services.GetStaderOperatorRegistry(c)
-	if err != nil {
-		return nil, err
-	}
-	svr, err := services.GetStaderValidatorRegistry(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +81,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 
 	nodeAccount, err = w.GetNodeAccount()
 	// get the vault address and vault credential
-	operatorRegistryInfo, err := node.GetOperatorRegistry(sor, nodeAccount.Address, nil)
+	operatorRegistryInfo, err := node.GetOperatorRegistry(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +89,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 		return nil, fmt.Errorf("node is not registered")
 	}
 
-	validatorKeyCount, err := node.GetTotalValidatorKeys(sor, nodeAccount.Address, nil)
+	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +133,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, submit bool)
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	tx, err := node.AddValidatorKeys(svr, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, opts)
+	tx, err := node.AddValidatorKeys(prn, types.ValidatorPubkey(pubKey), types.ValidatorSignature(signature), depositDataRoot, opts)
 	if err != nil {
 		return nil, err
 	}

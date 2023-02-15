@@ -21,7 +21,7 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	sor, err := services.GetStaderOperatorRegistry(c)
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 
 	nodeAccount, err := w.GetNodeAccount()
 
-	operatorRegistry, err := node.GetOperatorRegistry(sor, nodeAccount.Address, nil)
+	operatorRegistry, err := node.GetOperatorRegistry(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +58,7 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 	if err != nil {
 		return nil, err
 	}
-	sor, err := services.GetStaderOperatorRegistry(c)
-	if err != nil {
-		return nil, err
-	}
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 
 	// Response
 	response := api.RegisterNodeResponse{}
@@ -80,7 +77,7 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 
 	//fmt.Printf("mev socialize is %d\n", mevSocialize)
 	// Register node
-	tx, err := node.OnboardNodeOperator(sor, mevSocialize, operatorName, operatorRewardAddress, opts)
+	tx, err := node.OnboardNodeOperator(prn, mevSocialize, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
