@@ -18,6 +18,9 @@ type NodeStatusResponse struct {
 	Error                             string          `json:"error"`
 	AccountAddress                    common.Address  `json:"accountAddress"`
 	AccountAddressFormatted           string          `json:"accountAddressFormatted"`
+	OperatorId                        *big.Int        `json:"operatorId"`
+	OperatorName                      string          `json:"operatorName"`
+	OperatorRewardAddress             common.Address  `json:"operatorRewardAddress"`
 	WithdrawalAddress                 common.Address  `json:"withdrawalAddress"`
 	WithdrawalAddressFormatted        string          `json:"withdrawalAddressFormatted"`
 	PendingWithdrawalAddress          common.Address  `json:"pendingWithdrawalAddress"`
