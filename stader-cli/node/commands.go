@@ -350,14 +350,19 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "salt, l",
 						Usage: "An optional seed to use when generating the new validator address.",
 					},
+					cli.IntFlag{
+						Name:  "num-validator, nv",
+						Usage: "Number of validators you want to create (Required)",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
 						return err
 					}
 
+					fmt.Printf("num-validator is %d\n", c.Int("num-validator"))
 					// Validate flags
 					if c.String("amount") != "" {
 						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {

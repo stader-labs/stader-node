@@ -53,7 +53,7 @@ func getStatus(c *cli.Context) error {
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", colorGreen, colorReset)
 	fmt.Printf(
-		"The node %s%s%s has a balance of %.6f ETH.\n",
+		"The node %s%s%s has a balance of %.6f ETH.\n\n",
 		colorBlue,
 		status.AccountAddressFormatted,
 		colorReset,
