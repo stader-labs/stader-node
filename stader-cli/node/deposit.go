@@ -43,7 +43,7 @@ func nodeDeposit(c *cli.Context) error {
 	numValidators := c.Uint64("num-validators")
 
 	// Force 4 ETH minipools as the only option after much community discussion
-	amountWei := eth.EthToWei(4.0)
+	baseAmount := eth.EthToWei(4.0)
 
 	// Get minipool salt
 	var salt *big.Int
@@ -93,7 +93,8 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	totalDeposited := amountWei.Mul(amountWei, big.NewInt(int64(numValidators)))
+	baseAmountTemp := baseAmount
+	totalDeposited := baseAmountTemp.Mul(baseAmountTemp, big.NewInt(int64(numValidators)))
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
@@ -108,7 +109,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, salt, big.NewInt(int64(numValidators)), true)
+	response, err := staderClient.NodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
@@ -123,9 +124,7 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Log & return
 	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(totalDeposited), 6))
-	// fmt.Printf("Your new validator's address is: %s\n", response.MinipoolAddress)
 	fmt.Printf("Total %d validators were created\n", numValidators)
-	//fmt.Printf("The validator pubkey is: %s\n\n", response.ValidatorPubkey.Hex())
 
 	fmt.Println("Your validators are now in Initialized status.")
 	fmt.Println("Once the 4 ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
