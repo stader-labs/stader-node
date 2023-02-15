@@ -77,7 +77,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	}
 
 	amountToSend := amountWei.Mul(amountWei, numValidators)
-	fmt.Printf("amount of eth to deposit is %d\n", amountToSend)
 	opts.Value = amountToSend
 
 	nodeAccount, err = w.GetNodeAccount()
