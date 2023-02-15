@@ -12,7 +12,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 )
 
 // Config
@@ -93,14 +92,13 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	baseAmountTemp := baseAmount
-	totalDeposited := baseAmountTemp.Mul(baseAmountTemp, big.NewInt(int64(numValidators)))
+	totalDeposited := baseAmount.Uint64() * numValidators
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %.6f ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
+		"You are about to deposit %d ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
-		math.RoundDown(eth.WeiToEth(totalDeposited), 6), numValidators,
+		totalDeposited, numValidators,
 		5.0,
 		colorYellow,
 		colorReset))) {
@@ -123,7 +121,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(totalDeposited), 6))
+	fmt.Printf("The node deposit of %d ETH was made successfully!\n", totalDeposited)
 	fmt.Printf("Total %d validators were created\n", numValidators)
 
 	fmt.Println("Your validators are now in Initialized status.")
