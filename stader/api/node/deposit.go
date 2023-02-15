@@ -75,7 +75,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	if err != nil {
 		return nil, err
 	}
-	opts.Value = amountWei.Mul(amountWei, numValidators)
+
+	amountToSend := amountWei.Mul(amountWei, numValidators)
+	fmt.Printf("amount of eth to deposit is %d\n", amountToSend)
+	opts.Value = amountToSend
 
 	nodeAccount, err = w.GetNodeAccount()
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, nodeAccount.Address, nil)
