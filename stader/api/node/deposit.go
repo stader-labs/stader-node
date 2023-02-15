@@ -163,6 +163,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	if err != nil {
 		return nil, err
 	}
+	//fmt.Printf("tx is %s\n", tx.Hash())
 
 	// Print transaction if requested
 	if !submit {
