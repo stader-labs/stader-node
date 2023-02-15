@@ -174,6 +174,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	}
 
 	response.TxHash = tx.Hash()
+	response.Status = "success"
 
 	// Return response
 	return &response, nil
