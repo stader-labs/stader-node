@@ -19,11 +19,8 @@ func getStatus(c *cli.Context) (*api.WalletStatusResponse, error) {
 		return nil, err
 	}
 
-	privateKey, err := w.GetNodePrivateKey()
-
 	// Response
 	response := api.WalletStatusResponse{}
-	response.PrivateKey = privateKey
 
 	// Get wallet status
 	response.PasswordSet = pm.IsPasswordSet()
