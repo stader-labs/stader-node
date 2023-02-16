@@ -3,6 +3,7 @@ package node
 import (
 	"context"
 	"fmt"
+	staderCore "github.com/stader-labs/stader-minipool-go/stader"
 	"time"
 
 	"github.com/rocket-pool/rocketpool-go/node"
@@ -107,7 +108,7 @@ func canSetSmoothingPoolStatus(c *cli.Context, status bool) (*api.CanSetSmoothin
 	}
 	gasInfo, err := node.EstimateSetSmoothingPoolRegistrationStateGas(rp, status, opts)
 	if err == nil {
-		response.GasInfo = gasInfo
+		response.GasInfo = staderCore.GasInfo(gasInfo)
 	}
 
 	return &response, err

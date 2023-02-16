@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	_ "time/tzdata"
 
 	"github.com/rocket-pool/rocketpool-go/node"
@@ -39,7 +40,7 @@ func canSetTimezoneLocation(c *cli.Context, timezoneLocation string) (*api.CanSe
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 	response.CanSet = true
 	return &response, nil
 

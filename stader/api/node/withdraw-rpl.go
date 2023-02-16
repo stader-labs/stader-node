@@ -3,6 +3,7 @@ package node
 import (
 	"context"
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/rocket-pool/rocketpool-go/network"
@@ -104,7 +105,7 @@ func canNodeWithdrawRpl(c *cli.Context, amountWei *big.Int) (*api.CanNodeWithdra
 		}
 		gasInfo, err := node.EstimateWithdrawRPLGas(rp, amountWei, opts)
 		if err == nil {
-			response.GasInfo = gasInfo
+			response.GasInfo = stader.GasInfo(gasInfo)
 		}
 		return err
 	})

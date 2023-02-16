@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
+func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, socializeMev bool) (*api.CanRegisterNodeResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
@@ -40,9 +40,20 @@ func canRegisterNode(c *cli.Context) (*api.CanRegisterNodeResponse, error) {
 		return nil, err
 	}
 
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := node.EstimateOnboardNodeOperator(pnr, socializeMev, operatorName, operatorRewardAddress, opts)
+	if err != nil {
+		return nil, err
+	}
+
 	if operatorRegistry.OperatorName != "" {
 		response.AlreadyRegistered = true
 		response.CanRegister = false
+		response.GasInfo = gasInfo
 	} else {
 		response.CanRegister = true
 	}

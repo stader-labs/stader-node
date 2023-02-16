@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-minipool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
@@ -83,11 +82,23 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
+	if err != nil {
+		return err
+	}
+
+	// TODO - improve output ux
+	if canNodeDepositResponse.DepositDisabled {
+		fmt.Printf("Deposits are currently disabled!")
+		return nil
+	}
+	if canNodeDepositResponse.InsufficientBalance {
+		fmt.Printf("Account does not have enough balance!")
+		return nil
+	}
+
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  25000000,
-		SafeGasLimit: 30000000,
-	}, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}

@@ -62,8 +62,8 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 }
 
 // Check whether the node can be registered
-func (c *Client) CanRegisterNode() (api.CanRegisterNodeResponse, error) {
-	responseBytes, err := c.callAPI("node can-register")
+func (c *Client) CanRegisterNode(operatorName string, operatorRewardAddress common.Address, socializeMev bool) (api.CanRegisterNodeResponse, error) {
+	responseBytes, err := c.callAPI("node can-register", operatorName, operatorRewardAddress.Hex(), strconv.FormatBool(socializeMev))
 	if err != nil {
 		return api.CanRegisterNodeResponse{}, fmt.Errorf("Could not get can register node status: %w", err)
 	}
@@ -414,8 +414,8 @@ func (c *Client) NodeWithdrawRpl(amountWei *big.Int) (api.NodeWithdrawRplRespons
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountWei *big.Int, minFee float64, salt *big.Int) (api.CanNodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-deposit %s %f %s", amountWei.String(), minFee, salt.String()))
+func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.CanNodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("Could not get can node deposit status: %w", err)
 	}

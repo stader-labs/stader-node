@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 	"strconv"
 	"strings"
@@ -141,7 +142,7 @@ func canClaimRewards(c *cli.Context, indicesString string) (*api.CanNodeClaimRew
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 	return &response, nil
 
 }
@@ -247,7 +248,7 @@ func canClaimAndStakeRewards(c *cli.Context, indicesString string, stakeAmount *
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 	return &response, nil
 
 }

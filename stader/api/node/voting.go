@@ -3,6 +3,7 @@ package node
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -76,7 +77,7 @@ func estimateSetSnapshotDelegateGas(c *cli.Context, address common.Address) (*ap
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Return response
 	return &response, nil
@@ -187,7 +188,7 @@ func estimateClearSnapshotDelegateGas(c *cli.Context) (*api.EstimateClearSnapsho
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Return response
 	return &response, nil
