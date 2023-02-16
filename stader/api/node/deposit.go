@@ -94,16 +94,16 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		salt.SetUint64(nonce)
 	}
 
-	for i := int64(0); i < numValidators.Int64(); i++ {
-		validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+	newValidatorKey := validatorKeyCount
 
+	for i := int64(0); i < numValidators.Int64(); i++ {
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
 			return nil, err
 		}
 
-		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
+		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, newValidatorKey, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -150,6 +150,8 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		if err := w.Save(); err != nil {
 			return nil, err
 		}
+
+		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 	}
 
 	// Override the provided pending TX if requested
