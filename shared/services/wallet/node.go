@@ -69,6 +69,21 @@ func (w *Wallet) GetNodeAccountTransactor() (*bind.TransactOpts, error) {
 
 }
 
+func (w *Wallet) GetNodePrivateKey() (*ecdsa.PrivateKey, error) {
+	// Check wallet is initialized
+	if !w.IsInitialized() {
+		return nil, errors.New("Wallet is not initialized")
+	}
+
+	// Get private key
+	privateKey, _, err := w.getNodePrivateKey()
+	if err != nil {
+		return nil, err
+	}
+
+	return privateKey, err
+}
+
 // Get the node account private key bytes
 func (w *Wallet) GetNodePrivateKeyBytes() ([]byte, error) {
 

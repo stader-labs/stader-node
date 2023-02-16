@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
@@ -18,12 +19,12 @@ type ValidatorKeystore struct {
 }
 
 type WalletStatusResponse struct {
-	Status            string         `json:"status"`
-	PrivateKey        string         `json:"privateKey"`
-	Error             string         `json:"error"`
-	PasswordSet       bool           `json:"passwordSet"`
-	WalletInitialized bool           `json:"walletInitialized"`
-	AccountAddress    common.Address `json:"accountAddress"`
+	Status            string            `json:"status"`
+	PrivateKey        *ecdsa.PrivateKey `json:"privateKey"`
+	Error             string            `json:"error"`
+	PasswordSet       bool              `json:"passwordSet"`
+	WalletInitialized bool              `json:"walletInitialized"`
+	AccountAddress    common.Address    `json:"accountAddress"`
 }
 
 type SetPasswordResponse struct {
