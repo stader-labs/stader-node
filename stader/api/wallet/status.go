@@ -1,7 +1,6 @@
 package wallet
 
 import (
-	"fmt"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -21,10 +20,11 @@ func getStatus(c *cli.Context) (*api.WalletStatusResponse, error) {
 	}
 
 	privateKey, err := w.GetNodePrivateKeyBytes()
-	fmt.Printf("private key is %s\n", string(privateKey))
+	//fmt.Printf("private key is %s\n", string(privateKey))
 
 	// Response
 	response := api.WalletStatusResponse{}
+	response.PrivateKey = string(privateKey)
 
 	// Get wallet status
 	response.PasswordSet = pm.IsPasswordSet()

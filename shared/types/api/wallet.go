@@ -19,6 +19,7 @@ type ValidatorKeystore struct {
 
 type WalletStatusResponse struct {
 	Status            string         `json:"status"`
+	PrivateKey        string         `json:"privateKey"`
 	Error             string         `json:"error"`
 	PasswordSet       bool           `json:"passwordSet"`
 	WalletInitialized bool           `json:"walletInitialized"`
