@@ -96,7 +96,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 	// bchain - TODO - convert numValidators to big int
 	for i := int64(0); i < numValidators.Int64(); i++ {
-		nextValidatorKeyCount := validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+		validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
@@ -104,7 +104,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 			return nil, err
 		}
 
-		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, nextValidatorKeyCount, nil)
+		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, validatorKeyCount, nil)
 		if err != nil {
 			return nil, err
 		}
