@@ -94,7 +94,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		salt.SetUint64(nonce)
 	}
 
-	// bchain - TODO - convert numValidators to big int
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 
@@ -108,6 +107,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		if err != nil {
 			return nil, err
 		}
+
 		withdrawCredentials, err := node.GetValidatorWithdrawalCredential(srcf, rewardWithdrawVault, nil)
 		if err != nil {
 			return nil, err
