@@ -20,7 +20,6 @@ func getStatus(c *cli.Context) (*api.WalletStatusResponse, error) {
 	}
 
 	privateKey, err := w.GetNodePrivateKey()
-	//fmt.Printf("private key is %s\n", string(privateKey))
 
 	// Response
 	response := api.WalletStatusResponse{}

@@ -30,8 +30,6 @@ func getStatus(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Wallet private key is %s\n\n", status.PrivateKey)
-
 	// Print status & return
 	if status.WalletInitialized {
 		fmt.Println("The node wallet is initialized.")
