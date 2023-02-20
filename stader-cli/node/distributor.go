@@ -85,7 +85,7 @@ func distribute(c *cli.Context) error {
 		return err
 	}
 	if !isInitializedResponse.IsInitialized {
-		fmt.Println("Your fee distributor has not been initialized yet so you cannot distribute its balance.\nPlease run `rocketpool node initialize-fee-distributor` to create it first.")
+		fmt.Println("Your fee distributor has not been initialized yet so you cannot distribute its balance.\nPlease run `stader-cli node initialize-fee-distributor` to create it first.")
 		return nil
 	}
 
