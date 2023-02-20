@@ -97,35 +97,6 @@ func GetEthClient(c *cli.Context) (*ExecutionClientManager, error) {
 	return ec, nil
 }
 
-func GetEthxPermisionlessPoolManager(c *cli.Context) (*stader.EthxContractManager, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	ethPermisionlessPoolAddr := common.HexToAddress("0x2E9D0b1b10380DDB45DDc28B57B4A72E2d6b2782")
-	return stader.NewEthxPermisionlessPool(ec, ethPermisionlessPoolAddr)
-}
-
-func GetStaderOperatorRegistry(c *cli.Context) (*stader.StaderOperatorRegistryContractManager, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO - update the address when sanjay updates
-	staderOperatorRegistryAddr := common.HexToAddress("0x43AdBC333aa3cd7d937559da2a5574A1bC99C7e7")
-	return stader.NewStaderOperatorRegistry(ec, staderOperatorRegistryAddr)
-}
-
 func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRegistryContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -137,11 +108,10 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 	}
 
 	// TODO - update the address when sanjay updates
-	permissionlessNodeRegistry := common.HexToAddress("0xbc536B674De5d7671bef54C87c7f79c455a759Aa")
-	return stader.NewPermissionlessNodeRegistry(ec, permissionlessNodeRegistry)
+	return stader.NewPermissionlessNodeRegistry(ec, cfg.Smartnode.GetPermissionlessNodeRegistryAddress())
 }
 
-func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistryContractManager, error) {
+func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err
@@ -152,23 +122,8 @@ func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistry
 	}
 
 	// TODO - update the address when sanjay updates
-	staderValidatorRegistryAddr := common.HexToAddress("0x8fA48cEA24D8c8f3524C0a7B93D3C921e1A3f88f")
-	return stader.NewStaderValidatorRegistry(ec, staderValidatorRegistryAddr)
-}
-
-func GetStaderRewardContractFactory(c *cli.Context) (*stader.StaderRewardContractFactoryContractManager, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO - update the address when sanjay updates
-	staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
-	return stader.NewStaderRewardContractFactory(ec, staderRewardContractFactoryAddress)
+	//staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
+	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
 }
 
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {

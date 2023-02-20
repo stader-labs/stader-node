@@ -56,7 +56,7 @@ func registerNode(c *cli.Context) error {
 		if canRegister.AlreadyRegistered {
 			fmt.Println("The node is already registered with Stader.")
 		}
-		if canRegister.RegistrationDisabled {
+		if canRegister.RegistrationPaused {
 			fmt.Println("Node registrations are currently disabled.")
 		}
 		return nil
