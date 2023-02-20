@@ -933,7 +933,7 @@ install "$@"
 	
 `
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s | sh -s -- %s", txt, strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s | sh -s --%s", txt, strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
