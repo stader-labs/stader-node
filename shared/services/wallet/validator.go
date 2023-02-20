@@ -99,6 +99,26 @@ func (w *Wallet) GetValidatorKeyByPubkey(pubkey rptypes.ValidatorPubkey) (*eth2t
 
 }
 
+func (w *Wallet) CreateValidatorKeyFromIndex(index uint) (*eth2types.BLSPrivateKey, error) {
+	// Check wallet is initialized
+	if !w.IsInitialized() {
+		return nil, errors.New("Wallet is not initialized")
+	}
+
+	// Get validator key
+	key, _, err := w.getValidatorPrivateKey(index)
+	if err != nil {
+		return nil, err
+	}
+
+	return key, err
+
+}
+
+func (w *Wallet) GetNextAccount() uint {
+	return w.ws.NextAccount
+}
+
 // Create a new validator key
 func (w *Wallet) CreateValidatorKey() (*eth2types.BLSPrivateKey, error) {
 

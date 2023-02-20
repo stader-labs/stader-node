@@ -21,7 +21,7 @@ import (
 )
 
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
-	var canNodeDepositResponse *api.CanNodeDepositResponse
+	canNodeDepositResponse := api.CanNodeDepositResponse{}
 
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -86,20 +86,12 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	validatorSignatures := make([][]byte, numValidators.Int64())
 	depositDataRoots := make([][32]byte, numValidators.Int64())
 
-	// Get transactor
-	opts, err = w.GetNodeAccountTransactor()
-	if err != nil {
-		return nil, err
-	}
-
-	amountToSend = amountWei.Mul(amountWei, numValidators)
-	opts.Value = amountToSend
-
 	nodeAccount, err = w.GetNodeAccount()
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
+	//fmt.Printf("Got validator key account %d\n", validatorKeyCount)
 
 	// Adjust the salt
 	if salt.Cmp(big.NewInt(0)) == 0 {
@@ -112,22 +104,36 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	newValidatorKey := validatorKeyCount
 
+	walletIndex := w.GetNextAccount()
+	//fmt.Printf("walletIndex is %d\n", walletIndex)
+
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		// Create and save a new validator key
-		validatorKey, err := w.CreateValidatorKey()
+		//fmt.Printf("walletIndex is %d\n", walletIndex)
+		validatorKey, err := w.GetValidatorKeyAt(walletIndex)
 		if err != nil {
 			return nil, err
 		}
+		walletIndex++
+		//validatorKey, err := w.CreateValidatorKey()
+		//if err != nil {
+		//	return nil, err
+		//}
+
+		//fmt.Printf("walletIndex post increment is %d\n", walletIndex)
+		//fmt.Printf("validator public key is %s\n", validatorKey.PublicKey())
 
 		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, newValidatorKey, nil)
 		if err != nil {
 			return nil, err
 		}
+		//fmt.Printf("reward withdraw vault is %s\n", rewardWithdrawVault.String())
 
 		withdrawCredentials, err := node.GetValidatorWithdrawalCredential(srcf, rewardWithdrawVault, nil)
 		if err != nil {
 			return nil, err
 		}
+		//fmt.Printf("withdraw creds is %s\n", withdrawCredentials.String())
 
 		// Get validator deposit data and associated parameters
 		depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config)
@@ -137,38 +143,27 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		pubKey := rptypes.BytesToValidatorPubkey(depositData.PublicKey)
 		signature := rptypes.BytesToValidatorSignature(depositData.Signature)
 
+		//fmt.Printf("depositDataRoot is %v\n", depositData)
+
 		// convert deposit data root to 32 bytes
 		depositDataRootFixedSize := [32]byte{}
 		depositDataRootBytes := depositDataRoot.Bytes()
-		for i := 0; i < 32; i++ {
-			depositDataRootFixedSize[i] = depositDataRootBytes[i]
-		}
-
-		// Make sure a validator with this pubkey doesn't already exist
-		status, err := bc.GetValidatorStatus(pubKey, nil)
-		if err != nil {
-			return nil, fmt.Errorf("Error checking for existing validator status: %w\nYour funds have not been deposited for your own safety.", err)
-		}
-		if status.Exists {
-			return nil, fmt.Errorf("**** ALERT ****\n"+
-				"Your validator %s has the following as a validator pubkey:\n\t%s\n"+
-				"This key is already in use by validator %d on the Beacon chain!\n"+
-				"Stader will not allow you to deposit this validator for your own safety so you do not get slashed.\n"+
-				"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
-				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
+		for j := 0; j < 32; j++ {
+			depositDataRootFixedSize[j] = depositDataRootBytes[j]
 		}
 
 		validatorPubKeys[i] = pubKey[:]
 		validatorSignatures[i] = signature[:]
 		depositDataRoots[i] = depositDataRootFixedSize
 
-		// To save the validator index update
+		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+
 		if err := w.Save(); err != nil {
 			return nil, err
 		}
-
-		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 	}
+
+	//fmt.Println("Finished generating validator keys")
 
 	// Override the provided pending TX if requested
 	err = eth1.CheckForNonceOverride(c, opts)
@@ -179,15 +174,18 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
+	//fmt.Printf("Estimating gas")
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, validatorPubKeys, validatorSignatures, depositDataRoots, opts)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("tx is %s\n", tx.Hash())
+	//fmt.Printf("canNodeDepositResponse is %v\n", canNodeDepositResponse)
+	//fmt.Printf("Estimated gas!")
 
+	canNodeDepositResponse.CanDeposit = true
 	canNodeDepositResponse.GasInfo = gasInfo
 
-	return canNodeDepositResponse, nil
+	return &canNodeDepositResponse, nil
 }
 
 func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.NodeDepositResponse, error) {
@@ -295,8 +293,8 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		// convert deposit data root to 32 bytes
 		depositDataRootFixedSize := [32]byte{}
 		depositDataRootBytes := depositDataRoot.Bytes()
-		for i := 0; i < 32; i++ {
-			depositDataRootFixedSize[i] = depositDataRootBytes[i]
+		for j := 0; j < 32; j++ {
+			depositDataRootFixedSize[j] = depositDataRootBytes[j]
 		}
 
 		// Make sure a validator with this pubkey doesn't already exist
@@ -338,7 +336,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("tx is %s\n", tx.Hash())
 
 	// Print transaction if requested
 	if !submit {
