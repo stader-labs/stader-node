@@ -10,11 +10,12 @@ import (
 
 // Constants
 const (
-	mevBoostPortableTag         string = "flashbots/mev-boost:1.4.0-portable"
-	mevBoostModernTag           string = "flashbots/mev-boost:1.4.0"
-	mevBoostUrlEnvVar           string = "MEV_BOOST_URL"
-	mevBoostRelaysEnvVar        string = "MEV_BOOST_RELAYS"
-	mevDocsUrl                  string = "https://docs.rocketpool.net/guides/node/mev.html"
+	mevBoostPortableTag  string = "flashbots/mev-boost:1.4.0-portable"
+	mevBoostModernTag    string = "flashbots/mev-boost:1.4.0"
+	mevBoostUrlEnvVar    string = "MEV_BOOST_URL"
+	mevBoostRelaysEnvVar string = "MEV_BOOST_RELAYS"
+	// TODO: add docs ur
+	mevDocsUrl                  string = "#"
 	RegulatedRelayDescription   string = "Select this to enable the relays that comply with government regulations (e.g. OFAC sanctions), "
 	UnregulatedRelayDescription string = "Select this to enable the relays that do not follow any sanctions lists (do not censor transactions), "
 	NoSandwichRelayDescription  string = "and do not allow front-running or sandwich attacks."
@@ -395,9 +396,9 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "Flashbots",
 			Description: "Flashbots is the developer of MEV-Boost, and one of the best-known and most trusted relays in the space.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net?id=rocketpool",
-				config.Network_Prater:  "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net?id=rocketpool",
-				config.Network_Devnet:  "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net?id=rocketpool",
+				config.Network_Mainnet: "https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net?id=staderlabs",
+				config.Network_Prater:  "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net?id=staderlabs",
+				config.Network_Devnet:  "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -409,9 +410,9 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "bloXroute Max Profit",
 			Description: "Select this to enable the \"max profit\" relay from bloXroute.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com?id=rocketpool",
-				config.Network_Prater:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=rocketpool",
-				config.Network_Devnet:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=rocketpool",
+				config.Network_Mainnet: "https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com?id=staderlabs",
+				config.Network_Prater:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=staderlabs",
+				config.Network_Devnet:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=staderlabs",
 			},
 			Regulated:     false,
 			NoSandwiching: false,
@@ -423,7 +424,7 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "bloXroute Ethical",
 			Description: "Select this to enable the \"ethical\" relay from bloXroute.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xad0a8bb54565c2211cee576363f3a347089d2f07cf72679d16911d740262694cadb62d7fd7483f27afd714ca0f1b9118@bloxroute.ethical.blxrbdn.com?id=rocketpool",
+				config.Network_Mainnet: "https://0xad0a8bb54565c2211cee576363f3a347089d2f07cf72679d16911d740262694cadb62d7fd7483f27afd714ca0f1b9118@bloxroute.ethical.blxrbdn.com?id=staderlabs",
 			},
 			Regulated:     false,
 			NoSandwiching: true,
@@ -435,7 +436,7 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "bloXroute Regulated",
 			Description: "Select this to enable the \"regulated\" relay from bloXroute.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com?id=rocketpool",
+				config.Network_Mainnet: "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -447,9 +448,9 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "Blocknative",
 			Description: "Blocknative is a large blockchain infrastructure company that provides a popular MEV relay.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0x9000009807ed12c1f08bf4e81c6da3ba8e3fc3d953898ce0102433094e5f22f21102ec057841fcb81978ed1ea0fa8246@builder-relay-mainnet.blocknative.com?id=rocketpool",
-				config.Network_Prater:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=rocketpool",
-				config.Network_Devnet:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=rocketpool",
+				config.Network_Mainnet: "https://0x9000009807ed12c1f08bf4e81c6da3ba8e3fc3d953898ce0102433094e5f22f21102ec057841fcb81978ed1ea0fa8246@builder-relay-mainnet.blocknative.com?id=staderlabs",
+				config.Network_Prater:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=staderlabs",
+				config.Network_Devnet:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -461,9 +462,9 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "Eden Network",
 			Description: "Eden Network is the home of Eden Relay, a block building hub focused on optimising block rewards for validators.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io?id=rocketpool",
-				config.Network_Prater:  "https://0xaa1488eae4b06a1fff840a2b6db167afc520758dc2c8af0dfb57037954df3431b747e2f900fe8805f05d635e9a29717b@relay-goerli.edennetwork.io?id=rocketpool",
-				config.Network_Devnet:  "https://0xaa1488eae4b06a1fff840a2b6db167afc520758dc2c8af0dfb57037954df3431b747e2f900fe8805f05d635e9a29717b@relay-goerli.edennetwork.io?id=rocketpool",
+				config.Network_Mainnet: "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io?id=staderlabs",
+				config.Network_Prater:  "https://0xaa1488eae4b06a1fff840a2b6db167afc520758dc2c8af0dfb57037954df3431b747e2f900fe8805f05d635e9a29717b@relay-goerli.edennetwork.io?id=staderlabs",
+				config.Network_Devnet:  "https://0xaa1488eae4b06a1fff840a2b6db167afc520758dc2c8af0dfb57037954df3431b747e2f900fe8805f05d635e9a29717b@relay-goerli.edennetwork.io?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -475,9 +476,9 @@ func createDefaultRelays() []config.MevRelay {
 			Name:        "Ultra Sound",
 			Description: "The ultra sound relay is a credibly-neutral and permissionless relay — a public good from the ultrasound.money team.",
 			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money?id=rocketpool",
-				config.Network_Prater:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=rocketpool",
-				config.Network_Devnet:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=rocketpool",
+				config.Network_Mainnet: "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money?id=staderlabs",
+				config.Network_Prater:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=staderlabs",
+				config.Network_Devnet:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=staderlabs",
 			},
 			Regulated:     false,
 			NoSandwiching: false,

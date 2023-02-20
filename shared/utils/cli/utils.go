@@ -52,7 +52,7 @@ func printTransactionHashImpl(staderClient *stader.Client, hash common.Hash, fin
 	}
 
 	if isNew {
-		fmt.Print("Settings file not found. Please run `rocketpool service config` to set up your Smartnode.")
+		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 		return
 	}
 
@@ -119,8 +119,8 @@ func PrintDepositMismatchError(rpNetwork, beaconNetwork uint64, rpDepositAddress
 	fmt.Println("For the safety of your funds, Stader will not let you deposit your ETH until this is resolved.")
 	fmt.Println()
 	fmt.Println("To fix it if you are in Docker mode:")
-	fmt.Println("\t1. Run 'rocketpool service install -d' to get the latest configuration")
-	fmt.Println("\t2. Run 'rocketpool service stop' and 'rocketpool service start' to apply the configuration.")
+	fmt.Println("\t1. Run 'stader-cli service install -d' to get the latest configuration")
+	fmt.Println("\t2. Run 'stader-cli service stop' and 'stader-cli service start' to apply the configuration.")
 	fmt.Println("If you are using Hybrid or Native mode, please correct the network flags in your ETH2 launch script.")
 	fmt.Println()
 	fmt.Println("Details:")
