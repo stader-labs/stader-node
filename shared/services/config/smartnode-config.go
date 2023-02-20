@@ -130,7 +130,9 @@ type SmartnodeConfig struct {
 	optimismPriceMessengerAddress map[config.Network]string `yaml:"-"`
 
 	// Rewards submission block maps
-	rewardsSubmissionBlockMaps map[config.Network][]uint64 `yaml:"-"`
+	rewardsSubmissionBlockMaps        map[config.Network][]uint64 `yaml:"-"`
+	permissionlessNodeRegistryAddress map[config.Network]string   `yaml:"-"`
+	vaultFactoryAddress               map[config.Network]string   `yaml:"-"`
 }
 
 // Generates a new Smartnode configuration
@@ -311,6 +313,20 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Mainnet: "",
 			config.Network_Prater:  "0x95D6b8E2106E3B30a72fC87e2B56ce15E37853F9",
 			config.Network_Devnet:  "0x218a718A1B23B13737E2F566Dd45730E8DAD451b",
+		},
+
+		// TODO - update when mainnet contracts are released
+		permissionlessNodeRegistryAddress: map[config.Network]string{
+			config.Network_Devnet:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
+			config.Network_Prater:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
+			config.Network_Mainnet: "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
+		},
+
+		// TODO - update when mainnet contracts are released
+		vaultFactoryAddress: map[config.Network]string{
+			config.Network_Prater:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
+			config.Network_Devnet:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
+			config.Network_Mainnet: "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
 		},
 
 		rethAddress: map[config.Network]string{
@@ -527,6 +543,14 @@ func (cfg *SmartnodeConfig) GetConfigTitle() string {
 
 func (cfg *SmartnodeConfig) GetRethAddress() common.Address {
 	return common.HexToAddress(cfg.rethAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetPermissionlessNodeRegistryAddress() common.Address {
+	return common.HexToAddress(cfg.permissionlessNodeRegistryAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetVaultFactoryAddress() common.Address {
+	return common.HexToAddress(cfg.vaultFactoryAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

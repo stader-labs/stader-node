@@ -108,8 +108,7 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 	}
 
 	// TODO - update the address when sanjay updates
-	permissionlessNodeRegistry := common.HexToAddress("0xbc536B674De5d7671bef54C87c7f79c455a759Aa")
-	return stader.NewPermissionlessNodeRegistry(ec, permissionlessNodeRegistry)
+	return stader.NewPermissionlessNodeRegistry(ec, cfg.Smartnode.GetPermissionlessNodeRegistryAddress())
 }
 
 func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error) {
@@ -123,8 +122,8 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	}
 
 	// TODO - update the address when sanjay updates
-	staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
-	return stader.NewVaultFactory(ec, staderRewardContractFactoryAddress)
+	//staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
+	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
 }
 
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
