@@ -19,7 +19,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "status",
 				Aliases:   []string{"s"},
 				Usage:     "Get the node's status",
-				UsageText: "rocketpool api node status",
+				UsageText: "stader-cli api node status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -38,7 +38,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "sync",
 				Aliases:   []string{"y"},
 				Usage:     "Get the sync progress of the eth1 and eth2 clients",
-				UsageText: "rocketpool api node sync",
+				UsageText: "stader-cli api node sync",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -55,8 +55,8 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 			{
 				Name:      "can-register",
-				Usage:     "Check whether the node can be registered with Rocket Pool",
-				UsageText: "rocketpool api node can-register timezone-location",
+				Usage:     "Check whether the node can be registered with stader=",
+				UsageText: "stader-cli api node can-register timezone-location",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -105,7 +105,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-set-withdrawal-address",
 				Usage:     "Checks if the node can set its withdrawal address",
-				UsageText: "rocketpool api node can-set-withdrawal-address address confirm",
+				UsageText: "stader-cli api node can-set-withdrawal-address address confirm",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -132,7 +132,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "set-withdrawal-address",
 				Aliases:   []string{"w"},
 				Usage:     "Set the node's withdrawal address",
-				UsageText: "rocketpool api node set-withdrawal-address address confirm",
+				UsageText: "stader-cli api node set-withdrawal-address address confirm",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -159,7 +159,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-confirm-withdrawal-address",
 				Usage:     "Checks if the node can confirm its withdrawal address",
-				UsageText: "rocketpool api node can-confirm-withdrawal-address",
+				UsageText: "stader-cli api node can-confirm-withdrawal-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -176,7 +176,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "confirm-withdrawal-address",
 				Usage:     "Confirms the node's withdrawal address if it was set back to the node address",
-				UsageText: "rocketpool api node confirm-withdrawal-address",
+				UsageText: "stader-cli api node confirm-withdrawal-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -194,7 +194,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-set-timezone",
 				Usage:     "Checks if the node can set its timezone location",
-				UsageText: "rocketpool api node can-set-timezone timezone-location",
+				UsageText: "stader-cli api node can-set-timezone timezone-location",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -216,7 +216,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "set-timezone",
 				Aliases:   []string{"t"},
 				Usage:     "Set the node's timezone location",
-				UsageText: "rocketpool api node set-timezone timezone-location",
+				UsageText: "stader-cli api node set-timezone timezone-location",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -238,7 +238,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-swap-rpl",
 				Usage:     "Check whether the node can swap old RPL for new RPL",
-				UsageText: "rocketpool api node can-swap-rpl amount",
+				UsageText: "stader-cli api node can-swap-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -260,7 +260,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "swap-rpl-approve-rpl",
 				Aliases:   []string{"p1"},
 				Usage:     "Approve fixed-supply RPL for swapping to new RPL",
-				UsageText: "rocketpool api node swap-rpl-approve-rpl amount",
+				UsageText: "stader-cli api node swap-rpl-approve-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -282,7 +282,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "wait-and-swap-rpl",
 				Aliases:   []string{"p2"},
 				Usage:     "Swap old RPL for new RPL, waiting for the approval TX hash to be included in a block first",
-				UsageText: "rocketpool api node wait-and-swap-rpl amount tx-hash",
+				UsageText: "stader-cli api node wait-and-swap-rpl amount tx-hash",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -307,7 +307,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-swap-rpl-approval-gas",
 				Usage:     "Estimate the gas cost of legacy RPL interaction approval",
-				UsageText: "rocketpool api node get-swap-rpl-approval-gas",
+				UsageText: "stader-cli api node get-swap-rpl-approval-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -328,7 +328,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "swap-rpl-allowance",
 				Usage:     "Get the node's legacy RPL allowance for new RPL contract",
-				UsageText: "rocketpool api node swap-allowance-rpl",
+				UsageText: "stader-cli api node swap-allowance-rpl",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -346,7 +346,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "swap-rpl",
 				Aliases:   []string{"p3"},
 				Usage:     "Swap old RPL for new RPL",
-				UsageText: "rocketpool api node swap-rpl amount",
+				UsageText: "stader-cli api node swap-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -368,7 +368,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-stake-rpl",
 				Usage:     "Check whether the node can stake RPL",
-				UsageText: "rocketpool api node can-stake-rpl amount",
+				UsageText: "stader-cli api node can-stake-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -390,7 +390,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "stake-rpl-approve-rpl",
 				Aliases:   []string{"k1"},
 				Usage:     "Approve RPL for staking against the node",
-				UsageText: "rocketpool api node stake-rpl-approve-rpl amount",
+				UsageText: "stader-cli api node stake-rpl-approve-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -412,7 +412,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "wait-and-stake-rpl",
 				Aliases:   []string{"k2"},
 				Usage:     "Stake RPL against the node, waiting for approval tx-hash to be included in a block first",
-				UsageText: "rocketpool api node wait-and-stake-rpl amount tx-hash",
+				UsageText: "stader-cli api node wait-and-stake-rpl amount tx-hash",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -437,7 +437,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-stake-rpl-approval-gas",
 				Usage:     "Estimate the gas cost of new RPL interaction approval",
-				UsageText: "rocketpool api node get-stake-rpl-approval-gas",
+				UsageText: "stader-cli api node get-stake-rpl-approval-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -458,7 +458,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "stake-rpl-allowance",
 				Usage:     "Get the node's RPL allowance for the staking contract",
-				UsageText: "rocketpool api node stake-allowance-rpl",
+				UsageText: "stader-cli api node stake-allowance-rpl",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -476,7 +476,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "stake-rpl",
 				Aliases:   []string{"k3"},
 				Usage:     "Stake RPL against the node",
-				UsageText: "rocketpool api node stake-rpl amount",
+				UsageText: "stader-cli api node stake-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -498,7 +498,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-withdraw-rpl",
 				Usage:     "Check whether the node can withdraw staked RPL",
-				UsageText: "rocketpool api node can-withdraw-rpl amount",
+				UsageText: "stader-cli api node can-withdraw-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -520,7 +520,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "withdraw-rpl",
 				Aliases:   []string{"i"},
 				Usage:     "Withdraw RPL staked against the node",
-				UsageText: "rocketpool api node withdraw-rpl amount",
+				UsageText: "stader-cli api node withdraw-rpl amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -542,7 +542,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit",
-				UsageText: "rocketpool api node can-deposit amount min-fee salt",
+				UsageText: "stader-cli api node can-deposit amount min-fee salt",
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
@@ -572,7 +572,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a minipool, or just make and sign the transaction (when submit = false)",
-				UsageText: "rocketpool api node deposit amount salt submit",
+				UsageText: "stader-cli api node deposit amount salt submit",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -607,7 +607,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-send",
 				Usage:     "Check whether the node can send ETH or tokens to an address",
-				UsageText: "rocketpool api node can-send amount token",
+				UsageText: "stader-cli api node can-send amount token",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -633,7 +633,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "send",
 				Aliases:   []string{"n"},
 				Usage:     "Send ETH or tokens from the node account to an address",
-				UsageText: "rocketpool api node send amount token to",
+				UsageText: "stader-cli api node send amount token to",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -663,7 +663,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-burn",
 				Usage:     "Check whether the node can burn tokens for ETH",
-				UsageText: "rocketpool api node can-burn amount token",
+				UsageText: "stader-cli api node can-burn amount token",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -689,7 +689,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "burn",
 				Aliases:   []string{"b"},
 				Usage:     "Burn tokens for ETH",
-				UsageText: "rocketpool api node burn amount token",
+				UsageText: "stader-cli api node burn amount token",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -715,7 +715,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-claim-rpl-rewards",
 				Usage:     "Check whether the node has RPL rewards available to claim",
-				UsageText: "rocketpool api node can-claim-rpl-rewards",
+				UsageText: "stader-cli api node can-claim-rpl-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -732,7 +732,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "claim-rpl-rewards",
 				Usage:     "Claim available RPL rewards",
-				UsageText: "rocketpool api node claim-rpl-rewards",
+				UsageText: "stader-cli api node claim-rpl-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -750,7 +750,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "rewards",
 				Usage:     "Get RPL rewards info",
-				UsageText: "rocketpool api node rewards",
+				UsageText: "stader-cli api node rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -767,8 +767,8 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 			{
 				Name:      "deposit-contract-info",
-				Usage:     "Get information about the deposit contract specified by Rocket Pool and the Beacon Chain client",
-				UsageText: "rocketpool api node deposit-contract-info",
+				Usage:     "Get information about the deposit contract specified by Stader and the Beacon Chain client",
+				UsageText: "stader-cli api node deposit-contract-info",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -786,7 +786,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "sign",
 				Usage:     "Signs a transaction with the node's private key. The TX must be serialized as a hex string.",
-				UsageText: "rocketpool api node sign tx",
+				UsageText: "stader-cli api node sign tx",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -806,7 +806,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "sign-message",
 				Usage:     "Signs an arbitrary message with the node's private key.",
-				UsageText: "rocketpool api node sign-message 'message'",
+				UsageText: "stader-cli api node sign-message 'message'",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -826,7 +826,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "estimate-set-snapshot-delegate-gas",
 				Usage:     "Estimate the gas required to set a voting snapshot delegate",
-				UsageText: "rocketpool api node estimate-set-snapshot-delegate-gas address",
+				UsageText: "stader-cli api node estimate-set-snapshot-delegate-gas address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -848,7 +848,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "set-snapshot-delegate",
 				Usage:     "Set a voting snapshot delegate for the node",
-				UsageText: "rocketpool api node set-snapshot-delegate address",
+				UsageText: "stader-cli api node set-snapshot-delegate address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -871,7 +871,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "estimate-clear-snapshot-delegate-gas",
 				Usage:     "Estimate the gas required to clear the node's voting snapshot delegate",
-				UsageText: "rocketpool api node estimate-clear-snapshot-delegate-gas",
+				UsageText: "stader-cli api node estimate-clear-snapshot-delegate-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -888,7 +888,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "clear-snapshot-delegate",
 				Usage:     "Clear the node's voting snapshot delegate",
-				UsageText: "rocketpool api node clear-snapshot-delegate",
+				UsageText: "stader-cli api node clear-snapshot-delegate",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -906,7 +906,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "is-fee-distributor-initialized",
 				Usage:     "Check if the fee distributor contract for this node is initialized and deployed",
-				UsageText: "rocketpool api node is-fee-distributor-initialized",
+				UsageText: "stader-cli api node is-fee-distributor-initialized",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -923,7 +923,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-initialize-fee-distributor-gas",
 				Usage:     "Estimate the cost of initializing the fee distributor",
-				UsageText: "rocketpool api node get-initialize-fee-distributor-gas",
+				UsageText: "stader-cli api node get-initialize-fee-distributor-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -940,7 +940,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "estimate-set-snapshot-delegate-gas",
 				Usage:     "Estimate the gas required to set a voting snapshot delegate",
-				UsageText: "rocketpool api node estimate-set-snapshot-delegate-gas address",
+				UsageText: "stader-cli api node estimate-set-snapshot-delegate-gas address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -962,7 +962,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "initialize-fee-distributor",
 				Usage:     "Initialize and deploy the fee distributor contract for this node",
-				UsageText: "rocketpool api node initialize-fee-distributor",
+				UsageText: "stader-cli api node initialize-fee-distributor",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -980,7 +980,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-distribute",
 				Usage:     "Check if distributing ETH from the node's fee distributor is possible",
-				UsageText: "rocketpool api node can-distribute",
+				UsageText: "stader-cli api node can-distribute",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -997,7 +997,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "set-snapshot-delegate",
 				Usage:     "Set a voting snapshot delegate for the node",
-				UsageText: "rocketpool api node set-snapshot-delegate address",
+				UsageText: "stader-cli api node set-snapshot-delegate address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1019,7 +1019,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "distribute",
 				Usage:     "Distribute ETH from the node's fee distributor",
-				UsageText: "rocketpool api node distribute",
+				UsageText: "stader-cli api node distribute",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1036,7 +1036,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "claim-rpl-rewards",
 				Usage:     "Claim available RPL rewards",
-				UsageText: "rocketpool api node claim-rpl-rewards",
+				UsageText: "stader-cli api node claim-rpl-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1054,7 +1054,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-rewards-info",
 				Usage:     "Get info about your eligible rewards periods, including balances and Merkle proofs",
-				UsageText: "rocketpool api node get-rewards-info",
+				UsageText: "stader-cli api node get-rewards-info",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1071,7 +1071,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-claim-rewards",
 				Usage:     "Check if the rewards for the given intervals can be claimed",
-				UsageText: "rocketpool api node can-claim-rewards 0,1,2,5,6",
+				UsageText: "stader-cli api node can-claim-rewards 0,1,2,5,6",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1089,7 +1089,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "claim-rewards",
 				Usage:     "Claim rewards for the given reward intervals",
-				UsageText: "rocketpool api node claim-rewards 0,1,2,5,6",
+				UsageText: "stader-cli api node claim-rewards 0,1,2,5,6",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1107,7 +1107,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-claim-and-stake-rewards",
 				Usage:     "Check if the rewards for the given intervals can be claimed, and RPL restaked automatically",
-				UsageText: "rocketpool api node can-claim-and-stake-rewards 0,1,2,5,6 amount-to-restake",
+				UsageText: "stader-cli api node can-claim-and-stake-rewards 0,1,2,5,6 amount-to-restake",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1130,7 +1130,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "claim-and-stake-rewards",
 				Usage:     "Claim rewards for the given reward intervals and restake RPL automatically",
-				UsageText: "rocketpool api node claim-and-stake-rewards 0,1,2,5,6 amount-to-restake",
+				UsageText: "stader-cli api node claim-and-stake-rewards 0,1,2,5,6 amount-to-restake",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1154,7 +1154,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-smoothing-pool-registration-status",
 				Usage:     "Check whether or not the node is opted into the Smoothing Pool",
-				UsageText: "rocketpool api node get-smoothing-pool-registration-status",
+				UsageText: "stader-cli api node get-smoothing-pool-registration-status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1171,7 +1171,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-set-smoothing-pool-status",
 				Usage:     "Check if the node's Smoothing Pool status can be changed",
-				UsageText: "rocketpool api node can-set-smoothing-pool-status status",
+				UsageText: "stader-cli api node can-set-smoothing-pool-status status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1192,7 +1192,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "set-smoothing-pool-status",
 				Usage:     "Sets the node's Smoothing Pool opt-in status",
-				UsageText: "rocketpool api node set-smoothing-pool-status status",
+				UsageText: "stader-cli api node set-smoothing-pool-status status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1213,7 +1213,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "resolve-ens-name",
 				Usage:     "Resolve an ENS name",
-				UsageText: "rocketpool api node resolve-ens-name name",
+				UsageText: "stader-cli api node resolve-ens-name name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -1230,7 +1230,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "reverse-resolve-ens-name",
 				Usage:     "Reverse resolve an address to an ENS name",
-				UsageText: "rocketpool api node reverse-resolve-ens-name address",
+				UsageText: "stader-cli api node reverse-resolve-ens-name address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

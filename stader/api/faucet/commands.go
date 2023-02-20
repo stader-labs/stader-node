@@ -55,7 +55,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "withdraw-rpl",
 				Aliases:   []string{"w"},
 				Usage:     "Withdraw legacy RPL from the faucet",
-				UsageText: "rocketpool api faucet withdraw-rpl",
+				UsageText: "stader api faucet withdraw-rpl",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

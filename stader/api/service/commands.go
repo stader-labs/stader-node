@@ -18,7 +18,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "terminate-data-folder",
 				Aliases:   []string{"t"},
 				Usage:     "Deletes the data folder including the wallet file, password file, and all validator keys - don't use this unless you have a very good reason to do it (such as switching from Prater to Mainnet)",
-				UsageText: "rocketpool api service terminate-data-folder",
+				UsageText: "stader-cli api service terminate-data-folder",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -37,7 +37,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "get-client-status",
 				Aliases:   []string{"g"},
 				Usage:     "Gets the status of the configured Execution and Beacon clients",
-				UsageText: "rocketpool api service get-client-status",
+				UsageText: "stader-cli api service get-client-status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

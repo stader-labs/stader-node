@@ -35,7 +35,7 @@ func testRecovery(c *cli.Context) error {
 	}
 
 	// Prompt a notice about test recovery
-	fmt.Printf("%sNOTE:\nThis command will test the recovery of your node wallet's private key and (unless explicitly disabled) the validator keys for your validators, but will not actually write any files; it's simply a \"dry run\" of recovery.\nUse `rocketpool wallet recover` to actually recover the wallet and validator keys.%s\n\n", colorYellow, colorReset)
+	fmt.Printf("%sNOTE:\nThis command will test the recovery of your node wallet's private key and (unless explicitly disabled) the validator keys for your validators, but will not actually write any files; it's simply a \"dry run\" of recovery.\nUse `stader-cli wallet recover` to actually recover the wallet and validator keys.%s\n\n", colorYellow, colorReset)
 
 	// Prompt for mnemonic
 	var mnemonic string
