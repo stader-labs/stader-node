@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/urfave/cli"
@@ -70,7 +71,7 @@ func canNodeClaimRpl(c *cli.Context) (*api.CanNodeClaimRplResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Could not estimate the gas required to claim RPL: %w", err)
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	return &response, nil
 }

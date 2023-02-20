@@ -126,6 +126,21 @@ func GetStaderOperatorRegistry(c *cli.Context) (*stader.StaderOperatorRegistryCo
 	return stader.NewStaderOperatorRegistry(ec, staderOperatorRegistryAddr)
 }
 
+func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRegistryContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO - update the address when sanjay updates
+	permissionlessNodeRegistry := common.HexToAddress("0xbc536B674De5d7671bef54C87c7f79c455a759Aa")
+	return stader.NewPermissionlessNodeRegistry(ec, permissionlessNodeRegistry)
+}
+
 func GetStaderValidatorRegistry(c *cli.Context) (*stader.StaderValidatorRegistryContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -152,7 +167,7 @@ func GetStaderRewardContractFactory(c *cli.Context) (*stader.StaderRewardContrac
 	}
 
 	// TODO - update the address when sanjay updates
-	staderRewardContractFactoryAddress := common.HexToAddress("0x1F339648C179032fc627A7a97B5F8F88dE43d86e")
+	staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
 	return stader.NewStaderRewardContractFactory(ec, staderRewardContractFactoryAddress)
 }
 

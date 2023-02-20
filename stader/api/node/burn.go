@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/rocket-pool/rocketpool-go/tokens"
@@ -85,7 +86,8 @@ func canNodeBurn(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		case "reth":
 			gasInfo, err := tokens.EstimateBurnRETHGas(rp, amountWei, opts)
 			if err == nil {
-				response.GasInfo = gasInfo
+				// TODO - hack
+				response.GasInfo = stader.GasInfo(gasInfo)
 			}
 			return err
 		}

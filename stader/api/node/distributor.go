@@ -3,6 +3,7 @@ package node
 import (
 	"context"
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 
 	"github.com/rocket-pool/rocketpool-go/node"
 	"github.com/urfave/cli"
@@ -88,7 +89,7 @@ func getInitializeFeeDistributorGas(c *cli.Context) (*api.NodeInitializeFeeDistr
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Return response
 	return &response, nil
@@ -197,7 +198,7 @@ func canDistribute(c *cli.Context) (*api.NodeCanDistributeResponse, error) {
 			return err
 		}
 		gasInfo, err := distributor.EstimateDistributeGas(opts)
-		response.GasInfo = gasInfo
+		response.GasInfo = stader.GasInfo(gasInfo)
 		return err
 	})
 

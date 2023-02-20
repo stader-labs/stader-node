@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -57,7 +58,7 @@ func canNodeSwapRpl(c *cli.Context, amountWei *big.Int) (*api.CanNodeSwapRplResp
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Update & return response
 	response.CanSwap = !response.InsufficientBalance
@@ -141,7 +142,7 @@ func getSwapApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeSwapRplApp
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 	return &response, nil
 }
 

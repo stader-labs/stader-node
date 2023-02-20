@@ -2,6 +2,7 @@ package wallet
 
 import (
 	"fmt"
+	staderCore "github.com/stader-labs/stader-minipool-go/stader"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -27,7 +28,7 @@ func setEnsName(c *cli.Context, name string) error {
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(estimateGasSetName.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(staderCore.GasInfo(estimateGasSetName.GasInfo), staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}

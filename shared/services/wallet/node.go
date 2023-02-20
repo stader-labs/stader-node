@@ -63,10 +63,25 @@ func (w *Wallet) GetNodeAccountTransactor() (*bind.TransactOpts, error) {
 	transactor, err := bind.NewKeyedTransactorWithChainID(privateKey, w.chainID)
 	transactor.GasFeeCap = w.maxFee
 	transactor.GasTipCap = w.maxPriorityFee
-	transactor.GasLimit = 2000000
+	transactor.GasLimit = w.gasLimit
 	transactor.Context = context.Background()
 	return transactor, err
 
+}
+
+func (w *Wallet) GetNodePrivateKey() (*ecdsa.PrivateKey, error) {
+	// Check wallet is initialized
+	if !w.IsInitialized() {
+		return nil, errors.New("Wallet is not initialized")
+	}
+
+	// Get private key
+	privateKey, _, err := w.getNodePrivateKey()
+	if err != nil {
+		return nil, err
+	}
+
+	return privateKey, err
 }
 
 // Get the node account private key bytes

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
@@ -32,8 +31,23 @@ func registerNode(c *cli.Context) error {
 		return err
 	}
 
+	operatorName := c.String("operator-name")
+	operatorRewardAddressString := c.String("operator-reward-address")
+	if operatorRewardAddressString == "" {
+		operatorRewardAddressString = walletStatus.AccountAddress.String()
+	}
+	socializeMev := c.String("socialize-mev")
+	// default socialize mev to true
+	if socializeMev == "" {
+		socializeMev = "true"
+	}
+	socializeMevBool := parseToBool(socializeMev)
+
+	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddressString))
+	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
+
 	// Check node can be registered
-	canRegister, err := staderClient.CanRegisterNode()
+	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeMevBool)
 	if err != nil {
 		return err
 	}
@@ -49,10 +63,7 @@ func registerNode(c *cli.Context) error {
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  25000000,
-		SafeGasLimit: 30000000,
-	}, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canRegister.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
@@ -63,20 +74,6 @@ func registerNode(c *cli.Context) error {
 		return nil
 	}
 
-	operatorName := c.String("operator-name")
-	operatorRewardAddressString := c.String("operator-reward-address")
-	if operatorRewardAddressString == "" {
-		operatorRewardAddressString = walletStatus.AccountAddress.String()
-	}
-	socializeMev := c.String("socialize-mev")
-	// default socialize mev to true
-	if socializeMev == "" {
-		socializeMev = "true"
-	}
-	socializeMevBool := parseToBool(socializeMev)
-
-	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddressString))
-	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
 	// Register node
 	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeMevBool)
 	if err != nil {
