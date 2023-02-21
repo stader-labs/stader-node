@@ -16,6 +16,11 @@ import (
 type NodeStatusResponse struct {
 	Status                            string          `json:"status"`
 	Error                             string          `json:"error"`
+	OperatorName                      string          `json:"operatorName"`
+	OperatorRewardAddress             common.Address  `json:"operatorRewardAddress"`
+	OperatorId                        *big.Int        `json:"operatorId"`
+	NumberOfValidatorsRegistered      string          `json:"numberOfValidatorsRegistered"`
+	EthBalance                        *big.Int        `json:"ethBalance"`
 	AccountAddress                    common.Address  `json:"accountAddress"`
 	AccountAddressFormatted           string          `json:"accountAddressFormatted"`
 	WithdrawalAddress                 common.Address  `json:"withdrawalAddress"`
