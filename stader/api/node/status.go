@@ -63,6 +63,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 
+	response.Registered = true
+
 	// Return response
 	return &response, nil
 }
