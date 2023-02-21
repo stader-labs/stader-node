@@ -525,7 +525,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
