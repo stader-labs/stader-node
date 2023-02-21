@@ -99,7 +99,7 @@ func installService(c *cli.Context) error {
 	fmt.Println("")
 	fmt.Println("The Stader service was successfully installed!")
 
-	printPatchNotes(c)
+	// printPatchNotes(c)
 
 	// Reload the config after installation
 	_, isNew, err = staderClient.LoadConfig()
