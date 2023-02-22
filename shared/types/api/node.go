@@ -1,9 +1,10 @@
 package api
 
 import (
-	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 	"time"
+
+	"github.com/stader-labs/stader-minipool-go/stader"
 
 	"github.com/ethereum/go-ethereum/common"
 
@@ -15,9 +16,6 @@ import (
 type NodeStatusResponse struct {
 	Status                            string          `json:"status"`
 	Error                             string          `json:"error"`
-	OperatorName                      string          `json:"operatorName"`
-	OperatorRewardAddress             common.Address  `json:"operatorRewardAddress"`
-	OperatorId                        *big.Int        `json:"operatorId"`
 	NumberOfValidatorsRegistered      string          `json:"numberOfValidatorsRegistered"`
 	EthBalance                        *big.Int        `json:"ethBalance"`
 	AccountAddress                    common.Address  `json:"accountAddress"`
