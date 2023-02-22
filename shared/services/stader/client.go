@@ -473,37 +473,6 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 // Install the Stader service
 func (c *Client) InstallService(verbose, noDeps bool, network, version, path string, dataPath string) error {
 
-	// Get installation script downloader type
-	// downloader, err := c.getDownloader()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // Get installation script flags
-	// flags := []string{
-	// 	"-n", fmt.Sprintf("%s", shellescape.Quote(network)),
-	// 	"-v", fmt.Sprintf("%s", shellescape.Quote(version)),
-	// }
-	// if path != "" {
-	// 	flags = append(flags, fmt.Sprintf("-p %s", shellescape.Quote(path)))
-	// }
-	// if noDeps {
-	// 	flags = append(flags, "-d")
-	// }
-	// if dataPath != "" {
-	// 	flags = append(flags, fmt.Sprintf("-u %s", dataPath))
-	// }
-
-	// pwd, _ := os.Getwd()
-	// txt, err := ioutil.ReadFile(pwd + "/../shared/scripts/install.sh")
-	// if err != nil {
-	// 	return err
-	// }
-
-	// fmt.Println("install.sh: ", string(txt))
-
-	// // Initialize installation command
-	// cmd, err := c.newCommand(fmt.Sprintf("%s | sh -s -- %s", txt, strings.Join(flags, " ")))
 	downloader, err := c.getDownloader()
 	if err != nil {
 		return err
