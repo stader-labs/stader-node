@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -63,7 +64,7 @@ func canNodeStakeRpl(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplRe
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Update & return response
 	response.CanStake = !(response.InsufficientBalance || !response.InConsensus)
@@ -106,7 +107,7 @@ func getStakeApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplA
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 	return &response, nil
 }
 

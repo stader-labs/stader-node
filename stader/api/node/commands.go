@@ -60,12 +60,25 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
+						return err
+					}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					socializeMev, err := cliutils.ValidateBool("socialize-mev", c.Args().Get(2))
+
 					// Run
-					api.PrintResponse(canRegisterNode(c))
+					api.PrintResponse(canRegisterNode(c, operatorName, operatorRewardAddress, socializeMev))
 					return nil
 
 				},
@@ -576,10 +589,10 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 3); err != nil {
+					if err := cliutils.ValidateArgCount(c, 4); err != nil {
 						return err
 					}
-					amountWei, err := cliutils.ValidateDepositWeiAmount("deposit amount", c.Args().Get(0))
+					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
@@ -589,13 +602,55 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(2))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
+					if err != nil {
+						return err
+					}
+
+					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, submit))
+
+					return nil
+
+				},
+			},
+			{
+				Name:      "deposit",
+				Aliases:   []string{"d"},
+				Usage:     "Make a deposit and create a validator, or just make and sign the transaction (when submit = false)",
+				UsageText: "stader api node deposit amount salt submit",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
+					if err != nil {
+						return err
+					}
+
+					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, salt, submit)
+					response, err := nodeDeposit(c, amountWei, salt, numValidators, submit)
 					if submit {
 						api.PrintResponse(response, err)
 					}

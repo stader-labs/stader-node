@@ -3,16 +3,14 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 	"math/big"
 
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-minipool-go/utils/eth"
-	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 )
 
 // Config
@@ -40,8 +38,10 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 
+	numValidators := c.Uint64("num-validators")
+
 	// Force 4 ETH minipools as the only option after much community discussion
-	amountWei := eth.EthToWei(4.0)
+	baseAmount := eth.EthToWei(4.0)
 
 	// Get minipool salt
 	var salt *big.Int
@@ -82,20 +82,33 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
-	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(rocketpool.GasInfo{
-		EstGasLimit:  25000000,
-		SafeGasLimit: 30000000,
-	}, staderClient, c.Bool("yes"))
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
 
+	if canNodeDepositResponse.DepositDisabled {
+		fmt.Printf("Deposits are currently disabled!")
+		return nil
+	}
+	if canNodeDepositResponse.InsufficientBalance {
+		fmt.Printf("Account does not have enough balance!")
+		return nil
+	}
+
+	//Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
+	}
+
+	totalDeposited := baseAmount.Uint64() * numValidators
+
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %.6f ETH to create a validator with a minimum possible commission rate of %f%%.\n"+
+		"You are about to deposit %d ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
-		math.RoundDown(eth.WeiToEth(amountWei), 6),
+		eth.WeiToEth(big.NewInt(int64(totalDeposited))), numValidators,
 		5.0,
 		colorYellow,
 		colorReset))) {
@@ -104,13 +117,13 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(amountWei, salt, true)
+	response, err := staderClient.NodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
 
 	// Log and wait for the minipool address
-	fmt.Printf("Creating validator...\n")
+	fmt.Printf("Creating %d validators...\n", numValidators)
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
 	if err != nil {
@@ -118,13 +131,11 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %.6f ETH was made successfully!\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-	// fmt.Printf("Your new validator's address is: %s\n", response.MinipoolAddress)
-	fmt.Printf("The validator pubkey is: %s\n\n", response.ValidatorPubkey.Hex())
+	fmt.Printf("The node deposit of %d ETH was made successfully!\n", totalDeposited)
+	fmt.Printf("Total %d validators were created\n", numValidators)
 
-	fmt.Println("Your validator is now in Initialized status.")
-	fmt.Println("Once the 4 ETH deposit has been matched by the staking pool, it will move to Prelaunch status.")
-	// fmt.Printf("After that, it will move to Staking status once %s have passed.\n", response.ScrubPeriod)
+	fmt.Println("Your validators are now in Initialized status.")
+	fmt.Println("Once the ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
 	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
 
 	return nil

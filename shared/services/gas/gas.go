@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	staderCore "github.com/stader-labs/stader-minipool-go/stader"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -18,7 +18,7 @@ const colorReset string = "\033[0m"
 const colorYellow string = "\033[33m"
 const colorBlue string = "\033[36m"
 
-func AssignMaxFeeAndLimit(gasInfo rocketpool.GasInfo, staderClient *stader.Client, headless bool) error {
+func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Client, headless bool) error {
 
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
@@ -123,7 +123,7 @@ func GetHeadlessMaxFeeWei() (*big.Int, error) {
 	return nil, fmt.Errorf("Error getting gas price suggestions: %w", err)
 }
 
-func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, gasInfo rocketpool.GasInfo, priorityFee float64, gasLimit uint64) float64 {
+func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, gasInfo staderCore.GasInfo, priorityFee float64, gasLimit uint64) float64 {
 
 	rapidGwei := math.RoundUp(eth.WeiToGwei(gasSuggestion.RapidWei)+priorityFee, 0)
 	rapidEth := eth.WeiToEth(gasSuggestion.RapidWei)
@@ -216,7 +216,7 @@ func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, gasInf
 
 }
 
-func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, gasInfo rocketpool.GasInfo, priorityFee float64, gasLimit uint64) float64 {
+func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, gasInfo staderCore.GasInfo, priorityFee float64, gasLimit uint64) float64 {
 
 	fastGwei := math.RoundUp(gasSuggestion.FastGwei+priorityFee, 0)
 	fastEth := gasSuggestion.FastGwei / eth.WeiPerGwei

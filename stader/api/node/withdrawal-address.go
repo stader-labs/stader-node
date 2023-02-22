@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/storage"
@@ -47,7 +48,7 @@ func canSetWithdrawalAddress(c *cli.Context, withdrawalAddress common.Address, c
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Return response
 	response.CanSet = true
@@ -153,7 +154,7 @@ func canConfirmWithdrawalAddress(c *cli.Context) (*api.CanConfirmNodeWithdrawalA
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = gasInfo
+	response.GasInfo = stader.GasInfo(gasInfo)
 
 	// Return response
 	response.CanConfirm = (pendingAddress != nodeAccount.Address)

@@ -3,6 +3,7 @@ package node
 import (
 	"context"
 	"fmt"
+	"github.com/stader-labs/stader-minipool-go/stader"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -63,7 +64,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = gasInfo
+		response.GasInfo = stader.GasInfo(gasInfo)
 
 	case "rpl":
 
@@ -81,7 +82,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = gasInfo
+		response.GasInfo = stader.GasInfo(gasInfo)
 
 	case "fsrpl":
 
@@ -99,7 +100,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = gasInfo
+		response.GasInfo = stader.GasInfo(gasInfo)
 
 	case "reth":
 
@@ -117,7 +118,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = gasInfo
+		response.GasInfo = stader.GasInfo(gasInfo)
 
 	}
 
