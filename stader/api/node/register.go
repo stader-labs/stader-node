@@ -45,15 +45,25 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return nil, err
 	}
 
+	isPermissionlessRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(pnr, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if isPermissionlessRegistryPaused {
+		response.RegistrationPaused = true
+		return &response, nil
+	}
+
 	gasInfo, err := node.EstimateOnboardNodeOperator(pnr, socializeMev, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
 
+	response.GasInfo = gasInfo
+
 	if operatorRegistry.OperatorName != "" {
 		response.AlreadyRegistered = true
-		response.CanRegister = false
-		response.GasInfo = gasInfo
 	} else {
 		response.CanRegister = true
 	}
@@ -86,7 +96,6 @@ func registerNode(c *cli.Context, operatorName string, operatorRewardAddress com
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
 
-	//fmt.Printf("mev socialize is %d\n", mevSocialize)
 	// Register node
 	tx, err := node.OnboardNodeOperator(prn, mevSocialize, operatorName, operatorRewardAddress, opts)
 	if err != nil {

@@ -87,12 +87,12 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	if canNodeDepositResponse.DepositDisabled {
-		fmt.Printf("Deposits are currently disabled!")
-		return nil
-	}
 	if canNodeDepositResponse.InsufficientBalance {
 		fmt.Printf("Account does not have enough balance!")
+		return nil
+	}
+	if canNodeDepositResponse.DepositPaused {
+		fmt.Printf("Deposits are currently paused!")
 		return nil
 	}
 

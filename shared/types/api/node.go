@@ -64,12 +64,12 @@ type NodeStatusResponse struct {
 }
 
 type CanRegisterNodeResponse struct {
-	Status               string         `json:"status"`
-	Error                string         `json:"error"`
-	CanRegister          bool           `json:"canRegister"`
-	AlreadyRegistered    bool           `json:"alreadyRegistered"`
-	RegistrationDisabled bool           `json:"registrationDisabled"`
-	GasInfo              stader.GasInfo `json:"gasInfo"`
+	Status             string         `json:"status"`
+	Error              string         `json:"error"`
+	CanRegister        bool           `json:"canRegister"`
+	AlreadyRegistered  bool           `json:"alreadyRegistered"`
+	RegistrationPaused bool           `json:"registrationPaused"`
+	GasInfo            stader.GasInfo `json:"gasInfo"`
 }
 type RegisterNodeResponse struct {
 	Status string      `json:"status"`
@@ -204,7 +204,8 @@ type CanNodeDepositResponse struct {
 	CanDeposit          bool           `json:"canDeposit"`
 	InsufficientBalance bool           `json:"insufficientBalance"`
 	InvalidAmount       bool           `json:"invalidAmount"`
-	DepositDisabled     bool           `json:"depositDisabled"`
+	NotRegistered       bool           `json:"notRegistered"`
+	DepositPaused       bool           `json:"depositPaused"`
 	GasInfo             stader.GasInfo `json:"gasInfo"`
 }
 

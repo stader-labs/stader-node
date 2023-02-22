@@ -35,7 +35,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, err
 	}
-	srcf, err := services.GetStaderRewardContractFactory(c)
+	vfc, err := services.GetVaultFactory(c)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 	if userBalance.Cmp(amountToSend) < 0 {
-		canNodeDepositResponse.CanDeposit = false
 		canNodeDepositResponse.InsufficientBalance = true
 	}
 
@@ -79,7 +78,17 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 	if operatorRegistryInfo.OperatorName == "" {
-		return nil, fmt.Errorf("node is not registered with stader")
+		canNodeDepositResponse.NotRegistered = true
+		return &canNodeDepositResponse, nil
+	}
+
+	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPermissionlessNodeRegistryPaused {
+		canNodeDepositResponse.DepositPaused = true
+		return &canNodeDepositResponse, nil
 	}
 
 	validatorPubKeys := make([][]byte, numValidators.Int64())
@@ -91,7 +100,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Got validator key account %d\n", validatorKeyCount)
 
 	// Adjust the salt
 	if salt.Cmp(big.NewInt(0)) == 0 {
@@ -105,35 +113,24 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	newValidatorKey := validatorKeyCount
 
 	walletIndex := w.GetNextAccount()
-	//fmt.Printf("walletIndex is %d\n", walletIndex)
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		// Create and save a new validator key
-		//fmt.Printf("walletIndex is %d\n", walletIndex)
 		validatorKey, err := w.GetValidatorKeyAt(walletIndex)
 		if err != nil {
 			return nil, err
 		}
 		walletIndex++
-		//validatorKey, err := w.CreateValidatorKey()
-		//if err != nil {
-		//	return nil, err
-		//}
 
-		//fmt.Printf("walletIndex post increment is %d\n", walletIndex)
-		//fmt.Printf("validator public key is %s\n", validatorKey.PublicKey())
-
-		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(srcf, 1, operatorRegistryInfo.OperatorId, newValidatorKey, nil)
+		rewardWithdrawVault, err := node.ComputeWithdrawVaultAddress(vfc, 1, operatorRegistryInfo.OperatorId, newValidatorKey, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("reward withdraw vault is %s\n", rewardWithdrawVault.String())
 
-		withdrawCredentials, err := node.GetValidatorWithdrawalCredential(srcf, rewardWithdrawVault, nil)
+		withdrawCredentials, err := node.GetValidatorWithdrawalCredential(vfc, rewardWithdrawVault, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("withdraw creds is %s\n", withdrawCredentials.String())
 
 		// Get validator deposit data and associated parameters
 		depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config)
@@ -142,8 +139,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		}
 		pubKey := rptypes.BytesToValidatorPubkey(depositData.PublicKey)
 		signature := rptypes.BytesToValidatorSignature(depositData.Signature)
-
-		//fmt.Printf("depositDataRoot is %v\n", depositData)
 
 		// convert deposit data root to 32 bytes
 		depositDataRootFixedSize := [32]byte{}
@@ -163,8 +158,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		}
 	}
 
-	//fmt.Println("Finished generating validator keys")
-
 	// Override the provided pending TX if requested
 	err = eth1.CheckForNonceOverride(c, opts)
 	if err != nil {
@@ -174,13 +167,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	//fmt.Printf("Estimating gas")
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, validatorPubKeys, validatorSignatures, depositDataRoots, opts)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("canNodeDepositResponse is %v\n", canNodeDepositResponse)
-	//fmt.Printf("Estimated gas!")
 
 	canNodeDepositResponse.CanDeposit = true
 	canNodeDepositResponse.GasInfo = gasInfo
@@ -202,7 +192,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	if err != nil {
 		return nil, err
 	}
-	srcf, err := services.GetStaderRewardContractFactory(c)
+	srcf, err := services.GetVaultFactory(c)
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +337,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	}
 
 	response.TxHash = tx.Hash()
-	response.Status = "success"
 
 	// Return response
 	return &response, nil
