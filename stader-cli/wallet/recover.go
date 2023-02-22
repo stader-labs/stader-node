@@ -38,7 +38,7 @@ func recoverWallet(c *cli.Context) error {
 	}
 
 	// Prompt a notice about test recovery
-	fmt.Printf("%sNOTE:\nThis command will fully regenerate your node wallet's private key and (unless explicitly disabled) the validator keys for your validators.\nIf you just want to test recovery to ensure it works without actually regenerating the files, please use `rocketpool wallet test-recovery` instead.%s\n\n", colorYellow, colorReset)
+	fmt.Printf("%sNOTE:\nThis command will fully regenerate your node wallet's private key and (unless explicitly disabled) the validator keys for your validators.\nIf you just want to test recovery to ensure it works without actually regenerating the files, please use `stader-cli wallet test-recovery` instead.%s\n\n", colorYellow, colorReset)
 
 	// Set password if not set
 	if !status.PasswordSet {

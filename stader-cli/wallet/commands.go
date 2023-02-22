@@ -20,7 +20,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "status",
 				Aliases:   []string{"s"},
 				Usage:     "Get the node wallet status",
-				UsageText: "rocketpool wallet status",
+				UsageText: "stader-cli wallet status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -38,7 +38,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "init",
 				Aliases:   []string{"i"},
 				Usage:     "Initialize the node wallet",
-				UsageText: "rocketpool wallet init [options]",
+				UsageText: "stader-cli wallet init [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "password, p",
@@ -77,7 +77,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "recover",
 				Aliases:   []string{"r"},
 				Usage:     "Recover a node wallet from a mnemonic phrase",
-				UsageText: "rocketpool wallet recover [options]",
+				UsageText: "stader-cli wallet recover [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "password, p",
@@ -134,7 +134,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "rebuild",
 				Aliases:   []string{"b"},
 				Usage:     "Rebuild validator keystores from derived keys",
-				UsageText: "rocketpool wallet rebuild",
+				UsageText: "stader-cli wallet rebuild",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -152,7 +152,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "test-recovery",
 				Aliases:   []string{"t"},
 				Usage:     "Test recovering a node wallet without actually generating any of the node wallet or validator key files to ensure the process works as expected",
-				UsageText: "rocketpool wallet test-recovery [options]",
+				UsageText: "stader-cli wallet test-recovery [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "mnemonic, m",
@@ -200,7 +200,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "export",
 				Aliases:   []string{"e"},
 				Usage:     "Export the node wallet in JSON format",
-				UsageText: "rocketpool wallet export",
+				UsageText: "stader-cli wallet export",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -217,7 +217,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "set-ens-name",
 				Aliases:   []string{"ens"},
 				Usage:     "Set a name to the node wallet's ENS reverse record",
-				UsageText: "rocketpool wallet set-ens-name name",
+				UsageText: "stader-cli wallet set-ens-name name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -234,7 +234,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "purge",
 				Usage:     fmt.Sprintf("%sDeletes your node wallet, your validator keys, and restarts your Validator Client while preserving your chain data. WARNING: Only use this if you want to stop validating with this machine!%s", colorRed, colorReset),
-				UsageText: "rocketpool wallet purge",
+				UsageText: "stader-cli wallet purge",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

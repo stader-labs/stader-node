@@ -12,14 +12,14 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 	command.Subcommands = append(command.Subcommands, cli.Command{
 		Name:    name,
 		Aliases: aliases,
-		Usage:   "Manage Rocket Pool network parameters",
+		Usage:   "Manage Stader network parameters",
 		Subcommands: []cli.Command{
 
 			{
 				Name:      "node-fee",
 				Aliases:   []string{"f"},
 				Usage:     "Get the current network node commission rate",
-				UsageText: "rocketpool api network node-fee",
+				UsageText: "stader-cli api network node-fee",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -38,7 +38,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "rpl-price",
 				Aliases:   []string{"p"},
 				Usage:     "Get the current network RPL price in ETH",
-				UsageText: "rocketpool api network rpl-price",
+				UsageText: "stader-cli api network rpl-price",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -57,7 +57,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "stats",
 				Aliases:   []string{"s"},
 				Usage:     "Get stats about the Rocket Pool network and its tokens",
-				UsageText: "rocketpool api network stats",
+				UsageText: "stader-cli api network stats",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -76,7 +76,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "timezone-map",
 				Aliases:   []string{"t"},
 				Usage:     "Get the table of node operators by timezone",
-				UsageText: "rocketpool api network stats",
+				UsageText: "stader-cli api network stats",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -94,7 +94,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-generate-rewards-tree",
 				Usage:     "Check if the rewards tree for the provided interval can be generated",
-				UsageText: "rocketpool api network can-generate-rewards-tree index",
+				UsageText: "stader-cli api network can-generate-rewards-tree index",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -117,7 +117,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "generate-rewards-tree",
 				Usage:     "Set a request marker for the watchtower to generate the rewards tree for the given interval",
-				UsageText: "rocketpool api network generate-rewards-tree index",
+				UsageText: "stader-cli api network generate-rewards-tree index",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -141,7 +141,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "dao-proposals",
 				Aliases:   []string{"d"},
 				Usage:     "Get the currently active DAO proposals",
-				UsageText: "rocketpool api network dao-proposals",
+				UsageText: "stader-cli api network dao-proposals",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

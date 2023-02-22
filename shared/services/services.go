@@ -107,7 +107,6 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 		return nil, err
 	}
 
-	// TODO - update the address when sanjay updates
 	return stader.NewPermissionlessNodeRegistry(ec, cfg.Smartnode.GetPermissionlessNodeRegistryAddress())
 }
 
@@ -121,8 +120,6 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 		return nil, err
 	}
 
-	// TODO - update the address when sanjay updates
-	//staderRewardContractFactoryAddress := common.HexToAddress("0x5d541217f682f830707E3bF383a6b9dC1dfcd496")
 	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
 }
 

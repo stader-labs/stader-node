@@ -13,7 +13,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
-
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -249,5 +248,4 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 	// Return response
 	return &response, nil
-
 }

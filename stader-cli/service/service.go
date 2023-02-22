@@ -99,7 +99,7 @@ func installService(c *cli.Context) error {
 	fmt.Println("")
 	fmt.Println("The Stader service was successfully installed!")
 
-	printPatchNotes(c)
+	// printPatchNotes(c)
 
 	// Reload the config after installation
 	_, isNew, err = staderClient.LoadConfig()
@@ -159,8 +159,6 @@ func printPatchNotes(c *cli.Context) {
 	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
 	fmt.Println("The Smartnode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
 
-	fmt.Printf("%s=== Cumulative RPL Rewards ===%s\n", colorGreen, colorReset)
-	fmt.Println("We have temporarily disabled the calculation of RPL you earned pre-Redstone in `stader-cli node rewards` and Grafana while we work on some performance improvemenets. They'll be back soon!")
 }
 
 // Install the Stader update tracker for the metrics dashboard
