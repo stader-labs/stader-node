@@ -318,15 +318,15 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		},
 
 		permissionlessNodeRegistryAddress: map[config.Network]string{
-			config.Network_Devnet:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
-			config.Network_Prater:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
-			config.Network_Mainnet: "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
+			config.Network_Devnet:  "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
+			config.Network_Prater:  "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
+			config.Network_Mainnet: "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
 		},
 
 		vaultFactoryAddress: map[config.Network]string{
-			config.Network_Prater:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
-			config.Network_Devnet:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
-			config.Network_Mainnet: "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
+			config.Network_Prater:  "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
+			config.Network_Devnet:  "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
+			config.Network_Mainnet: "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
 		},
 
 		sdTokenAddress: map[config.Network]string{
