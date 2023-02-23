@@ -1,6 +1,7 @@
 package node
 
 import (
+	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-minipool-go/tokens"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -49,9 +50,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	response.AccountBalances.ETH = accountEthBalance
 
-	operatorRegistry, err := pnr.PermissionlessNodeRegistry.OperatorRegistry(nil, nodeAccount.Address)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorRegistry, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +66,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.Registered = false
 	} else {
 		response.Registered = true
-		response.OperatorId = operatorRegistry.OperatorId
+		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 	}
