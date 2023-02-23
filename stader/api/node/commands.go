@@ -394,7 +394,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(canNodeStakeRpl(c, amountWei))
+					api.PrintResponse(canNodeDepositSd(c, amountWei))
 					return nil
 
 				},
@@ -442,7 +442,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(waitForApprovalAndStakeRpl(c, amountWei, hash))
+					api.PrintResponse(waitForApprovalAndDepositSd(c, amountWei, hash))
 					return nil
 
 				},
@@ -502,7 +502,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(stakeRpl(c, amountWei))
+					api.PrintResponse(depositSdAsCollateral(c, amountWei))
 					return nil
 
 				},

@@ -123,6 +123,32 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
 }
 
+func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSdCollateralContract(ec, cfg.Smartnode.GetSdCollateralContractAddress())
+}
+
+func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetSdTokenAddress())
+}
+
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

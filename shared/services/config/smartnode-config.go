@@ -565,6 +565,14 @@ func (cfg *SmartnodeConfig) GetVaultFactoryAddress() common.Address {
 	return common.HexToAddress(cfg.vaultFactoryAddress[cfg.Network.Value.(config.Network)])
 }
 
+func (cfg *SmartnodeConfig) GetSdCollateralContractAddress() common.Address {
+	return common.HexToAddress(cfg.sdCollateralAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetSdTokenAddress() common.Address {
+	return common.HexToAddress(cfg.sdTokenAddress[cfg.Network.Value.(config.Network)])
+}
+
 func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.RocketPoolDirectory, "data")
 }

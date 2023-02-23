@@ -39,9 +39,10 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 	if err != nil {
 		return nil, err
 	}
-	operatorRegistry, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
+
+	if operatorId.Int64() == 0 {
+		response.AlreadyRegistered = true
+		return &response, nil
 	}
 
 	opts, err := w.GetNodeAccountTransactor()
@@ -58,19 +59,13 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		response.RegistrationPaused = true
 		return &response, nil
 	}
-
+	
 	gasInfo, err := node.EstimateOnboardNodeOperator(pnr, socializeMev, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
 
 	response.GasInfo = gasInfo
-
-	if operatorRegistry.OperatorName != "" {
-		response.AlreadyRegistered = true
-	} else {
-		response.CanRegister = true
-	}
 
 	return &response, nil
 
