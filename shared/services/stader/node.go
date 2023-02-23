@@ -37,27 +37,13 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.AccountBalances.ETH == nil {
 		response.AccountBalances.ETH = big.NewInt(0)
 	}
-	if response.AccountBalances.RPL == nil {
-		response.AccountBalances.RPL = big.NewInt(0)
-	}
-	if response.AccountBalances.RETH == nil {
-		response.AccountBalances.RETH = big.NewInt(0)
-	}
-	if response.AccountBalances.FixedSupplyRPL == nil {
-		response.AccountBalances.FixedSupplyRPL = big.NewInt(0)
+	if response.AccountBalances.Sd == nil {
+		response.AccountBalances.Sd = big.NewInt(0)
 	}
 	if response.WithdrawalBalances.ETH == nil {
 		response.WithdrawalBalances.ETH = big.NewInt(0)
 	}
-	if response.WithdrawalBalances.RPL == nil {
-		response.WithdrawalBalances.RPL = big.NewInt(0)
-	}
-	if response.WithdrawalBalances.RETH == nil {
-		response.WithdrawalBalances.RETH = big.NewInt(0)
-	}
-	if response.WithdrawalBalances.FixedSupplyRPL == nil {
-		response.WithdrawalBalances.FixedSupplyRPL = big.NewInt(0)
-	}
+
 	return response, nil
 }
 
@@ -286,8 +272,8 @@ func (c *Client) GetNodeSwapRplAllowance() (api.NodeSwapRplAllowanceResponse, er
 }
 
 // Check whether the node can stake RPL
-func (c *Client) CanNodeStakeRpl(amountWei *big.Int) (api.CanNodeStakeRplResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-stake-rpl %s", amountWei.String()))
+func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeStakeRplResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-deposit-sd %s", amountWei.String()))
 	if err != nil {
 		return api.CanNodeStakeRplResponse{}, fmt.Errorf("Could not get can node stake RPL status: %w", err)
 	}
@@ -302,8 +288,8 @@ func (c *Client) CanNodeStakeRpl(amountWei *big.Int) (api.CanNodeStakeRplRespons
 }
 
 // Get the gas estimate for approving new RPL interaction
-func (c *Client) NodeStakeRplApprovalGas(amountWei *big.Int) (api.NodeStakeRplApproveGasResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node get-stake-rpl-approval-gas %s", amountWei.String()))
+func (c *Client) NodeDepositSdApprovalGas(amountWei *big.Int) (api.NodeStakeRplApproveGasResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-deposit-sd-approval-gas %s", amountWei.String()))
 	if err != nil {
 		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("Could not get new RPL approval gas: %w", err)
 	}
@@ -318,8 +304,8 @@ func (c *Client) NodeStakeRplApprovalGas(amountWei *big.Int) (api.NodeStakeRplAp
 }
 
 // Approve RPL for staking against the node
-func (c *Client) NodeStakeRplApprove(amountWei *big.Int) (api.NodeStakeRplApproveResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node stake-rpl-approve-rpl %s", amountWei.String()))
+func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeStakeRplApproveResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-approve-sd %s", amountWei.String()))
 	if err != nil {
 		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("Could not approve RPL for staking: %w", err)
 	}
@@ -350,8 +336,8 @@ func (c *Client) NodeWaitAndStakeRpl(amountWei *big.Int, approvalTxHash common.H
 }
 
 // Stake RPL against the node
-func (c *Client) NodeStakeRpl(amountWei *big.Int) (api.NodeStakeRplStakeResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node stake-rpl %s", amountWei.String()))
+func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeStakeRplStakeResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd %s", amountWei.String()))
 	if err != nil {
 		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not stake node RPL: %w", err)
 	}
@@ -366,8 +352,8 @@ func (c *Client) NodeStakeRpl(amountWei *big.Int) (api.NodeStakeRplStakeResponse
 }
 
 // Get a node's RPL allowance for the staking contract
-func (c *Client) GetNodeStakeRplAllowance() (api.NodeStakeRplAllowanceResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node stake-rpl-allowance"))
+func (c *Client) GetNodeDepositSdAllowance() (api.NodeStakeRplAllowanceResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))
 	if err != nil {
 		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("Could not get node stake RPL allowance: %w", err)
 	}

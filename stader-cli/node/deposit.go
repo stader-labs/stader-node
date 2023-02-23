@@ -95,6 +95,10 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("Deposits are currently paused!")
 		return nil
 	}
+	if canNodeDepositResponse.NotEnoughSdCollateral {
+		fmt.Printf("Not enough SD as collateral")
+		return nil
+	}
 
 	//Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))

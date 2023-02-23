@@ -234,44 +234,40 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			// 	},
 			// },
 
-			// {
-			// 	Name:      "stake-rpl",
-			// 	Aliases:   []string{"k"},
-			// 	Usage:     "Stake RPL against the node",
-			// 	UsageText: "rocketpool node stake-rpl [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "amount, a",
-			// 			Usage: "The amount of RPL to stake (or 'min', 'max', or 'all')",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm RPL stake",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "swap, s",
-			// 			Usage: "Automatically confirm swapping old RPL before staking",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
+			{
+				Name:      "deposit-sd",
+				Aliases:   []string{"k"},
+				Usage:     "Deposit SD against the node",
+				UsageText: "stader-cli node stake-rpl [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of Sd to deposit (or 'min', 'max', or 'all')",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm RPL stake",
+					},
+				},
+				Action: func(c *cli.Context) error {
 
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
 
-			// 		// Validate flags
-			// 		if c.String("amount") != "" && c.String("amount") != "min" && c.String("amount") != "max" && c.String("amount") != "all" {
-			// 			if _, err := cliutils.ValidatePositiveEthAmount("stake amount", c.String("amount")); err != nil {
-			// 				return err
-			// 			}
-			// 		}
+					// Validate flags
+					if c.String("amount") != "" && c.String("amount") != "min" && c.String("amount") != "max" && c.String("amount") != "all" {
+						if _, err := cliutils.ValidatePositiveEthAmount("stake amount", c.String("amount")); err != nil {
+							return err
+						}
+					}
 
-			// 		// Run
-			// 		return nodeStakeRpl(c)
+					// Run
+					return nodeDepositSd(c)
 
-			// 	},
-			// },
+				},
+			},
 
 			// {
 			// 	Name:      "claim-rewards",

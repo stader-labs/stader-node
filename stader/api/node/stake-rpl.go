@@ -2,14 +2,12 @@ package node
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-minipool-go/sd-collateral"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/network"
-	"github.com/rocket-pool/rocketpool-go/node"
-	"github.com/rocket-pool/rocketpool-go/tokens"
 	"github.com/rocket-pool/rocketpool-go/utils"
+	"github.com/stader-labs/stader-minipool-go/tokens"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -17,17 +15,18 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 )
 
-func canNodeStakeRpl(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplResponse, error) {
+func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplResponse, error) {
 
 	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -41,50 +40,44 @@ func canNodeStakeRpl(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplRe
 		return nil, err
 	}
 
-	// Check RPL balance
-	rplBalance, err := tokens.GetRPLBalance(rp, nodeAccount.Address, nil)
+	// Check Sd balance
+	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, nodeAccount.Address)
 	if err != nil {
 		return nil, err
 	}
-	response.InsufficientBalance = (amountWei.Cmp(rplBalance) > 0)
-
-	// Check network consensus
-	inConsensus, err := network.InConsensus(rp, nil)
-	if err != nil {
-		return nil, err
-	}
-	response.InConsensus = inConsensus
+	response.InsufficientBalance = amountWei.Cmp(sdBalance) > 0
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
-	gasInfo, err := node.EstimateStakeGas(rp, amountWei, opts)
+	gasInfo, err := sd_collateral.EstimateDepositSdAsCollateral(sdc, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = stader.GasInfo(gasInfo)
+	response.GasInfo = gasInfo
 
 	// Update & return response
-	response.CanStake = !(response.InsufficientBalance || !response.InConsensus)
+	response.CanStake = !response.InsufficientBalance
 	return &response, nil
 
 }
 
-func getStakeApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveGasResponse, error) {
+func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveGasResponse, error) {
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireRocketStorage(c); err != nil {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -92,26 +85,20 @@ func getStakeApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplA
 	// Response
 	response := api.NodeStakeRplApproveGasResponse{}
 
-	// Get staking contract address
-	rocketNodeStakingAddress, err := rp.GetAddress("rocketNodeStaking", nil)
-	if err != nil {
-		return nil, err
-	}
-
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
-	gasInfo, err := tokens.EstimateApproveRPLGas(rp, *rocketNodeStakingAddress, amountWei, opts)
+	gasInfo, err := tokens.EstimateApproveGas(sdt, *sdc.SdCollateralContract.Address, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
-	response.GasInfo = stader.GasInfo(gasInfo)
+	response.GasInfo = gasInfo
 	return &response, nil
 }
 
-func allowanceRpl(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
+func allowanceSd(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
@@ -121,19 +108,17 @@ func allowanceRpl(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
 	}
 
 	// Response
 	response := api.NodeStakeRplAllowanceResponse{}
-
-	// Get staking contract address
-	rocketNodeStakingAddress, err := rp.GetAddress("rocketNodeStaking", nil)
-	if err != nil {
-		return nil, err
-	}
 
 	// Get node account
 	account, err := w.GetNodeAccount()
@@ -142,7 +127,7 @@ func allowanceRpl(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 	}
 
 	// Get node's RPL allowance
-	allowance, err := tokens.GetRPLAllowance(rp, account.Address, *rocketNodeStakingAddress, nil)
+	allowance, err := tokens.Allowance(sdt, account.Address, *sdc.SdCollateralContract.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +137,7 @@ func allowanceRpl(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 	return &response, nil
 }
 
-func approveRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveResponse, error) {
+func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
@@ -162,19 +147,16 @@ func approveRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveRes
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
 	if err != nil {
 		return nil, err
 	}
-
+	sdc, err := services.GetSdCollateralContract(c)
+	if err != nil {
+		return nil, err
+	}
 	// Response
 	response := api.NodeStakeRplApproveResponse{}
-
-	// Get staking contract address
-	rocketNodeStakingAddress, err := rp.GetAddress("rocketNodeStaking", nil)
-	if err != nil {
-		return nil, err
-	}
 
 	// Approve RPL allowance
 	opts, err := w.GetNodeAccountTransactor()
@@ -185,7 +167,7 @@ func approveRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveRes
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
-	hash, err := tokens.ApproveRPL(rp, *rocketNodeStakingAddress, amountWei, opts)
+	hash, err := tokens.Approve(sdt, *sdc.SdCollateralContract.Address, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +179,7 @@ func approveRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveRes
 
 }
 
-func waitForApprovalAndStakeRpl(c *cli.Context, amountWei *big.Int, hash common.Hash) (*api.NodeStakeRplStakeResponse, error) {
+func waitForApprovalAndDepositSd(c *cli.Context, amountWei *big.Int, hash common.Hash) (*api.NodeStakeRplStakeResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
@@ -215,21 +197,18 @@ func waitForApprovalAndStakeRpl(c *cli.Context, amountWei *big.Int, hash common.
 	}
 
 	// Perform the stake
-	return stakeRpl(c, amountWei)
+	return depositSdAsCollateral(c, amountWei)
 
 }
 
-func stakeRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplStakeResponse, error) {
+func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplStakeResponse, error) {
 
 	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -246,12 +225,12 @@ func stakeRpl(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplStakeRespons
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
-	hash, err := node.StakeRPL(rp, amountWei, opts)
+	tx, err := sd_collateral.DepositSdAsCollateral(sdc, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	response.StakeTxHash = hash
+	response.StakeTxHash = tx.Hash()
 
 	// Return response
 	return &response, nil

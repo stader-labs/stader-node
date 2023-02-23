@@ -8,7 +8,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/rocket-pool/rocketpool-go/tokens"
+	"github.com/stader-labs/stader-minipool-go/tokens"
 	"github.com/stader-labs/stader-node/shared/services/rewards"
 	"github.com/stader-labs/stader-node/shared/utils/rp"
 )
@@ -199,14 +199,15 @@ type NodeWithdrawRplResponse struct {
 }
 
 type CanNodeDepositResponse struct {
-	Status              string         `json:"status"`
-	Error               string         `json:"error"`
-	CanDeposit          bool           `json:"canDeposit"`
-	InsufficientBalance bool           `json:"insufficientBalance"`
-	InvalidAmount       bool           `json:"invalidAmount"`
-	NotRegistered       bool           `json:"notRegistered"`
-	DepositPaused       bool           `json:"depositPaused"`
-	GasInfo             stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	CanDeposit            bool           `json:"canDeposit"`
+	InsufficientBalance   bool           `json:"insufficientBalance"`
+	InvalidAmount         bool           `json:"invalidAmount"`
+	NotRegistered         bool           `json:"notRegistered"`
+	DepositPaused         bool           `json:"depositPaused"`
+	NotEnoughSdCollateral bool           `json:"notEnoughSdCollateral"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type NodeDepositResponse struct {

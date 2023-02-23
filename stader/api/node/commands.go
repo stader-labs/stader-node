@@ -379,9 +379,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
-				Name:      "can-stake-rpl",
+				Name:      "can-node-deposit-sd",
 				Usage:     "Check whether the node can stake RPL",
-				UsageText: "stader-cli api node can-stake-rpl amount",
+				UsageText: "stader-cli api node can-node-deposit-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -400,10 +400,10 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "stake-rpl-approve-rpl",
+				Name:      "deposit-sd-approve-sd",
 				Aliases:   []string{"k1"},
-				Usage:     "Approve RPL for staking against the node",
-				UsageText: "stader-cli api node stake-rpl-approve-rpl amount",
+				Usage:     "Approve SD for staking against the node",
+				UsageText: "stader-cli api node deposit-sd-approve-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -416,15 +416,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(approveRpl(c, amountWei))
+					api.PrintResponse(approveSd(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "wait-and-stake-rpl",
+				Name:      "wait-and-deposit-sd",
 				Aliases:   []string{"k2"},
-				Usage:     "Stake RPL against the node, waiting for approval tx-hash to be included in a block first",
+				Usage:     "Deposit SD against the node, waiting for approval tx-hash to be included in a block first",
 				UsageText: "stader-cli api node wait-and-stake-rpl amount tx-hash",
 				Action: func(c *cli.Context) error {
 
@@ -448,9 +448,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "get-stake-rpl-approval-gas",
-				Usage:     "Estimate the gas cost of new RPL interaction approval",
-				UsageText: "stader-cli api node get-stake-rpl-approval-gas",
+				Name:      "get-deposit-sd-approval-gas",
+				Usage:     "Estimate the gas cost of new SD interaction approval",
+				UsageText: "stader-cli api node get-deposit-sd-approval-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -463,15 +463,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(getStakeApprovalGas(c, amountWei))
+					api.PrintResponse(getDepositSdApprovalGas(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "stake-rpl-allowance",
-				Usage:     "Get the node's RPL allowance for the staking contract",
-				UsageText: "stader-cli api node stake-allowance-rpl",
+				Name:      "deposit-sd-allowance",
+				Usage:     "Get the node's SD allowance for the collateral contract",
+				UsageText: "stader-cli api node deposit-sd-allowance",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -480,16 +480,16 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(allowanceRpl(c))
+					api.PrintResponse(allowanceSd(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "stake-rpl",
+				Name:      "deposit-sd",
 				Aliases:   []string{"k3"},
-				Usage:     "Stake RPL against the node",
-				UsageText: "stader-cli api node stake-rpl amount",
+				Usage:     "Deposit SD against the node",
+				UsageText: "stader-cli api node deposit-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

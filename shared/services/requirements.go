@@ -10,8 +10,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/dao/trustednode"
-	"github.com/rocket-pool/rocketpool-go/node"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
+	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/urfave/cli"
 )
@@ -123,9 +123,6 @@ func RequireRplFaucet(c *cli.Context) error {
 
 func RequireNodeRegistered(c *cli.Context) error {
 	if err := RequireNodeWallet(c); err != nil {
-		return err
-	}
-	if err := RequireRocketStorage(c); err != nil {
 		return err
 	}
 	nodeRegistered, err := getNodeRegistered(c)
@@ -324,7 +321,7 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	rp, err := GetRocketPool(c)
+	pnr, err := GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return false, err
 	}
@@ -332,7 +329,12 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return node.GetNodeExists(rp, nodeAccount.Address, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return false, err
+	}
+
+	return operatorId.Int64() != 0, nil
 }
 
 // Check if the node is a member of the oracle DAO
