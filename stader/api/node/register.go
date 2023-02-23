@@ -35,7 +35,11 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 
 	nodeAccount, err := w.GetNodeAccount()
 
-	operatorRegistry, err := node.GetOperatorRegistry(pnr, nodeAccount.Address, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorRegistry, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
