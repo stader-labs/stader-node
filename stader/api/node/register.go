@@ -40,7 +40,7 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return nil, err
 	}
 
-	if operatorId.Int64() == 0 {
+	if operatorId.Int64() != 0 {
 		response.AlreadyRegistered = true
 		return &response, nil
 	}
@@ -54,17 +54,17 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 	if err != nil {
 		return nil, err
 	}
-
 	if isPermissionlessRegistryPaused {
 		response.RegistrationPaused = true
 		return &response, nil
 	}
-	
+
 	gasInfo, err := node.EstimateOnboardNodeOperator(pnr, socializeMev, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
 
+	response.CanRegister = true
 	response.GasInfo = gasInfo
 
 	return &response, nil
