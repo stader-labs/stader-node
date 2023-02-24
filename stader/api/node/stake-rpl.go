@@ -2,12 +2,12 @@ package node
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-minipool-go/sd-collateral"
+	"github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/utils"
-	"github.com/stader-labs/stader-minipool-go/tokens"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"

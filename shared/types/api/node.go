@@ -4,13 +4,13 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/stader-labs/stader-minipool-go/tokens"
 	"github.com/stader-labs/stader-node/shared/services/rewards"
 	"github.com/stader-labs/stader-node/shared/utils/rp"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 )
 
 type NodeStatusResponse struct {

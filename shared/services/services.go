@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"

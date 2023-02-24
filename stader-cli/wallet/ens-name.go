@@ -2,7 +2,7 @@ package wallet
 
 import (
 	"fmt"
-	staderCore "github.com/stader-labs/stader-minipool-go/stader"
+	staderCore "github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"

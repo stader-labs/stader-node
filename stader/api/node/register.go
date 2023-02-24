@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/stader-labs/stader-minipool-go/node"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
 )
 

@@ -5,13 +5,13 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
-	staderCore "github.com/stader-labs/stader-minipool-go/stader"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
+	staderCore "github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
 const colorReset string = "\033[0m"

@@ -3,7 +3,7 @@ package node
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"io/ioutil"
 	"net/http"
 	"net/url"

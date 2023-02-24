@@ -1,10 +1,10 @@
 package node
 
 import (
-	"github.com/stader-labs/stader-minipool-go/node"
-	"github.com/stader-labs/stader-minipool-go/tokens"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 )
 
