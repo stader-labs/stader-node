@@ -100,10 +100,9 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %d ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
+		"You are about to deposit %d ETH to create %d validators. \n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
 		eth.WeiToEth(big.NewInt(int64(totalDeposited))), numValidators,
-		5.0,
 		colorYellow,
 		colorReset))) {
 		fmt.Println("Cancelled.")
