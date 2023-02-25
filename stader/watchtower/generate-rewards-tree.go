@@ -185,7 +185,7 @@ func (t *generateRewardsTree) generateRewardsTree(index uint64) {
 				// Get the rETH address from the archive EC
 				address, err = client.RocketStorage.GetAddress(opts, crypto.Keccak256Hash([]byte("contract.addressrocketTokenRETH")))
 				if err != nil {
-					t.handleError(fmt.Errorf("%s Error verifying rETH address with Archive EC: %w", err))
+					//t.handleError(fmt.Errorf("%s Error verifying rETH address with Archive EC: %w", err))
 					return
 				}
 			} else {
@@ -199,7 +199,7 @@ func (t *generateRewardsTree) generateRewardsTree(index uint64) {
 
 	// Sanity check the rETH address to make sure the client is working right
 	if address != t.cfg.Smartnode.GetRethAddress() {
-		t.handleError(fmt.Errorf("***ERROR*** Your Primary EC provided %s as the rETH address, but it should have been %s!", address.Hex(), t.cfg.Smartnode.GetRethAddress().Hex()))
+		//t.handleError(fmt.Errorf("***ERROR*** Your Primary EC provided %s as the rETH address, but it should have been %s!", address.Hex(), t.cfg.Smartnode.GetRethAddress().Hex()))
 		return
 	}
 

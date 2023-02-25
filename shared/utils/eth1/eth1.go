@@ -95,7 +95,7 @@ func GetBestApiClient(primary *rocketpool.RocketPool, cfg *config.StaderConfig, 
 				// Get the rETH address from the archive EC
 				address, err = client.RocketStorage.GetAddress(opts, crypto.Keccak256Hash([]byte("contract.addressrocketTokenRETH")))
 				if err != nil {
-					return nil, fmt.Errorf("%s Error verifying rETH address with Archive EC: %w", err)
+					return nil, fmt.Errorf("%s Error verifying canary address with Archive EC: %w", err)
 				}
 			} else {
 				// No archive node specified

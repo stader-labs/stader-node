@@ -118,9 +118,6 @@ func (t *stakePrelaunchMinipools) run() error {
 		return err
 	}
 
-	// Log
-	t.log.Println("Checking for minipools to launch...")
-
 	// Get node account
 	nodeAccount, err := t.w.GetNodeAccount()
 	if err != nil {
@@ -141,9 +138,6 @@ func (t *stakePrelaunchMinipools) run() error {
 	if err != nil {
 		return err
 	}
-
-	// Log
-	t.log.Printlnf("%d minipool(s) are ready for staking...", len(minipools))
 
 	// Stake minipools
 	successCount := 0

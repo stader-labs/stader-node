@@ -80,9 +80,6 @@ func (d *downloadRewardsTrees) run() error {
 		return nil
 	}
 
-	// Log
-	d.log.Println("Checking for new rewards tree files to download...")
-
 	// Get node account
 	nodeAccount, err := d.w.GetNodeAccount()
 	if err != nil {
@@ -103,7 +100,6 @@ func (d *downloadRewardsTrees) run() error {
 		treeFilePath := d.cfg.Smartnode.GetRewardsTreePath(i, true)
 		_, err = os.Stat(treeFilePath)
 		if os.IsNotExist(err) {
-			d.log.Printlnf("You are missing the rewards tree file for interval %d.", i)
 			missingIntervals = append(missingIntervals, i)
 		} else if err != nil {
 			return fmt.Errorf("error checking if rewards interval %d file exists: %w", i, err)
@@ -116,17 +112,14 @@ func (d *downloadRewardsTrees) run() error {
 
 	// Download missing intervals
 	for _, missingInterval := range missingIntervals {
-		fmt.Printf("Downloading interval %d file... ", missingInterval)
 		intervalInfo, err := rprewards.GetIntervalInfo(d.rp, d.cfg, nodeAccount.Address, missingInterval)
 		if err != nil {
-			return fmt.Errorf("error getting interval %d info: %w", missingInterval, err)
 		}
 		err = rprewards.DownloadRewardsFile(d.cfg, missingInterval, intervalInfo.CID, true)
 		if err != nil {
 			fmt.Println()
 			return err
 		}
-		fmt.Println("done!")
 	}
 
 	return nil

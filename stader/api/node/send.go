@@ -128,6 +128,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 
 }
 
+// TODO - bchain fix this method
 func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Address) (*api.NodeSendResponse, error) {
 
 	// Get services
@@ -174,7 +175,7 @@ func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Addres
 		}
 		response.TxHash = hash
 
-	case "rpl":
+	case "ethx":
 
 		// Get RocketStorage
 		if err := services.RequireRocketStorage(c); err != nil {
@@ -187,7 +188,7 @@ func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Addres
 		}
 		response.TxHash = hash
 
-	case "fsrpl":
+	case "sd":
 
 		// Get RocketStorage
 		if err := services.RequireRocketStorage(c); err != nil {
@@ -195,19 +196,6 @@ func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Addres
 		}
 		// Transfer fixed-supply RPL
 		hash, err := tokens.TransferFixedSupplyRPL(rp, to, amountWei, opts)
-		if err != nil {
-			return nil, err
-		}
-		response.TxHash = hash
-
-	case "reth":
-
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Transfer rETH
-		hash, err := tokens.TransferRETH(rp, to, amountWei, opts)
 		if err != nil {
 			return nil, err
 		}

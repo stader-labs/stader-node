@@ -115,7 +115,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	// Log and wait for the minipool address
 	fmt.Printf("Creating %d validators...\n", numValidators)
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)

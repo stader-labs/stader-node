@@ -109,17 +109,8 @@ func ValidatePercentage(name, value string) (float64, error) {
 // Validate a token type
 func ValidateTokenType(name, value string) (string, error) {
 	val := strings.ToLower(value)
-	if !(val == "eth" || val == "rpl" || val == "fsrpl" || val == "reth") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'ETH', 'RPL', 'fsRPL', and 'rETH'", name, value)
-	}
-	return val, nil
-}
-
-// Validate a proposal type
-func ValidateProposalType(name, value string) (string, error) {
-	val := strings.ToLower(value)
-	if !(val == "pending" || val == "active" || val == "succeeded" || val == "executed" || val == "cancelled" || val == "defeated" || val == "expired" || val == "all") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'pending', 'active', 'succeeded', 'executed', 'cancelled', 'defeated', 'expired', and 'all'", name, value)
+	if !(val == "eth" || val == "sd" || val == "ethx") {
+		return "", fmt.Errorf("invalid %s '%s' - valid types are 'ETH', 'ETHX', 'SD'", name, value)
 	}
 	return val, nil
 }
@@ -203,8 +194,8 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 // Validate a burnable token type
 func ValidateBurnableTokenType(name, value string) (string, error) {
 	val := strings.ToLower(value)
-	if !(val == "reth") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'rETH'", name, value)
+	if !(val == "ethx") {
+		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'ethx'", name, value)
 	}
 	return val, nil
 }
