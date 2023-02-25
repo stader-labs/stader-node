@@ -32,12 +32,6 @@ func nodeDeposit(c *cli.Context) error {
 
 	fmt.Println("Your eth2 client is on the correct network.")
 
-	// Post a warning about fee distribution
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new validator, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new validator.%s\nWould you like to continue?", colorYellow, colorReset))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	numValidators := c.Uint64("num-validators")
 
 	// Force 4 ETH minipools as the only option after much community discussion
@@ -134,9 +128,8 @@ func nodeDeposit(c *cli.Context) error {
 	fmt.Printf("The node deposit of %d ETH was made successfully!\n", totalDeposited)
 	fmt.Printf("Total %d validators were created\n", numValidators)
 
-	fmt.Println("Your validators are now in Initialized status.")
-	fmt.Println("Once the ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
-	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
+	fmt.Printf("You have now initialized %d\n validators", numValidators)
+	fmt.Println("Once the ETH deposits have been matched by the EthX staking pool, it will move to Prelaunch status.")
 
 	return nil
 
