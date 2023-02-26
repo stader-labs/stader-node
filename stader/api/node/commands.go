@@ -620,7 +620,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, submit))
+					api.PrintResponse(nodeDeposit(c, amountWei, salt, numValidators, submit))
 
 					return nil
 
