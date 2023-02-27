@@ -32,7 +32,7 @@ func Allowance(tokenContract *stader.Erc20TokenContractManager, owner common.Add
 
 // Estimate the gas of Transfer
 func EstimateTransferGas(tokenContract *stader.Erc20TokenContractManager, to common.Address, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "Transfer", to, amount)
+	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "transfer", to, amount)
 }
 
 // Transfer tokens to an address
@@ -47,7 +47,7 @@ func Transfer(tokenContract *stader.Erc20TokenContractManager, to common.Address
 
 // Estimate the gas of Approve
 func EstimateApproveGas(tokenContract *stader.Erc20TokenContractManager, spender common.Address, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "Approve", spender, amount)
+	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "approve", spender, amount)
 }
 
 // Approve a token Allowance for a spender
@@ -62,7 +62,7 @@ func Approve(tokenContract *stader.Erc20TokenContractManager, spender common.Add
 
 // Estimate the gas of TransferFrom
 func EstimateTransferFromGas(tokenContract *stader.Erc20TokenContractManager, from, to common.Address, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "TransferFrom", from, to, amount)
+	return tokenContract.Erc20TokenContract.GetTransactionGasInfo(opts, "transferFrom", from, to, amount)
 }
 
 // Transfer tokens from a sender to an address
