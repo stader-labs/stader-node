@@ -336,9 +336,9 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		},
 
 		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:  "0x5df0A01fe58F7da277b8d9F16ee739917Db28f38",
-			config.Network_Devnet:  "0x5df0A01fe58F7da277b8d9F16ee739917Db28f38",
-			config.Network_Mainnet: "0x5df0A01fe58F7da277b8d9F16ee739917Db28f38",
+			config.Network_Prater:  "0xC3cC480121e1e836546E683d79103d3f50cC4373",
+			config.Network_Devnet:  "0xC3cC480121e1e836546E683d79103d3f50cC4373",
+			config.Network_Mainnet: "0xC3cC480121e1e836546E683d79103d3f50cC4373",
 		},
 
 		rethAddress: map[config.Network]string{
