@@ -242,11 +242,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",
-						Usage: "The amount of Sd to deposit",
+						Usage: "The amount of SD to deposit",
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm RPL stake",
+						Usage: "Automatically confirm SD deposit",
 					},
 				},
 				Action: func(c *cli.Context) error {

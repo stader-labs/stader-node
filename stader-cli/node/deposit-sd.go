@@ -95,12 +95,12 @@ func nodeDepositSd(c *cli.Context) error {
 			return err
 		}
 		hash := response.ApproveTxHash
-		fmt.Printf("Approving RPL for staking...\n")
+		fmt.Printf("Approving SD for deposting...\n")
 		cliutils.PrintTransactionHash(staderClient, hash)
 		if _, err = staderClient.WaitForTransaction(hash); err != nil {
 			return err
 		}
-		fmt.Println("Successfully approved staking access to RPL.")
+		fmt.Println("Successfully approved SD to deposit.")
 
 		// If a custom nonce is set, increment it for the next transaction
 		if c.GlobalUint64("nonce") != 0 {
@@ -128,7 +128,7 @@ func nodeDepositSd(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to Deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -146,7 +146,7 @@ func nodeDepositSd(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Successfully staked %.6f RPL.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully deposited %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
 	return nil
 
 }
