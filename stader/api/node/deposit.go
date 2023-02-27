@@ -334,12 +334,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	fmt.Printf("nodeDeposit: Submitting the validator keys!")
 	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("nodeDeposit: Submitted the validator keys: %s\n", tx.Hash())
 
 	// Print transaction if requested
 	if !submit {
