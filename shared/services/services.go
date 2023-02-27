@@ -149,6 +149,19 @@ func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, erro
 	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetSdTokenAddress())
 }
 
+func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetEthxTokenAddress())
+}
+
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

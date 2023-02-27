@@ -41,6 +41,7 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplR
 	}
 
 	// Check Sd balance
+	// TODO - bchain we should abstract this out
 	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, nodeAccount.Address)
 	if err != nil {
 		return nil, err
