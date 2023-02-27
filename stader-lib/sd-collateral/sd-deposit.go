@@ -9,7 +9,7 @@ import (
 )
 
 func EstimateDepositSdAsCollateral(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "depositSdAsCollateral", amount)
+	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "depositSDAsCollateral", amount)
 }
 
 func DepositSdAsCollateral(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {

@@ -11,8 +11,8 @@ import (
 // Token balances
 type Balances struct {
 	ETH  *big.Int `json:"eth"`
-	Sd   *big.Int `json:"reth"`
-	Ethx *big.Int `json:"rpl"`
+	Sd   *big.Int `json:"sd"`
+	Ethx *big.Int `json:"ethx"`
 }
 
 // Get a token's total supply
