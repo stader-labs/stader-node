@@ -242,7 +242,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",
-						Usage: "The amount of Sd to deposit (or 'min', 'max', or 'all')",
+						Usage: "The amount of Sd to deposit",
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -256,11 +256,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					// Validate flags
-					if c.String("amount") != "" && c.String("amount") != "min" && c.String("amount") != "max" && c.String("amount") != "all" {
-						if _, err := cliutils.ValidatePositiveEthAmount("stake amount", c.String("amount")); err != nil {
-							return err
-						}
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
 					}
 
 					// Run

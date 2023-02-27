@@ -5,6 +5,7 @@ import (
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/urfave/cli"
 	"math/big"
+	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -41,15 +42,28 @@ func nodeDepositSd(c *cli.Context) error {
 	//sdBalance := *(status.AccountBalances.Sd)
 
 	// Get stake mount
-	var amountWei *big.Int
+	amountInString := c.String("amount")
+	amount, err := strconv.ParseFloat(amountInString, 64)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("amount is %f\n", amount)
+	amountWei := eth.EthToWei(amount)
+	fmt.Printf("amountWei is %d\n", amountWei)
 
 	// Check allowance
 	allowance, err := staderClient.GetNodeDepositSdAllowance()
 	if err != nil {
 		return err
 	}
+	fmt.Printf("allowance is %d\n", allowance.Allowance.Int64())
 
-	if allowance.Allowance.Cmp(amountWei) < 0 {
+	// Calculate max uint256 value
+	maxApproval := big.NewInt(2)
+	maxApproval = maxApproval.Exp(maxApproval, big.NewInt(256), nil)
+	maxApproval = maxApproval.Sub(maxApproval, big.NewInt(1))
+
+	if allowance.Allowance.Cmp(maxApproval) < 0 {
 		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD.")
 		fmt.Println("This only needs to be done once for your node.")
 
@@ -57,11 +71,6 @@ func nodeDepositSd(c *cli.Context) error {
 		if c.GlobalUint64("nonce") != 0 {
 			cliutils.PrintMultiTransactionNonceWarning()
 		}
-
-		// Calculate max uint256 value
-		maxApproval := big.NewInt(2)
-		maxApproval = maxApproval.Exp(maxApproval, big.NewInt(256), nil)
-		maxApproval = maxApproval.Sub(maxApproval, big.NewInt(1))
 
 		// Get approval gas
 		approvalGas, err := staderClient.NodeDepositSdApprovalGas(maxApproval)
