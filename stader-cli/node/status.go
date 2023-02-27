@@ -58,6 +58,12 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddressFormatted,
 		colorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
+	fmt.Printf(
+		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
+		colorBlue,
+		status.AccountAddressFormatted,
+		colorReset,
+		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", colorGreen, colorReset)
 
