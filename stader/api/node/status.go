@@ -4,6 +4,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 )
@@ -23,6 +24,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -59,13 +64,27 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 
-	if operatorRegistry.OperatorName == "" {
-		response.Registered = false
-	} else {
+	if operatorRegistry.OperatorName != "" {
 		response.Registered = true
 		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
+
+		// get operator deposited sd collateral
+		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.DepositedSdCollateral = operatorSdCollateral
+
+		// TODO - bchain - work on getting validator statuses
+		//totalOperatorValidators, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+		//if err != nil {
+		//	return nil, err
+		//}
+
+	} else {
+		response.Registered = false
 	}
 
 	// Return response

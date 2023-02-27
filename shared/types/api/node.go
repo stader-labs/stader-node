@@ -9,38 +9,24 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/services/rewards"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 )
 
 type NodeStatusResponse struct {
-	Status                            string          `json:"status"`
-	Error                             string          `json:"error"`
-	NumberOfValidatorsRegistered      string          `json:"numberOfValidatorsRegistered"`
-	EthBalance                        *big.Int        `json:"ethBalance"`
-	AccountAddress                    common.Address  `json:"accountAddress"`
-	AccountAddressFormatted           string          `json:"accountAddressFormatted"`
-	OperatorId                        *big.Int        `json:"operatorId"`
-	OperatorName                      string          `json:"operatorName"`
-	OperatorRewardAddress             common.Address  `json:"operatorRewardAddress"`
-	WithdrawalAddress                 common.Address  `json:"withdrawalAddress"`
-	WithdrawalAddressFormatted        string          `json:"withdrawalAddressFormatted"`
-	PendingWithdrawalAddress          common.Address  `json:"pendingWithdrawalAddress"`
-	PendingWithdrawalAddressFormatted string          `json:"pendingWithdrawalAddressFormatted"`
-	Registered                        bool            `json:"registered"`
-	Trusted                           bool            `json:"trusted"`
-	TimezoneLocation                  string          `json:"timezoneLocation"`
-	AccountBalances                   tokens.Balances `json:"accountBalances"`
-	WithdrawalBalances                tokens.Balances `json:"withdrawalBalances"`
-	RplStake                          *big.Int        `json:"rplStake"`
-	EffectiveRplStake                 *big.Int        `json:"effectiveRplStake"`
-	MinimumRplStake                   *big.Int        `json:"minimumRplStake"`
-	MaximumRplStake                   *big.Int        `json:"maximumRplStake"`
-	CollateralRatio                   float64         `json:"collateralRatio"`
-	VotingDelegate                    common.Address  `json:"votingDelegate"`
-	VotingDelegateFormatted           string          `json:"votingDelegateFormatted"`
-	MinipoolLimit                     uint64          `json:"minipoolLimit"`
-	MinipoolCounts                    struct {
+	Status                       string          `json:"status"`
+	Error                        string          `json:"error"`
+	NumberOfValidatorsRegistered string          `json:"numberOfValidatorsRegistered"`
+	AccountAddress               common.Address  `json:"accountAddress"`
+	AccountAddressFormatted      string          `json:"accountAddressFormatted"`
+	OperatorId                   *big.Int        `json:"operatorId"`
+	OperatorName                 string          `json:"operatorName"`
+	OperatorRewardAddress        common.Address  `json:"operatorRewardAddress"`
+	DepositedSdCollateral        *big.Int        `json:"depositedSdCollateral"`
+	Registered                   bool            `json:"registered"`
+	TimezoneLocation             string          `json:"timezoneLocation"`
+	AccountBalances              tokens.Balances `json:"accountBalances"`
+	ValidatorLimit               uint64          `json:"validatorLimit"`
+	ValidatorStatuses            struct {
 		Total               int `json:"total"`
 		Initialized         int `json:"initialized"`
 		Prelaunch           int `json:"prelaunch"`
@@ -52,15 +38,6 @@ type NodeStatusResponse struct {
 		CloseAvailable      int `json:"closeAvailable"`
 		Finalised           int `json:"finalised"`
 	} `json:"minipoolCounts"`
-	IsFeeDistributorInitialized bool                      `json:"isFeeDistributorInitialized"`
-	FeeRecipientInfo            rp.FeeRecipientInfo       `json:"feeRecipientInfo"`
-	FeeDistributorBalance       *big.Int                  `json:"feeDistributorBalance"`
-	PenalizedMinipools          map[common.Address]uint64 `json:"penalizedMinipools"`
-	SnapshotResponse            struct {
-		Error                   string                 `json:"error"`
-		ProposalVotes           []SnapshotProposalVote `json:"proposalVotes"`
-		ActiveSnapshotProposals []SnapshotProposal     `json:"activeSnapshotProposals"`
-	} `json:"snapshotResponse"`
 }
 
 type CanRegisterNodeResponse struct {
