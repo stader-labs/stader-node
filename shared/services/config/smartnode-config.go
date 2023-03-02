@@ -286,9 +286,10 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		},
 
 		chainID: map[config.Network]uint{
-			config.Network_Mainnet: 1, // Mainnet
-			config.Network_Prater:  5, // Goerli
-			config.Network_Devnet:  5, // Also goerli
+			config.Network_Mainnet:  1,       // Mainnet
+			config.Network_Prater:   5,       // Goerli
+			config.Network_Devnet:   5,       // Also goerli
+			config.Network_Zhejiang: 1337803, // Zhejiang
 		},
 
 		storageAddress: map[config.Network]string{
@@ -464,6 +465,18 @@ func (cfg *SmartnodeConfig) GetValidatorKeychainPath() string {
 	return filepath.Join(DaemonDataPath, "validators")
 }
 
+func (cfg *SmartnodeConfig) GetWalletPathInCLI() string {
+	return filepath.Join(cfg.DataPath.Value.(string), "wallet")
+}
+
+func (cfg *SmartnodeConfig) GetPasswordPathInCLI() string {
+	return filepath.Join(cfg.DataPath.Value.(string), "password")
+}
+
+func (cfg *SmartnodeConfig) GetValidatorKeychainPathInCLI() string {
+	return filepath.Join(cfg.DataPath.Value.(string), "validators")
+}
+
 func (config *SmartnodeConfig) GetWatchtowerStatePath() string {
 	if config.parent.IsNativeMode {
 		return filepath.Join(config.DataPath.Value.(string), WatchtowerFolder, "state.yml")
@@ -635,6 +648,11 @@ func getNetworkOptions() []config.ParameterOption {
 			Name:        "Goerli Testnet",
 			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Smartnode in a free, safe environment before moving to Mainnet.",
 			Value:       config.Network_Prater,
+		},
+		{
+			Name:        "Zhejiang Testnet",
+			Description: "This is the Zhejiang test network, using free fake ETH and free fake RPL to make fake validators.\nUse this if you want to test the upcoming Atlas upgrade to Rocket Pool, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
+			Value:       config.Network_Zhejiang,
 		},
 	}
 

@@ -99,6 +99,7 @@ type StaderConfig struct {
 	Prysm              *PrysmConfig              `yaml:"prysm,omitempty"`
 	Teku               *TekuConfig               `yaml:"teku,omitempty"`
 	ExternalLighthouse *ExternalLighthouseConfig `yaml:"externalLighthouse,omitempty"`
+	ExternalNimbus     *ExternalNimbusConfig     `yaml:"externalNimbus,omitempty"`
 	ExternalPrysm      *ExternalPrysmConfig      `yaml:"externalPrysm,omitempty"`
 	ExternalTeku       *ExternalTekuConfig       `yaml:"externalTeku,omitempty"`
 
@@ -292,6 +293,10 @@ func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 				Description: "Select this if you will use Lighthouse as your Consensus client.",
 				Value:       config.ConsensusClient_Lighthouse,
 			}, {
+				Name:        "Nimbus",
+				Description: "Select this if you will use Nimbus as your Consensus client.",
+				Value:       config.ConsensusClient_Nimbus,
+			}, {
 				Name:        "Prysm",
 				Description: "Select this if you will use Prysm as your Consensus client.",
 				Value:       config.ConsensusClient_Prysm,
@@ -441,6 +446,7 @@ func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 	cfg.Prysm = NewPrysmConfig(cfg)
 	cfg.Teku = NewTekuConfig(cfg)
 	cfg.ExternalLighthouse = NewExternalLighthouseConfig(cfg)
+	cfg.ExternalNimbus = NewExternalNimbusConfig(cfg)
 	cfg.ExternalPrysm = NewExternalPrysmConfig(cfg)
 	cfg.ExternalTeku = NewExternalTekuConfig(cfg)
 	cfg.Grafana = NewGrafanaConfig(cfg)
@@ -535,6 +541,7 @@ func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 		"externalExecution":  cfg.ExternalExecution,
 		"consensusCommon":    cfg.ConsensusCommon,
 		"lighthouse":         cfg.Lighthouse,
+		"externalNimbus":     cfg.ExternalNimbus,
 		"nimbus":             cfg.Nimbus,
 		"prysm":              cfg.Prysm,
 		"teku":               cfg.Teku,
@@ -651,6 +658,8 @@ func (cfg *StaderConfig) GetSelectedConsensusClientConfig() (config.ConsensusCon
 		switch client {
 		case config.ConsensusClient_Lighthouse:
 			return cfg.ExternalLighthouse, nil
+		case config.ConsensusClient_Nimbus:
+			return cfg.ExternalNimbus, nil
 		case config.ConsensusClient_Prysm:
 			return cfg.ExternalPrysm, nil
 		case config.ConsensusClient_Teku:
@@ -675,11 +684,7 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 	case config.Mode_Local:
 		client := cfg.ConsensusClient.Value.(config.ConsensusClient)
 		switch client {
-		case config.ConsensusClient_Lighthouse:
-			return cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool), nil
-		case config.ConsensusClient_Nimbus:
-			return cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool), nil
-		case config.ConsensusClient_Prysm:
+		case config.ConsensusClient_Lighthouse, config.ConsensusClient_Nimbus, config.ConsensusClient_Prysm:
 			return cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Teku:
 			return false, nil
@@ -692,6 +697,8 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 		switch client {
 		case config.ConsensusClient_Lighthouse:
 			return cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool), nil
+		case config.ConsensusClient_Nimbus:
+			return cfg.ExternalNimbus.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Prysm:
 			return cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Teku:
@@ -880,6 +887,8 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 		switch consensusClient {
 		case config.ConsensusClient_Lighthouse:
 			config.AddParametersToEnvVars(cfg.ExternalLighthouse.GetParameters(), envVars)
+		case config.ConsensusClient_Nimbus:
+			config.AddParametersToEnvVars(cfg.ExternalNimbus.GetParameters(), envVars)
 		case config.ConsensusClient_Prysm:
 			config.AddParametersToEnvVars(cfg.ExternalPrysm.GetParameters(), envVars)
 		case config.ConsensusClient_Teku:
@@ -955,15 +964,20 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 
 	// MEV-Boost
 	if cfg.EnableMevBoost.Value == true {
-		config.AddParametersToEnvVars(cfg.MevBoost.GetParameters(), envVars)
-		if cfg.MevBoost.Mode.Value == config.Mode_Local {
-			envVars[mevBoostRelaysEnvVar] = cfg.MevBoost.GetRelayString()
-			envVars[mevBoostUrlEnvVar] = fmt.Sprintf("http://%s:%d", MevBoostContainerName, cfg.MevBoost.Port.Value)
+		if cfg.Smartnode.Network.Value.(config.Network) == config.Network_Zhejiang {
+			// Disable MEV-Boost on Zhejiang
+			cfg.EnableMevBoost.Value = false
+		} else {
+			config.AddParametersToEnvVars(cfg.MevBoost.GetParameters(), envVars)
+			if cfg.MevBoost.Mode.Value == config.Mode_Local {
+				envVars[mevBoostRelaysEnvVar] = cfg.MevBoost.GetRelayString()
+				envVars[mevBoostUrlEnvVar] = fmt.Sprintf("http://%s:%d", MevBoostContainerName, cfg.MevBoost.Port.Value)
 
-			// Handle open API port
-			if cfg.MevBoost.OpenRpcPort.Value == true {
-				port := cfg.MevBoost.Port.Value.(uint16)
-				envVars["MEV_BOOST_OPEN_API_PORT"] = fmt.Sprintf("\"%d:%d/tcp\"", port, port)
+				// Handle open API port
+				if cfg.MevBoost.OpenRpcPort.Value == true {
+					port := cfg.MevBoost.Port.Value.(uint16)
+					envVars["MEV_BOOST_OPEN_API_PORT"] = fmt.Sprintf("\"%d:%d/tcp\"", port, port)
+				}
 			}
 		}
 	}
@@ -1076,20 +1090,25 @@ func (cfg *StaderConfig) Validate() []string {
 
 	// Ensure there's a MEV-boost URL
 	if !cfg.IsNativeMode && cfg.EnableMevBoost.Value == true {
-		switch cfg.MevBoost.Mode.Value.(config.Mode) {
-		case config.Mode_Local:
-			// In local MEV-boost mode, the user has to have at least one relay
-			relays := cfg.MevBoost.GetEnabledMevRelays()
-			if len(relays) == 0 {
-				errors = append(errors, "You have MEV-boost enabled in local mode but don't have any profiles or relays enabled. Please select at least one profile or relay to use MEV-boost.")
+		if cfg.Smartnode.Network.Value.(config.Network) == config.Network_Zhejiang {
+			// Disable MEV-Boost on Zhejiang
+			cfg.EnableMevBoost.Value = false
+		} else {
+			switch cfg.MevBoost.Mode.Value.(config.Mode) {
+			case config.Mode_Local:
+				// In local MEV-boost mode, the user has to have at least one relay
+				relays := cfg.MevBoost.GetEnabledMevRelays()
+				if len(relays) == 0 {
+					errors = append(errors, "You have MEV-boost enabled in local mode but don't have any profiles or relays enabled. Please select at least one profile or relay to use MEV-boost.")
+				}
+			case config.Mode_External:
+				// In external MEV-boost mode, the user has to have an external URL if they're running Docker mode
+				if cfg.ExecutionClientMode.Value.(config.Mode) == config.Mode_Local && cfg.MevBoost.ExternalUrl.Value.(string) == "" {
+					errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
+				}
+			default:
+				errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `stader-cli service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
 			}
-		case config.Mode_External:
-			// In external MEV-boost mode, the user has to have an external URL if they're running Docker mode
-			if cfg.ExecutionClientMode.Value.(config.Mode) == config.Mode_Local && cfg.MevBoost.ExternalUrl.Value.(string) == "" {
-				errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
-			}
-		default:
-			errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `stader-cli service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
 		}
 	}
 

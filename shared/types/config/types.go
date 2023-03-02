@@ -9,6 +9,7 @@ type ConsensusClient string
 type RewardsMode string
 type MevRelayID string
 type MevSelectionMode string
+type NimbusPruningMode string
 
 // Enum to describe which container(s) a parameter impacts, so the Smartnode knows which
 // ones to restart upon a settings change
@@ -28,11 +29,12 @@ const (
 
 // Enum to describe which network the system is on
 const (
-	Network_Unknown Network = ""
-	Network_All     Network = "all"
-	Network_Mainnet Network = "mainnet"
-	Network_Prater  Network = "prater"
-	Network_Devnet  Network = "devnet"
+	Network_Unknown  Network = ""
+	Network_All      Network = "all"
+	Network_Mainnet  Network = "mainnet"
+	Network_Prater   Network = "prater"
+	Network_Devnet   Network = "devnet"
+	Network_Zhejiang Network = "zhejiang"
 )
 
 // Enum to describe the mode for a client - local (Docker Mode) or external (Hybrid Mode)
@@ -97,6 +99,12 @@ const (
 const (
 	MevSelectionMode_Profile MevSelectionMode = "profile"
 	MevSelectionMode_Relay   MevSelectionMode = "relay"
+)
+
+// Enum to describe Nimbus pruning modes
+const (
+	NimbusPruningMode_Archive NimbusPruningMode = "archive"
+	NimbusPruningMode_Prune   NimbusPruningMode = "prune"
 )
 
 type Config interface {

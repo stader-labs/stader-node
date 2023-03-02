@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	lighthouseTagPortableTest string = "sigp/lighthouse:v3.3.0"
-	lighthouseTagPortableProd string = "sigp/lighthouse:v3.3.0"
-	lighthouseTagModernTest   string = "sigp/lighthouse:v3.3.0-modern"
-	lighthouseTagModernProd   string = "sigp/lighthouse:v3.3.0-modern"
+	lighthouseTagPortableTest string = "sigp/lighthouse:capella"
+	lighthouseTagPortableProd string = "sigp/lighthouse:v3.5.0"
+	lighthouseTagModernTest   string = "sigp/lighthouse:capella-modern"
+	lighthouseTagModernProd   string = "sigp/lighthouse:v3.5.0-modern"
 	defaultLhMaxPeers         uint16 = 80
 )
 
@@ -56,9 +56,10 @@ func NewLighthouseConfig(cfg *StaderConfig) *LighthouseConfig {
 			Description: "The tag name of the Lighthouse container you want to use from Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getLighthouseTagProd(),
-				config.Network_Prater:  getLighthouseTagTest(),
-				config.Network_Devnet:  getLighthouseTagTest(),
+				config.Network_Mainnet:  getLighthouseTagProd(),
+				config.Network_Prater:   getLighthouseTagTest(),
+				config.Network_Devnet:   getLighthouseTagTest(),
+				config.Network_Zhejiang: getLighthouseTagTest(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG", "VC_CONTAINER_TAG"},
