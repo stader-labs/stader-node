@@ -71,7 +71,7 @@ func (addonsPage *AddonsPage) createContent() {
 		SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 			addonsPage.layout.descriptionBox.SetText(addonsPage.addonSubpages[index].getPage().description)
 		})
-	categoryList.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	categoryList.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	categoryList.SetBorderPadding(0, 0, 1, 1)
 	addonsPage.categoryList = categoryList
 

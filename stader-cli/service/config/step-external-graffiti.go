@@ -17,6 +17,7 @@ func createExternalGraffitiStep(wiz *wizard, currentStep int, totalSteps int) *t
 		switch wiz.md.Config.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) {
 		case cfgtypes.ConsensusClient_Lighthouse:
 			modal.textboxes[graffitiLabel].SetText(wiz.md.Config.ExternalLighthouse.Graffiti.Value.(string))
+
 		case cfgtypes.ConsensusClient_Prysm:
 			modal.textboxes[graffitiLabel].SetText(wiz.md.Config.ExternalPrysm.Graffiti.Value.(string))
 		case cfgtypes.ConsensusClient_Teku:
@@ -29,6 +30,11 @@ func createExternalGraffitiStep(wiz *wizard, currentStep int, totalSteps int) *t
 		switch wiz.md.Config.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) {
 		case cfgtypes.ConsensusClient_Lighthouse:
 			wiz.md.Config.ExternalLighthouse.Graffiti.Value = text[graffitiLabel]
+			wiz.externalDoppelgangerModal.show()
+		case cfgtypes.ConsensusClient_Nimbus:
+			wiz.md.Config.ExternalNimbus.Graffiti.Value = text[graffitiLabel]
+			wiz.externalDoppelgangerModal.show()
+
 			wiz.externalDoppelgangerModal.show()
 		case cfgtypes.ConsensusClient_Prysm:
 			wiz.md.Config.ExternalPrysm.Graffiti.Value = text[graffitiLabel]

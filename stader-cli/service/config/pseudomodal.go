@@ -62,7 +62,7 @@ func NewPseudomodal(direction int, app *tview.Application) *Pseudomodal {
 			SetButtonsAlign(tview.AlignCenter).
 			SetButtonBackgroundColor(tview.Styles.PrimitiveBackgroundColor).
 			SetButtonTextColor(tview.Styles.PrimaryTextColor)
-		form.SetBackgroundColor(tcell.ColorRebeccaPurple).SetBorderPadding(0, 0, 0, 0)
+		form.SetBackgroundColor(tview.Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
 		form.SetCancelFunc(func() {
 			if m.done != nil {
 				m.done(-1, "")
@@ -74,7 +74,7 @@ func NewPseudomodal(direction int, app *tview.Application) *Pseudomodal {
 		m.frame = tview.NewFrame(form).SetBorders(0, 0, 1, 0, 0, 0)
 	}
 	m.frame.SetBorder(true).
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorderPadding(1, 1, 1, 1)
 	return m
 }
@@ -153,7 +153,7 @@ func (m *Pseudomodal) AddButtons(labels []string) *Pseudomodal {
 					SetButtonsAlign(tview.AlignCenter).
 					SetButtonBackgroundColor(tview.Styles.PrimitiveBackgroundColor).
 					SetButtonTextColor(tview.Styles.PrimaryTextColor)
-				form.SetBackgroundColor(tcell.ColorRebeccaPurple).SetBorderPadding(0, 0, 0, 0)
+				form.SetBackgroundColor(tview.Styles.ContrastBackgroundColor).SetBorderPadding(0, 0, 0, 0)
 				form.SetCancelFunc(func() {
 					if m.done != nil {
 						m.done(-1, "")

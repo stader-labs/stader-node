@@ -10,7 +10,7 @@ import (
 
 func createFinishedStep(wiz *wizard, currentStep int, totalSteps int) *choiceWizardStep {
 
-	helperText := "All done! You're ready to run.\n\nIf you'd like, you can review and change all of the Smartnode and client settings next or just save and exit."
+	helperText := "All done! You're ready to run.\n\nIf you'd like, you can review and change all of the Stader Node and client settings next or just save and exit."
 
 	show := func(modal *choiceModalLayout) {
 		wiz.md.setPage(modal.page)
@@ -33,7 +33,11 @@ func createFinishedStep(wiz *wizard, currentStep int, totalSteps int) *choiceWiz
 	}
 
 	back := func() {
-		wiz.mevModeModal.show()
+		if wiz.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			wiz.metricsModal.show()
+		} else {
+			wiz.mevModeModal.show()
+		}
 	}
 
 	return newChoiceStep(

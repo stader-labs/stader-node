@@ -69,7 +69,7 @@ func (home *settingsNativeHome) createContent() {
 		SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 			layout.descriptionBox.SetText(home.settingsSubpages[index].description)
 		})
-	categoryList.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	categoryList.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	categoryList.SetBorderPadding(0, 0, 1, 1)
 	home.categoryList = categoryList
 
@@ -131,9 +131,7 @@ func (home *settingsNativeHome) createFooter() (tview.Primitive, int) {
 
 	// Save and Quit buttons
 	saveButton := tview.NewButton("Review Changes and Save")
-	saveButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	wizardButton := tview.NewButton("Open the Config Wizard")
-	wizardButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	home.saveButton = saveButton
 	home.wizardButton = wizardButton
 

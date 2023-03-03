@@ -15,23 +15,25 @@ type wizard struct {
 	checkpointSyncProviderModal     *textBoxWizardStep
 	doppelgangerDetectionModal      *choiceWizardStep
 	lighthouseExternalSettingsModal *textBoxWizardStep
-	prysmExternalSettingsModal      *textBoxWizardStep
-	tekuExternalSettingsModal       *textBoxWizardStep
-	externalGraffitiModal           *textBoxWizardStep
-	metricsModal                    *choiceWizardStep
-	mevModeModal                    *choiceWizardStep
-	localMevModal                   *checkBoxWizardStep
-	externalMevModal                *textBoxWizardStep
-	finishedModal                   *choiceWizardStep
-	consensusLocalRandomModal       *choiceWizardStep
-	consensusLocalRandomPrysmModal  *choiceWizardStep
-	consensusLocalPrysmWarning      *choiceWizardStep
-	consensusLocalTekuWarning       *choiceWizardStep
-	externalDoppelgangerModal       *choiceWizardStep
-	executionLocalRandomModal       *choiceWizardStep
-	useFallbackModal                *choiceWizardStep
-	fallbackNormalModal             *textBoxWizardStep
-	fallbackPrysmModal              *textBoxWizardStep
+	nimbusExternalSettingsModal     *textBoxWizardStep
+
+	prysmExternalSettingsModal     *textBoxWizardStep
+	tekuExternalSettingsModal      *textBoxWizardStep
+	externalGraffitiModal          *textBoxWizardStep
+	metricsModal                   *choiceWizardStep
+	mevModeModal                   *choiceWizardStep
+	localMevModal                  *checkBoxWizardStep
+	externalMevModal               *textBoxWizardStep
+	finishedModal                  *choiceWizardStep
+	consensusLocalRandomModal      *choiceWizardStep
+	consensusLocalRandomPrysmModal *choiceWizardStep
+	consensusLocalPrysmWarning     *choiceWizardStep
+	consensusLocalTekuWarning      *choiceWizardStep
+	externalDoppelgangerModal      *choiceWizardStep
+	executionLocalRandomModal      *choiceWizardStep
+	useFallbackModal               *choiceWizardStep
+	fallbackNormalModal            *textBoxWizardStep
+	fallbackPrysmModal             *textBoxWizardStep
 
 	// Native mode
 	nativeWelcomeModal     *choiceWizardStep
@@ -70,6 +72,7 @@ func newWizard(md *mainDisplay) *wizard {
 	wiz.checkpointSyncProviderModal = createCheckpointSyncStep(wiz, 5, totalDockerSteps)
 	wiz.doppelgangerDetectionModal = createDoppelgangerStep(wiz, 5, totalDockerSteps)
 	wiz.lighthouseExternalSettingsModal = createExternalLhStep(wiz, 5, totalDockerSteps)
+	wiz.nimbusExternalSettingsModal = createExternalNimbusStep(wiz, 5, totalDockerSteps)
 	wiz.prysmExternalSettingsModal = createExternalPrysmStep(wiz, 5, totalDockerSteps)
 	wiz.tekuExternalSettingsModal = createExternalTekuStep(wiz, 5, totalDockerSteps)
 	wiz.externalGraffitiModal = createExternalGraffitiStep(wiz, 5, totalDockerSteps)

@@ -54,16 +54,16 @@ func newCheckBoxModalLayout(app *tview.Application, title string, width int, tex
 		SetWordWrap(true).
 		SetTextColor(tview.Styles.PrimaryTextColor).
 		SetDynamicColors(true)
-	textView.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	textView.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	textView.SetBorderPadding(0, 0, 1, 1)
 
 	// Row spacers with the correct background color
 	spacer1 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer2 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer3 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 
 	// The main content grid
 	contentGrid := tview.NewGrid().
@@ -74,7 +74,7 @@ func newCheckBoxModalLayout(app *tview.Application, title string, width int, tex
 		AddItem(layout.controlGrid, 3, 0, 1, 1, 0, 0, true).
 		AddItem(spacer3, 4, 0, 1, 1, 0, 0, false)
 	contentGrid.
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorder(true).
 		SetTitle(" " + title + " ")
 	layout.controlGrid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -142,12 +142,12 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 
 	controlGrid := tview.NewGrid().
 		SetRows(0, 1, 1, 1)
-	controlGrid.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	controlGrid.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 
 	formFlex := tview.NewFlex().
 		SetDirection(tview.FlexRow)
 	// Add a spacing row to make the first button line up with the description box
-	spacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	spacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	formFlex.AddItem(spacer, 1, 1, false)
 	layout.formFlex = formFlex
 
@@ -158,12 +158,12 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 		SetButtonTextColor(tview.Styles.PrimaryTextColor).
 		SetFieldBackgroundColor(tcell.ColorBlack)
 	form.
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorderPadding(0, 0, 0, 0)
 	layout.form = form
 
 	formFlex.AddItem(layout.form, 0, 2, true)
-	bottomFormSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	bottomFormSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	formFlex.AddItem(bottomFormSpacer, 0, 2, false)
 
 	// Create the form for the Next button
@@ -173,7 +173,7 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 		SetButtonTextColor(tview.Styles.PrimaryTextColor).
 		SetFieldBackgroundColor(tcell.ColorBlack)
 	nextButtonForm.
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorderPadding(0, 0, 0, 0)
 	nextButtonForm.AddButton("Next", func() {
 		if layout.done != nil {
@@ -218,8 +218,8 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 	layout.buttonForm = nextButtonForm
 
 	// Create the columns, including the left and right spacers
-	leftSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
-	rightSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	leftSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	rightSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	controlGrid.
 		AddItem(leftSpacer, 0, 0, 1, 1, 0, 0, false).
 		AddItem(formFlex, 0, 1, 1, 1, 0, 0, true).
@@ -232,12 +232,12 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 		SetDynamicColors(true)
 	layout.descriptionBox.SetBorder(true)
 	layout.descriptionBox.SetBorderPadding(0, 0, 1, 1)
-	layout.descriptionBox.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	layout.descriptionBox.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	layout.descriptionBox.SetTitle("Description")
 
-	leftSpacer = tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
-	midSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
-	rightSpacer = tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	leftSpacer = tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	midSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
+	rightSpacer = tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 
 	controlGrid.SetRows(0, 1, 1)
 	controlGrid.SetColumns(1, -3, 1, -5, 1)
@@ -248,7 +248,7 @@ func (layout *checkBoxModalLayout) createControlGrid() int {
 	controlGrid.AddItem(rightSpacer, 0, 4, 1, 1, 0, 0, false)
 
 	// Add spacers and the Next button
-	topSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	topSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	controlGrid.AddItem(topSpacer, 1, 0, 1, 5, 0, 0, false)
 	controlGrid.AddItem(layout.buttonForm, 2, 0, 1, 5, 0, 0, false)
 
@@ -311,10 +311,10 @@ func (layout *checkBoxModalLayout) generateCheckboxes(labels []string, descripti
 	}
 
 	layout.formFlex.Clear()
-	spacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	spacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	layout.formFlex.AddItem(spacer, 1, 1, false)
 	layout.formFlex.AddItem(layout.form, len(labels)*2, 1, true)
-	bottomFormSpacer := tview.NewBox().SetBackgroundColor(tcell.ColorRebeccaPurple)
+	bottomFormSpacer := tview.NewBox().SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	layout.formFlex.AddItem(bottomFormSpacer, 0, 1, false)
 
 	/*

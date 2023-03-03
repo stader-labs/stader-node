@@ -77,18 +77,15 @@ func (home *settingsHome) createContent() {
 	// Create the category list
 	categoryList := tview.NewList().
 		SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
-			if mainText == home.fallbackPage.page.title {
-				// Temp block of Nimbus for the fallback page until it supports fallback
-				cc, _ := home.md.Config.GetSelectedConsensusClient()
-				switch cc {
-				case cfgtypes.ConsensusClient_Nimbus:
-					layout.descriptionBox.SetText("You have Nimbus selected for your Consensus client.\n\nNimbus does not support fallback clients at this time, so this option is disabled.")
-					return
-				}
+			if mainText == home.mevBoostPage.page.title &&
+				home.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+				// Disable MEV-Boost on Zhejiang
+				layout.descriptionBox.SetText("MEV-Boost is not available on Zhejiang.")
+				return
 			}
 			layout.descriptionBox.SetText(home.settingsSubpages[index].getPage().description)
 		})
-	categoryList.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	categoryList.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	categoryList.SetBorderPadding(0, 0, 1, 1)
 	home.categoryList = categoryList
 
@@ -106,13 +103,10 @@ func (home *settingsHome) createContent() {
 		categoryList.AddItem(subpage.getPage().title, "", 0, nil)
 	}
 	categoryList.SetSelectedFunc(func(i int, s1, s2 string, r rune) {
-		if s1 == home.fallbackPage.page.title {
-			// Temp block of Nimbus for the fallback page until it supports fallback
-			cc, _ := home.md.Config.GetSelectedConsensusClient()
-			switch cc {
-			case cfgtypes.ConsensusClient_Nimbus:
-				return
-			}
+		if s1 == home.mevBoostPage.page.title &&
+			home.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			// Disable MEV-Boost on Zhejiang
+			return
 		}
 		home.settingsSubpages[i].handleLayoutChanged()
 		home.md.setPage(home.settingsSubpages[i].getPage())
@@ -159,9 +153,7 @@ func (home *settingsHome) createFooter() (tview.Primitive, int) {
 
 	// Save and Quit buttons
 	saveButton := tview.NewButton("Review Changes and Save")
-	saveButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	wizardButton := tview.NewButton("Open the Config Wizard")
-	wizardButton.SetBackgroundColor(tcell.ColorRebeccaPurple)
 	home.saveButton = saveButton
 	home.wizardButton = wizardButton
 

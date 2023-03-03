@@ -48,9 +48,9 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.StaderConfig,
 
 	grid.SetBorder(true).
 		SetTitle(fmt.Sprintf(" Stader Node %s Configuration ", shared.StaderVersion)).
-		SetBorderColor(tcell.ColorPapayaWhip).
-		SetTitleColor(tcell.ColorPapayaWhip).
-		SetBackgroundColor(tcell.ColorDarkOliveGreen.TrueColor())
+		SetBorderColor(tcell.ColorOrange).
+		SetTitleColor(tcell.ColorOrange).
+		SetBackgroundColor(tcell.ColorBlack)
 
 	// Create the navigation header
 	navHeader := tview.NewTextView().
@@ -69,7 +69,7 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.StaderConfig,
 		SetTextAlign(tview.AlignCenter).
 		SetWordWrap(true).
 		SetTextColor(tview.Styles.PrimaryTextColor)
-	resizeWarning.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	resizeWarning.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	resizeWarning.SetBorderPadding(0, 0, 1, 1)
 
 	// Create the main display object
@@ -93,10 +93,10 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.StaderConfig,
 	md.dockerWizard = newWizard(md)
 
 	// Set up the resize warning
-	md.app.SetAfterDrawFunc(func(screen tcell.Screen) {
+	md.app.SetBeforeDrawFunc(func(screen tcell.Screen) bool {
 		x, y := screen.Size()
 		if x == md.previousWidth && y == md.previousHeight {
-			return
+			return false
 		}
 		if x < 112 || y < 32 {
 			grid.RemoveItem(pages)
@@ -107,6 +107,8 @@ func NewMainDisplay(app *tview.Application, previousConfig *config.StaderConfig,
 		}
 		md.previousWidth = x
 		md.previousHeight = y
+
+		return false
 	})
 
 	if isNew || isMigration {

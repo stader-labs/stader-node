@@ -5,11 +5,12 @@ import (
 	"strings"
 
 	"github.com/rivo/tview"
+	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
 
 func createNativeFinishedStep(wiz *wizard, currentStep int, totalSteps int) *choiceWizardStep {
 
-	helperText := "All done! You're ready to run.\n\nIf you'd like, you can review and change all of the Smartnode and Native settings next or just save and exit."
+	helperText := "All done! You're ready to run.\n\nIf you'd like, you can review and change all of the Stader Node and Native settings next or just save and exit."
 
 	show := func(modal *choiceModalLayout) {
 		wiz.md.setPage(modal.page)
@@ -32,7 +33,11 @@ func createNativeFinishedStep(wiz *wizard, currentStep int, totalSteps int) *cho
 	}
 
 	back := func() {
-		wiz.nativeMevModal.show()
+		if wiz.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			wiz.nativeMetricsModal.show()
+		} else {
+			wiz.nativeMevModal.show()
+		}
 	}
 
 	return newChoiceStep(

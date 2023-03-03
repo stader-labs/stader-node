@@ -34,7 +34,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		SetDynamicColors(true).
 		SetWordWrap(true)
 	changeBox.SetBorder(true)
-	changeBox.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	changeBox.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	changeBox.SetBorderPadding(0, 0, 1, 1)
 
 	builder := strings.Builder{}
@@ -56,7 +56,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 			if newConfig.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && newConfig.ExecutionClient.Value.(cfgtypes.ExecutionClient) != cfgtypes.ExecutionClient_Geth {
 				totalAffectedContainers[cfgtypes.ContainerID_Eth1] = true
 			}
-			builder.WriteString(fmt.Sprintf("Updated to Smartnode v%s (will affect several containers)\n\n", shared.StaderVersion))
+			builder.WriteString(fmt.Sprintf("Updated to Stader Node v%s (will affect several containers)\n\n", shared.StaderVersion))
 		}
 
 		for categoryName, changedSettingsList := range changedSettings {
@@ -94,7 +94,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		SetTextAlign(tview.AlignCenter).
 		SetWordWrap(true).
 		SetTextColor(tview.Styles.PrimaryTextColor)
-	textView.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	textView.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	textView.SetBorderPadding(0, 0, 1, 1)
 
 	var buttonGrid *tview.Flex
@@ -103,7 +103,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		buttonGrid = tview.NewFlex().
 			SetDirection(tview.FlexColumn).
 			AddItem(tview.NewBox().
-				SetBackgroundColor(tcell.ColorRebeccaPurple), 0, 1, false)
+				SetBackgroundColor(tview.Styles.ContrastBackgroundColor), 0, 1, false)
 	} else {
 		// Create the save button
 		saveButton := tview.NewButton("Save Settings")
@@ -129,25 +129,25 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		buttonGrid = tview.NewFlex().
 			SetDirection(tview.FlexColumn).
 			AddItem(tview.NewBox().
-				SetBackgroundColor(tcell.ColorRebeccaPurple), 0, 1, false).
+				SetBackgroundColor(tview.Styles.ContrastBackgroundColor), 0, 1, false).
 			AddItem(saveButton, len(saveButton.GetLabel())+2, 0, true).
 			AddItem(tview.NewBox().
-				SetBackgroundColor(tcell.ColorRebeccaPurple), 0, 1, false)
+				SetBackgroundColor(tview.Styles.ContrastBackgroundColor), 0, 1, false)
 	}
 
 	// Row spacers with the correct background color
 	spacer1 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer2 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer3 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer4 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacerL := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacerR := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 
 	// The main content grid
 	contentGrid := tview.NewGrid().
@@ -163,7 +163,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		AddItem(spacerL, 0, 0, 7, 1, 0, 0, false).
 		AddItem(spacerR, 0, 2, 7, 1, 0, 0, false)
 	contentGrid.
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorder(true).
 		SetTitle(" Review Changes ")
 	contentGrid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

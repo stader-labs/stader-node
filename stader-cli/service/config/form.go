@@ -71,9 +71,9 @@ func NewForm() *Form {
 		Box:                   box,
 		itemPadding:           1,
 		labelColor:            tview.Styles.SecondaryTextColor,
-		fieldBackgroundColor:  tcell.ColorRebeccaPurple,
+		fieldBackgroundColor:  tview.Styles.ContrastBackgroundColor,
 		fieldTextColor:        tview.Styles.PrimaryTextColor,
-		buttonBackgroundColor: tcell.ColorRebeccaPurple,
+		buttonBackgroundColor: tview.Styles.ContrastBackgroundColor,
 		buttonTextColor:       tview.Styles.PrimaryTextColor,
 	}
 
