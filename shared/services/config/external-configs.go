@@ -210,7 +210,7 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Watchtower, config.ContainerID_Node},
 			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -218,8 +218,8 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 
 		JsonRpcUrl: config.Parameter{
 			ID:                   "jsonRpcUrl",
-			Name:                 "JSON-RPC URL",
-			Description:          "The URL of the JSON-RPC API endpoint for your external client. Prysm's validator client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Name:                 "gRPC URL",
+			Description:          "The URL of the gRPC API endpoint for your external client. Prysm's validator client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
@@ -259,9 +259,10 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Prater:  getPrysmVcTestTag(),
-				config.Network_Devnet:  getPrysmVcTestTag(),
+				config.Network_Mainnet:  getPrysmVcProdTag(),
+				config.Network_Prater:   getPrysmVcTestTag(),
+				config.Network_Devnet:   getPrysmVcTestTag(),
+				config.Network_Zhejiang: getLighthouseTagTest(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},
