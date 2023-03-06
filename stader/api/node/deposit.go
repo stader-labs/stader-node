@@ -6,6 +6,7 @@ import (
 	"github.com/rocket-pool/rocketpool-go/types"
 	_ "github.com/stader-labs/stader-node/stader-lib/network"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
