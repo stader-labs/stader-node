@@ -311,6 +311,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
 		fmt.Printf("canNodeDeposit: depositSignature is %s\n", depositSignature)
+		fmt.Printf("canNodeDeposit: public key is %s\n", pubKey)
 
 		// Make sure a validator with this pubkey doesn't already exist
 		status, err := bc.GetValidatorStatus(types.ValidatorPubkey(pubKey), nil)
