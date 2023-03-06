@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	prysmBnTagAmd64Test string = "prysmaticlabs/prysm-beacon-chain:HEAD-3d6d0a-debug"
-	prysmVcTagAmd64Test string = "prysmaticlabs/prysm-validator:HEAD-3d6d0a-debug"
-	prysmTagArm64Test   string = "rocketpool/prysm:v3.2.0"
+	prysmBnTagAmd64Test string = "prysmaticlabs/prysm-beacon-chain:HEAD-ec13d5-debug"
+	prysmVcTagAmd64Test string = "prysmaticlabs/prysm-validator:HEAD-ec13d5-debug"
+	prysmTagArm64Test   string = "rocketpool/prysm:v3.2.1-ec13d52-arm64"
 
-	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-3d6d0a-debug"
-	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-3d6d0a-debug"
-	prysmTagArm64Prod       string = "rocketpool/prysm:v3.2.0"
+	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-0cf1ca-debug"
+	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-0cf1ca-debug"
+	prysmTagArm64Prod       string = "rocketpool/prysm:v3.2.1"
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45
@@ -98,9 +98,10 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Description: "The tag name of the Prysm Beacon Node container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmBnProdTag(),
-				config.Network_Prater:  getPrysmBnTestTag(),
-				config.Network_Devnet:  getPrysmBnTestTag(),
+				config.Network_Mainnet:  getPrysmBnProdTag(),
+				config.Network_Prater:   getPrysmBnTestTag(),
+				config.Network_Devnet:   getPrysmBnTestTag(),
+				config.Network_Zhejiang: getPrysmBnTestTag(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG"},
@@ -114,9 +115,10 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Description: "The tag name of the Prysm Validator Client container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Prater:  getPrysmVcTestTag(),
-				config.Network_Devnet:  getPrysmVcTestTag(),
+				config.Network_Mainnet:  getPrysmVcProdTag(),
+				config.Network_Prater:   getPrysmVcTestTag(),
+				config.Network_Devnet:   getPrysmVcTestTag(),
+				config.Network_Zhejiang: getPrysmVcTestTag(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},

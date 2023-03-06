@@ -29,7 +29,7 @@ func NewReviewNativePage(md *mainDisplay, oldConfig *config.StaderConfig, newCon
 	changeBox := tview.NewTextView().
 		SetDynamicColors(true)
 	changeBox.SetBorder(true)
-	changeBox.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	changeBox.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	changeBox.SetBorderPadding(0, 0, 1, 1)
 
 	builder := strings.Builder{}
@@ -71,7 +71,7 @@ func NewReviewNativePage(md *mainDisplay, oldConfig *config.StaderConfig, newCon
 		SetTextAlign(tview.AlignCenter).
 		SetWordWrap(true).
 		SetTextColor(tview.Styles.PrimaryTextColor)
-	textView.SetBackgroundColor(tcell.ColorRebeccaPurple)
+	textView.SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	textView.SetBorderPadding(0, 0, 1, 1)
 
 	// Create the save button
@@ -94,24 +94,24 @@ func NewReviewNativePage(md *mainDisplay, oldConfig *config.StaderConfig, newCon
 	buttonGrid := tview.NewFlex().
 		SetDirection(tview.FlexColumn).
 		AddItem(tview.NewBox().
-			SetBackgroundColor(tcell.ColorRebeccaPurple), 0, 1, false).
+			SetBackgroundColor(tview.Styles.ContrastBackgroundColor), 0, 1, false).
 		AddItem(saveButton, len(saveButton.GetLabel())+2, 0, true).
 		AddItem(tview.NewBox().
-			SetBackgroundColor(tcell.ColorRebeccaPurple), 0, 1, false)
+			SetBackgroundColor(tview.Styles.ContrastBackgroundColor), 0, 1, false)
 
 	// Row spacers with the correct background color
 	spacer1 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer2 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer3 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacer4 := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacerL := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 	spacerR := tview.NewBox().
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor)
 
 	// The main content grid
 	contentGrid := tview.NewGrid().
@@ -127,7 +127,7 @@ func NewReviewNativePage(md *mainDisplay, oldConfig *config.StaderConfig, newCon
 		AddItem(spacerL, 0, 0, 7, 1, 0, 0, false).
 		AddItem(spacerR, 0, 2, 7, 1, 0, 0, false)
 	contentGrid.
-		SetBackgroundColor(tcell.ColorRebeccaPurple).
+		SetBackgroundColor(tview.Styles.ContrastBackgroundColor).
 		SetBorder(true).
 		SetTitle(" Review Changes ")
 	contentGrid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

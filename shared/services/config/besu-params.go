@@ -6,7 +6,7 @@ import (
 
 // Constants
 const (
-	besuTagTest          string = "hyperledger/besu:22.10.3-openjdk-latest"
+	besuTagTest          string = "hyperledger/besu:develop-openjdk-latest"
 	besuTagProd          string = "hyperledger/besu:22.10.3-openjdk-latest"
 	besuEventLogInterval int    = 1000
 	besuMaxPeers         uint16 = 25
@@ -100,9 +100,10 @@ func NewBesuConfig(cfg *StaderConfig) *BesuConfig {
 			Description: "The tag name of the Besu container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: besuTagProd,
-				config.Network_Prater:  besuTagTest,
-				config.Network_Devnet:  besuTagTest,
+				config.Network_Mainnet:  besuTagProd,
+				config.Network_Prater:   besuTagTest,
+				config.Network_Devnet:   besuTagTest,
+				config.Network_Zhejiang: besuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},

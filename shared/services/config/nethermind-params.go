@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"runtime"
 
 	"github.com/pbnjay/memory"
@@ -10,8 +9,8 @@ import (
 
 // Constants
 const (
-	nethermindTagAmd64         string = "nethermind/nethermind:1.15.0"
-	nethermindTagArm64         string = "nethermind/nethermind:1.15.0"
+	nethermindTagProd          string = "nethermind/nethermind:1.17.0"
+	nethermindTagTest          string = "nethermind/nethermind:1.17.0"
 	nethermindEventLogInterval int    = 1000
 	nethermindStopSignal       string = "SIGTERM"
 )
@@ -128,11 +127,16 @@ func NewNethermindConfig(cfg *StaderConfig) *NethermindConfig {
 		},
 
 		ContainerTag: config.Parameter{
-			ID:                   "containerTag",
-			Name:                 "Container Tag",
-			Description:          "The tag name of the Nethermind container you want to use on Docker Hub.",
-			Type:                 config.ParameterType_String,
-			Default:              map[config.Network]interface{}{config.Network_All: getNethermindTag()},
+			ID:          "containerTag",
+			Name:        "Container Tag",
+			Description: "The tag name of the Nethermind container you want to use on Docker Hub.",
+			Type:        config.ParameterType_String,
+			Default: map[config.Network]interface{}{
+				config.Network_Mainnet:  nethermindTagProd,
+				config.Network_Prater:   nethermindTagTest,
+				config.Network_Devnet:   nethermindTagTest,
+				config.Network_Zhejiang: nethermindTagTest,
+			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},
 			CanBeBlank:           false,
@@ -160,15 +164,15 @@ func calculateNethermindCache() uint64 {
 	if totalMemoryGB == 0 {
 		return 0
 	} else if totalMemoryGB < 9 {
-		return 512
+		return 256
 	} else if totalMemoryGB < 13 {
-		return 1024
+		return 512
 	} else if totalMemoryGB < 17 {
-		return 2048
+		return 1024
 	} else if totalMemoryGB < 25 {
-		return 4096
+		return 2048
 	} else if totalMemoryGB < 33 {
-		return 6144
+		return 4096
 	} else {
 		return 8192
 	}
@@ -181,15 +185,15 @@ func calculateNethermindPruneMemSize() uint64 {
 	if totalMemoryGB == 0 {
 		return 0
 	} else if totalMemoryGB < 9 {
-		return 512
+		return 256
 	} else if totalMemoryGB < 13 {
-		return 1024
+		return 512
 	} else if totalMemoryGB < 17 {
-		return 2048
+		return 1024
 	} else if totalMemoryGB < 25 {
-		return 4096
+		return 2048
 	} else if totalMemoryGB < 33 {
-		return 6144
+		return 4096
 	} else {
 		return 8192
 	}
@@ -201,17 +205,6 @@ func calculateNethermindPeers() uint16 {
 		return 25
 	}
 	return 50
-}
-
-// Get the container tag for Nethermind based on the current architecture
-func getNethermindTag() string {
-	if runtime.GOARCH == "arm64" {
-		return nethermindTagArm64
-	} else if runtime.GOARCH == "amd64" {
-		return nethermindTagAmd64
-	} else {
-		panic(fmt.Sprintf("Nethermind doesn't support architecture %s", runtime.GOARCH))
-	}
 }
 
 // Get the parameters for this config

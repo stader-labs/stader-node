@@ -9,10 +9,12 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/tyler-smith/go-bip39"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/passwords"
+	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
 )
 
 // Config
@@ -264,4 +266,13 @@ func ValidateTxHash(name, value string) (common.Hash, error) {
 
 	return hash, nil
 
+}
+
+// Validate a validator pubkey
+func ValidatePubkey(name, value string) (types.ValidatorPubkey, error) {
+	pubkey, err := types.HexToValidatorPubkey(hexutils.RemovePrefix(value))
+	if err != nil {
+		return types.ValidatorPubkey{}, fmt.Errorf("Invalid %s '%s': %w", name, value, err)
+	}
+	return pubkey, nil
 }

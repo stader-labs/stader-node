@@ -92,14 +92,14 @@ func NewDropDown() *DropDown {
 		SetSelectedTextColor(tview.Styles.PrimitiveBackgroundColor).
 		SetSelectedBackgroundColor(tview.Styles.PrimaryTextColor).
 		SetHighlightFullLine(true).
-		SetBackgroundColor(tcell.ColorRebeccaPurple)
+		SetBackgroundColor(tview.Styles.MoreContrastBackgroundColor)
 
 	d := &DropDown{
 		Box:                  tview.NewBox(),
 		currentOption:        -1,
 		list:                 list,
 		labelColor:           tview.Styles.SecondaryTextColor,
-		fieldBackgroundColor: tcell.ColorRebeccaPurple,
+		fieldBackgroundColor: tview.Styles.ContrastBackgroundColor,
 		fieldTextColor:       tview.Styles.PrimaryTextColor,
 		prefixTextColor:      tview.Styles.ContrastSecondaryTextColor,
 	}
@@ -256,6 +256,11 @@ func (d *DropDown) GetFieldWidth() int {
 		}
 	}
 	return fieldWidth
+}
+
+// GetFieldHeight returns this primitive's field height.
+func (d *DropDown) GetFieldHeight() int {
+	return 1
 }
 
 // AddOption adds a new selectable option to this drop-down. The "selected"

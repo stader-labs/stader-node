@@ -1,12 +1,10 @@
 package config
 
-import (
-	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-)
+import cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 
 func createMetricsStep(wiz *wizard, currentStep int, totalSteps int) *choiceWizardStep {
 
-	helperText := "Would you like to enable the Smartnode's metrics monitoring system? This will monitor things such as hardware stats (CPU usage, RAM usage, free disk space), your validator stats, stats about your node such as ETH rewards, and much more.\n\nNone of this information will be sent to any remote servers for collection an analysis; this is purely for your own usage on your node."
+	helperText := "Would you like to enable the Stader Node's metrics monitoring system? This will monitor things such as hardware stats (CPU usage, RAM usage, free disk space), your validator stats, stats about your node such as ETH rewards, and much more.\n\nNone of this information will be sent to any remote servers for collection an analysis; this is purely for your own usage on your node."
 
 	show := func(modal *choiceModalLayout) {
 		wiz.md.setPage(modal.page)
@@ -23,23 +21,15 @@ func createMetricsStep(wiz *wizard, currentStep int, totalSteps int) *choiceWiza
 		} else {
 			wiz.md.Config.EnableMetrics.Value = false
 		}
-		wiz.mevModeModal.show()
+		if wiz.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			wiz.finishedModal.show()
+		} else {
+			wiz.mevModeModal.show()
+		}
 	}
 
 	back := func() {
-		cc, _ := wiz.md.Config.GetSelectedConsensusClient()
-		switch cc {
-		case cfgtypes.ConsensusClient_Nimbus:
-			// Temp until Nimbus supports fallback clients
-			wiz.md.Config.UseFallbackClients.Value = false
-			if wiz.md.Config.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
-				wiz.consensusLocalModal.show()
-			} else {
-				wiz.consensusExternalSelectModal.show()
-			}
-		default:
-			wiz.useFallbackModal.show()
-		}
+		wiz.useFallbackModal.show()
 	}
 
 	return newChoiceStep(

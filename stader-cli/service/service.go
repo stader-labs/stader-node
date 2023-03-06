@@ -1223,7 +1223,7 @@ func serviceVersion(c *cli.Context) error {
 		case cfgtypes.ConsensusClient_Lighthouse:
 			eth2ClientString = fmt.Sprintf(format, "Lighthouse", cfg.Lighthouse.ContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Nimbus:
-			eth2ClientString = fmt.Sprintf(format, "Nimbus", cfg.Nimbus.ContainerTag.Value.(string))
+			eth2ClientString = fmt.Sprintf(format, "Nimbus", cfg.Nimbus.BnContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Prysm:
 			// Prysm is a special case, as the BN and VC image versions may differ
 			eth2ClientString = fmt.Sprintf(format+"\n\tVC image: %s", "Prysm", cfg.Prysm.BnContainerTag.Value.(string), cfg.Prysm.VcContainerTag.Value.(string))

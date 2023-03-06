@@ -7,8 +7,14 @@ import (
 )
 
 const (
-	nimbusTagTest            string = "statusim/nimbus-eth2:multiarch-v22.12.0"
-	nimbusTagProd            string = "statusim/nimbus-eth2:multiarch-v22.12.0"
+	// Prater
+	nimbusBnTagTest string = "rocketpool/nimbus-eth2:unstable-cdca079-bn"
+	nimbusVcTagTest string = "rocketpool/nimbus-eth2:unstable-cdca079-vc"
+
+	// Mainnet
+	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v23.2.0"
+	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v23.2.0"
+
 	defaultNimbusMaxPeersArm uint16 = 100
 	defaultNimbusMaxPeersAmd uint16 = 160
 )
@@ -23,11 +29,20 @@ type NimbusConfig struct {
 	// Common parameters that Nimbus doesn't support and should be hidden
 	UnsupportedCommonParams []string `yaml:"-"`
 
-	// The Docker Hub tag for Nimbus
-	ContainerTag config.Parameter `yaml:"containerTag,omitempty"`
+	// The Docker Hub tag for the BN
+	BnContainerTag config.Parameter `yaml:"bnContainerTag,omitempty"`
 
-	// Custom command line flags for Nimbus
-	AdditionalFlags config.Parameter `yaml:"additionalFlags,omitempty"`
+	// The Docker Hub tag for the VC
+	VcContainerTag config.Parameter `yaml:"vcContainerTag,omitempty"`
+
+	// The pruning mode to use in the BN
+	PruningMode config.Parameter `yaml:"pruningMode,omitempty"`
+
+	// Custom command line flags for the BN
+	AdditionalBnFlags config.Parameter `yaml:"additionalBnFlags,omitempty"`
+
+	// Custom command line flags for the VC
+	AdditionalVcFlags config.Parameter `yaml:"additionalVcFlags,omitempty"`
 }
 
 // Generates a new Nimbus configuration
@@ -47,30 +62,81 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
-		ContainerTag: config.Parameter{
-			ID:          "containerTag",
-			Name:        "Container Tag",
-			Description: "The tag name of the Nimbus container you want to use on Docker Hub.",
+		BnContainerTag: config.Parameter{
+			ID:          "bnContainerTag",
+			Name:        "Beacon Node Container Tag",
+			Description: "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: nimbusTagProd,
-				config.Network_Prater:  nimbusTagTest,
-				config.Network_Devnet:  nimbusTagTest,
+				config.Network_Mainnet:  nimbusBnTagProd,
+				config.Network_Prater:   nimbusBnTagTest,
+				config.Network_Devnet:   nimbusBnTagTest,
+				config.Network_Zhejiang: nimbusBnTagTest,
 			},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},
-			EnvironmentVariables: []string{"BN_CONTAINER_TAG", "VC_CONTAINER_TAG"},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
+			EnvironmentVariables: []string{"BN_CONTAINER_TAG"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   true,
 		},
 
-		AdditionalFlags: config.Parameter{
-			ID:                   "additionalFlags",
-			Name:                 "Additional Flags",
-			Description:          "Additional custom command line flags you want to pass to Nimbus, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+		VcContainerTag: config.Parameter{
+			ID:          "containerTag",
+			Name:        "Validator Client Container Tag",
+			Description: "The tag name of the Nimbus Validator Client container you want to use on Docker Hub.",
+			Type:        config.ParameterType_String,
+			Default: map[config.Network]interface{}{
+				config.Network_Mainnet:  nimbusVcTagProd,
+				config.Network_Prater:   nimbusVcTagTest,
+				config.Network_Devnet:   nimbusVcTagTest,
+				config.Network_Zhejiang: nimbusVcTagTest,
+			},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   true,
+		},
+
+		PruningMode: config.Parameter{
+			ID:                   "pruningMode",
+			Name:                 "Pruning Mode",
+			Description:          "Choose how Nimbus will prune its database. Highlight each option to learn more about it.",
+			Type:                 config.ParameterType_Choice,
+			Default:              map[config.Network]interface{}{config.Network_All: config.NimbusPruningMode_Archive},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
+			EnvironmentVariables: []string{"NIMBUS_PRUNING_MODE"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+			Options: []config.ParameterOption{{
+				Name:        "Archive",
+				Description: "Nimbus will download the entire Beacon Chain history and store it forever. This is healthier for the overall network, since people will be able to sync the entire chain from scratch using your node.",
+				Value:       config.NimbusPruningMode_Archive,
+			}, {
+				Name:        "Pruned",
+				Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync using `rocketpool service resync-eth2`. Make sure you have a checkpoint sync provider specified first!",
+				Value:       config.NimbusPruningMode_Prune,
+			}},
+		},
+
+		AdditionalBnFlags: config.Parameter{
+			ID:                   "additionalBnFlags",
+			Name:                 "Additional Beacon Client Flags",
+			Description:          "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"BN_ADDITIONAL_FLAGS"},
+			CanBeBlank:           true,
+			OverwriteOnUpgrade:   false,
+		},
+
+		AdditionalVcFlags: config.Parameter{
+			ID:                   "additionalVcFlags",
+			Name:                 "Additional Validator Client Flags",
+			Description:          "Additional custom command line flags you want to pass Nimbus's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Type:                 config.ParameterType_String,
+			Default:              map[config.Network]interface{}{config.Network_All: ""},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"VC_ADDITIONAL_FLAGS"},
 			CanBeBlank:           true,
 			OverwriteOnUpgrade:   false,
 		},
@@ -81,8 +147,11 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 func (cfg *NimbusConfig) GetParameters() []*config.Parameter {
 	return []*config.Parameter{
 		&cfg.MaxPeers,
-		&cfg.ContainerTag,
-		&cfg.AdditionalFlags,
+		&cfg.PruningMode,
+		&cfg.BnContainerTag,
+		&cfg.VcContainerTag,
+		&cfg.AdditionalBnFlags,
+		&cfg.AdditionalVcFlags,
 	}
 }
 
@@ -93,7 +162,7 @@ func (cfg *NimbusConfig) GetUnsupportedCommonParams() []string {
 
 // Get the Docker container name of the validator client
 func (cfg *NimbusConfig) GetValidatorImage() string {
-	return cfg.ContainerTag.Value.(string)
+	return cfg.VcContainerTag.Value.(string)
 }
 
 // Get the name of the client

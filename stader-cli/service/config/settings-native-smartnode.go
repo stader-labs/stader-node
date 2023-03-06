@@ -6,14 +6,14 @@ import (
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
 
-// The page wrapper for the Smartnode config
+// The page wrapper for the Stader Node config
 type NativeSmartnodeConfigPage struct {
 	home   *settingsNativeHome
 	page   *page
 	layout *standardLayout
 }
 
-// Creates a new page for the Native Smartnode settings
+// Creates a new page for the Native Stader Node settings
 func NewNativeSmartnodeConfigPage(home *settingsNativeHome) *NativeSmartnodeConfigPage {
 
 	configPage := &NativeSmartnodeConfigPage{
@@ -24,8 +24,8 @@ func NewNativeSmartnodeConfigPage(home *settingsNativeHome) *NativeSmartnodeConf
 	configPage.page = newPage(
 		home.homePage,
 		"settings-native-smartnode",
-		"Smartnode and TX Fees",
-		"Select this to configure the settings for the Smartnode itself, including the defaults and limits on transaction fees.",
+		"Stader Node and TX Fees",
+		"Select this to configure the settings for the Stader Node itself, including the defaults and limits on transaction fees.",
 		configPage.layout.grid,
 	)
 
@@ -33,14 +33,14 @@ func NewNativeSmartnodeConfigPage(home *settingsNativeHome) *NativeSmartnodeConf
 
 }
 
-// Creates the content for the Smartnode settings page
+// Creates the content for the Stader Node settings page
 func (configPage *NativeSmartnodeConfigPage) createContent() {
 
 	// Create the layout
 	masterConfig := configPage.home.md.Config
 	layout := newStandardLayout()
 	configPage.layout = layout
-	layout.createForm(&masterConfig.Smartnode.Network, "Smartnode and TX Fee Settings")
+	layout.createForm(&masterConfig.Smartnode.Network, "Stader Node and TX Fee Settings")
 
 	// Return to the home page after pressing Escape
 	layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
