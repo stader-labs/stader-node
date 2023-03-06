@@ -338,14 +338,14 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Prater:   "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
 			config.Network_Devnet:   "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
 			config.Network_Mainnet:  "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
-			config.Network_Zhejiang: "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
+			config.Network_Zhejiang: "0x117f8c20b91e34049798ca66f9234dea4a700f19",
 		},
 
 		sdCollateralAddress: map[config.Network]string{
 			config.Network_Prater:   "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
 			config.Network_Devnet:   "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
 			config.Network_Mainnet:  "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
-			config.Network_Zhejiang: "0x4E9aFC5428A3d83FEb0454C9E547A14ADBB20FcD",
+			config.Network_Zhejiang: "0xed7c5d558e48c63b991484e5ed6647016bef280d",
 		},
 
 		ethxTokenAddress: map[config.Network]string{
