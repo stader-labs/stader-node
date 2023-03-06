@@ -81,24 +81,24 @@ func nodeDeposit(c *cli.Context) error {
 			fmt.Printf("%s**WARNING**: your primary consensus client is either not fully synced or offline and you do not have a fallback client configured.\nYOU WILL LOSE ETH if your validator is activated before it is fully synced.\n%s", colorRed, colorReset)
 		}
 	}
-	//
-	//canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if canNodeDepositResponse.InsufficientBalance {
-	//	fmt.Printf("Account does not have enough balance!")
-	//	return nil
-	//}
-	//if canNodeDepositResponse.DepositPaused {
-	//	fmt.Printf("Deposits are currently paused!")
-	//	return nil
-	//}
-	//if canNodeDepositResponse.NotEnoughSdCollateral {
-	//	fmt.Printf("Not enough SD as collateral")
-	//	return nil
-	//}
+
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
+	if err != nil {
+		return err
+	}
+
+	if canNodeDepositResponse.InsufficientBalance {
+		fmt.Printf("Account does not have enough balance!")
+		return nil
+	}
+	if canNodeDepositResponse.DepositPaused {
+		fmt.Printf("Deposits are currently paused!")
+		return nil
+	}
+	if canNodeDepositResponse.NotEnoughSdCollateral {
+		fmt.Printf("Not enough SD as collateral")
+		return nil
+	}
 
 	//Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))

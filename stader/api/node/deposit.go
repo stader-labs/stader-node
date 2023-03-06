@@ -167,6 +167,9 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
 
+		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
+		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
+
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
 
