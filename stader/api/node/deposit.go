@@ -39,10 +39,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, err
 	}
-	//sdc, err := services.GetSdCollateralContract(c)
-	//if err != nil {
-	//	return nil, err
-	//}
+	sdc, err := services.GetSdCollateralContract(c)
+	if err != nil {
+		return nil, err
+	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -99,14 +99,14 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
-	//hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, uint32(numValidators.Int64()), nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if !hasEnoughSdCollateral {
-	//	canNodeDepositResponse.NotEnoughSdCollateral = true
-	//	return &canNodeDepositResponse, nil
-	//}
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, uint32(numValidators.Int64()), nil)
+	if err != nil {
+		return nil, err
+	}
+	if !hasEnoughSdCollateral {
+		canNodeDepositResponse.NotEnoughSdCollateral = true
+		return &canNodeDepositResponse, nil
+	}
 
 	pubKeys := make([][]byte, numValidators.Int64())
 	preDepositSignatures := make([][]byte, numValidators.Int64())
