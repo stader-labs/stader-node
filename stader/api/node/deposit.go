@@ -272,7 +272,9 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 	newValidatorKey := validatorKeyCount
 
+	fmt.Printf("generating validator keys\n")
 	for i := int64(0); i < numValidators.Int64(); i++ {
+		fmt.Printf("generating validator %d keys\n", i)
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
@@ -308,7 +310,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		depositSignatures[i] = depositSignature[:]
 
 		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
-		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
+		fmt.Printf("canNodeDeposit: depositSignature is %s\n", depositSignature)
 
 		// Make sure a validator with this pubkey doesn't already exist
 		status, err := bc.GetValidatorStatus(types.ValidatorPubkey(pubKey), nil)
@@ -341,6 +343,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
+	fmt.Printf("adding valdiator keys!")
 	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
