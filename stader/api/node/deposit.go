@@ -167,9 +167,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
 
-		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
-		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
-
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
 
@@ -272,7 +269,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 	newValidatorKey := validatorKeyCount
 
-	fmt.Printf("generating validator keys\n")
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		fmt.Printf("generating validator %d keys\n", i)
 		// Create and save a new validator key
@@ -309,10 +305,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
 
-		fmt.Printf("canNodeDeposit: preDepositSignature is %s\n", preDepositSignature)
-		fmt.Printf("canNodeDeposit: depositSignature is %s\n", depositSignature)
-		fmt.Printf("canNodeDeposit: public key is %s\n", pubKey)
-
 		// Make sure a validator with this pubkey doesn't already exist
 		status, err := bc.GetValidatorStatus(types.ValidatorPubkey(pubKey), nil)
 		if err != nil {
@@ -344,7 +336,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	fmt.Printf("adding valdiator keys!")
 	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
