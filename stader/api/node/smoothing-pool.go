@@ -3,7 +3,7 @@ package node
 import (
 	"context"
 	"fmt"
-	staderCore "github.com/stader-labs/stader-minipool-go/stader"
+	staderCore "github.com/stader-labs/stader-node/stader-lib/stader"
 	"time"
 
 	"github.com/rocket-pool/rocketpool-go/node"

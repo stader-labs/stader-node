@@ -106,7 +106,7 @@ func canStakeMinipool(c *cli.Context, minipoolAddress common.Address) (*api.CanS
 		}
 
 		// Get validator deposit data
-		depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config)
+		depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config, 1)
 		if err != nil {
 			return nil, err
 		}
@@ -193,7 +193,7 @@ func stakeMinipool(c *cli.Context, minipoolAddress common.Address) (*api.StakeMi
 	}
 
 	// Get validator deposit data
-	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config)
+	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config, 1)
 	if err != nil {
 		return nil, err
 	}

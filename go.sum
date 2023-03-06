@@ -2003,6 +2003,16 @@ github.com/stader-labs/stader-minipool-go v0.0.0-20230220064601-5cfc4c1dd663 h1:
 github.com/stader-labs/stader-minipool-go v0.0.0-20230220064601-5cfc4c1dd663/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
 github.com/stader-labs/stader-minipool-go v0.0.0-20230222150119-a5a75775c011 h1:wgIzy/zkStoFDfBqB0Lyt3ukH3dJNKy3Em8DgO520UY=
 github.com/stader-labs/stader-minipool-go v0.0.0-20230222150119-a5a75775c011/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223144114-6045f59babdb h1:4d+bewf+z+qxcmpFwVg3w5mc918E75dPcp5LJ+2frw0=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223144114-6045f59babdb/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223150209-aa75f08b4c8c h1:Be+nGKh0jwZ6kLClxrJt27Mvb9leaFneIvBPAki2WV8=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223150209-aa75f08b4c8c/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223151710-12afac7c752d h1:gjWzeN0pLn5qxIE4P7F2mF0APlu74Z9oB/MVVEf8adk=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223151710-12afac7c752d/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223163544-d8d6f0189365 h1:ivTHBhjSWiMOsId+siQLKF+p0+rM9rtG5jg2G3FVoNk=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223163544-d8d6f0189365/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223165401-2cc30ad16b7b h1:m3v5MskGG3Mnh/XSI1V54Atke2TXVCaHO5QGgkXwL0I=
+github.com/stader-labs/stader-minipool-go v0.0.0-20230223165401-2cc30ad16b7b/go.mod h1:ePU60nMxJBzAeNZMr3H/Jr00PoBabjXdQvODBE3yWhQ=
 github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 h1:Oo2KZNP70KE0+IUJSidPj/BFS/RXNHmKIJOdckzml2E=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=

@@ -109,8 +109,8 @@ func ValidatePercentage(name, value string) (float64, error) {
 // Validate a token type
 func ValidateTokenType(name, value string) (string, error) {
 	val := strings.ToLower(value)
-	if !(val == "eth" || val == "rpl" || val == "fsrpl" || val == "reth") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'ETH', 'RPL', 'fsRPL', and 'rETH'", name, value)
+	if !(val == "eth" || val == "sd" || val == "ethx") {
+		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'ETH', 'SD', and 'EthX'", name, value)
 	}
 	return val, nil
 }

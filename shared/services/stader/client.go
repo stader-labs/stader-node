@@ -33,7 +33,7 @@ import (
 
 // Config
 const (
-	InstallerURL     string = "https://stadernode.s3.amazonaws.com/install.sh"
+	InstallerURL     string = "https://temps3node.s3.amazonaws.com/install.sh"
 	UpdateTrackerURL string = "https://github.com/rocket-pool/smartnode-install/releases/download/%s/install-update-tracker.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"

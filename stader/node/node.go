@@ -186,7 +186,7 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 			return fmt.Errorf("could not write default fee recipient file to %s: %w", feeRecipientPath, err)
 		}
 	} else if err != nil {
-		return fmt.Errorf("Error checking fee recipient file status: %w", err)
+		return fmt.Errorf("error checking fee recipient file status: %w", err)
 	}
 
 	return nil

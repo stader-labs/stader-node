@@ -266,7 +266,7 @@ func (t *stakePrelaunchMinipools) stakeMinipool(mp *minipool.Minipool, eth2Confi
 	}
 
 	// Get validator deposit data
-	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config)
+	depositData, depositDataRoot, err := validator.GetDepositData(validatorKey, withdrawalCredentials, eth2Config, 1)
 	if err != nil {
 		return false, err
 	}

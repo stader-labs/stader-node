@@ -44,12 +44,6 @@ func getStatus(c *cli.Context) error {
 		return err
 	}
 
-	// Get the config
-	//cfg, _, err := staderClient.LoadConfig()
-	//if err != nil {
-	//	return fmt.Errorf("Error loading configuration: %w", err)
-	//}
-
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", colorGreen, colorReset)
 	fmt.Printf(
@@ -58,6 +52,18 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddressFormatted,
 		colorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
+	fmt.Printf(
+		"The node %s%s%s has a balance of %.6f SD.\n\n",
+		colorBlue,
+		status.AccountAddressFormatted,
+		colorReset,
+		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
+	fmt.Printf(
+		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
+		colorBlue,
+		status.AccountAddressFormatted,
+		colorReset,
+		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", colorGreen, colorReset)
 

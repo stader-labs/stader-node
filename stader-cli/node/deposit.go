@@ -6,7 +6,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"math/big"
 
-	"github.com/stader-labs/stader-minipool-go/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -93,6 +93,10 @@ func nodeDeposit(c *cli.Context) error {
 	}
 	if canNodeDepositResponse.DepositPaused {
 		fmt.Printf("Deposits are currently paused!")
+		return nil
+	}
+	if canNodeDepositResponse.NotEnoughSdCollateral {
+		fmt.Printf("Not enough SD as collateral")
 		return nil
 	}
 
