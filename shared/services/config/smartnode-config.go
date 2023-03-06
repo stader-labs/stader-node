@@ -324,14 +324,14 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Devnet:   "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
 			config.Network_Prater:   "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
 			config.Network_Mainnet:  "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
-			config.Network_Zhejiang: "0xcE2233693b3087684E7373455706D8Fe115a2498",
+			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 
 		vaultFactoryAddress: map[config.Network]string{
 			config.Network_Prater:   "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
 			config.Network_Devnet:   "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
 			config.Network_Mainnet:  "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
-			config.Network_Zhejiang: "0xC9B291Bd8aB326B08ee1F2D4B5bbbc11dEF31C89",
+			config.Network_Zhejiang: "0xacC1766b4a6dacbB67063a639F588EaB8b6b5A2d",
 		},
 
 		sdTokenAddress: map[config.Network]string{
@@ -352,7 +352,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Prater:   "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
 			config.Network_Devnet:   "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
 			config.Network_Mainnet:  "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
-			config.Network_Zhejiang: "0x1D6fe15f4d5182Ba0c38571A2eE36F2b767F7BFA",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		rethAddress: map[config.Network]string{
