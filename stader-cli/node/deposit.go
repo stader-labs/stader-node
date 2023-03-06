@@ -3,7 +3,6 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/services/gas"
 	"math/big"
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -82,29 +81,28 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
-	if err != nil {
-		return err
-	}
-
-	if canNodeDepositResponse.InsufficientBalance {
-		fmt.Printf("Account does not have enough balance!")
-		return nil
-	}
-	if canNodeDepositResponse.DepositPaused {
-		fmt.Printf("Deposits are currently paused!")
-		return nil
-	}
-	if canNodeDepositResponse.NotEnoughSdCollateral {
-		fmt.Printf("Not enough SD as collateral")
-		return nil
-	}
-
-	//Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
-	}
+	//canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
+	//if err != nil {
+	//	return err
+	//}
+	//if canNodeDepositResponse.InsufficientBalance {
+	//	fmt.Printf("Account does not have enough balance!")
+	//	return nil
+	//}
+	//if canNodeDepositResponse.DepositPaused {
+	//	fmt.Printf("Deposits are currently paused!")
+	//	return nil
+	//}
+	//if canNodeDepositResponse.NotEnoughSdCollateral {
+	//	fmt.Printf("Not enough SD as collateral")
+	//	return nil
+	//}
+	//
+	////Assign max fees
+	//err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))
+	//if err != nil {
+	//	return err
+	//}
 
 	totalDeposited := baseAmount.Uint64() * numValidators
 
