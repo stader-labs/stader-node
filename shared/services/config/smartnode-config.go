@@ -133,6 +133,9 @@ type SmartnodeConfig struct {
 	rewardsSubmissionBlockMaps        map[config.Network][]uint64 `yaml:"-"`
 	permissionlessNodeRegistryAddress map[config.Network]string   `yaml:"-"`
 	vaultFactoryAddress               map[config.Network]string   `yaml:"-"`
+	sdCollateralAddress               map[config.Network]string   `yaml:"-"`
+	sdTokenAddress                    map[config.Network]string   `yaml:"-"`
+	ethxTokenAddress                  map[config.Network]string   `yaml:"-"`
 }
 
 // Generates a new Smartnode configuration
@@ -316,18 +319,34 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Devnet:  "0x218a718A1B23B13737E2F566Dd45730E8DAD451b",
 		},
 
-		// TODO - update when mainnet contracts are released
 		permissionlessNodeRegistryAddress: map[config.Network]string{
-			config.Network_Devnet:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
-			config.Network_Prater:  "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
-			config.Network_Mainnet: "0xbc536B674De5d7671bef54C87c7f79c455a759Aa",
+			config.Network_Devnet:  "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
+			config.Network_Prater:  "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
+			config.Network_Mainnet: "0xeb9e32b2aae13fF98311Bf818C094a4d14FFE694",
 		},
 
-		// TODO - update when mainnet contracts are released
 		vaultFactoryAddress: map[config.Network]string{
-			config.Network_Prater:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
-			config.Network_Devnet:  "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
-			config.Network_Mainnet: "0x5d541217f682f830707E3bF383a6b9dC1dfcd496",
+			config.Network_Prater:  "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
+			config.Network_Devnet:  "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
+			config.Network_Mainnet: "0xC60D9b8688F7B12a1ecB5D1349103fBEa7b02906",
+		},
+
+		sdTokenAddress: map[config.Network]string{
+			config.Network_Prater:  "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
+			config.Network_Devnet:  "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
+			config.Network_Mainnet: "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
+		},
+
+		sdCollateralAddress: map[config.Network]string{
+			config.Network_Prater:  "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
+			config.Network_Devnet:  "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
+			config.Network_Mainnet: "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
+		},
+
+		ethxTokenAddress: map[config.Network]string{
+			config.Network_Prater:  "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
+			config.Network_Devnet:  "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
+			config.Network_Mainnet: "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
 		},
 
 		rethAddress: map[config.Network]string{
@@ -564,6 +583,18 @@ func (cfg *SmartnodeConfig) GetPermissionlessNodeRegistryAddress() common.Addres
 
 func (cfg *SmartnodeConfig) GetVaultFactoryAddress() common.Address {
 	return common.HexToAddress(cfg.vaultFactoryAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetSdCollateralContractAddress() common.Address {
+	return common.HexToAddress(cfg.sdCollateralAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetSdTokenAddress() common.Address {
+	return common.HexToAddress(cfg.sdTokenAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetEthxTokenAddress() common.Address {
+	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

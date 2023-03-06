@@ -3,12 +3,12 @@ package node
 import (
 	"context"
 	"fmt"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/tokens"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -30,7 +30,11 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	ethxt, err := services.GetEthxTokenContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +63,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.InsufficientBalance = (amountWei.Cmp(ethBalanceWei) > 0)
+		response.InsufficientBalance = amountWei.Cmp(ethBalanceWei) > 0
 		gasInfo, err := eth.EstimateSendTransactionGas(ec, nodeAccount.Address, opts)
 		if err != nil {
 			return nil, err
@@ -68,57 +72,31 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 
 	case "rpl":
 
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Check node RPL balance
-		rplBalanceWei, err := tokens.GetRPLBalance(rp, nodeAccount.Address, nil)
+		// Check node SD balance
+		sdBalanceWei, err := tokens.BalanceOf(sdt, nodeAccount.Address, nil)
 		if err != nil {
 			return nil, err
 		}
-		response.InsufficientBalance = (amountWei.Cmp(rplBalanceWei) > 0)
-		gasInfo, err := tokens.EstimateTransferRPLGas(rp, nodeAccount.Address, amountWei, opts)
+		response.InsufficientBalance = amountWei.Cmp(sdBalanceWei) > 0
+		gasInfo, err := tokens.EstimateTransferGas(sdt, nodeAccount.Address, amountWei, opts)
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = stader.GasInfo(gasInfo)
+		response.GasInfo = gasInfo
 
-	case "fsrpl":
+	case "ethx":
 
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Check node fixed-supply RPL balance
-		fixedSupplyRplBalanceWei, err := tokens.GetFixedSupplyRPLBalance(rp, nodeAccount.Address, nil)
+		// Check node EthX balance
+		ethxBalanceWei, err := tokens.BalanceOf(ethxt, nodeAccount.Address, nil)
 		if err != nil {
 			return nil, err
 		}
-		response.InsufficientBalance = (amountWei.Cmp(fixedSupplyRplBalanceWei) > 0)
-		gasInfo, err := tokens.EstimateTransferFixedSupplyRPLGas(rp, nodeAccount.Address, amountWei, opts)
+		response.InsufficientBalance = amountWei.Cmp(ethxBalanceWei) > 0
+		gasInfo, err := tokens.EstimateTransferGas(ethxt, nodeAccount.Address, amountWei, opts)
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = stader.GasInfo(gasInfo)
-
-	case "reth":
-
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Check node rETH balance
-		rethBalanceWei, err := tokens.GetRETHBalance(rp, nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-		response.InsufficientBalance = (amountWei.Cmp(rethBalanceWei) > 0)
-		gasInfo, err := tokens.EstimateTransferRETHGas(rp, nodeAccount.Address, amountWei, opts)
-		if err != nil {
-			return nil, err
-		}
-		response.GasInfo = stader.GasInfo(gasInfo)
+		response.GasInfo = gasInfo
 
 	}
 
@@ -142,7 +120,11 @@ func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Addres
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+	ethxt, err := services.GetEthxTokenContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -174,40 +156,19 @@ func nodeSend(c *cli.Context, amountWei *big.Int, token string, to common.Addres
 		}
 		response.TxHash = hash
 
-	case "rpl":
+	case "sd":
 
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Transfer RPL
-		hash, err := tokens.TransferRPL(rp, to, amountWei, opts)
+		// Transfer SD
+		hash, err := tokens.Transfer(sdt, to, amountWei, opts)
 		if err != nil {
 			return nil, err
 		}
 		response.TxHash = hash
 
-	case "fsrpl":
+	case "ethx":
 
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Transfer fixed-supply RPL
-		hash, err := tokens.TransferFixedSupplyRPL(rp, to, amountWei, opts)
-		if err != nil {
-			return nil, err
-		}
-		response.TxHash = hash
-
-	case "reth":
-
-		// Get RocketStorage
-		if err := services.RequireRocketStorage(c); err != nil {
-			return nil, err
-		}
-		// Transfer rETH
-		hash, err := tokens.TransferRETH(rp, to, amountWei, opts)
+		// Transfer Ethx
+		hash, err := tokens.Transfer(ethxt, to, amountWei, opts)
 		if err != nil {
 			return nil, err
 		}

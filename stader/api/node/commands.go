@@ -379,9 +379,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
-				Name:      "can-stake-rpl",
+				Name:      "can-node-deposit-sd",
 				Usage:     "Check whether the node can stake RPL",
-				UsageText: "stader-cli api node can-stake-rpl amount",
+				UsageText: "stader-cli api node can-node-deposit-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -394,16 +394,16 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(canNodeStakeRpl(c, amountWei))
+					api.PrintResponse(canNodeDepositSd(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "stake-rpl-approve-rpl",
+				Name:      "deposit-sd-approve-sd",
 				Aliases:   []string{"k1"},
-				Usage:     "Approve RPL for staking against the node",
-				UsageText: "stader-cli api node stake-rpl-approve-rpl amount",
+				Usage:     "Approve SD for staking against the node",
+				UsageText: "stader-cli api node deposit-sd-approve-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -416,15 +416,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(approveRpl(c, amountWei))
+					api.PrintResponse(approveSd(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "wait-and-stake-rpl",
+				Name:      "wait-and-deposit-sd",
 				Aliases:   []string{"k2"},
-				Usage:     "Stake RPL against the node, waiting for approval tx-hash to be included in a block first",
+				Usage:     "Deposit SD against the node, waiting for approval tx-hash to be included in a block first",
 				UsageText: "stader-cli api node wait-and-stake-rpl amount tx-hash",
 				Action: func(c *cli.Context) error {
 
@@ -442,15 +442,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(waitForApprovalAndStakeRpl(c, amountWei, hash))
+					api.PrintResponse(waitForApprovalAndDepositSd(c, amountWei, hash))
 					return nil
 
 				},
 			},
 			{
-				Name:      "get-stake-rpl-approval-gas",
-				Usage:     "Estimate the gas cost of new RPL interaction approval",
-				UsageText: "stader-cli api node get-stake-rpl-approval-gas",
+				Name:      "get-deposit-sd-approval-gas",
+				Usage:     "Estimate the gas cost of new SD interaction approval",
+				UsageText: "stader-cli api node get-deposit-sd-approval-gas",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -463,15 +463,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(getStakeApprovalGas(c, amountWei))
+					api.PrintResponse(getDepositSdApprovalGas(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "stake-rpl-allowance",
-				Usage:     "Get the node's RPL allowance for the staking contract",
-				UsageText: "stader-cli api node stake-allowance-rpl",
+				Name:      "deposit-sd-allowance",
+				Usage:     "Get the node's SD allowance for the collateral contract",
+				UsageText: "stader-cli api node deposit-sd-allowance",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -480,16 +480,16 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(allowanceRpl(c))
+					api.PrintResponse(allowanceSd(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "stake-rpl",
+				Name:      "deposit-sd",
 				Aliases:   []string{"k3"},
-				Usage:     "Stake RPL against the node",
-				UsageText: "stader-cli api node stake-rpl amount",
+				Usage:     "Deposit SD against the node",
+				UsageText: "stader-cli api node deposit-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -502,7 +502,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(stakeRpl(c, amountWei))
+					api.PrintResponse(depositSdAsCollateral(c, amountWei))
 					return nil
 
 				},
@@ -559,43 +559,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
-						return err
-					}
-					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
-					if err != nil {
-						return err
-					}
-
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
-					if err != nil {
-						return err
-					}
-
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
-					if err != nil {
-						return err
-					}
-
-					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, submit))
-
-					return nil
-
-				},
-			},
-			{
-				Name:      "deposit",
-				Aliases:   []string{"d"},
-				Usage:     "Make a deposit and create a minipool, or just make and sign the transaction (when submit = false)",
-				UsageText: "stader-cli api node deposit amount salt submit",
-				Action: func(c *cli.Context) error {
-
 					// Validate args
 					if err := cliutils.ValidateArgCount(c, 4); err != nil {
 						return err

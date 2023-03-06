@@ -2,7 +2,7 @@ package node
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	_ "time/tzdata"
 
 	"github.com/rocket-pool/rocketpool-go/node"

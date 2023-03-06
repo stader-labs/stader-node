@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
-	"github.com/stader-labs/stader-minipool-go/stader"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -121,6 +121,45 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	}
 
 	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
+}
+
+func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSdCollateralContract(ec, cfg.Smartnode.GetSdCollateralContractAddress())
+}
+
+func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetSdTokenAddress())
+}
+
+func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetEthxTokenAddress())
 }
 
 func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {

@@ -12,12 +12,12 @@ import (
 const DepositAmount = 32000000000 // gwei
 
 // Get deposit data & root for a given validator key and withdrawal credentials
-func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials common.Hash, eth2Config beacon.Eth2Config) (eth2.DepositData, common.Hash, error) {
+func GetDepositData(validatorKey *eth2types.BLSPrivateKey, withdrawalCredentials common.Hash, eth2Config beacon.Eth2Config, amount uint64) (eth2.DepositData, common.Hash, error) {
 	// Build deposit data
 	dd := eth2.DepositDataNoSignature{
 		PublicKey:             validatorKey.PublicKey().Marshal(),
 		WithdrawalCredentials: withdrawalCredentials[:],
-		Amount:                DepositAmount,
+		Amount:                amount,
 	}
 
 	// Get signing root
