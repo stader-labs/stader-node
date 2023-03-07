@@ -345,7 +345,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Prater:   "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
 			config.Network_Devnet:   "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
 			config.Network_Mainnet:  "0xb0999B893937DCA77d26bc5923184D0bdD17Fbaf",
-			config.Network_Zhejiang: "0xed7c5d558e48c63b991484e5ed6647016bef280d",
+			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
 		},
 
 		ethxTokenAddress: map[config.Network]string{
