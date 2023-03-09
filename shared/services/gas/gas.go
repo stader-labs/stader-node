@@ -2,6 +2,7 @@ package gas
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/log"
 	"math/big"
 	"strconv"
 
@@ -13,10 +14,6 @@ import (
 	staderCore "github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
-
-const colorReset string = "\033[0m"
-const colorYellow string = "\033[33m"
-const colorBlue string = "\033[36m"
 
 func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Client, headless bool) error {
 
@@ -43,7 +40,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 	if maxPriorityFeeGwei == 0 {
 		maxPriorityFee := eth.GweiToWei(cfg.Smartnode.PriorityFee.Value.(float64))
 		if maxPriorityFee == nil || maxPriorityFee.Uint64() == 0 {
-			fmt.Printf("%sNOTE: max priority fee not set or set to 0, defaulting to 2 gwei%s\n", colorYellow, colorReset)
+			fmt.Printf("%sNOTE: max priority fee not set or set to 0, defaulting to 2 gwei%s\n", log.ColorYellow, log.ColorReset)
 			maxPriorityFeeGwei = 2
 		} else {
 			maxPriorityFeeGwei = eth.WeiToGwei(maxPriorityFee)
@@ -52,7 +49,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 	// Use the requested max fee and priority fee if provided
 	if maxFeeGwei != 0 {
-		fmt.Printf("%sUsing the requested max fee of %.2f gwei (including a max priority fee of %.2f gwei).\n", colorYellow, maxFeeGwei, maxPriorityFeeGwei)
+		fmt.Printf("%sUsing the requested max fee of %.2f gwei (including a max priority fee of %.2f gwei).\n", log.ColorYellow, maxFeeGwei, maxPriorityFeeGwei)
 
 		var lowLimit float64
 		var highLimit float64
@@ -63,7 +60,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 			lowLimit = maxFeeGwei / eth.WeiPerGwei * float64(gasLimit)
 			highLimit = lowLimit
 		}
-		fmt.Printf("Total cost: %.4f to %.4f ETH%s\n", lowLimit, highLimit, colorReset)
+		fmt.Printf("Total cost: %.4f to %.4f ETH%s\n", lowLimit, highLimit, log.ColorReset)
 
 	} else {
 		if headless {
@@ -81,7 +78,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 			} else {
 				// Fallback to Etherscan
-				fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", colorYellow, err.Error(), colorReset)
+				fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", log.ColorYellow, err.Error(), log.ColorReset)
 				etherscanData, err := etherscan.GetGasPrices()
 				if err == nil {
 					// Print the Etherscan data and ask for an amount
@@ -91,12 +88,12 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 				}
 			}
 		}
-		fmt.Printf("%sUsing a max fee of %.2f gwei and a priority fee of %.2f gwei.\n%s", colorBlue, maxFeeGwei, maxPriorityFeeGwei, colorReset)
+		fmt.Printf("%sUsing a max fee of %.2f gwei and a priority fee of %.2f gwei.\n%s", log.ColorBlue, maxFeeGwei, maxPriorityFeeGwei, log.ColorReset)
 	}
 
 	// Use the requested gas limit if provided
 	if gasLimit != 0 {
-		fmt.Printf("Using the requested gas limit of %d units.\n%sNOTE: if you set this too low, your transaction may fail but you will still have to pay the gas fee!%s\n", gasLimit, colorYellow, colorReset)
+		fmt.Printf("Using the requested gas limit of %d units.\n%sNOTE: if you set this too low, your transaction may fail but you will still have to pay the gas fee!%s\n", gasLimit, log.ColorYellow, log.ColorReset)
 	}
 
 	if maxPriorityFeeGwei > maxFeeGwei {
@@ -114,7 +111,7 @@ func GetHeadlessMaxFeeWei() (*big.Int, error) {
 		return etherchainData.RapidWei, nil
 	}
 
-	fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", colorYellow, err.Error(), colorReset)
+	fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", log.ColorYellow, err.Error(), log.ColorReset)
 	etherscanData, err := etherscan.GetGasPrices()
 	if err == nil {
 		return eth.GweiToWei(etherscanData.FastGwei), nil
@@ -177,7 +174,7 @@ func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, gasInf
 		slowHighLimit = slowLowLimit
 	}
 
-	fmt.Printf("%s+============== Suggested Gas Prices ==============+\n", colorBlue)
+	fmt.Printf("%s+============== Suggested Gas Prices ==============+\n", log.ColorBlue)
 	fmt.Println("| Avg Wait Time |  Max Fee  |    Total Gas Cost    |")
 	fmt.Printf("| %-13s | %-9s | %.4f to %.4f ETH |\n",
 		gasSuggestion.RapidTime, fmt.Sprintf("%d gwei", int(rapidGwei)), rapidLowLimit, rapidHighLimit)
@@ -187,7 +184,7 @@ func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, gasInf
 		gasSuggestion.StandardTime, fmt.Sprintf("%d gwei", int(standardGwei)), standardLowLimit, standardHighLimit)
 	fmt.Printf("| %-13s | %-9s | %.4f to %.4f ETH |\n",
 		gasSuggestion.SlowTime, fmt.Sprintf("%d gwei", int(slowGwei)), slowLowLimit, slowHighLimit)
-	fmt.Printf("+==================================================+\n\n%s", colorReset)
+	fmt.Printf("+==================================================+\n\n%s", log.ColorReset)
 
 	fmt.Printf("These prices include a maximum priority fee of %.2f gwei.\n", priorityFee)
 
@@ -257,7 +254,7 @@ func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, gasInfo 
 		slowHighLimit = slowLowLimit
 	}
 
-	fmt.Printf("%s+============ Suggested Gas Prices ============+\n", colorBlue)
+	fmt.Printf("%s+============ Suggested Gas Prices ============+\n", log.ColorBlue)
 	fmt.Println("|   Speed   |  Max Fee  |    Total Gas Cost    |")
 	fmt.Printf("| Fast      | %-9s | %.4f to %.4f ETH |\n",
 		fmt.Sprintf("%d gwei", int(fastGwei)), fastLowLimit, fastHighLimit)
@@ -265,7 +262,7 @@ func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, gasInfo 
 		fmt.Sprintf("%d gwei", int(standardGwei)), standardLowLimit, standardHighLimit)
 	fmt.Printf("| Slow      | %-9s | %.4f to %.4f ETH |\n",
 		fmt.Sprintf("%d gwei", int(slowGwei)), slowLowLimit, slowHighLimit)
-	fmt.Printf("+==============================================+\n\n%s", colorReset)
+	fmt.Printf("+==============================================+\n\n%s", log.ColorReset)
 
 	fmt.Printf("These prices include a maximum priority fee of %.2f gwei.\n", priorityFee)
 
