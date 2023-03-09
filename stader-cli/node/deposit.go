@@ -33,12 +33,6 @@ func nodeDeposit(c *cli.Context) error {
 
 	fmt.Println("Your eth2 client is on the correct network.")
 
-	// Post a warning about fee distribution
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("%sNOTE: by creating a new validator, your node will automatically claim and distribute any balance you have in your fee distributor contract. If you don't want to claim your balance at this time, you should not create a new validator.%s\nWould you like to continue?", log.ColorYellow, log.ColorReset))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	numValidators := c.Uint64("num-validators")
 
 	// Force 4 ETH minipools as the only option after much community discussion
@@ -107,10 +101,9 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %d ETH to create %d validators with a minimum possible commission rate of %f%%.\n"+
+		"You are about to deposit %d ETH to create %d validators."+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
 		eth.WeiToEth(big.NewInt(int64(totalDeposited))), numValidators,
-		5.0,
 		log.ColorYellow,
 		log.ColorReset))) {
 		fmt.Println("Cancelled.")

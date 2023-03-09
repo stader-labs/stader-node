@@ -146,9 +146,6 @@ func (t *submitScrubMinipools) run() error {
 		return nil
 	}
 
-	// Log
-	t.log.Println("Checking for minipools to scrub...")
-
 	// Check if the check is already running
 	t.lock.Lock()
 	if t.isRunning {

@@ -75,9 +75,6 @@ func (m *manageFeeRecipient) run() error {
 		return err
 	}
 
-	// Log
-	m.log.Println("Checking for correct fee recipient...")
-
 	// Get node account
 	nodeAccount, err := m.w.GetNodeAccount()
 	if err != nil {

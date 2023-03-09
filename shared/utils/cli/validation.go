@@ -117,15 +117,6 @@ func ValidateTokenType(name, value string) (string, error) {
 	return val, nil
 }
 
-// Validate a proposal type
-func ValidateProposalType(name, value string) (string, error) {
-	val := strings.ToLower(value)
-	if !(val == "pending" || val == "active" || val == "succeeded" || val == "executed" || val == "cancelled" || val == "defeated" || val == "expired" || val == "all") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'pending', 'active', 'succeeded', 'executed', 'cancelled', 'defeated', 'expired', and 'all'", name, value)
-	}
-	return val, nil
-}
-
 //
 // Command specific types
 //
@@ -198,15 +189,6 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 	}
 	if !(val == 0 || val == 16 || val == 32) {
 		return 0, fmt.Errorf("Invalid %s '%s' - valid values are 0, 16 and 32 ether", name, value)
-	}
-	return val, nil
-}
-
-// Validate a burnable token type
-func ValidateBurnableTokenType(name, value string) (string, error) {
-	val := strings.ToLower(value)
-	if !(val == "reth") {
-		return "", fmt.Errorf("Invalid %s '%s' - valid types are 'rETH'", name, value)
 	}
 	return val, nil
 }
