@@ -81,10 +81,6 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	downloadRewardsTrees, err := newDownloadRewardsTrees(c, log.NewColorLogger(DownloadRewardsTreesColor))
-	if err != nil {
-		return err
-	}
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
@@ -108,12 +104,6 @@ func run(c *cli.Context) error {
 				} else {
 					// Manage the fee recipient for the node
 					if err := manageFeeRecipient.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the rewards download check
-					if err := downloadRewardsTrees.run(); err != nil {
 						errorLog.Println(err)
 					}
 					time.Sleep(taskCooldown)
