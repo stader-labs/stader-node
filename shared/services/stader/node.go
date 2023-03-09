@@ -14,14 +14,14 @@ import (
 func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	responseBytes, err := c.callAPI("node status")
 	if err != nil {
-		return api.NodeStatusResponse{}, fmt.Errorf("Could not get node status: %w", err)
+		return api.NodeStatusResponse{}, fmt.Errorf("could not get node status: %w", err)
 	}
 	var response api.NodeStatusResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStatusResponse{}, fmt.Errorf("Could not decode node status response: %w", err)
+		return api.NodeStatusResponse{}, fmt.Errorf("could not decode node status response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStatusResponse{}, fmt.Errorf("Could not get node status: %s", response.Error)
+		return api.NodeStatusResponse{}, fmt.Errorf("could not get node status: %s", response.Error)
 	}
 	if response.AccountBalances.ETH == nil {
 		response.AccountBalances.ETH = big.NewInt(0)
@@ -37,14 +37,14 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 func (c *Client) CanRegisterNode(operatorName string, operatorRewardAddress common.Address, socializeMev bool) (api.CanRegisterNodeResponse, error) {
 	responseBytes, err := c.callAPI("node can-register", operatorName, operatorRewardAddress.Hex(), strconv.FormatBool(socializeMev))
 	if err != nil {
-		return api.CanRegisterNodeResponse{}, fmt.Errorf("Could not get can register node status: %w", err)
+		return api.CanRegisterNodeResponse{}, fmt.Errorf("could not get can register node status: %w", err)
 	}
 	var response api.CanRegisterNodeResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanRegisterNodeResponse{}, fmt.Errorf("Could not decode can register node response: %w", err)
+		return api.CanRegisterNodeResponse{}, fmt.Errorf("could not decode can register node response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanRegisterNodeResponse{}, fmt.Errorf("Could not get can register node status: %s", response.Error)
+		return api.CanRegisterNodeResponse{}, fmt.Errorf("could not get can register node status: %s", response.Error)
 	}
 	return response, nil
 }
@@ -53,14 +53,14 @@ func (c *Client) CanRegisterNode(operatorName string, operatorRewardAddress comm
 func (c *Client) RegisterNode(operatorName string, operatorRewardAddress common.Address, socializeMev bool) (api.RegisterNodeResponse, error) {
 	responseBytes, err := c.callAPI("node register", operatorName, operatorRewardAddress.Hex(), strconv.FormatBool(socializeMev))
 	if err != nil {
-		return api.RegisterNodeResponse{}, fmt.Errorf("Could not register node: %w", err)
+		return api.RegisterNodeResponse{}, fmt.Errorf("could not register node: %w", err)
 	}
 	var response api.RegisterNodeResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.RegisterNodeResponse{}, fmt.Errorf("Could not decode register node response: %w", err)
+		return api.RegisterNodeResponse{}, fmt.Errorf("could not decode register node response: %w", err)
 	}
 	if response.Error != "" {
-		return api.RegisterNodeResponse{}, fmt.Errorf("Could not register node: %s", response.Error)
+		return api.RegisterNodeResponse{}, fmt.Errorf("could not register node: %s", response.Error)
 	}
 	return response, nil
 }
@@ -69,14 +69,14 @@ func (c *Client) RegisterNode(operatorName string, operatorRewardAddress common.
 func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeStakeRplResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-deposit-sd %s", amountWei.String()))
 	if err != nil {
-		return api.CanNodeStakeRplResponse{}, fmt.Errorf("Could not get can node stake RPL status: %w", err)
+		return api.CanNodeStakeRplResponse{}, fmt.Errorf("could not get can node stake RPL status: %w", err)
 	}
 	var response api.CanNodeStakeRplResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanNodeStakeRplResponse{}, fmt.Errorf("Could not decode can node stake RPL response: %w", err)
+		return api.CanNodeStakeRplResponse{}, fmt.Errorf("could not decode can node stake RPL response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanNodeStakeRplResponse{}, fmt.Errorf("Could not get can node stake RPL status: %s", response.Error)
+		return api.CanNodeStakeRplResponse{}, fmt.Errorf("could not get can node stake RPL status: %s", response.Error)
 	}
 	return response, nil
 }
@@ -85,14 +85,14 @@ func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeStakeRplRespon
 func (c *Client) NodeDepositSdApprovalGas(amountWei *big.Int) (api.NodeStakeRplApproveGasResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node get-deposit-sd-approval-gas %s", amountWei.String()))
 	if err != nil {
-		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("Could not get new RPL approval gas: %w", err)
+		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("could not get new RPL approval gas: %w", err)
 	}
 	var response api.NodeStakeRplApproveGasResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("Could not decode node stake RPL approve gas response: %w", err)
+		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("could not decode node stake RPL approve gas response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("Could not get new RPL approval gas: %s", response.Error)
+		return api.NodeStakeRplApproveGasResponse{}, fmt.Errorf("could not get new RPL approval gas: %s", response.Error)
 	}
 	return response, nil
 }
@@ -101,14 +101,14 @@ func (c *Client) NodeDepositSdApprovalGas(amountWei *big.Int) (api.NodeStakeRplA
 func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeStakeRplApproveResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-approve-sd %s", amountWei.String()))
 	if err != nil {
-		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("Could not approve RPL for staking: %w", err)
+		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("could not approve RPL for staking: %w", err)
 	}
 	var response api.NodeStakeRplApproveResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("Could not decode stake node RPL approve response: %w", err)
+		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("could not decode stake node RPL approve response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("Could not approve RPL for staking: %s", response.Error)
+		return api.NodeStakeRplApproveResponse{}, fmt.Errorf("could not approve RPL for staking: %s", response.Error)
 	}
 	return response, nil
 }
@@ -117,14 +117,14 @@ func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeStakeRplAppro
 func (c *Client) NodeWaitAndStakeRpl(amountWei *big.Int, approvalTxHash common.Hash) (api.NodeStakeRplStakeResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node wait-and-stake-rpl %s %s", amountWei.String(), approvalTxHash.String()))
 	if err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not stake node RPL: %w", err)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %w", err)
 	}
 	var response api.NodeStakeRplStakeResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not decode stake node RPL response: %w", err)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not decode stake node RPL response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not stake node RPL: %s", response.Error)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %s", response.Error)
 	}
 	return response, nil
 }
@@ -133,14 +133,14 @@ func (c *Client) NodeWaitAndStakeRpl(amountWei *big.Int, approvalTxHash common.H
 func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeStakeRplStakeResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd %s", amountWei.String()))
 	if err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not stake node RPL: %w", err)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %w", err)
 	}
 	var response api.NodeStakeRplStakeResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not decode stake node RPL response: %w", err)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not decode stake node RPL response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("Could not stake node RPL: %s", response.Error)
+		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %s", response.Error)
 	}
 	return response, nil
 }
@@ -149,14 +149,14 @@ func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeStakeRplStakeRespons
 func (c *Client) GetNodeDepositSdAllowance() (api.NodeStakeRplAllowanceResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))
 	if err != nil {
-		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("Could not get node stake RPL allowance: %w", err)
+		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("could not get node stake RPL allowance: %w", err)
 	}
 	var response api.NodeStakeRplAllowanceResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("Could not decode node stake RPL allowance response: %w", err)
+		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("could not decode node stake RPL allowance response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("Could not get node stake RPL allowance: %s", response.Error)
+		return api.NodeStakeRplAllowanceResponse{}, fmt.Errorf("could not get node stake RPL allowance: %s", response.Error)
 	}
 	return response, nil
 }
@@ -165,15 +165,15 @@ func (c *Client) GetNodeDepositSdAllowance() (api.NodeStakeRplAllowanceResponse,
 func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.CanNodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))
 	if err != nil {
-		return api.CanNodeDepositResponse{}, fmt.Errorf("Could not get can node deposit status: %w", err)
+		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can node deposit status: %w", err)
 	}
 	var response api.CanNodeDepositResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanNodeDepositResponse{}, fmt.Errorf("Could not decode can node deposit response: %w", err)
+		return api.CanNodeDepositResponse{}, fmt.Errorf("could not decode can node deposit response: %w", err)
 	}
 	fmt.Printf("response in CanNodeDeposit is %v\n", response)
 	if response.Error != "" {
-		return api.CanNodeDepositResponse{}, fmt.Errorf("Could not get can node deposit status: %s", response.Error)
+		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can node deposit status: %s", response.Error)
 	}
 	return response, nil
 }
@@ -181,14 +181,14 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators
 func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	responseBytes, err := c.callAPI("node get-contracts-info")
 	if err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get networks contracts info: %w", err)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not get networks contracts info: %w", err)
 	}
 	var response api.ContractsInfoResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not decode networks contracts info: %w", err)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not decode networks contracts info: %w", err)
 	}
 	if response.Error != "" {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get networks contract info: %s", response.Error)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not get networks contract info: %s", response.Error)
 	}
 	return response, nil
 }
@@ -197,14 +197,14 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.NodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))
 	if err != nil {
-		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit as er: %w", err)
+		return api.NodeDepositResponse{}, fmt.Errorf("could not make node deposit as er: %w", err)
 	}
 	var response api.NodeDepositResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositResponse{}, fmt.Errorf("Could not decode node deposit response: %w", err)
+		return api.NodeDepositResponse{}, fmt.Errorf("could not decode node deposit response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeDepositResponse{}, fmt.Errorf("Could not make node deposit: %s", response.Error)
+		return api.NodeDepositResponse{}, fmt.Errorf("could not make node deposit: %s", response.Error)
 	}
 	return response, nil
 }
@@ -213,14 +213,14 @@ func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *b
 func (c *Client) CanNodeSend(amountWei *big.Int, token string) (api.CanNodeSendResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-send %s %s", amountWei.String(), token))
 	if err != nil {
-		return api.CanNodeSendResponse{}, fmt.Errorf("Could not get can node send status: %w", err)
+		return api.CanNodeSendResponse{}, fmt.Errorf("could not get can node send status: %w", err)
 	}
 	var response api.CanNodeSendResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanNodeSendResponse{}, fmt.Errorf("Could not decode can node send response: %w", err)
+		return api.CanNodeSendResponse{}, fmt.Errorf("could not decode can node send response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanNodeSendResponse{}, fmt.Errorf("Could not get can node send status: %s", response.Error)
+		return api.CanNodeSendResponse{}, fmt.Errorf("could not get can node send status: %s", response.Error)
 	}
 	return response, nil
 }
@@ -229,14 +229,14 @@ func (c *Client) CanNodeSend(amountWei *big.Int, token string) (api.CanNodeSendR
 func (c *Client) NodeSend(amountWei *big.Int, token string, toAddress common.Address) (api.NodeSendResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node send %s %s %s", amountWei.String(), token, toAddress.Hex()))
 	if err != nil {
-		return api.NodeSendResponse{}, fmt.Errorf("Could not send tokens from node: %w", err)
+		return api.NodeSendResponse{}, fmt.Errorf("could not send tokens from node: %w", err)
 	}
 	var response api.NodeSendResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeSendResponse{}, fmt.Errorf("Could not decode node send response: %w", err)
+		return api.NodeSendResponse{}, fmt.Errorf("could not decode node send response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeSendResponse{}, fmt.Errorf("Could not send tokens from node: %s", response.Error)
+		return api.NodeSendResponse{}, fmt.Errorf("could not send tokens from node: %s", response.Error)
 	}
 	return response, nil
 }
@@ -245,14 +245,14 @@ func (c *Client) NodeSend(amountWei *big.Int, token string, toAddress common.Add
 func (c *Client) NodeSync() (api.NodeSyncProgressResponse, error) {
 	responseBytes, err := c.callAPI("node sync")
 	if err != nil {
-		return api.NodeSyncProgressResponse{}, fmt.Errorf("Could not get node sync: %w", err)
+		return api.NodeSyncProgressResponse{}, fmt.Errorf("could not get node sync: %w", err)
 	}
 	var response api.NodeSyncProgressResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeSyncProgressResponse{}, fmt.Errorf("Could not decode node sync response: %w", err)
+		return api.NodeSyncProgressResponse{}, fmt.Errorf("could not decode node sync response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeSyncProgressResponse{}, fmt.Errorf("Could not get node sync: %s", response.Error)
+		return api.NodeSyncProgressResponse{}, fmt.Errorf("could not get node sync: %s", response.Error)
 	}
 	return response, nil
 }
@@ -261,14 +261,14 @@ func (c *Client) NodeSync() (api.NodeSyncProgressResponse, error) {
 func (c *Client) DepositContractInfo() (api.ContractsInfoResponse, error) {
 	responseBytes, err := c.callAPI("node deposit-contract-info")
 	if err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get deposit contract info: %w", err)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not get deposit contract info: %w", err)
 	}
 	var response api.ContractsInfoResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not decode deposit contract info response: %w", err)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not decode deposit contract info response: %w", err)
 	}
 	if response.Error != "" {
-		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get deposit contract info: %s", response.Error)
+		return api.ContractsInfoResponse{}, fmt.Errorf("could not get deposit contract info: %s", response.Error)
 	}
 	return response, nil
 }
@@ -276,28 +276,28 @@ func (c *Client) DepositContractInfo() (api.ContractsInfoResponse, error) {
 func (c *Client) ResolveEnsName(name string) (api.ResolveEnsNameResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node resolve-ens-name %s", name))
 	if err != nil {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not resolve ENS name: %w", err)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not resolve ENS name: %w", err)
 	}
 	var response api.ResolveEnsNameResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not decode resolve-ens-name: %w", err)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not decode resolve-ens-name: %w", err)
 	}
 	if response.Error != "" {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not resolve ENS name: %s", response.Error)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not resolve ENS name: %s", response.Error)
 	}
 	return response, nil
 }
 func (c *Client) ReverseResolveEnsName(name string) (api.ResolveEnsNameResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node reverse-resolve-ens-name %s", name))
 	if err != nil {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not reverse resolve ENS name: %w", err)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not reverse resolve ENS name: %w", err)
 	}
 	var response api.ResolveEnsNameResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not decode reverse-resolve-ens-name: %w", err)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not decode reverse-resolve-ens-name: %w", err)
 	}
 	if response.Error != "" {
-		return api.ResolveEnsNameResponse{}, fmt.Errorf("Could not reverse resolve ENS name: %s", response.Error)
+		return api.ResolveEnsNameResponse{}, fmt.Errorf("could not reverse resolve ENS name: %s", response.Error)
 	}
 	return response, nil
 }
@@ -306,15 +306,15 @@ func (c *Client) ReverseResolveEnsName(name string) (api.ResolveEnsNameResponse,
 func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	responseBytes, err := c.callAPI("node sign-message", message)
 	if err != nil {
-		return api.NodeSignResponse{}, fmt.Errorf("Could not sign message: %w", err)
+		return api.NodeSignResponse{}, fmt.Errorf("could not sign message: %w", err)
 	}
 
 	var response api.NodeSignResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeSignResponse{}, fmt.Errorf("Could not decode node sign response: %w", err)
+		return api.NodeSignResponse{}, fmt.Errorf("could not decode node sign response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeSignResponse{}, fmt.Errorf("Could not sign message: %s", response.Error)
+		return api.NodeSignResponse{}, fmt.Errorf("could not sign message: %s", response.Error)
 	}
 	return response, nil
 }
