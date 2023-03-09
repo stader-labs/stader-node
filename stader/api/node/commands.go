@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/utils/api"
@@ -382,11 +381,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					fmt.Printf("Validating args")
 					if err := cliutils.ValidateArgCount(c, 0); err != nil {
 						return err
 					}
-					fmt.Printf("Validated args successfully!")
 
 					// Run
 					api.PrintResponse(getContractsInfo(c))
