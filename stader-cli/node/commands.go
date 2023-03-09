@@ -15,7 +15,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 		Aliases: aliases,
 		Usage:   "Manage the node",
 		Subcommands: []cli.Command{
-
 			{
 				Name:      "status",
 				Aliases:   []string{"s"},
@@ -33,7 +32,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "sync",
 				Aliases:   []string{"y"},
@@ -51,7 +49,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
@@ -100,7 +97,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "deposit-sd",
 				Aliases:   []string{"k"},
@@ -132,7 +128,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "deposit",
 				Aliases:   []string{"d"},
@@ -180,7 +175,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "send",
 				Aliases:   []string{"n"},
@@ -226,26 +220,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return getContractsInfo(c)
-
 				},
 			},
-
-			// {
-			// 	Name:      "sign-message",
-			// 	Aliases:   []string{"sm"},
-			// 	Usage:     "Sign an arbitrary message with the node's private key",
-			// 	UsageText: "stader-cli node sign-message [-m message]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "message, m",
-			// 			Usage: "The 'quoted message' to be signed",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-			// 		// Run
-			// 		return signMessage(c)
-			// 	},
-			// },
 		},
 	})
 }
