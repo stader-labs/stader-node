@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/utils/api"
@@ -375,33 +376,17 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
-				Name:      "rewards",
-				Usage:     "Get RPL rewards info",
-				UsageText: "stader-cli api node rewards",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(getRewards(c))
-					return nil
-
-				},
-			},
-
-			{
 				Name:      "get-contracts-info",
 				Usage:     "Get information about the deposit contract and stader contract on the current network",
 				UsageText: "stader-cli api node get-contracts-info",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
+					fmt.Printf("Validating args")
 					if err := cliutils.ValidateArgCount(c, 0); err != nil {
 						return err
 					}
+					fmt.Printf("Validated args successfully!")
 
 					// Run
 					api.PrintResponse(getContractsInfo(c))

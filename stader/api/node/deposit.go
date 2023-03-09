@@ -3,7 +3,6 @@ package node
 import (
 	"context"
 	"fmt"
-	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
@@ -17,8 +16,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
-
-// TODO: refactor canNodeDeposit and nodeDeposit bchain
 
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
 	canNodeDepositResponse := api.CanNodeDepositResponse{}
@@ -304,7 +301,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		depositSignatures[i] = depositSignature[:]
 
 		// Make sure a validator with this pubkey doesn't already exist
-		status, err := bc.GetValidatorStatus(types.ValidatorPubkey(pubKey), nil)
+		status, err := bc.GetValidatorStatus(pubKey, nil)
 		if err != nil {
 			return nil, fmt.Errorf("Error checking for existing validator status: %w\nYour funds have not been deposited for your own safety.", err)
 		}

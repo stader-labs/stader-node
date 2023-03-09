@@ -58,7 +58,6 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
 	supplyCollector := collectors.NewSupplyCollector(rp)
 	rplCollector := collectors.NewRplCollector(rp)
 	odaoCollector := collectors.NewOdaoCollector(rp)
-	nodeCollector := collectors.NewNodeCollector(rp, bc, nodeAccount.Address, cfg)
 	trustedNodeCollector := collectors.NewTrustedNodeCollector(rp, bc, nodeAccount.Address, cfg)
 	beaconCollector := collectors.NewBeaconCollector(rp, bc, ec, nodeAccount.Address)
 
@@ -69,7 +68,6 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
 	registry.MustRegister(supplyCollector)
 	registry.MustRegister(rplCollector)
 	registry.MustRegister(odaoCollector)
-	registry.MustRegister(nodeCollector)
 	registry.MustRegister(trustedNodeCollector)
 	registry.MustRegister(beaconCollector)
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})

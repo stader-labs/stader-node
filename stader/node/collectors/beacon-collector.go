@@ -5,11 +5,9 @@ import (
 	"log"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/services/beacon"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
-
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
+	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -81,15 +79,16 @@ func (collector *BeaconCollector) Collect(channel chan<- prometheus.Metric) {
 	var validatorIndices []uint64
 	var head beacon.BeaconHead
 
-	// Get sync committee duties
-	wg.Go(func() error {
-		var err error
-		validatorIndices, err = rp.GetNodeValidatorIndices(collector.rp, collector.ec, collector.bc, collector.nodeAddress)
-		if err != nil {
-			return fmt.Errorf("Error getting validator indices: %w", err)
-		}
-		return nil
-	})
+	// TODO - check this - bchain
+	//// Get sync committee duties
+	//wg.Go(func() error {
+	//	var err error
+	//	validatorIndices, err = rp.GetNodeValidatorIndices(collector.rp, collector.ec, collector.bc, collector.nodeAddress)
+	//	if err != nil {
+	//		return fmt.Errorf("Error getting validator indices: %w", err)
+	//	}
+	//	return nil
+	//})
 
 	wg.Go(func() error {
 		var err error

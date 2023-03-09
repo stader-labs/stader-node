@@ -13,10 +13,8 @@ import (
 	"github.com/rocket-pool/rocketpool-go/dao/trustednode"
 	"github.com/rocket-pool/rocketpool-go/minipool"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	tnsettings "github.com/rocket-pool/rocketpool-go/settings/trustednode"
-	"github.com/rocket-pool/rocketpool-go/types"
-	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 
 	ethpb "github.com/prysmaticlabs/prysm/v3/proto/prysm/v1alpha1"
@@ -274,35 +272,35 @@ func (t *submitScrubMinipools) initializeMinipoolDetails(minipoolAddresses []com
 
 	pubkeys := []types.ValidatorPubkey{}
 
-	for _, minipoolAddress := range minipoolAddresses {
-		// Create a minipool contract wrapper for the given address
-		mp, err := minipool.NewMinipool(t.rp, minipoolAddress, nil)
-		if err != nil {
-			t.log.Printf("Error creating minipool wrapper for %s: %s", minipoolAddress.Hex(), err.Error())
-			continue
-		}
-
-		// Get the correct withdrawal credentials
-		expectedCreds, err := minipool.GetMinipoolWithdrawalCredentials(t.rp, minipoolAddress, nil)
-		if err != nil {
-			t.log.Printf("Error getting expected withdrawal creds for minipool %s: %s", minipoolAddress.Hex(), err.Error())
-			continue
-		}
-
-		// Get the validator pubkey
-		pubkey, err := minipool.GetMinipoolPubkey(t.rp, minipoolAddress, nil)
-		if err != nil {
-			t.log.Printf("Error getting validator pubkey for minipool %s: %s", minipoolAddress.Hex(), err.Error())
-			continue
-		}
-		pubkeys = append(pubkeys, pubkey)
-
-		// Create a new details entry for this minipool
-		t.it.minipools[mp] = &minipoolDetails{
-			expectedWithdrawalCredentials: expectedCreds,
-			pubkey:                        pubkey,
-		}
-	}
+	//for _, minipoolAddress := range minipoolAddresses {
+	//	// Create a minipool contract wrapper for the given address
+	//	mp, err := minipool.NewMinipool(t.rp, minipoolAddress, nil)
+	//	if err != nil {
+	//		t.log.Printf("Error creating minipool wrapper for %s: %s", minipoolAddress.Hex(), err.Error())
+	//		continue
+	//	}
+	//
+	//	// Get the correct withdrawal credentials
+	//	expectedCreds, err := minipool.GetMinipoolWithdrawalCredentials(t.rp, minipoolAddress, nil)
+	//	if err != nil {
+	//		t.log.Printf("Error getting expected withdrawal creds for minipool %s: %s", minipoolAddress.Hex(), err.Error())
+	//		continue
+	//	}
+	//
+	//	// Get the validator pubkey
+	//	pubkey, err := minipool.GetMinipoolPubkey(t.rp, minipoolAddress, nil)
+	//	if err != nil {
+	//		t.log.Printf("Error getting validator pubkey for minipool %s: %s", minipoolAddress.Hex(), err.Error())
+	//		continue
+	//	}
+	//	pubkeys = append(pubkeys, pubkey)
+	//
+	//	// Create a new details entry for this minipool
+	//	t.it.minipools[mp] = &minipoolDetails{
+	//		expectedWithdrawalCredentials: expectedCreds,
+	//		pubkey:                        pubkey,
+	//	}
+	//}
 
 	return pubkeys
 
@@ -466,78 +464,78 @@ func (t *submitScrubMinipools) verifyPrestakeEvents() {
 // Step 3: Verify minipools by their deposits
 func (t *submitScrubMinipools) verifyDeposits() error {
 
-	minipoolsToScrub := []*minipool.Minipool{}
-
-	// Create a "hashset" of the remaining pubkeys
-	pubkeys := make(map[types.ValidatorPubkey]bool, len(t.it.minipools))
-	for _, details := range t.it.minipools {
-		pubkeys[details.pubkey] = true
-	}
-
-	// Get the deposits from the deposit contract
-	depositMap, err := utils.GetDeposits(t.rp, pubkeys, t.it.startBlock, t.it.eventLogInterval, nil)
-	if err != nil {
-		return err
-	}
-
-	// Check each minipool's deposit data
-	for minipool, details := range t.it.minipools {
-
-		// Get the deposit list for this minipool
-		deposits, exists := depositMap[details.pubkey]
-		if !exists || len(deposits) == 0 {
-			// Somehow this minipool doesn't have a deposit?
-			t.it.unknownMinipools++
-			continue
-		}
-
-		// Go through each deposit for this minipool and find the first one that's valid
-		for depositIndex, deposit := range deposits {
-			depositData := new(ethpb.Deposit_Data)
-			depositData.Amount = deposit.Amount
-			depositData.PublicKey = deposit.Pubkey.Bytes()
-			depositData.WithdrawalCredentials = deposit.WithdrawalCredentials.Bytes()
-			depositData.Signature = deposit.Signature.Bytes()
-
-			err := prdeposit.VerifyDepositSignature(depositData, t.it.depositDomain)
-			if err != nil {
-				// This isn't a valid deposit, so ignore it
-				t.log.Printlnf("Invalid deposit for minipool %s:", minipool.Address.Hex())
-				t.log.Printlnf("\tTX Hash: %s", deposit.TxHash.Hex())
-				t.log.Printlnf("\tBlock: %d, TX Index: %d, Deposit Index: %d", deposit.BlockNumber, deposit.TxIndex, depositIndex)
-				t.log.Printlnf("\tError: %s", err.Error())
-			} else {
-				// This is a valid deposit
-				expectedCreds := details.expectedWithdrawalCredentials
-				actualCreds := deposit.WithdrawalCredentials
-				if actualCreds != expectedCreds {
-					t.log.Println("=== SCRUB DETECTED ON DEPOSIT CONTRACT ===")
-					t.log.Printlnf("\tTX Hash: %s", deposit.TxHash.Hex())
-					t.log.Printlnf("\tBlock: %d, TX Index: %d, Deposit Index: %d", deposit.BlockNumber, deposit.TxIndex, depositIndex)
-					t.log.Printlnf("\tMinipool: %s", minipool.Address.Hex())
-					t.log.Printlnf("\tExpected creds: %s", expectedCreds.Hex())
-					t.log.Printlnf("\tActual creds: %s", actualCreds.Hex())
-					t.log.Println("==========================================")
-					minipoolsToScrub = append(minipoolsToScrub, minipool)
-					t.it.badOnDepositContract++
-				} else {
-					t.it.goodOnDepositContract++
-				}
-
-				// Remove this minipool from the list of things to process in the next step
-				delete(t.it.minipools, minipool)
-				break
-			}
-		}
-	}
-
-	// Scrub the offending minipools
-	for _, minipool := range minipoolsToScrub {
-		err := t.submitVoteScrubMinipool(minipool)
-		if err != nil {
-			t.log.Printlnf("ALERT: Couldn't scrub minipool %s: %s", minipool.Address.Hex(), err.Error())
-		}
-	}
+	//minipoolsToScrub := []*minipool.Minipool{}
+	//
+	//// Create a "hashset" of the remaining pubkeys
+	//pubkeys := make(map[types.ValidatorPubkey]bool, len(t.it.minipools))
+	//for _, details := range t.it.minipools {
+	//	pubkeys[details.pubkey] = true
+	//}
+	//
+	//// Get the deposits from the deposit contract
+	//depositMap, err := utils.GetDeposits(t.rp, pubkeys, t.it.startBlock, t.it.eventLogInterval, nil)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//// Check each minipool's deposit data
+	//for minipool, details := range t.it.minipools {
+	//
+	//	// Get the deposit list for this minipool
+	//	deposits, exists := depositMap[details.pubkey]
+	//	if !exists || len(deposits) == 0 {
+	//		// Somehow this minipool doesn't have a deposit?
+	//		t.it.unknownMinipools++
+	//		continue
+	//	}
+	//
+	//	// Go through each deposit for this minipool and find the first one that's valid
+	//	for depositIndex, deposit := range deposits {
+	//		depositData := new(ethpb.Deposit_Data)
+	//		depositData.Amount = deposit.Amount
+	//		depositData.PublicKey = deposit.Pubkey.Bytes()
+	//		depositData.WithdrawalCredentials = deposit.WithdrawalCredentials.Bytes()
+	//		depositData.Signature = deposit.Signature.Bytes()
+	//
+	//		err := prdeposit.VerifyDepositSignature(depositData, t.it.depositDomain)
+	//		if err != nil {
+	//			// This isn't a valid deposit, so ignore it
+	//			t.log.Printlnf("Invalid deposit for minipool %s:", minipool.Address.Hex())
+	//			t.log.Printlnf("\tTX Hash: %s", deposit.TxHash.Hex())
+	//			t.log.Printlnf("\tBlock: %d, TX Index: %d, Deposit Index: %d", deposit.BlockNumber, deposit.TxIndex, depositIndex)
+	//			t.log.Printlnf("\tError: %s", err.Error())
+	//		} else {
+	//			// This is a valid deposit
+	//			expectedCreds := details.expectedWithdrawalCredentials
+	//			actualCreds := deposit.WithdrawalCredentials
+	//			if actualCreds != expectedCreds {
+	//				t.log.Println("=== SCRUB DETECTED ON DEPOSIT CONTRACT ===")
+	//				t.log.Printlnf("\tTX Hash: %s", deposit.TxHash.Hex())
+	//				t.log.Printlnf("\tBlock: %d, TX Index: %d, Deposit Index: %d", deposit.BlockNumber, deposit.TxIndex, depositIndex)
+	//				t.log.Printlnf("\tMinipool: %s", minipool.Address.Hex())
+	//				t.log.Printlnf("\tExpected creds: %s", expectedCreds.Hex())
+	//				t.log.Printlnf("\tActual creds: %s", actualCreds.Hex())
+	//				t.log.Println("==========================================")
+	//				minipoolsToScrub = append(minipoolsToScrub, minipool)
+	//				t.it.badOnDepositContract++
+	//			} else {
+	//				t.it.goodOnDepositContract++
+	//			}
+	//
+	//			// Remove this minipool from the list of things to process in the next step
+	//			delete(t.it.minipools, minipool)
+	//			break
+	//		}
+	//	}
+	//}
+	//
+	//// Scrub the offending minipools
+	//for _, minipool := range minipoolsToScrub {
+	//	err := t.submitVoteScrubMinipool(minipool)
+	//	if err != nil {
+	//		t.log.Printlnf("ALERT: Couldn't scrub minipool %s: %s", minipool.Address.Hex(), err.Error())
+	//	}
+	//}
 
 	return nil
 
@@ -546,65 +544,65 @@ func (t *submitScrubMinipools) verifyDeposits() error {
 // Step 4: Catch-all safety mechanism that scrubs minipools without valid deposits after a certain period of time
 // This should never be used, it's simply here as a redundant check
 func (t *submitScrubMinipools) checkSafetyScrub() error {
-
-	minipoolsToScrub := []*minipool.Minipool{}
-
-	// Warn if there are any remaining minipools - this should never happen
-	remainingMinipools := len(t.it.minipools)
-	if remainingMinipools > 0 {
-		t.log.Printlnf("WARNING: %d minipools did not have deposit information", remainingMinipools)
-	} else {
-		return nil
-	}
-
-	// Get the scrub period
-	scrubPeriodUint, err := tnsettings.GetScrubPeriod(t.rp, nil)
-	if err != nil {
-		return err
-	}
-	scrubPeriod := time.Duration(scrubPeriodUint) * time.Second
-
-	// Get the safety period where minipools can be scrubbed without a valid deposit
-	safetyPeriod := scrubPeriod / ScrubSafetyDivider
-	if safetyPeriod < MinScrubSafetyTime {
-		safetyPeriod = MinScrubSafetyTime
-	}
-
-	for minipool := range t.it.minipools {
-		// Get the minipool's status
-		statusDetails, err := minipool.GetStatusDetails(nil)
-		if err != nil {
-			t.log.Printlnf("Error getting status for minipool %s: %s", minipool.Address.Hex(), err.Error())
-			continue
-		}
-
-		// Verify this is actually a prelaunch minipool
-		if statusDetails.Status != types.Prelaunch {
-			t.log.Printlnf("\tMinipool %s is under review but is in %d status?", minipool.Address.Hex(), types.MinipoolDepositTypes[statusDetails.Status])
-			continue
-		}
-
-		// Check the time it entered prelaunch against the safety period
-		if (t.it.latestBlockTime.Sub(statusDetails.StatusTime)) > safetyPeriod {
-			t.log.Println("=== SAFETY SCRUB DETECTED ===")
-			t.log.Printlnf("\tMinipool: %s", minipool.Address.Hex())
-			t.log.Printlnf("\tTime since prelaunch: %s", time.Since(statusDetails.StatusTime))
-			t.log.Printlnf("\tSafety scrub period: %s", safetyPeriod)
-			t.log.Println("=============================")
-			minipoolsToScrub = append(minipoolsToScrub, minipool)
-			t.it.safetyScrubs++
-			// Remove this minipool from the list of things to process in the next step
-			delete(t.it.minipools, minipool)
-		}
-	}
-
-	// Scrub the offending minipools
-	for _, minipool := range minipoolsToScrub {
-		err := t.submitVoteScrubMinipool(minipool)
-		if err != nil {
-			t.log.Printlnf("ALERT: Couldn't scrub minipool %s: %s", minipool.Address.Hex(), err.Error())
-		}
-	}
+	//
+	//minipoolsToScrub := []*minipool.Minipool{}
+	//
+	//// Warn if there are any remaining minipools - this should never happen
+	//remainingMinipools := len(t.it.minipools)
+	//if remainingMinipools > 0 {
+	//	t.log.Printlnf("WARNING: %d minipools did not have deposit information", remainingMinipools)
+	//} else {
+	//	return nil
+	//}
+	//
+	//// Get the scrub period
+	//scrubPeriodUint, err := tnsettings.GetScrubPeriod(t.rp, nil)
+	//if err != nil {
+	//	return err
+	//}
+	//scrubPeriod := time.Duration(scrubPeriodUint) * time.Second
+	//
+	//// Get the safety period where minipools can be scrubbed without a valid deposit
+	//safetyPeriod := scrubPeriod / ScrubSafetyDivider
+	//if safetyPeriod < MinScrubSafetyTime {
+	//	safetyPeriod = MinScrubSafetyTime
+	//}
+	//
+	//for minipool := range t.it.minipools {
+	//	// Get the minipool's status
+	//	statusDetails, err := minipool.GetStatusDetails(nil)
+	//	if err != nil {
+	//		t.log.Printlnf("Error getting status for minipool %s: %s", minipool.Address.Hex(), err.Error())
+	//		continue
+	//	}
+	//
+	//	// Verify this is actually a prelaunch minipool
+	//	if statusDetails.Status != types.Prelaunch {
+	//		t.log.Printlnf("\tMinipool %s is under review but is in %d status?", minipool.Address.Hex(), types.MinipoolDepositTypes[statusDetails.Status])
+	//		continue
+	//	}
+	//
+	//	// Check the time it entered prelaunch against the safety period
+	//	if (t.it.latestBlockTime.Sub(statusDetails.StatusTime)) > safetyPeriod {
+	//		t.log.Println("=== SAFETY SCRUB DETECTED ===")
+	//		t.log.Printlnf("\tMinipool: %s", minipool.Address.Hex())
+	//		t.log.Printlnf("\tTime since prelaunch: %s", time.Since(statusDetails.StatusTime))
+	//		t.log.Printlnf("\tSafety scrub period: %s", safetyPeriod)
+	//		t.log.Println("=============================")
+	//		minipoolsToScrub = append(minipoolsToScrub, minipool)
+	//		t.it.safetyScrubs++
+	//		// Remove this minipool from the list of things to process in the next step
+	//		delete(t.it.minipools, minipool)
+	//	}
+	//}
+	//
+	//// Scrub the offending minipools
+	//for _, minipool := range minipoolsToScrub {
+	//	err := t.submitVoteScrubMinipool(minipool)
+	//	if err != nil {
+	//		t.log.Printlnf("ALERT: Couldn't scrub minipool %s: %s", minipool.Address.Hex(), err.Error())
+	//	}
+	//}
 
 	return nil
 
