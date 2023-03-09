@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/beacon/client"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
 // This is a proxy for multiple Beacon clients, providing natural fallback support if one of them fails.

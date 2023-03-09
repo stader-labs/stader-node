@@ -2,16 +2,11 @@ package node
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
-
-// Settings
-var ethClientRecentBlockThreshold, _ = time.ParseDuration("5m")
 
 func getSyncProgress(c *cli.Context) error {
 
@@ -29,26 +24,27 @@ func getSyncProgress(c *cli.Context) error {
 	}
 
 	// Make sure ETH2 is on the correct chain
-	depositContractInfo, err := staderClient.DepositContractInfo()
-	if err != nil {
-		return err
-	}
-	if !depositContractInfo.SufficientSync {
-		colorReset := "\033[0m"
-		colorYellow := "\033[33m"
-		fmt.Printf("%sYour eth1 client hasn't synced enough to determine if your eth1 and eth2 clients are on the same network.\n", colorYellow)
-		fmt.Printf("To run this safety check, try again later when eth1 has made more sync progress.%s\n\n", colorReset)
-	} else if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
-		depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
-		cliutils.PrintDepositMismatchError(
-			depositContractInfo.RPNetwork,
-			depositContractInfo.BeaconNetwork,
-			depositContractInfo.RPDepositContract,
-			depositContractInfo.BeaconDepositContract)
-		return nil
-	} else {
-		fmt.Println("Your eth2 client is on the correct network.\n")
-	}
+	// TODO - bchain check if we need to do such checks
+	//depositContractInfo, err := staderClient.DepositContractInfo()
+	//if err != nil {
+	//	return err
+	//}
+	//if !depositContractInfo.SufficientSync {
+	//	colorReset := "\033[0m"
+	//	colorYellow := "\033[33m"
+	//	fmt.Printf("%sYour eth1 client hasn't synced enough to determine if your eth1 and eth2 clients are on the same network.\n", colorYellow)
+	//	fmt.Printf("To run this safety check, try again later when eth1 has made more sync progress.%s\n\n", colorReset)
+	//} else if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
+	//	depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
+	//	cliutils.PrintDepositMismatchError(
+	//		depositContractInfo.RPNetwork,
+	//		depositContractInfo.BeaconNetwork,
+	//		depositContractInfo.RPDepositContract,
+	//		depositContractInfo.BeaconDepositContract)
+	//	return nil
+	//} else {
+	//	fmt.Println("Your eth2 client is on the correct network.\n")
+	//}
 
 	// Get node status
 	status, err := staderClient.NodeSync()

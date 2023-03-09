@@ -10,7 +10,6 @@ import (
 	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
-	rputils "github.com/stader-labs/stader-node/shared/utils/rp"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -32,46 +31,47 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 
 // Get the balances of the minipools on the beacon chain
 func GetBeaconBalances(rp *rocketpool.RocketPool, bc beacon.Client, addresses []common.Address, beaconHead beacon.BeaconHead, opts *bind.CallOpts) ([]minipoolBalanceDetails, error) {
-
-	// Get minipool validator statuses
-	validators, err := rputils.GetMinipoolValidators(rp, bc, addresses, opts, &beacon.ValidatorStatusOptions{Epoch: &beaconHead.Epoch})
-	if err != nil {
-		return []minipoolBalanceDetails{}, err
-	}
-
-	// Load details in batches
-	details := make([]minipoolBalanceDetails, len(addresses))
-	for bsi := 0; bsi < len(addresses); bsi += MinipoolBalanceDetailsBatchSize {
-
-		// Get batch start & end index
-		msi := bsi
-		mei := bsi + MinipoolBalanceDetailsBatchSize
-		if mei > len(addresses) {
-			mei = len(addresses)
-		}
-
-		// Load details
-		var wg errgroup.Group
-		for mi := msi; mi < mei; mi++ {
-			mi := mi
-			wg.Go(func() error {
-				address := addresses[mi]
-				validator := validators[address]
-				mpDetails, err := GetMinipoolBalanceDetails(rp, address, opts, validator, beaconHead.Epoch)
-				if err == nil {
-					details[mi] = mpDetails
-				}
-				return err
-			})
-		}
-		if err := wg.Wait(); err != nil {
-			return []minipoolBalanceDetails{}, err
-		}
-
-	}
-
-	// Return
-	return details, nil
+	return []minipoolBalanceDetails{}, nil
+	//
+	//// Get minipool validator statuses
+	//validators, err := rputils.GetMinipoolValidators(rp, bc, addresses, opts, &beacon.ValidatorStatusOptions{Epoch: &beaconHead.Epoch})
+	//if err != nil {
+	//	return []minipoolBalanceDetails{}, err
+	//}
+	//
+	//// Load details in batches
+	//details := make([]minipoolBalanceDetails, len(addresses))
+	//for bsi := 0; bsi < len(addresses); bsi += MinipoolBalanceDetailsBatchSize {
+	//
+	//	// Get batch start & end index
+	//	msi := bsi
+	//	mei := bsi + MinipoolBalanceDetailsBatchSize
+	//	if mei > len(addresses) {
+	//		mei = len(addresses)
+	//	}
+	//
+	//	// Load details
+	//	var wg errgroup.Group
+	//	for mi := msi; mi < mei; mi++ {
+	//		mi := mi
+	//		wg.Go(func() error {
+	//			address := addresses[mi]
+	//			validator := validators[address]
+	//			mpDetails, err := GetMinipoolBalanceDetails(rp, address, opts, validator, beaconHead.Epoch)
+	//			if err == nil {
+	//				details[mi] = mpDetails
+	//			}
+	//			return err
+	//		})
+	//	}
+	//	if err := wg.Wait(); err != nil {
+	//		return []minipoolBalanceDetails{}, err
+	//	}
+	//
+	//}
+	//
+	//// Return
+	//return details, nil
 }
 
 // Get minipool balance details

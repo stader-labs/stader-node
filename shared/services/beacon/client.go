@@ -3,7 +3,7 @@ package beacon
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/prysmaticlabs/go-bitfield"
-	"github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
 // API request options

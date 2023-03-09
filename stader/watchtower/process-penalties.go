@@ -1,23 +1,11 @@
 package watchtower
 
 import (
-	"bytes"
 	"fmt"
-	"io/ioutil"
-	"math/big"
-	"os"
-	"path/filepath"
-	"strconv"
-	"sync"
-	"time"
-
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/rocket-pool/rocketpool-go/dao/trustednode"
-	"github.com/rocket-pool/rocketpool-go/minipool"
 	"github.com/rocket-pool/rocketpool-go/network"
-	"github.com/rocket-pool/rocketpool-go/node"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -25,6 +13,12 @@ import (
 	rpgas "github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"math/big"
+	"os"
+	"path/filepath"
+	"strconv"
+	"sync"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
@@ -336,132 +330,132 @@ func (t *processPenalties) handleError(err error) {
 }
 
 func (t *processPenalties) processBlock(block *beacon.BeaconBlock, smoothingPoolAddress common.Address) (bool, error) {
-
-	isIllegalFeeRecipient := false
-
-	if !block.HasExecutionPayload {
-		// Merge hasn't occurred yet so skip
-		return isIllegalFeeRecipient, nil
-	}
-
-	status, err := t.bc.GetValidatorStatusByIndex(strconv.FormatUint(block.ProposerIndex, 10), nil)
-	if err != nil {
-		return isIllegalFeeRecipient, err
-	}
-
-	// Get the minipool address from the proposer's pubkey
-	minipoolAddress, err := minipool.GetMinipoolByPubkey(t.rp, status.Pubkey, nil)
-	if err != nil {
-		return isIllegalFeeRecipient, err
-	}
-
-	// A zero result indicates this proposer is not a RocketPool node operator
-	var emptyAddress [20]byte
-	if bytes.Equal(emptyAddress[:], minipoolAddress[:]) {
-		return isIllegalFeeRecipient, nil
-	}
-
-	// Retrieve the node's distributor address
-	mp, err := minipool.NewMinipool(t.rp, minipoolAddress, nil)
-	if err != nil {
-		return isIllegalFeeRecipient, err
-	}
-
-	nodeAddress, err := mp.GetNodeAddress(nil)
-	if err != nil {
-		return isIllegalFeeRecipient, err
-	}
-
-	distributorAddress, err := node.GetDistributorAddress(t.rp, nodeAddress, nil)
-	if err != nil {
-		return isIllegalFeeRecipient, err
-	}
-
-	// Retrieve the rETH address
-	rethAddress := t.cfg.Smartnode.GetRethAddress()
-
-	// Ignore blocks that were sent to the smoothing pool
-	if smoothingPoolAddress != emptyAddress && block.FeeRecipient == smoothingPoolAddress {
-		return isIllegalFeeRecipient, nil
-	}
-
-	// Ignore blocks that were sent to the rETH address
-	if block.FeeRecipient == rethAddress {
-		return isIllegalFeeRecipient, nil
-	}
-
-	// Check if the user was opted into the smoothing pool for this block
-	opts := bind.CallOpts{
-		BlockNumber: big.NewInt(int64(block.ExecutionBlockNumber)),
-	}
-	isOptedIn, err := node.GetSmoothingPoolRegistrationState(t.rp, nodeAddress, &opts)
-	if err != nil {
-		t.log.Printlnf("*** WARNING: Couldn't check if node %s was opted into the smoothing pool for slot %d (execution block %d), skipping check... error: %w\n***", nodeAddress.Hex(), block.Slot, block.ExecutionBlockNumber, err)
-		isOptedIn = false
-	}
-
-	// Check for smoothing pool theft
-	if isOptedIn && block.FeeRecipient != smoothingPoolAddress {
-		t.log.Println("=== SMOOTHING POOL THEFT DETECTED ===")
-		t.log.Printlnf("Beacon Block:  %d", block.Slot)
-		t.log.Printlnf("Minipool:      %s", minipoolAddress.Hex())
-		t.log.Printlnf("Node:          %s", nodeAddress.Hex())
-		t.log.Printlnf("FEE RECIPIENT: %s", block.FeeRecipient.Hex())
-		t.log.Println("=====================================")
-
-		isIllegalFeeRecipient = true
-		err = t.submitPenalty(minipoolAddress, block)
-		return isIllegalFeeRecipient, err
-	}
-
-	// Make sure they didn't opt out in order to steal a block
-	if !isOptedIn {
-		// Get the opt out time
-		optOutTime, err := node.GetSmoothingPoolRegistrationChanged(t.rp, nodeAddress, &opts)
-		if err != nil {
-			t.log.Printlnf("*** WARNING: Couldn't check when node %s opted out of the smoothing pool for slot %d (execution block %d), skipping check... error: %w\n***", nodeAddress.Hex(), block.Slot, block.ExecutionBlockNumber, err)
-		} else if optOutTime != time.Unix(0, 0) {
-			// Get the time of the epoch before this one
-			blockEpoch := block.Slot / t.beaconConfig.SlotsPerEpoch
-			previousEpoch := blockEpoch - 1
-			genesisTime := time.Unix(int64(t.beaconConfig.GenesisTime), 0)
-			epochStartTime := genesisTime.Add(time.Second * time.Duration(t.beaconConfig.SecondsPerEpoch*previousEpoch))
-
-			// If they opted out after the start of the previous epoch, they cheated
-			if optOutTime.Sub(epochStartTime) > 0 {
-				t.log.Println("=== SMOOTHING POOL THEFT DETECTED ===")
-				t.log.Printlnf("Beacon Block:         %d", block.Slot)
-				t.log.Printlnf("Safe Opt Out Time:    %s", epochStartTime)
-				t.log.Printlnf("ACTUAL OPT OUT TIME:  %s", optOutTime)
-				t.log.Printlnf("Minipool:             %s", minipoolAddress.Hex())
-				t.log.Printlnf("Node:                 %s", nodeAddress.Hex())
-				t.log.Printlnf("FEE RECIPIENT:        %s", block.FeeRecipient.Hex())
-				t.log.Println("=====================================")
-
-				isIllegalFeeRecipient = true
-				err = t.submitPenalty(minipoolAddress, block)
-				return isIllegalFeeRecipient, err
-			}
-		}
-	}
-
-	// Check for distributor address theft
-	if !isOptedIn && block.FeeRecipient != distributorAddress {
-		t.log.Println("=== ILLEGAL FEE RECIPIENT DETECTED ===")
-		t.log.Printlnf("Beacon Block:  %d", block.Slot)
-		t.log.Printlnf("Minipool:      %s", minipoolAddress.Hex())
-		t.log.Printlnf("Node:          %s", nodeAddress.Hex())
-		t.log.Printlnf("Distributor:   %s", distributorAddress.Hex())
-		t.log.Printlnf("FEE RECIPIENT: %s", block.FeeRecipient.Hex())
-		t.log.Println("======================================")
-
-		isIllegalFeeRecipient = true
-		err = t.submitPenalty(minipoolAddress, block)
-		return isIllegalFeeRecipient, err
-	}
-
-	// No cheating detected
-	return isIllegalFeeRecipient, nil
+	//
+	//isIllegalFeeRecipient := false
+	//
+	//if !block.HasExecutionPayload {
+	//	// Merge hasn't occurred yet so skip
+	//	return isIllegalFeeRecipient, nil
+	//}
+	//
+	//status, err := t.bc.GetValidatorStatusByIndex(strconv.FormatUint(block.ProposerIndex, 10), nil)
+	//if err != nil {
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//// Get the minipool address from the proposer's pubkey
+	//minipoolAddress, err := minipool.GetMinipoolByPubkey(t.rp, status.Pubkey, nil)
+	//if err != nil {
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//// A zero result indicates this proposer is not a RocketPool node operator
+	//var emptyAddress [20]byte
+	//if bytes.Equal(emptyAddress[:], minipoolAddress[:]) {
+	//	return isIllegalFeeRecipient, nil
+	//}
+	//
+	//// Retrieve the node's distributor address
+	//mp, err := minipool.NewMinipool(t.rp, minipoolAddress, nil)
+	//if err != nil {
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//nodeAddress, err := mp.GetNodeAddress(nil)
+	//if err != nil {
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//distributorAddress, err := node.GetDistributorAddress(t.rp, nodeAddress, nil)
+	//if err != nil {
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//// Retrieve the rETH address
+	//rethAddress := t.cfg.Smartnode.GetRethAddress()
+	//
+	//// Ignore blocks that were sent to the smoothing pool
+	//if smoothingPoolAddress != emptyAddress && block.FeeRecipient == smoothingPoolAddress {
+	//	return isIllegalFeeRecipient, nil
+	//}
+	//
+	//// Ignore blocks that were sent to the rETH address
+	//if block.FeeRecipient == rethAddress {
+	//	return isIllegalFeeRecipient, nil
+	//}
+	//
+	//// Check if the user was opted into the smoothing pool for this block
+	//opts := bind.CallOpts{
+	//	BlockNumber: big.NewInt(int64(block.ExecutionBlockNumber)),
+	//}
+	//isOptedIn, err := node.GetSmoothingPoolRegistrationState(t.rp, nodeAddress, &opts)
+	//if err != nil {
+	//	t.log.Printlnf("*** WARNING: Couldn't check if node %s was opted into the smoothing pool for slot %d (execution block %d), skipping check... error: %w\n***", nodeAddress.Hex(), block.Slot, block.ExecutionBlockNumber, err)
+	//	isOptedIn = false
+	//}
+	//
+	//// Check for smoothing pool theft
+	//if isOptedIn && block.FeeRecipient != smoothingPoolAddress {
+	//	t.log.Println("=== SMOOTHING POOL THEFT DETECTED ===")
+	//	t.log.Printlnf("Beacon Block:  %d", block.Slot)
+	//	t.log.Printlnf("Minipool:      %s", minipoolAddress.Hex())
+	//	t.log.Printlnf("Node:          %s", nodeAddress.Hex())
+	//	t.log.Printlnf("FEE RECIPIENT: %s", block.FeeRecipient.Hex())
+	//	t.log.Println("=====================================")
+	//
+	//	isIllegalFeeRecipient = true
+	//	err = t.submitPenalty(minipoolAddress, block)
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//// Make sure they didn't opt out in order to steal a block
+	//if !isOptedIn {
+	//	// Get the opt out time
+	//	optOutTime, err := node.GetSmoothingPoolRegistrationChanged(t.rp, nodeAddress, &opts)
+	//	if err != nil {
+	//		t.log.Printlnf("*** WARNING: Couldn't check when node %s opted out of the smoothing pool for slot %d (execution block %d), skipping check... error: %w\n***", nodeAddress.Hex(), block.Slot, block.ExecutionBlockNumber, err)
+	//	} else if optOutTime != time.Unix(0, 0) {
+	//		// Get the time of the epoch before this one
+	//		blockEpoch := block.Slot / t.beaconConfig.SlotsPerEpoch
+	//		previousEpoch := blockEpoch - 1
+	//		genesisTime := time.Unix(int64(t.beaconConfig.GenesisTime), 0)
+	//		epochStartTime := genesisTime.Add(time.Second * time.Duration(t.beaconConfig.SecondsPerEpoch*previousEpoch))
+	//
+	//		// If they opted out after the start of the previous epoch, they cheated
+	//		if optOutTime.Sub(epochStartTime) > 0 {
+	//			t.log.Println("=== SMOOTHING POOL THEFT DETECTED ===")
+	//			t.log.Printlnf("Beacon Block:         %d", block.Slot)
+	//			t.log.Printlnf("Safe Opt Out Time:    %s", epochStartTime)
+	//			t.log.Printlnf("ACTUAL OPT OUT TIME:  %s", optOutTime)
+	//			t.log.Printlnf("Minipool:             %s", minipoolAddress.Hex())
+	//			t.log.Printlnf("Node:                 %s", nodeAddress.Hex())
+	//			t.log.Printlnf("FEE RECIPIENT:        %s", block.FeeRecipient.Hex())
+	//			t.log.Println("=====================================")
+	//
+	//			isIllegalFeeRecipient = true
+	//			err = t.submitPenalty(minipoolAddress, block)
+	//			return isIllegalFeeRecipient, err
+	//		}
+	//	}
+	//}
+	//
+	//// Check for distributor address theft
+	//if !isOptedIn && block.FeeRecipient != distributorAddress {
+	//	t.log.Println("=== ILLEGAL FEE RECIPIENT DETECTED ===")
+	//	t.log.Printlnf("Beacon Block:  %d", block.Slot)
+	//	t.log.Printlnf("Minipool:      %s", minipoolAddress.Hex())
+	//	t.log.Printlnf("Node:          %s", nodeAddress.Hex())
+	//	t.log.Printlnf("Distributor:   %s", distributorAddress.Hex())
+	//	t.log.Printlnf("FEE RECIPIENT: %s", block.FeeRecipient.Hex())
+	//	t.log.Println("======================================")
+	//
+	//	isIllegalFeeRecipient = true
+	//	err = t.submitPenalty(minipoolAddress, block)
+	//	return isIllegalFeeRecipient, err
+	//}
+	//
+	//// No cheating detected
+	return false, nil
 
 }
 

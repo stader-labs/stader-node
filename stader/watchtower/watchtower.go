@@ -76,10 +76,6 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error during rpl price check: %w", err)
 	}
-	submitNetworkBalances, err := newSubmitNetworkBalances(c, log.NewColorLogger(SubmitNetworkBalancesColor))
-	if err != nil {
-		return fmt.Errorf("error during network balances check: %w", err)
-	}
 	submitWithdrawableMinipools, err := newSubmitWithdrawableMinipools(c, log.NewColorLogger(SubmitWithdrawableMinipoolsColor))
 	if err != nil {
 		return fmt.Errorf("error during withdrawable minipools check: %w", err)
@@ -96,18 +92,10 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error during scrub check: %w", err)
 	}
-	submitRewardsTree, err := newSubmitRewardsTree(c, log.NewColorLogger(SubmitRewardsTreeColor), errorLog)
-	if err != nil {
-		return fmt.Errorf("error during rewards tree check: %w", err)
-	}
 	/*processPenalties, err := newProcessPenalties(c, log.NewColorLogger(ProcessPenaltiesColor), errorLog)
 	if err != nil {
 		return fmt.Errorf("error during penalties check: %w", err)
 	}*/
-	generateRewardsTree, err := newGenerateRewardsTree(c, log.NewColorLogger(SubmitRewardsTreeColor), errorLog)
-	if err != nil {
-		return fmt.Errorf("error during manual tree generation check: %w", err)
-	}
 
 	intervalDelta := maxTasksInterval - minTasksInterval
 	secondsDelta := intervalDelta.Seconds()
@@ -133,11 +121,6 @@ func run(c *cli.Context) error {
 				if err != nil {
 					errorLog.Println(err)
 				} else {
-					// Run the manual rewards tree generation
-					if err := generateRewardsTree.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
 
 					// Run the challenge check
 					if err := respondChallenges.run(); err != nil {
@@ -145,20 +128,8 @@ func run(c *cli.Context) error {
 					}
 					time.Sleep(taskCooldown)
 
-					// Run the rewards tree submission check
-					if err := submitRewardsTree.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
 					// Run the price submission check
 					if err := submitRplPrice.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the network balance submission check
-					if err := submitNetworkBalances.run(); err != nil {
 						errorLog.Println(err)
 					}
 					time.Sleep(taskCooldown)

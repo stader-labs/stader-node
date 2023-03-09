@@ -42,7 +42,6 @@ var (
 	bcManager          *BeaconClientManager
 	rocketPool         *rocketpool.RocketPool
 	oneInchOracle      *contracts.OneInchOracle
-	rplFaucet          *contracts.RPLFaucet
 	snapshotDelegation *contracts.SnapshotDelegation
 	beaconClient       beacon.Client
 	docker             *client.Client
@@ -187,18 +186,6 @@ func GetOneInchOracle(c *cli.Context) (*contracts.OneInchOracle, error) {
 	return getOneInchOracle(cfg, ec)
 }
 
-func GetRplFaucet(c *cli.Context) (*contracts.RPLFaucet, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-	return getRplFaucet(cfg, ec)
-}
-
 func GetSnapshotDelegation(c *cli.Context) (*contracts.SnapshotDelegation, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -319,14 +306,6 @@ func getOneInchOracle(cfg *config.StaderConfig, client rocketpool.ExecutionClien
 		oneInchOracle, err = contracts.NewOneInchOracle(common.HexToAddress(cfg.Smartnode.GetOneInchOracleAddress()), client)
 	})
 	return oneInchOracle, err
-}
-
-func getRplFaucet(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.RPLFaucet, error) {
-	var err error
-	initRplFaucet.Do(func() {
-		rplFaucet, err = contracts.NewRPLFaucet(common.HexToAddress(cfg.Smartnode.GetRplFaucetAddress()), client)
-	})
-	return rplFaucet, err
 }
 
 func getSnapshotDelegation(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.SnapshotDelegation, error) {

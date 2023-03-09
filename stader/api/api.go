@@ -10,13 +10,8 @@ import (
 	apitypes "github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/stader/api/auction"
-	"github.com/stader-labs/stader-node/stader/api/faucet"
-	"github.com/stader-labs/stader-node/stader/api/minipool"
 	"github.com/stader-labs/stader-node/stader/api/network"
 	"github.com/stader-labs/stader-node/stader/api/node"
-	"github.com/stader-labs/stader-node/stader/api/odao"
-	"github.com/stader-labs/stader-node/stader/api/queue"
 	apiservice "github.com/stader-labs/stader-node/stader/api/service"
 	"github.com/stader-labs/stader-node/stader/api/wallet"
 )
@@ -48,7 +43,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	command := cli.Command{
 		Name:        name,
 		Aliases:     aliases,
-		Usage:       "Run Rocket Pool API commands",
+		Usage:       "Run Stader API commands",
 		Subcommands: []cli.Command{},
 	}
 
@@ -58,13 +53,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	}
 
 	// Register subcommands
-	auction.RegisterSubcommands(&command, "auction", []string{"a"})
-	faucet.RegisterSubcommands(&command, "faucet", []string{"f"})
-	minipool.RegisterSubcommands(&command, "minipool", []string{"m"})
 	network.RegisterSubcommands(&command, "network", []string{"e"})
 	node.RegisterSubcommands(&command, "node", []string{"n"})
-	odao.RegisterSubcommands(&command, "odao", []string{"o"})
-	queue.RegisterSubcommands(&command, "queue", []string{"q"})
 	wallet.RegisterSubcommands(&command, "wallet", []string{"w"})
 	apiservice.RegisterSubcommands(&command, "service", []string{"s"})
 	debug.RegisterSubcommands(&command, "debug", []string{"d"})

@@ -1573,18 +1573,6 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Smartnode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
 	}
 
-	// Create the rewards file dir
-	rewardsFilePath, err := homedir.Expand(cfg.Smartnode.GetRewardsTreePath(0, false))
-	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't expand the rewards tree file directory (%s). You will not be able to view or claim your rewards until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
-		return deployedContainers, nil
-	}
-	rewardsFileDir := filepath.Dir(rewardsFilePath)
-	err = os.MkdirAll(rewardsFileDir, 0775)
-	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't create the rewards tree file directory (%s). You will not be able to view or claim your rewards until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), rewardsFileDir, colorReset)
-	}
-
 	return c.composeAddons(cfg, staderDir, settings, deployedContainers)
 
 }

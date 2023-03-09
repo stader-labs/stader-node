@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -11,25 +10,15 @@ import (
 
 // Constants
 const (
-	smartnodeTag                       string = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag                string = "rocketpool/eth1-prune-provision:v0.0.1"
-	ecMigratorTag                      string = "rocketpool/ec-migrator:v1.0.0"
-	NetworkID                          string = "network"
-	ProjectNameID                      string = "projectName"
-	SnapshotID                         string = "rocketpool-dao.eth"
-	RewardsTreeFilenameFormat          string = "rp-rewards-%s-%d.json"
-	MinipoolPerformanceFilenameFormat  string = "rp-minipool-performance-%s-%d.json"
-	RewardsTreeIpfsExtension           string = ".zst"
-	RewardsTreesFolder                 string = "rewards-trees"
-	DaemonDataPath                     string = "/.stader/data"
-	WatchtowerFolder                   string = "watchtower"
-	WatchtowerStateFile                string = "state.yml"
-	RegenerateRewardsTreeRequestSuffix string = ".request"
-	RegenerateRewardsTreeRequestFormat string = "%d" + RegenerateRewardsTreeRequestSuffix
-	PrimaryRewardsFileUrl              string = "https://%s.ipfs.dweb.link/%s"
-	SecondaryRewardsFileUrl            string = "https://ipfs.io/ipfs/%s/%s"
-	FeeRecipientFilename               string = "rp-fee-recipient.txt"
-	NativeFeeRecipientFilename         string = "rp-fee-recipient-env.txt"
+	smartnodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag        string = "rocketpool/eth1-prune-provision:v0.0.1"
+	ecMigratorTag              string = "rocketpool/ec-migrator:v1.0.0"
+	NetworkID                  string = "network"
+	ProjectNameID              string = "projectName"
+	DaemonDataPath             string = "/.stader/data"
+	WatchtowerFolder           string = "watchtower"
+	FeeRecipientFilename       string = "rp-fee-recipient.txt"
+	NativeFeeRecipientFilename string = "rp-fee-recipient-env.txt"
 )
 
 // --ignore-sync-check
@@ -562,18 +551,6 @@ func (cfg *SmartnodeConfig) GetSnapshotApiDomain() string {
 	return cfg.snapshotApiDomain[cfg.Network.Value.(config.Network)]
 }
 
-func (cfg *SmartnodeConfig) GetVotingSnapshotID() [32]byte {
-	// So the contract wants a Keccak'd hash of the voting ID, but Snapshot's service wants ASCII so it can display the ID in plain text; we have to do this to make it play nicely with Snapshot
-	buffer := [32]byte{}
-	idBytes := []byte(SnapshotID)
-	copy(buffer[0:], idBytes)
-	return buffer
-}
-
-func (config *SmartnodeConfig) GetSnapshotID() string {
-	return SnapshotID
-}
-
 // The the title for the config
 func (cfg *SmartnodeConfig) GetConfigTitle() string {
 	return cfg.Title
@@ -605,30 +582,6 @@ func (cfg *SmartnodeConfig) GetEthxTokenAddress() common.Address {
 
 func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.RocketPoolDirectory, "data")
-}
-
-func (cfg *SmartnodeConfig) GetRewardsTreePath(interval uint64, daemon bool) string {
-	if daemon && !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, RewardsTreesFolder, fmt.Sprintf(RewardsTreeFilenameFormat, string(cfg.Network.Value.(config.Network)), interval))
-	}
-
-	return filepath.Join(cfg.DataPath.Value.(string), RewardsTreesFolder, fmt.Sprintf(RewardsTreeFilenameFormat, string(cfg.Network.Value.(config.Network)), interval))
-}
-
-func (cfg *SmartnodeConfig) GetMinipoolPerformancePath(interval uint64, daemon bool) string {
-	if daemon && !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, RewardsTreesFolder, fmt.Sprintf(MinipoolPerformanceFilenameFormat, string(cfg.Network.Value.(config.Network)), interval))
-	}
-
-	return filepath.Join(cfg.DataPath.Value.(string), RewardsTreesFolder, fmt.Sprintf(MinipoolPerformanceFilenameFormat, string(cfg.Network.Value.(config.Network)), interval))
-}
-
-func (cfg *SmartnodeConfig) GetRegenerateRewardsTreeRequestPath(interval uint64, daemon bool) string {
-	if daemon && !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, WatchtowerFolder, fmt.Sprintf(RegenerateRewardsTreeRequestFormat, interval))
-	}
-
-	return filepath.Join(cfg.DataPath.Value.(string), WatchtowerFolder, fmt.Sprintf(RegenerateRewardsTreeRequestFormat, interval))
 }
 
 func (cfg *SmartnodeConfig) GetWatchtowerFolder(daemon bool) string {

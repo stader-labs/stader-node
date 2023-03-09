@@ -8,7 +8,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/stader-labs/stader-node/shared/services/rewards"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 )
 
@@ -239,37 +238,41 @@ type NodeClaimRplResponse struct {
 	TxHash common.Hash `json:"txHash"`
 }
 
-type NodeRewardsResponse struct {
-	Status                      string        `json:"status"`
-	Error                       string        `json:"error"`
-	NodeRegistrationTime        time.Time     `json:"nodeRegistrationTime"`
-	RewardsInterval             time.Duration `json:"rewardsInterval"`
-	LastCheckpoint              time.Time     `json:"lastCheckpoint"`
-	Trusted                     bool          `json:"trusted"`
-	Registered                  bool          `json:"registered"`
-	EffectiveRplStake           float64       `json:"effectiveRplStake"`
-	TotalRplStake               float64       `json:"totalRplStake"`
-	TrustedRplBond              float64       `json:"trustedRplBond"`
-	EstimatedRewards            float64       `json:"estimatedRewards"`
-	CumulativeRplRewards        float64       `json:"cumulativeRplRewards"`
-	CumulativeEthRewards        float64       `json:"cumulativeEthRewards"`
-	EstimatedTrustedRplRewards  float64       `json:"estimatedTrustedRplRewards"`
-	CumulativeTrustedRplRewards float64       `json:"cumulativeTrustedRplRewards"`
-	UnclaimedRplRewards         float64       `json:"unclaimedRplRewards"`
-	UnclaimedEthRewards         float64       `json:"unclaimedEthRewards"`
-	UnclaimedTrustedRplRewards  float64       `json:"unclaimedTrustedRplRewards"`
-	BeaconRewards               float64       `json:"beaconRewards"`
-	TxHash                      common.Hash   `json:"txHash"`
-}
+//
+//type NodeRewardsResponse struct {
+//	Status                      string        `json:"status"`
+//	Error                       string        `json:"error"`
+//	NodeRegistrationTime        time.Time     `json:"nodeRegistrationTime"`
+//	RewardsInterval             time.Duration `json:"rewardsInterval"`
+//	LastCheckpoint              time.Time     `json:"lastCheckpoint"`
+//	Trusted                     bool          `json:"trusted"`
+//	Registered                  bool          `json:"registered"`
+//	EffectiveRplStake           float64       `json:"effectiveRplStake"`
+//	TotalRplStake               float64       `json:"totalRplStake"`
+//	TrustedRplBond              float64       `json:"trustedRplBond"`
+//	EstimatedRewards            float64       `json:"estimatedRewards"`
+//	CumulativeRplRewards        float64       `json:"cumulativeRplRewards"`
+//	CumulativeEthRewards        float64       `json:"cumulativeEthRewards"`
+//	EstimatedTrustedRplRewards  float64       `json:"estimatedTrustedRplRewards"`
+//	CumulativeTrustedRplRewards float64       `json:"cumulativeTrustedRplRewards"`
+//	UnclaimedRplRewards         float64       `json:"unclaimedRplRewards"`
+//	UnclaimedEthRewards         float64       `json:"unclaimedEthRewards"`
+//	UnclaimedTrustedRplRewards  float64       `json:"unclaimedTrustedRplRewards"`
+//	BeaconRewards               float64       `json:"beaconRewards"`
+//	TxHash                      common.Hash   `json:"txHash"`
+//}
 
-type DepositContractInfoResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	RPDepositContract     common.Address `json:"rpDepositContract"`
-	RPNetwork             uint64         `json:"rpNetwork"`
-	BeaconDepositContract common.Address `json:"beaconDepositContract"`
-	BeaconNetwork         uint64         `json:"beaconNetwork"`
-	SufficientSync        bool           `json:"sufficientSync"`
+type ContractsInfoResponse struct {
+	Status                     string         `json:"status"`
+	Error                      string         `json:"error"`
+	Network                    uint64         `json:"network"`
+	BeaconDepositContract      common.Address `json:"beaconDepositContract"`
+	BeaconNetwork              uint64         `json:"beaconNetwork"`
+	PermissionlessNodeRegistry common.Address `json:"permissionlessNodeRegistry"`
+	VaultFactory               common.Address `json:"vaultFactory"`
+	EthxToken                  common.Address `json:"ethxToken"`
+	SdToken                    common.Address `json:"sdToken"`
+	SdCollateralContract       common.Address `json:"sdCollateralContract"`
 }
 
 type NodeSignResponse struct {
@@ -331,16 +334,17 @@ type NodeDistributeResponse struct {
 	TxHash common.Hash `json:"txHash"`
 }
 
-type NodeGetRewardsInfoResponse struct {
-	Status             string                 `json:"status"`
-	Error              string                 `json:"error"`
-	ClaimedIntervals   []uint64               `json:"claimedIntervals"`
-	UnclaimedIntervals []rewards.IntervalInfo `json:"unclaimedIntervals"`
-	InvalidIntervals   []rewards.IntervalInfo `json:"invalidIntervals"`
-	RplStake           *big.Int               `json:"rplStake"`
-	RplPrice           *big.Int               `json:"rplPrice"`
-	ActiveMinipools    int                    `json:"activeMinipools"`
-}
+//
+//type NodeGetRewardsInfoResponse struct {
+//	Status             string                 `json:"status"`
+//	Error              string                 `json:"error"`
+//	ClaimedIntervals   []uint64               `json:"claimedIntervals"`
+//	UnclaimedIntervals []rewards.IntervalInfo `json:"unclaimedIntervals"`
+//	InvalidIntervals   []rewards.IntervalInfo `json:"invalidIntervals"`
+//	RplStake           *big.Int               `json:"rplStake"`
+//	RplPrice           *big.Int               `json:"rplPrice"`
+//	ActiveMinipools    int                    `json:"activeMinipools"`
+//}
 
 type CanNodeClaimRewardsResponse struct {
 	Status  string         `json:"status"`
