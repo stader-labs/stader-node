@@ -270,7 +270,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	newValidatorKey := validatorKeyCount
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
-		fmt.Printf("generating validator %d keys\n", i)
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
@@ -318,10 +317,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 				"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
 				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
 		}
-
-		fmt.Printf("nodeDeposit: pubKey is %s\n", pubKey)
-		fmt.Printf("nodeDeposit: preDepositSignature is %s\n", preDepositSignature)
-		fmt.Printf("nodeDeposit: depositSignature is %s\n", depositSignature)
 
 		// To save the validator index update
 		if err := w.Save(); err != nil {
