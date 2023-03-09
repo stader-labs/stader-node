@@ -24,6 +24,21 @@ func (c *Client) NodeFee() (api.NodeFeeResponse, error) {
 	return response, nil
 }
 
+func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
+	responseBytes, err := c.callAPI("node get-contracts-info")
+	if err != nil {
+		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get networks contracts info: %w", err)
+	}
+	var response api.ContractsInfoResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ContractsInfoResponse{}, fmt.Errorf("Could not decode networks contracts info: %w", err)
+	}
+	if response.Error != "" {
+		return api.ContractsInfoResponse{}, fmt.Errorf("Could not get networks contract info: %s", response.Error)
+	}
+	return response, nil
+}
+
 // Get network RPL price
 func (c *Client) RplPrice() (api.RplPriceResponse, error) {
 	responseBytes, err := c.callAPI("network rpl-price")

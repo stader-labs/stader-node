@@ -262,14 +262,17 @@ type NodeRewardsResponse struct {
 	TxHash                      common.Hash   `json:"txHash"`
 }
 
-type DepositContractInfoResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	RPDepositContract     common.Address `json:"rpDepositContract"`
-	RPNetwork             uint64         `json:"rpNetwork"`
-	BeaconDepositContract common.Address `json:"beaconDepositContract"`
-	BeaconNetwork         uint64         `json:"beaconNetwork"`
-	SufficientSync        bool           `json:"sufficientSync"`
+type ContractsInfoResponse struct {
+	Status                     string         `json:"status"`
+	Error                      string         `json:"error"`
+	Network                    uint64         `json:"network"`
+	BeaconDepositContract      common.Address `json:"beaconDepositContract"`
+	BeaconNetwork              uint64         `json:"beaconNetwork"`
+	PermissionlessNodeRegistry common.Address `json:"permissionlessNodeRegistry"`
+	VaultFactory               common.Address `json:"vaultFactory"`
+	EthxToken                  common.Address `json:"ethxToken"`
+	SdToken                    common.Address `json:"sdToken"`
+	SdCollateralContract       common.Address `json:"sdCollateralContract"`
 }
 
 type NodeSignResponse struct {

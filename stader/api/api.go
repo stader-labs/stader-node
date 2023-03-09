@@ -43,7 +43,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	command := cli.Command{
 		Name:        name,
 		Aliases:     aliases,
-		Usage:       "Run Rocket Pool API commands",
+		Usage:       "Run Stader API commands",
 		Subcommands: []cli.Command{},
 	}
 
