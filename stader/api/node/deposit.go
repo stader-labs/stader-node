@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/rocket-pool/rocketpool-go/types"
-	_ "github.com/stader-labs/stader-node/stader-lib/network"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
