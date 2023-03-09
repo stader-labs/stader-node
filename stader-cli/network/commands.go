@@ -47,23 +47,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-			{
-				Name:      "get-contracts-info",
-				Aliases:   []string{"c"},
-				Usage:     "Get the current network contracts info",
-				UsageText: "stader-cli network get-contracts-info",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					return getNodeFee(c)
-
-				},
-			},
 		},
 	})
 }
