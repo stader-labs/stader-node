@@ -270,7 +270,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	newValidatorKey := validatorKeyCount
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
-		fmt.Printf("generating validator %d keys\n", i)
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
