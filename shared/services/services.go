@@ -15,7 +15,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	"github.com/stader-labs/stader-node/shared/services/contracts"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	lhkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/lighthouse"
@@ -35,16 +34,14 @@ const (
 
 // Service instances & initializers
 var (
-	cfg                *config.StaderConfig
-	passwordManager    *passwords.PasswordManager
-	nodeWallet         *wallet.Wallet
-	ecManager          *ExecutionClientManager
-	bcManager          *BeaconClientManager
-	rocketPool         *rocketpool.RocketPool
-	oneInchOracle      *contracts.OneInchOracle
-	snapshotDelegation *contracts.SnapshotDelegation
-	beaconClient       beacon.Client
-	docker             *client.Client
+	cfg             *config.StaderConfig
+	passwordManager *passwords.PasswordManager
+	nodeWallet      *wallet.Wallet
+	ecManager       *ExecutionClientManager
+	bcManager       *BeaconClientManager
+	rocketPool      *rocketpool.RocketPool
+	beaconClient    beacon.Client
+	docker          *client.Client
 
 	initCfg                sync.Once
 	initPasswordManager    sync.Once
@@ -174,30 +171,6 @@ func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
 	return getRocketPool(cfg, ec)
 }
 
-func GetOneInchOracle(c *cli.Context) (*contracts.OneInchOracle, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-	return getOneInchOracle(cfg, ec)
-}
-
-func GetSnapshotDelegation(c *cli.Context) (*contracts.SnapshotDelegation, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-	return getSnapshotDelegation(cfg, ec)
-}
-
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -298,22 +271,6 @@ func getRocketPool(cfg *config.StaderConfig, client rocketpool.ExecutionClient) 
 		rocketPool, err = rocketpool.NewRocketPool(client, common.HexToAddress(cfg.Smartnode.GetStorageAddress()))
 	})
 	return rocketPool, err
-}
-
-func getOneInchOracle(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.OneInchOracle, error) {
-	var err error
-	initOneInchOracle.Do(func() {
-		oneInchOracle, err = contracts.NewOneInchOracle(common.HexToAddress(cfg.Smartnode.GetOneInchOracleAddress()), client)
-	})
-	return oneInchOracle, err
-}
-
-func getSnapshotDelegation(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*contracts.SnapshotDelegation, error) {
-	var err error
-	initSnapshotDelegation.Do(func() {
-		snapshotDelegation, err = contracts.NewSnapshotDelegation(common.HexToAddress(cfg.Smartnode.GetSnapshotDelegationAddress()), client)
-	})
-	return snapshotDelegation, err
 }
 
 func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientManager, error) {

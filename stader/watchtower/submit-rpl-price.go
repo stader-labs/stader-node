@@ -26,10 +26,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	"github.com/stader-labs/stader-node/shared/services/contracts"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/api"
-	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	mathutils "github.com/stader-labs/stader-node/shared/utils/math"
 )
@@ -68,7 +66,6 @@ type submitRplPrice struct {
 	ec  rocketpool.ExecutionClient
 	w   *wallet.Wallet
 	rp  *rocketpool.RocketPool
-	oio *contracts.OneInchOracle
 	bc  beacon.Client
 }
 
@@ -92,10 +89,6 @@ func newSubmitRplPrice(c *cli.Context, logger log.ColorLogger) (*submitRplPrice,
 	if err != nil {
 		return nil, err
 	}
-	oio, err := services.GetOneInchOracle(c)
-	if err != nil {
-		return nil, err
-	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -109,7 +102,6 @@ func newSubmitRplPrice(c *cli.Context, logger log.ColorLogger) (*submitRplPrice,
 		ec:  ec,
 		w:   w,
 		rp:  rp,
-		oio: oio,
 		bc:  bc,
 	}, nil
 
@@ -303,39 +295,8 @@ func (t *submitRplPrice) hasSubmittedSpecificBlockPrices(nodeAddress common.Addr
 // Get RPL price at block
 func (t *submitRplPrice) getRplPrice(blockNumber uint64) (*big.Int, error) {
 
-	// Require 1inch oracle contract
-	if err := services.RequireOneInchOracle(t.c); err != nil {
-		return nil, err
-	}
-
-	// Get RPL token address
-	rplAddress := common.HexToAddress(t.cfg.Smartnode.GetRplTokenAddress())
-
-	// Initialize call options
-	opts := &bind.CallOpts{
-		BlockNumber: big.NewInt(int64(blockNumber)),
-	}
-
-	// Get a client with the block number available
-	client, err := eth1.GetBestApiClient(t.rp, t.cfg, t.printMessage, opts.BlockNumber)
-	if err != nil {
-		return nil, err
-	}
-
-	// Generate an OIO wrapper using the client
-	oio, err := contracts.NewOneInchOracle(common.HexToAddress(t.cfg.Smartnode.GetOneInchOracleAddress()), client.Client)
-	if err != nil {
-		return nil, err
-	}
-
-	// Get RPL price
-	rplPrice, err := oio.GetRateToEth(opts, rplAddress, true)
-	if err != nil {
-		return nil, fmt.Errorf("Could not get RPL price at block %d: %w", blockNumber, err)
-	}
-
 	// Return
-	return rplPrice, nil
+	return big.NewInt(1), nil
 
 }
 
