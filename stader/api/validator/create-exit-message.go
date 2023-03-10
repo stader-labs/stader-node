@@ -1,6 +1,8 @@
 package validator
 
 import (
+	"fmt"
+
 	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
@@ -68,9 +70,9 @@ func CreateExitMessage(c *cli.Context, validatorPubkey types.ValidatorPubkey) (*
 		return nil, err
 	}
 
-	print("validatorIndex: ", validatorIndex)
-	print("head.Epoch: ", head.Epoch)
-	print("signature: ", signature)
+	fmt.Println("validatorIndex: ", validatorIndex)
+	fmt.Println("head.Epoch: ", head.Epoch)
+	fmt.Println("signature: ", signature)
 
 	response := VoluntaryExitRequest{
 		Message: VoluntaryExitMessage{
