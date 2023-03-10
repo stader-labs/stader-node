@@ -3,6 +3,8 @@ package node
 import (
 	"context"
 	"fmt"
+	"math/big"
+
 	"github.com/rocket-pool/rocketpool-go/types"
 	_ "github.com/stader-labs/stader-node/stader-lib/network"
 	"github.com/stader-labs/stader-node/stader-lib/node"
@@ -11,12 +13,12 @@ import (
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	_ "golang.org/x/sync/errgroup"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
+	apivalidator "github.com/stader-labs/stader-node/stader/api/validator"
 )
 
 // TODO: refactor canNodeDeposit and nodeDeposit bchain
@@ -325,6 +327,13 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		}
 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+
+		response, err := apivalidator.CreateExitMessage(c, types.ValidatorPubkey(pubKey))
+		if err != nil {
+			fmt.Println("Error creating exit message", err)
+		}
+		fmt.Println(response)
+
 	}
 
 	// Override the provided pending TX if requested

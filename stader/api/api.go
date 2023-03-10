@@ -18,6 +18,7 @@ import (
 	"github.com/stader-labs/stader-node/stader/api/odao"
 	"github.com/stader-labs/stader-node/stader/api/queue"
 	apiservice "github.com/stader-labs/stader-node/stader/api/service"
+	apivalidator "github.com/stader-labs/stader-node/stader/api/validator"
 	"github.com/stader-labs/stader-node/stader/api/wallet"
 )
 
@@ -68,6 +69,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	wallet.RegisterSubcommands(&command, "wallet", []string{"w"})
 	apiservice.RegisterSubcommands(&command, "service", []string{"s"})
 	debug.RegisterSubcommands(&command, "debug", []string{"d"})
+	apivalidator.RegisterSubcommands(&command, "validator", []string{"v"})
 
 	// Append a general wait-for-transaction command to support async operations
 	command.Subcommands = append(command.Subcommands, cli.Command{
