@@ -313,6 +313,9 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 				"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
 				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
 		}
+		fmt.Printf("pubKeys is %s\n", pubKey)
+		fmt.Printf("preDepositSignature is %s\n", preDepositSignature)
+		fmt.Printf("depositSignature is %s\n", depositSignature)
 
 		// To save the validator index update
 		if err := w.Save(); err != nil {
