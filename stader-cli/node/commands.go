@@ -252,9 +252,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
 					index := c.Uint64("validator-index")
 					fmt.Printf("index is %d\n", index)
 					epochDelta := c.Uint64("epoch-delta")
