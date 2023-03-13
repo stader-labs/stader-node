@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/rocket-pool/rocketpool-go/types"
-	_ "github.com/stader-labs/stader-node/stader-lib/network"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
@@ -18,10 +16,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
-	apivalidator "github.com/stader-labs/stader-node/stader/api/validator"
 )
-
-// TODO: refactor canNodeDeposit and nodeDeposit bchain
 
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
 	canNodeDepositResponse := api.CanNodeDepositResponse{}
@@ -272,7 +267,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	newValidatorKey := validatorKeyCount
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
-		fmt.Printf("generating validator %d keys\n", i)
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
@@ -308,7 +302,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		depositSignatures[i] = depositSignature[:]
 
 		// Make sure a validator with this pubkey doesn't already exist
-		status, err := bc.GetValidatorStatus(types.ValidatorPubkey(pubKey), nil)
+		status, err := bc.GetValidatorStatus(pubKey, nil)
 		if err != nil {
 			return nil, fmt.Errorf("Error checking for existing validator status: %w\nYour funds have not been deposited for your own safety.", err)
 		}
@@ -320,6 +314,9 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 				"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
 				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
 		}
+		fmt.Printf("pubKeys is %s\n", pubKey)
+		fmt.Printf("preDepositSignature is %s\n", preDepositSignature)
+		fmt.Printf("depositSignature is %s\n", depositSignature)
 
 		// To save the validator index update
 		if err := w.Save(); err != nil {
@@ -327,13 +324,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		}
 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
-
-		response, err := apivalidator.CreateExitMessage(c, types.ValidatorPubkey(pubKey))
-		if err != nil {
-			fmt.Println("Error creating exit message", err)
-		}
-		fmt.Println(response)
-
 	}
 
 	// Override the provided pending TX if requested
