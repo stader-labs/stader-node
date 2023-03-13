@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"time"
 
@@ -273,6 +274,17 @@ type ContractsInfoResponse struct {
 	EthxToken                  common.Address `json:"ethxToken"`
 	SdToken                    common.Address `json:"sdToken"`
 	SdCollateralContract       common.Address `json:"sdCollateralContract"`
+}
+
+type DebugExitResponse struct {
+	Status          string                   `json:"status"`
+	Error           string                   `json:"error"`
+	ValidatorPubKey types.ValidatorPubkey    `json:"validatorPubKey"`
+	ExitEpoch       uint64                   `json:"exitEpoch"`
+	ValidatorIndex  uint64                   `json:"validatorIndex"`
+	SrHash          common.Hash              `json:"srHash"`
+	SignedMsg       types.ValidatorSignature `json:"signedMsg"`
+	SignatureDomain common.Hash              `json:"signatureDomain"`
 }
 
 type NodeSignResponse struct {

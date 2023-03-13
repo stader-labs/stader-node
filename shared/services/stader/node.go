@@ -193,6 +193,22 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	return response, nil
 }
 
+func (c *Client) DebugExit(validatorIndex *big.Int) (api.DebugExitResponse, error) {
+	fmt.Printf("cli: validatorIndex is %d\n", validatorIndex)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d", validatorIndex))
+	if err != nil {
+		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %w", err)
+	}
+	var response api.DebugExitResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.DebugExitResponse{}, fmt.Errorf("could not decode debug exit info: %w", err)
+	}
+	if response.Error != "" {
+		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %s", response.Error)
+	}
+	return response, nil
+}
+
 // Make a node deposit
 func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.NodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))

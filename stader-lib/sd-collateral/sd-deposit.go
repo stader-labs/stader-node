@@ -30,7 +30,7 @@ func GetOperatorSdBalance(sdc *stader.SdCollateralContractManager, operatorAddre
 	return balance, err
 }
 
-func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, poolType uint8, numValidators uint32, opts *bind.CallOpts) (bool, error) {
+func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, poolType uint8, numValidators *big.Int, opts *bind.CallOpts) (bool, error) {
 	hasEnoughSdCollateral, err := sdc.SdCollateral.HasEnoughSDCollateral(opts, operatorAddress, poolType, numValidators)
 	if err != nil {
 		return false, err

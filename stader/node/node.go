@@ -2,6 +2,10 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/shared/types/eth2"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -22,20 +26,56 @@ import (
 )
 
 // Config
+var preSignedCooldown, _ = time.ParseDuration("12h")
+var preSignedBatchCooldown, _ = time.ParseDuration("30s")
+var preSignBatchSize = uint(10) // Go thru 100 keys in each pass
 var tasksInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests = 200
 
-	ClaimRplRewardsColor         = color.FgGreen
 	StakePrelaunchMinipoolsColor = color.FgBlue
-	DownloadRewardsTreesColor    = color.FgGreen
 	MetricsColor                 = color.FgHiYellow
 	ManageFeeRecipientColor      = color.FgHiCyan
 	ErrorColor                   = color.FgRed
-	WarningColor                 = color.FgYellow
 )
+
+// TODO - refactor this from debug-exit command too
+// Get a voluntary exit message signature for a given validator key and index
+func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex uint64, epoch uint64, signatureDomain []byte) (types.ValidatorSignature, error) {
+
+	// Build voluntary exit message
+	exitMessage := eth2.VoluntaryExit{
+		Epoch:          epoch,
+		ValidatorIndex: validatorIndex,
+	}
+
+	// Get object root
+	or, err := exitMessage.HashTreeRoot()
+	if err != nil {
+		return types.ValidatorSignature{}, err
+	}
+
+	// Get signing root
+	sr := eth2.SigningRoot{
+		ObjectRoot: or[:],
+		Domain:     signatureDomain,
+	}
+
+	srHash, err := sr.HashTreeRoot()
+	if err != nil {
+		return types.ValidatorSignature{}, err
+	}
+	fmt.Printf("api: srHash is %s\n", common.Bytes2Hex(srHash[:]))
+
+	// Sign message
+	signature := validatorKey.Sign(srHash[:]).Marshal()
+
+	// Return
+	return types.BytesToValidatorSignature(signature), nil
+
+}
 
 // Register node command
 func RegisterCommands(app *cli.App, name string, aliases []string) {
@@ -58,6 +98,11 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	//w, err := services.GetWallet(c)
+	//if err != nil {
+	//	return err
+	//}
+
 	// Clean up old fee recipient files
 	err = removeLegacyFeeRecipientFiles(c)
 	if err != nil {
@@ -66,11 +111,6 @@ func run(c *cli.Context) error {
 
 	// Configure
 	configureHTTP()
-
-	// Wait until node is registered
-	// if err := services.WaitNodeRegistered(c, true); err != nil {
-	// 	return err
-	// }
 
 	// Initialize tasks
 	manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
@@ -84,10 +124,51 @@ func run(c *cli.Context) error {
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
+	//lastSeenPresignedKey := uint(0)
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
+	wg.Add(3)
+
+	// validator presigned loop
+	//go func() {
+	//	for {
+	//		// TODO - bchain - restructure this better
+	//		walletIndex := w.GetNextAccount()
+	//		noOfBatches := walletIndex / preSignBatchSize
+	//		erroredOut := false
+	//
+	//		for i := uint(0); i < noOfBatches; i++ {
+	//			temp := lastSeenPresignedKey
+	//			for j := temp; j < temp+preSignBatchSize; j++ {
+	//				// get wallet key
+	//				key, err := w.GetValidatorKeyAt(j)
+	//				if err != nil {
+	//					erroredOut = true
+	//					break
+	//				}
+	//
+	//				// check if it is already registered
+	//
+	//				// if not registered, get presigned message
+	//				preSignedMsg, err := GetSignedExitMessage()
+	//
+	//				// submit presign key to api
+	//
+	//				lastSeenPresignedKey = j
+	//				time.Sleep(preSignedBatchCooldown)
+	//			}
+	//			if erroredOut {
+	//				wg.Done()
+	//				break
+	//			}
+	//
+	//		}
+	//
+	//		// run loop every 12 hours
+	//		time.Sleep(preSignedCooldown)
+	//	}
+	//}()
 
 	// Run task loop
 	go func() {
