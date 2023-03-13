@@ -9,7 +9,7 @@ import (
 	"math/big"
 )
 
-func debugExitMsg(c *cli.Context, validatorIndex uint64) error {
+func debugExitMsg(c *cli.Context, validatorIndex uint64, epochDelta uint64) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func debugExitMsg(c *cli.Context, validatorIndex uint64) error {
 	}
 
 	// Get node fee
-	response, err := staderClient.DebugExit(big.NewInt(int64(validatorIndex)))
+	response, err := staderClient.DebugExit(big.NewInt(int64(validatorIndex)), big.NewInt(int64(epochDelta)))
 	if err != nil {
 		return err
 	}
@@ -31,6 +31,7 @@ func debugExitMsg(c *cli.Context, validatorIndex uint64) error {
 	fmt.Printf("%s=== Exit details ===%s\n", log.ColorGreen, log.ColorReset)
 	fmt.Printf("Validator pub key is %s\n", response.ValidatorPubKey)
 	fmt.Printf("Exit epoch is %d\n", response.ExitEpoch)
+	fmt.Printf("Current epoch is %d\n", response.CurrentEpoch)
 	fmt.Printf("Validator index is %d\n", response.ValidatorIndex)
 	fmt.Printf("Signed msg is %s\n", response.SignedMsg.Hex())
 	fmt.Printf("Signature domain is %s\n", response.SignatureDomain.Hex())

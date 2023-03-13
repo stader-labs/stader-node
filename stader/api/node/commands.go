@@ -488,8 +488,13 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
+					epochDelta, err := cliutils.ValidateBigInt("epoch-delta", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
 					// Run
-					api.PrintResponse(DebugExit(c, validatorIndex))
+					api.PrintResponse(DebugExit(c, validatorIndex, epochDelta))
 					return nil
 
 				},

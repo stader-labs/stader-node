@@ -193,9 +193,9 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	return response, nil
 }
 
-func (c *Client) DebugExit(validatorIndex *big.Int) (api.DebugExitResponse, error) {
+func (c *Client) DebugExit(validatorIndex *big.Int, epochDelta *big.Int) (api.DebugExitResponse, error) {
 	fmt.Printf("cli: validatorIndex is %d\n", validatorIndex)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d", validatorIndex))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d %d", validatorIndex, epochDelta))
 	if err != nil {
 		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %w", err)
 	}

@@ -232,18 +232,82 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-index, vi",
 						Usage: "Validator index for whom we want to generate the debug exit",
 					},
+					cli.Uint64Flag{
+						Name:  "epoch-delta, ed",
+						Usage: "Delta to add to the epoch",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
-					//	return err
-					//}
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
 					index := c.Uint64("validator-index")
 					fmt.Printf("index is %d\n", index)
+					epochDelta := c.Uint64("epoch-delta")
+					fmt.Printf("epoch delta is %d\n", epochDelta)
 
 					// Run
-					return debugExitMsg(c, index)
+					return debugExitMsg(c, index, epochDelta)
+				},
+			},
+			{
+				Name:      "exit",
+				Aliases:   []string{"e"},
+				Usage:     "Exit validator",
+				UsageText: "stader-cli node exit validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator we want to exit",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					//// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidateAddress("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					fmt.Printf("validator pub key is %s\n", validatorPubKey)
+
+					// Run
+					return ExitValidator(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "send-presigned-exit-msg",
+				Aliases:   []string{"spem"},
+				Usage:     "Send the presigned exit msg to stader",
+				UsageText: "stader-cli node send-presigned-exit-msg --validator-index",
+				Flags: []cli.Flag{
+					cli.Uint64Flag{
+						Name:  "validator-index, vi",
+						Usage: "Validator index for whom we want to generate the debug exit",
+					},
+					cli.Uint64Flag{
+						Name:  "epoch-delta, ed",
+						Usage: "Delta to add to the epoch",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					//// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					index := c.Uint64("validator-index")
+					fmt.Printf("index is %d\n", index)
+					epochDelta := c.Uint64("epoch-delta")
+					fmt.Printf("epoch-delta is %d\n", epochDelta)
+
+					// Run
+					return SendSignedPresignedMessage(c, index)
 				},
 			},
 		},

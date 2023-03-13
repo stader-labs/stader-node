@@ -281,6 +281,7 @@ type DebugExitResponse struct {
 	Error           string                   `json:"error"`
 	ValidatorPubKey types.ValidatorPubkey    `json:"validatorPubKey"`
 	ExitEpoch       uint64                   `json:"exitEpoch"`
+	CurrentEpoch    uint64                   `json:"currentEpoch"`
 	ValidatorIndex  uint64                   `json:"validatorIndex"`
 	SrHash          common.Hash              `json:"srHash"`
 	SignedMsg       types.ValidatorSignature `json:"signedMsg"`

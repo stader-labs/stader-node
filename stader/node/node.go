@@ -117,10 +117,6 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	stakePrelaunchMinipools, err := newStakePrelaunchMinipools(c, log.NewColorLogger(StakePrelaunchMinipoolsColor))
-	if err != nil {
-		return err
-	}
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
@@ -128,7 +124,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(3)
+	wg.Add(2)
 
 	// validator presigned loop
 	//go func() {
@@ -142,7 +138,7 @@ func run(c *cli.Context) error {
 	//			temp := lastSeenPresignedKey
 	//			for j := temp; j < temp+preSignBatchSize; j++ {
 	//				// get wallet key
-	//				key, err := w.GetValidatorKeyAt(j)
+	//				validatorKey, err := w.GetValidatorKeyAt(j)
 	//				if err != nil {
 	//					erroredOut = true
 	//					break
@@ -188,11 +184,6 @@ func run(c *cli.Context) error {
 						errorLog.Println(err)
 					}
 					time.Sleep(taskCooldown)
-
-					// Run the minipool stake check
-					if err := stakePrelaunchMinipools.run(); err != nil {
-						errorLog.Println(err)
-					}
 				}
 			}
 			time.Sleep(tasksInterval)
