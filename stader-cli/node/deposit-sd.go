@@ -29,12 +29,6 @@ func nodeDepositSd(c *cli.Context) error {
 		return err
 	}
 
-	// Get node status
-	//status, err := staderClient.NodeStatus()
-	//if err != nil {
-	//	return err
-	//}
-
 	// If a custom nonce is set, print the multi-transaction warning
 	if c.GlobalUint64("nonce") != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()

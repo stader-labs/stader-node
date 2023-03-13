@@ -70,7 +70,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		}
 		response.GasInfo = stader.GasInfo(gasInfo)
 
-	case "rpl":
+	case "sd":
 
 		// Check node SD balance
 		sdBalanceWei, err := tokens.BalanceOf(sdt, nodeAccount.Address, nil)

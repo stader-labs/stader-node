@@ -23,7 +23,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
 )
 
 // Settings
@@ -154,85 +153,85 @@ func (t *submitWithdrawableMinipools) run() error {
 // Get all minipool withdrawable details
 func (t *submitWithdrawableMinipools) getNetworkMinipoolWithdrawableDetails(nodeAddress common.Address) ([]minipoolWithdrawableDetails, error) {
 
-	// Data
-	var wg1 errgroup.Group
-	var addresses []common.Address
-	var eth2Config beacon.Eth2Config
-	var beaconHead beacon.BeaconHead
-
-	// Get minipool addresses
-	wg1.Go(func() error {
-		var err error
-		addresses, err = minipool.GetMinipoolAddresses(t.rp, nil)
-		return err
-	})
-
-	// Get eth2 config
-	wg1.Go(func() error {
-		var err error
-		eth2Config, err = t.bc.GetEth2Config()
-		return err
-	})
-
-	// Get beacon head
-	wg1.Go(func() error {
-		var err error
-		beaconHead, err = t.bc.GetBeaconHead()
-		return err
-	})
-
-	// Wait for data
-	if err := wg1.Wait(); err != nil {
-		return []minipoolWithdrawableDetails{}, err
-	}
-
-	// Get minipool validator statuses
-	validators, err := rp.GetMinipoolValidators(t.rp, t.bc, addresses, nil, nil)
-	if err != nil {
-		return []minipoolWithdrawableDetails{}, err
-	}
-
-	// Load details in batches
-	minipools := make([]minipoolWithdrawableDetails, len(addresses))
-	for bsi := 0; bsi < len(addresses); bsi += MinipoolWithdrawableDetailsBatchSize {
-
-		// Get batch start & end index
-		msi := bsi
-		mei := bsi + MinipoolWithdrawableDetailsBatchSize
-		if mei > len(addresses) {
-			mei = len(addresses)
-		}
-
-		// Log
-		//t.log.Printlnf("Checking minipools %d - %d of %d for withdrawable status...", msi + 1, mei, len(addresses))
-
-		// Load details
-		var wg errgroup.Group
-		for mi := msi; mi < mei; mi++ {
-			mi := mi
-			wg.Go(func() error {
-				address := addresses[mi]
-				validator := validators[address]
-				mpDetails, err := t.getMinipoolWithdrawableDetails(nodeAddress, address, validator, eth2Config, beaconHead)
-				if err == nil {
-					minipools[mi] = mpDetails
-				}
-				return err
-			})
-		}
-		if err := wg.Wait(); err != nil {
-			return []minipoolWithdrawableDetails{}, err
-		}
-
-	}
+	//// Data
+	//var wg1 errgroup.Group
+	//var addresses []common.Address
+	//var eth2Config beacon.Eth2Config
+	//var beaconHead beacon.BeaconHead
+	//
+	//// Get minipool addresses
+	//wg1.Go(func() error {
+	//	var err error
+	//	addresses, err = minipool.GetMinipoolAddresses(t.rp, nil)
+	//	return err
+	//})
+	//
+	//// Get eth2 config
+	//wg1.Go(func() error {
+	//	var err error
+	//	eth2Config, err = t.bc.GetEth2Config()
+	//	return err
+	//})
+	//
+	//// Get beacon head
+	//wg1.Go(func() error {
+	//	var err error
+	//	beaconHead, err = t.bc.GetBeaconHead()
+	//	return err
+	//})
+	//
+	//// Wait for data
+	//if err := wg1.Wait(); err != nil {
+	//	return []minipoolWithdrawableDetails{}, err
+	//}
+	//
+	//// Get minipool validator statuses
+	//validators, err := rp.GetMinipoolValidators(t.rp, t.bc, addresses, nil, nil)
+	//if err != nil {
+	//	return []minipoolWithdrawableDetails{}, err
+	//}
+	//
+	//// Load details in batches
+	//minipools := make([]minipoolWithdrawableDetails, len(addresses))
+	//for bsi := 0; bsi < len(addresses); bsi += MinipoolWithdrawableDetailsBatchSize {
+	//
+	//	// Get batch start & end index
+	//	msi := bsi
+	//	mei := bsi + MinipoolWithdrawableDetailsBatchSize
+	//	if mei > len(addresses) {
+	//		mei = len(addresses)
+	//	}
+	//
+	//	// Log
+	//	//t.log.Printlnf("Checking minipools %d - %d of %d for withdrawable status...", msi + 1, mei, len(addresses))
+	//
+	//	// Load details
+	//	var wg errgroup.Group
+	//	for mi := msi; mi < mei; mi++ {
+	//		mi := mi
+	//		wg.Go(func() error {
+	//			address := addresses[mi]
+	//			validator := validators[address]
+	//			mpDetails, err := t.getMinipoolWithdrawableDetails(nodeAddress, address, validator, eth2Config, beaconHead)
+	//			if err == nil {
+	//				minipools[mi] = mpDetails
+	//			}
+	//			return err
+	//		})
+	//	}
+	//	if err := wg.Wait(); err != nil {
+	//		return []minipoolWithdrawableDetails{}, err
+	//	}
+	//
+	//}
 
 	// Filter by withdrawable status
 	withdrawableMinipools := []minipoolWithdrawableDetails{}
-	for _, details := range minipools {
-		if details.Withdrawable {
-			withdrawableMinipools = append(withdrawableMinipools, details)
-		}
-	}
+	//for _, details := range minipools {
+	//	if details.Withdrawable {
+	//		withdrawableMinipools = append(withdrawableMinipools, details)
+	//	}
+	//}
 
 	// Return
 	return withdrawableMinipools, nil

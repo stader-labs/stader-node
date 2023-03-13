@@ -67,7 +67,6 @@ func GetBestApiClient(primary *rocketpool.RocketPool, cfg *config.StaderConfig, 
 
 	client := primary
 
-	// Try getting the rETH address as a canary to see if the block is available
 	opts := &bind.CallOpts{
 		BlockNumber: blockNumber,
 	}

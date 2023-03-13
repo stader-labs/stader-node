@@ -15,7 +15,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 		Aliases: aliases,
 		Usage:   "Manage the node",
 		Subcommands: []cli.Command{
-
 			{
 				Name:      "status",
 				Aliases:   []string{"s"},
@@ -33,7 +32,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "sync",
 				Aliases:   []string{"y"},
@@ -51,7 +49,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
@@ -100,140 +97,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
-			// {
-			// 	Name:      "rewards",
-			// 	Aliases:   []string{"e"},
-			// 	Usage:     "Get the time and your expected RPL rewards of the next checkpoint",
-			// 	UsageText: "rocketpool node rewards",
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return getRewards(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "set-withdrawal-address",
-			// 	Aliases:   []string{"w"},
-			// 	Usage:     "Set the node's withdrawal address",
-			// 	UsageText: "stader-cli node set-withdrawal-address [options] address",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm setting withdrawal address",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "force",
-			// 			Usage: "Force update the withdrawal address, bypassing the 'pending' state that requires a confirmation transaction from the new address",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 1); err != nil {
-			// 			return err
-			// 		}
-			// 		withdrawalAddress := c.Args().Get(0)
-
-			// 		// Run
-			// 		return setWithdrawalAddress(c, withdrawalAddress)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "confirm-withdrawal-address",
-			// 	Aliases:   []string{"f"},
-			// 	Usage:     "Confirm the node's pending withdrawal address if it has been set back to the node's address itself",
-			// 	UsageText: "stader-cli node confirm-withdrawal-address [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm withdrawal address",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return confirmWithdrawalAddress(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "set-timezone",
-			// 	Aliases:   []string{"t"},
-			// 	Usage:     "Set the node's timezone location",
-			// 	UsageText: "stader-cli node set-timezone [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "timezone, t",
-			// 			Usage: "The timezone location to set for the node (in the format 'Country/City')",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Validate flags
-			// 		if c.String("timezone") != "" {
-			// 			if _, err := cliutils.ValidateTimezoneLocation("timezone location", c.String("timezone")); err != nil {
-			// 				return err
-			// 			}
-			// 		}
-
-			// 		// Run
-			// 		return setTimezoneLocation(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "swap-rpl",
-			// 	Aliases:   []string{"p"},
-			// 	Usage:     "Swap old RPL for new RPL",
-			// 	UsageText: "rocketpool node swap-rpl [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "amount, a",
-			// 			Usage: "The amount of old RPL to swap (or 'all')",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Validate flags
-			// 		if c.String("amount") != "" && c.String("amount") != "all" {
-			// 			if _, err := cliutils.ValidatePositiveEthAmount("swap amount", c.String("amount")); err != nil {
-			// 				return err
-			// 			}
-			// 		}
-
-			// 		// Run
-			// 		return nodeSwapRpl(c)
-
-			// 	},
-			// },
-
 			{
 				Name:      "deposit-sd",
 				Aliases:   []string{"k"},
@@ -265,70 +128,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
-			// {
-			// 	Name:      "claim-rewards",
-			// 	Aliases:   []string{"c"},
-			// 	Usage:     "Claim available RPL and ETH rewards for any checkpoint you haven't claimed yet",
-			// 	UsageText: "rocketpool node claim-rpl [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "restake-amount, a",
-			// 			Usage: "The amount of RPL to automatically restake during claiming (or '150%%' to stake up to 150%% collateral, or 'all' for all available RPL)",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm rewards claim",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return nodeClaimRewards(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "withdraw-rpl",
-			// 	Aliases:   []string{"i"},
-			// 	Usage:     "Withdraw RPL staked against the node",
-			// 	UsageText: "rocketpool node withdraw-rpl [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "amount, a",
-			// 			Usage: "The amount of RPL to withdraw (or 'max')",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm RPL withdrawal",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Validate flags
-			// 		if c.String("amount") != "" && c.String("amount") != "max" {
-			// 			if _, err := cliutils.ValidatePositiveEthAmount("withdrawal amount", c.String("amount")); err != nil {
-			// 				return err
-			// 			}
-			// 		}
-
-			// 		// Run
-			// 		return nodeWithdrawRpl(c)
-
-			// 	},
-			// },
-
 			{
 				Name:      "deposit",
 				Aliases:   []string{"d"},
@@ -376,7 +175,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "send",
 				Aliases:   []string{"n"},
@@ -408,167 +206,22 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "get-contracts-info",
+				Aliases:   []string{"c"},
+				Usage:     "Get the current network contracts info",
+				UsageText: "stader-cli node get-contracts-info",
+				Action: func(c *cli.Context) error {
 
-			// {
-			// 	Name:      "set-voting-delegate",
-			// 	Aliases:   []string{"sv"},
-			// 	Usage:     "Set the address you want to use when voting on Rocket Pool governance proposals, or the address you want to delegate your voting power to.",
-			// 	UsageText: "rocketpool node set-voting-delegate address",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm delegate setting",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
 
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 1); err != nil {
-			// 			return err
-			// 		}
-			// 		delegate := c.Args().Get(0)
-
-			// 		// Run
-			// 		return nodeSetVotingDelegate(c, delegate)
-
-			// 	},
-			// },
-			// {
-			// 	Name:      "clear-voting-delegate",
-			// 	Aliases:   []string{"cv"},
-			// 	Usage:     "Remove the address you've set for voting on Rocket Pool governance proposals.",
-			// 	UsageText: "rocketpool node clear-voting-delegate",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm delegate clearing",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return nodeClearVotingDelegate(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "initialize-fee-distributor",
-			// 	Aliases:   []string{"z"},
-			// 	Usage:     "Create the fee distributor contract for your node, so you can withdraw priority fees and MEV rewards after the merge",
-			// 	UsageText: "stader-cli node initialize-fee-distributor",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm initialization gas costs",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return initializeFeeDistributor(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "distribute-fees",
-			// 	Aliases:   []string{"b"},
-			// 	Usage:     "Distribute the priority fee and MEV rewards from your fee distributor to your withdrawal address  (based on your node's average commission)",
-			// 	UsageText: "stader-cli node distribute-fees",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm distribution",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return distribute(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "join-el-rewards-pool",
-			// 	Aliases:   []string{"js"},
-			// 	Usage:     "Opt your node into the el-rewards Pool",
-			// 	UsageText: "stader-cli node join-el-rewards-pool",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm opt-in",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return joinSmoothingPool(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "leave-el-rewards-pool",
-			// 	Aliases:   []string{"ls"},
-			// 	Usage:     "Leave the el-rewards Pool",
-			// 	UsageText: "stader-cli node leave-el-rewards-pool",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm opt-out",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run
-			// 		return leaveSmoothingPool(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "sign-message",
-			// 	Aliases:   []string{"sm"},
-			// 	Usage:     "Sign an arbitrary message with the node's private key",
-			// 	UsageText: "stader-cli node sign-message [-m message]",
-			// 	Flags: []cli.Flag{
-			// 		cli.StringFlag{
-			// 			Name:  "message, m",
-			// 			Usage: "The 'quoted message' to be signed",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-			// 		// Run
-			// 		return signMessage(c)
-			// 	},
-			// },
+					// Run
+					return getContractsInfo(c)
+				},
+			},
 		},
 	})
 }
