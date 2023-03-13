@@ -33,7 +33,7 @@ func debugExitMsg(c *cli.Context, validatorIndex uint64, epochDelta uint64) erro
 	fmt.Printf("Exit epoch is %d\n", response.ExitEpoch)
 	fmt.Printf("Current epoch is %d\n", response.CurrentEpoch)
 	fmt.Printf("Validator index is %d\n", response.ValidatorIndex)
-	fmt.Printf("Signed msg is %s\n", response.SignedMsg.Hex())
+	fmt.Printf("Signed msg is %s\n", response.SignedMsg.String())
 	fmt.Printf("Signature domain is %s\n", response.SignatureDomain.Hex())
 	fmt.Printf("SrHash is %s\n", response.SrHash.Hex())
 
