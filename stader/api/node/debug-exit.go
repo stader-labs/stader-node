@@ -2,7 +2,6 @@ package node
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/types/eth2"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"math/big"
@@ -11,41 +10,8 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
-
-// Get a voluntary exit message signature for a given validator key and index
-func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex uint64, epoch uint64, signatureDomain []byte) (types.ValidatorSignature, [32]byte, error) {
-
-	// Build voluntary exit message
-	exitMessage := eth2.VoluntaryExit{
-		Epoch:          epoch,
-		ValidatorIndex: validatorIndex,
-	}
-
-	// Get object root
-	or, err := exitMessage.HashTreeRoot()
-	if err != nil {
-		return types.ValidatorSignature{}, [32]byte{}, err
-	}
-
-	// Get signing root
-	sr := eth2.SigningRoot{
-		ObjectRoot: or[:],
-		Domain:     signatureDomain,
-	}
-
-	srHash, err := sr.HashTreeRoot()
-	if err != nil {
-		return types.ValidatorSignature{}, [32]byte{}, nil
-	}
-
-	// Sign message
-	signature := validatorKey.Sign(srHash[:]).Marshal()
-
-	// Return
-	return types.BytesToValidatorSignature(signature), srHash, nil
-
-}
 
 func DebugExit(c *cli.Context, valIndex *big.Int, epochDelta *big.Int) (*api.DebugExitResponse, error) {
 	w, err := services.GetWallet(c)
@@ -81,7 +47,7 @@ func DebugExit(c *cli.Context, valIndex *big.Int, epochDelta *big.Int) (*api.Deb
 		return nil, err
 	}
 
-	exitMsg, srHash, err := GetSignedExitMessage(validatorPrivateKey, validatorIndex, exitEpoch, signatureDomain)
+	exitMsg, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorIndex, exitEpoch, signatureDomain)
 	if err != nil {
 		return nil, err
 	}
