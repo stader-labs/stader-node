@@ -1,7 +1,10 @@
 package node
 
 import (
+	"bytes"
+	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
@@ -14,6 +17,7 @@ import (
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"net/http"
+	"strconv"
 )
 
 // TODO - refactor
@@ -31,9 +35,11 @@ type PreSignCheckApiResponseType struct {
 }
 
 type PreSignSendApiResponseType struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
-type PreSignedSendApiRequest struct {
+type PreSignedSendApiRequestType struct {
 	Data []byte `json:"data"`
 }
 
@@ -74,6 +80,7 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	return nil
 }
 
+// TODO - need to do a major refactoring! bchain
 func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.SendPresignedMsgResponse, error) {
 	// generate presigned message
 	w, err := services.GetWallet(c)
@@ -115,7 +122,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	_, _, err = validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+	exitMsg, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
 	if err != nil {
 		return nil, err
 	}
@@ -146,29 +153,78 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("public key is %v\n", publicKey)
 
 	//// check if it is already there
-	//preSignCheckRequest := PreSignCheckApiRequestType{
-	//	ValidatorPublicKey: validatorPubKey.String(),
-	//}
-	//requestData, err := json.Marshal(preSignCheckRequest)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//preSignCheckRes, err := http.Post(preSignCheckApi, "application/json", bytes.NewBuffer(requestData))
-	//if err != nil {
-	//	return nil, err
-	//}
-	//defer preSignCheckRes.Body.Close()
-	//var preSignCheckResponse PreSignCheckApiResponseType
-	//err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//fmt.Printf("PreSigned check output %t\n", preSignCheckResponse.Value)
+	preSignCheckRequest := PreSignCheckApiRequestType{
+		ValidatorPublicKey: validatorPubKey.String(),
+	}
+	requestData, err := json.Marshal(preSignCheckRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	preSignCheckRes, err := http.Post(preSignCheckApi, "application/json", bytes.NewBuffer(requestData))
+	if err != nil {
+		return nil, err
+	}
+	defer preSignCheckRes.Body.Close()
+	var preSignCheckResponse PreSignCheckApiResponseType
+	err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("PreSigned check output %t\n", preSignCheckResponse.Value)
+	if preSignCheckResponse.Value {
+		fmt.Println("Already registered!")
+		return nil, nil
+	}
 
 	// encrypt the presigned exit message object
+	preSignedMessageUnEncrypted := PreSignSendUnEncryptedType{
+		Message: struct {
+			Epoch          string `json:"epoch"`
+			ValidatorIndex string `json:"validator_index"`
+		}{
+			Epoch:          strconv.FormatUint(exitEpoch, 10),
+			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
+		},
+		MessageHash:        string(srHash[:]),
+		Signature:          exitMsg.String(),
+		ValidatorPublicKey: validatorPubKey.String(),
+	}
+	marshalledPreSignedMessage, err := json.Marshal(preSignedMessageUnEncrypted)
+	if err != nil {
+		return nil, err
+	}
+
+	oaep, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, marshalledPreSignedMessage, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	// send the encrypted presigned exit message object to the api
+	preSignedMessage := PreSignedSendApiRequestType{Data: oaep}
+	fmt.Printf("preSignedMessage is %v\n", preSignedMessage)
+	//preSignedRequestData, err := json.Marshal(preSignedMessage)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	//
+	//preSignSendRes, err := http.Post(preSignSendApi, "application/json", bytes.NewBuffer(preSignedRequestData))
+	//if err != nil {
+	//	return nil, err
+	//}
+	//defer preSignSendRes.Body.Close()
+	//var preSignSendResponse PreSignSendApiResponseType
+	//err = json.NewDecoder(preSignSendRes.Body).Decode(&preSignSendResponse)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//fmt.Printf("PreSigned send output %t\n", preSignSendResponse)
+
+	response.ValidatorIndex = validatorStatus.Index
+	response.ValidatorPubKey = validatorPubKey
+	response.ExitEpoch = exitEpoch
+	response.SignedMsg = exitMsg
 
 	return &response, nil
 }
