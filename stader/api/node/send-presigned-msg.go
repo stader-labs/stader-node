@@ -1,6 +1,7 @@
 package node
 
 import (
+	"bytes"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
@@ -133,34 +134,34 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("public key is %s\n", publicKeyResponse.Value)
 
 	// encrypt using the public key
-	fmt.Println("Getting the rsa pub key")
-	rsaPubKey, err := BytesToPublicKey([]byte("-----BEGIN PUBLIC KEY-----\n" + publicKeyResponse.Value + "\n-----END PUBLIC KEY-----"))
-	if err != nil {
-		fmt.Printf("error in generating rsa pub key is %v\n", err)
-		return nil, err
-	}
-	fmt.Printf("rsa pub key is %v\n", rsaPubKey)
+	//fmt.Println("Getting the rsa pub key")
+	//rsaPubKey, err := BytesToPublicKey([]byte("-----BEGIN PUBLIC KEY-----\n" + publicKeyResponse.Value + "\n-----END PUBLIC KEY-----"))
+	//if err != nil {
+	//	fmt.Printf("error in generating rsa pub key is %v\n", err)
+	//	return nil, err
+	//}
+	//fmt.Printf("rsa pub key is %v\n", rsaPubKey)
 
 	// check if it is already there
-	//preSignCheckRequest := PreSignCheckApiRequestType{
-	//	ValidatorPublicKey: validatorPubKey.String(),
-	//}
-	//requestData, err := json.Marshal(preSignCheckRequest)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//res, err := http.Post(preSignCheckApi, string(requestData))
-	//if err != nil {
-	//	return nil, err
-	//}
-	//defer res.Body.Close()
-	//var publicKeyResponse PublicKeyApiResponse
-	//err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//fmt.Printf("public key is %s\n", publicKeyResponse.Value)
+	preSignCheckRequest := PreSignCheckApiRequestType{
+		ValidatorPublicKey: validatorPubKey.String(),
+	}
+	requestData, err := json.Marshal(preSignCheckRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	preSignCheckRes, err := http.Post(preSignCheckApi, "application/json", bytes.NewBuffer(requestData))
+	if err != nil {
+		return nil, err
+	}
+	defer preSignCheckRes.Body.Close()
+	var preSignCheckResponse PreSignCheckApiResponseType
+	err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("PreSigned check output %t\n", preSignCheckResponse.Value)
 
 	// send the exit msg to the api
 
