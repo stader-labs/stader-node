@@ -95,6 +95,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("validator private key is %s\n", validatorPrivateKey)
 
 	currentHead, err := bc.GetBeaconHead()
 	if err != nil {
@@ -190,24 +191,32 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		Signature:          exitMsg.Hex(),
 		ValidatorPublicKey: validatorPubKey.Hex(),
 	}
-	marshalledPreSignedMessage, err := json.Marshal(preSignedMessageUnEncrypted)
+	_, err = json.Marshal(preSignedMessageUnEncrypted)
 	if err != nil {
 		return nil, err
 	}
 
-	oaep, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, marshalledPreSignedMessage, nil)
+	exitMsgEncrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, exitMsg.Bytes(), nil)
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("encrypted oaep exitMsg is %s\n", exitMsgEncrypted)
+
+	messageHashEncrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, srHash[:], nil)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("encrypted oaep message hash is %s\n", messageHashEncrypted)
 
 	// send the encrypted presigned exit message object to the api
-	preSignedMessage := PreSignedSendApiRequestType{Data: oaep}
-	fmt.Printf("preSignedMessage is %v\n", preSignedMessage)
+	//preSignedMessage := PreSignedSendApiRequestType{Data: signedMsg}
+	//fmt.Printf("preSignedMessage is %v\n", preSignedMessage)
 	//preSignedRequestData, err := json.Marshal(preSignedMessage)
 	//if err != nil {
 	//	return nil, err
 	//}
-
 	//
 	//preSignSendRes, err := http.Post(preSignSendApi, "application/json", bytes.NewBuffer(preSignedRequestData))
 	//if err != nil {
