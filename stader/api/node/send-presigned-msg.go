@@ -1,7 +1,10 @@
 package node
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -41,6 +44,22 @@ type PreSignSendUnEncryptedType struct {
 
 type PublicKeyApiResponse struct {
 	Value string `json:"value"`
+}
+
+func BytesToPublicKey(pub []byte) (*rsa.PublicKey, error) {
+	block, _ := pem.Decode(pub)
+	b := block.Bytes
+	var err error
+
+	ifc, err := x509.ParsePKIXPublicKey(b)
+	if err != nil {
+		return nil, err
+	}
+	key, ok := ifc.(*rsa.PublicKey)
+	if !ok {
+		return nil, err
+	}
+	return key, nil
 }
 
 func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
@@ -106,6 +125,10 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 	fmt.Printf("public key is %s\n", publicKeyResponse.Value)
+
+	// encrypt using the public key
+	rsaPubKey, err := BytesToPublicKey([]byte(publicKeyResponse.Value))
+	fmt.Printf("rsa pub key is %v\n", rsaPubKey)
 
 	// check if it is already there
 	//http.Post(preSignCheckApi, http.)
