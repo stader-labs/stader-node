@@ -294,30 +294,23 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "send-presigned-exit-msg",
 				Aliases:   []string{"spem"},
 				Usage:     "Send the presigned exit msg to stader",
-				UsageText: "stader-cli node send-presigned-exit-msg --validator-index",
+				UsageText: "stader-cli node send-presigned-exit-msg --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.Uint64Flag{
-						Name:  "validator-index, vi",
+						Name:  "validator-pub-key, vpk",
 						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-					cli.Uint64Flag{
-						Name:  "epoch-delta, ed",
-						Usage: "Delta to add to the epoch",
 					},
 				},
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-					index := c.Uint64("validator-index")
-					fmt.Printf("index is %d\n", index)
-					epochDelta := c.Uint64("epoch-delta")
-					fmt.Printf("epoch-delta is %d\n", epochDelta)
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
 
 					// Run
-					return SendSignedPresignedMessage(c, index)
+					return SendSignedPresignedMessage(c, validatorPubKey)
 				},
 			},
 		},

@@ -212,6 +212,21 @@ func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitV
 	return response, nil
 }
 
+func (c *Client) SendPresignedMessage(validatorPubKey types.ValidatorPubkey) (api.SendPresignedMsgResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node send-presigned-msg %s", validatorPubKey))
+	if err != nil {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+	}
+	var response api.SendPresignedMsgResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
 func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	responseBytes, err := c.callAPI("node get-contracts-info")
 	if err != nil {
