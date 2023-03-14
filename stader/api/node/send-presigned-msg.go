@@ -21,6 +21,10 @@ const preSignSendApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/p
 const preSignCheckApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/msgSubmitted"
 const publicKeyApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/publicKey"
 
+type PreSignCheckApiRequestType struct {
+	ValidatorPublicKey string `json:"validatorPublicKey"`
+}
+
 type PreSignCheckApiResponseType struct {
 	Value bool `json:"value"`
 }
@@ -128,7 +132,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 
 	// encrypt using the public key
 	fmt.Println("Getting the rsa pub key")
-	rsaPubKey, err := BytesToPublicKey([]byte("\n-----BEGIN PUBLIC KEY-----" + publicKeyResponse.Value + "-----END PUBLIC KEY-----\n"))
+	rsaPubKey, err := BytesToPublicKey([]byte("-----BEGIN PUBLIC KEY-----\n" + publicKeyResponse.Value + "\n-----END PUBLIC KEY-----"))
 	if err != nil {
 		fmt.Printf("error in generating rsa pub key is %v\n", err)
 		return nil, err
@@ -136,7 +140,25 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("rsa pub key is %v\n", rsaPubKey)
 
 	// check if it is already there
-	//http.Post(preSignCheckApi, http.)
+	//preSignCheckRequest := PreSignCheckApiRequestType{
+	//	ValidatorPublicKey: validatorPubKey.String(),
+	//}
+	//requestData, err := json.Marshal(preSignCheckRequest)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//res, err := http.Post(preSignCheckApi, string(requestData))
+	//if err != nil {
+	//	return nil, err
+	//}
+	//defer res.Body.Close()
+	//var publicKeyResponse PublicKeyApiResponse
+	//err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//fmt.Printf("public key is %s\n", publicKeyResponse.Value)
 
 	// send the exit msg to the api
 
