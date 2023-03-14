@@ -31,8 +31,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Your eth2 client is on the correct network.")
-
 	numValidators := c.Uint64("num-validators")
 
 	// Force 4 ETH minipools as the only option after much community discussion

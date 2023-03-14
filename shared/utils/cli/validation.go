@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/tyler-smith/go-bip39"
 	"github.com/urfave/cli"
 

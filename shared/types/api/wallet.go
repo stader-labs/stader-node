@@ -4,7 +4,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
 // Encrypted validator keystore following the EIP-2335 standard

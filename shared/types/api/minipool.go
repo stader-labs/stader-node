@@ -80,6 +80,7 @@ type CanExitMinipoolResponse struct {
 	CanExit       bool   `json:"canExit"`
 	InvalidStatus bool   `json:"invalidStatus"`
 }
+
 type ExitMinipoolResponse struct {
 	Status string `json:"status"`
 	Error  string `json:"error"`

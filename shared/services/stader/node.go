@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"strconv"
 
@@ -174,6 +175,36 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators
 	fmt.Printf("response in CanNodeDeposit is %v\n", response)
 	if response.Error != "" {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can node deposit status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanExitValidator(validatorPubKey types.ValidatorPubkey) (api.CanExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-exit %s", validatorPubKey))
+	if err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %w", err)
+	}
+	var response api.CanExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not decode can exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node exit %s", validatorPubKey))
+	if err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+	}
+	var response api.ExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
 	}
 	return response, nil
 }

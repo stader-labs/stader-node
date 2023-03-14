@@ -499,6 +499,48 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-exit",
+				Usage:     "Can validator exit",
+				UsageText: "stader-cli api node can-exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canExitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "exit",
+				Usage:     "Exit validator",
+				UsageText: "stader-cli api node exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(exitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
 		},
 	})
 }
