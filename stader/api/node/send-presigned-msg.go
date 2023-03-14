@@ -3,6 +3,7 @@ package node
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
@@ -133,16 +134,16 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("public key is %s\n", publicKeyResponse.Value)
 
 	// encrypt using the public key
-	fmt.Println("Getting the rsa pub key")
-	fmt.Println("formatting public key")
-	formattedPublicKey := "-----BEGIN PUBLIC KEY-----\n" + publicKeyResponse.Value + "\n-----END PUBLIC KEY-----"
-	fmt.Printf("formatted public key is %s\n", formattedPublicKey)
-	rsaPubKey, err := BytesToPublicKey([]byte(formattedPublicKey))
+	encodedPublicKey, err := base64.StdEncoding.DecodeString(publicKeyResponse.Value)
 	if err != nil {
-		fmt.Printf("error in generating rsa pub key is %v\n", err)
+		panic(err)
+	}
+
+	publicKey, err := BytesToPublicKey(encodedPublicKey)
+	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("rsa pub key is %v\n", rsaPubKey)
+	fmt.Printf("public key is %v\n", publicKey)
 
 	//// check if it is already there
 	//preSignCheckRequest := PreSignCheckApiRequestType{
