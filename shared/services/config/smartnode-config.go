@@ -119,12 +119,15 @@ type SmartnodeConfig struct {
 	optimismPriceMessengerAddress map[config.Network]string `yaml:"-"`
 
 	// Rewards submission block maps
-	rewardsSubmissionBlockMaps        map[config.Network][]uint64 `yaml:"-"`
-	permissionlessNodeRegistryAddress map[config.Network]string   `yaml:"-"`
-	vaultFactoryAddress               map[config.Network]string   `yaml:"-"`
-	sdCollateralAddress               map[config.Network]string   `yaml:"-"`
-	sdTokenAddress                    map[config.Network]string   `yaml:"-"`
-	ethxTokenAddress                  map[config.Network]string   `yaml:"-"`
+	rewardsSubmissionBlockMaps map[config.Network][]uint64 `yaml:"-"`
+
+	permissionlessNodeRegistryAddress map[config.Network]string `yaml:"-"`
+	vaultFactoryAddress               map[config.Network]string `yaml:"-"`
+	sdCollateralAddress               map[config.Network]string `yaml:"-"`
+	sdTokenAddress                    map[config.Network]string `yaml:"-"`
+	ethxTokenAddress                  map[config.Network]string `yaml:"-"`
+
+	staderBackendApi map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Smartnode configuration
@@ -342,6 +345,10 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Devnet:   "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
 			config.Network_Mainnet:  "0x9A3f0A872bf39E0cd28a4C25FE66F4B6586953F6",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		staderBackendApi: map[config.Network]string{
+			config.Network_All: "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com",
 		},
 
 		rethAddress: map[config.Network]string{
@@ -578,6 +585,10 @@ func (cfg *SmartnodeConfig) GetSdTokenAddress() common.Address {
 
 func (cfg *SmartnodeConfig) GetEthxTokenAddress() common.Address {
 	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *SmartnodeConfig) GetStaderBackendApi() string {
+	return cfg.staderBackendApi[cfg.Network.Value.(config.Network)]
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

@@ -288,6 +288,13 @@ type DebugExitResponse struct {
 	SignatureDomain common.Hash              `json:"signatureDomain"`
 }
 
+type CanSendPresignedMsgResponse struct {
+	Status                               string `json:"status"`
+	Error                                string `json:"error"`
+	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
+	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
+}
+
 type SendPresignedMsgResponse struct {
 	Status          string                   `json:"status"`
 	Error           string                   `json:"error"`
