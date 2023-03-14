@@ -288,6 +288,15 @@ type DebugExitResponse struct {
 	SignatureDomain common.Hash              `json:"signatureDomain"`
 }
 
+type SendPresignedMsgResponse struct {
+	Status          string                   `json:"status"`
+	Error           string                   `json:"error"`
+	ValidatorPubKey types.ValidatorPubkey    `json:"validatorPubKey"`
+	ExitEpoch       uint64                   `json:"exitEpoch"`
+	ValidatorIndex  uint64                   `json:"validatorIndex"`
+	SignedMsg       types.ValidatorSignature `json:"signedMsg"`
+}
+
 type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
