@@ -17,7 +17,6 @@ import (
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"net/http"
-	"strconv"
 )
 
 // TODO - refactor
@@ -45,8 +44,8 @@ type PreSignedSendApiRequestType struct {
 
 type PreSignSendUnEncryptedType struct {
 	Message struct {
-		Epoch          string `json:"epoch"`
-		ValidatorIndex string `json:"validator_index"`
+		Epoch          uint64 `json:"epoch"`
+		ValidatorIndex uint64 `json:"validator_index"`
 	} `json:"message"`
 	MessageHash        string `json:"messageHash"`
 	Signature          string `json:"signature"`
@@ -181,11 +180,11 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	// encrypt the presigned exit message object
 	preSignedMessageUnEncrypted := PreSignSendUnEncryptedType{
 		Message: struct {
-			Epoch          string `json:"epoch"`
-			ValidatorIndex string `json:"validator_index"`
+			Epoch          uint64 `json:"epoch"`
+			ValidatorIndex uint64 `json:"validator_index"`
 		}{
-			Epoch:          strconv.FormatUint(exitEpoch, 10),
-			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
+			Epoch:          exitEpoch,
+			ValidatorIndex: validatorStatus.Index,
 		},
 		MessageHash:        string(srHash[:]),
 		Signature:          exitMsg.Hex(),
