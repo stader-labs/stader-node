@@ -151,6 +151,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 	fmt.Printf("public key is %v\n", publicKey)
+	fmt.Printf("public key size is %d\n", publicKey.Size())
 
 	//// check if it is already there
 	preSignCheckRequest := PreSignCheckApiRequestType{
