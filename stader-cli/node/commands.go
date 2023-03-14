@@ -290,7 +290,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 				},
 				Action: func(c *cli.Context) error {
-
 					//// Validate args
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
 					if err != nil {
