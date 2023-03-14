@@ -296,7 +296,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Usage:     "Send the presigned exit msg to stader",
 				UsageText: "stader-cli node send-presigned-exit-msg --validator-pub-key",
 				Flags: []cli.Flag{
-					cli.Uint64Flag{
+					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
 						Usage: "Validator index for whom we want to generate the debug exit",
 					},
