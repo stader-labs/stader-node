@@ -188,8 +188,8 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 		},
 		MessageHash:        string(srHash[:]),
-		Signature:          exitMsg.String(),
-		ValidatorPublicKey: validatorPubKey.String(),
+		Signature:          exitMsg.Hex(),
+		ValidatorPublicKey: validatorPubKey.Hex(),
 	}
 	marshalledPreSignedMessage, err := json.Marshal(preSignedMessageUnEncrypted)
 	if err != nil {
