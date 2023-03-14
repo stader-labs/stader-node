@@ -1,84 +1,17 @@
 package node
 
 import (
-	"crypto/rsa"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
-	"github.com/stader-labs/stader-node/shared/utils/net"
+	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 )
-
-// TODO - refactor these urls somehow
-const preSignSendApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/presign"
-const preSignCheckApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/msgSubmitted"
-const publicKeyApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/publicKey"
-
-func sendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
-	res, err := net.MakePostRequest(preSignSendApi, preSignedMessage)
-	if err != nil {
-		return nil, err
-	}
-
-	var preSignSendResponse stader_backend.PreSignSendApiResponseType
-	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	return &preSignSendResponse, nil
-}
-
-func isPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, error) {
-	//// check if it is already there
-	preSignCheckRequest := stader_backend.PreSignCheckApiRequestType{
-		ValidatorPublicKey: validatorPubKey.String(),
-	}
-
-	preSignCheckRes, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
-
-	defer preSignCheckRes.Body.Close()
-	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
-	err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
-	if err != nil {
-		return false, err
-	}
-	return preSignCheckResponse.Value, nil
-}
-
-func getPublicKey() (*rsa.PublicKey, error) {
-	// get public key from api
-	res, err := net.MakeGetRequest(publicKeyApi, struct{}{})
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	var publicKeyResponse stader_backend.PublicKeyApiResponse
-	err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	decodedPublicKey, err := base64.StdEncoding.DecodeString(publicKeyResponse.Value)
-	if err != nil {
-		return nil, err
-	}
-
-	publicKey, err := crypto.BytesToPublicKey(decodedPublicKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return publicKey, nil
-}
 
 func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSendPresignedMsgResponse, error) {
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
@@ -99,7 +32,7 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 
 	// check if already registered
-	isRegistered, err := isPresignedKeyRegistered(validatorPubKey)
+	isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +92,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	}
 
 	// get the public key
-	publicKey, err := getPublicKey()
+	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +123,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		ValidatorPublicKey: validatorPubKey.Hex(),
 	}
 
-	_, err = sendPresignedMessageToStaderBackend(preSignedMessageRequest)
+	_, err = stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)
 	if err != nil {
 		return nil, err
 	}
