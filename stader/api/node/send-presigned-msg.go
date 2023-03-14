@@ -128,7 +128,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 
 	// encrypt using the public key
 	fmt.Println("Getting the rsa pub key")
-	rsaPubKey, err := BytesToPublicKey([]byte(publicKeyResponse.Value))
+	rsaPubKey, err := BytesToPublicKey([]byte("-----BEGIN PUBLIC KEY-----\n" + publicKeyResponse.Value + "\n-----END PUBLIC KEY-----\n"))
 	if err != nil {
 		fmt.Printf("error in generating rsa pub key is %v\n", err)
 		return nil, err
