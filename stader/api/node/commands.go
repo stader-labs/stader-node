@@ -528,9 +528,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
 					if err != nil {
