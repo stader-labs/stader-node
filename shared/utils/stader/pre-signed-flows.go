@@ -2,7 +2,6 @@ package stader
 
 import (
 	"crypto/rsa"
-	"encoding/base64"
 	"encoding/json"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
@@ -61,7 +60,7 @@ func GetPublicKey() (*rsa.PublicKey, error) {
 		return nil, err
 	}
 
-	decodedPublicKey, err := base64.StdEncoding.DecodeString(publicKeyResponse.Value)
+	decodedPublicKey, err := crypto.DecodeBase64(publicKeyResponse.Value)
 	if err != nil {
 		return nil, err
 	}
