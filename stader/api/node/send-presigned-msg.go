@@ -110,8 +110,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	fmt.Printf("encrypted oaep message hash is %s\n", messageHashEncrypted)
-
 	fmt.Printf("Sending the presigned message\n")
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
@@ -122,10 +120,12 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 			Epoch:          strconv.FormatUint(exitEpoch, 10),
 			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 		},
-		MessageHash:        messageHashEncrypted,
-		Signature:          exitSignatureEncrypted,
+		MessageHash:        string(messageHashEncrypted),
+		Signature:          string(exitSignatureEncrypted),
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
+
+	fmt.Printf("preSignedMessageRequest is %s\n", preSignedMessageRequest)
 
 	res, err := stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)
 	if err != nil {
