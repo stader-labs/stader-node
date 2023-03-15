@@ -93,8 +93,9 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 	fmt.Printf("exitMsg is %s\n", exitMsg.String())
-	fmt.Printf("srHash is %s\n", common.BytesToHash(srHash[:]))
 	srHashHex := common.Bytes2Hex(srHash[:])
+	fmt.Printf("srHash is %s\n", srHashHex)
+	fmt.Printf("srHash wihtout 0x is %s\n", srHashHex[2:])
 
 	// get the public key
 	fmt.Printf("Getting public key!")
