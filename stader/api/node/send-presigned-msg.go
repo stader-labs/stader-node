@@ -104,11 +104,15 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
+	exitSignatureEncrypted = crypto.EncodeBase64(exitSignatureEncrypted)
+	fmt.Printf("base64 encoded exit signature is %s\n", string(exitSignatureEncrypted))
 
 	messageHashEncrypted, err := crypto.EncryptUsingPublicKey(srHash[:], publicKey)
 	if err != nil {
 		return nil, err
 	}
+	messageHashEncrypted = crypto.EncodeBase64(messageHashEncrypted)
+	fmt.Printf("base64 encoded message hash is %s\n", string(messageHashEncrypted))
 
 	fmt.Printf("Sending the presigned message\n")
 	// encrypt the presigned exit message object
