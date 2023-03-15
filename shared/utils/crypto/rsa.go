@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 )
@@ -24,11 +23,34 @@ func BytesToPublicKey(pub []byte) (*rsa.PublicKey, error) {
 	return key, nil
 }
 
-func EncryptUsingPublicKey(data []byte, publicKey *rsa.PublicKey) (string, error) {
-	exitMsgEncrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, data, nil)
+func BytesToPrivateKey(pub []byte) (*rsa.PrivateKey, error) {
+	block, _ := pem.Decode(pub)
+	b := block.Bytes
+	var err error
+
+	key, err := x509.ParsePKCS1PrivateKey(b)
 	if err != nil {
-		return "", err
+		fmt.Printf("Error using x509.ParsePKIXPublicKey %v\n", err)
+		return nil, err
 	}
 
-	return hex.EncodeToString(exitMsgEncrypted), nil
+	return key, nil
+}
+
+func EncryptUsingPublicKey(data []byte, publicKey *rsa.PublicKey) ([]byte, error) {
+	exitMsgEncrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, data, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return exitMsgEncrypted, nil
+}
+
+func DecryptUsingPublicKey(data []byte, privateKey *rsa.PrivateKey) ([]byte, error) {
+	exitMsgEncrypted, err := rsa.DecryptOAEP(sha256.New(), rand.Reader, privateKey, data, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return exitMsgEncrypted, nil
 }
