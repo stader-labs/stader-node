@@ -103,7 +103,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("Got the public key! %v\n", publicKey)
 
 	fmt.Println("Encrypting exitSignature!")
-	exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey(exitMsg.Bytes(), publicKey)
+	exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitMsg.String()), publicKey)
 	if err != nil {
 		return nil, err
 	}
