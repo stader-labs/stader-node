@@ -11,10 +11,8 @@ func DecodeBase64(data string) ([]byte, error) {
 	return decodedPublicKey, nil
 }
 
-func EncodeBase64(data []byte) []byte {
-	var dst []byte
+func EncodeBase64(data []byte) string {
+	res := base64.StdEncoding.EncodeToString(data)
 
-	base64.StdEncoding.Encode(dst, data)
-
-	return dst
+	return res
 }
