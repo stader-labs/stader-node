@@ -94,7 +94,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	}
 	fmt.Printf("exitMsg is %s\n", exitMsg.String())
 	fmt.Printf("srHash is %s\n", common.BytesToHash(srHash[:]))
-	srHash = common.BytesToHash(srHash[:])
+	srHashHex := common.Bytes2Hex(srHash[:])
 
 	// get the public key
 	fmt.Printf("Getting public key!")
@@ -114,7 +114,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	fmt.Printf("base64 encoded exit signature is %s\n", exitSignatureEncryptedString)
 
 	fmt.Println("Encrypting message hash")
-	messageHashEncrypted, err := crypto.EncryptUsingPublicKey(srHash[:], publicKey)
+	messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
 	if err != nil {
 		return nil, err
 	}
