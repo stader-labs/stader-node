@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 )
@@ -32,6 +33,9 @@ func EncryptUsingPublicKey(data []byte, publicKey *rsa.PublicKey) ([]byte, error
 	if err != nil {
 		return nil, err
 	}
+
+	encodedToString := hex.EncodeToString(exitMsgEncrypted)
+	fmt.Printf("EncryptUsingPublicKey: Encode to string output: %s\n", encodedToString)
 
 	return exitMsgEncrypted, nil
 }
