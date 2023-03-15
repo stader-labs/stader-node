@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -92,7 +93,8 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 	fmt.Printf("exitMsg is %s\n", exitMsg.String())
-	fmt.Printf("srHash is %s\n", types.BytesToValidatorPubkey(srHash[:]))
+	fmt.Printf("srHash is %s\n", common.BytesToHash(srHash[:]))
+	srHash = common.BytesToHash(srHash[:])
 
 	// get the public key
 	fmt.Printf("Getting public key!")
