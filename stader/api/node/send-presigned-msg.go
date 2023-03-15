@@ -11,6 +11,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
+	"strconv"
 )
 
 func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSendPresignedMsgResponse, error) {
@@ -115,15 +116,15 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
 		Message: struct {
-			Epoch          uint64 `json:"epoch"`
-			ValidatorIndex uint64 `json:"validator_index"`
+			Epoch          string `json:"epoch"`
+			ValidatorIndex string `json:"validator_index"`
 		}{
-			Epoch:          exitEpoch,
-			ValidatorIndex: validatorStatus.Index,
+			Epoch:          strconv.FormatUint(exitEpoch, 10),
+			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 		},
 		MessageHash:        messageHashEncrypted,
 		Signature:          exitSignatureEncrypted,
-		ValidatorPublicKey: validatorPubKey.Hex(),
+		ValidatorPublicKey: validatorPubKey.String(),
 	}
 
 	res, err := stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)

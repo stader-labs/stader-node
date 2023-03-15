@@ -15,8 +15,8 @@ type PreSignSendApiResponseType struct {
 
 type PreSignSendApiRequestType struct {
 	Message struct {
-		Epoch          uint64 `json:"epoch"`
-		ValidatorIndex uint64 `json:"validator_index"`
+		Epoch          string `json:"epoch"`
+		ValidatorIndex string `json:"validator_index"`
 	} `json:"message"`
 	MessageHash        []byte `json:"messageHash"`
 	Signature          []byte `json:"signature"`
