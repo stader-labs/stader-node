@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
-	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 )
@@ -28,14 +27,13 @@ func BytesToPublicKey(pub []byte) (*rsa.PublicKey, error) {
 	return key, nil
 }
 
-func EncryptUsingPublicKey(data []byte, publicKey *rsa.PublicKey) (string, error) {
+func EncryptUsingPublicKey(data []byte, publicKey *rsa.PublicKey) ([]byte, error) {
 	exitMsgEncrypted, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, publicKey, data, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	encodedToString := hex.EncodeToString(exitMsgEncrypted)
-	//fmt.Printf("EncryptUsingPublicKey: Encode to string output: %s\n", encodedToString)
+	//encodedToString := hex.EncodeToString(exitMsgEncrypted)
 
-	return encodedToString, nil
+	return exitMsgEncrypted, nil
 }
