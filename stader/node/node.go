@@ -195,6 +195,7 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
 						continue
 					}
+					srHashHex := common.Bytes2Hex(srHash[:])
 
 					// encrypt the signature and srHash
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
@@ -205,7 +206,7 @@ func run(c *cli.Context) error {
 					// TODO - bchain - revise the naming
 					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
 
-					messageHashEncrypted, err := crypto.EncryptUsingPublicKey(srHash[:], publicKey)
+					messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
 					if err != nil {
 						errorLog.Printf("Failed to encrypt message hash for validator: %s\n", validatorPubKey)
 						continue
@@ -242,6 +243,7 @@ func run(c *cli.Context) error {
 				batchIndex = batchIndex + preSignBatchSize
 			}
 
+			errorLog.Printf("Done with the pass of presign daemon")
 			// run loop every 12 hours
 			time.Sleep(preSignedCooldown)
 		}
