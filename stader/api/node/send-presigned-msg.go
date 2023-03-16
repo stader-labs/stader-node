@@ -24,8 +24,9 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 
 	// check if validator is present by querying validator index
-	validatorIndex, err := bc.GetValidatorIndex(validatorPubKey)
-	if validatorIndex == 0 || err != nil {
+	validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
+	fmt.Printf("canSendPresignedMsg: Validator status is %v\n", validatorStatus)
+	if validatorStatus.Index == 0 || err != nil {
 		canSendPresignedMsgResponse.ValidatorNotRegistered = true
 		return &canSendPresignedMsgResponse, nil
 	}
