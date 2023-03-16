@@ -53,6 +53,10 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 		fmt.Println("Validator pre sign key is already registered!")
 		return nil
 	}
+	if canSendPresignedMsgRes.ValidatorIsExiting {
+		fmt.Println("Validator is exiting")
+		return nil
+	}
 
 	// send presigned message
 	res, err := staderClient.SendPresignedMessage(validatorPubKey)
