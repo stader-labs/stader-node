@@ -3,13 +3,17 @@ package node
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/types/eth2"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
+	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 
@@ -41,42 +45,6 @@ const (
 	InfoColor               = color.FgHiCyan
 )
 
-// TODO - refactor this from debug-exit command too
-// Get a voluntary exit message signature for a given validator key and index
-func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex uint64, epoch uint64, signatureDomain []byte) (types.ValidatorSignature, error) {
-
-	// Build voluntary exit message
-	exitMessage := eth2.VoluntaryExit{
-		Epoch:          epoch,
-		ValidatorIndex: validatorIndex,
-	}
-
-	// Get object root
-	or, err := exitMessage.HashTreeRoot()
-	if err != nil {
-		return types.ValidatorSignature{}, err
-	}
-
-	// Get signing root
-	sr := eth2.SigningRoot{
-		ObjectRoot: or[:],
-		Domain:     signatureDomain,
-	}
-
-	srHash, err := sr.HashTreeRoot()
-	if err != nil {
-		return types.ValidatorSignature{}, err
-	}
-	fmt.Printf("api: srHash is %s\n", common.Bytes2Hex(srHash[:]))
-
-	// Sign message
-	signature := validatorKey.Sign(srHash[:]).Marshal()
-
-	// Return
-	return types.BytesToValidatorSignature(signature), nil
-
-}
-
 // Register node command
 func RegisterCommands(app *cli.App, name string, aliases []string) {
 	app.Commands = append(app.Commands, cli.Command{
@@ -98,18 +66,18 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	//w, err := services.GetWallet(c)
-	//if err != nil {
-	//	return err
-	//}
-	//bc, err := services.GetBeaconClient(c)
-	//if err != nil {
-	//	return err
-	//}
-	//publicKey, err := stader.GetPublicKey()
-	//if err != nil {
-	//	return err
-	//}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	publicKey, err := stader.GetPublicKey()
+	if err != nil {
+		return err
+	}
 
 	// Configure
 	configureHTTP()
@@ -122,129 +90,129 @@ func run(c *cli.Context) error {
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
-	//infoLog := log.NewColorLogger(InfoColor)
+	infoLog := log.NewColorLogger(InfoColor)
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
 	wg.Add(3)
 
 	// validator presigned loop
-	//go func() {
-	//	for {
-	//		infoLog.Println("Starting a pass of the presign daemon!")
-	//		walletIndex := w.GetNextAccount()
-	//		noOfBatches := walletIndex / uint(preSignBatchSize)
-	//		batchIndex := 0
-	//
-	//		currentHead, err := bc.GetBeaconHead()
-	//		if err != nil {
-	//			panic("not able to communicate with beacon chain!")
-	//		}
-	//
-	//		for i := uint(0); i < noOfBatches; i++ {
-	//			for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
-	//				infoLog.Printf("Checking validator index %d\n", j)
-	//				// TODO - bchain - parallelize for each validator for each batch
-	//				validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
-	//				// log the errors and continue. dont need to sleep post an error
-	//				if err != nil {
-	//					errorLog.Printf("Could not find validator private key for validator index %d\n", j)
-	//					continue
-	//				}
-	//
-	//				validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
-	//
-	//				// check if validator has not yet been registered
-	//				validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
-	//				if err != nil {
-	//					errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
-	//					continue
-	//				}
-	//
-	//				// check if the presigned message has been registered. if it has been registered, then continue
-	//				isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
-	//				if isRegistered {
-	//					infoLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
-	//					continue
-	//				} else if err != nil {
-	//					errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
-	//				}
-	//
-	//				// exit epoch should be > activation_epoch + 256
-	//				// exit epoch should be > current epoch
-	//				exitEpoch := currentHead.Epoch + 1
-	//				epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
-	//				if epochsSinceActivation < 256 {
-	//					exitEpoch = exitEpoch + (256 - epochsSinceActivation) + 1
-	//				}
-	//
-	//				signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch)
-	//				if err != nil {
-	//					errorLog.Printf("Failed to get the signature domain from beacon chain\n")
-	//					continue
-	//				}
-	//
-	//				// get the presigned msg
-	//				exitSignature, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
-	//				if err != nil {
-	//					errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
-	//					continue
-	//				}
-	//				srHashHex := common.Bytes2Hex(srHash[:])
-	//
-	//				// encrypt the signature and srHash
-	//				exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
-	//				if err != nil {
-	//					errorLog.Printf("Failed to encrypt exit signature for validator: %s\n", validatorPubKey)
-	//					continue
-	//				}
-	//				// TODO - bchain - revise the naming
-	//				exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
-	//
-	//				messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
-	//				if err != nil {
-	//					errorLog.Printf("Failed to encrypt message hash for validator: %s\n", validatorPubKey)
-	//					continue
-	//				}
-	//				messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
-	//
-	//				// send it to the presigned api
-	//				backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
-	//					Message: struct {
-	//						Epoch          string `json:"epoch"`
-	//						ValidatorIndex string `json:"validator_index"`
-	//					}{
-	//						Epoch:          strconv.FormatUint(exitEpoch, 10),
-	//						ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
-	//					},
-	//					MessageHash:        messageHashEncryptedString,
-	//					Signature:          exitSignatureEncryptedString,
-	//					ValidatorPublicKey: validatorPubKey.String(),
-	//				})
-	//				if !backendRes.Success {
-	//					errorLog.Printf("Failed to send the presigned api: %s\n", backendRes.Message)
-	//					continue
-	//				} else if backendRes.Success {
-	//					errorLog.Printf("Successfully sent the presigned message for validator: %s\n", validatorPubKey)
-	//					continue
-	//				} else if err != nil {
-	//					errorLog.Printf("Sending presigned message failed with %v\n", err)
-	//					continue
-	//				}
-	//
-	//				time.Sleep(preSignedBatchCooldown)
-	//			}
-	//
-	//			batchIndex = batchIndex + preSignBatchSize
-	//		}
-	//
-	//		errorLog.Printf("Done with the pass of presign daemon")
-	//		// run loop every 12 hours
-	//		time.Sleep(preSignedCooldown)
-	//	}
-	//
-	//	wg.Done()
-	//}()
+	go func() {
+		for {
+			infoLog.Println("Starting a pass of the presign daemon!")
+			walletIndex := w.GetNextAccount()
+			noOfBatches := walletIndex / uint(preSignBatchSize)
+			batchIndex := 0
+
+			currentHead, err := bc.GetBeaconHead()
+			if err != nil {
+				panic("not able to communicate with beacon chain!")
+			}
+
+			for i := uint(0); i < noOfBatches; i++ {
+				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
+					infoLog.Printf("Checking validator index %d\n", j)
+					// TODO - bchain - parallelize for each validator for each batch
+					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
+					// log the errors and continue. dont need to sleep post an error
+					if err != nil {
+						errorLog.Printf("Could not find validator private key for validator index %d\n", j)
+						continue
+					}
+
+					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
+
+					// check if validator has not yet been registered
+					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
+					if err != nil {
+						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
+						continue
+					}
+
+					// check if the presigned message has been registered. if it has been registered, then continue
+					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
+					if isRegistered {
+						infoLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
+						continue
+					} else if err != nil {
+						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
+					}
+
+					// exit epoch should be > activation_epoch + 256
+					// exit epoch should be > current epoch
+					exitEpoch := currentHead.Epoch + 1
+					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
+					if epochsSinceActivation < 256 {
+						exitEpoch = exitEpoch + (256 - epochsSinceActivation) + 1
+					}
+
+					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch)
+					if err != nil {
+						errorLog.Printf("Failed to get the signature domain from beacon chain\n")
+						continue
+					}
+
+					// get the presigned msg
+					exitSignature, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+					if err != nil {
+						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
+						continue
+					}
+					srHashHex := common.Bytes2Hex(srHash[:])
+
+					// encrypt the signature and srHash
+					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
+					if err != nil {
+						errorLog.Printf("Failed to encrypt exit signature for validator: %s\n", validatorPubKey)
+						continue
+					}
+					// TODO - bchain - revise the naming
+					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
+
+					messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
+					if err != nil {
+						errorLog.Printf("Failed to encrypt message hash for validator: %s\n", validatorPubKey)
+						continue
+					}
+					messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
+
+					// send it to the presigned api
+					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
+						Message: struct {
+							Epoch          string `json:"epoch"`
+							ValidatorIndex string `json:"validator_index"`
+						}{
+							Epoch:          strconv.FormatUint(exitEpoch, 10),
+							ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
+						},
+						MessageHash:        messageHashEncryptedString,
+						Signature:          exitSignatureEncryptedString,
+						ValidatorPublicKey: validatorPubKey.String(),
+					})
+					if !backendRes.Success {
+						errorLog.Printf("Failed to send the presigned api: %s\n", backendRes.Message)
+						continue
+					} else if backendRes.Success {
+						errorLog.Printf("Successfully sent the presigned message for validator: %s\n", validatorPubKey)
+						continue
+					} else if err != nil {
+						errorLog.Printf("Sending presigned message failed with %v\n", err)
+						continue
+					}
+
+					time.Sleep(preSignedBatchCooldown)
+				}
+
+				batchIndex = batchIndex + preSignBatchSize
+			}
+
+			errorLog.Printf("Done with the pass of presign daemon")
+			// run loop every 12 hours
+			time.Sleep(preSignedCooldown)
+		}
+
+		wg.Done()
+	}()
 
 	// Run task loop
 	go func() {
