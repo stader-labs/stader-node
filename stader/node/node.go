@@ -125,7 +125,6 @@ func run(c *cli.Context) error {
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 
 					// check if validator has not yet been registered
-					// TODO - filter for validator state. we need to check if validator is not exiting
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if validatorStatus.Index == 0 || err != nil {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
