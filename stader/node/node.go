@@ -75,6 +75,7 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	// TODO - if public key changes, we will have to restart node
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return err
@@ -110,7 +111,7 @@ func run(c *cli.Context) error {
 				panic("not able to communicate with beacon chain!")
 			}
 
-			for i := uint(0); i < noOfBatches; i++ {
+			for i := uint(0); i <= noOfBatches; i++ {
 				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
 					time.Sleep(preSignedBatchCooldown)
 					infoLog.Printf("Checking validator index %d\n", j)
