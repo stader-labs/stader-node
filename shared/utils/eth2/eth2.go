@@ -29,6 +29,17 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 	return config.GenesisEpoch + (time-config.GenesisTime)/config.SecondsPerEpoch
 }
 
+func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_PendingInitialized:
+	case beacon.ValidatorState_PendingQueued:
+	case beacon.ValidatorState_ActiveOngoing:
+		return false
+	}
+
+	return true
+}
+
 // Get the balances of the minipools on the beacon chain
 func GetBeaconBalances(rp *rocketpool.RocketPool, bc beacon.Client, addresses []common.Address, beaconHead beacon.BeaconHead, opts *bind.CallOpts) ([]minipoolBalanceDetails, error) {
 	return []minipoolBalanceDetails{}, nil

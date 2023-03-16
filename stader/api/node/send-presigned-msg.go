@@ -7,6 +7,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -37,6 +38,11 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 	if isRegistered {
 		canSendPresignedMsgResponse.ValidatorPreSignKeyAlreadyRegistered = true
+		return &canSendPresignedMsgResponse, nil
+	}
+
+	if eth2.IsValidatorExiting(validatorStatus) {
+		canSendPresignedMsgResponse.ValidatorIsExiting = true
 		return &canSendPresignedMsgResponse, nil
 	}
 
@@ -78,7 +84,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if epochsSinceActivation < 256 {
 		exitEpoch = exitEpoch + (256 - epochsSinceActivation)
 	}
-	fmt.Printf("exitEpoch is %d\n", exitEpoch)
+	//fmt.Printf("exitEpoch is %d\n", exitEpoch)
 
 	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch)
 	if err != nil {
@@ -89,39 +95,39 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("exitMsg is %s\n", exitMsg.String())
+	//fmt.Printf("exitMsg is %s\n", exitMsg.String())
 	srHashHex := common.Bytes2Hex(srHash[:])
-	fmt.Printf("srHash is %s\n", srHashHex)
-	fmt.Printf("srHash wihtout 0x is %s\n", srHashHex[2:])
+	//fmt.Printf("srHash is %s\n", srHashHex)
+	//fmt.Printf("srHash wihtout 0x is %s\n", srHashHex[2:])
 
 	// get the public key
-	fmt.Printf("Getting public key!")
+	//fmt.Printf("Getting public key!")
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Got the public key! %v\n", publicKey)
+	//fmt.Printf("Got the public key! %v\n", publicKey)
 
-	fmt.Println("Encrypting exitSignature!")
+	//fmt.Println("Encrypting exitSignature!")
 	exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitMsg.String()), publicKey)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("exitSigntaure encrypted is %s\n", exitSignatureEncrypted)
+	//fmt.Printf("exitSigntaure encrypted is %s\n", exitSignatureEncrypted)
 	exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
-	fmt.Printf("base64 encoded exit signature is %s\n", exitSignatureEncryptedString)
+	//fmt.Printf("base64 encoded exit signature is %s\n", exitSignatureEncryptedString)
 
-	fmt.Println("Encrypting message hash")
+	//fmt.Println("Encrypting message hash")
 	messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Encrypted message hash")
-	fmt.Printf("message hash encrypted is %s\n", messageHashEncrypted)
+	//fmt.Println("Encrypted message hash")
+	//fmt.Printf("message hash encrypted is %s\n", messageHashEncrypted)
 	messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
-	fmt.Printf("base64 encoded message hash is %s\n", messageHashEncryptedString)
+	//fmt.Printf("base64 encoded message hash is %s\n", messageHashEncryptedString)
 
-	fmt.Printf("Sending the presigned message\n")
+	//fmt.Printf("Sending the presigned message\n")
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
 		Message: struct {
@@ -135,8 +141,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		Signature:          exitSignatureEncryptedString,
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
-
-	fmt.Printf("preSignedMessageRequest is %s\n", preSignedMessageRequest)
 
 	res, err := stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)
 	if err != nil {

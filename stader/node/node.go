@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -31,7 +32,7 @@ import (
 
 // Config
 var preSignedCooldown, _ = time.ParseDuration("12h")
-var preSignedBatchCooldown, _ = time.ParseDuration("30s")
+var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 10 // Go thru 10 keys in each pass
 var tasksInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
@@ -111,6 +112,7 @@ func run(c *cli.Context) error {
 
 			for i := uint(0); i < noOfBatches; i++ {
 				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
+					time.Sleep(preSignedBatchCooldown)
 					infoLog.Printf("Checking validator index %d\n", j)
 					// TODO - bchain - parallelize for each validator for each batch
 					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
@@ -123,10 +125,15 @@ func run(c *cli.Context) error {
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 
 					// check if validator has not yet been registered
-					// TODO - filter for validator state
+					// TODO - filter for validator state. we need to check if validator is not exiting
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if validatorStatus.Index == 0 || err != nil {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
+						continue
+					}
+
+					if eth2.IsValidatorExiting(validatorStatus) {
+						errorLog.Printf("Validator %s is exiting\n", validatorPubKey)
 						continue
 					}
 
@@ -200,8 +207,6 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Sending presigned message failed with %v\n", err)
 						continue
 					}
-
-					time.Sleep(preSignedBatchCooldown)
 				}
 
 				batchIndex = batchIndex + preSignBatchSize
