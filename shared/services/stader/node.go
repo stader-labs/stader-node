@@ -113,22 +113,6 @@ func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeStakeRplAppro
 	return response, nil
 }
 
-// Stake RPL against the node waiting for approvalTxHash to be included in a block first
-func (c *Client) NodeWaitAndStakeRpl(amountWei *big.Int, approvalTxHash common.Hash) (api.NodeStakeRplStakeResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node wait-and-stake-rpl %s %s", amountWei.String(), approvalTxHash.String()))
-	if err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %w", err)
-	}
-	var response api.NodeStakeRplStakeResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not decode stake node RPL response: %w", err)
-	}
-	if response.Error != "" {
-		return api.NodeStakeRplStakeResponse{}, fmt.Errorf("could not stake node RPL: %s", response.Error)
-	}
-	return response, nil
-}
-
 // Stake RPL against the node
 func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeStakeRplStakeResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd %s", amountWei.String()))
@@ -269,22 +253,6 @@ func (c *Client) NodeSync() (api.NodeSyncProgressResponse, error) {
 	}
 	if response.Error != "" {
 		return api.NodeSyncProgressResponse{}, fmt.Errorf("could not get node sync: %s", response.Error)
-	}
-	return response, nil
-}
-
-// Get the deposit contract info for Stader and the Beacon Client
-func (c *Client) DepositContractInfo() (api.ContractsInfoResponse, error) {
-	responseBytes, err := c.callAPI("node deposit-contract-info")
-	if err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("could not get deposit contract info: %w", err)
-	}
-	var response api.ContractsInfoResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ContractsInfoResponse{}, fmt.Errorf("could not decode deposit contract info response: %w", err)
-	}
-	if response.Error != "" {
-		return api.ContractsInfoResponse{}, fmt.Errorf("could not get deposit contract info: %s", response.Error)
 	}
 	return response, nil
 }
