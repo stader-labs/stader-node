@@ -1,7 +1,6 @@
 package watchtower
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"sync"
@@ -18,24 +17,12 @@ import (
 // Config
 var minTasksInterval, _ = time.ParseDuration("4m")
 var maxTasksInterval, _ = time.ParseDuration("6m")
-var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests = 200
 
-	RespondChallengesColor           = color.FgWhite
-	ClaimRplRewardsColor             = color.FgGreen
-	SubmitRplPriceColor              = color.FgYellow
-	SubmitNetworkBalancesColor       = color.FgYellow
-	SubmitWithdrawableMinipoolsColor = color.FgBlue
-	DissolveTimedOutMinipoolsColor   = color.FgMagenta
-	ProcessWithdrawalsColor          = color.FgCyan
-	SubmitScrubMinipoolsColor        = color.FgHiGreen
-	ErrorColor                       = color.FgRed
-	MetricsColor                     = color.FgHiYellow
-	SubmitRewardsTreeColor           = color.FgHiCyan
-	WarningColor                     = color.FgYellow
-	ProcessPenaltiesColor            = color.FgHiMagenta
+	ErrorColor   = color.FgRed
+	MetricsColor = color.FgHiYellow
 )
 
 // Register watchtower command
@@ -67,31 +54,6 @@ func run(c *cli.Context) error {
 	// Initialize error logger
 	errorLog := log.NewColorLogger(ErrorColor)
 
-	// Initialize tasks
-	respondChallenges, err := newRespondChallenges(c, log.NewColorLogger(RespondChallengesColor))
-	if err != nil {
-		return fmt.Errorf("error during respond-to-challenges check: %w", err)
-	}
-	submitRplPrice, err := newSubmitRplPrice(c, log.NewColorLogger(SubmitRplPriceColor))
-	if err != nil {
-		return fmt.Errorf("error during rpl price check: %w", err)
-	}
-	submitWithdrawableMinipools, err := newSubmitWithdrawableMinipools(c, log.NewColorLogger(SubmitWithdrawableMinipoolsColor))
-	if err != nil {
-		return fmt.Errorf("error during withdrawable minipools check: %w", err)
-	}
-	dissolveTimedOutMinipools, err := newDissolveTimedOutMinipools(c, log.NewColorLogger(DissolveTimedOutMinipoolsColor))
-	if err != nil {
-		return fmt.Errorf("error during timed-out minipools check: %w", err)
-	}
-	processWithdrawals, err := newProcessWithdrawals(c, log.NewColorLogger(ProcessWithdrawalsColor))
-	if err != nil {
-		return fmt.Errorf("error during withdrawal processing check: %w", err)
-	}
-	submitScrubMinipools, err := newSubmitScrubMinipools(c, log.NewColorLogger(SubmitScrubMinipoolsColor), errorLog, scrubCollector)
-	if err != nil {
-		return fmt.Errorf("error during scrub check: %w", err)
-	}
 	/*processPenalties, err := newProcessPenalties(c, log.NewColorLogger(ProcessPenaltiesColor), errorLog)
 	if err != nil {
 		return fmt.Errorf("error during penalties check: %w", err)
@@ -121,48 +83,6 @@ func run(c *cli.Context) error {
 				if err != nil {
 					errorLog.Println(err)
 				} else {
-
-					// Run the challenge check
-					if err := respondChallenges.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the price submission check
-					if err := submitRplPrice.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the withdrawable status submission check
-					if err := submitWithdrawableMinipools.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the minipool dissolve check
-					if err := dissolveTimedOutMinipools.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the withdrawal processing check
-					if err := processWithdrawals.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-
-					// Run the minipool scrub check
-					if err := submitScrubMinipools.run(); err != nil {
-						errorLog.Println(err)
-					}
-					/*time.Sleep(taskCooldown)
-
-					// Run the fee recipient penalty check
-					if err := processPenalties.run(); err != nil {
-						errorLog.Println(err)
-					}*/
-					// DISABLED until MEV-Boost can support it
 				}
 			}
 			time.Sleep(interval)

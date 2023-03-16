@@ -9,6 +9,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
+// TODO - ROCKETPOOL-OWNED
+
 // Print an API response
 // response must be a pointer to a struct type with Error and Status string fields
 func PrintResponse(response interface{}, responseError error) {

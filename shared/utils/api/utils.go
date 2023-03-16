@@ -2,24 +2,23 @@ package api
 
 import (
 	"fmt"
-	"math/big"
-	"time"
-
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/settings/protocol"
 	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"math/big"
 )
+
+// TODO - ROCKETPOOL-OWNER
 
 // The fraction of the timeout period to trigger overdue transactions
 const TimeoutSafetyFactor int = 2
 
 // Print the gas price and cost of a TX
-func PrintAndCheckGasInfo(gasInfo rocketpool.GasInfo, checkThreshold bool, gasThresholdGwei float64, logger log.ColorLogger, maxFeeWei *big.Int, gasLimit uint64) bool {
+func PrintAndCheckGasInfo(gasInfo stader.GasInfo, checkThreshold bool, gasThresholdGwei float64, logger log.ColorLogger, maxFeeWei *big.Int, gasLimit uint64) bool {
 
 	// Check the gas threshold if requested
 	if checkThreshold {
@@ -55,7 +54,7 @@ func PrintAndCheckGasInfo(gasInfo rocketpool.GasInfo, checkThreshold bool, gasTh
 }
 
 // Print a TX's details to the logger and waits for it to validated.
-func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec rocketpool.ExecutionClient, logger log.ColorLogger) error {
+func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec stader.ExecutionClient, logger log.ColorLogger) error {
 
 	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
 	hashString := hash.String()
@@ -73,21 +72,5 @@ func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec r
 	}
 
 	return nil
-
-}
-
-// True if a transaction is due and needs to bypass the gas threshold
-func IsTransactionDue(rp *rocketpool.RocketPool, startTime time.Time) (bool, time.Duration, error) {
-
-	// Get the dissolve timeout
-	timeout, err := protocol.GetMinipoolLaunchTimeout(rp, nil)
-	if err != nil {
-		return false, 0, err
-	}
-
-	dueTime := timeout / time.Duration(TimeoutSafetyFactor)
-	isDue := time.Since(startTime) > dueTime
-	timeUntilDue := time.Until(startTime.Add(dueTime))
-	return isDue, timeUntilDue, nil
 
 }

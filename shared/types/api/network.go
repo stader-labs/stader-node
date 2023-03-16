@@ -1,8 +1,6 @@
 package api
 
 import (
-	"math/big"
-
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -13,15 +11,6 @@ type NodeFeeResponse struct {
 	MinNodeFee    float64 `json:"minNodeFee"`
 	TargetNodeFee float64 `json:"targetNodeFee"`
 	MaxNodeFee    float64 `json:"maxNodeFee"`
-}
-
-type RplPriceResponse struct {
-	Status                 string   `json:"status"`
-	Error                  string   `json:"error"`
-	RplPrice               *big.Int `json:"rplPrice"`
-	RplPriceBlock          uint64   `json:"rplPriceBlock"`
-	MinPerMinipoolRplStake *big.Int `json:"minPerMinipoolRplStake"`
-	MaxPerMinipoolRplStake *big.Int `json:"maxPerMinipoolRplStake"`
 }
 
 type NetworkStatsResponse struct {
