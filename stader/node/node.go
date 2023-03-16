@@ -113,7 +113,7 @@ func run(c *cli.Context) error {
 
 			for i := uint(0); i <= noOfBatches; i++ {
 				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
-					time.Sleep(preSignedBatchCooldown)
+					//time.Sleep(preSignedBatchCooldown)
 					infoLog.Printf("Checking validator index %d\n", j)
 					// TODO - bchain - parallelize for each validator for each batch
 					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
