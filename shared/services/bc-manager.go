@@ -73,17 +73,10 @@ func NewBeaconClientManager(cfg *config.StaderConfig) (*BeaconClientManager, err
 
 	var primaryBc beacon.Client
 	var fallbackBc beacon.Client
-	switch selectedCC {
-	case cfgtypes.ConsensusClient_Nimbus:
-		primaryBc = client.NewNimbusClient(primaryProvider)
-		if fallbackProvider != "" {
-			fallbackBc = client.NewNimbusClient(fallbackProvider)
-		}
-	default:
-		primaryBc = client.NewStandardHttpClient(primaryProvider)
-		if fallbackProvider != "" {
-			fallbackBc = client.NewStandardHttpClient(fallbackProvider)
-		}
+
+	primaryBc = client.NewStandardHttpClient(primaryProvider)
+	if fallbackProvider != "" {
+		fallbackBc = client.NewStandardHttpClient(fallbackProvider)
 	}
 
 	return &BeaconClientManager{
@@ -244,9 +237,9 @@ func (m *BeaconClientManager) GetValidatorProposerDuties(indices []uint64, epoch
 }
 
 // Get the Beacon chain's domain data
-func (m *BeaconClientManager) GetDomainData(domainType []byte, epoch uint64) ([]byte, error) {
+func (m *BeaconClientManager) GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error) {
 	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
-		return client.GetDomainData(domainType, epoch)
+		return client.GetDomainData(domainType, epoch, useGenesisFork)
 	})
 	if err != nil {
 		return nil, err
@@ -322,8 +315,8 @@ func (m *BeaconClientManager) CheckStatus() *api.ClientManagerStatus {
 	}
 
 	// Flag the ready clients
-	m.primaryReady = status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced
-	m.fallbackReady = status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced
+	m.primaryReady = (status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced)
+	m.fallbackReady = (status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced)
 
 	return status
 

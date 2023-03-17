@@ -1,11 +1,12 @@
 package node
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/types/eth2"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
-	"math/big"
 
 	"github.com/urfave/cli"
 
@@ -69,7 +70,7 @@ func DebugExit(c *cli.Context, valIndex *big.Int) (*api.DebugExitResponse, error
 		return nil, err
 	}
 
-	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], currentHead.Epoch)
+	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], currentHead.Epoch, false)
 	if err != nil {
 		return nil, err
 	}
