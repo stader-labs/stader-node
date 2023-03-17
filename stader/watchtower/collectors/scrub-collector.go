@@ -6,7 +6,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const namespace = "stader"
+const namespace = "stdr"
 
 // Represents the collector for the scrub check metrics
 type ScrubCollector struct {

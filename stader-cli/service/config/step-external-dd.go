@@ -13,9 +13,9 @@ func createExternalDoppelgangerStep(wiz *wizard, currentStep int, totalSteps int
 		ddEnabled := true
 		switch wiz.md.Config.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) {
 		case cfgtypes.ConsensusClient_Lighthouse:
-			ddEnabled = (wiz.md.Config.ExternalLighthouse.DoppelgangerDetection.Value == true)
+			ddEnabled = wiz.md.Config.ExternalLighthouse.DoppelgangerDetection.Value == true
 		case cfgtypes.ConsensusClient_Prysm:
-			ddEnabled = (wiz.md.Config.ExternalPrysm.DoppelgangerDetection.Value == true)
+			ddEnabled = wiz.md.Config.ExternalPrysm.DoppelgangerDetection.Value == true
 		}
 
 		if ddEnabled {

@@ -16,7 +16,6 @@ import (
 // TODO - bchain make user experience such that we suggest users how much sd to stake
 func nodeDepositSd(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err

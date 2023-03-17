@@ -1,4 +1,4 @@
-package rp
+package stdr
 
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -27,7 +27,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 	//
 	//// Get the smoothing pool address
 	//wg.Go(func() error {
-	//	smoothingPoolContract, err := rp.GetContract("rocketSmoothingPool", opts)
+	//	smoothingPoolContract, err := stdr.GetContract("rocketSmoothingPool", opts)
 	//	if err != nil {
 	//		return fmt.Errorf("Error getting smoothing pool contract: %w", err)
 	//	}
@@ -37,7 +37,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 	//
 	//// Get the node's fee distributor
 	//wg.Go(func() error {
-	//	distributorAddress, err := node.GetDistributorAddress(rp, nodeAddress, nil)
+	//	distributorAddress, err := node.GetDistributorAddress(stdr, nodeAddress, nil)
 	//	if err != nil {
 	//		return fmt.Errorf("Error getting the fee distributor for %s: %w", nodeAddress.Hex(), err)
 	//	}
@@ -47,7 +47,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 	//
 	//// Check if the user's opted into the smoothing pool
 	//wg.Go(func() error {
-	//	isOptedIn, err := node.GetSmoothingPoolRegistrationState(rp, nodeAddress, nil)
+	//	isOptedIn, err := node.GetSmoothingPoolRegistrationState(stdr, nodeAddress, nil)
 	//	if err != nil {
 	//		return err
 	//	}
@@ -63,7 +63,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 	//// Calculate the safe opt-out epoch if applicable
 	//if !info.IsInSmoothingPool {
 	//	// Get the opt out time
-	//	optOutTime, err := node.GetSmoothingPoolRegistrationChanged(rp, nodeAddress, nil)
+	//	optOutTime, err := node.GetSmoothingPoolRegistrationChanged(stdr, nodeAddress, nil)
 	//	if err != nil {
 	//		return nil, fmt.Errorf("Error getting smoothing pool opt-out time: %w", err)
 	//	}

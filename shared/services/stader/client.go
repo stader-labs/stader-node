@@ -29,7 +29,7 @@ import (
 	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // Config
@@ -46,13 +46,11 @@ const (
 	PrometheusFile           string = "prometheus.yml"
 
 	APIContainerSuffix string = "_api"
-	APIBinPath         string = "/go/bin/stader"
+	APIBinPath         string = "/go/bin/stdr"
 
-	templatesDir                  string = "templates"
-	overrideDir                   string = "override"
-	runtimeDir                    string = "runtime"
-	defaultFeeRecipientFile       string = "fr-default.tmpl"
-	defaultNativeFeeRecipientFile string = "fr-default-env.tmpl"
+	templatesDir string = "templates"
+	overrideDir  string = "override"
+	runtimeDir   string = "runtime"
 
 	templateSuffix    string = ".tmpl"
 	composeFileSuffix string = ".yml"
@@ -158,7 +156,7 @@ func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 		return nil, false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
 
-	cfg, err := rp.LoadConfigFromFile(expandedPath)
+	cfg, err := stdr.LoadConfigFromFile(expandedPath)
 	if err != nil {
 		return nil, false, err
 	}
@@ -179,7 +177,7 @@ func (c *Client) LoadBackupConfig() (*config.StaderConfig, error) {
 		return nil, fmt.Errorf("error expanding backup settings file path: %w", err)
 	}
 
-	return rp.LoadConfigFromFile(expandedPath)
+	return stdr.LoadConfigFromFile(expandedPath)
 }
 
 // Save the config
@@ -189,7 +187,7 @@ func (c *Client) SaveConfig(cfg *config.StaderConfig) error {
 	if err != nil {
 		return err
 	}
-	return rp.SaveConfig(cfg, expandedPath)
+	return stdr.SaveConfig(cfg, expandedPath)
 }
 
 // Remove the upgrade flag file
@@ -198,7 +196,7 @@ func (c *Client) RemoveUpgradeFlagFile() error {
 	if err != nil {
 		return err
 	}
-	return rp.RemoveUpgradeFlagFile(expandedPath)
+	return stdr.RemoveUpgradeFlagFile(expandedPath)
 }
 
 // Returns whether or not this is the first run of the configurator since a previous installation
@@ -207,7 +205,7 @@ func (c *Client) IsFirstRun() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
-	return rp.IsFirstRun(expandedPath), nil
+	return stdr.IsFirstRun(expandedPath), nil
 }
 
 // Load the legacy config if one exists
@@ -1323,19 +1321,19 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	}
 
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode before starting it.")
+		return "", fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode before starting it.")
 	}
 
 	// Check config
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stader-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stdr-cli service config' before running this command.")
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient) == cfgtypes.ExecutionClient_Unknown {
-		return "", errors.New("No Execution (ETH1) client selected. Please run 'stader-cli service config' before running this command.")
+		return "", errors.New("No Execution (ETH1) client selected. Please run 'stdr-cli service config' before running this command.")
 	}
 	if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stader-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stdr-cli service config' before running this command.")
 	} else if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Unknown {
-		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stader-cli service config' before running this command.")
+		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stdr-cli service config' before running this command.")
 	}
 
 	// Get the external IP address

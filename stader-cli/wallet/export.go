@@ -12,7 +12,6 @@ import (
 
 func exportWallet(c *cli.Context) error {
 
-	// Get RP client
 	staderCLient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -34,7 +33,7 @@ func exportWallet(c *cli.Context) error {
 		stat, err := os.Stdout.Stat()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "An error occured while determining whether or not the output is a tty: %w\n"+
-				"Use \"stader-cli --secure-session wallet export\" to bypass.\n", err)
+				"Use \"stdr-cli --secure-session wallet export\" to bypass.\n", err)
 			os.Exit(1)
 		}
 

@@ -10,20 +10,20 @@ import (
 
 // Constants
 const (
-	smartnodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	smartnodeTag                      = "staderdev/stdr-node:v" + shared.StaderVersion
 	pruneProvisionerTag        string = "rocketpool/eth1-prune-provision:v0.0.1"
 	ecMigratorTag              string = "rocketpool/ec-migrator:v1.0.0"
 	NetworkID                  string = "network"
 	ProjectNameID              string = "projectName"
-	DaemonDataPath             string = "/.stader/data"
+	DaemonDataPath             string = "/.stdr/data"
 	WatchtowerFolder           string = "watchtower"
-	FeeRecipientFilename       string = "rp-fee-recipient.txt"
-	NativeFeeRecipientFilename string = "rp-fee-recipient-env.txt"
+	FeeRecipientFilename       string = "stdr-fee-recipient.txt"
+	NativeFeeRecipientFilename string = "stdr-fee-recipient-env.txt"
 )
 
 // --ignore-sync-check
 // Defaults
-const defaultProjectName string = "stader"
+const defaultProjectName string = "stdr"
 
 // Configuration for the Smartnode
 type SmartnodeConfig struct {
@@ -163,7 +163,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			Name:                 "Watchtower Path",
 			Description:          "The absolute path of the watchtower state folder that contains persistent state that is used by the watchtower process on trusted nodes. **Only relevant for trusted nodes.**",
 			Type:                 config.ParameterType_String,
-			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stader/watchtower"},
+			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stdr/watchtower"},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower},
 			EnvironmentVariables: []string{"ROCKETPOOL_WATCHTOWER_FOLDER"},
 			CanBeBlank:           false,

@@ -719,7 +719,7 @@ Public License instead of this License. But first, please read
 		cli.StringFlag{
 			Name:  "config-path, c",
 			Usage: "Stader node config asset `path`",
-			Value: "~/.stader",
+			Value: "~/.stdr",
 		},
 		cli.StringFlag{
 			Name:  "daemon-path, d",
@@ -768,7 +768,7 @@ Public License instead of this License. But first, please read
 	// Register commands
 
 	// Get the config path from the arguments (or use the default)
-	configPath := "~/.stader"
+	configPath := "~/.stdr"
 	for index, arg := range os.Args {
 		if arg == "-c" || arg == "--config-path" {
 			if len(os.Args)-1 == index {

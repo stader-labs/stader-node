@@ -13,7 +13,6 @@ import (
 
 func registerNode(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err

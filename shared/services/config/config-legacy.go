@@ -215,7 +215,7 @@ func ValidateDefaults(Chain Chain, ChainName string) error {
 					}
 				}
 				if err != nil {
-					return fmt.Errorf("Could not parse config - "+
+					return fmt.Errorf("could not parse config - "+
 						"parameter '%s' in %s client option '%s' "+
 						"is a %s but has a default value of '%s' which failed parsing: %w",
 						param.Name, ChainName, option.Name, param.Type, param.Default, err)
@@ -246,7 +246,7 @@ func ValidateMetricDefaults(Params []ClientParam) error {
 				}
 			}
 			if err != nil {
-				return fmt.Errorf("Could not parse config - "+
+				return fmt.Errorf("could not parse config - "+
 					"parameter '%s' in metrics "+
 					"is a %s but has a default value of '%s' which failed parsing: %w",
 					param.Name, param.Type, param.Default, err)

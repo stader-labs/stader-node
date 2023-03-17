@@ -14,7 +14,7 @@ import (
 	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	rputils "github.com/stader-labs/stader-node/shared/utils/rp"
+	rputils "github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 

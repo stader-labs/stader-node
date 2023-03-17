@@ -12,7 +12,7 @@ import (
 	"math/big"
 )
 
-// TODO - ROCKETPOOL-OWNER
+// TODO - ROCKETPOOL-OWNED
 
 // The fraction of the timeout period to trigger overdue transactions
 const TimeoutSafetyFactor int = 2
