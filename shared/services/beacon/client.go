@@ -129,5 +129,4 @@ type Client interface {
 	Close() error
 	GetEth1DataForEth2Block(blockId string) (Eth1Data, bool, error)
 	GetCommitteesForEpoch(epoch *uint64) ([]Committee, error)
-	ChangeWithdrawalCredentials(validatorIndex uint64, fromBlsPubkey types.ValidatorPubkey, toExecutionAddress common.Address, signature types.ValidatorSignature) error
 }
