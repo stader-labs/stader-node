@@ -13,10 +13,8 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
-rocketpool
-rocketpool-cli
-rocketpool-cli/*
-rocketpool/*
+stader
+stader-cli
 .vscode
 .DS_Store
 stader-cli/stader-cli

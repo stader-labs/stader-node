@@ -7,13 +7,10 @@ import (
 	"sync"
 
 	"github.com/docker/docker/client"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
-	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
@@ -24,12 +21,12 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/rp"
 )
 
+// TODO - ROCKETPOOL-OWNED
+
 // Config
 const (
-	DockerAPIVersion        string = "1.40"
-	EcContainerName         string = "eth1"
-	FallbackEcContainerName string = "eth1-fallback"
-	BnContainerName         string = "eth2"
+	DockerAPIVersion string = "1.40"
+	BnContainerName  string = "eth2"
 )
 
 // Service instances & initializers
@@ -39,21 +36,14 @@ var (
 	nodeWallet      *wallet.Wallet
 	ecManager       *ExecutionClientManager
 	bcManager       *BeaconClientManager
-	rocketPool      *rocketpool.RocketPool
-	beaconClient    beacon.Client
 	docker          *client.Client
 
-	initCfg                sync.Once
-	initPasswordManager    sync.Once
-	initNodeWallet         sync.Once
-	initECManager          sync.Once
-	initBCManager          sync.Once
-	initRocketPool         sync.Once
-	initOneInchOracle      sync.Once
-	initRplFaucet          sync.Once
-	initSnapshotDelegation sync.Once
-	initBeaconClient       sync.Once
-	initDocker             sync.Once
+	initCfg             sync.Once
+	initPasswordManager sync.Once
+	initNodeWallet      sync.Once
+	initECManager       sync.Once
+	initBCManager       sync.Once
+	initDocker          sync.Once
 )
 
 //
@@ -158,19 +148,6 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetEthxTokenAddress())
 }
 
-func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	return getRocketPool(cfg, ec)
-}
-
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -263,14 +240,6 @@ func getEthClient(c *cli.Context, cfg *config.StaderConfig) (*ExecutionClientMan
 		}
 	})
 	return ecManager, err
-}
-
-func getRocketPool(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*rocketpool.RocketPool, error) {
-	var err error
-	initRocketPool.Do(func() {
-		rocketPool, err = rocketpool.NewRocketPool(client, common.HexToAddress(cfg.Smartnode.GetStorageAddress()))
-	})
-	return rocketPool, err
 }
 
 func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientManager, error) {
