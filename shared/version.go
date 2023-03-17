@@ -1,6 +1,6 @@
 package shared
 
-const StaderVersion string = "0.1.0-dev"
+const StaderVersion string = "0.2.0-dev"
 
 //const IntVersion = "1.7.2-dev"
 

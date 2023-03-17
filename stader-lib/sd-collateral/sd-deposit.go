@@ -38,3 +38,12 @@ func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddr
 
 	return hasEnoughSdCollateral, nil
 }
+
+func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount *big.Int, poolType uint8, opts *bind.CallOpts) (*big.Int, error) {
+	maxValidatorSpawanable, err := sdc.SdCollateral.GetMaxValidatorSpawnable(opts, sdAmount, poolType)
+	if err != nil {
+		return nil, err
+	}
+
+	return maxValidatorSpawanable, nil
+}
