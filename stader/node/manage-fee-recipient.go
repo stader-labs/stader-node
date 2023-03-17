@@ -2,10 +2,10 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/docker/docker/client"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -24,7 +24,7 @@ type manageFeeRecipient struct {
 	log log.ColorLogger
 	cfg *config.StaderConfig
 	w   *wallet.Wallet
-	rp  *rocketpool.RocketPool
+	prn *stader.PermissionlessNodeRegistryContractManager
 	d   *client.Client
 	bc  beacon.Client
 }
@@ -41,7 +41,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 		log: logger,
 		cfg: cfg,
 		w:   w,
-		rp:  rp,
+		prn: prn,
 		d:   d,
 		bc:  bc,
 	}, nil
@@ -82,7 +82,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Get the fee recipient info for the node
-	feeRecipientInfo, err := rputils.GetFeeRecipientInfo(m.rp, m.bc, nodeAccount.Address, nil)
+	feeRecipientInfo, err := rputils.GetFeeRecipientInfo(m.prn, m.bc, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}

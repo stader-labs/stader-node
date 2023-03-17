@@ -5,11 +5,11 @@ import (
 	"github.com/stader-labs/stader-node/stader/api/debug"
 	"github.com/urfave/cli"
 
-	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/stader-labs/stader-node/shared/services"
 	apitypes "github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/stader-lib/utils"
 	"github.com/stader-labs/stader-node/stader/api/network"
 	"github.com/stader-labs/stader-node/stader/api/node"
 	apiservice "github.com/stader-labs/stader-node/stader/api/service"
@@ -19,14 +19,14 @@ import (
 // Waits for an auction transaction
 func waitForTransaction(c *cli.Context, hash common.Hash) (*apitypes.APIResponse, error) {
 
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 
 	// Response
 	response := apitypes.APIResponse{}
-	_, err = utils.WaitForTransaction(rp.Client, hash)
+	_, err = utils.WaitForTransaction(prn.Client, hash)
 	if err != nil {
 		return nil, err
 	}

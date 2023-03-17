@@ -186,13 +186,13 @@ func waitForApprovalAndDepositSd(c *cli.Context, amountWei *big.Int, hash common
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 
 	// Wait for the RPL approval TX to successfully get included in a block
-	_, err = utils.WaitForTransaction(rp.Client, hash)
+	_, err = utils.WaitForTransaction(prn.Client, hash)
 	if err != nil {
 		return nil, err
 	}

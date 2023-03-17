@@ -19,6 +19,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
+// TODO - ROCKETPOOL-OWNED
+
 // This is a proxy for multiple ETH clients, providing natural fallback support if one of them fails.
 type ExecutionClientManager struct {
 	primaryEcUrl    string

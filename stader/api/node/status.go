@@ -41,7 +41,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	}
 
 	response.AccountAddress = nodeAccount.Address
-	response.AccountAddressFormatted = formatResolvedAddress(c, response.AccountAddress)
 
 	accountEthBalance, err := tokens.GetEthBalance(pnr.Client, nodeAccount.Address, nil)
 	if err != nil {

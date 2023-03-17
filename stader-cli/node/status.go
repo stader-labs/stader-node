@@ -2,8 +2,8 @@ package node
 
 import (
 	"fmt"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"

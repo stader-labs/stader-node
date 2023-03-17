@@ -1,8 +1,8 @@
 package validator
 
 import (
-	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/shared/types/eth2"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 )
 

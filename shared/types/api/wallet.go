@@ -3,8 +3,8 @@ package api
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
 // Encrypted validator keystore following the EIP-2335 standard
@@ -69,12 +69,12 @@ type ExportWalletResponse struct {
 }
 
 type SetEnsNameResponse struct {
-	Status  string             `json:"status"`
-	Error   string             `json:"error"`
-	Address common.Address     `json:"address"`
-	EnsName string             `json:"ensName"`
-	TxHash  common.Hash        `json:"txHash"`
-	GasInfo rocketpool.GasInfo `json:"gasInfo"`
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	Address common.Address `json:"address"`
+	EnsName string         `json:"ensName"`
+	TxHash  common.Hash    `json:"txHash"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
 }
 
 type TestMnemonicResponse struct {

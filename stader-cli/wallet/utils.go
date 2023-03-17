@@ -3,6 +3,7 @@ package wallet
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/log"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -10,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -18,6 +18,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
 	"github.com/stader-labs/stader-node/stader-cli/wallet/bip39"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"gopkg.in/yaml.v2"
 )
 
@@ -124,7 +125,7 @@ func promptForCustomKeyPasswords(rp *stader.Client, cfg *config.StaderConfig, te
 
 	// Prompt the user with a warning message
 	if !testOnly {
-		fmt.Printf("%sWARNING:\nThe Smartnode has detected that you have custom (externally-derived) validator keys for your validators.\nIf these keys were actively used for validation by a service such as Allnodes, you MUST CONFIRM WITH THAT SERVICE that they have stopped validating and disabled those keys, and will NEVER validate with them again.\nOtherwise, you may both run the same keys at the same time which WILL RESULT IN YOUR VALIDATORS BEING SLASHED.%s\n\n", colorRed, colorReset)
+		fmt.Printf("%sWARNING:\nThe Smartnode has detected that you have custom (externally-derived) validator keys for your validators.\nIf these keys were actively used for validation by a service such as Allnodes, you MUST CONFIRM WITH THAT SERVICE that they have stopped validating and disabled those keys, and will NEVER validate with them again.\nOtherwise, you may both run the same keys at the same time which WILL RESULT IN YOUR VALIDATORS BEING SLASHED.%s\n\n", log.ColorRed, log.ColorReset)
 
 		if !cliutils.Confirm("Please confirm that you have coordinated with the service that was running your validators previously to ensure they have STOPPED validation for your validators, will NEVER start them again, and you have manually confirmed on a Blockchain explorer such as https://beaconcha.in that your validators are no longer attesting.") {
 			fmt.Println("Cancelled.")

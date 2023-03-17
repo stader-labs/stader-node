@@ -4,13 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"log"
 	"sync"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/dao/trustednode"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
@@ -131,23 +130,6 @@ func RequireNodeRegistered(c *cli.Context) error {
 	}
 	if !nodeRegistered {
 		return errors.New("The node is not registered with Stader. Please run 'stader-cli node register' and try again.")
-	}
-	return nil
-}
-
-func RequireNodeTrusted(c *cli.Context) error {
-	if err := RequireNodeWallet(c); err != nil {
-		return err
-	}
-	if err := RequireRocketStorage(c); err != nil {
-		return err
-	}
-	nodeTrusted, err := getNodeTrusted(c)
-	if err != nil {
-		return err
-	}
-	if !nodeTrusted {
-		return errors.New("The node is not a member of the oracle DAO. Nodes can only join the oracle DAO by invite.")
 	}
 	return nil
 }
@@ -337,28 +319,11 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	return operatorId.Int64() != 0, nil
 }
 
-// Check if the node is a member of the oracle DAO
-func getNodeTrusted(c *cli.Context) (bool, error) {
-	w, err := GetWallet(c)
-	if err != nil {
-		return false, err
-	}
-	rp, err := GetRocketPool(c)
-	if err != nil {
-		return false, err
-	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return false, err
-	}
-	return trustednode.GetMemberExists(rp, nodeAccount.Address, nil)
-}
-
 // Wait for the eth client to sync
 // timeout of 0 indicates no timeout
 var ethClientSyncLock sync.Mutex
 
-func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.StaderConfig) (bool, rocketpool.ExecutionClient, error) {
+func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.StaderConfig) (bool, stader.ExecutionClient, error) {
 
 	// Check the EC status
 	mgrStatus := ecMgr.CheckStatus(cfg)
@@ -600,7 +565,7 @@ func waitBeaconClientSynced(c *cli.Context, verbose bool, timeout int64) (bool, 
 }
 
 // Confirm the EC's latest block is within the threshold of the current system clock
-func IsSyncWithinThreshold(ec rocketpool.ExecutionClient) (bool, time.Time, error) {
+func IsSyncWithinThreshold(ec stader.ExecutionClient) (bool, time.Time, error) {
 	timestamp, err := GetEthClientLatestBlockTimestamp(ec)
 	if err != nil {
 		return false, time.Time{}, err

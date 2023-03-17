@@ -2,11 +2,12 @@ package services
 
 import (
 	"context"
-
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 )
 
-func GetEthClientLatestBlockTimestamp(ec rocketpool.ExecutionClient) (uint64, error) {
+// TODO - ROCKETPOOL-OWNED
+
+func GetEthClientLatestBlockTimestamp(ec stader.ExecutionClient) (uint64, error) {
 	// Get latest block
 	header, err := ec.HeaderByNumber(context.Background(), nil)
 	if err != nil {

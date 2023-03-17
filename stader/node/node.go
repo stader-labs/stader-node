@@ -73,7 +73,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
+	wg.Add(1)
 
 	// Run task loop
 	go func() {
@@ -96,15 +96,6 @@ func run(c *cli.Context) error {
 				}
 			}
 			time.Sleep(tasksInterval)
-		}
-		wg.Done()
-	}()
-
-	// Run metrics loop
-	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor))
-		if err != nil {
-			errorLog.Println(err)
 		}
 		wg.Done()
 	}()

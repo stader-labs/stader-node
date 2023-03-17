@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
 // Stader config
