@@ -38,7 +38,7 @@ const (
 	PruneProvisionerContainerSuffix string = "_prune_provisioner"
 	EcMigratorContainerSuffix       string = "_ec_migrator"
 	clientDataVolumeName            string = "/ethclient"
-	dataFolderVolumeName            string = "/.stdr/data"
+	dataFolderVolumeName            string = "/.stader/data"
 
 	PruneFreeSpaceRequired uint64 = 50 * 1024 * 1024 * 1024
 	dockerImageRegex       string = ".*/(?P<image>.*):.*"
@@ -121,7 +121,7 @@ func installService(c *cli.Context) error {
 
 	// Report next steps
 	fmt.Printf("%s\n=== Next Steps ===\n", colorLightBlue)
-	fmt.Printf("Run 'stdr-cli service config' to review the settings changes for this update, or to continue setting up your node.%s\n", colorReset)
+	fmt.Printf("Run 'stader-cli service config' to review the settings changes for this update, or to continue setting up your node.%s\n", colorReset)
 
 	// Print the docker permissions notice
 	if isNew && !isMigration {
@@ -153,7 +153,7 @@ func printPatchNotes(c *cli.Context) {
 	fmt.Println("MEV-Boost is now opt-out instead of opt-in. Furthermore, there is a new way to select relays: you can now select \"profiles\" instead of individual relays. As new relays are added to the Smartnode, any that belong to the profiles you've selected will automatically be enabled for you.\nNOTE: everyone will have to configure either profile-mode or individual-relay mode when first upgrading from v1.6, even if you had previously configured MEV-Boost.")
 
 	fmt.Printf("%s=== ENS Support ===%s\n", colorGreen, colorReset)
-	fmt.Println("`stdr-cli node set-withdrawal-address`, `stdr-cli node send`, and `stdr-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stdr-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
+	fmt.Println("`stader-cli node set-withdrawal-address`, `stdr-cli node send`, and `stdr-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stdr-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
 
 	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
 	fmt.Println("The Smartnode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
@@ -330,7 +330,7 @@ func configureService(c *cli.Context) error {
 		// Query for service start if this is a new installation
 		if isNew {
 			if !cliutils.Confirm("Would you like to start the Smartnode services automatically now?") {
-				fmt.Println("Please run `stdr-cli service start` when you are ready to launch.")
+				fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
 				return nil
 			}
 			return startService(c, true)
@@ -343,7 +343,7 @@ func configureService(c *cli.Context) error {
 				fmt.Printf("\t%s_%s\n", prefix, container)
 			}
 			if !cliutils.Confirm("Would you like to restart them automatically now?") {
-				fmt.Println("Please run `stdr-cli service start` when you are ready to apply the changes.")
+				fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
 				return nil
 			}
 

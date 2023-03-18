@@ -46,7 +46,7 @@ const (
 	PrometheusFile           string = "prometheus.yml"
 
 	APIContainerSuffix string = "_api"
-	APIBinPath         string = "/go/bin/stdr"
+	APIBinPath         string = "/go/bin/stader"
 
 	templatesDir string = "templates"
 	overrideDir  string = "override"
@@ -1321,12 +1321,12 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	}
 
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode before starting it.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode before starting it.")
 	}
 
 	// Check config
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stdr-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stader-cli service config' before running this command.")
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient) == cfgtypes.ExecutionClient_Unknown {
 		return "", errors.New("No Execution (ETH1) client selected. Please run 'stdr-cli service config' before running this command.")
 	}

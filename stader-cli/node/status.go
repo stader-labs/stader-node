@@ -68,7 +68,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Name: %s\n", status.OperatorName)
 		fmt.Printf("Operator Reward Address: %s\n", status.OperatorRewardAddress.String())
 	} else {
-		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with stdr", log.ColorGreen, log.ColorReset)
+		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with stader", log.ColorGreen, log.ColorReset)
 	}
 
 	// Return

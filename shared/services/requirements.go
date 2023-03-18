@@ -37,7 +37,7 @@ func RequireNodePassword(c *cli.Context) error {
 		return err
 	}
 	if !nodePasswordSet {
-		return errors.New("The node password has not been set. Please run './stdr-cli wallet init' and try again.")
+		return errors.New("The node password has not been set. Please run './stader-cli wallet init' and try again.")
 	}
 	return nil
 }
@@ -51,7 +51,7 @@ func RequireNodeWallet(c *cli.Context) error {
 		return err
 	}
 	if !nodeWalletInitialized {
-		return errors.New("The node wallet has not been initialized. Please run './stdr-cli wallet init' and try again.")
+		return errors.New("The node wallet has not been initialized. Please run './stader-cli wallet init' and try again.")
 	}
 	return nil
 }
@@ -129,7 +129,7 @@ func RequireNodeRegistered(c *cli.Context) error {
 		return err
 	}
 	if !nodeRegistered {
-		return errors.New("The node is not registered with Stader. Please run 'stdr-cli node register' and try again.")
+		return errors.New("The node is not registered with Stader. Please run 'stader-cli node register' and try again.")
 	}
 	return nil
 }

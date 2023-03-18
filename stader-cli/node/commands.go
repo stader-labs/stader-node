@@ -19,7 +19,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "status",
 				Aliases:   []string{"s"},
 				Usage:     "Get the node's status",
-				UsageText: "stdr-cli node status",
+				UsageText: "stader-cli node status",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -36,7 +36,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "sync",
 				Aliases:   []string{"y"},
 				Usage:     "Get the sync progress of the eth1 and eth2 clients",
-				UsageText: "stdr-cli node sync",
+				UsageText: "stader-cli node sync",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -52,8 +52,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with stdr",
-				UsageText: "stdr-cli node register [options]",
+				Usage:     "Register the node with stader",
+				UsageText: "stader-cli node register [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-name, on",
@@ -101,7 +101,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit-sd",
 				Aliases:   []string{"k"},
 				Usage:     "Deposit SD against the node",
-				UsageText: "stdr-cli node stake-rpl [options]",
+				UsageText: "stader-cli node stake-rpl [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",
@@ -132,7 +132,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stdr-cli node deposit [options]",
+				UsageText: "stader-cli node deposit [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -179,7 +179,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "send",
 				Aliases:   []string{"n"},
 				Usage:     "Send ETH or SD, EthX tokens from the node account to an address.",
-				UsageText: "stdr-cli node send [options] amount token to",
+				UsageText: "stader-cli node send [options] amount token to",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -210,7 +210,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "get-contracts-info",
 				Aliases:   []string{"c"},
 				Usage:     "Get the current network contracts info",
-				UsageText: "stdr-cli node get-contracts-info",
+				UsageText: "stader-cli node get-contracts-info",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -226,7 +226,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "debug-exit",
 				Aliases:   []string{"c"},
 				Usage:     "get the debug exit info",
-				UsageText: "stdr-cli node debug-exit index",
+				UsageText: "stader-cli node debug-exit index",
 				Flags: []cli.Flag{
 					cli.Uint64Flag{
 						Name:  "validator-index, vi",
