@@ -1,5 +1,7 @@
 package eth2
 
+// ROCKETPOOL-OWNED
+
 // Deposit data (with no signature field)
 type DepositDataNoSignature struct {
 	PublicKey             []byte `json:"pubkey" ssz-size:"48"`

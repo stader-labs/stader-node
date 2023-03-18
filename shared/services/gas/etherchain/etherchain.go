@@ -1,5 +1,7 @@
 package etherchain
 
+// ROCKETPOOL-OWNED
+
 import (
 	"encoding/json"
 	"fmt"

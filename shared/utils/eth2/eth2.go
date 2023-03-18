@@ -1,5 +1,7 @@
 package eth2
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 )

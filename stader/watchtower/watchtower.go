@@ -43,11 +43,6 @@ func run(c *cli.Context) error {
 	// Configure
 	configureHTTP()
 
-	// Wait until node is registered
-	if err := services.WaitNodeRegistered(c, true); err != nil {
-		return err
-	}
-
 	// Initialize the scrub metrics reporter
 	scrubCollector := collectors.NewScrubCollector()
 

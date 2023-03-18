@@ -1,5 +1,7 @@
 package keystore
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/sethvargo/go-password/password"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"

@@ -1,5 +1,7 @@
 package services
 
+// ROCKETPOOL-OWNED
+
 import (
 	"fmt"
 	"math/big"
@@ -21,7 +23,6 @@ import (
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
-// TODO - ROCKETPOOL-OWNED
 
 // Config
 const (

@@ -1,5 +1,7 @@
 package stader
 
+// ROCKETPOOL-OWNED
+
 import (
 	"bufio"
 	"errors"
@@ -433,7 +435,6 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Smartnode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
 	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
 	cfg.Smartnode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
-	cfg.Smartnode.MinipoolStakeGasThreshold.Value = legacyCfg.StaderNode.MinipoolStakeGasThreshold
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {

@@ -1,5 +1,7 @@
 package teku
 
+// ROCKETPOOL-OWNED
+
 import (
 	"encoding/json"
 	"fmt"

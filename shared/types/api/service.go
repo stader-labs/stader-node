@@ -1,5 +1,7 @@
 package api
 
+// ROCKETPOOL-OWNED
+
 import "github.com/ethereum/go-ethereum/common"
 
 type TerminateDataFolderResponse struct {

@@ -8,11 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stader-labs/stader-node/stader-lib/stader"
-
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 )
 
@@ -21,8 +19,6 @@ const EthClientSyncTimeout = 16    // 16 seconds
 const BeaconClientSyncTimeout = 16 // 16 seconds
 var checkNodePasswordInterval, _ = time.ParseDuration("15s")
 var checkNodeWalletInterval, _ = time.ParseDuration("15s")
-var checkRocketStorageInterval, _ = time.ParseDuration("15s")
-var checkNodeRegisteredInterval, _ = time.ParseDuration("15s")
 var ethClientSyncPollInterval, _ = time.ParseDuration("5s")
 var beaconClientSyncPollInterval, _ = time.ParseDuration("5s")
 var ethClientRecentBlockThreshold, _ = time.ParseDuration("5m")
@@ -75,48 +71,6 @@ func RequireBeaconClientSynced(c *cli.Context) error {
 	}
 	if !beaconClientSynced {
 		return errors.New("The Eth 2.0 node is currently syncing. Please try again later.")
-	}
-	return nil
-}
-
-func RequireRocketStorage(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	rocketStorageLoaded, err := getRocketStorageLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !rocketStorageLoaded {
-		return errors.New("The Stader storage contract was not found; the configured address may be incorrect, or the Eth 1.0 node may not be synced. Please try again later.")
-	}
-	return nil
-}
-
-func RequireOneInchOracle(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	oneInchOracleLoaded, err := getOneInchOracleLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !oneInchOracleLoaded {
-		return errors.New("The 1inch oracle contract was not found; the configured address may be incorrect, or the mainnet Eth 1.0 node may not be synced. Please try again later.")
-	}
-	return nil
-}
-
-func RequireRplFaucet(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	rplFaucetLoaded, err := getRplFaucetLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !rplFaucetLoaded {
-		return errors.New("The RPL faucet contract was not found; the configured address may be incorrect, or the Eth 1.0 node may not be synced. Please try again later.")
 	}
 	return nil
 }
@@ -184,47 +138,6 @@ func WaitBeaconClientSynced(c *cli.Context, verbose bool) error {
 	return err
 }
 
-func WaitRocketStorage(c *cli.Context, verbose bool) error {
-	if err := WaitEthClientSynced(c, verbose); err != nil {
-		return err
-	}
-	for {
-		rocketStorageLoaded, err := getRocketStorageLoaded(c)
-		if err != nil {
-			return err
-		}
-		if rocketStorageLoaded {
-			return nil
-		}
-		if verbose {
-			log.Printf("The Stader storage contract was not found, retrying in %s...\n", checkRocketStorageInterval.String())
-		}
-		time.Sleep(checkRocketStorageInterval)
-	}
-}
-
-func WaitNodeRegistered(c *cli.Context, verbose bool) error {
-	if err := WaitNodeWallet(c, verbose); err != nil {
-		return err
-	}
-	if err := WaitRocketStorage(c, verbose); err != nil {
-		return err
-	}
-	for {
-		nodeRegistered, err := getNodeRegistered(c)
-		if err != nil {
-			return err
-		}
-		if nodeRegistered {
-			return nil
-		}
-		if verbose {
-			log.Printf("The node is not registered with Stader, retrying in %s...\n", checkNodeRegisteredInterval.String())
-		}
-		time.Sleep(checkNodeRegisteredInterval)
-	}
-}
-
 //
 // Helpers
 //
@@ -245,57 +158,6 @@ func getNodeWalletInitialized(c *cli.Context) (bool, error) {
 		return false, err
 	}
 	return w.GetInitialized()
-}
-
-// Check if the RocketStorage contract is loaded
-func getRocketStorageLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetStorageAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
-}
-
-// Check if the 1inch exchange oracle contract is loaded
-func getOneInchOracleLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetOneInchOracleAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
-}
-
-// Check if the RPL faucet contract is loaded
-func getRplFaucetLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetRplFaucetAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
 }
 
 // Check if the node is registered

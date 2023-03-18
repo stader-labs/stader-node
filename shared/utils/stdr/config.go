@@ -1,5 +1,7 @@
 package stdr
 
+// ROCKETPOOL-OWNED
+
 import (
 	"fmt"
 	"io/ioutil"

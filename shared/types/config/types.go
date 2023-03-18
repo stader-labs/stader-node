@@ -1,5 +1,7 @@
 package config
 
+// ROCKETPOOL-OWNED
+
 type ContainerID string
 type Network string
 type Mode string

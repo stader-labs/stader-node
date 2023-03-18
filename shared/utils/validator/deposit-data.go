@@ -1,5 +1,7 @@
 package validator
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/types/eth2"
