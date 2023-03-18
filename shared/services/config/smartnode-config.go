@@ -12,7 +12,7 @@ import (
 const (
 	smartnodeTag                      = "staderdev/stdr-node:v" + shared.StaderVersion
 	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
-	ecMigratorTag              string = "rocketpool/ec-migrator:v1.0.0"
+	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                  string = "network"
 	ProjectNameID              string = "projectName"
 	DaemonDataPath             string = "/.stdr/data"
