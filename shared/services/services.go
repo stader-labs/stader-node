@@ -18,7 +18,7 @@ import (
 	nmkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/nimbus"
 	prkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/prysm"
 	tkkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/teku"
-	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stader"
 )
 
 // TODO - ROCKETPOOL-OWNED
@@ -168,7 +168,7 @@ func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 	var err error
 	initCfg.Do(func() {
 		settingsFile := os.ExpandEnv(c.GlobalString("settings"))
-		cfg, err = stdr.LoadConfigFromFile(settingsFile)
+		cfg, err = staderUtils.LoadConfigFromFile(settingsFile)
 		if cfg == nil && err == nil {
 			err = fmt.Errorf("Settings file [%s] not found.", settingsFile)
 		}

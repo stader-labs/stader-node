@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/docker/docker/client"
@@ -14,7 +15,7 @@ import (
 	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	rputils "github.com/stader-labs/stader-node/shared/utils/stdr"
+	rputils "github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 

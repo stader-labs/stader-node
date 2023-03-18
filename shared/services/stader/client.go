@@ -29,7 +29,7 @@ import (
 	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stader"
 )
 
 // Config
@@ -46,7 +46,7 @@ const (
 	PrometheusFile           string = "prometheus.yml"
 
 	APIContainerSuffix string = "_api"
-	APIBinPath         string = "/go/bin/stdr"
+	APIBinPath         string = "/go/bin/stader"
 
 	templatesDir string = "templates"
 	overrideDir  string = "override"
@@ -156,7 +156,7 @@ func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 		return nil, false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
 
-	cfg, err := stdr.LoadConfigFromFile(expandedPath)
+	cfg, err := staderUtils.LoadConfigFromFile(expandedPath)
 	if err != nil {
 		return nil, false, err
 	}
@@ -177,7 +177,7 @@ func (c *Client) LoadBackupConfig() (*config.StaderConfig, error) {
 		return nil, fmt.Errorf("error expanding backup settings file path: %w", err)
 	}
 
-	return stdr.LoadConfigFromFile(expandedPath)
+	return staderUtils.LoadConfigFromFile(expandedPath)
 }
 
 // Save the config
@@ -187,7 +187,7 @@ func (c *Client) SaveConfig(cfg *config.StaderConfig) error {
 	if err != nil {
 		return err
 	}
-	return stdr.SaveConfig(cfg, expandedPath)
+	return staderUtils.SaveConfig(cfg, expandedPath)
 }
 
 // Remove the upgrade flag file
@@ -196,7 +196,7 @@ func (c *Client) RemoveUpgradeFlagFile() error {
 	if err != nil {
 		return err
 	}
-	return stdr.RemoveUpgradeFlagFile(expandedPath)
+	return staderUtils.RemoveUpgradeFlagFile(expandedPath)
 }
 
 // Returns whether or not this is the first run of the configurator since a previous installation
@@ -205,7 +205,7 @@ func (c *Client) IsFirstRun() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
-	return stdr.IsFirstRun(expandedPath), nil
+	return staderUtils.IsFirstRun(expandedPath), nil
 }
 
 // Load the legacy config if one exists
