@@ -14,8 +14,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
-// TODO - ROCKETPOOL-OWNED
-
 // This is a proxy for multiple Beacon clients, providing natural fallback support if one of them fails.
 type BeaconClientManager struct {
 	primaryBc       beacon.Client

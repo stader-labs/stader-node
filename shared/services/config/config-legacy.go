@@ -15,14 +15,14 @@ import (
 )
 
 // Stader config
-type LegacyRocketPoolConfig struct {
-	Rocketpool struct {
+type LegacyStaderConfig struct {
+	Stader struct {
 		StorageAddress       string `yaml:"storageAddress,omitempty"`
 		OneInchOracleAddress string `yaml:"oneInchOracleAddress,omitempty"`
 		RplTokenAddress      string `yaml:"rplTokenAddress,omitempty"`
 		RPLFaucetAddress     string `yaml:"rplFaucetAddress,omitempty"`
-	} `yaml:"rocketpool,omitempty"`
-	Smartnode struct {
+	} `yaml:"stader,omitempty"`
+	StaderNode struct {
 		ProjectName               string  `yaml:"projectName,omitempty"`
 		GraffitiVersion           string  `yaml:"graffitiVersion,omitempty"`
 		Image                     string  `yaml:"image,omitempty"`
@@ -96,13 +96,13 @@ type Metrics struct {
 }
 
 // Get the selected clients from a config
-func (config *LegacyRocketPoolConfig) GetSelectedEth1Client() *ClientOption {
+func (config *LegacyStaderConfig) GetSelectedEth1Client() *ClientOption {
 	return config.Chains.Eth1.GetSelectedClient()
 }
-func (config *LegacyRocketPoolConfig) GetSelectedEth1FallbackClient() *ClientOption {
+func (config *LegacyStaderConfig) GetSelectedEth1FallbackClient() *ClientOption {
 	return config.Chains.Eth1.GetClientById(config.Chains.Eth1Fallback.Client.Selected)
 }
-func (config *LegacyRocketPoolConfig) GetSelectedEth2Client() *ClientOption {
+func (config *LegacyStaderConfig) GetSelectedEth2Client() *ClientOption {
 	return config.Chains.Eth2.GetSelectedClient()
 }
 func (chain *Chain) GetSelectedClient() *ClientOption {
@@ -165,7 +165,7 @@ func (client *ClientOption) GetValidatorImage() string {
 }
 
 // Serialize a config to yaml bytes
-func (config *LegacyRocketPoolConfig) Serialize() ([]byte, error) {
+func (config *LegacyStaderConfig) Serialize() ([]byte, error) {
 	bytes, err := yaml.Marshal(config)
 	if err != nil {
 		return []byte{}, fmt.Errorf("Could not serialize config: %w", err)
@@ -174,21 +174,21 @@ func (config *LegacyRocketPoolConfig) Serialize() ([]byte, error) {
 }
 
 // Parse a config from yaml bytes
-func Parse(bytes []byte) (LegacyRocketPoolConfig, error) {
-	var config LegacyRocketPoolConfig
+func Parse(bytes []byte) (LegacyStaderConfig, error) {
+	var config LegacyStaderConfig
 	if err := yaml.Unmarshal(bytes, &config); err != nil {
-		return LegacyRocketPoolConfig{}, fmt.Errorf("Could not parse config: %w", err)
+		return LegacyStaderConfig{}, fmt.Errorf("Could not parse config: %w", err)
 	}
 
 	// Validate the defaults
 	if err := ValidateDefaults(config.Chains.Eth1, "eth1"); err != nil {
-		return LegacyRocketPoolConfig{}, err
+		return LegacyStaderConfig{}, err
 	}
 	if err := ValidateDefaults(config.Chains.Eth2, "eth2"); err != nil {
-		return LegacyRocketPoolConfig{}, err
+		return LegacyStaderConfig{}, err
 	}
 	if err := ValidateMetricDefaults(config.Metrics.Params); err != nil {
-		return LegacyRocketPoolConfig{}, err
+		return LegacyStaderConfig{}, err
 	}
 
 	return config, nil
@@ -257,27 +257,27 @@ func ValidateMetricDefaults(Params []ClientParam) error {
 }
 
 // Merge configs
-func Merge(configs ...*LegacyRocketPoolConfig) (LegacyRocketPoolConfig, error) {
-	var merged LegacyRocketPoolConfig
+func Merge(configs ...*LegacyStaderConfig) (LegacyStaderConfig, error) {
+	var merged LegacyStaderConfig
 	for i := len(configs) - 1; i >= 0; i-- {
 		if err := mergo.Merge(&merged, configs[i]); err != nil {
-			return LegacyRocketPoolConfig{}, fmt.Errorf("Could not merge configs: %w", err)
+			return LegacyStaderConfig{}, fmt.Errorf("Could not merge configs: %w", err)
 		}
 	}
 	return merged, nil
 }
 
 // Load merged config from files
-func Load(c *cli.Context) (LegacyRocketPoolConfig, error) {
+func Load(c *cli.Context) (LegacyStaderConfig, error) {
 
 	// Load configs
 	globalConfig, err := loadFile(os.ExpandEnv(c.GlobalString("config")), true)
 	if err != nil {
-		return LegacyRocketPoolConfig{}, err
+		return LegacyStaderConfig{}, err
 	}
 	userConfig, err := loadFile(os.ExpandEnv(c.GlobalString("settings")), true)
 	if err != nil {
-		return LegacyRocketPoolConfig{}, err
+		return LegacyStaderConfig{}, err
 	}
 	cliConfig := getCliConfig(c)
 
@@ -287,22 +287,22 @@ func Load(c *cli.Context) (LegacyRocketPoolConfig, error) {
 }
 
 // Load config from a file
-func loadFile(path string, required bool) (LegacyRocketPoolConfig, error) {
+func loadFile(path string, required bool) (LegacyStaderConfig, error) {
 
 	// Read file; squelch not found errors if file is optional
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		if required {
-			return LegacyRocketPoolConfig{}, fmt.Errorf("Could not find config file at %s: %w", path, err)
+			return LegacyStaderConfig{}, fmt.Errorf("Could not find config file at %s: %w", path, err)
 		}
 
-		return LegacyRocketPoolConfig{}, nil
+		return LegacyStaderConfig{}, nil
 	}
 
 	// Parse config
-	var config LegacyRocketPoolConfig
+	var config LegacyStaderConfig
 	if err := yaml.Unmarshal(bytes, &config); err != nil {
-		return LegacyRocketPoolConfig{}, fmt.Errorf("Could not parse config file at %s: %w", path, err)
+		return LegacyStaderConfig{}, fmt.Errorf("Could not parse config file at %s: %w", path, err)
 	}
 
 	// Return
@@ -311,58 +311,58 @@ func loadFile(path string, required bool) (LegacyRocketPoolConfig, error) {
 }
 
 // Create config from CLI arguments
-func getCliConfig(c *cli.Context) LegacyRocketPoolConfig {
-	var config LegacyRocketPoolConfig
-	config.Rocketpool.StorageAddress = c.GlobalString("storageAddress")
-	config.Rocketpool.OneInchOracleAddress = c.GlobalString("oneInchOracleAddress")
-	config.Rocketpool.RplTokenAddress = c.GlobalString("rplTokenAddress")
-	config.Rocketpool.RPLFaucetAddress = c.GlobalString("rplFaucetAddress")
-	config.Smartnode.PasswordPath = c.GlobalString("password")
-	config.Smartnode.WalletPath = c.GlobalString("wallet")
-	config.Smartnode.ValidatorKeychainPath = c.GlobalString("validatorKeychain")
-	config.Smartnode.MaxFee = c.GlobalFloat64("maxFee")
-	config.Smartnode.MaxPriorityFee = c.GlobalFloat64("maxPrioFee")
-	config.Smartnode.GasLimit = c.GlobalUint64("gasLimit")
+func getCliConfig(c *cli.Context) LegacyStaderConfig {
+	var config LegacyStaderConfig
+	config.Stader.StorageAddress = c.GlobalString("storageAddress")
+	config.Stader.OneInchOracleAddress = c.GlobalString("oneInchOracleAddress")
+	config.Stader.RplTokenAddress = c.GlobalString("rplTokenAddress")
+	config.Stader.RPLFaucetAddress = c.GlobalString("rplFaucetAddress")
+	config.StaderNode.PasswordPath = c.GlobalString("password")
+	config.StaderNode.WalletPath = c.GlobalString("wallet")
+	config.StaderNode.ValidatorKeychainPath = c.GlobalString("validatorKeychain")
+	config.StaderNode.MaxFee = c.GlobalFloat64("maxFee")
+	config.StaderNode.MaxPriorityFee = c.GlobalFloat64("maxPrioFee")
+	config.StaderNode.GasLimit = c.GlobalUint64("gasLimit")
 	config.Chains.Eth1.Provider = c.GlobalString("eth1Provider")
 	config.Chains.Eth2.Provider = c.GlobalString("eth2Provider")
 	return config
 }
 
 // Parse and return the max fee in wei
-func (config *LegacyRocketPoolConfig) GetMaxFee() (*big.Int, error) {
+func (config *LegacyStaderConfig) GetMaxFee() (*big.Int, error) {
 
 	// No gas price specified
-	if config.Smartnode.MaxFee == 0 {
+	if config.StaderNode.MaxFee == 0 {
 		return nil, nil
 	}
 
 	// Return gas price in wei
-	return eth.GweiToWei(config.Smartnode.MaxFee), nil
+	return eth.GweiToWei(config.StaderNode.MaxFee), nil
 
 }
 
 // Parse and return the max priority fee in wei
-func (config *LegacyRocketPoolConfig) GetMaxPriorityFee() (*big.Int, error) {
+func (config *LegacyStaderConfig) GetMaxPriorityFee() (*big.Int, error) {
 
 	// No gas price specified
-	if config.Smartnode.MaxPriorityFee == 0 {
+	if config.StaderNode.MaxPriorityFee == 0 {
 		return nil, nil
 	}
 
 	// Return gas price in wei
-	return eth.GweiToWei(config.Smartnode.MaxPriorityFee), nil
+	return eth.GweiToWei(config.StaderNode.MaxPriorityFee), nil
 
 }
 
 // Parse and return the gas limit
-func (config *LegacyRocketPoolConfig) GetGasLimit() (uint64, error) {
+func (config *LegacyStaderConfig) GetGasLimit() (uint64, error) {
 
 	// No gas limit specified
-	if config.Smartnode.GasLimit == 0 {
+	if config.StaderNode.GasLimit == 0 {
 		return 0, nil
 	}
 
 	// Return
-	return config.Smartnode.GasLimit, nil
+	return config.StaderNode.GasLimit, nil
 
 }

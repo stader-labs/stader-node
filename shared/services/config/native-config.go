@@ -124,11 +124,11 @@ func (cfg *NativeConfig) GetParameters() []*config.Parameter {
 }
 
 func getDefaultValidatorRestartCommand(config *StaderConfig) string {
-	return filepath.Join(config.RocketPoolDirectory, "restart-vc.sh")
+	return filepath.Join(config.StaderDirectory, "restart-vc.sh")
 }
 
 func getDefaultValidatorStopCommand(config *StaderConfig) string {
-	return filepath.Join(config.RocketPoolDirectory, "stop-validator.sh")
+	return filepath.Join(config.StaderDirectory, "stop-validator.sh")
 }
 
 // The the title for the config

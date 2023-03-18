@@ -3,7 +3,7 @@
 # Print usage
 usage() {
     echo "Usage: build-release.sh -v <version number>"
-    echo "This script builds the Smartnode builder image used to build the daemon binaries."
+    echo "This script builds the Stader node builder image used to build the daemon binaries."
     exit 0
 }
 
@@ -23,8 +23,8 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo -n "Building Docker image... "
-docker build -t staderdev/stader-node:$VERSION -f docker/smartnode-builder .
-docker tag staderdev/stader-node:$VERSION staderdev/stader-node:latest
-docker push staderdev/stader-node:$VERSION
-docker push staderdev/stader-node:latestx  x64
+docker build -t staderdev/stader-node-builder:$VERSION -f docker/stader-node-builder .
+docker tag staderdev/stader-node-builder:$VERSION staderdev/stader-node-builder:latest
+docker push staderdev/stader-node-builder:$VERSION
+docker push staderdev/stader-node-builder:latest
 echo "done!"

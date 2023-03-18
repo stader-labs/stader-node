@@ -112,7 +112,7 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 				Value:       config.NimbusPruningMode_Archive,
 			}, {
 				Name:        "Pruned",
-				Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync using `rocketpool service resync-eth2`. Make sure you have a checkpoint sync provider specified first!",
+				Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync using `stader-cli service resync-eth2`. Make sure you have a checkpoint sync provider specified first!",
 				Value:       config.NimbusPruningMode_Prune,
 			}},
 		},

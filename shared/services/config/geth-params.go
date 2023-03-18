@@ -86,7 +86,7 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 		UsePebble: config.Parameter{
 			ID:                   "usePebble",
 			Name:                 "Use Pebble DB",
-			Description:          "Use the new Pebble database for Geth instead of the old LevelDB database. Pebble offers better performance and stability, and reduces the number of instances where a crash causes database corruption that requires a resync.\n\n[orange]NOTE: You will need to resync Geth after enabling this by running `rocketpool service resync-eth1`.",
+			Description:          "Use the new Pebble database for Geth instead of the old LevelDB database. Pebble offers better performance and stability, and reduces the number of instances where a crash causes database corruption that requires a resync.\n\n[orange]NOTE: You will need to resync Geth after enabling this by running `stader-cli service resync-eth1`.",
 			Type:                 config.ParameterType_Bool,
 			Default:              map[config.Network]interface{}{config.Network_All: false},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

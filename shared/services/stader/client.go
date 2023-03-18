@@ -430,10 +430,10 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	}
 
 	// Smartnode settings
-	cfg.Smartnode.ProjectName.Value = legacyCfg.Smartnode.ProjectName
-	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.Smartnode.MaxFee
-	cfg.Smartnode.PriorityFee.Value = legacyCfg.Smartnode.MaxPriorityFee
-	cfg.Smartnode.MinipoolStakeGasThreshold.Value = legacyCfg.Smartnode.MinipoolStakeGasThreshold
+	cfg.Smartnode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
+	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
+	cfg.Smartnode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
+	cfg.Smartnode.MinipoolStakeGasThreshold.Value = legacyCfg.StaderNode.MinipoolStakeGasThreshold
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {
@@ -462,7 +462,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Native.EcHttpUrl.Value = legacyCfg.Chains.Eth1.Provider
 	cfg.Native.CcHttpUrl.Value = legacyCfg.Chains.Eth2.Provider
 	c.migrateCcSelection(legacyCfg.Chains.Eth2.Client.Selected, &cfg.Native.ConsensusClient)
-	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.Smartnode.ValidatorRestartCommand
+	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.StaderNode.ValidatorRestartCommand
 	cfg.Smartnode.DataPath.Value = filepath.Join(c.configPath, "data")
 
 	return cfg, nil

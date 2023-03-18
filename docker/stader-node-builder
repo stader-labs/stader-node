@@ -1,4 +1,4 @@
-# This image is used to build the Rocket Pool Smartnode and related artifacts
+# This image is used to build the Stader and related artifacts
 
 FROM golang:1.19.5-buster
 
