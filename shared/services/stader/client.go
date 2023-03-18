@@ -29,7 +29,7 @@ import (
 	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-	staderUtils "github.com/stader-labs/stader-node/shared/utils/stader"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // Config

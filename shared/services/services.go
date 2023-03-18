@@ -18,7 +18,7 @@ import (
 	nmkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/nimbus"
 	prkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/prysm"
 	tkkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/teku"
-	staderUtils "github.com/stader-labs/stader-node/shared/utils/stader"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // TODO - ROCKETPOOL-OWNED
