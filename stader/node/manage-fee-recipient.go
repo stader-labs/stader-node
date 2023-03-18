@@ -14,7 +14,7 @@ import (
 	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	staderutils "github.com/stader-labs/stader-node/shared/utils/stdr"
+	rputils "github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
@@ -82,7 +82,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Get the fee recipient info for the node
-	feeRecipientInfo, err := staderutils.GetFeeRecipientInfo(m.prn, m.bc, nodeAccount.Address, nil)
+	feeRecipientInfo, err := rputils.GetFeeRecipientInfo(m.prn, m.bc, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}

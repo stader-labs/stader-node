@@ -1,5 +1,7 @@
 package bip39
 
+// ROCKETPOOL-OWNED
+
 import (
 	"errors"
 	"sort"

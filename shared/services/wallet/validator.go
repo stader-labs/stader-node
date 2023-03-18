@@ -1,5 +1,7 @@
 package wallet
 
+// ROCKETPOOL-OWNED
+
 import (
 	"bytes"
 	"errors"

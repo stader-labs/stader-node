@@ -1,5 +1,7 @@
 package addons
 
+// ROCKETPOOL-OWNED
+
 import (
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )

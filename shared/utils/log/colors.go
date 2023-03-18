@@ -1,5 +1,7 @@
 package log
 
+// ROCKETPOOL-OWNED
+
 const (
 	ColorBlue   string = "\033[36m"
 	ColorReset  string = "\033[0m"

@@ -1,5 +1,7 @@
 package api
 
+// ROCKETPOOL-OWNED
+
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
@@ -11,8 +13,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"math/big"
 )
-
-// TODO - ROCKETPOOL-OWNED
 
 // The fraction of the timeout period to trigger overdue transactions
 const TimeoutSafetyFactor int = 2

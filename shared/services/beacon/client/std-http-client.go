@@ -1,5 +1,7 @@
 package client
 
+// ROCKETPOOL-OWNED
+
 import (
 	"bytes"
 	"encoding/hex"

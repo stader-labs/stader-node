@@ -1,5 +1,7 @@
 package stdr
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"

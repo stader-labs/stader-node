@@ -3,6 +3,8 @@
 
 package term
 
+// ROCKETPOOL-OWNED
+
 import (
 	"os"
 	"os/exec"

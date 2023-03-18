@@ -14,10 +14,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	"github.com/stader-labs/stader-node/shared/services/wallet/keystore/lighthouse"
-	"github.com/stader-labs/stader-node/shared/services/wallet/keystore/nimbus"
-	"github.com/stader-labs/stader-node/shared/services/wallet/keystore/prysm"
-	"github.com/stader-labs/stader-node/shared/services/wallet/keystore/teku"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
@@ -27,7 +23,6 @@ var taskCooldown, _ = time.ParseDuration("10s")
 const (
 	MaxConcurrentEth1Requests = 200
 
-	MetricsColor            = color.FgHiYellow
 	ManageFeeRecipientColor = color.FgHiCyan
 	ErrorColor              = color.FgRed
 )
@@ -49,12 +44,6 @@ func run(c *cli.Context) error {
 
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
-	if err != nil {
-		return err
-	}
-
-	// Clean up old fee recipient files
-	err = removeLegacyFeeRecipientFiles(c)
 	if err != nil {
 		return err
 	}
@@ -138,10 +127,10 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 		var defaultFeeRecipientFileContents string
 		if cfg.IsNativeMode {
 			// Native mode needs an environment variable definition
-			defaultFeeRecipientFileContents = fmt.Sprintf("%s=%s", config.FeeRecipientEnvVar, cfg.Smartnode.GetRethAddress().Hex())
+			defaultFeeRecipientFileContents = fmt.Sprintf("%s=%s", config.FeeRecipientEnvVar, cfg.Smartnode.GetEthxTokenAddress().Hex())
 		} else {
 			// Docker and Hybrid just need the address itself
-			defaultFeeRecipientFileContents = cfg.Smartnode.GetRethAddress().Hex()
+			defaultFeeRecipientFileContents = cfg.Smartnode.GetEthxTokenAddress().Hex()
 		}
 		err := ioutil.WriteFile(feeRecipientPath, []byte(defaultFeeRecipientFileContents), 0664)
 		if err != nil {
@@ -149,35 +138,6 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 		}
 	} else if err != nil {
 		return fmt.Errorf("error checking fee recipient file status: %w", err)
-	}
-
-	return nil
-
-}
-
-// Remove the old fee recipient files that were created in v1.5.0
-func removeLegacyFeeRecipientFiles(c *cli.Context) error {
-
-	legacyFeeRecipientFile := "stader-fee-recipient.txt"
-
-	cfg, err := services.GetConfig(c)
-	if err != nil {
-		return err
-	}
-
-	validatorsFolder := cfg.Smartnode.GetValidatorKeychainPath()
-
-	// Remove the legacy files
-	keystoreDirs := []string{lighthouse.KeystoreDir, nimbus.KeystoreDir, prysm.KeystoreDir, teku.KeystoreDir}
-	for _, keystoreDir := range keystoreDirs {
-		oldFile := filepath.Join(validatorsFolder, keystoreDir, legacyFeeRecipientFile)
-		_, err = os.Stat(oldFile)
-		if !os.IsNotExist(err) {
-			err = os.Remove(oldFile)
-			if err != nil {
-				fmt.Printf("NOTE: Couldn't remove old fee recipient file (%s): %s\nThis file is no longer used, you may remove it manually if you wish.\n", oldFile, err.Error())
-			}
-		}
 	}
 
 	return nil

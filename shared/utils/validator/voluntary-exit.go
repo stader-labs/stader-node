@@ -1,5 +1,7 @@
 package validator
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/stader-labs/stader-node/shared/types/eth2"
 	"github.com/stader-labs/stader-node/stader-lib/types"

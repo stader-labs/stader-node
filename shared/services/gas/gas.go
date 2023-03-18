@@ -1,5 +1,7 @@
 package gas
 
+// ROCKETPOOL-OWNED
+
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/utils/log"

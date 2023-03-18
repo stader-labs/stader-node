@@ -54,7 +54,7 @@ type StaderConfig struct {
 
 	Version string `yaml:"-"`
 
-	RocketPoolDirectory string `yaml:"-"`
+	StaderDirectory string `yaml:"-"`
 
 	IsNativeMode bool `yaml:"-"`
 
@@ -170,9 +170,9 @@ func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 	}}
 
 	cfg := &StaderConfig{
-		Title:               "Top-level Settings",
-		RocketPoolDirectory: rpDir,
-		IsNativeMode:        isNativeMode,
+		Title:           "Top-level Settings",
+		StaderDirectory: rpDir,
+		IsNativeMode:    isNativeMode,
 
 		ExecutionClientMode: config.Parameter{
 			ID:                   "executionClientMode",
@@ -483,7 +483,7 @@ func getAugmentedEcDescription(client config.ExecutionClient, originalDescriptio
 
 // Create a copy of this configuration.
 func (cfg *StaderConfig) CreateCopy() *StaderConfig {
-	newConfig := NewStaderConfig(cfg.RocketPoolDirectory, cfg.IsNativeMode)
+	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode)
 
 	// Set the network
 	network := cfg.Smartnode.Network.Value.(config.Network)
@@ -723,7 +723,7 @@ func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 		param.Serialize(rootParams)
 	}
 	masterMap[rootConfigName] = rootParams
-	masterMap[rootConfigName]["rpDir"] = cfg.RocketPoolDirectory
+	masterMap[rootConfigName]["rpDir"] = cfg.StaderDirectory
 	masterMap[rootConfigName]["isNative"] = fmt.Sprint(cfg.IsNativeMode)
 	masterMap[rootConfigName]["version"] = fmt.Sprintf("v%s", shared.StaderVersion) // Update the version with the current Smartnode version
 
@@ -773,7 +773,7 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 		}
 	}
 
-	cfg.RocketPoolDirectory = masterMap[rootConfigName]["rpDir"]
+	cfg.StaderDirectory = masterMap[rootConfigName]["rpDir"]
 	cfg.IsNativeMode, err = strconv.ParseBool(masterMap[rootConfigName]["isNative"])
 	if err != nil {
 		return fmt.Errorf("error parsing isNative: %w", err)
@@ -801,9 +801,9 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars := map[string]string{}
 
 	// Basic variables and root parameters
-	envVars["SMARTNODE_IMAGE"] = cfg.Smartnode.GetSmartnodeContainerTag()
-	envVars["ROCKETPOOL_FOLDER"] = cfg.RocketPoolDirectory
-	envVars["RETH_ADDRESS"] = cfg.Smartnode.GetRethAddress().Hex()
+	envVars["STADERNODE_IMAGE"] = cfg.Smartnode.GetStadernodeContainerTag()
+	envVars["STADER_FOLDER"] = cfg.StaderDirectory
+	envVars["ETHX_ADDRESS"] = cfg.Smartnode.GetEthxTokenAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
 	config.AddParametersToEnvVars(cfg.Smartnode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)

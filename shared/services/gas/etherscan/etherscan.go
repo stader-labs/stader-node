@@ -1,5 +1,7 @@
 package etherscan
 
+// ROCKETPOOL-OWNED
+
 import (
 	"encoding/json"
 	"fmt"

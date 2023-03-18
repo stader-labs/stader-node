@@ -1,5 +1,7 @@
 package config
 
+// ROCKETPOOL-OWNED
+
 import (
 	"runtime"
 

@@ -1,5 +1,7 @@
 package prysm
 
+// ROCKETPOOL-OWNED
+
 import (
 	"bytes"
 	"encoding/json"

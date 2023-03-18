@@ -1,5 +1,7 @@
 package lighthouse
 
+// ROCKETPOOL-OWNED
+
 import (
 	"encoding/json"
 	"fmt"

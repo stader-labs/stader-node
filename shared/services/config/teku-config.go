@@ -1,5 +1,7 @@
 package config
 
+// ROCKETPOOL-OWNED
+
 import (
 	"github.com/pbnjay/memory"
 	"github.com/stader-labs/stader-node/shared/types/config"

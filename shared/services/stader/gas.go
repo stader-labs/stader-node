@@ -1,5 +1,7 @@
 package stader
 
+// ROCKETPOOL-OWNED
+
 import (
 	"fmt"
 )
