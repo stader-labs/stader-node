@@ -55,17 +55,8 @@ type SmartnodeConfig struct {
 	// Manual priority fee override
 	PriorityFee config.Parameter `yaml:"priorityFee,omitempty"`
 
-	// Threshold for auto minipool stakes
-	//MinipoolStakeGasThreshold config.Parameter `yaml:"minipoolStakeGasThreshold,omitempty"`
-
-	// Mode for acquiring Merkle rewards trees
-	//RewardsTreeMode config.Parameter `yaml:"rewardsTreeMode,omitempty"`
-
 	// URL for an EC with archive mode, for manual rewards tree generation
 	ArchiveECUrl config.Parameter `yaml:"archiveEcUrl,omitempty"`
-
-	// Token for Oracle DAO members to use when uploading Merkle trees to Web3.Storage
-	//Web3StorageApiToken config.Parameter `yaml:"web3StorageApiToken,omitempty"`
 
 	///////////////////////////
 	// Non-editable settings //
@@ -79,48 +70,6 @@ type SmartnodeConfig struct {
 
 	// The map of networks to execution chain IDs
 	chainID map[config.Network]uint `yaml:"-"`
-
-	// The contract address of RocketStorage
-	//storageAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the 1inch oracle
-	//oneInchOracleAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the RPL token
-	//rplTokenAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the RPL faucet
-	//rplFaucetAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address for Snapshot delegation
-	//snapshotDelegationAddress map[config.Network]string `yaml:"-"`
-
-	// The Snapshot API domain
-	//snapshotApiDomain map[config.Network]string `yaml:"-"`
-
-	// The contract address of rETH
-	//rethAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of rocketRewardsPool from v1.0.0
-	//legacyRewardsPoolAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of rocketClaimNode from v1.0.0
-	//legacyClaimNodeAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of rocketClaimTrustedNode from v1.0.0
-	//legacyClaimTrustedNodeAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of rocketMinipoolManager from v1.0.0
-	//legacyMinipoolManagerAddress map[config.Network]string `yaml:"-"`
-
-	// Addresses for RocketRewardsPool that have been upgraded during development
-	//previousRewardsPoolAddresses map[config.Network]map[string][]common.Address `yaml:"-"`
-
-	// The RocketOvmPriceMessenger address for each network
-	//optimismPriceMessengerAddress map[config.Network]string `yaml:"-"`
-
-	// Rewards submission block maps
-	//rewardsSubmissionBlockMaps        map[config.Network][]uint64 `yaml:"-"`
 
 	// The contract address of the permissionless node operator registry
 	permissionlessNodeRegistryAddress map[config.Network]string `yaml:"-"`
