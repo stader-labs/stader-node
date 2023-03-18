@@ -4,7 +4,6 @@ package api
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/stader/api/debug"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -12,7 +11,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/stader-lib/utils"
-	"github.com/stader-labs/stader-node/stader/api/network"
 	"github.com/stader-labs/stader-node/stader/api/node"
 	apiservice "github.com/stader-labs/stader-node/stader/api/service"
 	"github.com/stader-labs/stader-node/stader/api/wallet"
@@ -55,11 +53,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	}
 
 	// Register subcommands
-	network.RegisterSubcommands(&command, "network", []string{"e"})
+	// network.RegisterSubcommands(&command, "network", []string{"e"})
 	node.RegisterSubcommands(&command, "node", []string{"n"})
 	wallet.RegisterSubcommands(&command, "wallet", []string{"w"})
 	apiservice.RegisterSubcommands(&command, "service", []string{"s"})
-	debug.RegisterSubcommands(&command, "debug", []string{"d"})
+	// debug.RegisterSubcommands(&command, "debug", []string{"d"})
 
 	// Append a general wait-for-transaction command to support async operations
 	command.Subcommands = append(command.Subcommands, cli.Command{
