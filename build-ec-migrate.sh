@@ -32,3 +32,12 @@ echo -n "Pushing to Docker Hub... "
 docker push staderdev/ec-migrator:$VERSION-amd64 || fail "Error pushing amd64 Docker EC Migrator image to Docker Hub."
 docker push staderdev/ec-migrator:$VERSION-arm64 || fail "Error pushing arm Docker EC Migrator image to Docker Hub."
 echo "done!"
+
+ echo -n "Building Docker manifest... "
+rm -f ~/.docker/manifests/docker.io_staderdev_ec-migrator-$VERSION
+docker manifest create staderdev/ec-migrator:$VERSION --amend staderdev/ec-migrator:$VERSION-amd64 --amend staderdev/ec-migrator:$VERSION-arm64
+echo "done!"
+
+echo -n "Pushing to Docker Hub... "
+docker manifest push --purge staderdev/ec-migrator:$VERSION
+echo "done!"
