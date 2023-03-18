@@ -2,9 +2,10 @@ package gas
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/utils/log"
 	"math/big"
 	"strconv"
+
+	"github.com/stader-labs/stader-node/shared/utils/log"
 
 	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"
@@ -22,7 +23,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 		return fmt.Errorf("Error getting Stader configuration: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	// Get the current settings from the CLI arguments

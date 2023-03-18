@@ -1321,19 +1321,19 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	}
 
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode before starting it.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode before starting it.")
 	}
 
 	// Check config
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stdr-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stader-cli service config' before running this command.")
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient) == cfgtypes.ExecutionClient_Unknown {
-		return "", errors.New("No Execution (ETH1) client selected. Please run 'stdr-cli service config' before running this command.")
+		return "", errors.New("No Execution (ETH1) client selected. Please run 'stader-cli service config' before running this command.")
 	}
 	if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stdr-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stader-cli service config' before running this command.")
 	} else if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Unknown {
-		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stdr-cli service config' before running this command.")
+		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stader-cli service config' before running this command.")
 	}
 
 	// Get the external IP address

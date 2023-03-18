@@ -52,7 +52,7 @@ func printTransactionHashImpl(staderClient *stader.Client, hash common.Hash, fin
 	}
 
 	if isNew {
-		fmt.Print("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 		return
 	}
 
@@ -108,8 +108,8 @@ func PrintDepositMismatchError(rpNetwork, beaconNetwork uint64, rpDepositAddress
 	fmt.Println("For the safety of your funds, Stader will not let you deposit your ETH until this is resolved.")
 	fmt.Println()
 	fmt.Println("To fix it if you are in Docker mode:")
-	fmt.Println("\t1. Run 'stdr-cli service install -d' to get the latest configuration")
-	fmt.Println("\t2. Run 'stdr-cli service stop' and 'stdr-cli service start' to apply the configuration.")
+	fmt.Println("\t1. Run 'stader-cli service install -d' to get the latest configuration")
+	fmt.Println("\t2. Run 'stader-cli service stop' and 'stader-cli service start' to apply the configuration.")
 	fmt.Println("If you are using Hybrid or Native mode, please correct the network flags in your ETH2 launch script.")
 	fmt.Println()
 	fmt.Println("Details:")
@@ -124,7 +124,7 @@ func PrintNetwork(staderClient *stader.Client) error {
 		return fmt.Errorf("error loading global config: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("settings file not found. Please run `stdr-client service config` to set up your Smartnode")
+		return fmt.Errorf("settings file not found. Please run `stader-client service config` to set up your Smartnode")
 	}
 
 	currentNetwork := cfg.Smartnode.Network.Value.(cfgtypes.Network)

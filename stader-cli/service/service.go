@@ -121,7 +121,7 @@ func installService(c *cli.Context) error {
 
 	// Report next steps
 	fmt.Printf("%s\n=== Next Steps ===\n", colorLightBlue)
-	fmt.Printf("Run 'stdr-cli service config' to review the settings changes for this update, or to continue setting up your node.%s\n", colorReset)
+	fmt.Printf("Run 'stader-cli service config' to review the settings changes for this update, or to continue setting up your node.%s\n", colorReset)
 
 	// Print the docker permissions notice
 	if isNew && !isMigration {
@@ -153,7 +153,7 @@ func printPatchNotes(c *cli.Context) {
 	fmt.Println("MEV-Boost is now opt-out instead of opt-in. Furthermore, there is a new way to select relays: you can now select \"profiles\" instead of individual relays. As new relays are added to the Smartnode, any that belong to the profiles you've selected will automatically be enabled for you.\nNOTE: everyone will have to configure either profile-mode or individual-relay mode when first upgrading from v1.6, even if you had previously configured MEV-Boost.")
 
 	fmt.Printf("%s=== ENS Support ===%s\n", colorGreen, colorReset)
-	fmt.Println("`stdr-cli node set-withdrawal-address`, `stdr-cli node send`, and `stdr-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stdr-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
+	fmt.Println("`stader-cli node set-withdrawal-address`, `stader-cli node send`, and `stader-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stader-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
 
 	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
 	fmt.Println("The Smartnode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
@@ -330,7 +330,7 @@ func configureService(c *cli.Context) error {
 		// Query for service start if this is a new installation
 		if isNew {
 			if !cliutils.Confirm("Would you like to start the Smartnode services automatically now?") {
-				fmt.Println("Please run `stdr-cli service start` when you are ready to launch.")
+				fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
 				return nil
 			}
 			return startService(c, true)
@@ -343,7 +343,7 @@ func configureService(c *cli.Context) error {
 				fmt.Printf("\t%s_%s\n", prefix, container)
 			}
 			if !cliutils.Confirm("Would you like to restart them automatically now?") {
-				fmt.Println("Please run `stdr-cli service start` when you are ready to apply the changes.")
+				fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
 				return nil
 			}
 
@@ -525,10 +525,10 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		selectedEc := cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)
 		switch selectedEc {
 		case cfgtypes.ExecutionClient_Obs_Infura:
-			fmt.Printf("%sYou currently have Infura configured as your primary Execution client, but it is no longer supported because it is not compatible with the upcoming Ethereum Merge.\nPlease run `stdr-cli service config` and select a full Execution client.%s\n", colorRed, colorReset)
+			fmt.Printf("%sYou currently have Infura configured as your primary Execution client, but it is no longer supported because it is not compatible with the upcoming Ethereum Merge.\nPlease run `stader-cli service config` and select a full Execution client.%s\n", colorRed, colorReset)
 			return nil
 		case cfgtypes.ExecutionClient_Obs_Pocket:
-			fmt.Printf("%sYou currently have Pocket configured as your primary Execution client, but it is no longer supported because it is not compatible with the upcoming Ethereum Merge.\nPlease run `stdr-cli service config` and select a full Execution client.%s\n", colorRed, colorReset)
+			fmt.Printf("%sYou currently have Pocket configured as your primary Execution client, but it is no longer supported because it is not compatible with the upcoming Ethereum Merge.\nPlease run `stader-cli service config` and select a full Execution client.%s\n", colorRed, colorReset)
 			return nil
 		}
 	}
@@ -554,9 +554,9 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	if isMigration {
-		return fmt.Errorf("You must upgrade your configuration before starting the Smartnode.\nPlease run `stdr-cli service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
+		return fmt.Errorf("You must upgrade your configuration before starting the Smartnode.\nPlease run `stader-cli service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
 	} else if isNew {
-		return fmt.Errorf("No configuration detected. Please run `stdr-cli service config` to set up your Smartnode before running it.")
+		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Smartnode before running it.")
 	}
 
 	// Check if this is a new install
@@ -669,7 +669,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *config.StaderConfig) error {
 
 	fmt.Printf("%s=== NOTICE ===\n", colorYellow)
-	fmt.Printf("You are currently using Teku as your Consensus client.\nv1.3.1+ fixes an issue that would cause Teku's slashing protection database to be lost after an upgrade.\nIt will now be rebuilt.\n\nFor the absolute safety of your funds, your node will wait for 15 minutes before starting.\nYou will miss a few attestations during this process; this is expected.\n\nThis delay only needs to happen the first time you start the Smartnode after upgrading to v1.3.1 or higher.%s\n\nIf you are installing the Smartnode for the first time or don't have any validators yet, you can skip this with `stdr-cli service start --ignore-slash-timer`. Otherwise, we strongly recommend you wait for the full delay.\n\n", colorReset)
+	fmt.Printf("You are currently using Teku as your Consensus client.\nv1.3.1+ fixes an issue that would cause Teku's slashing protection database to be lost after an upgrade.\nIt will now be rebuilt.\n\nFor the absolute safety of your funds, your node will wait for 15 minutes before starting.\nYou will miss a few attestations during this process; this is expected.\n\nThis delay only needs to happen the first time you start the Smartnode after upgrading to v1.3.1 or higher.%s\n\nIf you are installing the Smartnode for the first time or don't have any validators yet, you can skip this with `stader-cli service start --ignore-slash-timer`. Otherwise, we strongly recommend you wait for the full delay.\n\n", colorReset)
 
 	// Get the container prefix
 	prefix, err := getContainerPrefix(staderClient)
@@ -813,7 +813,7 @@ func checkForValidatorChange(stader *stader.Client, cfg *config.StaderConfig) er
 			fmt.Printf("You have changed your validator client from %s to %s.\n", currentValidatorName, pendingValidatorName)
 			fmt.Println("If you have active validators, starting the new client immediately will cause them to be slashed due to duplicate attestations!")
 			fmt.Println("To prevent slashing, Stader will delay activating the new client for 15 minutes.")
-			fmt.Printf("If you want to bypass this cooldown and understand the risks, run `stdr-cli service start --ignore-slash-timer`.%s\n\n", colorReset)
+			fmt.Printf("If you want to bypass this cooldown and understand the risks, run `stader-cli service start --ignore-slash-timer`.%s\n\n", colorReset)
 
 			// Wait for 15 minutes
 			for remainingTime > 0 {
@@ -897,7 +897,7 @@ func getContainerPrefix(staderClient *stader.Client) (string, error) {
 		return "", err
 	}
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	return cfg.Smartnode.ProjectName.Value.(string), nil
@@ -918,7 +918,7 @@ func pruneExecutionClient(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	// Sanity checks
@@ -941,7 +941,7 @@ func pruneExecutionClient(c *cli.Context) error {
 
 	if selectedEc == cfgtypes.ExecutionClient_Geth {
 		if cfg.UseFallbackClients.Value == false {
-			fmt.Printf("%sYou do not have a fallback execution client configured.\nYour node will no longer be able to perform any validation duties (attesting or proposing blocks) until Geth is done pruning and has synced again.\nPlease configure a fallback client with `stdr-cli service config` before running this.%s\n", colorRed, colorReset)
+			fmt.Printf("%sYou do not have a fallback execution client configured.\nYour node will no longer be able to perform any validation duties (attesting or proposing blocks) until Geth is done pruning and has synced again.\nPlease configure a fallback client with `stader-cli service config` before running this.%s\n", colorRed, colorReset)
 		} else {
 			fmt.Println("You have fallback clients enabled. Stader (and your consensus client) will use that while the main client is pruning.")
 		}
@@ -1032,7 +1032,7 @@ func pruneExecutionClient(c *cli.Context) error {
 		}
 	}
 
-	fmt.Printf("\nDone! Your main execution client is now pruning. You can follow its progress with `stdr-cli service logs eth1`.\n")
+	fmt.Printf("\nDone! Your main execution client is now pruning. You can follow its progress with `stader-cli service logs eth1`.\n")
 	fmt.Println("Once it's done, it will restart automatically and resume normal operation.")
 
 	fmt.Printf("%sNOTE: While pruning, you **cannot** interrupt the client (e.g. by restarting) or you risk corrupting the database!\nYou must let it run to completion!%s\n", colorYellow, colorReset)
@@ -1163,7 +1163,7 @@ func serviceVersion(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("settings file not found. Please run `stdr-cli service config` to set up your Smartnode")
+		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Smartnode")
 	}
 
 	// Handle native mode
@@ -1267,7 +1267,7 @@ func resyncEth1(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	fmt.Println("This will delete the chain data of your primary ETH1 client and resync it from scratch.")
@@ -1329,7 +1329,7 @@ func resyncEth1(c *cli.Context) error {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}
 
-	fmt.Printf("\nDone! Your main ETH1 client is now resyncing. You can follow its progress with `stdr-cli service logs eth1`.\n")
+	fmt.Printf("\nDone! Your main ETH1 client is now resyncing. You can follow its progress with `stader-cli service logs eth1`.\n")
 
 	return nil
 
@@ -1350,7 +1350,7 @@ func resyncEth2(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	fmt.Println("This will delete the chain data of your ETH2 client and resync it from scratch.")
@@ -1390,7 +1390,7 @@ func resyncEth2(c *cli.Context) error {
 		// Get the current checkpoint sync URL
 		checkpointSyncUrl := cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string)
 		if checkpointSyncUrl == "" {
-			fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your ETH2 client finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `stdr-cli service config` so it syncs instantly before running this.%s\n\n", colorRed, colorBold, colorReset, colorRed, colorReset)
+			fmt.Printf("%sYou do not have a checkpoint sync provider configured.\nIf you have active validators, they %swill be considered offline and will lose ETH%s%s until your ETH2 client finishes syncing.\nWe strongly recommend you configure a checkpoint sync provider with `stader-cli service config` so it syncs instantly before running this.%s\n\n", colorRed, colorBold, colorReset, colorRed, colorReset)
 		} else {
 			fmt.Printf("You have a checkpoint sync provider configured (%s).\nYour ETH2 client will use it to sync to the head of the Beacon Chain instantly after being rebuilt.\n\n", checkpointSyncUrl)
 		}
@@ -1452,7 +1452,7 @@ func resyncEth2(c *cli.Context) error {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}
 
-	fmt.Printf("\nDone! Your ETH2 client is now resyncing. You can follow its progress with `stdr-cli service logs eth2`.\n")
+	fmt.Printf("\nDone! Your ETH2 client is now resyncing. You can follow its progress with `stader-cli service logs eth2`.\n")
 
 	return nil
 
@@ -1485,7 +1485,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	// Make the path absolute
@@ -1600,7 +1600,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stdr-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
 	}
 
 	// Make the path absolute
