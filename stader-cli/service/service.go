@@ -222,6 +222,7 @@ func configureService(c *cli.Context) error {
 
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
+	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
 		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)

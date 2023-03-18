@@ -158,7 +158,7 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 // Remove the old fee recipient files that were created in v1.5.0
 func removeLegacyFeeRecipientFiles(c *cli.Context) error {
 
-	legacyFeeRecipientFile := "stdr-fee-recipient.txt"
+	legacyFeeRecipientFile := "stader-fee-recipient.txt"
 
 	cfg, err := services.GetConfig(c)
 	if err != nil {

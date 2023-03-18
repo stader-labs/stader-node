@@ -723,7 +723,7 @@ Public License instead of this License. But first, please read
 		cli.StringFlag{
 			Name:  "settings, s",
 			Usage: "Stader service user config absolute `path`",
-			Value: "/.stdr/user-settings.yml",
+			Value: "/.stader/user-settings.yml",
 		},
 		cli.StringFlag{
 			Name:  "storageAddress, a",

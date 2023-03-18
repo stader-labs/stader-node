@@ -3,9 +3,10 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -130,7 +131,7 @@ func nodeDeposit(c *cli.Context) error {
 
 	fmt.Println("Your validators are now in Initialized status.")
 	fmt.Println("Once the ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
-	fmt.Println("You can watch its progress using `stdr-cli service logs node`.")
+	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
 
 	return nil
 
