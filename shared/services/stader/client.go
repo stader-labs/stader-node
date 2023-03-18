@@ -34,8 +34,8 @@ import (
 
 // Config
 const (
-	InstallerURL     string = "https://temps3node.s3.amazonaws.com/zhejiang/install.sh"
-	UpdateTrackerURL string = "https://github.com/rocket-pool/smartnode-install/releases/download/%s/install-update-tracker.sh"
+	InstallerURL     string = "https://temps3node.s3.amazonaws.com/%s/install.sh"
+	UpdateTrackerURL string = "https://temps3node.s3.amazonaws.com/download/%s/install-update-tracker.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
@@ -493,7 +493,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
