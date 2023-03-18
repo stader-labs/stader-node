@@ -39,7 +39,7 @@ build_cli() {
 
 # Builds the .tar.xz file packages with the Stader configuration files
 build_install_packages() {
-    cd stader-node-install || fail "Directory ${PWD}/stader-node-install does not exist or you don't have permissions to access it."
+    cd stader-node || fail "Directory ${PWD}/stader-node-install does not exist or you don't have permissions to access it."
     rm -f stader-node-install.tar.xz
 
     echo -n "Building Stader node installer packages... "
@@ -47,8 +47,10 @@ build_install_packages() {
     mv stader-node-install.tar.xz ../$VERSION
     cp install.sh ../$VERSION
     cp install-update-tracker.sh ../$VERSION
+    cd ..
     echo "done!"
 
+    cd stader-node-install || fail "Directory ${PWD}/stader-node-install does not exist or you don't have permissions to access it."
     echo -n "Building update tracker package... "
     tar cfJ stader-update-tracker.tar.xz stader-update-tracker || fail "Error building update tracker package."
     mv stader-update-tracker.tar.xz ../$VERSION

@@ -801,7 +801,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars := map[string]string{}
 
 	// Basic variables and root parameters
-	envVars["SMARTNODE_IMAGE"] = cfg.Smartnode.GetSmartnodeContainerTag()
+	envVars["STADER_NODE_IMAGE"] = cfg.Smartnode.GetSmartnodeContainerTag()
 	envVars["STADER_FOLDER"] = cfg.StaderDirectory
 	envVars["RETH_ADDRESS"] = cfg.Smartnode.GetRethAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
