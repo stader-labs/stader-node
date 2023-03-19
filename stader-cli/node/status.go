@@ -3,6 +3,7 @@ package node
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -39,8 +40,15 @@ func getStatus(c *cli.Context) error {
 		return err
 	}
 
-	totalRegisteredValidators := len(status.ValidatorInfos)
-	totalRegisterableValidators := status.SdCollateralWorthValidators
+	totalRegisteredValidators := 0
+	if status.ValidatorInfos != nil {
+		totalRegisteredValidators = len(status.ValidatorInfos)
+	}
+
+	totalRegisterableValidators := big.NewInt(0)
+	if status.SdCollateralWorthValidators != nil {
+		totalRegisterableValidators = status.SdCollateralWorthValidators
+	}
 	noOfValidatorsWhichWeCanRegister := totalRegisterableValidators.Int64() - int64(totalRegisteredValidators)
 
 	// Account address & balances
