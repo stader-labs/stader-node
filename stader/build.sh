@@ -3,8 +3,6 @@
 export CGO_ENABLED=1
 cd /stader-node/stader
 
-# GOOS=darwin GOARCH=amd64 go build -o stadrr-cli-darwin-amd64 stadrr-cli.go
-
 #
 ## Build x64 version
 CGO_CFLAGS="-O -D__BLST_PORTABLE__" GOARCH=amd64 GOOS=linux go build -o stader-daemon-linux-amd64 stader.go

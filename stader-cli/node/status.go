@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -68,7 +69,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Name: %s\n", status.OperatorName)
 		fmt.Printf("Operator Reward Address: %s\n", status.OperatorRewardAddress.String())
 	} else {
-		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with stader", log.ColorGreen, log.ColorReset)
+		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with Stader", log.ColorGreen, log.ColorReset)
 	}
 
 	// Return

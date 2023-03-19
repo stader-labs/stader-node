@@ -4,9 +4,10 @@ package gas
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/utils/log"
 	"math/big"
 	"strconv"
+
+	"github.com/stader-labs/stader-node/shared/utils/log"
 
 	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"

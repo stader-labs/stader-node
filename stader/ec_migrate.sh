@@ -1,4 +1,3 @@
- # shellcheck disable=SC1114
  #!/bin/sh
 
 EC_CHAINDATA_DIR=/ethclient

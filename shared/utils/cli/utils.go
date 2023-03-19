@@ -126,7 +126,7 @@ func PrintNetwork(staderClient *stader.Client) error {
 		return fmt.Errorf("error loading global config: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("settings file not found. Please run `stader-client service config` to set up your Smartnode")
+		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Stader Node")
 	}
 
 	currentNetwork := cfg.Smartnode.Network.Value.(cfgtypes.Network)

@@ -10,10 +10,9 @@ import (
 
 // Constants
 const (
-	smartnodeTag = "staderdev/stader-node:v" + shared.StaderVersion
-	// TODO - arjay remove this and add them to stader docker namespace
-	pruneProvisionerTag        string = "rocketpool/eth1-prune-provision:v0.0.1"
-	ecMigratorTag              string = "rocketpool/ec-migrator:v1.0.0"
+	smartnodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
+	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                  string = "network"
 	ProjectNameID              string = "projectName"
 	DaemonDataPath             string = "/.stader/data"
@@ -113,7 +112,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: getDefaultDataDir(cfg)},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Validator},
-			EnvironmentVariables: []string{"ROCKETPOOL_DATA_FOLDER"},
+			EnvironmentVariables: []string{"STADER_DATA_FOLDER"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
 		},
@@ -125,7 +124,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stader/watchtower"},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower},
-			EnvironmentVariables: []string{"ROCKETPOOL_WATCHTOWER_FOLDER"},
+			EnvironmentVariables: []string{"STADER_GUARDIAN_FOLDER"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
 		},
@@ -183,12 +182,6 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 			config.Network_Mainnet: "https://etherscan.io/tx",
 			config.Network_Prater:  "https://goerli.etherscan.io/tx",
 			config.Network_Devnet:  "https://goerli.etherscan.io/tx",
-		},
-
-		stakeUrl: map[config.Network]string{
-			config.Network_Mainnet: "https://stake.rocketpool.net",
-			config.Network_Prater:  "https://testnet.rocketpool.net",
-			config.Network_Devnet:  "TBD",
 		},
 
 		chainID: map[config.Network]uint{
@@ -392,7 +385,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 		{
 			Name:        "Zhejiang Testnet",
-			Description: "This is the Zhejiang test network, using free fake ETH and free fake RPL to make fake validators.\nUse this if you want to test the upcoming Atlas upgrade to Rocket Pool, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
+			Description: "This is the Zhejiang test network, using free fake ETH and free fake RPL to make fake validators.\nUse this if you want to test the ZHejiang network, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
 			Value:       config.Network_Zhejiang,
 		},
 	}

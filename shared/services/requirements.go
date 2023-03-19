@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"log"
 	"sync"
 	"time"
 
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 )
 

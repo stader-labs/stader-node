@@ -21,8 +21,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
-// TODO - ROCKETPOOL-OWNED
-
 // This is a proxy for multiple ETH clients, providing natural fallback support if one of them fails.
 type ExecutionClientManager struct {
 	primaryEcUrl    string
@@ -384,8 +382,6 @@ func getNetworkNameFromId(networkId uint) string {
 		return "Ethereum Mainnet"
 	case 5:
 		return "Goerli Testnet"
-	case 1337803:
-		return "Zhejiang Testnet"
 	default:
 		return "Unknown Network"
 	}

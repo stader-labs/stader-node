@@ -801,7 +801,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars := map[string]string{}
 
 	// Basic variables and root parameters
-	envVars["STADERNODE_IMAGE"] = cfg.Smartnode.GetStadernodeContainerTag()
+	envVars["STADER_NODE_IMAGE"] = cfg.Smartnode.GetStadernodeContainerTag()
 	envVars["STADER_FOLDER"] = cfg.StaderDirectory
 	envVars["ETHX_ADDRESS"] = cfg.Smartnode.GetEthxTokenAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
@@ -1107,7 +1107,7 @@ func (cfg *StaderConfig) Validate() []string {
 					errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
 				}
 			default:
-				errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `stdr-cli service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
+				errors = append(errors, "You do not have a MEV-Boost mode configured. You must either select a mode in the `stader-cli service config` UI, or disable MEV-Boost.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
 			}
 		}
 	}

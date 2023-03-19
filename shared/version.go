@@ -1,8 +1,6 @@
 package shared
 
-// ROCKETPOOL-OWNED
-
-const StaderVersion string = "0.2.0-dev"
+const StaderVersion string = "0.2.2-dev"
 
 //const IntVersion = "1.7.2-dev"
 

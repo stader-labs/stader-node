@@ -10,13 +10,12 @@ import (
 )
 
 const (
-	prysmBnTagAmd64Test string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
-	prysmVcTagAmd64Test string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
-	prysmTagArm64Test   string = "rocketpool/prysm:v3.2.2-rc.3"
-
+	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
+	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
+	prysmTagArm64Test       string = "staderdev/prysm:v3.2.2-rc.3"
 	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
 	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
-	prysmTagArm64Prod       string = "rocketpool/prysm:v3.2.2-rc.3"
+	prysmTagArm64Prod       string = "staderdev/prysm:v3.2.2-rc.3"
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45

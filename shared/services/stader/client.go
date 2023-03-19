@@ -31,13 +31,13 @@ import (
 	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // Config
 const (
-	InstallerURL     string = "https://temps3node.s3.amazonaws.com/zhejiang/install.sh"
-	UpdateTrackerURL string = "https://github.com/rocket-pool/smartnode-install/releases/download/%s/install-update-tracker.sh"
+	InstallerURL     string = "https://temps3node.s3.amazonaws.com/%s/install.sh"
+	UpdateTrackerURL string = "https://temps3node.s3.amazonaws.com/download/%s/install-update-tracker.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
@@ -158,7 +158,7 @@ func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 		return nil, false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
 
-	cfg, err := stdr.LoadConfigFromFile(expandedPath)
+	cfg, err := staderUtils.LoadConfigFromFile(expandedPath)
 	if err != nil {
 		return nil, false, err
 	}
@@ -179,7 +179,7 @@ func (c *Client) LoadBackupConfig() (*config.StaderConfig, error) {
 		return nil, fmt.Errorf("error expanding backup settings file path: %w", err)
 	}
 
-	return stdr.LoadConfigFromFile(expandedPath)
+	return staderUtils.LoadConfigFromFile(expandedPath)
 }
 
 // Save the config
@@ -189,7 +189,7 @@ func (c *Client) SaveConfig(cfg *config.StaderConfig) error {
 	if err != nil {
 		return err
 	}
-	return stdr.SaveConfig(cfg, expandedPath)
+	return staderUtils.SaveConfig(cfg, expandedPath)
 }
 
 // Remove the upgrade flag file
@@ -198,7 +198,7 @@ func (c *Client) RemoveUpgradeFlagFile() error {
 	if err != nil {
 		return err
 	}
-	return stdr.RemoveUpgradeFlagFile(expandedPath)
+	return staderUtils.RemoveUpgradeFlagFile(expandedPath)
 }
 
 // Returns whether or not this is the first run of the configurator since a previous installation
@@ -207,7 +207,7 @@ func (c *Client) IsFirstRun() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
-	return stdr.IsFirstRun(expandedPath), nil
+	return staderUtils.IsFirstRun(expandedPath), nil
 }
 
 // Load the legacy config if one exists
@@ -432,9 +432,9 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	}
 
 	// Smartnode settings
-	cfg.Smartnode.ProjectName.Value = legacyCfg.Smartnode.ProjectName
-	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.Smartnode.MaxFee
-	cfg.Smartnode.PriorityFee.Value = legacyCfg.Smartnode.MaxPriorityFee
+	cfg.Smartnode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
+	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
+	cfg.Smartnode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {
@@ -463,7 +463,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Native.EcHttpUrl.Value = legacyCfg.Chains.Eth1.Provider
 	cfg.Native.CcHttpUrl.Value = legacyCfg.Chains.Eth2.Provider
 	c.migrateCcSelection(legacyCfg.Chains.Eth2.Client.Selected, &cfg.Native.ConsensusClient)
-	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.Smartnode.ValidatorRestartCommand
+	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.StaderNode.ValidatorRestartCommand
 	cfg.Smartnode.DataPath.Value = filepath.Join(c.configPath, "data")
 
 	return cfg, nil
@@ -494,7 +494,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
@@ -1329,12 +1329,12 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
 		return "", fmt.Errorf("You haven't selected local or external mode for your Execution (ETH1) client.\nPlease run 'stader-cli service config' before running this command.")
 	} else if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient) == cfgtypes.ExecutionClient_Unknown {
-		return "", errors.New("No Execution (ETH1) client selected. Please run 'stdr-cli service config' before running this command.")
+		return "", errors.New("No Execution (ETH1) client selected. Please run 'stader-cli service config' before running this command.")
 	}
 	if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Unknown {
-		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stdr-cli service config' before running this command.")
+		return "", fmt.Errorf("You haven't selected local or external mode for your Consensus (ETH2) client.\nPlease run 'stader-cli service config' before running this command.")
 	} else if cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Unknown {
-		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stdr-cli service config' before running this command.")
+		return "", errors.New("No Consensus (ETH2) client selected. Please run 'stader-cli service config' before running this command.")
 	}
 
 	// Get the external IP address
