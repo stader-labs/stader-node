@@ -97,6 +97,7 @@ func getStatus(c *cli.Context) error {
 				if validatorInfo.Status == 8 {
 					fmt.Printf("-Withdrawn time %d\n", validatorInfo.WithdrawnTime)
 				}
+				fmt.Println("")
 			}
 		} else {
 			fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader", log.ColorGreen, log.ColorReset)
