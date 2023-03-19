@@ -15,9 +15,6 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
 
-// Config
-const DefaultMaxNodeFeeSlippage = 0.01 // 1% below current network fee
-
 func nodeDeposit(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)

@@ -24,10 +24,9 @@ type NodeStatusResponse struct {
 	OperatorName                 string          `json:"operatorName"`
 	OperatorRewardAddress        common.Address  `json:"operatorRewardAddress"`
 	DepositedSdCollateral        *big.Int        `json:"depositedSdCollateral"`
+	SdCollateralWorthValidators  *big.Int        `json:"sdCollateralWorthValidators"`
 	Registered                   bool            `json:"registered"`
-	TimezoneLocation             string          `json:"timezoneLocation"`
 	AccountBalances              tokens.Balances `json:"accountBalances"`
-	ValidatorLimit               uint64          `json:"validatorLimit"`
 	ValidatorStatuses            struct {
 		Total               int `json:"total"`
 		Initialized         int `json:"initialized"`

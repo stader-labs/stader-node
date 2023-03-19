@@ -1,7 +1,8 @@
 package watchtower
 
+// ROCKETPOOL-OWNED
+
 import (
-	"math/rand"
 	"net/http"
 	"sync"
 	"time"
@@ -9,9 +10,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
 
-	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/stader/watchtower/collectors"
 )
 
 // Config
@@ -30,7 +29,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	app.Commands = append(app.Commands, cli.Command{
 		Name:    name,
 		Aliases: aliases,
-		Usage:   "Run Rocket Pool watchtower activity daemon",
+		Usage:   "Run Stader watchtower activity daemon",
 		Action: func(c *cli.Context) error {
 			return run(c)
 		},
@@ -43,51 +42,16 @@ func run(c *cli.Context) error {
 	// Configure
 	configureHTTP()
 
-	// Initialize the scrub metrics reporter
-	scrubCollector := collectors.NewScrubCollector()
-
 	// Initialize error logger
 	errorLog := log.NewColorLogger(ErrorColor)
 
-	/*processPenalties, err := newProcessPenalties(c, log.NewColorLogger(ProcessPenaltiesColor), errorLog)
-	if err != nil {
-		return fmt.Errorf("error during penalties check: %w", err)
-	}*/
-
-	intervalDelta := maxTasksInterval - minTasksInterval
-	secondsDelta := intervalDelta.Seconds()
-
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
-
-	// Run task loop
-	go func() {
-		for {
-			// Randomize the next interval
-			randomSeconds := rand.Intn(int(secondsDelta))
-			interval := time.Duration(randomSeconds)*time.Second + minTasksInterval
-
-			// Check the EC status
-			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-			if err != nil {
-				errorLog.Println(err)
-			} else {
-				// Check the BC status
-				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-				if err != nil {
-					errorLog.Println(err)
-				} else {
-				}
-			}
-			time.Sleep(interval)
-		}
-		wg.Done()
-	}()
+	wg.Add(1)
 
 	// Run metrics loop
 	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), scrubCollector)
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor))
 		if err != nil {
 			errorLog.Println(err)
 		}

@@ -8,11 +8,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/stader/watchtower/collectors"
 	"github.com/urfave/cli"
 )
 
-func runMetricsServer(c *cli.Context, logger log.ColorLogger, scrubCollector *collectors.ScrubCollector) error {
+func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
 
 	// Get services
 	cfg, err := services.GetConfig(c)
@@ -27,7 +26,6 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, scrubCollector *co
 
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
-	registry.MustRegister(scrubCollector)
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 
 	// Start the HTTP server

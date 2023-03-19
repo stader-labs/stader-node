@@ -76,11 +76,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.DepositedSdCollateral = operatorSdCollateral
 
+		// total registerable validators
+		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SdCollateralWorthValidators = totalSdWorthValidators
+
 		// TODO - bchain - work on getting validator statuses
-		//totalOperatorValidators, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
-		//if err != nil {
-		//	return nil, err
-		//}
 
 	} else {
 		response.Registered = false
