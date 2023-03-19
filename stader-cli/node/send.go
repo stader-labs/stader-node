@@ -2,8 +2,6 @@ package node
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -45,20 +43,12 @@ func nodeSend(c *cli.Context, amount float64, token string, toAddressOrENS strin
 	}
 	var toAddress common.Address
 	var toAddressString string
-	if strings.Contains(toAddressOrENS, ".") {
-		response, err := staderClient.ResolveEnsName(toAddressOrENS)
-		if err != nil {
-			return err
-		}
-		toAddress = response.Address
-		toAddressString = fmt.Sprintf("%s (%s)", toAddressOrENS, toAddress.Hex())
-	} else {
-		toAddress, err = cliutils.ValidateAddress("to address", toAddressOrENS)
-		if err != nil {
-			return err
-		}
-		toAddressString = toAddress.Hex()
+
+	toAddress, err = cliutils.ValidateAddress("to address", toAddressOrENS)
+	if err != nil {
+		return err
 	}
+	toAddressString = toAddress.Hex()
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to send %.6f %s to %s? This action cannot be undone!", math.RoundDown(eth.WeiToEth(amountWei), 6), token, toAddressString))) {
