@@ -3,6 +3,7 @@ package api
 // ROCKETPOOL-OWNED
 
 import (
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"time"
@@ -15,30 +16,19 @@ import (
 )
 
 type NodeStatusResponse struct {
-	Status                       string          `json:"status"`
-	Error                        string          `json:"error"`
-	NumberOfValidatorsRegistered string          `json:"numberOfValidatorsRegistered"`
-	AccountAddress               common.Address  `json:"accountAddress"`
-	AccountAddressFormatted      string          `json:"accountAddressFormatted"`
-	OperatorId                   *big.Int        `json:"operatorId"`
-	OperatorName                 string          `json:"operatorName"`
-	OperatorRewardAddress        common.Address  `json:"operatorRewardAddress"`
-	DepositedSdCollateral        *big.Int        `json:"depositedSdCollateral"`
-	SdCollateralWorthValidators  *big.Int        `json:"sdCollateralWorthValidators"`
-	Registered                   bool            `json:"registered"`
-	AccountBalances              tokens.Balances `json:"accountBalances"`
-	ValidatorStatuses            struct {
-		Total               int `json:"total"`
-		Initialized         int `json:"initialized"`
-		Prelaunch           int `json:"prelaunch"`
-		Staking             int `json:"staking"`
-		Withdrawable        int `json:"withdrawable"`
-		Dissolved           int `json:"dissolved"`
-		RefundAvailable     int `json:"refundAvailable"`
-		WithdrawalAvailable int `json:"withdrawalAvailable"`
-		CloseAvailable      int `json:"closeAvailable"`
-		Finalised           int `json:"finalised"`
-	} `json:"minipoolCounts"`
+	Status                       string               `json:"status"`
+	Error                        string               `json:"error"`
+	NumberOfValidatorsRegistered string               `json:"numberOfValidatorsRegistered"`
+	AccountAddress               common.Address       `json:"accountAddress"`
+	AccountAddressFormatted      string               `json:"accountAddressFormatted"`
+	OperatorId                   *big.Int             `json:"operatorId"`
+	OperatorName                 string               `json:"operatorName"`
+	OperatorRewardAddress        common.Address       `json:"operatorRewardAddress"`
+	DepositedSdCollateral        *big.Int             `json:"depositedSdCollateral"`
+	SdCollateralWorthValidators  *big.Int             `json:"sdCollateralWorthValidators"`
+	Registered                   bool                 `json:"registered"`
+	AccountBalances              tokens.Balances      `json:"accountBalances"`
+	ValidatorInfos               []stdr.ValidatorInfo `json:"validatorInfos"`
 }
 
 type CanRegisterNodeResponse struct {

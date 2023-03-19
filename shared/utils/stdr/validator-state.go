@@ -1,6 +1,11 @@
 package stdr
 
-var ValidatorState = map[uint64]string{
+import (
+	"github.com/ethereum/go-ethereum/common"
+	"math/big"
+)
+
+var ValidatorState = map[uint8]string{
 	0: "Initialized",
 	1: "Invalid Signature",
 	2: "Front Run",
@@ -11,4 +16,14 @@ var ValidatorState = map[uint64]string{
 	7: "In Exit Queue",
 	8: "Exited",
 	9: "Withdrawn",
+}
+
+type ValidatorInfo struct {
+	Status               uint8
+	Pubkey               []byte
+	PreDepositSignature  []byte
+	DepositSignature     []byte
+	WithdrawVaultAddress common.Address
+	OperatorId           *big.Int
+	InitialBondEth       *big.Int
 }
