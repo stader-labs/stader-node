@@ -28,16 +28,16 @@ func getContractsInfo(c *cli.Context) error {
 	}
 
 	fmt.Printf("%s=== Beacon Network Contract Details ===%s\n", log.ColorGreen, log.ColorReset)
-	fmt.Printf("Beacon Network: %d\n", response.BeaconNetwork)
-	fmt.Printf("Beacon Deposit Contract: %s\n", response.BeaconDepositContract)
+	fmt.Printf("Beacon Network: %d\n\n", response.BeaconNetwork)
+	fmt.Printf("Beacon Deposit Contract: %s\n\n", response.BeaconDepositContract)
 
 	fmt.Printf("%s=== Stader Network Contract Details ===%s\n", log.ColorGreen, log.ColorReset)
-	fmt.Printf("Network: %d\n", response.Network)
-	fmt.Printf("Permissionless Node Registry: %s\n", response.PermissionlessNodeRegistry)
-	fmt.Printf("Vault Factory: %s\n", response.VaultFactory)
-	fmt.Printf("Sd Collateral Lock: %s\n", response.SdCollateralContract)
-	fmt.Printf("EthX Token: %s\n", response.EthxToken)
-	fmt.Printf("Sd Token: %s\n", response.SdToken)
+	fmt.Printf("Network: %d\n\n", response.Network)
+	fmt.Printf("Permissionless Node Registry: %s\n\n", response.PermissionlessNodeRegistry)
+	fmt.Printf("Vault Factory: %s\n\n", response.VaultFactory)
+	fmt.Printf("Sd Collateral Lock: %s\n\n", response.SdCollateralContract)
+	fmt.Printf("EthX Token: %s\n\n", response.EthxToken)
+	fmt.Printf("Sd Token: %s\n\n", response.SdToken)
 
 	return nil
 }

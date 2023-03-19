@@ -78,12 +78,12 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	if status.Registered {
-		fmt.Printf("The node is registered with Stader. Below are node details:\n")
-		fmt.Printf("Operator Id: %d\n", status.OperatorId)
-		fmt.Printf("Operator Name: %s\n", status.OperatorName)
-		fmt.Printf("Operator Reward Address: %s\n", status.OperatorRewardAddress.String())
+		fmt.Printf("The node is registered with Stader. Below are node details:\n\n")
+		fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
+		fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
+		fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
 
-		fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("%s=== Registered Validator Details ===%s\n\n", log.ColorGreen, log.ColorReset)
 		// display validators
 		if totalRegisteredValidators > 0 {
 			for i := 0; i < totalRegisteredValidators; i++ {
