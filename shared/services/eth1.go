@@ -7,7 +7,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 )
 
-// TODO - ROCKETPOOL-OWNED
+// ROCKETPOOL-OWNED
 
 func GetEthClientLatestBlockTimestamp(ec stader.ExecutionClient) (uint64, error) {
 	// Get latest block

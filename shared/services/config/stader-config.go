@@ -14,7 +14,6 @@ import (
 	"github.com/pbnjay/memory"
 	"github.com/stader-labs/stader-node/addons"
 	"github.com/stader-labs/stader-node/shared"
-	"github.com/stader-labs/stader-node/shared/services/config/migration"
 	addontypes "github.com/stader-labs/stader-node/shared/types/addons"
 	"github.com/stader-labs/stader-node/shared/types/config"
 	"gopkg.in/yaml.v2"
@@ -742,12 +741,13 @@ func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 // Deserializes a settings file into this config
 func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) error {
 
-	// Upgrade the config to the latest version
-	err := migration.UpdateConfig(masterMap)
-	if err != nil {
-		return fmt.Errorf("error upgrading configuration to v%s: %w", shared.StaderVersion, err)
-	}
+	//// Upgrade the config to the latest version
+	//err := migration.UpdateConfig(masterMap)
+	//if err != nil {
+	//	return fmt.Errorf("error upgrading configuration to v%s: %w", shared.StaderVersion, err)
+	//}
 
+	var err error
 	// Get the network
 	network := config.Network_Mainnet
 	smartnodeConfig, exists := masterMap["smartnode"]

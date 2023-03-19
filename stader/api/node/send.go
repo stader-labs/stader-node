@@ -5,7 +5,6 @@ package node
 import (
 	"context"
 	"fmt"
-	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"math/big"
 
@@ -70,7 +69,7 @@ func canNodeSend(c *cli.Context, amountWei *big.Int, token string) (*api.CanNode
 		if err != nil {
 			return nil, err
 		}
-		response.GasInfo = stader.GasInfo(gasInfo)
+		response.GasInfo = gasInfo
 
 	case "sd":
 
