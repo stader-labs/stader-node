@@ -83,9 +83,9 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Name: %s\n", status.OperatorName)
 		fmt.Printf("Operator Reward Address: %s\n", status.OperatorRewardAddress.String())
 
+		fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 		// display validators
 		if totalRegisteredValidators > 0 {
-			fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 			for i := 0; i < totalRegisteredValidators; i++ {
 				fmt.Printf("%d)\n", i)
 				validatorInfo := status.ValidatorInfos[i]
