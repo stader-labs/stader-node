@@ -780,7 +780,6 @@ Public License instead of this License. But first, please read
 	}
 
 	// Get and parse the config file
-	// configFile := fmt.Sprintf("%s/%s", configPath, rocketpool.SettingsFile)
 	configFile := fmt.Sprintf("%s/%s", configPath, "user-settings.yml")
 	_, err := homedir.Expand(configFile)
 	if err != nil {

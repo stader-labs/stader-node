@@ -38,7 +38,6 @@ func purge(c *cli.Context) error {
 		return err
 	}
 
-	// Restart RP node and watchtower now that the wallet's gone
 	if !cfg.IsNativeMode {
 		projectName := cfg.Smartnode.ProjectName.Value.(string)
 		nodeName := projectName + service.NodeContainerSuffix
@@ -65,9 +64,9 @@ func purge(c *cli.Context) error {
 
 }
 
-func restartContainer(rp *stader.Client, containerName string) error {
+func restartContainer(sd *stader.Client, containerName string) error {
 	// Restart node
-	result, err := rp.RestartContainer(containerName)
+	result, err := sd.RestartContainer(containerName)
 	if err != nil {
 		return fmt.Errorf("Error stopping %s container: %w", containerName, err)
 	}

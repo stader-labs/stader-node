@@ -102,23 +102,6 @@ func PrettyPrintError(err error) {
 	fmt.Println(prettyErr)
 }
 
-// Prints an error message when the Beacon client is not using the deposit contract address that Stader expects
-func PrintDepositMismatchError(rpNetwork, beaconNetwork uint64, rpDepositAddress, beaconDepositAddress common.Address) {
-	fmt.Printf("%s***ALERT***\n", colorRed)
-	fmt.Println("YOUR ETH2 CLIENT IS NOT CONNECTED TO THE SAME NETWORK THAT Stader IS USING!")
-	fmt.Println("This is likely because your ETH2 client is using the wrong configuration.")
-	fmt.Println("For the safety of your funds, Stader will not let you deposit your ETH until this is resolved.")
-	fmt.Println()
-	fmt.Println("To fix it if you are in Docker mode:")
-	fmt.Println("\t1. Run 'stader-cli service install -d' to get the latest configuration")
-	fmt.Println("\t2. Run 'stader-cli service stop' and 'stader-cli service start' to apply the configuration.")
-	fmt.Println("If you are using Hybrid or Native mode, please correct the network flags in your ETH2 launch script.")
-	fmt.Println()
-	fmt.Println("Details:")
-	fmt.Printf("\tStader expects deposit contract %s on chain %d.\n", rpDepositAddress.Hex(), rpNetwork)
-	fmt.Printf("\tYour Beacon client is using deposit contract %s on chain %d.%s\n", beaconDepositAddress.Hex(), beaconNetwork, colorReset)
-}
-
 // Prints what network you're currently on
 func PrintNetwork(staderClient *stader.Client) error {
 	cfg, isNew, err := staderClient.LoadConfig()

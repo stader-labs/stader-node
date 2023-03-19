@@ -18,27 +18,19 @@ import (
 
 // Stader config
 type LegacyStaderConfig struct {
-	Stader struct {
-		StorageAddress       string `yaml:"storageAddress,omitempty"`
-		OneInchOracleAddress string `yaml:"oneInchOracleAddress,omitempty"`
-		RplTokenAddress      string `yaml:"rplTokenAddress,omitempty"`
-		RPLFaucetAddress     string `yaml:"rplFaucetAddress,omitempty"`
-	} `yaml:"stader,omitempty"`
 	StaderNode struct {
-		ProjectName               string  `yaml:"projectName,omitempty"`
-		GraffitiVersion           string  `yaml:"graffitiVersion,omitempty"`
-		Image                     string  `yaml:"image,omitempty"`
-		PasswordPath              string  `yaml:"passwordPath,omitempty"`
-		WalletPath                string  `yaml:"walletPath,omitempty"`
-		ValidatorKeychainPath     string  `yaml:"validatorKeychainPath,omitempty"`
-		ValidatorRestartCommand   string  `yaml:"validatorRestartCommand,omitempty"`
-		MaxFee                    float64 `yaml:"maxFee,omitempty"`
-		MaxPriorityFee            float64 `yaml:"maxPriorityFee,omitempty"`
-		GasLimit                  uint64  `yaml:"gasLimit,omitempty"`
-		RplClaimGasThreshold      float64 `yaml:"rplClaimGasThreshold,omitempty"`
-		MinipoolStakeGasThreshold float64 `yaml:"minipoolStakeGasThreshold,omitempty"`
-		TxWatchUrl                string  `yaml:"txWatchUrl,omitempty"`
-		StakeUrl                  string  `yaml:"stakeUrl,omitempty"`
+		ProjectName             string  `yaml:"projectName,omitempty"`
+		GraffitiVersion         string  `yaml:"graffitiVersion,omitempty"`
+		Image                   string  `yaml:"image,omitempty"`
+		PasswordPath            string  `yaml:"passwordPath,omitempty"`
+		WalletPath              string  `yaml:"walletPath,omitempty"`
+		ValidatorKeychainPath   string  `yaml:"validatorKeychainPath,omitempty"`
+		ValidatorRestartCommand string  `yaml:"validatorRestartCommand,omitempty"`
+		MaxFee                  float64 `yaml:"maxFee,omitempty"`
+		MaxPriorityFee          float64 `yaml:"maxPriorityFee,omitempty"`
+		GasLimit                uint64  `yaml:"gasLimit,omitempty"`
+		TxWatchUrl              string  `yaml:"txWatchUrl,omitempty"`
+		StakeUrl                string  `yaml:"stakeUrl,omitempty"`
 	} `yaml:"smartnode,omitempty"`
 	Chains struct {
 		Eth1         Chain `yaml:"eth1,omitempty"`
@@ -315,10 +307,6 @@ func loadFile(path string, required bool) (LegacyStaderConfig, error) {
 // Create config from CLI arguments
 func getCliConfig(c *cli.Context) LegacyStaderConfig {
 	var config LegacyStaderConfig
-	config.Stader.StorageAddress = c.GlobalString("storageAddress")
-	config.Stader.OneInchOracleAddress = c.GlobalString("oneInchOracleAddress")
-	config.Stader.RplTokenAddress = c.GlobalString("rplTokenAddress")
-	config.Stader.RPLFaucetAddress = c.GlobalString("rplFaucetAddress")
 	config.StaderNode.PasswordPath = c.GlobalString("password")
 	config.StaderNode.WalletPath = c.GlobalString("wallet")
 	config.StaderNode.ValidatorKeychainPath = c.GlobalString("validatorKeychain")

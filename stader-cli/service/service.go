@@ -836,9 +836,9 @@ func checkForValidatorChange(stader *stader.Client, cfg *config.StaderConfig) er
 
 // Get the name of the container responsible for validator duties based on the client name
 // TODO: this is temporary and can change, clean it up when Nimbus supports split mode
-func getContainerNameForValidatorDuties(CurrentValidatorClientName string, rp *stader.Client) (string, error) {
+func getContainerNameForValidatorDuties(CurrentValidatorClientName string, sd *stader.Client) (string, error) {
 
-	prefix, err := getContainerPrefix(rp)
+	prefix, err := getContainerPrefix(sd)
 	if err != nil {
 		return "", err
 	}

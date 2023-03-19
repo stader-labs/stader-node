@@ -156,7 +156,7 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 }
 
 // Creates a new Stader configuration instance
-func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
+func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 
 	clientModes := []config.ParameterOption{{
 		Name:        "Locally Managed",
@@ -170,7 +170,7 @@ func NewStaderConfig(rpDir string, isNativeMode bool) *StaderConfig {
 
 	cfg := &StaderConfig{
 		Title:           "Top-level Settings",
-		StaderDirectory: rpDir,
+		StaderDirectory: staderDir,
 		IsNativeMode:    isNativeMode,
 
 		ExecutionClientMode: config.Parameter{
