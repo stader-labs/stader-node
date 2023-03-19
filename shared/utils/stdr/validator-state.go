@@ -21,9 +21,10 @@ var ValidatorState = map[uint8]string{
 type ValidatorInfo struct {
 	Status               uint8
 	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
+	Signature            []byte
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
 }

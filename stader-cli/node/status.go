@@ -92,10 +92,10 @@ func getStatus(c *cli.Context) error {
 				validatorInfo := status.ValidatorInfos[i]
 				fmt.Printf("-Validator Pub Key: %s\n", validatorInfo.Pubkey)
 				fmt.Printf("-Validator Status %s\n", stdr.ValidatorState[validatorInfo.Status])
-				fmt.Printf("-Deposit time %d\n", 1)
+				fmt.Printf("-Deposit time %d\n", validatorInfo.DepositTime)
 				// Validator has withdrawn
 				if validatorInfo.Status == 8 {
-					fmt.Printf("-Withdrawn time %d\n", 1)
+					fmt.Printf("-Withdrawn time %d\n", validatorInfo.WithdrawnTime)
 				}
 			}
 		} else {
