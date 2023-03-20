@@ -86,7 +86,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 	configFlags := []cli.Flag{}
 	cfgTemplate := config.NewStaderConfig("", false)
-	network := cfgTemplate.Smartnode.Network.Value.(cfgtypes.Network)
+	network := cfgTemplate.Stadernode.Network.Value.(cfgtypes.Network)
 
 	// Root params
 	configFlags = createFlagsFromConfigParams("", cfgTemplate.GetParameters(), configFlags, network)
@@ -502,7 +502,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "terminate",
 				Aliases:   []string{"t"},
-				Usage:     fmt.Sprintf("%sDeletes all of the Stader Docker containers and volumes, including your ETH1 and ETH2 chain data and your Prometheus database (if metrics are enabled). Only use this if you are cleaning up the Smartnode and want to start over!%s", colorRed, colorReset),
+				Usage:     fmt.Sprintf("%sDeletes all of the Stader Docker containers and volumes, including your ETH1 and ETH2 chain data and your Prometheus database (if metrics are enabled). Only use this if you are cleaning up the Stadernode and want to start over!%s", colorRed, colorReset),
 				UsageText: "stader-cli service terminate [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{

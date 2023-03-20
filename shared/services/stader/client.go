@@ -317,7 +317,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	default:
 		return nil, fmt.Errorf("legacy config had an unknown chain ID [%s]", chainID)
 	}
-	cfg.Smartnode.Network.Value = network
+	cfg.Stadernode.Network.Value = network
 
 	// Migrate the EC
 	err = c.migrateProviderInfo(legacyCfg.Chains.Eth1.Provider, legacyCfg.Chains.Eth1.WsProvider, "eth1", &cfg.ExecutionClientMode, &cfg.ExecutionCommon.HttpPort, &cfg.ExecutionCommon.WsPort, &cfg.ExternalExecution.HttpUrl, &cfg.ExternalExecution.WsUrl)
@@ -431,10 +431,10 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 		cfg.ReconnectDelay.Value = cfg.ReconnectDelay.Default[cfgtypes.Network_All]
 	}
 
-	// Smartnode settings
-	cfg.Smartnode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
-	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
-	cfg.Smartnode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
+	// Stadernode settings
+	cfg.Stadernode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
+	cfg.Stadernode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
+	cfg.Stadernode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {
@@ -464,7 +464,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Native.CcHttpUrl.Value = legacyCfg.Chains.Eth2.Provider
 	c.migrateCcSelection(legacyCfg.Chains.Eth2.Client.Selected, &cfg.Native.ConsensusClient)
 	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.StaderNode.ValidatorRestartCommand
-	cfg.Smartnode.DataPath.Value = filepath.Join(c.configPath, "data")
+	cfg.Stadernode.DataPath.Value = filepath.Join(c.configPath, "data")
 
 	return cfg, nil
 
@@ -998,7 +998,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the wallet
-	walletPath, err := homedir.Expand(cfg.Smartnode.GetWalletPathInCLI())
+	walletPath, err := homedir.Expand(cfg.Stadernode.GetWalletPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading wallet path: %w", err)
 	}
@@ -1010,7 +1010,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the password
-	passwordPath, err := homedir.Expand(cfg.Smartnode.GetPasswordPathInCLI())
+	passwordPath, err := homedir.Expand(cfg.Stadernode.GetPasswordPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading password path: %w", err)
 	}
@@ -1022,7 +1022,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the validators dir
-	validatorsPath, err := homedir.Expand(cfg.Smartnode.GetValidatorKeychainPathInCLI())
+	validatorsPath, err := homedir.Expand(cfg.Stadernode.GetValidatorKeychainPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading validators folder path: %w", err)
 	}
@@ -1322,7 +1322,7 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	}
 
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode before starting it.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode before starting it.")
 	}
 
 	// Check config
@@ -1562,14 +1562,14 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Create the custom keys dir
-	customKeyDir, err := homedir.Expand(filepath.Join(cfg.Smartnode.DataPath.Value.(string), "custom-keys"))
+	customKeyDir, err := homedir.Expand(filepath.Join(cfg.Stadernode.DataPath.Value.(string), "custom-keys"))
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Smartnode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
+		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Stadernode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
 		return deployedContainers, nil
 	}
 	err = os.MkdirAll(customKeyDir, 0775)
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Smartnode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
+		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Stadernode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
 	}
 
 	return c.composeAddons(cfg, staderDir, settings, deployedContainers)
@@ -1734,10 +1734,10 @@ func (c *Client) getAPIContainerName() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if cfg.Smartnode.ProjectName.Value == "" {
+	if cfg.Stadernode.ProjectName.Value == "" {
 		return "", errors.New("Stader docker project name not set")
 	}
-	return cfg.Smartnode.ProjectName.Value.(string) + APIContainerSuffix, nil
+	return cfg.Stadernode.ProjectName.Value.(string) + APIContainerSuffix, nil
 }
 
 // Get gas price & limit flags

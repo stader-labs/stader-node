@@ -5,7 +5,7 @@ import "fmt"
 func createNativeDataStep(wiz *wizard, currentStep int, totalSteps int) *textBoxWizardStep {
 
 	// Create the labels
-	dataPathLabel := wiz.md.Config.Smartnode.DataPath.Name
+	dataPathLabel := wiz.md.Config.Stadernode.DataPath.Name
 	vrcLabel := wiz.md.Config.Native.ValidatorRestartCommand.Name
 	vscLabel := wiz.md.Config.Native.ValidatorStopCommand.Name
 
@@ -20,7 +20,7 @@ func createNativeDataStep(wiz *wizard, currentStep int, totalSteps int) *textBox
 					box.SetText(fmt.Sprint(param.Value))
 				}
 			}
-			for _, param := range wiz.md.Config.Smartnode.GetParameters() {
+			for _, param := range wiz.md.Config.Stadernode.GetParameters() {
 				if param.Name == label {
 					box.SetText(fmt.Sprint(param.Value))
 				}
@@ -29,7 +29,7 @@ func createNativeDataStep(wiz *wizard, currentStep int, totalSteps int) *textBox
 	}
 
 	done := func(text map[string]string) {
-		wiz.md.Config.Smartnode.DataPath.Value = text[dataPathLabel]
+		wiz.md.Config.Stadernode.DataPath.Value = text[dataPathLabel]
 		wiz.md.Config.Native.ValidatorRestartCommand.Value = text[vrcLabel]
 		wiz.md.Config.Native.ValidatorStopCommand.Value = text[vscLabel]
 		wiz.nativeUseFallbackModal.show()
@@ -47,8 +47,8 @@ func createNativeDataStep(wiz *wizard, currentStep int, totalSteps int) *textBox
 		96,
 		"Other Settings",
 		[]string{dataPathLabel, vrcLabel, vscLabel},
-		[]int{wiz.md.Config.Smartnode.DataPath.MaxLength, wiz.md.Config.Native.ValidatorRestartCommand.MaxLength, wiz.md.Config.Native.ValidatorStopCommand.MaxLength},
-		[]string{wiz.md.Config.Smartnode.DataPath.Regex, wiz.md.Config.Native.ValidatorRestartCommand.Regex, wiz.md.Config.Native.ValidatorStopCommand.Regex},
+		[]int{wiz.md.Config.Stadernode.DataPath.MaxLength, wiz.md.Config.Native.ValidatorRestartCommand.MaxLength, wiz.md.Config.Native.ValidatorStopCommand.MaxLength},
+		[]string{wiz.md.Config.Stadernode.DataPath.Regex, wiz.md.Config.Native.ValidatorRestartCommand.Regex, wiz.md.Config.Native.ValidatorStopCommand.Regex},
 		show,
 		done,
 		back,

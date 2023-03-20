@@ -90,8 +90,8 @@ func (m *manageFeeRecipient) run() error {
 
 	// Get the correct fee recipient address
 	var correctFeeRecipient common.Address
-	if feeRecipientInfo.IsInSmoothingPool || feeRecipientInfo.IsInOptOutCooldown {
-		correctFeeRecipient = feeRecipientInfo.SmoothingPoolAddress
+	if feeRecipientInfo.IsInSocializingPool || feeRecipientInfo.IsInOptOutCooldown {
+		correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
 	} else {
 		correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
 	}

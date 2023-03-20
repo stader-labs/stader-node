@@ -10,7 +10,7 @@ import (
 const (
 	defaultBitflyNodeMetricsSecret      string = ""
 	defaultBitflyNodeMetricsEndpoint    string = "https://beaconcha.in/api/v1/client/metrics"
-	defaultBitflyNodeMetricsMachineName string = "Smartnode"
+	defaultBitflyNodeMetricsMachineName string = "Stadernode"
 )
 
 // Configuration for Bitfly Node Metrics

@@ -54,11 +54,11 @@ func printTransactionHashImpl(staderClient *stader.Client, hash common.Hash, fin
 	}
 
 	if isNew {
-		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 		return
 	}
 
-	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
+	txWatchUrl := cfg.Stadernode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	fmt.Printf("Transaction has been submitted with hash %s.\n", hashString)
@@ -112,16 +112,16 @@ func PrintNetwork(staderClient *stader.Client) error {
 		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Stader Node")
 	}
 
-	currentNetwork := cfg.Smartnode.Network.Value.(cfgtypes.Network)
+	currentNetwork := cfg.Stadernode.Network.Value.(cfgtypes.Network)
 	switch currentNetwork {
 	case cfgtypes.Network_Mainnet:
-		fmt.Printf("Your Smartnode is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
 	case cfgtypes.Network_Prater:
-		fmt.Printf("Your Smartnode is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
 	case cfgtypes.Network_Devnet:
-		fmt.Printf("Your Smartnode is currently using the %sPrater Development Network.%s\n\n", colorYellow, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sPrater Development Network.%s\n\n", colorYellow, colorReset)
 	case cfgtypes.Network_Zhejiang:
-		fmt.Printf("Your Smartnode is currently using the %sZhejiang Test Network.%s\n\n", colorYellow, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sZhejiang Test Network.%s\n\n", colorYellow, colorReset)
 	default:
 		fmt.Printf("%sYou are on an unexpected network [%v].%s\n\n", colorYellow, currentNetwork, colorReset)
 	}

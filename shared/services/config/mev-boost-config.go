@@ -108,7 +108,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		Mode: config.Parameter{
 			ID:                   "mode",
 			Name:                 "MEV-Boost Mode",
-			Description:          "Choose whether to let the Smartnode manage your MEV-Boost instance (Locally Managed), or if you manage your own outside of the Smartnode stack (Externally Managed).",
+			Description:          "Choose whether to let the Stadernode manage your MEV-Boost instance (Locally Managed), or if you manage your own outside of the Stadernode stack (Externally Managed).",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.Mode_Local},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_MevBoost},
@@ -117,7 +117,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 			OverwriteOnUpgrade:   false,
 			Options: []config.ParameterOption{{
 				Name:        "Locally Managed",
-				Description: "Allow the Smartnode to manage the MEV-Boost client for you",
+				Description: "Allow the Stadernode to manage the MEV-Boost client for you",
 				Value:       config.Mode_Local,
 			}, {
 				Name:        "Externally Managed",
@@ -200,7 +200,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		AdditionalFlags: config.Parameter{
 			ID:                   "additionalFlags",
 			Name:                 "Additional Flags",
-			Description:          "Additional custom command line flags you want to pass to MEV-Boost, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass to MEV-Boost, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_MevBoost},
@@ -262,7 +262,7 @@ func (cfg *MevBoostConfig) GetAvailableProfiles() (bool, bool, bool, bool) {
 	unregulatedAllMev := false
 	unregulatedNoSandwich := false
 
-	currentNetwork := cfg.parentConfig.Smartnode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
 	for _, relay := range cfg.relays {
 		_, exists := relay.Urls[currentNetwork]
 		if !exists {
@@ -280,7 +280,7 @@ func (cfg *MevBoostConfig) GetAvailableProfiles() (bool, bool, bool, bool) {
 // Get the relays that are available for the current network
 func (cfg *MevBoostConfig) GetAvailableRelays() []config.MevRelay {
 	relays := []config.MevRelay{}
-	currentNetwork := cfg.parentConfig.Smartnode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
 	for _, relay := range cfg.relays {
 		_, exists := relay.Urls[currentNetwork]
 		if !exists {
@@ -296,7 +296,7 @@ func (cfg *MevBoostConfig) GetAvailableRelays() []config.MevRelay {
 func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 	relays := []config.MevRelay{}
 
-	currentNetwork := cfg.parentConfig.Smartnode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
 	switch cfg.SelectionMode.Value.(config.MevSelectionMode) {
 	case config.MevSelectionMode_Profile:
 		for _, relay := range cfg.relays {
@@ -378,7 +378,7 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 
 func (cfg *MevBoostConfig) GetRelayString() string {
 	relayUrls := []string{}
-	currentNetwork := cfg.parentConfig.Smartnode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
 
 	relays := cfg.GetEnabledMevRelays()
 	for _, relay := range relays {

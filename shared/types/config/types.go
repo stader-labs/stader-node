@@ -13,7 +13,7 @@ type MevRelayID string
 type MevSelectionMode string
 type NimbusPruningMode string
 
-// Enum to describe which container(s) a parameter impacts, so the Smartnode knows which
+// Enum to describe which container(s) a parameter impacts, so the Stadernode knows which
 // ones to restart upon a settings change
 const (
 	ContainerID_Unknown    ContainerID = ""

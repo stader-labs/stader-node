@@ -78,7 +78,7 @@ func (home *settingsHome) createContent() {
 	categoryList := tview.NewList().
 		SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 			if mainText == home.mevBoostPage.page.title &&
-				home.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+				home.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 				// Disable MEV-Boost on Zhejiang
 				layout.descriptionBox.SetText("MEV-Boost is not available on Zhejiang.")
 				return
@@ -104,7 +104,7 @@ func (home *settingsHome) createContent() {
 	}
 	categoryList.SetSelectedFunc(func(i int, s1, s2 string, r rune) {
 		if s1 == home.mevBoostPage.page.title &&
-			home.md.Config.Smartnode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			home.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 			// Disable MEV-Boost on Zhejiang
 			return
 		}

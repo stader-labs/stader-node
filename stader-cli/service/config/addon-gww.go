@@ -53,7 +53,7 @@ func (configPage *AddonGwwPage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Smartnode.Network, fmt.Sprintf("%s Settings", configPage.addon.GetName()))
+	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, fmt.Sprintf("%s Settings", configPage.addon.GetName()))
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

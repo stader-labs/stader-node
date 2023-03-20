@@ -26,7 +26,7 @@ type NativeConfig struct {
 	ValidatorStopCommand config.Parameter `yaml:"validatorStopCommand,omitempty"`
 }
 
-// Generates a new Smartnode configuration
+// Generates a new Stadernode configuration
 func NewNativeConfig(cfg *StaderConfig) *NativeConfig {
 
 	return &NativeConfig{
