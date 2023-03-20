@@ -722,7 +722,7 @@ func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 		param.Serialize(rootParams)
 	}
 	masterMap[rootConfigName] = rootParams
-	masterMap[rootConfigName]["rpDir"] = cfg.StaderDirectory
+	masterMap[rootConfigName]["sdDir"] = cfg.StaderDirectory
 	masterMap[rootConfigName]["isNative"] = fmt.Sprint(cfg.IsNativeMode)
 	masterMap[rootConfigName]["version"] = fmt.Sprintf("v%s", shared.StaderVersion) // Update the version with the current Stadernode version
 
@@ -773,7 +773,7 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 		}
 	}
 
-	cfg.StaderDirectory = masterMap[rootConfigName]["rpDir"]
+	cfg.StaderDirectory = masterMap[rootConfigName]["sdDir"]
 	cfg.IsNativeMode, err = strconv.ParseBool(masterMap[rootConfigName]["isNative"])
 	if err != nil {
 		return fmt.Errorf("error parsing isNative: %w", err)
