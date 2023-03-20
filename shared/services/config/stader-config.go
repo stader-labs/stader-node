@@ -116,9 +116,6 @@ type StaderConfig struct {
 	// MEV-Boost
 	EnableMevBoost config.Parameter `yaml:"enableMevBoost,omitempty"`
 	MevBoost       *MevBoostConfig  `yaml:"mevBoost,omitempty"`
-
-	// Addons
-	// GraffitiWallWriter addontypes.SmartnodeAddon `yaml:"addon-gww,omitempty"`
 }
 
 // Load configuration settings from a file
