@@ -292,6 +292,9 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 
+		fmt.Printf("pubKey is %s\n", pubKey)
+		fmt.Printf("preDepositSignature is %s\n", preDepositSignature)
+
 		//depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
 		//if err != nil {
 		//	return nil, err
