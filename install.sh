@@ -49,7 +49,7 @@ fi
 # The total number of steps in the installation process
 TOTAL_STEPS="9"
 # The Stader user data path
-RP_PATH="$HOME/.stader"
+STADER_PATH="$HOME/.stader"
 # The default stader node package version to download
 PACKAGE_VERSION="latest"
 # The default network to run Stader on
@@ -99,7 +99,7 @@ install() {
 while getopts "dp:u:n:v:" FLAG; do
     case "$FLAG" in
         d) NO_DEPS=true ;;
-        p) RP_PATH="$OPTARG" ;;
+        p) STADER_PATH="$OPTARG" ;;
         u) DATA_PATH="$OPTARG" ;;
         n) NETWORK="$OPTARG" ;;
         v) PACKAGE_VERSION="$OPTARG" ;;
@@ -108,7 +108,7 @@ while getopts "dp:u:n:v:" FLAG; do
 done
 
 if [ -z "$DATA_PATH" ]; then
-    DATA_PATH="$RP_PATH/data"
+    DATA_PATH="$STADER_PATH/data"
 fi
 
 
@@ -360,43 +360,43 @@ fi
 
 # Check for existing installation
 progress 5 "Checking for existing installation..."
-if [ -d $RP_PATH ]; then
+if [ -d $STADER_PATH ]; then
     # Check for legacy files - key on the old config.yml
-    if [ -f "$RP_PATH/config.yml" ]; then
+    if [ -f "$STADER_PATH/config.yml" ]; then
         progress 5 "Old installation detected, backing it up and migrating to new config system..."
-        OLD_CONFIG_BACKUP_PATH="$RP_PATH/old_config_backup"
+        OLD_CONFIG_BACKUP_PATH="$STADER_PATH/old_config_backup"
         { mkdir -p $OLD_CONFIG_BACKUP_PATH || fail "Could not create old config backup folder."; } >&2
 
-        if [ -f "$RP_PATH/config.yml" ]; then
-            { mv "$RP_PATH/config.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move config.yml to backup folder."; } >&2
+        if [ -f "$STADER_PATH/config.yml" ]; then
+            { mv "$STADER_PATH/config.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move config.yml to backup folder."; } >&2
         fi
-        if [ -f "$RP_PATH/settings.yml" ]; then
-            { mv "$RP_PATH/settings.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move settings.yml to backup folder."; } >&2
+        if [ -f "$STADER_PATH/settings.yml" ]; then
+            { mv "$STADER_PATH/settings.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move settings.yml to backup folder."; } >&2
         fi
-        if [ -f "$RP_PATH/docker-compose.yml" ]; then
-            { mv "$RP_PATH/docker-compose.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose.yml to backup folder."; } >&2
+        if [ -f "$STADER_PATH/docker-compose.yml" ]; then
+            { mv "$STADER_PATH/docker-compose.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose.yml to backup folder."; } >&2
         fi
-        if [ -f "$RP_PATH/docker-compose-metrics.yml" ]; then
-            { mv "$RP_PATH/docker-compose-metrics.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose-metrics.yml to backup folder."; } >&2
+        if [ -f "$STADER_PATH/docker-compose-metrics.yml" ]; then
+            { mv "$STADER_PATH/docker-compose-metrics.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose-metrics.yml to backup folder."; } >&2
         fi
-        if [ -f "$RP_PATH/docker-compose-fallback.yml" ]; then
-            { mv "$RP_PATH/docker-compose-fallback.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose-fallback.yml to backup folder."; }>&2
+        if [ -f "$STADER_PATH/docker-compose-fallback.yml" ]; then
+            { mv "$STADER_PATH/docker-compose-fallback.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move docker-compose-fallback.yml to backup folder."; }>&2
         fi
-        if [ -f "$RP_PATH/prometheus.tmpl" ]; then
-            { mv "$RP_PATH/prometheus.tmpl" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move prometheus.tmpl to backup folder."; } >&2
+        if [ -f "$STADER_PATH/prometheus.tmpl" ]; then
+            { mv "$STADER_PATH/prometheus.tmpl" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move prometheus.tmpl to backup folder."; } >&2
         fi
-        if [ -f "$RP_PATH/grafana-prometheus-datasource.yml" ]; then
-            { mv "$RP_PATH/grafana-prometheus-datasource.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move grafana-prometheus-datasource.yml to backupfolder."; } >&2
+        if [ -f "$STADER_PATH/grafana-prometheus-datasource.yml" ]; then
+            { mv "$STADER_PATH/grafana-prometheus-datasource.yml" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move grafana-prometheus-datasource.yml to backupfolder."; } >&2
         fi
-        if [ -d "$RP_PATH/chains" ]; then
-            { mv "$RP_PATH/chains" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move chains directory to backup folder."; } >&2
+        if [ -d "$STADER_PATH/chains" ]; then
+            { mv "$STADER_PATH/chains" "$OLD_CONFIG_BACKUP_PATH" || fail "Could not move chains directory to backup folder."; } >&2
         fi
     fi
 
     # Back up existing config file
-    if [ -f "$RP_PATH/user-settings.yml" ]; then
+    if [ -f "$STADER_PATH/user-settings.yml" ]; then
         progress 5 "Backing up configuration settings to user-settings-backup.yml..."
-        { cp "$RP_PATH/user-settings.yml" "$RP_PATH/user-settings-backup.yml" || fail "Could not backup configuration settings."; } >&2
+        { cp "$STADER_PATH/user-settings.yml" "$STADER_PATH/user-settings-backup.yml" || fail "Could not backup configuration settings."; } >&2
     fi
 fi
 
@@ -404,7 +404,7 @@ fi
 # Create ~/.stader dir & files
 progress 6 "Creating Stader user data directory..."
 { mkdir -p "$DATA_PATH/validators" || fail "Could not create the Stader user data directory."; } >&2
-{ mkdir -p "$RP_PATH/runtime" || fail "Could not create the Stader runtime directory."; } >&2
+{ mkdir -p "$STADER_PATH/runtime" || fail "Could not create the Stader runtime directory."; } >&2
 { mkdir -p "$DATA_PATH/secrets" || fail "Could not create the Stader secrets directory."; } >&2
 { mkdir -p "$DATA_PATH/rewards-trees" || fail "Could not create the Stader rewards trees directory."; } >&2
 
@@ -417,22 +417,19 @@ progress 7 "Downloading Stader package files..."
 
 # Copy package files
 progress 8 "Copying package files to Stader user data directory..."
-{ cp -r "$PACKAGE_FILES_PATH/addons" "$RP_PATH" || fail "Could not copy addons folder to the Stader user data directory."; } >&2
-{ cp -r -n "$PACKAGE_FILES_PATH/override" "$RP_PATH" || rsync -r --ignore-existing "$PACKAGE_FILES_PATH/override" "$RP_PATH" || fail "Could not copy new override files to the Stader user data directory."; } >&2
-{ cp -r "$PACKAGE_FILES_PATH/scripts" "$RP_PATH" || fail "Could not copy scripts folder to the Stader user data directory."; } >&2
-{ cp -r "$PACKAGE_FILES_PATH/templates" "$RP_PATH" || fail "Could not copy templates folder to the Stader user data directory."; } >&2
-{ cp -r "$PACKAGE_FILES_PATH/zhejiang" "$RP_PATH" || fail "Could not copy zhejiang folder to the Stader user data directory."; } >&2
-{ cp "$PACKAGE_FILES_PATH/grafana-prometheus-datasource.yml" "$PACKAGE_FILES_PATH/prometheus.tmpl" "$RP_PATH" || fail "Could not copy base files to the Stader user data directory."; } >&2
-{ find "$RP_PATH/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || fail "Could not set executable permissions on package files."; } >&2
-{ touch -a "$RP_PATH/.firstrun" || fail "Could not create the first-run flag file."; } >&2
+
+{ cp -r -n "$PACKAGE_FILES_PATH/override" "$STADER_PATH" || rsync -r --ignore-existing "$PACKAGE_FILES_PATH/override" "$STADER_PATH" || fail "Could not copy new override files to the Stader user data directory."; } >&2
+{ cp -r "$PACKAGE_FILES_PATH/scripts" "$STADER_PATH" || fail "Could not copy scripts folder to the Stader user data directory."; } >&2
+{ cp -r "$PACKAGE_FILES_PATH/templates" "$STADER_PATH" || fail "Could not copy templates folder to the Stader user data directory."; } >&2
+{ cp -r "$PACKAGE_FILES_PATH/zhejiang" "$STADER_PATH" || fail "Could not copy zhejiang folder to the Stader user data directory."; } >&2
+{ cp "$PACKAGE_FILES_PATH/grafana-prometheus-datasource.yml" "$PACKAGE_FILES_PATH/prometheus.tmpl" "$STADER_PATH" || fail "Could not copy base files to the Stader user data directory."; } >&2
+{ find "$STADER_PATH/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || fail "Could not set executable permissions on package files."; } >&2
+{ touch -a "$STADER_PATH/.firstrun" || fail "Could not create the first-run flag file."; } >&2
 
 # Clean up unnecessary files from old installations
 progress 9 "Cleaning up obsolete files from previous installs..."
-{ rm -rf "$DATA_PATH/fr-default" || echo "NOTE: Could not remove '$DATA_PATH/fr-default' which is no longer needed."; } >&2
-GRAFFITI_OWNER=$(stat -c "%U" $RP_PATH/addons/gww/graffiti.txt)
-if [ "$GRAFFITI_OWNER" = "$USER" ]; then
-    { rm -f "$RP_PATH/addons/gww/graffiti.txt" || echo -e "${COLOR_YELLOW}WARNING: Could not remove '$RP_PATH/addons/gww/graffiti.txt' which was used by the Graffiti Wall Writer addon. You will need to remove this file manually if you intend to use the Graffiti Wall Writer.${COLOR_RESET}"; } >&2
-fi
+{
+    echo "Nothing to remove."
 }
 
 install "$@"

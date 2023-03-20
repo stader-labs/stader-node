@@ -28,7 +28,7 @@ import (
 	"github.com/blang/semver/v4"
 	externalip "github.com/glendc/go-external-ip"
 	"github.com/mitchellh/go-homedir"
-	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
+
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
@@ -1578,31 +1578,6 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 
 // Handle composing for addons
 func (c *Client) composeAddons(cfg *config.StaderConfig, staderDir string, settings map[string]string, deployedContainers []string) ([]string, error) {
-
-	// GWW
-	if cfg.GraffitiWallWriter.GetEnabledParameter().Value == true {
-		runtimeFolder := filepath.Join(staderDir, runtimeDir, "addons", "gww")
-		templatesFolder := filepath.Join(staderDir, templatesDir, "addons", "gww")
-		overrideFolder := filepath.Join(staderDir, overrideDir, "addons", "gww")
-
-		// Make the addon folder
-		err := os.MkdirAll(runtimeFolder, 0775)
-		if err != nil {
-			return []string{}, fmt.Errorf("error creating addon runtime folder (%s): %w", runtimeFolder, err)
-		}
-
-		contents, err := envsubst.ReadFile(filepath.Join(templatesFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+templateSuffix))
-		if err != nil {
-			return []string{}, fmt.Errorf("error reading and substituting GWW addon container template: %w", err)
-		}
-		composePath := filepath.Join(runtimeFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(composePath, contents, 0664)
-		if err != nil {
-			return []string{}, fmt.Errorf("could not write GWW addon container file to %s: %w", composePath, err)
-		}
-		deployedContainers = append(deployedContainers, composePath)
-		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+composeFileSuffix))
-	}
 
 	return deployedContainers, nil
 
