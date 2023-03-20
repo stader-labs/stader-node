@@ -33,8 +33,6 @@ func nodeDepositSd(c *cli.Context) error {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
-	//sdBalance := *(status.AccountBalances.Sd)
-
 	// Get stake mount
 	amountInString := c.String("amount")
 	amount, err := strconv.ParseFloat(amountInString, 64)
@@ -83,7 +81,6 @@ func nodeDepositSd(c *cli.Context) error {
 			return nil
 		}
 
-		// Approve RPL for staking
 		response, err := staderClient.NodeDepositSdApprove(maxApproval)
 		if err != nil {
 			return err
@@ -102,21 +99,20 @@ func nodeDepositSd(c *cli.Context) error {
 		}
 	}
 
-	// Check RPL can be staked
-	canStake, err := staderClient.CanNodeDepositSd(amountWei)
+	canDeposit, err := staderClient.CanNodeDepositSd(amountWei)
 	if err != nil {
 		return err
 	}
-	if !canStake.CanStake {
+	if !canDeposit.CanDeposit {
 		fmt.Println("Cannot deposit SD:")
-		if canStake.InsufficientBalance {
+		if canDeposit.InsufficientBalance {
 			fmt.Println("The node's SD balance is insufficient.")
 		}
 		return nil
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canStake.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
@@ -127,15 +123,14 @@ func nodeDepositSd(c *cli.Context) error {
 		return nil
 	}
 
-	// Stake RPL
-	stakeResponse, err := staderClient.NodeDepositSd(amountWei)
+	depositSdResponse, err := staderClient.NodeDepositSd(amountWei)
 	if err != nil {
 		return err
 	}
 
 	fmt.Printf("Deposting SD...\n")
-	cliutils.PrintTransactionHash(staderClient, stakeResponse.StakeTxHash)
-	if _, err = staderClient.WaitForTransaction(stakeResponse.StakeTxHash); err != nil {
+	cliutils.PrintTransactionHash(staderClient, depositSdResponse.DepositTxHash)
+	if _, err = staderClient.WaitForTransaction(depositSdResponse.DepositTxHash); err != nil {
 		return err
 	}
 

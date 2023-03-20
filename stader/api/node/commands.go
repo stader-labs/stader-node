@@ -158,7 +158,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "wait-and-deposit-sd",
 				Aliases:   []string{"k2"},
 				Usage:     "Deposit SD against the node, waiting for approval tx-hash to be included in a block first",
-				UsageText: "stader-cli api node wait-and-stake-rpl amount tx-hash",
+				UsageText: "stader-cli api node wait-and-deposit-sd amount tx-hash",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

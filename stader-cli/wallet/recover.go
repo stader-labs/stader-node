@@ -15,7 +15,6 @@ import (
 
 func recoverWallet(c *cli.Context) error {
 
-	// Get RP client
 	staderOwner, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err

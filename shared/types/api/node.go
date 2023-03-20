@@ -46,7 +46,7 @@ type RegisterNodeResponse struct {
 type CanNodeDepositSdResponse struct {
 	Status              string         `json:"status"`
 	Error               string         `json:"error"`
-	CanStake            bool           `json:"canStake"`
+	CanDeposit          bool           `json:"CanDeposit"`
 	InsufficientBalance bool           `json:"insufficientBalance"`
 	InConsensus         bool           `json:"inConsensus"`
 	GasInfo             stader.GasInfo `json:"gasInfo"`
@@ -62,9 +62,9 @@ type NodeDepositSdApproveResponse struct {
 	ApproveTxHash common.Hash `json:"approveTxHash"`
 }
 type NodeDepositSdResponse struct {
-	Status      string      `json:"status"`
-	Error       string      `json:"error"`
-	StakeTxHash common.Hash `json:"stakeTxHash"`
+	Status        string      `json:"status"`
+	Error         string      `json:"error"`
+	DepositTxHash common.Hash `json:"stakeTxHash"`
 }
 type NodeDepositSdAllowanceResponse struct {
 	Status    string   `json:"status"`
@@ -75,7 +75,7 @@ type NodeDepositSdAllowanceResponse struct {
 type CanNodeDepositResponse struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
-	CanDeposit            bool           `json:"canDeposit"`
+	CanDeposit            bool           `json:"CanDeposit"`
 	InsufficientBalance   bool           `json:"insufficientBalance"`
 	InvalidAmount         bool           `json:"invalidAmount"`
 	NotRegistered         bool           `json:"notRegistered"`

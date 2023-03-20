@@ -67,82 +67,82 @@ func (c *Client) RegisterNode(operatorName string, operatorRewardAddress common.
 	return response, nil
 }
 
-// Check whether the node can stake RPL
+// Check whether the node can deposit SD
 func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeDepositSdResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-deposit-sd %s", amountWei.String()))
 	if err != nil {
-		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not get can node stake RPL status: %w", err)
+		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not get can node deposit SD status: %w", err)
 	}
 	var response api.CanNodeDepositSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not decode can node stake RPL response: %w", err)
+		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not decode can node deposit SD response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not get can node stake RPL status: %s", response.Error)
+		return api.CanNodeDepositSdResponse{}, fmt.Errorf("could not get can node deposit SD status: %s", response.Error)
 	}
 	return response, nil
 }
 
-// Get the gas estimate for approving new RPL interaction
+// Get the gas estimate for approving new SD interaction
 func (c *Client) NodeDepositSdApprovalGas(amountWei *big.Int) (api.NodeDepositSdApproveGasResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node get-deposit-sd-approval-gas %s", amountWei.String()))
 	if err != nil {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new RPL approval gas: %w", err)
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
 	}
 	var response api.NodeDepositSdApproveGasResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not decode node stake RPL approve gas response: %w", err)
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not decode node deposit S approve gas response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new RPL approval gas: %s", response.Error)
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %s", response.Error)
 	}
 	return response, nil
 }
 
-// Approve RPL for staking against the node
+// Approve SD for depositing as collateral
 func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeDepositSdApproveResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-approve-sd %s", amountWei.String()))
 	if err != nil {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve RPL for staking: %w", err)
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
 	}
 	var response api.NodeDepositSdApproveResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not decode stake node RPL approve response: %w", err)
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not decode deposit node SD approve response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve RPL for staking: %s", response.Error)
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %s", response.Error)
 	}
 	return response, nil
 }
 
-// Stake RPL against the node
+// Deposit SD as collateral
 func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeDepositSdResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd %s", amountWei.String()))
 	if err != nil {
-		return api.NodeDepositSdResponse{}, fmt.Errorf("could not stake node RPL: %w", err)
+		return api.NodeDepositSdResponse{}, fmt.Errorf("could not deposit node SD: %w", err)
 	}
 	var response api.NodeDepositSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdResponse{}, fmt.Errorf("could not decode stake node RPL response: %w", err)
+		return api.NodeDepositSdResponse{}, fmt.Errorf("could not decode deposit node SD response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeDepositSdResponse{}, fmt.Errorf("could not stake node RPL: %s", response.Error)
+		return api.NodeDepositSdResponse{}, fmt.Errorf("could not deposit node SD: %s", response.Error)
 	}
 	return response, nil
 }
 
-// Get a node's RPL allowance for the staking contract
+// Get the node's SD allowance
 func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))
 	if err != nil {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node stake RPL allowance: %w", err)
+		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %w", err)
 	}
 	var response api.NodeDepositSdAllowanceResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not decode node stake RPL allowance response: %w", err)
+		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not decode node deposit SD allowance response: %w", err)
 	}
 	if response.Error != "" {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node stake RPL allowance: %s", response.Error)
+		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %s", response.Error)
 	}
 	return response, nil
 }

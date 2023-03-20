@@ -103,7 +103,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit-sd",
 				Aliases:   []string{"k"},
 				Usage:     "Deposit SD against the node",
-				UsageText: "stader-cli node stake-rpl [options]",
+				UsageText: "stader-cli node deposit-sd [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",

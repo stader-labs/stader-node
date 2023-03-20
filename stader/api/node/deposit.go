@@ -160,9 +160,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 
-		fmt.Printf("pubKey is %s\n", pubKey)
-		fmt.Printf("preDepositSignature is %s\n", preDepositSignature)
-
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
 		//depositSignatures[i] = depositSignature[:]

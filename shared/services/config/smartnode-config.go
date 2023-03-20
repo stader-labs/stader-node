@@ -385,7 +385,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 		{
 			Name:        "Zhejiang Testnet",
-			Description: "This is the Zhejiang test network, using free fake ETH and free fake RPL to make fake validators.\nUse this if you want to test the ZHejiang network, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
+			Description: "This is the Zhejiang test network, using free fake ETH and free fake SD to make fake validators.\nUse this if you want to test the ZHejiang network, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
 			Value:       config.Network_Zhejiang,
 		},
 	}
