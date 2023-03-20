@@ -10,7 +10,7 @@ import (
 
 // Constants
 const (
-	smartnodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	stadernodeTag                     = "staderdev/stader-node:v" + shared.StaderVersion
 	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
 	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                  string = "network"
@@ -87,7 +87,7 @@ type StaderNodeConfig struct {
 }
 
 // Generates a new Stadernode configuration
-func NewSmartnodeConfig(cfg *StaderConfig) *StaderNodeConfig {
+func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 
 	return &StaderNodeConfig{
 		Title:  "Stadernode Settings",
@@ -316,7 +316,7 @@ func (cfg *StaderNodeConfig) GetCustomKeyPasswordFilePath() string {
 }
 
 func (cfg *StaderNodeConfig) GetStadernodeContainerTag() string {
-	return smartnodeTag
+	return stadernodeTag
 }
 
 func (config *StaderNodeConfig) GetPruneProvisionerContainerTag() string {

@@ -58,7 +58,7 @@ func NewBitflyNodeMetricsConfig(cfg *StaderConfig) *BitflyNodeMetricsConfig {
 		MachineName: config.Parameter{
 			ID:                   "bitflyMachineName",
 			Name:                 "Node Metrics Machine Name",
-			Description:          "The name of the machine you are running on. This is used to identify your machine in the mobile app.\nChange this if you are running multiple Smartnodes with the same Secret.",
+			Description:          "The name of the machine you are running on. This is used to identify your machine in the mobile app.\nChange this if you are running multiple Stader nodes with the same Secret.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: defaultBitflyNodeMetricsMachineName},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator, config.ContainerID_Eth2},

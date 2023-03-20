@@ -31,7 +31,7 @@ type LegacyStaderConfig struct {
 		GasLimit                uint64  `yaml:"gasLimit,omitempty"`
 		TxWatchUrl              string  `yaml:"txWatchUrl,omitempty"`
 		StakeUrl                string  `yaml:"stakeUrl,omitempty"`
-	} `yaml:"smartnode,omitempty"`
+	} `yaml:"staderNode,omitempty"`
 	Chains struct {
 		Eth1         Chain `yaml:"eth1,omitempty"`
 		Eth1Fallback Chain `yaml:"eth1Fallback,omitempty"`

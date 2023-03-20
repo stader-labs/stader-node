@@ -82,7 +82,7 @@ type StaderConfig struct {
 	EnableBitflyNodeMetrics config.Parameter `yaml:"enableBitflyNodeMetrics,omitempty"`
 
 	// The Stadernode configuration
-	Stadernode *StaderNodeConfig `yaml:"smartnode,omitempty"`
+	Stadernode *StaderNodeConfig `yaml:"stadernode,omitempty"`
 
 	// Execution client configurations
 	ExecutionCommon   *ExecutionCommonConfig   `yaml:"executionCommon,omitempty"`
@@ -431,7 +431,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 	cfg.ExecutionClientMode.Default[config.Network_All] = cfg.ExecutionClientMode.Options[0].Value
 	cfg.ConsensusClientMode.Default[config.Network_All] = cfg.ConsensusClientMode.Options[0].Value
 
-	cfg.Stadernode = NewSmartnodeConfig(cfg)
+	cfg.Stadernode = NewStadernodeConfig(cfg)
 	cfg.ExecutionCommon = NewExecutionCommonConfig(cfg)
 	cfg.Geth = NewGethConfig(cfg)
 	cfg.Nethermind = NewNethermindConfig(cfg)
@@ -532,7 +532,7 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 // Get the subconfigurations for this config
 func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 	return map[string]config.Config{
-		"smartnode":          cfg.Stadernode,
+		"stadernode":         cfg.Stadernode,
 		"executionCommon":    cfg.ExecutionCommon,
 		"geth":               cfg.Geth,
 		"nethermind":         cfg.Nethermind,
@@ -750,9 +750,9 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 	var err error
 	// Get the network
 	network := config.Network_Mainnet
-	smartnodeConfig, exists := masterMap["smartnode"]
+	stadernodeConfig, exists := masterMap["stadernode"]
 	if exists {
-		networkString, exists := smartnodeConfig[cfg.Stadernode.Network.ID]
+		networkString, exists := stadernodeConfig[cfg.Stadernode.Network.ID]
 		if exists {
 			valueType := reflect.TypeOf(networkString)
 			paramType := reflect.TypeOf(network)

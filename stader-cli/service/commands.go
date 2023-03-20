@@ -135,7 +135,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.StringFlag{
 						Name:  "version, v",
-						Usage: "The smart node package version to install",
+						Usage: "The stader node package version to install",
 						Value: fmt.Sprintf("v%s", shared.StaderVersion),
 					},
 				},
