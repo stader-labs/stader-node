@@ -1,7 +1,5 @@
 package api
 
-// ROCKETPOOL-OWNED
-
 import (
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
