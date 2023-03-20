@@ -17,6 +17,7 @@ type FeeRecipientInfo struct {
 	OptOutEpoch            uint64         `json:"optOutEpoch"`
 }
 
+// TODO - add fee receipient info for socializing pools
 func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, bc beacon.Client, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
 	return nil, nil
 }

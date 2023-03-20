@@ -173,7 +173,7 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Lighthouse container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Lighthouse container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  getLighthouseTagProd(),
@@ -258,7 +258,7 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  getPrysmVcProdTag(),
@@ -332,7 +332,7 @@ func NewExternalNimbusConfig(cfg *StaderConfig) *ExternalNimbusConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Nimbus validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Nimbus validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  nimbusVcTagProd,
@@ -393,7 +393,7 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Teku container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Teku container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  tekuTagProd,

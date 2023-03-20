@@ -1564,12 +1564,12 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	// Create the custom keys dir
 	customKeyDir, err := homedir.Expand(filepath.Join(cfg.Stadernode.DataPath.Value.(string), "custom-keys"))
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Stadernode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
+		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any validator keys you created outside of the Stadernode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
 		return deployedContainers, nil
 	}
 	err = os.MkdirAll(customKeyDir, 0775)
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Stadernode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
+		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any validator keys you created outside of the Stadernode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
 	}
 
 	return c.composeAddons(cfg, staderDir, settings, deployedContainers)
