@@ -56,7 +56,7 @@ func PrintAndCheckGasInfo(gasInfo stader.GasInfo, checkThreshold bool, gasThresh
 // Print a TX's details to the logger and waits for it to validated.
 func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec stader.ExecutionClient, logger log.ColorLogger) error {
 
-	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
+	txWatchUrl := cfg.Stadernode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	logger.Printlnf("Transaction has been submitted with hash %s.", hashString)

@@ -10,7 +10,7 @@ import (
 
 // Constants
 const (
-	smartnodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	stadernodeTag                     = "staderdev/stader-node:v" + shared.StaderVersion
 	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
 	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                  string = "network"
@@ -25,8 +25,8 @@ const (
 // Defaults
 const defaultProjectName string = "stader"
 
-// Configuration for the Smartnode
-type SmartnodeConfig struct {
+// Configuration for the Stader node
+type StaderNodeConfig struct {
 	Title string `yaml:"-"`
 
 	// The parent config
@@ -86,17 +86,17 @@ type SmartnodeConfig struct {
 	ethxTokenAddress map[config.Network]string `yaml:"-"`
 }
 
-// Generates a new Smartnode configuration
-func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
+// Generates a new Stadernode configuration
+func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 
-	return &SmartnodeConfig{
-		Title:  "Smartnode Settings",
+	return &StaderNodeConfig{
+		Title:  "Stadernode Settings",
 		parent: cfg,
 
 		ProjectName: config.Parameter{
 			ID:                   ProjectNameID,
 			Name:                 "Project Name",
-			Description:          "This is the prefix that will be attached to all of the Docker containers managed by the Smartnode.",
+			Description:          "This is the prefix that will be attached to all of the Docker containers managed by the Stadernode.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: defaultProjectName},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator, config.ContainerID_Grafana, config.ContainerID_Prometheus, config.ContainerID_Exporter},
@@ -145,7 +145,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 		ManualMaxFee: config.Parameter{
 			ID:                   "manualMaxFee",
 			Name:                 "Manual Max Fee",
-			Description:          "Set this if you want all of the Smartnode's transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will show you the current suggested max fee based on the current network conditions and let you specify it each time you do a transaction.\n\nAny other value will ignore the recommended max fee and explicitly use this value instead.\n\nThis applies to automated transactions as well.",
+			Description:          "Set this if you want all of the Stadernode's transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will show you the current suggested max fee based on the current network conditions and let you specify it each time you do a transaction.\n\nAny other value will ignore the recommended max fee and explicitly use this value instead.\n\nThis applies to automated transactions as well.",
 			Type:                 config.ParameterType_Float,
 			Default:              map[config.Network]interface{}{config.Network_All: float64(0)},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Watchtower},
@@ -230,7 +230,7 @@ func NewSmartnodeConfig(cfg *StaderConfig) *SmartnodeConfig {
 }
 
 // Get the parameters for this config
-func (cfg *SmartnodeConfig) GetParameters() []*config.Parameter {
+func (cfg *StaderNodeConfig) GetParameters() []*config.Parameter {
 	return []*config.Parameter{
 		&cfg.Network,
 		&cfg.ProjectName,
@@ -243,19 +243,19 @@ func (cfg *SmartnodeConfig) GetParameters() []*config.Parameter {
 
 // Getters for the non-editable parameters
 
-func (cfg *SmartnodeConfig) GetTxWatchUrl() string {
+func (cfg *StaderNodeConfig) GetTxWatchUrl() string {
 	return cfg.txWatchUrl[cfg.Network.Value.(config.Network)]
 }
 
-func (cfg *SmartnodeConfig) GetStakeUrl() string {
+func (cfg *StaderNodeConfig) GetStakeUrl() string {
 	return cfg.stakeUrl[cfg.Network.Value.(config.Network)]
 }
 
-func (cfg *SmartnodeConfig) GetChainID() uint {
+func (cfg *StaderNodeConfig) GetChainID() uint {
 	return cfg.chainID[cfg.Network.Value.(config.Network)]
 }
 
-func (cfg *SmartnodeConfig) GetWalletPath() string {
+func (cfg *StaderNodeConfig) GetWalletPath() string {
 	if cfg.parent.IsNativeMode {
 		return filepath.Join(cfg.DataPath.Value.(string), "wallet")
 	}
@@ -263,7 +263,7 @@ func (cfg *SmartnodeConfig) GetWalletPath() string {
 	return filepath.Join(DaemonDataPath, "wallet")
 }
 
-func (cfg *SmartnodeConfig) GetPasswordPath() string {
+func (cfg *StaderNodeConfig) GetPasswordPath() string {
 	if cfg.parent.IsNativeMode {
 		return filepath.Join(cfg.DataPath.Value.(string), "password")
 	}
@@ -271,7 +271,7 @@ func (cfg *SmartnodeConfig) GetPasswordPath() string {
 	return filepath.Join(DaemonDataPath, "password")
 }
 
-func (cfg *SmartnodeConfig) GetValidatorKeychainPath() string {
+func (cfg *StaderNodeConfig) GetValidatorKeychainPath() string {
 	if cfg.parent.IsNativeMode {
 		return filepath.Join(cfg.DataPath.Value.(string), "validators")
 	}
@@ -279,19 +279,19 @@ func (cfg *SmartnodeConfig) GetValidatorKeychainPath() string {
 	return filepath.Join(DaemonDataPath, "validators")
 }
 
-func (cfg *SmartnodeConfig) GetWalletPathInCLI() string {
+func (cfg *StaderNodeConfig) GetWalletPathInCLI() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "wallet")
 }
 
-func (cfg *SmartnodeConfig) GetPasswordPathInCLI() string {
+func (cfg *StaderNodeConfig) GetPasswordPathInCLI() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "password")
 }
 
-func (cfg *SmartnodeConfig) GetValidatorKeychainPathInCLI() string {
+func (cfg *StaderNodeConfig) GetValidatorKeychainPathInCLI() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "validators")
 }
 
-func (config *SmartnodeConfig) GetWatchtowerStatePath() string {
+func (config *StaderNodeConfig) GetWatchtowerStatePath() string {
 	if config.parent.IsNativeMode {
 		return filepath.Join(config.DataPath.Value.(string), WatchtowerFolder, "state.yml")
 	}
@@ -299,7 +299,7 @@ func (config *SmartnodeConfig) GetWatchtowerStatePath() string {
 	return filepath.Join(DaemonDataPath, WatchtowerFolder, "state.yml")
 }
 
-func (cfg *SmartnodeConfig) GetCustomKeyPath() string {
+func (cfg *StaderNodeConfig) GetCustomKeyPath() string {
 	if cfg.parent.IsNativeMode {
 		return filepath.Join(cfg.DataPath.Value.(string), "custom-keys")
 	}
@@ -307,7 +307,7 @@ func (cfg *SmartnodeConfig) GetCustomKeyPath() string {
 	return filepath.Join(DaemonDataPath, "custom-keys")
 }
 
-func (cfg *SmartnodeConfig) GetCustomKeyPasswordFilePath() string {
+func (cfg *StaderNodeConfig) GetCustomKeyPasswordFilePath() string {
 	if cfg.parent.IsNativeMode {
 		return filepath.Join(cfg.DataPath.Value.(string), "custom-key-passwords")
 	}
@@ -315,40 +315,40 @@ func (cfg *SmartnodeConfig) GetCustomKeyPasswordFilePath() string {
 	return filepath.Join(DaemonDataPath, "custom-key-passwords")
 }
 
-func (cfg *SmartnodeConfig) GetStadernodeContainerTag() string {
-	return smartnodeTag
+func (cfg *StaderNodeConfig) GetStadernodeContainerTag() string {
+	return stadernodeTag
 }
 
-func (config *SmartnodeConfig) GetPruneProvisionerContainerTag() string {
+func (config *StaderNodeConfig) GetPruneProvisionerContainerTag() string {
 	return pruneProvisionerTag
 }
 
-func (cfg *SmartnodeConfig) GetEcMigratorContainerTag() string {
+func (cfg *StaderNodeConfig) GetEcMigratorContainerTag() string {
 	return ecMigratorTag
 }
 
 // The the title for the config
-func (cfg *SmartnodeConfig) GetConfigTitle() string {
+func (cfg *StaderNodeConfig) GetConfigTitle() string {
 	return cfg.Title
 }
 
-func (cfg *SmartnodeConfig) GetPermissionlessNodeRegistryAddress() common.Address {
+func (cfg *StaderNodeConfig) GetPermissionlessNodeRegistryAddress() common.Address {
 	return common.HexToAddress(cfg.permissionlessNodeRegistryAddress[cfg.Network.Value.(config.Network)])
 }
 
-func (cfg *SmartnodeConfig) GetVaultFactoryAddress() common.Address {
+func (cfg *StaderNodeConfig) GetVaultFactoryAddress() common.Address {
 	return common.HexToAddress(cfg.vaultFactoryAddress[cfg.Network.Value.(config.Network)])
 }
 
-func (cfg *SmartnodeConfig) GetSdCollateralContractAddress() common.Address {
+func (cfg *StaderNodeConfig) GetSdCollateralContractAddress() common.Address {
 	return common.HexToAddress(cfg.sdCollateralAddress[cfg.Network.Value.(config.Network)])
 }
 
-func (cfg *SmartnodeConfig) GetSdTokenAddress() common.Address {
+func (cfg *StaderNodeConfig) GetSdTokenAddress() common.Address {
 	return common.HexToAddress(cfg.sdTokenAddress[cfg.Network.Value.(config.Network)])
 }
 
-func (cfg *SmartnodeConfig) GetEthxTokenAddress() common.Address {
+func (cfg *StaderNodeConfig) GetEthxTokenAddress() common.Address {
 	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
 }
 
@@ -356,7 +356,7 @@ func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.StaderDirectory, "data")
 }
 
-func (cfg *SmartnodeConfig) GetWatchtowerFolder(daemon bool) string {
+func (cfg *StaderNodeConfig) GetWatchtowerFolder(daemon bool) string {
 	if daemon && !cfg.parent.IsNativeMode {
 		return filepath.Join(DaemonDataPath, WatchtowerFolder)
 	}
@@ -364,7 +364,7 @@ func (cfg *SmartnodeConfig) GetWatchtowerFolder(daemon bool) string {
 	return filepath.Join(cfg.DataPath.Value.(string), WatchtowerFolder)
 }
 
-func (cfg *SmartnodeConfig) GetFeeRecipientFilePath() string {
+func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
 	if !cfg.parent.IsNativeMode {
 		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
 	}
@@ -380,7 +380,7 @@ func getNetworkOptions() []config.ParameterOption {
 			Value:       config.Network_Mainnet,
 		}, {
 			Name:        "Goerli Testnet",
-			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Smartnode in a free, safe environment before moving to Mainnet.",
+			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Stadernode in a free, safe environment before moving to Mainnet.",
 			Value:       config.Network_Prater,
 		},
 		{

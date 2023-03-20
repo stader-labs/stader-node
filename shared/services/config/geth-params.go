@@ -117,7 +117,7 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 		AdditionalFlags: config.Parameter{
 			ID:                   "additionalFlags",
 			Name:                 "Additional Flags",
-			Description:          "Additional custom command line flags you want to pass to Geth, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass to Geth, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

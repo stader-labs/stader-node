@@ -40,7 +40,7 @@ func (configPage *NativePage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Smartnode.Network, "Native Mode Settings")
+	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, "Native Mode Settings")
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

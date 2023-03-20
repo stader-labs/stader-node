@@ -45,7 +45,7 @@ func (configPage *SmartnodeConfigPage) createContent() {
 	masterConfig := configPage.home.md.Config
 	layout := newStandardLayout()
 	configPage.layout = layout
-	layout.createForm(&masterConfig.Smartnode.Network, "Stader Node and TX Fee Settings")
+	layout.createForm(&masterConfig.Stadernode.Network, "Stader Node and TX Fee Settings")
 
 	// Return to the home page after pressing Escape
 	layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -67,14 +67,14 @@ func (configPage *SmartnodeConfigPage) createContent() {
 	})
 
 	// Set up the form items
-	formItems := createParameterizedFormItems(masterConfig.Smartnode.GetParameters(), layout.descriptionBox)
+	formItems := createParameterizedFormItems(masterConfig.Stadernode.GetParameters(), layout.descriptionBox)
 	for _, formItem := range formItems {
 		layout.form.AddFormItem(formItem.item)
 		layout.parameters[formItem.item] = formItem
 		if formItem.parameter.ID == config.NetworkID {
 			dropDown := formItem.item.(*DropDown)
 			dropDown.SetSelectedFunc(func(text string, index int) {
-				newNetwork := configPage.home.md.Config.Smartnode.Network.Options[index].Value.(cfgtypes.Network)
+				newNetwork := configPage.home.md.Config.Stadernode.Network.Options[index].Value.(cfgtypes.Network)
 				configPage.home.md.Config.ChangeNetwork(newNetwork)
 				configPage.home.refresh()
 			})

@@ -62,7 +62,7 @@ func (configPage *MevBoostConfigPage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Smartnode.Network, "MEV-Boost Settings")
+	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, "MEV-Boost Settings")
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

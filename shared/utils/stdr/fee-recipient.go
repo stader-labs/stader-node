@@ -10,13 +10,14 @@ import (
 )
 
 type FeeRecipientInfo struct {
-	SmoothingPoolAddress  common.Address `json:"smoothingPoolAddress"`
-	FeeDistributorAddress common.Address `json:"feeDistributorAddress"`
-	IsInSmoothingPool     bool           `json:"isInSmoothingPool"`
-	IsInOptOutCooldown    bool           `json:"isInOptOutCooldown"`
-	OptOutEpoch           uint64         `json:"optOutEpoch"`
+	SocializingPoolAddress common.Address `json:"socializingPoolAddress"`
+	FeeDistributorAddress  common.Address `json:"feeDistributorAddress"`
+	IsInSocializingPool    bool           `json:"isInSocializingPool"`
+	IsInOptOutCooldown     bool           `json:"isInOptOutCooldown"`
+	OptOutEpoch            uint64         `json:"optOutEpoch"`
 }
 
+// TODO - add fee receipient info for socializing pools
 func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, bc beacon.Client, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
 	// Get fee recipient info
 	return nil, nil

@@ -26,7 +26,7 @@ type NativeConfig struct {
 	ValidatorStopCommand config.Parameter `yaml:"validatorStopCommand,omitempty"`
 }
 
-// Generates a new Smartnode configuration
+// Generates a new Stadernode configuration
 func NewNativeConfig(cfg *StaderConfig) *NativeConfig {
 
 	return &NativeConfig{
@@ -88,7 +88,7 @@ func NewNativeConfig(cfg *StaderConfig) *NativeConfig {
 		ValidatorRestartCommand: config.Parameter{
 			ID:                   "validatorRestartCommand",
 			Name:                 "VC Restart Script",
-			Description:          "The absolute path to a custom script that will be invoked when Stader needs to restart your validator container to load the new key after a minipool is staked.",
+			Description:          "The absolute path to a custom script that will be invoked when Stader needs to restart your validator container to load the new key after a validator is staked.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: getDefaultValidatorRestartCommand(cfg)},
 			AffectsContainers:    []config.ContainerID{},

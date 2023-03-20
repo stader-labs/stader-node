@@ -25,7 +25,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 		return fmt.Errorf("Error getting Stader configuration: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("couldn't locate settings file. Execute the stader-cli service config command to set up your Stader Node")
 	}
 
 	// Get the current settings from the CLI arguments
@@ -33,7 +33,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 	// Get the max fee - prioritize the CLI arguments, default to the config file setting
 	if maxFeeGwei == 0 {
-		maxFee := eth.GweiToWei(cfg.Smartnode.ManualMaxFee.Value.(float64))
+		maxFee := eth.GweiToWei(cfg.Stadernode.ManualMaxFee.Value.(float64))
 		if maxFee != nil && maxFee.Uint64() != 0 {
 			maxFeeGwei = eth.WeiToGwei(maxFee)
 		}
@@ -41,7 +41,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 	// Get the priority fee - prioritize the CLI arguments, default to the config file setting
 	if maxPriorityFeeGwei == 0 {
-		maxPriorityFee := eth.GweiToWei(cfg.Smartnode.PriorityFee.Value.(float64))
+		maxPriorityFee := eth.GweiToWei(cfg.Stadernode.PriorityFee.Value.(float64))
 		if maxPriorityFee == nil || maxPriorityFee.Uint64() == 0 {
 			fmt.Printf("%sNOTE: max priority fee not set or set to 0, defaulting to 2 gwei%s\n", log.ColorYellow, log.ColorReset)
 			maxPriorityFeeGwei = 2

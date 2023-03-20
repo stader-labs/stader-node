@@ -23,7 +23,6 @@ import (
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
-
 // Config
 const (
 	DockerAPIVersion string = "1.40"
@@ -94,7 +93,7 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 		return nil, err
 	}
 
-	return stader.NewPermissionlessNodeRegistry(ec, cfg.Smartnode.GetPermissionlessNodeRegistryAddress())
+	return stader.NewPermissionlessNodeRegistry(ec, cfg.Stadernode.GetPermissionlessNodeRegistryAddress())
 }
 
 func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error) {
@@ -107,7 +106,7 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 		return nil, err
 	}
 
-	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
+	return stader.NewVaultFactory(ec, cfg.Stadernode.GetVaultFactoryAddress())
 }
 
 func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
@@ -120,7 +119,7 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 		return nil, err
 	}
 
-	return stader.NewSdCollateralContract(ec, cfg.Smartnode.GetSdCollateralContractAddress())
+	return stader.NewSdCollateralContract(ec, cfg.Stadernode.GetSdCollateralContractAddress())
 }
 
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -133,7 +132,7 @@ func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, erro
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetSdTokenAddress())
+	return stader.NewErc20TokenContract(ec, cfg.Stadernode.GetSdTokenAddress())
 }
 
 func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -146,7 +145,7 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetEthxTokenAddress())
+	return stader.NewErc20TokenContract(ec, cfg.Stadernode.GetEthxTokenAddress())
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
@@ -179,7 +178,7 @@ func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 
 func getPasswordManager(cfg *config.StaderConfig) *passwords.PasswordManager {
 	initPasswordManager.Do(func() {
-		passwordManager = passwords.NewPasswordManager(os.ExpandEnv(cfg.Smartnode.GetPasswordPath()))
+		passwordManager = passwords.NewPasswordManager(os.ExpandEnv(cfg.Stadernode.GetPasswordPath()))
 	})
 	return passwordManager
 }
@@ -190,7 +189,7 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 		var maxFee *big.Int
 		maxFeeFloat := c.GlobalFloat64("maxFee")
 		if maxFeeFloat == 0 {
-			maxFeeFloat = cfg.Smartnode.ManualMaxFee.Value.(float64)
+			maxFeeFloat = cfg.Stadernode.ManualMaxFee.Value.(float64)
 		}
 		if maxFeeFloat != 0 {
 			maxFee = eth.GweiToWei(maxFeeFloat)
@@ -199,24 +198,24 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 		var maxPriorityFee *big.Int
 		maxPriorityFeeFloat := c.GlobalFloat64("maxPrioFee")
 		if maxPriorityFeeFloat == 0 {
-			maxPriorityFeeFloat = cfg.Smartnode.PriorityFee.Value.(float64)
+			maxPriorityFeeFloat = cfg.Stadernode.PriorityFee.Value.(float64)
 		}
 		if maxPriorityFeeFloat != 0 {
 			maxPriorityFee = eth.GweiToWei(maxPriorityFeeFloat)
 		}
 
-		chainId := cfg.Smartnode.GetChainID()
+		chainId := cfg.Stadernode.GetChainID()
 
-		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.Smartnode.GetWalletPath()), chainId, maxFee, maxPriorityFee, 0, pm)
+		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.Stadernode.GetWalletPath()), chainId, maxFee, maxPriorityFee, 0, pm)
 		if err != nil {
 			return
 		}
 
 		// Keystores
-		lighthouseKeystore := lhkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
+		lighthouseKeystore := lhkeystore.NewKeystore(os.ExpandEnv(cfg.Stadernode.GetValidatorKeychainPath()), pm)
+		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.Stadernode.GetValidatorKeychainPath()), pm)
+		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.Stadernode.GetValidatorKeychainPath()), pm)
+		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.Stadernode.GetValidatorKeychainPath()), pm)
 		nodeWallet.AddKeystore("lighthouse", lighthouseKeystore)
 		nodeWallet.AddKeystore("nimbus", nimbusKeystore)
 		nodeWallet.AddKeystore("prysm", prysmKeystore)

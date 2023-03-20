@@ -39,7 +39,7 @@ func purge(c *cli.Context) error {
 	}
 
 	if !cfg.IsNativeMode {
-		projectName := cfg.Smartnode.ProjectName.Value.(string)
+		projectName := cfg.Stadernode.ProjectName.Value.(string)
 		nodeName := projectName + service.NodeContainerSuffix
 		watchtowerName := projectName + service.WatchtowerContainerSuffix
 
@@ -64,9 +64,9 @@ func purge(c *cli.Context) error {
 
 }
 
-func restartContainer(rp *stader.Client, containerName string) error {
+func restartContainer(sd *stader.Client, containerName string) error {
 	// Restart node
-	result, err := rp.RestartContainer(containerName)
+	result, err := sd.RestartContainer(containerName)
 	if err != nil {
 		return fmt.Errorf("Error stopping %s container: %w", containerName, err)
 	}

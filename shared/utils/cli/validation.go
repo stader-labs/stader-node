@@ -19,11 +19,6 @@ import (
 	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
 )
 
-// Config
-const (
-	MinDAOMemberIDLength = 3
-)
-
 //
 // General types
 //
@@ -189,7 +184,7 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	if !(val == 0 || val == 16 || val == 32) {
+	if !(val == 0 || val == 4 || val == 32) {
 		return 0, fmt.Errorf("invalid %s '%s' - valid values are 0, 16 and 32 ether", name, value)
 	}
 	return val, nil
@@ -217,15 +212,6 @@ func ValidateTimezoneLocation(name, value string) (string, error) {
 		return "", fmt.Errorf("invalid %s '%s' - must be in the format 'Country/City'", name, value)
 	}
 	return value, nil
-}
-
-// Validate a DAO member ID
-func ValidateDAOMemberID(name, value string) (string, error) {
-	val := strings.TrimSpace(value)
-	if len(val) < MinDAOMemberIDLength {
-		return "", fmt.Errorf("invalid %s '%s' - must be at least %d characters long", name, val, MinDAOMemberIDLength)
-	}
-	return val, nil
 }
 
 // Validate a transaction hash

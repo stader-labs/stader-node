@@ -6,7 +6,7 @@ import (
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
 
-// Interface for Smartnode addons
+// Interface for Stadernode addons
 type SmartnodeAddon interface {
 	GetName() string
 	GetDescription() string

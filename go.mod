@@ -3,6 +3,7 @@ module github.com/stader-labs/stader-node
 go 1.13
 
 require (
+	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/a8m/envsubst v1.3.0
 	github.com/alessio/shellescape v1.4.1
 	github.com/blang/semver/v4 v4.0.0
@@ -21,7 +22,6 @@ require (
 	github.com/hashicorp/go-version v1.6.0
 	github.com/herumi/bls-eth-go-binary v1.28.1 // indirect
 	github.com/imdario/mergo v0.3.13
-	github.com/klauspost/compress v1.15.11
 	github.com/klauspost/cpuid/v2 v2.1.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect
@@ -33,18 +33,13 @@ require (
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
 	github.com/rivo/tview v0.0.0-20220916081518-2e69b7385a37
-	github.com/rocket-pool/rocketpool-go v1.4.1
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/stader-minipool-go v0.0.0-20230223165401-2cc30ad16b7b
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
-	github.com/wealdtech/go-ens/v3 v3.5.5
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
 	github.com/wealdtech/go-eth2-util v1.7.0
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
-	github.com/wealdtech/go-merkletree v1.0.1-0.20190605192610-2bb163c2ea2a
-	github.com/web3-storage/go-w3s-client v0.0.6
 	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0
 	golang.org/x/term v0.4.0
@@ -52,9 +47,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect
 )
-
-replace github.com/wealdtech/go-merkletree v1.0.1-0.20190605192610-2bb163c2ea2a => github.com/rocket-pool/go-merkletree v1.0.1-0.20220406020931-c262d9b976dd
-
-replace github.com/web3-storage/go-w3s-client => github.com/rocket-pool/go-w3s-client v0.0.0-20221006052217-dbd9938d11d8
-
-// replace github.com/rocket-pool/rocketpool-go => ../rocketpool-go
