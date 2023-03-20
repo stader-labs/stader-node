@@ -725,22 +725,6 @@ Public License instead of this License. But first, please read
 			Usage: "Stader service user config absolute `path`",
 			Value: "/.stader/user-settings.yml",
 		},
-		//cli.StringFlag{
-		//	Name:  "storageAddress, a",
-		//	Usage: "Stader storage contract `address`",
-		//},
-		//cli.StringFlag{
-		//	Name:  "oneInchOracleAddress, o",
-		//	Usage: "1inch exchange oracle contract `address`",
-		//},
-		//cli.StringFlag{
-		//	Name:  "rplTokenAddress, t",
-		//	Usage: "RPL token contract `address`",
-		//},
-		//cli.StringFlag{
-		//	Name:  "rplFaucetAddress, f",
-		//	Usage: "Stader RPL token faucet `address`",
-		//},
 		cli.StringFlag{
 			Name:  "password, p",
 			Usage: "Stader wallet password file absolute `path`",
