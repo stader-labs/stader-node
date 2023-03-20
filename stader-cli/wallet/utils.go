@@ -103,7 +103,7 @@ func confirmMnemonic(mnemonic string) {
 }
 
 // Check for custom keys, prompt for their passwords, and store them in the custom keys file
-func promptForCustomKeyPasswords(rp *stader.Client, cfg *config.StaderConfig, testOnly bool) (string, error) {
+func promptForCustomKeyPasswords(sd *stader.Client, cfg *config.StaderConfig, testOnly bool) (string, error) {
 
 	// Check for the custom key directory
 	datapath, err := homedir.Expand(cfg.Smartnode.DataPath.Value.(string))
