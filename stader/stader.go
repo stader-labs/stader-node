@@ -41,7 +41,7 @@ func main() {
 			// Email: "kane@rocketpool.net",
 		},
 	}
-	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd"
+	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd."
 
 	const GPLv3 = `                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

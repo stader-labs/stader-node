@@ -766,7 +766,7 @@ Public License instead of this License. But first, please read
 		},
 	}
 	// Register commands
-
+	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd."
 	// Get the config path from the arguments (or use the default)
 	configPath := "~/.stader"
 	for index, arg := range os.Args {

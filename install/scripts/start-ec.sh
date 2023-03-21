@@ -1,5 +1,5 @@
 #!/bin/sh
-# This script launches ETH1 clients for Rocket Pool's docker stack; only edit if you know what you're doing ;)
+# This script launches ETH1 clients for Stader docker stack; only edit if you know what you're doing ;)
 
 # Performance tuning for ARM systems
 define_perf_prefix() {

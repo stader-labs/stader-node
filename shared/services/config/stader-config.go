@@ -891,7 +891,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	// Graffiti
 	identifier := ""
 	versionString := fmt.Sprintf("v%s", shared.StaderVersion)
-	envVars["ROCKET_POOL_VERSION"] = versionString
+	envVars["STADER_VERSION"] = versionString
 	if len(versionString) < 8 {
 		ecInitial := strings.ToUpper(string(envVars["EC_CLIENT"][0]))
 		ccInitial := strings.ToUpper(string(envVars["CC_CLIENT"][0]))
