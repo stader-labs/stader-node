@@ -12,15 +12,15 @@ import (
 
 	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
-	"github.com/rivo/tview"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
+	ethcliui "github.com/stader-labs/ethcli-ui"
+	uipages "github.com/stader-labs/ethcli-ui/pages"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	cliconfig "github.com/stader-labs/stader-node/stader-cli/service/config"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -217,6 +217,25 @@ func serviceStatus(c *cli.Context) error {
 
 }
 
+func onDone(settings interface{}, err error) {
+	set := settings.(uipages.SettingsType)
+
+	fmt.Printf("===settings is:===\n %v \n===", set)
+}
+
+// func cnfToUISettings(cnf *config.StaderConfig) uipages.SettingsType {
+
+// 	cnf.Stadernode.Network.Value = "mainnet"
+
+// 	return uipages.SettingsType{
+// 		Network: cnf,
+// 	}
+// }
+
+// func uiSettingsToCnf(settings uipages.SettingsType) *config.StaderConfig {
+// 	return *config.StaderConfig{}
+// }
+
 // Configure the service
 
 // Configure the service
@@ -242,7 +261,7 @@ func configureService(c *cli.Context) error {
 	defer staderClient.Close()
 
 	// Load the config, checking to see if it's new (hasn't been installed before)
-	var oldCfg *config.StaderConfig
+	// var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
@@ -270,7 +289,7 @@ func configureService(c *cli.Context) error {
 
 	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
 	if isMigration || isUpdate {
-		oldCfg = cfg
+		// oldCfg = cfg
 		cfg = cfg.CreateCopy()
 		err = cfg.UpdateDefaults()
 		if err != nil {
@@ -288,83 +307,88 @@ func configureService(c *cli.Context) error {
 	}
 
 	// Check for native mode
-	isNative := c.GlobalIsSet("daemon-path")
+	// isNative := c.GlobalIsSet("daemon-path")
 
-	app := tview.NewApplication()
-	md := cliconfig.NewMainDisplay(app, oldCfg, cfg, isNew, isMigration, isUpdate, isNative)
-	err = app.Run()
+	// app := tview.NewApplication()
+	// md := cliconfig.NewMainDisplay(app, oldCfg, cfg, isNew, isMigration, isUpdate, isNative)
+	// err = app.Run()
+	// if err != nil {
+	// 	return err
+	// }
+
+	_, err = ethcliui.Run(onDone)
 	if err != nil {
 		return err
 	}
 
 	// Deal with saving the config and printing the changes
-	if md.ShouldSave {
-		// Save the config
-		staderClient.SaveConfig(md.Config)
-		fmt.Println("Your changes have been saved!")
+	// if md.ShouldSave {
+	// 	// Save the config
+	// 	staderClient.SaveConfig(md.Config)
+	// 	fmt.Println("Your changes have been saved!")
 
-		// Exit immediately if we're in native mode
-		if isNative {
-			fmt.Println("Please restart your daemon service for them to take effect.")
-			return nil
-		}
+	// 	// Exit immediately if we're in native mode
+	// 	if isNative {
+	// 		fmt.Println("Please restart your daemon service for them to take effect.")
+	// 		return nil
+	// 	}
 
-		// Handle network changes
-		prefix := fmt.Sprint(md.PreviousConfig.Stadernode.ProjectName.Value)
-		if md.ChangeNetworks {
-			// Remove the checkpoint sync provider
-			md.Config.ConsensusCommon.CheckpointSyncProvider.Value = ""
-			staderClient.SaveConfig(md.Config)
+	// 	// Handle network changes
+	// 	prefix := fmt.Sprint(md.PreviousConfig.Stadernode.ProjectName.Value)
+	// 	if md.ChangeNetworks {
+	// 		// Remove the checkpoint sync provider
+	// 		md.Config.ConsensusCommon.CheckpointSyncProvider.Value = ""
+	// 		staderClient.SaveConfig(md.Config)
 
-			fmt.Printf("%sWARNING: You have requested to change networks.\n\nAll of your existing chain data, your node wallet, and your validator keys will be removed. If you had a Checkpoint Sync URL provided for your Consensus client, it will be removed and you will need to specify a different one that supports the new network.\n\nPlease confirm you have backed up everything you want to keep, because it will be deleted if you answer `y` to the prompt below.\n\n%s", colorYellow, colorReset)
+	// 		fmt.Printf("%sWARNING: You have requested to change networks.\n\nAll of your existing chain data, your node wallet, and your validator keys will be removed. If you had a Checkpoint Sync URL provided for your Consensus client, it will be removed and you will need to specify a different one that supports the new network.\n\nPlease confirm you have backed up everything you want to keep, because it will be deleted if you answer `y` to the prompt below.\n\n%s", colorYellow, colorReset)
 
-			if !cliutils.Confirm("Would you like the Smartnode to automatically switch networks for you? This will destroy and rebuild your `data` folder and all of Docker containers.") {
-				return nil
-			}
+	// 		if !cliutils.Confirm("Would you like the Smartnode to automatically switch networks for you? This will destroy and rebuild your `data` folder and all of Docker containers.") {
+	// 			return nil
+	// 		}
 
-			err = changeNetworks(c, staderClient, fmt.Sprintf("%s%s", prefix, ApiContainerSuffix))
-			if err != nil {
-				fmt.Printf("%s%s%s\nThe Stadernode could not automatically change networks for you, so you will have to run the steps manually.\n", colorRed, err.Error(), colorReset)
-			}
-			return nil
-		}
+	// 		err = changeNetworks(c, staderClient, fmt.Sprintf("%s%s", prefix, ApiContainerSuffix))
+	// 		if err != nil {
+	// 			fmt.Printf("%s%s%s\nThe Stadernode could not automatically change networks for you, so you will have to run the steps manually.\n", colorRed, err.Error(), colorReset)
+	// 		}
+	// 		return nil
+	// 	}
 
-		// Query for service start if this is a new installation
-		if isNew {
-			if !cliutils.Confirm("Would you like to start the Stadernode services automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
-				return nil
-			}
-			return startService(c, true)
-		}
+	// 	// Query for service start if this is a new installation
+	// 	if isNew {
+	// 		if !cliutils.Confirm("Would you like to start the Stadernode services automatically now?") {
+	// 			fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
+	// 			return nil
+	// 		}
+	// 		return startService(c, true)
+	// 	}
 
-		// Query for service start if this is old and there are containers to change
-		if len(md.ContainersToRestart) > 0 {
-			fmt.Println("The following containers must be restarted for the changes to take effect:")
-			for _, container := range md.ContainersToRestart {
-				fmt.Printf("\t%s_%s\n", prefix, container)
-			}
-			if !cliutils.Confirm("Would you like to restart them automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
-				return nil
-			}
+	// 	// Query for service start if this is old and there are containers to change
+	// 	if len(md.ContainersToRestart) > 0 {
+	// 		fmt.Println("The following containers must be restarted for the changes to take effect:")
+	// 		for _, container := range md.ContainersToRestart {
+	// 			fmt.Printf("\t%s_%s\n", prefix, container)
+	// 		}
+	// 		if !cliutils.Confirm("Would you like to restart them automatically now?") {
+	// 			fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
+	// 			return nil
+	// 		}
 
-			fmt.Println()
-			for _, container := range md.ContainersToRestart {
-				fullName := fmt.Sprintf("%s_%s", prefix, container)
-				fmt.Printf("Stopping %s... ", fullName)
-				staderClient.StopContainer(fullName)
-				fmt.Print("done!\n")
-			}
+	// 		fmt.Println()
+	// 		for _, container := range md.ContainersToRestart {
+	// 			fullName := fmt.Sprintf("%s_%s", prefix, container)
+	// 			fmt.Printf("Stopping %s... ", fullName)
+	// 			staderClient.StopContainer(fullName)
+	// 			fmt.Print("done!\n")
+	// 		}
 
-			fmt.Println()
-			fmt.Println("Applying changes and restarting containers...")
-			return startService(c, true)
-		}
-	} else {
-		fmt.Println("Your changes have not been saved. Your Stadernode configuration is the same as it was before.")
-		return nil
-	}
+	// 		fmt.Println()
+	// 		fmt.Println("Applying changes and restarting containers...")
+	// 		return startService(c, true)
+	// 	}
+	// } else {
+	// 	fmt.Println("Your changes have not been saved. Your Stadernode configuration is the same as it was before.")
+	// 	return nil
+	// }
 
 	return err
 }
