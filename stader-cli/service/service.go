@@ -220,21 +220,14 @@ func serviceStatus(c *cli.Context) error {
 func onDone(settings interface{}, err error) {
 	set := settings.(uipages.SettingsType)
 
+	//staderClient, err := stader.NewClientFromCtx(c)
+	//cfg, isNew, err := staderClient.LoadConfig()
+
+	// update the network
+	//newNetwork := set.Network.(cfgtypes.Network)
+
 	fmt.Printf("===settings is:===\n %v \n===", set)
 }
-
-// func cnfToUISettings(cnf *config.StaderConfig) uipages.SettingsType {
-
-// 	cnf.Stadernode.Network.Value = "mainnet"
-
-// 	return uipages.SettingsType{
-// 		Network: cnf,
-// 	}
-// }
-
-// func uiSettingsToCnf(settings uipages.SettingsType) *config.StaderConfig {
-// 	return *config.StaderConfig{}
-// }
 
 // Configure the service
 
@@ -316,10 +309,25 @@ func configureService(c *cli.Context) error {
 	// 	return err
 	// }
 
-	_, err = ethcliui.Run(onDone)
+	set, err := ethcliui.Run(onDone)
+	fmt.Printf("Checking if there was any error or not\n")
 	if err != nil {
 		return err
 	}
+
+	newSettings := set()
+
+	fmt.Printf("set in configureService is %v\n", set())
+
+	// update the settings
+
+	// update the network
+	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
+
+	// update the consensus and execution client
+	cfg.ConsensusClientMode.Value = newSettings.ConsensusClient.Selection
+
+	staderClient.SaveConfig(cfg)
 
 	// Deal with saving the config and printing the changes
 	// if md.ShouldSave {
