@@ -1257,6 +1257,12 @@ github.com/stader-labs/ethcli-ui v0.0.0-20230321103419-12161c20ec55 h1:9HCgxjr0n
 github.com/stader-labs/ethcli-ui v0.0.0-20230321103419-12161c20ec55/go.mod h1:B3hRV6asq9kBm+r79YT6bx7WAsEL20LEiZRBJBIM3Dg=
 github.com/stader-labs/ethcli-ui v0.0.0-20230321124009-a8f5f3dc65df h1:IJg2jDX2pa/osfKBi6xn2qgF0l0MVZHFi9CKCt7Vcx4=
 github.com/stader-labs/ethcli-ui v0.0.0-20230321124009-a8f5f3dc65df/go.mod h1:B3hRV6asq9kBm+r79YT6bx7WAsEL20LEiZRBJBIM3Dg=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321131723-68514ff15296 h1:/MMc8mIVVlpjKos6Ng/NyGCpXrVrRURxxbKolhCvsZc=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321131723-68514ff15296/go.mod h1:B3hRV6asq9kBm+r79YT6bx7WAsEL20LEiZRBJBIM3Dg=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321140422-55da427ef7f4 h1:0s5raLmjSe9qk9P4c2EOCEcDQXND4uvziDmrfBTdpEw=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321140422-55da427ef7f4/go.mod h1:B3hRV6asq9kBm+r79YT6bx7WAsEL20LEiZRBJBIM3Dg=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321140446-c9ea787a217e h1:ysuNfs63kQoZJpj7ttw8qx/wmKC6eyBDhH62g9TPnOs=
+github.com/stader-labs/ethcli-ui v0.0.0-20230321140446-c9ea787a217e/go.mod h1:B3hRV6asq9kBm+r79YT6bx7WAsEL20LEiZRBJBIM3Dg=
 github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 h1:Oo2KZNP70KE0+IUJSidPj/BFS/RXNHmKIJOdckzml2E=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=

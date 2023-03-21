@@ -325,9 +325,54 @@ func configureService(c *cli.Context) error {
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
 	// update the consensus and execution client
-	cfg.ConsensusClientMode.Value = newSettings.ConsensusClient.Selection
+	// TODO - randomize selection
+	cfg.ConsensusClientMode.Value = newSettings.EthClient
+	cfg.ExecutionClientMode.Value = newSettings.EthClient
 
-	staderClient.SaveConfig(cfg)
+	if newSettings.EthClient == "local" {
+		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
+		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
+	} else if newSettings.EthClient == "external" {
+		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
+		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
+		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
+		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+	}
+	cfg.ConsensusCommon.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
+	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
+
+	// update fallback clients - TODO
+
+	// update monitoring
+	if newSettings.Monitoring == "Yes" {
+		cfg.EnableMetrics.Value = true
+	} else if newSettings.Monitoring == "No" {
+		cfg.EnableMetrics.Value = false
+	}
+
+	// update mev boost
+	if newSettings.MEVBoost == "external" {
+		cfg.EnableMevBoost.Value = true
+		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
+	} else if newSettings.MEVBoost == "local" {
+		cfg.EnableMevBoost.Value = false
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
+		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
+		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
+	}
+
+	err = staderClient.SaveConfig(cfg)
+	if err != nil {
+		return err
+	}
 
 	// Deal with saving the config and printing the changes
 	// if md.ShouldSave {

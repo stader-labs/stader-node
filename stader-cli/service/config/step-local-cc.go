@@ -109,7 +109,7 @@ func selectRandomCC(goodOptions []cfgtypes.ParameterOption, includeSupermajority
 
 	// Get system specs
 	totalMemoryGB := memory.TotalMemory() / 1024 / 1024 / 1024
-	isLowPower := (totalMemoryGB < 15 || runtime.GOARCH == "arm64")
+	isLowPower := totalMemoryGB < 15 || runtime.GOARCH == "arm64"
 
 	// Filter out the clients based on system specs
 	filteredClients := []cfgtypes.ConsensusClient{}
