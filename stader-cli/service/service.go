@@ -362,14 +362,21 @@ func configureService(c *cli.Context) error {
 		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
 	} else if newSettings.MEVBoost == "local" {
-		cfg.EnableMevBoost.Value = false
+		fmt.Printf("Setting local mev!\n")
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
 		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
 		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
 		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
+		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
 	}
 
 	err = staderClient.SaveConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	// Restart the services
+	err = startService(c, false)
 	if err != nil {
 		return err
 	}

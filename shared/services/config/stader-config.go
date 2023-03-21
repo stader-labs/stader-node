@@ -69,8 +69,8 @@ type StaderConfig struct {
 	ExternalConsensusClient config.Parameter `yaml:"externalConsensusClient,omitempty"`
 
 	// Metrics settings
-	EnableMetrics           config.Parameter `yaml:"enableMetrics,omitempty"`
-	EnableODaoMetrics       config.Parameter `yaml:"enableODaoMetrics,omitempty"`
+	EnableMetrics config.Parameter `yaml:"enableMetrics,omitempty"`
+	//EnableODaoMetrics       config.Parameter `yaml:"enableODaoMetrics,omitempty"`
 	EcMetricsPort           config.Parameter `yaml:"ecMetricsPort,omitempty"`
 	BnMetricsPort           config.Parameter `yaml:"bnMetricsPort,omitempty"`
 	VcMetricsPort           config.Parameter `yaml:"vcMetricsPort,omitempty"`
@@ -313,18 +313,6 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
-		EnableODaoMetrics: config.Parameter{
-			ID:                   "enableODaoMetrics",
-			Name:                 "Enable Oracle DAO Metrics",
-			Description:          "Enable the tracking of Oracle DAO performance metrics, such as prices and balances submission participation.",
-			Type:                 config.ParameterType_Bool,
-			Default:              map[config.Network]interface{}{config.Network_All: false},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Node},
-			EnvironmentVariables: []string{"ENABLE_ODAO_METRICS"},
-			CanBeBlank:           false,
-			OverwriteOnUpgrade:   false,
-		},
-
 		EnableBitflyNodeMetrics: config.Parameter{
 			ID:                   "enableBitflyNodeMetrics",
 			Name:                 "Enable Beaconcha.in Node Metrics",
@@ -509,7 +497,6 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.ConsensusClient,
 		&cfg.ExternalConsensusClient,
 		&cfg.EnableMetrics,
-		&cfg.EnableODaoMetrics,
 		&cfg.EnableBitflyNodeMetrics,
 		&cfg.EcMetricsPort,
 		&cfg.BnMetricsPort,
