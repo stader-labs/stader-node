@@ -417,7 +417,6 @@ progress 7 "Downloading Stader package files..."
 
 # Copy package files
 progress 8 "Copying package files to Stader user data directory..."
-
 { cp -r -n "$PACKAGE_FILES_PATH/override" "$STADER_PATH" || rsync -r --ignore-existing "$PACKAGE_FILES_PATH/override" "$STADER_PATH" || fail "Could not copy new override files to the Stader user data directory."; } >&2
 { cp -r "$PACKAGE_FILES_PATH/scripts" "$STADER_PATH" || fail "Could not copy scripts folder to the Stader user data directory."; } >&2
 { cp -r "$PACKAGE_FILES_PATH/templates" "$STADER_PATH" || fail "Could not copy templates folder to the Stader user data directory."; } >&2
@@ -428,8 +427,7 @@ progress 8 "Copying package files to Stader user data directory..."
 
 # Clean up unnecessary files from old installations
 progress 9 "Cleaning up obsolete files from previous installs..."
-{
-    echo "Nothing to remove."
+
 }
 
 install "$@"
