@@ -12,9 +12,7 @@ import (
 
 	"github.com/alessio/shellescape"
 	"github.com/pbnjay/memory"
-	"github.com/stader-labs/stader-node/addons"
 	"github.com/stader-labs/stader-node/shared"
-	addontypes "github.com/stader-labs/stader-node/shared/types/addons"
 	"github.com/stader-labs/stader-node/shared/types/config"
 	"gopkg.in/yaml.v2"
 )
@@ -118,9 +116,6 @@ type StaderConfig struct {
 	// MEV-Boost
 	EnableMevBoost config.Parameter `yaml:"enableMevBoost,omitempty"`
 	MevBoost       *MevBoostConfig  `yaml:"mevBoost,omitempty"`
-
-	// Addons
-	GraffitiWallWriter addontypes.SmartnodeAddon `yaml:"addon-gww,omitempty"`
 }
 
 // Load configuration settings from a file
@@ -455,9 +450,6 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 	cfg.Native = NewNativeConfig(cfg)
 	cfg.MevBoost = NewMevBoostConfig(cfg)
 
-	// Addons
-	cfg.GraffitiWallWriter = addons.NewGraffitiWallWriter()
-
 	// Apply the default values for mainnet
 	cfg.Stadernode.Network.Value = cfg.Stadernode.Network.Options[0].Value
 	cfg.applyAllDefaults()
@@ -555,7 +547,6 @@ func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 		"bitflyNodeMetrics":  cfg.BitflyNodeMetrics,
 		"native":             cfg.Native,
 		"mevBoost":           cfg.MevBoost,
-		"addons-gww":         cfg.GraffitiWallWriter.GetConfig(),
 	}
 }
 
@@ -981,9 +972,6 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			}
 		}
 	}
-
-	// Addons
-	cfg.GraffitiWallWriter.UpdateEnvVars(envVars)
 
 	return envVars
 
