@@ -107,7 +107,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	pubKeys := make([][]byte, numValidators.Int64())
 	preDepositSignatures := make([][]byte, numValidators.Int64())
-	//depositSignatures := make([][]byte, numValidators.Int64())
+	depositSignatures := make([][]byte, numValidators.Int64())
 
 	operatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
@@ -152,17 +152,17 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		}
 		preDepositSignature := stadertypes.BytesToValidatorSignature(preDepositData.Signature)
 
-		//depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//depositSignature := stadertypes.BytesToValidatorSignature(depositData.Signature)
+		depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
+		if err != nil {
+			return nil, err
+		}
+		depositSignature := stadertypes.BytesToValidatorSignature(depositData.Signature)
 
 		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
-		//depositSignatures[i] = depositSignature[:]
+		depositSignatures[i] = depositSignature[:]
 
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
@@ -176,7 +176,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, opts)
+	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +244,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 	pubKeys := make([][]byte, numValidators.Int64())
 	preDepositSignatures := make([][]byte, numValidators.Int64())
-	//depositSignatures := make([][]byte, numValidators.Int64())
+	depositSignatures := make([][]byte, numValidators.Int64())
 
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
@@ -295,15 +295,15 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		fmt.Printf("pubKey is %s\n", pubKey)
 		fmt.Printf("preDepositSignature is %s\n", preDepositSignature)
 
-		//depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//depositSignature := stadertypes.BytesToValidatorSignature(depositData.Signature)
+		depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
+		if err != nil {
+			return nil, err
+		}
+		depositSignature := stadertypes.BytesToValidatorSignature(depositData.Signature)
 
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
-		//depositSignatures[i] = depositSignature[:]
+		depositSignatures[i] = depositSignature[:]
 
 		// Make sure a validator with this pubkey doesn't already exist
 		status, err := bc.GetValidatorStatus(pubKey, nil)
@@ -336,7 +336,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, opts)
+	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
 	}
