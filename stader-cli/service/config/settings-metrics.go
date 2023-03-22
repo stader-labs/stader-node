@@ -58,7 +58,7 @@ func (configPage *MetricsConfigPage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, "Monitoring / Metrics Settings")
+	configPage.layout.createForm(&configPage.masterConfig.StaderNode.Network, "Monitoring / Metrics Settings")
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

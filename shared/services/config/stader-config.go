@@ -78,8 +78,8 @@ type StaderConfig struct {
 	GuardianMetricsPort     config.Parameter `yaml:"guardianMetricsPort,omitempty"`
 	EnableBitflyNodeMetrics config.Parameter `yaml:"enableBitflyNodeMetrics,omitempty"`
 
-	// The Stadernode configuration
-	Stadernode *StaderNodeConfig `yaml:"stadernode,omitempty"`
+	// The StaderNode configuration
+	StaderNode *StaderNodeConfig `yaml:"stadernode,omitempty"`
 
 	// Execution client configurations
 	ExecutionCommon   *ExecutionCommonConfig   `yaml:"executionCommon,omitempty"`
@@ -413,7 +413,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 	cfg.ExecutionClientMode.Default[config.Network_All] = cfg.ExecutionClientMode.Options[0].Value
 	cfg.ConsensusClientMode.Default[config.Network_All] = cfg.ConsensusClientMode.Options[0].Value
 
-	cfg.Stadernode = NewStadernodeConfig(cfg)
+	cfg.StaderNode = NewStadernodeConfig(cfg)
 	cfg.ExecutionCommon = NewExecutionCommonConfig(cfg)
 	cfg.Geth = NewGethConfig(cfg)
 	cfg.Nethermind = NewNethermindConfig(cfg)
@@ -438,7 +438,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 	cfg.MevBoost = NewMevBoostConfig(cfg)
 
 	// Apply the default values for mainnet
-	cfg.Stadernode.Network.Value = cfg.Stadernode.Network.Options[0].Value
+	cfg.StaderNode.Network.Value = cfg.StaderNode.Network.Options[0].Value
 	cfg.applyAllDefaults()
 
 	return cfg
@@ -464,8 +464,8 @@ func (cfg *StaderConfig) CreateCopy() *StaderConfig {
 	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode)
 
 	// Set the network
-	network := cfg.Stadernode.Network.Value.(config.Network)
-	newConfig.Stadernode.Network.Value = network
+	network := cfg.StaderNode.Network.Value.(config.Network)
+	newConfig.StaderNode.Network.Value = network
 
 	newParams := newConfig.GetParameters()
 	for i, param := range cfg.GetParameters() {
@@ -510,7 +510,7 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 // Get the subconfigurations for this config
 func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 	return map[string]config.Config{
-		"stadernode":         cfg.Stadernode,
+		"stadernode":         cfg.StaderNode,
 		"executionCommon":    cfg.ExecutionCommon,
 		"geth":               cfg.Geth,
 		"nethermind":         cfg.Nethermind,
@@ -540,14 +540,14 @@ func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 func (cfg *StaderConfig) ChangeNetwork(newNetwork config.Network) {
 
 	// Get the current network
-	oldNetwork, ok := cfg.Stadernode.Network.Value.(config.Network)
+	oldNetwork, ok := cfg.StaderNode.Network.Value.(config.Network)
 	if !ok {
 		oldNetwork = config.Network_Unknown
 	}
 	if oldNetwork == newNetwork {
 		return
 	}
-	cfg.Stadernode.Network.Value = newNetwork
+	cfg.StaderNode.Network.Value = newNetwork
 
 	// Update the master parameters
 	rootParams := cfg.GetParameters()
@@ -729,7 +729,7 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 	network := config.Network_Mainnet
 	stadernodeConfig, exists := masterMap["stadernode"]
 	if exists {
-		networkString, exists := stadernodeConfig[cfg.Stadernode.Network.ID]
+		networkString, exists := stadernodeConfig[cfg.StaderNode.Network.ID]
 		if exists {
 			valueType := reflect.TypeOf(networkString)
 			paramType := reflect.TypeOf(network)
@@ -778,11 +778,11 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars := map[string]string{}
 
 	// Basic variables and root parameters
-	envVars["STADER_NODE_IMAGE"] = cfg.Stadernode.GetStadernodeContainerTag()
+	envVars["STADER_NODE_IMAGE"] = cfg.StaderNode.GetStadernodeContainerTag()
 	envVars["STADER_FOLDER"] = cfg.StaderDirectory
-	envVars["ETHX_ADDRESS"] = cfg.Stadernode.GetEthxTokenAddress().Hex()
+	envVars["ETHX_ADDRESS"] = cfg.StaderNode.GetEthxTokenAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
-	config.AddParametersToEnvVars(cfg.Stadernode.GetParameters(), envVars)
+	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 
 	// EC parameters
@@ -941,7 +941,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 
 	// MEV-Boost
 	if cfg.EnableMevBoost.Value == true {
-		if cfg.Stadernode.Network.Value.(config.Network) == config.Network_Zhejiang {
+		if cfg.StaderNode.Network.Value.(config.Network) == config.Network_Zhejiang {
 			// Disable MEV-Boost on Zhejiang
 			cfg.EnableMevBoost.Value = false
 		} else {
@@ -971,7 +971,7 @@ func (cfg *StaderConfig) GetConfigTitle() string {
 // Update the default settings for all overwrite-on-upgrade parameters
 func (cfg *StaderConfig) UpdateDefaults() error {
 	// Update the root params
-	currentNetwork := cfg.Stadernode.Network.Value.(config.Network)
+	currentNetwork := cfg.StaderNode.Network.Value.(config.Network)
 	for _, param := range cfg.GetParameters() {
 		defaultValue, err := param.GetDefault(currentNetwork)
 		if err != nil {
@@ -1015,7 +1015,7 @@ func (cfg *StaderConfig) GetChanges(oldConfig *StaderConfig) (map[string][]confi
 
 	// Check if the network has changed
 	changeNetworks := false
-	if oldConfig.Stadernode.Network.Value != cfg.Stadernode.Network.Value {
+	if oldConfig.StaderNode.Network.Value != cfg.StaderNode.Network.Value {
 		changeNetworks = true
 	}
 
@@ -1064,7 +1064,7 @@ func (cfg *StaderConfig) Validate() []string {
 
 	// Ensure there's a MEV-boost URL
 	if !cfg.IsNativeMode && cfg.EnableMevBoost.Value == true {
-		if cfg.Stadernode.Network.Value.(config.Network) == config.Network_Zhejiang {
+		if cfg.StaderNode.Network.Value.(config.Network) == config.Network_Zhejiang {
 			// Disable MEV-Boost on Zhejiang
 			cfg.EnableMevBoost.Value = false
 		} else {
@@ -1092,7 +1092,7 @@ func (cfg *StaderConfig) Validate() []string {
 // Applies all of the defaults to all of the settings that have them defined
 func (cfg *StaderConfig) applyAllDefaults() error {
 	for _, param := range cfg.GetParameters() {
-		err := param.SetToDefault(cfg.Stadernode.Network.Value.(config.Network))
+		err := param.SetToDefault(cfg.StaderNode.Network.Value.(config.Network))
 		if err != nil {
 			return fmt.Errorf("error setting root parameter default: %w", err)
 		}
@@ -1100,7 +1100,7 @@ func (cfg *StaderConfig) applyAllDefaults() error {
 
 	for name, subconfig := range cfg.GetSubconfigs() {
 		for _, param := range subconfig.GetParameters() {
-			err := param.SetToDefault(cfg.Stadernode.Network.Value.(config.Network))
+			err := param.SetToDefault(cfg.StaderNode.Network.Value.(config.Network))
 			if err != nil {
 				return fmt.Errorf("error setting parameter default for %s: %w", name, err)
 			}

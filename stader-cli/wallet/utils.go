@@ -5,12 +5,13 @@ package wallet
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/utils/log"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/stader-labs/stader-node/shared/utils/log"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services/config"
@@ -106,7 +107,7 @@ func confirmMnemonic(mnemonic string) {
 func promptForCustomKeyPasswords(sd *stader.Client, cfg *config.StaderConfig, testOnly bool) (string, error) {
 
 	// Check for the custom key directory
-	datapath, err := homedir.Expand(cfg.Stadernode.DataPath.Value.(string))
+	datapath, err := homedir.Expand(cfg.StaderNode.DataPath.Value.(string))
 	if err != nil {
 		return "", fmt.Errorf("error expanding data directory: %w", err)
 	}

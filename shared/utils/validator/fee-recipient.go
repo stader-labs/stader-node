@@ -33,16 +33,16 @@ func RestartValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.Color
 		// Get validator container name & client type label
 		var containerName string
 		var clientTypeLabel string
-		if cfg.Stadernode.ProjectName.Value == "" {
+		if cfg.StaderNode.ProjectName.Value == "" {
 			return errors.New("Stader docker project name not set")
 		}
 		clientType, _ := bc.GetClientType()
 		switch clientType {
 		case beacon.SplitProcess:
-			containerName = cfg.Stadernode.ProjectName.Value.(string) + ValidatorContainerSuffix
+			containerName = cfg.StaderNode.ProjectName.Value.(string) + ValidatorContainerSuffix
 			clientTypeLabel = "validator"
 		case beacon.SingleProcess:
-			containerName = cfg.Stadernode.ProjectName.Value.(string) + BeaconContainerSuffix
+			containerName = cfg.StaderNode.ProjectName.Value.(string) + BeaconContainerSuffix
 			clientTypeLabel = "beacon"
 		default:
 			return fmt.Errorf("Can't restart the validator, unknown client type '%d'", clientType)
@@ -114,16 +114,16 @@ func StopValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.ColorLog
 		// Get validator container name & client type label
 		var containerName string
 		var clientTypeLabel string
-		if cfg.Stadernode.ProjectName.Value == "" {
+		if cfg.StaderNode.ProjectName.Value == "" {
 			return errors.New("Stader docker project name not set")
 		}
 		clientType, _ := bc.GetClientType()
 		switch clientType {
 		case beacon.SplitProcess:
-			containerName = cfg.Stadernode.ProjectName.Value.(string) + ValidatorContainerSuffix
+			containerName = cfg.StaderNode.ProjectName.Value.(string) + ValidatorContainerSuffix
 			clientTypeLabel = "validator"
 		case beacon.SingleProcess:
-			containerName = cfg.Stadernode.ProjectName.Value.(string) + BeaconContainerSuffix
+			containerName = cfg.StaderNode.ProjectName.Value.(string) + BeaconContainerSuffix
 			clientTypeLabel = "beacon"
 		default:
 			return fmt.Errorf("Can't stop the validator, unknown client type '%d'", clientType)

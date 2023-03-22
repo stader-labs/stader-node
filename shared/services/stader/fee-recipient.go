@@ -22,7 +22,7 @@ const (
 func CheckFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfig) (bool, bool, error) {
 
 	// Check if the file exists
-	path := cfg.Stadernode.GetFeeRecipientFilePath()
+	path := cfg.StaderNode.GetFeeRecipientFilePath()
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return false, false, nil
@@ -54,7 +54,7 @@ func UpdateFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfi
 	bytes := []byte(expectedString)
 
 	// Write the file
-	path := cfg.Stadernode.GetFeeRecipientFilePath()
+	path := cfg.StaderNode.GetFeeRecipientFilePath()
 	err := ioutil.WriteFile(path, bytes, FileMode)
 	if err != nil {
 		return fmt.Errorf("error writing fee recipient file: %w", err)

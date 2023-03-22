@@ -12,7 +12,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
+	staderService "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
@@ -97,7 +97,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Check if the VC is using the correct fee recipient
-	fileExists, correctAddress, err := rpsvc.CheckFeeRecipientFile(correctFeeRecipient, m.cfg)
+	fileExists, correctAddress, err := staderService.CheckFeeRecipientFile(correctFeeRecipient, m.cfg)
 	if err != nil {
 		return fmt.Errorf("error validating fee recipient files: %w", err)
 	}
@@ -112,7 +112,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Regenerate the fee recipient files
-	err = rpsvc.UpdateFeeRecipientFile(correctFeeRecipient, m.cfg)
+	err = staderService.UpdateFeeRecipientFile(correctFeeRecipient, m.cfg)
 	if err != nil {
 		m.log.Println("***ERROR***")
 		m.log.Printlnf("Error updating fee recipient files: %s", err.Error())

@@ -7,23 +7,23 @@ import (
 )
 
 // The page wrapper for the Stader Node config
-type NativeSmartnodeConfigPage struct {
+type NativeStaderNodeConfigPage struct {
 	home   *settingsNativeHome
 	page   *page
 	layout *standardLayout
 }
 
 // Creates a new page for the Native Stader Node settings
-func NewNativeSmartnodeConfigPage(home *settingsNativeHome) *NativeSmartnodeConfigPage {
+func NewNativeStaderNodeConfigPage(home *settingsNativeHome) *NativeStaderNodeConfigPage {
 
-	configPage := &NativeSmartnodeConfigPage{
+	configPage := &NativeStaderNodeConfigPage{
 		home: home,
 	}
 
 	configPage.createContent()
 	configPage.page = newPage(
 		home.homePage,
-		"settings-native-smartnode",
+		"settings-native-stader-node",
 		"Stader Node and TX Fees",
 		"Select this to configure the settings for the Stader Node itself, including the defaults and limits on transaction fees.",
 		configPage.layout.grid,
@@ -34,13 +34,13 @@ func NewNativeSmartnodeConfigPage(home *settingsNativeHome) *NativeSmartnodeConf
 }
 
 // Creates the content for the Stader Node settings page
-func (configPage *NativeSmartnodeConfigPage) createContent() {
+func (configPage *NativeStaderNodeConfigPage) createContent() {
 
 	// Create the layout
 	masterConfig := configPage.home.md.Config
 	layout := newStandardLayout()
 	configPage.layout = layout
-	layout.createForm(&masterConfig.Stadernode.Network, "Stader Node and TX Fee Settings")
+	layout.createForm(&masterConfig.StaderNode.Network, "Stader Node and TX Fee Settings")
 
 	// Return to the home page after pressing Escape
 	layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -62,7 +62,7 @@ func (configPage *NativeSmartnodeConfigPage) createContent() {
 	})
 
 	// Set up the form items
-	formItems := createParameterizedFormItems(masterConfig.Stadernode.GetParameters(), layout.descriptionBox)
+	formItems := createParameterizedFormItems(masterConfig.StaderNode.GetParameters(), layout.descriptionBox)
 	for _, formItem := range formItems {
 		if formItem.parameter.ID == config.ProjectNameID {
 			// Ignore the project name ID since it doesn't apply to native mode
@@ -74,7 +74,7 @@ func (configPage *NativeSmartnodeConfigPage) createContent() {
 		if formItem.parameter.ID == config.NetworkID {
 			dropDown := formItem.item.(*DropDown)
 			dropDown.SetSelectedFunc(func(text string, index int) {
-				newNetwork := configPage.home.md.Config.Stadernode.Network.Options[index].Value.(cfgtypes.Network)
+				newNetwork := configPage.home.md.Config.StaderNode.Network.Options[index].Value.(cfgtypes.Network)
 				configPage.home.md.Config.ChangeNetwork(newNetwork)
 				configPage.home.refresh()
 			})
