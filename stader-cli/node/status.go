@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -83,20 +84,25 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 		fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
 
-		fmt.Printf("%s=== Registered Validator Details ===%s\n\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 		// display validators
 		if totalRegisteredValidators > 0 {
 			for i := 0; i < totalRegisteredValidators; i++ {
-				fmt.Printf("%d)\n", i)
+				fmt.Printf("%d)\n", i+1)
 				validatorInfo := status.ValidatorInfos[i]
-				fmt.Printf("-Validator Pub Key: %s\n", validatorInfo.Pubkey)
-				fmt.Printf("-Validator Status %s\n", stdr.ValidatorState[validatorInfo.Status])
-				fmt.Printf("-Deposit time %d\n", validatorInfo.DepositTime)
+				fmt.Printf("-Validator Pub Key: %s\n\n", common.BytesToAddress(validatorInfo.Pubkey))
+				fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
+				fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+
+				if validatorInfo.Status > 3 {
+					fmt.Printf("-Deposit time: %d\n\n", validatorInfo.DepositTime)
+				}
+
 				// Validator has withdrawn
 				if validatorInfo.Status == 8 {
-					fmt.Printf("-Withdrawn time %d\n", validatorInfo.WithdrawnTime)
+					fmt.Printf("-Withdrawn time: %d\n\n", validatorInfo.WithdrawnTime)
 				}
-				fmt.Println("")
+				fmt.Printf("\n\n")
 			}
 		} else {
 			fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader", log.ColorGreen, log.ColorReset)
