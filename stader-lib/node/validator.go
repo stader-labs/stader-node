@@ -9,12 +9,12 @@ import (
 	"math/big"
 )
 
-func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "addValidatorKeys", pubKeys, preDepositSignatures)
+func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "addValidatorKeys", pubKeys, preDepositSignatures, depositSignatures)
 }
 
-func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(opts, pubKeys, preDepositSignatures)
+func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(opts, pubKeys, preDepositSignatures, depositSignatures)
 	if err != nil {
 		return nil, fmt.Errorf("could not add validator keys: %w", err)
 	}
@@ -33,7 +33,8 @@ func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractMa
 func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (struct {
 	Status               uint8
 	Pubkey               []byte
-	Signature            []byte
+	PreDepositSignature  []byte
+	DepositSignature     []byte
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int

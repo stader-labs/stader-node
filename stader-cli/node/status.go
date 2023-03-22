@@ -2,9 +2,9 @@ package node
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
@@ -90,7 +90,7 @@ func getStatus(c *cli.Context) error {
 			for i := 0; i < totalRegisteredValidators; i++ {
 				fmt.Printf("%d)\n", i+1)
 				validatorInfo := status.ValidatorInfos[i]
-				fmt.Printf("-Validator Pub Key: %s\n\n", common.BytesToAddress(validatorInfo.Pubkey))
+				fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
 				fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
 				fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 
