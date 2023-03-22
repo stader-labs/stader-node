@@ -59,7 +59,7 @@ func (configPage *ConsensusConfigPage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, "Consensus Client (ETH2) Settings")
+	configPage.layout.createForm(&configPage.masterConfig.StaderNode.Network, "Consensus Client (ETH2) Settings")
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

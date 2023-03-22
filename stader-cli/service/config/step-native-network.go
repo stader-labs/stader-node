@@ -7,7 +7,7 @@ import (
 func createNativeNetworkStep(wiz *wizard, currentStep int, totalSteps int) *choiceWizardStep {
 
 	// Create the button names and descriptions from the config
-	networks := wiz.md.Config.Stadernode.Network.Options
+	networks := wiz.md.Config.StaderNode.Network.Options
 	networkNames := []string{}
 	networkDescriptions := []string{}
 	for _, network := range networks {
@@ -21,8 +21,8 @@ func createNativeNetworkStep(wiz *wizard, currentStep int, totalSteps int) *choi
 		wiz.md.setPage(modal.page)
 		modal.focus(0) // Catch-all for safety
 
-		for i, option := range wiz.md.Config.Stadernode.Network.Options {
-			if option.Value == wiz.md.Config.Stadernode.Network.Value {
+		for i, option := range wiz.md.Config.StaderNode.Network.Options {
+			if option.Value == wiz.md.Config.StaderNode.Network.Value {
 				modal.focus(i)
 				break
 			}

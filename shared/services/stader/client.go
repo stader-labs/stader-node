@@ -317,7 +317,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	default:
 		return nil, fmt.Errorf("legacy config had an unknown chain ID [%s]", chainID)
 	}
-	cfg.Stadernode.Network.Value = network
+	cfg.StaderNode.Network.Value = network
 
 	// Migrate the EC
 	err = c.migrateProviderInfo(legacyCfg.Chains.Eth1.Provider, legacyCfg.Chains.Eth1.WsProvider, "eth1", &cfg.ExecutionClientMode, &cfg.ExecutionCommon.HttpPort, &cfg.ExecutionCommon.WsPort, &cfg.ExternalExecution.HttpUrl, &cfg.ExternalExecution.WsUrl)
@@ -432,9 +432,9 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	}
 
 	// Stadernode settings
-	cfg.Stadernode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
-	cfg.Stadernode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
-	cfg.Stadernode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
+	cfg.StaderNode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
+	cfg.StaderNode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
+	cfg.StaderNode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {
@@ -464,7 +464,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Native.CcHttpUrl.Value = legacyCfg.Chains.Eth2.Provider
 	c.migrateCcSelection(legacyCfg.Chains.Eth2.Client.Selected, &cfg.Native.ConsensusClient)
 	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.StaderNode.ValidatorRestartCommand
-	cfg.Stadernode.DataPath.Value = filepath.Join(c.configPath, "data")
+	cfg.StaderNode.DataPath.Value = filepath.Join(c.configPath, "data")
 
 	return cfg, nil
 
@@ -998,7 +998,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the wallet
-	walletPath, err := homedir.Expand(cfg.Stadernode.GetWalletPathInCLI())
+	walletPath, err := homedir.Expand(cfg.StaderNode.GetWalletPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading wallet path: %w", err)
 	}
@@ -1010,7 +1010,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the password
-	passwordPath, err := homedir.Expand(cfg.Stadernode.GetPasswordPathInCLI())
+	passwordPath, err := homedir.Expand(cfg.StaderNode.GetPasswordPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading password path: %w", err)
 	}
@@ -1022,7 +1022,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the validators dir
-	validatorsPath, err := homedir.Expand(cfg.Stadernode.GetValidatorKeychainPathInCLI())
+	validatorsPath, err := homedir.Expand(cfg.StaderNode.GetValidatorKeychainPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading validators folder path: %w", err)
 	}
@@ -1562,7 +1562,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Create the custom keys dir
-	customKeyDir, err := homedir.Expand(filepath.Join(cfg.Stadernode.DataPath.Value.(string), "custom-keys"))
+	customKeyDir, err := homedir.Expand(filepath.Join(cfg.StaderNode.DataPath.Value.(string), "custom-keys"))
 	if err != nil {
 		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any validator keys you created outside of the Stadernode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
 		return deployedContainers, nil
@@ -1709,10 +1709,10 @@ func (c *Client) getAPIContainerName() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if cfg.Stadernode.ProjectName.Value == "" {
+	if cfg.StaderNode.ProjectName.Value == "" {
 		return "", errors.New("Stader docker project name not set")
 	}
-	return cfg.Stadernode.ProjectName.Value.(string) + APIContainerSuffix, nil
+	return cfg.StaderNode.ProjectName.Value.(string) + APIContainerSuffix, nil
 }
 
 // Get gas price & limit flags

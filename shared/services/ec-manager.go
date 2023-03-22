@@ -361,7 +361,7 @@ func (p *ExecutionClientManager) CheckStatus(cfg *config.StaderConfig) *api.Clie
 	if status.FallbackEnabled {
 		status.FallbackClientStatus = checkEcStatus(p.fallbackEc)
 		// Check if fallback is using the expected network
-		expectedChainID := cfg.Stadernode.GetChainID()
+		expectedChainID := cfg.StaderNode.GetChainID()
 		if status.FallbackClientStatus.NetworkId != expectedChainID {
 			p.fallbackReady = false
 			colorReset := "\033[0m"

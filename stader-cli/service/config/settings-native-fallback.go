@@ -48,7 +48,7 @@ func (configPage *NativeFallbackConfigPage) createContent() {
 
 	// Create the layout
 	configPage.layout = newStandardLayout()
-	configPage.layout.createForm(&configPage.masterConfig.Stadernode.Network, "Fallback Client Settings")
+	configPage.layout.createForm(&configPage.masterConfig.StaderNode.Network, "Fallback Client Settings")
 
 	// Return to the home page after pressing Escape
 	configPage.layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

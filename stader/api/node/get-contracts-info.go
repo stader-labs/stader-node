@@ -39,7 +39,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error getting configuration: %w", err)
 	}
-	response.Network = uint64(config.Stadernode.GetChainID())
+	response.Network = uint64(config.StaderNode.GetChainID())
 
 	// Get the Beacon Client info
 	bc, err := services.GetBeaconClient(c)

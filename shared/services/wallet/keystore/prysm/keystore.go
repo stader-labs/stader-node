@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
-	rpkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore"
+	staderkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	eth2ks "github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4"
 
@@ -177,7 +177,7 @@ func (ks *Keystore) initialize() error {
 	_, err := os.Stat(passwordFilePath)
 	if os.IsNotExist(err) {
 		// Create a new password
-		password, err = rpkeystore.GenerateRandomPassword()
+		password, err = staderkeystore.GenerateRandomPassword()
 		if err != nil {
 			return fmt.Errorf("Could not generate random password: %w", err)
 		}

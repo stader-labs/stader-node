@@ -4,6 +4,8 @@ package api
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -11,7 +13,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/utils"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
-	"math/big"
 )
 
 // The fraction of the timeout period to trigger overdue transactions
@@ -56,7 +57,7 @@ func PrintAndCheckGasInfo(gasInfo stader.GasInfo, checkThreshold bool, gasThresh
 // Print a TX's details to the logger and waits for it to validated.
 func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec stader.ExecutionClient, logger log.ColorLogger) error {
 
-	txWatchUrl := cfg.Stadernode.GetTxWatchUrl()
+	txWatchUrl := cfg.StaderNode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	logger.Printlnf("Transaction has been submitted with hash %s.", hashString)

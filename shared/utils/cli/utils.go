@@ -58,7 +58,7 @@ func printTransactionHashImpl(staderClient *stader.Client, hash common.Hash, fin
 		return
 	}
 
-	txWatchUrl := cfg.Stadernode.GetTxWatchUrl()
+	txWatchUrl := cfg.StaderNode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	fmt.Printf("Transaction has been submitted with hash %s.\n", hashString)
@@ -112,7 +112,7 @@ func PrintNetwork(staderClient *stader.Client) error {
 		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Stader Node")
 	}
 
-	currentNetwork := cfg.Stadernode.Network.Value.(cfgtypes.Network)
+	currentNetwork := cfg.StaderNode.Network.Value.(cfgtypes.Network)
 	switch currentNetwork {
 	case cfgtypes.Network_Mainnet:
 		fmt.Printf("Your Stader Node is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
