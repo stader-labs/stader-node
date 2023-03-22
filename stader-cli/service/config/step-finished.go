@@ -94,7 +94,7 @@ func processConfigAfterQuit(md *mainDisplay) {
 		if md.isUpdate || md.isMigration {
 			totalAffectedContainers[cfgtypes.ContainerID_Api] = true
 			totalAffectedContainers[cfgtypes.ContainerID_Node] = true
-			totalAffectedContainers[cfgtypes.ContainerID_Watchtower] = true
+			totalAffectedContainers[cfgtypes.ContainerID_Guardian] = true
 		}
 
 		var containersToRestart []cfgtypes.ContainerID
