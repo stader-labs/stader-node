@@ -31,7 +31,7 @@ const (
 	NodeContainerName         string = "node"
 	PrometheusContainerName   string = "prometheus"
 	ValidatorContainerName    string = "validator"
-	WatchtowerContainerName   string = "watchtower"
+	GuardianContainerName     string = "guardian"
 
 	FeeRecipientFileEnvVar string = "FEE_RECIPIENT_FILE"
 	FeeRecipientEnvVar     string = "FEE_RECIPIENT"
@@ -42,7 +42,7 @@ const defaultBnMetricsPort uint16 = 9100
 const defaultVcMetricsPort uint16 = 9101
 const defaultNodeMetricsPort uint16 = 9102
 const defaultExporterMetricsPort uint16 = 9103
-const defaultWatchtowerMetricsPort uint16 = 9104
+const defaultGuardianMetricsPort uint16 = 9104
 const defaultEcMetricsPort uint16 = 9105
 
 // The master configuration struct
@@ -76,7 +76,7 @@ type StaderConfig struct {
 	VcMetricsPort           config.Parameter `yaml:"vcMetricsPort,omitempty"`
 	NodeMetricsPort         config.Parameter `yaml:"nodeMetricsPort,omitempty"`
 	ExporterMetricsPort     config.Parameter `yaml:"exporterMetricsPort,omitempty"`
-	WatchtowerMetricsPort   config.Parameter `yaml:"watchtowerMetricsPort,omitempty"`
+	GuardianMetricsPort     config.Parameter `yaml:"guardianMetricsPort,omitempty"`
 	EnableBitflyNodeMetrics config.Parameter `yaml:"enableBitflyNodeMetrics,omitempty"`
 
 	// The Stadernode configuration
@@ -174,7 +174,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Choose which mode to use for your Execution client - locally managed (Docker Mode), or externally managed (Hybrid Mode).",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -212,7 +212,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Enable this if you would like to specify a fallback Execution and Consensus Client, which will temporarily be used by the Stadernode and your Validator Client if your primary Execution / Consensus client pair ever go offline (e.g. if you switch, prune, or resync your clients).",
 			Type:                 config.ParameterType_Bool,
 			Default:              map[config.Network]interface{}{config.Network_All: false},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -224,7 +224,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "The delay to wait after your primary Execution or Consensus clients fail before trying to reconnect to them. An example format is \"10h20m30s\" - this would make it 10 hours, 20 minutes, and 30 seconds.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: "60s"},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -236,7 +236,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Choose which mode to use for your Consensus client - locally managed (Docker Mode), or externally managed (Hybrid Mode).",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.Mode_Local},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Prometheus, config.ContainerID_Validator, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Prometheus, config.ContainerID_Validator, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -249,7 +249,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Select which Consensus client you would like to use.",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.ConsensusClient_Nimbus},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth2, config.ContainerID_Validator},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth2, config.ContainerID_Validator},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -278,7 +278,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Select which Consensus client your externally managed client is.",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.ConsensusClient_Lighthouse},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth2, config.ContainerID_Validator},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth2, config.ContainerID_Validator},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -307,7 +307,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			Description:          "Enable the Stadernode's performance and status metrics system. This will provide you with the node operator's Grafana dashboard.",
 			Type:                 config.ParameterType_Bool,
 			Default:              map[config.Network]interface{}{config.Network_All: true},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth2, config.ContainerID_Grafana, config.ContainerID_Prometheus, config.ContainerID_Exporter},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth2, config.ContainerID_Grafana, config.ContainerID_Prometheus, config.ContainerID_Exporter},
 			EnvironmentVariables: []string{"ENABLE_METRICS"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -385,14 +385,14 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
-		WatchtowerMetricsPort: config.Parameter{
-			ID:                   "watchtowerMetricsPort",
+		GuardianMetricsPort: config.Parameter{
+			ID:                   "guardianMetricsPort",
 			Name:                 "Guardian Oracle Port",
 			Description:          "The port your Guardian Oracle container should expose its metrics on.\nThis is only relevant for Oracle Nodes.",
 			Type:                 config.ParameterType_Uint16,
-			Default:              map[config.Network]interface{}{config.Network_All: defaultWatchtowerMetricsPort},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower, config.ContainerID_Prometheus},
-			EnvironmentVariables: []string{"WATCHTOWER_METRICS_PORT"},
+			Default:              map[config.Network]interface{}{config.Network_All: defaultGuardianMetricsPort},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Guardian, config.ContainerID_Prometheus},
+			EnvironmentVariables: []string{"GUARDIAN_METRICS_PORT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
 		},
@@ -503,7 +503,7 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.VcMetricsPort,
 		&cfg.NodeMetricsPort,
 		&cfg.ExporterMetricsPort,
-		&cfg.WatchtowerMetricsPort,
+		&cfg.GuardianMetricsPort,
 		&cfg.EnableMevBoost,
 	}
 }

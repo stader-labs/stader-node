@@ -19,7 +19,7 @@ const (
 	ContainerID_Unknown    ContainerID = ""
 	ContainerID_Api        ContainerID = "api"
 	ContainerID_Node       ContainerID = "node"
-	ContainerID_Watchtower ContainerID = "watchtower"
+	ContainerID_Guardian   ContainerID = "guardian"
 	ContainerID_Eth1       ContainerID = "eth1"
 	ContainerID_Eth2       ContainerID = "eth2"
 	ContainerID_Validator  ContainerID = "validator"
