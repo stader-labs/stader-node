@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
@@ -18,7 +17,6 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
 	ethcliui "github.com/stader-labs/ethcli-ui"
-	uipages "github.com/stader-labs/ethcli-ui/pages"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
 
@@ -217,18 +215,6 @@ func serviceStatus(c *cli.Context) error {
 
 }
 
-func onDone(settings interface{}, err error) {
-	set := settings.(uipages.SettingsType)
-
-	//staderClient, err := stader.NewClientFromCtx(c)
-	//cfg, isNew, err := staderClient.LoadConfig()
-
-	// update the network
-	//newNetwork := set.Network.(cfgtypes.Network)
-
-	fmt.Printf("===settings is:===\n %v \n===", set)
-}
-
 // Configure the service
 
 // Configure the service
@@ -309,7 +295,7 @@ func configureService(c *cli.Context) error {
 	// 	return err
 	// }
 
-	set, err := ethcliui.Run(onDone)
+	set, err := ethcliui.Run()
 	fmt.Printf("Checking if there was any error or not\n")
 	if err != nil {
 		return err
@@ -333,7 +319,7 @@ func configureService(c *cli.Context) error {
 		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
 		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
 	} else if newSettings.EthClient == "external" {
-		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.Selection
+		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
 		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
 		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
@@ -638,31 +624,31 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
-	isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
-		previousVersion := "0.0.0"
-		backupCfg, err := staderClient.LoadBackupConfig()
-		if err != nil {
-			fmt.Printf("WARNING: Couldn't determine previous Stadernode version from backup settings: %s\n", err.Error())
-		} else if backupCfg != nil {
-			previousVersion = backupCfg.Version
-		}
-
-		oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
-		if err != nil {
-			fmt.Printf("WARNING: Backup configuration states the previous Stadernode installation used version %s, which is not a valid version\n", previousVersion)
-			oldVersion, _ = version.NewVersion("0.0.0")
-		}
-
-		vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
-		if vulnerableConstraint.Check(oldVersion) {
-			err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
-			if err != nil {
-				return err
-			}
-		}
-	}
+	//isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
+	//isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
+	//if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
+	//	previousVersion := "0.0.0"
+	//	backupCfg, err := staderClient.LoadBackupConfig()
+	//	if err != nil {
+	//		fmt.Printf("WARNING: Couldn't determine previous Stadernode version from backup settings: %s\n", err.Error())
+	//	} else if backupCfg != nil {
+	//		previousVersion = backupCfg.Version
+	//	}
+	//
+	//	oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
+	//	if err != nil {
+	//		fmt.Printf("WARNING: Backup configuration states the previous Stadernode installation used version %s, which is not a valid version\n", previousVersion)
+	//		oldVersion, _ = version.NewVersion("0.0.0")
+	//	}
+	//
+	//	vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
+	//	if vulnerableConstraint.Check(oldVersion) {
+	//		err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
+	//		if err != nil {
+	//			return err
+	//		}
+	//	}
+	//}
 
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
@@ -697,6 +683,7 @@ func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *c
 		return fmt.Errorf("Error getting validator container prefix: %w", err)
 	}
 
+	fmt.Printf("prefix is %d\n", prefix)
 	// Get the current validator client
 	currentValidatorImageString, err := staderClient.GetDockerImage(prefix + ValidatorContainerSuffix)
 	if err != nil {
