@@ -612,6 +612,7 @@ func (c *Client) InstallUpdateTracker(verbose bool, version string) error {
 // Start the Stader service
 func (c *Client) StartService(composeFiles []string) error {
 
+	fmt.Printf("compose files are %v\n", composeFiles)
 	// Start the API container first
 	cmd, err := c.compose([]string{}, "up -d")
 	if err != nil {

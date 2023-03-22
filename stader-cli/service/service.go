@@ -348,6 +348,8 @@ func configureService(c *cli.Context) error {
 	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
 	// update fallback clients - TODO
+	//cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.SelectionOption
+	//cfg.FallbackNormal.
 
 	// update monitoring
 	if newSettings.Monitoring == "Yes" {
