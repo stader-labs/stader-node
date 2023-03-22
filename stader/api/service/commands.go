@@ -14,7 +14,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 	command.Subcommands = append(command.Subcommands, cli.Command{
 		Name:    name,
 		Aliases: aliases,
-		Usage:   "Manage the Rocket Pool deposit queue",
+		Usage:   "Manage the deposit queue",
 		Subcommands: []cli.Command{
 			{
 				Name:      "terminate-data-folder",
