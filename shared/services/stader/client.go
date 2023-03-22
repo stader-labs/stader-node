@@ -416,8 +416,8 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			convertUintParam(param, &cfg.NodeMetricsPort, network, 16)
 		case "EXPORTER_METRICS_PORT":
 			convertUintParam(param, &cfg.ExporterMetricsPort, network, 16)
-		case "WATCHTOWER_METRICS_PORT":
-			convertUintParam(param, &cfg.WatchtowerMetricsPort, network, 16)
+		case "GUARDIAN_METRICS_PORT":
+			convertUintParam(param, &cfg.GuardianMetricsPort, network, 16)
 		case "PROMETHEUS_PORT":
 			convertUintParam(param, &cfg.Prometheus.Port, network, 16)
 		case "GRAFANA_PORT":
@@ -1448,18 +1448,18 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	deployedContainers = append(deployedContainers, nodeComposePath)
 	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.NodeContainerName+composeFileSuffix))
 
-	// Watchtower
-	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.WatchtowerContainerName+templateSuffix))
+	// Guardian
+	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.GuardianContainerName+templateSuffix))
 	if err != nil {
-		return []string{}, fmt.Errorf("error reading and substituting watchtower container template: %w", err)
+		return []string{}, fmt.Errorf("error reading and substituting guardian container template: %w", err)
 	}
-	watchtowerComposePath := filepath.Join(runtimeFolder, config.WatchtowerContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(watchtowerComposePath, contents, 0664)
+	guardianComposePath := filepath.Join(runtimeFolder, config.GuardianContainerName+composeFileSuffix)
+	err = ioutil.WriteFile(guardianComposePath, contents, 0664)
 	if err != nil {
-		return []string{}, fmt.Errorf("could not write watchtower container file to %s: %w", watchtowerComposePath, err)
+		return []string{}, fmt.Errorf("could not write guardian container file to %s: %w", guardianComposePath, err)
 	}
-	deployedContainers = append(deployedContainers, watchtowerComposePath)
-	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.WatchtowerContainerName+composeFileSuffix))
+	deployedContainers = append(deployedContainers, guardianComposePath)
+	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GuardianContainerName+composeFileSuffix))
 
 	// Validator
 	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ValidatorContainerName+templateSuffix))

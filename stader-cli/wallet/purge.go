@@ -4,6 +4,7 @@ package wallet
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/utils/log"
 
 	"github.com/urfave/cli"
@@ -41,7 +42,7 @@ func purge(c *cli.Context) error {
 	if !cfg.IsNativeMode {
 		projectName := cfg.Stadernode.ProjectName.Value.(string)
 		nodeName := projectName + service.NodeContainerSuffix
-		watchtowerName := projectName + service.WatchtowerContainerSuffix
+		guardianName := projectName + service.GuardianContainerSuffix
 
 		// Restart node
 		err := restartContainer(staderClient, nodeName)
@@ -49,13 +50,13 @@ func purge(c *cli.Context) error {
 			return err
 		}
 
-		// Restart watchtower
-		err = restartContainer(staderClient, watchtowerName)
+		// Restart guardian
+		err = restartContainer(staderClient, guardianName)
 		if err != nil {
 			return err
 		}
 	} else {
-		fmt.Printf("%sNOTE: As you are in Native mode, please restart your node and watchtower services manually to remove the cached wallet information.%s\n\n", log.ColorYellow, log.ColorReset)
+		fmt.Printf("%sNOTE: As you are in Native mode, please restart your node and guardian services manually to remove the cached wallet information.%s\n\n", log.ColorYellow, log.ColorReset)
 	}
 
 	fmt.Printf("Deleted the node wallet and all validator keys.\n**Please verify that the keys have been removed by looking at your validator logs before continuing.**\n\n")

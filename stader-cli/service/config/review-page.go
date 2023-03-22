@@ -51,7 +51,7 @@ func NewReviewPage(md *mainDisplay, oldConfig *config.StaderConfig, newConfig *c
 		if md.isUpdate || md.isMigration {
 			totalAffectedContainers[cfgtypes.ContainerID_Api] = true
 			totalAffectedContainers[cfgtypes.ContainerID_Node] = true
-			totalAffectedContainers[cfgtypes.ContainerID_Watchtower] = true
+			totalAffectedContainers[cfgtypes.ContainerID_Guardian] = true
 
 			if newConfig.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && newConfig.ExecutionClient.Value.(cfgtypes.ExecutionClient) != cfgtypes.ExecutionClient_Geth {
 				totalAffectedContainers[cfgtypes.ContainerID_Eth1] = true

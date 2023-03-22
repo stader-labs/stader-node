@@ -1,4 +1,4 @@
-package watchtower
+package guardian
 
 import (
 	"fmt"
@@ -36,9 +36,9 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
 	http.Handle(metricsPath, handler)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
-            <head><title>Stader Watchtower Metrics Exporter</title></head>
+            <head><title>Stader Guardian Metrics Exporter</title></head>
             <body>
-            <h1>Rocket Pool Watchtower Metrics Exporter</h1>
+            <h1>Stader Guardian Metrics Exporter</h1>
             <p><a href='` + metricsPath + `'>Metrics</a></p>
             </body>
             </html>`,

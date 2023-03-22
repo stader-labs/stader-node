@@ -16,7 +16,7 @@ const (
 	NetworkID                  string = "network"
 	ProjectNameID              string = "projectName"
 	DaemonDataPath             string = "/.stader/data"
-	WatchtowerFolder           string = "watchtower"
+	GuardianFolder             string = "guardian"
 	FeeRecipientFilename       string = "stader-fee-recipient.txt"
 	NativeFeeRecipientFilename string = "stader-fee-recipient-env.txt"
 )
@@ -42,8 +42,8 @@ type StaderNodeConfig struct {
 	// The path of the data folder where everything is stored
 	DataPath config.Parameter `yaml:"dataPath,omitempty"`
 
-	// The path of the watchtower's persistent state storage
-	WatchtowerStatePath config.Parameter `yaml:"watchtowerStatePath"`
+	// The path of the guardians's persistent state storage
+	GuardianStatePath config.Parameter `yaml:"guardianStatePath"`
 
 	// Which network we're on
 	Network config.Parameter `yaml:"network,omitempty"`
@@ -99,7 +99,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "This is the prefix that will be attached to all of the Docker containers managed by the Stadernode.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: defaultProjectName},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator, config.ContainerID_Grafana, config.ContainerID_Prometheus, config.ContainerID_Exporter},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator, config.ContainerID_Grafana, config.ContainerID_Prometheus, config.ContainerID_Exporter},
 			EnvironmentVariables: []string{"COMPOSE_PROJECT_NAME"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -111,19 +111,19 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "The absolute path of the `data` folder that contains your node wallet's encrypted file, the password for your node wallet, and all of the validator keys for your validators. You may use environment variables in this string.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: getDefaultDataDir(cfg)},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Validator},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Validator},
 			EnvironmentVariables: []string{"STADER_DATA_FOLDER"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
 		},
 
-		WatchtowerStatePath: config.Parameter{
-			ID:                   "watchtowerPath",
-			Name:                 "Watchtower Path",
-			Description:          "The absolute path of the watchtower state folder that contains persistent state that is used by the watchtower process on trusted nodes. **Only relevant for trusted nodes.**",
+		GuardianStatePath: config.Parameter{
+			ID:                   "guardianPath",
+			Name:                 "Guardian Path",
+			Description:          "The absolute path of the guardian state folder that contains persistent state that is used by the guardian process on trusted nodes. **Only relevant for trusted nodes.**",
 			Type:                 config.ParameterType_String,
-			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stader/watchtower"},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower},
+			Default:              map[config.Network]interface{}{config.Network_All: "$HOME/.stader/guardian"},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Guardian},
 			EnvironmentVariables: []string{"STADER_GUARDIAN_FOLDER"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -135,7 +135,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "The Ethereum network you want to use - select Goerli Testnet to practice with Goerli ETH, or Mainnet to stake on the real network using real ETH.",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.Network_Mainnet},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator},
 			EnvironmentVariables: []string{"NETWORK"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -148,7 +148,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "Set this if you want all of the Stadernode's transactions to use this specific max fee value (in gwei), which is the most you'd be willing to pay (*including the priority fee*).\n\nA value of 0 will show you the current suggested max fee based on the current network conditions and let you specify it each time you do a transaction.\n\nAny other value will ignore the recommended max fee and explicitly use this value instead.\n\nThis applies to automated transactions as well.",
 			Type:                 config.ParameterType_Float,
 			Default:              map[config.Network]interface{}{config.Network_All: float64(0)},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -160,7 +160,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "The default value for the priority fee (in gwei) for all of your transactions. This describes how much you're willing to pay *above the network's current base fee* - the higher this is, the more ETH you give to the validators for including your transaction, which generally means it will be included in a block faster (as long as your max fee is sufficiently high to cover the current network conditions).\n\nMust be larger than 0.",
 			Type:                 config.ParameterType_Float,
 			Default:              map[config.Network]interface{}{config.Network_All: float64(2)},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -172,7 +172,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			Description:          "[orange]**For manual Merkle rewards tree generation only.**[white]\n\nGenerating the Merkle rewards tree files for past rewards intervals typically requires an Execution client with Archive mode enabled, which is usually disabled on your primary and fallback Execution clients to save disk space.\nIf you want to generate your own rewards tree files for intervals from a long time ago, you may enter the URL of an Execution client with Archive access here.\n\nFor a free light client with Archive access, you may use https://www.alchemy.com/supernode.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Guardian},
 			EnvironmentVariables: []string{},
 			CanBeBlank:           true,
 			OverwriteOnUpgrade:   false,
@@ -291,12 +291,12 @@ func (cfg *StaderNodeConfig) GetValidatorKeychainPathInCLI() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "validators")
 }
 
-func (config *StaderNodeConfig) GetWatchtowerStatePath() string {
+func (config *StaderNodeConfig) GetGuardianStatePath() string {
 	if config.parent.IsNativeMode {
-		return filepath.Join(config.DataPath.Value.(string), WatchtowerFolder, "state.yml")
+		return filepath.Join(config.DataPath.Value.(string), GuardianFolder, "state.yml")
 	}
 
-	return filepath.Join(DaemonDataPath, WatchtowerFolder, "state.yml")
+	return filepath.Join(DaemonDataPath, GuardianFolder, "state.yml")
 }
 
 func (cfg *StaderNodeConfig) GetCustomKeyPath() string {
@@ -356,12 +356,12 @@ func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.StaderDirectory, "data")
 }
 
-func (cfg *StaderNodeConfig) GetWatchtowerFolder(daemon bool) string {
+func (cfg *StaderNodeConfig) GetGuardianFolder(daemon bool) string {
 	if daemon && !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, WatchtowerFolder)
+		return filepath.Join(DaemonDataPath, GuardianFolder)
 	}
 
-	return filepath.Join(cfg.DataPath.Value.(string), WatchtowerFolder)
+	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {

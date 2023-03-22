@@ -36,7 +36,7 @@ const (
 	ExecutionContainerSuffix        string = "_eth1"
 	NodeContainerSuffix             string = "_node"
 	ApiContainerSuffix              string = "_api"
-	WatchtowerContainerSuffix       string = "_watchtower"
+	GuardianContainerSuffix         string = "guardian"
 	PruneProvisionerContainerSuffix string = "_prune_provisioner"
 	EcMigratorContainerSuffix       string = "_ec_migrator"
 	clientDataVolumeName            string = "/ethclient"

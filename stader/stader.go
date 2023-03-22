@@ -9,8 +9,8 @@ import (
 	"github.com/stader-labs/stader-node/shared"
 	apiutils "github.com/stader-labs/stader-node/shared/utils/api"
 	"github.com/stader-labs/stader-node/stader/api"
+	"github.com/stader-labs/stader-node/stader/guardian"
 	"github.com/stader-labs/stader-node/stader/node"
-	"github.com/stader-labs/stader-node/stader/watchtower"
 )
 
 // Run
@@ -784,7 +784,7 @@ Public License instead of this License. But first, please read
 	// Register commands
 	api.RegisterCommands(app, "api", []string{"a"})
 	node.RegisterCommands(app, "node", []string{"n"})
-	watchtower.RegisterCommands(app, "watchtower", []string{"w"})
+	guardian.RegisterCommands(app, "guardian", []string{"w"})
 
 	// Get command being run
 	var commandName string
