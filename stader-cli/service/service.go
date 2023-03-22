@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rivo/tview"
 	"github.com/urfave/cli"
@@ -620,31 +619,31 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
-	isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
-		previousVersion := "0.0.0"
-		backupCfg, err := staderClient.LoadBackupConfig()
-		if err != nil {
-			fmt.Printf("WARNING: Couldn't determine previous Stadernode version from backup settings: %s\n", err.Error())
-		} else if backupCfg != nil {
-			previousVersion = backupCfg.Version
-		}
-
-		oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
-		if err != nil {
-			fmt.Printf("WARNING: Backup configuration states the previous Stadernode installation used version %s, which is not a valid version\n", previousVersion)
-			oldVersion, _ = version.NewVersion("0.0.0")
-		}
-
-		vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
-		if vulnerableConstraint.Check(oldVersion) {
-			err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
-			if err != nil {
-				return err
-			}
-		}
-	}
+	//isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
+	//isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
+	//if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
+	//	previousVersion := "0.0.0"
+	//	backupCfg, err := staderClient.LoadBackupConfig()
+	//	if err != nil {
+	//		fmt.Printf("WARNING: Couldn't determine previous Stadernode version from backup settings: %s\n", err.Error())
+	//	} else if backupCfg != nil {
+	//		previousVersion = backupCfg.Version
+	//	}
+	//
+	//	oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
+	//	if err != nil {
+	//		fmt.Printf("WARNING: Backup configuration states the previous Stadernode installation used version %s, which is not a valid version\n", previousVersion)
+	//		oldVersion, _ = version.NewVersion("0.0.0")
+	//	}
+	//
+	//	vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
+	//	if vulnerableConstraint.Check(oldVersion) {
+	//		err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
+	//		if err != nil {
+	//			return err
+	//		}
+	//	}
+	//}
 
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
