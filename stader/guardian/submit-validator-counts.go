@@ -108,6 +108,24 @@ func countValidatorsByStatus(pubKeys []string, blockNumber uint64, status string
 	return count, nil
 }
 
+func submitValidatorCounts() {
+	blockNumber := GetLatestReportableBlock()
+	validatorPubKeys, err := getValidatorPubKeys()
+	activeValidatorsCount, err := countValidatorsByStatus(validatorPubKeys, blockNumber, "active_exiting")
+	exitedValidatorsCount, err := countValidatorsByStatus(validatorPubKeys, blockNumber, "exited_unslashed")
+	exitedValidatorsCount, err += countValidatorsByStatus(validatorPubKeys, blockNumber, "withdrawal_possible")
+	slashedValidatorsCount, err := countValidatorsByStatus(validatorPubKeys, blockNumber, "exited_slashed")
+	slashedValidatorsCount, err += countValidatorsByStatus(validatorPubKeys, blockNumber, "active_slashed")
+	
+	// Call the submitValidatorCounts function
+	tx, err := contractInstance.SubmitValidatorCounts(auth, blockNumber, activeValidatorsCount, exitedValidatorsCount, slashedValidatorsCount)
+	if err != nil {
+		fmt.Errorf("Failed to submit validator counts: %v", err)
+	}
+
+	fmt.Printf("Transaction sent: %s\n", tx.Hash().Hex())
+}
+
 // Get the latest block number to report RPL price for
 func (t *submitValidatorCount) getLatestReportableBlock() (uint64, error) {
 
@@ -125,7 +143,7 @@ func (t *submitValidatorCount) getLatestReportableBlock() (uint64, error) {
 }
 
 // Returns the latest block number that oracles should be reporting prices for
-func GetLatestReportablePricesBlock(rp *rocketpool.RocketPool, opts *bind.CallOpts) (*big.Int, error) {
+func GetLatestReportableBlock(rp *rocketpool.RocketPool, opts *bind.CallOpts) (*big.Int, error) {
 	rp.GetContract("StaderOracle", opts)
 	rocketNetworkPrices, err := getRocketNetworkPrices(rp, opts)
 	if err != nil {
