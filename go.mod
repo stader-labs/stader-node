@@ -36,7 +36,7 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/ethcli-ui v0.0.0-20230321195251-19d399099a82
+	github.com/stader-labs/ethcli-ui v0.0.0-20230321203353-c7bbf399619b
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
