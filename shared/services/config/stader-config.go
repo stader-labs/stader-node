@@ -69,8 +69,7 @@ type StaderConfig struct {
 	ExternalConsensusClient config.Parameter `yaml:"externalConsensusClient,omitempty"`
 
 	// Metrics settings
-	EnableMetrics config.Parameter `yaml:"enableMetrics,omitempty"`
-	//EnableODaoMetrics       config.Parameter `yaml:"enableODaoMetrics,omitempty"`
+	EnableMetrics           config.Parameter `yaml:"enableMetrics,omitempty"`
 	EcMetricsPort           config.Parameter `yaml:"ecMetricsPort,omitempty"`
 	BnMetricsPort           config.Parameter `yaml:"bnMetricsPort,omitempty"`
 	VcMetricsPort           config.Parameter `yaml:"vcMetricsPort,omitempty"`

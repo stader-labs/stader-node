@@ -787,13 +787,9 @@ Public License instead of this License. But first, please read
 		os.Exit(1)
 	}
 
-	// network.RegisterCommands(app, "network", []string{"e"})
 	node.RegisterCommands(app, "node", []string{"n"})
-	// odao.RegisterCommands(app, "odao", []string{"o"})
 	service.RegisterCommands(app, "service", []string{"s"})
 	wallet.RegisterCommands(app, "wallet", []string{"w"})
-	// wallet.RegisterCommands(app, "license", []string{"l"})
-	// wallet.RegisterCommands(app, "copyright", []string{"c"})
 	app.Commands = append(app.Commands, cli.Command{
 		Name:    "license",
 		Aliases: []string{"l"},

@@ -333,6 +333,7 @@ func configureService(c *cli.Context) error {
 		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
 		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
 	} else if newSettings.EthClient == "external" {
+		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.Selection
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
 		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
 		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
