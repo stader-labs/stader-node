@@ -224,30 +224,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return getContractsInfo(c)
 				},
 			},
-			{
-				Name:      "debug-exit",
-				Aliases:   []string{"c"},
-				Usage:     "get the debug exit info",
-				UsageText: "stader-cli node debug-exit index",
-				Flags: []cli.Flag{
-					cli.Uint64Flag{
-						Name:  "validator-index, vi",
-						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
-					//	return err
-					//}
-					index := c.Uint64("validator-index")
-					fmt.Printf("index is %d\n", index)
-
-					// Run
-					return debugExitMsg(c, index)
-				},
-			},
 		},
 	})
 }
