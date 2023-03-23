@@ -337,13 +337,10 @@ func configureService(c *cli.Context) error {
 
 	fmt.Printf("set in configureService is %v\n", set())
 
-	// update the settings
-
 	// update the network
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
 	// update the consensus and execution client
-	// TODO - randomize selection
 	cfg.ConsensusClientMode.Value = newSettings.EthClient
 	cfg.ExecutionClientMode.Value = newSettings.EthClient
 
@@ -617,12 +614,6 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	} else if isNew {
 		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Stadernode before running it.")
 	}
-
-	//// Check if this is a new install
-	//isUpdate, err := staderClient.IsFirstRun()
-	//if err != nil {
-	//	return fmt.Errorf("error checking for first-run status: %w", err)
-	//}
 
 	if !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
