@@ -8,13 +8,10 @@ import (
 	"math/big"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/network"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/urfave/cli"
@@ -29,11 +26,10 @@ const (
 	beaconChainAPI = "https://beaconcha.in/api/v1"
 )
 
-type submitValidatorCount struct {
+type submitValidatorStats struct {
 	c   *cli.Context
 	log log.ColorLogger
 	cfg *config.StaderConfig
-	ec  rocketpool.ExecutionClient
 	w   *wallet.Wallet
 	bc  beacon.Client
 }
@@ -108,7 +104,7 @@ func countValidatorsByStatus(pubKeys []string, blockNumber uint64, status string
 	return count, nil
 }
 
-func submitValidatorCounts() {
+func submitValidatorStats() {
 	blockNumber := GetLatestReportableBlock()
 	validatorPubKeys, err := getValidatorPubKeys()
 	activeValidatorsCount, err := countValidatorsByStatus(validatorPubKeys, blockNumber, "active_exiting")
@@ -127,14 +123,14 @@ func submitValidatorCounts() {
 }
 
 // Get the latest block number to report RPL price for
-func (t *submitValidatorCount) getLatestReportableBlock() (uint64, error) {
+func (t *submitValidatorStats) getLatestReportableBlock() (uint64, error) {
 
 	// Require eth client synced
 	if err := services.RequireEthClientSynced(t.c); err != nil {
 		return 0, err
 	}
 
-	latestBlock, err := network.GetLatestReportablePricesBlock(t.rp, nil)
+	latestBlock, err := GetLatestReportableBlock(t.rp, nil)
 	if err != nil {
 		return 0, fmt.Errorf("Error getting latest reportable block: %w", err)
 	}
@@ -143,73 +139,32 @@ func (t *submitValidatorCount) getLatestReportableBlock() (uint64, error) {
 }
 
 // Returns the latest block number that oracles should be reporting prices for
-func GetLatestReportableBlock(rp *rocketpool.RocketPool, opts *bind.CallOpts) (*big.Int, error) {
-	rp.GetContract("StaderOracle", opts)
-	rocketNetworkPrices, err := getRocketNetworkPrices(rp, opts)
+func GetLatestReportableBlock() (*big.Int, error) {
+	staderOracle, err := GetContract("StaderOracle")
 	if err != nil {
 		return nil, err
 	}
 	latestReportableBlock := new(*big.Int)
-	if err := rocketNetworkPrices.Call(opts, latestReportableBlock, "getLatestReportableBlock"); err != nil {
+	if err := staderOracle.Call(opts, latestReportableBlock, "getLatestReportableBlock"); err != nil {
 		return nil, fmt.Errorf("Could not get latest reportable block: %w", err)
 	}
 	return *latestReportableBlock, nil
 }
 
-// Get contracts
-var rocketNetworkPricesLock sync.Mutex
-
-// Load Rocket Pool contracts
-func (rp *RocketPool) GetContract(contractName string, opts *bind.CallOpts) (*Contract, error) {
-
-	// Check for cached contract
-	if opts == nil {
-		if cached, ok := rp.getCachedContract(contractName); ok {
-			if time.Now().Unix()-cached.time <= CacheTTL {
-				return cached.contract, nil
-			} else {
-				rp.deleteCachedContract(contractName)
-			}
-		}
-	}
-
+func GetContract(contractName string) (*Contract, error) {
 	// Data
 	var wg errgroup.Group
 	var address *common.Address
 	var abi *abi.ABI
 
-	// Load data
-	wg.Go(func() error {
-		var err error
-		address, err = rp.GetAddress(contractName, opts)
-		return err
-	})
-	wg.Go(func() error {
-		var err error
-		abi, err = rp.GetABI(contractName, opts)
-		return err
-	})
-
-	// Wait for data
-	if err := wg.Wait(); err != nil {
-		return nil, err
-	}
-
 	// Create contract
 	contract := &Contract{
-		Contract: bind.NewBoundContract(*address, *abi, rp.Client, rp.Client, rp.Client),
+		Contract: bind.NewBoundContract(*address, *abi),
 		Address:  address,
 		ABI:      abi,
 		Client:   rp.Client,
 	}
 
-	// Cache contract
-	rp.setCachedContract(contractName, cachedContract{
-		contract: contract,
-		time:     time.Now().Unix(),
-	})
-
 	// Return
 	return contract, nil
-
 }
