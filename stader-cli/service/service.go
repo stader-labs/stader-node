@@ -364,11 +364,7 @@ func configureService(c *cli.Context) error {
 	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
 	// update fallback clients - TODO
-	if newSettings.FallbackClients.SelectionOption == "Yes" {
-		cfg.UseFallbackClients.Value = true
-	} else if newSettings.FallbackClients.SelectionOption == "No" {
-		cfg.UseFallbackClients.Value = false
-	}
+	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
 	// get the consensus client we are using for fallback
 	fallBackConsensusClient := newSettings.ConsensusClient.Selection
 	if newSettings.EthClient == "external" {
@@ -389,11 +385,7 @@ func configureService(c *cli.Context) error {
 	}
 
 	// update monitoring
-	if newSettings.Monitoring == "Yes" {
-		cfg.EnableMetrics.Value = true
-	} else if newSettings.Monitoring == "No" {
-		cfg.EnableMetrics.Value = false
-	}
+	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
 
 	// update mev boost
 	if newSettings.MEVBoost == "external" {

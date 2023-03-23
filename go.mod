@@ -36,7 +36,7 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/ethcli-ui v0.0.0-20230323110622-3f83eb6b4cb8
+	github.com/stader-labs/ethcli-ui v0.0.0-20230323190503-ffa016dbc84d
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
@@ -44,7 +44,7 @@ require (
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/crypto v0.5.0
+	golang.org/x/crypto v0.7.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/term v0.6.0
 	golang.org/x/text v0.8.0 // indirect
