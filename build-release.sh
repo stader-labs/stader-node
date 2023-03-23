@@ -114,7 +114,7 @@ build_docker_prune_provision_manifest() {
 }
 
 send_slack() {
-    # curl -X POST --data-urlencode 'payload={"channel": "'${SLACK_CHAN}'", "username": "'${SLACK_USERNAME}'", "text": "'"${*}"'", "icon_emoji": "'${SLACK_ICON}'"}' ${URL} > /dev/null 2>&1
+    # TODO: @prabhakar087 - please fetch the key from secrets manager and use it here
     curl -X POST --data-urlencode "payload={\"channel\": \"#stader-node-build-alerts\", \"username\": \"webhookbot\", \"text\": \"${*}\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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 > /dev/null 2>&1
 }
 
