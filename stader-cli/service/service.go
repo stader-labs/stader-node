@@ -216,6 +216,24 @@ func serviceStatus(c *cli.Context) error {
 
 }
 
+func ConvertBoolToString(boolValue bool) string {
+	if boolValue {
+		return "Yes"
+	}
+
+	return "No"
+}
+
+func ConvertStringToBool(stringValue string) bool {
+	if stringValue == "Yes" {
+		return true
+	} else {
+		return false
+	}
+
+	//return false, fmt.Errorf("invalid string value: %s\n", stringValue)
+}
+
 // Configure the service
 
 // Configure the service
@@ -288,21 +306,21 @@ func configureService(c *cli.Context) error {
 
 	currentSettings := pages.SettingsType{
 		Confirmed: false,
-		Network:   cfg.Stadernode.Network.Value.(string),
-		EthClient: cfg.ConsensusClientMode.Value.(string),
+		Network:   "prater",
+		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
-			SelectionOption: cfg.ExecutionClient.Value.(string),
+			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
 			External: pages.ExecutionClientExternalType{
 				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
 				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
 			},
 		},
 		ConsensusClient: pages.ConsensusClientSettingsType{
-			Selection:              cfg.ConsensusClient.Value.(string),
-			ExternalSelection:      cfg.ExternalConsensusClient.Value.(string),
+			Selection:              string(cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
 			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
 			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
-			DoppelgangerProtection: cfg.ConsensusCommon.DoppelgangerDetection.Value.(string),
+			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
 			External: pages.ConsensusClientExternalType{
 				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
 					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
@@ -316,13 +334,13 @@ func configureService(c *cli.Context) error {
 				},
 			},
 		},
-		Monitoring:               cfg.EnableMetrics.Value.(string),
-		MEVBoost:                 cfg.EnableMevBoost.Value.(string),
+		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
+		MEVBoost:                 string(cfg.MevBoost.Mode.Value.(cfgtypes.Mode)),
 		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
 		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
 		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
 		FallbackClients: pages.FallbackClientsSettingsType{
-			SelectionOption: cfg.UseFallbackClients.Value.(string),
+			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
 			Lighthouse: pages.FallbackClientsLighthouseType{
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
@@ -371,15 +389,15 @@ func configureService(c *cli.Context) error {
 		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
 		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
-		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
 		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
-		cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
 		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
 		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
 	}
-	cfg.ConsensusCommon.DoppelgangerDetection.Value = newSettings.ConsensusClient.DoppelgangerProtection
+	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
 	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
