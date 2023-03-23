@@ -363,7 +363,6 @@ func configureService(c *cli.Context) error {
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
 	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
-	// update fallback clients - TODO
 	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
 	// get the consensus client we are using for fallback
 	fallBackConsensusClient := newSettings.ConsensusClient.Selection
@@ -393,7 +392,6 @@ func configureService(c *cli.Context) error {
 		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
 	} else if newSettings.MEVBoost == "local" {
-		fmt.Printf("Setting local mev!\n")
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
 		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
 		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
