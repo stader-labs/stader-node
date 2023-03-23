@@ -4,6 +4,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/stader-labs/ethcli-ui/pages"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -285,23 +286,71 @@ func configureService(c *cli.Context) error {
 		return staderClient.SaveConfig(cfg)
 	}
 
-	// Check for native mode
-	// isNative := c.GlobalIsSet("daemon-path")
+	currentSettings := pages.SettingsType{
+		Confirmed: false,
+		Network:   cfg.Stadernode.Network.Value.(string),
+		EthClient: cfg.ConsensusClientMode.Value.(string),
+		ExecutionClient: pages.ExecutionClientSettingsType{
+			SelectionOption: cfg.ExecutionClient.Value.(string),
+			External: pages.ExecutionClientExternalType{
+				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
+				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
+			},
+		},
+		ConsensusClient: pages.ConsensusClientSettingsType{
+			Selection:              cfg.ConsensusClient.Value.(string),
+			ExternalSelection:      cfg.ExternalConsensusClient.Value.(string),
+			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
+			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
+			DoppelgangerProtection: cfg.ConsensusCommon.DoppelgangerDetection.Value.(string),
+			External: pages.ConsensusClientExternalType{
+				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
+					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
+				},
+				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
+					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
+					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
+				},
+				Teku: pages.ConsensusClientExternalSelectedTekuType{
+					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
+				},
+			},
+		},
+		Monitoring:               cfg.EnableMetrics.Value.(string),
+		MEVBoost:                 cfg.EnableMevBoost.Value.(string),
+		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
+		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
+		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
+		FallbackClients: pages.FallbackClientsSettingsType{
+			SelectionOption: cfg.UseFallbackClients.Value.(string),
+			Lighthouse: pages.FallbackClientsLighthouseType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Prysm: pages.FallbackClientsPrysmType{
+				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
+				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
+			},
+			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+		},
+	}
 
-	// app := tview.NewApplication()
-	// md := cliconfig.NewMainDisplay(app, oldCfg, cfg, isNew, isMigration, isUpdate, isNative)
-	// err = app.Run()
-	// if err != nil {
-	// 	return err
-	// }
-
-	set, err := ethcliui.Run()
+	set, err := ethcliui.Run(&currentSettings)
 	fmt.Printf("Checking if there was any error or not\n")
 	if err != nil {
 		return err
 	}
 
 	newSettings := set()
+
+	if !newSettings.Confirmed {
+		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
+		return nil
+	}
 
 	fmt.Printf("set in configureService is %v\n", set())
 
@@ -335,8 +384,29 @@ func configureService(c *cli.Context) error {
 	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
 	// update fallback clients - TODO
-	//cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.SelectionOption
-	//cfg.FallbackNormal.
+	if newSettings.FallbackClients.SelectionOption == "Yes" {
+		cfg.UseFallbackClients.Value = true
+	} else if newSettings.FallbackClients.SelectionOption == "No" {
+		cfg.UseFallbackClients.Value = false
+	}
+	// get the consensus client we are using for fallback
+	fallBackConsensusClient := newSettings.ConsensusClient.Selection
+	if newSettings.EthClient == "external" {
+		fallBackConsensusClient = newSettings.ConsensusClient.ExternalSelection
+	}
+
+	switch fallBackConsensusClient {
+	case "prysm":
+		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings.FallbackClients.Prysm.ExecutionClientUrl
+		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeHttpUrl
+		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeJsonRpcpUrl
+	case "lighthouse":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.BeaconNodeHttpUrl
+	case "teku":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
+	}
 
 	// update monitoring
 	if newSettings.Monitoring == "Yes" {
