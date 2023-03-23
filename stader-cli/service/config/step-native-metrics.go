@@ -21,7 +21,7 @@ func createNativeMetricsStep(wiz *wizard, currentStep int, totalSteps int) *choi
 		} else {
 			wiz.md.Config.EnableMetrics.Value = false
 		}
-		if wiz.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+		if wiz.md.Config.StaderNode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 			wiz.nativeFinishedModal.show()
 		} else {
 			wiz.nativeMevModal.show()

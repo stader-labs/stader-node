@@ -81,7 +81,7 @@ func installService(c *cli.Context) error {
 		return fmt.Errorf("error loading old configuration: %w", err)
 	}
 	if !isNew {
-		dataPath = cfg.Stadernode.DataPath.Value.(string)
+		dataPath = cfg.StaderNode.DataPath.Value.(string)
 		dataPath, err = homedir.Expand(dataPath)
 		if err != nil {
 			return fmt.Errorf("error getting data path from old configuration: %w", err)
@@ -274,7 +274,7 @@ func configureService(c *cli.Context) error {
 		}
 
 		// Handle network changes
-		prefix := fmt.Sprint(md.PreviousConfig.Stadernode.ProjectName.Value)
+		prefix := fmt.Sprint(md.PreviousConfig.StaderNode.ProjectName.Value)
 		if md.ChangeNetworks {
 			// Remove the checkpoint sync provider
 			md.Config.ConsensusCommon.CheckpointSyncProvider.Value = ""
@@ -866,7 +866,7 @@ func getContainerPrefix(staderClient *stader.Client) (string, error) {
 		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
-	return cfg.Stadernode.ProjectName.Value.(string), nil
+	return cfg.StaderNode.ProjectName.Value.(string), nil
 }
 
 // Prepares the execution client for pruning
@@ -926,7 +926,7 @@ func pruneExecutionClient(c *cli.Context) error {
 	}
 
 	// Get the prune provisioner image
-	pruneProvisioner := cfg.Stadernode.GetPruneProvisionerContainerTag()
+	pruneProvisioner := cfg.StaderNode.GetPruneProvisionerContainerTag()
 
 	// Check for enough free space
 	executionContainerName := prefix + ExecutionContainerSuffix
@@ -1528,7 +1528,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 	}
 
 	// Run the migrator
-	ecMigrator := cfg.Stadernode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	fmt.Printf("Exporting data from volume %s to %s...\n", volume, targetDir)
 	err = staderClient.RunEcMigrator(prefix+EcMigratorContainerSuffix, volume, targetDir, "export", ecMigrator)
 	if err != nil {
@@ -1583,7 +1583,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 
 	// Check the source dir
 	fmt.Println("Checking source directory...")
-	ecMigrator := cfg.Stadernode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	sourceBytes, err := staderClient.GetDirSizeViaEcMigrator(prefix+EcMigratorContainerSuffix, sourceDir, ecMigrator)
 	if err != nil {
 		return err

@@ -262,7 +262,7 @@ func (cfg *MevBoostConfig) GetAvailableProfiles() (bool, bool, bool, bool) {
 	unregulatedAllMev := false
 	unregulatedNoSandwich := false
 
-	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.StaderNode.Network.Value.(config.Network)
 	for _, relay := range cfg.relays {
 		_, exists := relay.Urls[currentNetwork]
 		if !exists {
@@ -280,7 +280,7 @@ func (cfg *MevBoostConfig) GetAvailableProfiles() (bool, bool, bool, bool) {
 // Get the relays that are available for the current network
 func (cfg *MevBoostConfig) GetAvailableRelays() []config.MevRelay {
 	relays := []config.MevRelay{}
-	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.StaderNode.Network.Value.(config.Network)
 	for _, relay := range cfg.relays {
 		_, exists := relay.Urls[currentNetwork]
 		if !exists {
@@ -296,7 +296,7 @@ func (cfg *MevBoostConfig) GetAvailableRelays() []config.MevRelay {
 func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 	relays := []config.MevRelay{}
 
-	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.StaderNode.Network.Value.(config.Network)
 	switch cfg.SelectionMode.Value.(config.MevSelectionMode) {
 	case config.MevSelectionMode_Profile:
 		for _, relay := range cfg.relays {
@@ -378,7 +378,7 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 
 func (cfg *MevBoostConfig) GetRelayString() string {
 	relayUrls := []string{}
-	currentNetwork := cfg.parentConfig.Stadernode.Network.Value.(config.Network)
+	currentNetwork := cfg.parentConfig.StaderNode.Network.Value.(config.Network)
 
 	relays := cfg.GetEnabledMevRelays()
 	for _, relay := range relays {

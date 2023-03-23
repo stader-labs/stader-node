@@ -15,7 +15,7 @@ type settingsHome struct {
 	homePage         *page
 	saveButton       *tview.Button
 	wizardButton     *tview.Button
-	smartnodePage    *SmartnodeConfigPage
+	staderNodePage   *StaderNodeConfigPage
 	ecPage           *ExecutionConfigPage
 	fallbackPage     *FallbackConfigPage
 	ccPage           *ConsensusConfigPage
@@ -39,14 +39,14 @@ func newSettingsHome(md *mainDisplay) *settingsHome {
 	}
 
 	// Create the settings subpages
-	home.smartnodePage = NewSmartnodeConfigPage(home)
+	home.staderNodePage = NewStaderNodeConfigPage(home)
 	home.ecPage = NewExecutionConfigPage(home)
 	home.ccPage = NewConsensusConfigPage(home)
 	home.fallbackPage = NewFallbackConfigPage(home)
 	home.mevBoostPage = NewMevBoostConfigPage(home)
 	home.metricsPage = NewMetricsConfigPage(home)
 	settingsSubpages := []settingsPage{
-		home.smartnodePage,
+		home.staderNodePage,
 		home.ecPage,
 		home.ccPage,
 		home.fallbackPage,
@@ -75,7 +75,7 @@ func (home *settingsHome) createContent() {
 	categoryList := tview.NewList().
 		SetChangedFunc(func(index int, mainText, secondaryText string, shortcut rune) {
 			if mainText == home.mevBoostPage.page.title &&
-				home.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+				home.md.Config.StaderNode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 				// Disable MEV-Boost on Zhejiang
 				layout.descriptionBox.SetText("MEV-Boost is not available on Zhejiang.")
 				return
@@ -101,7 +101,7 @@ func (home *settingsHome) createContent() {
 	}
 	categoryList.SetSelectedFunc(func(i int, s1, s2 string, r rune) {
 		if s1 == home.mevBoostPage.page.title &&
-			home.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+			home.md.Config.StaderNode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 			// Disable MEV-Boost on Zhejiang
 			return
 		}
@@ -215,10 +215,6 @@ func (home *settingsHome) createFooter() (tview.Primitive, int) {
 
 // Refreshes the settings on all of the config pages to match the config's values
 func (home *settingsHome) refresh() {
-	/*
-		if home.smartnodePage != nil {
-			home.smartnodePage.layout.refresh()
-		}*/
 
 	if home.ecPage != nil {
 		home.ecPage.layout.refresh()
