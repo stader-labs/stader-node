@@ -14,7 +14,7 @@ type settingsNativeHome struct {
 	homePage         *page
 	saveButton       *tview.Button
 	wizardButton     *tview.Button
-	smartnodePage    *NativeSmartnodeConfigPage
+	StaderNodePage   *NativeStaderNodeConfigPage
 	nativePage       *NativePage
 	fallbackPage     *NativeFallbackConfigPage
 	metricsPage      *NativeMetricsConfigPage
@@ -36,12 +36,12 @@ func newSettingsNativeHome(md *mainDisplay) *settingsNativeHome {
 	}
 
 	// Create the settings subpages
-	home.smartnodePage = NewNativeSmartnodeConfigPage(home)
+	home.StaderNodePage = NewNativeStaderNodeConfigPage(home)
 	home.nativePage = NewNativePage(home)
 	home.fallbackPage = NewNativeFallbackConfigPage(home)
 	home.metricsPage = NewNativeMetricsConfigPage(home)
 	settingsSubpages := []*page{
-		home.smartnodePage.page,
+		home.StaderNodePage.page,
 		home.nativePage.page,
 		home.fallbackPage.page,
 		home.metricsPage.page,
@@ -196,10 +196,6 @@ func (home *settingsNativeHome) createFooter() (tview.Primitive, int) {
 
 // Refreshes the settings on all of the config pages to match the config's values
 func (home *settingsNativeHome) refresh() {
-	/*
-		if home.smartnodePage != nil {
-			home.smartnodePage.layout.refresh()
-		}*/
 
 	if home.nativePage != nil {
 		home.nativePage.layout.refresh()

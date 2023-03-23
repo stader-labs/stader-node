@@ -33,7 +33,7 @@ func createNativeFinishedStep(wiz *wizard, currentStep int, totalSteps int) *cho
 	}
 
 	back := func() {
-		if wiz.md.Config.Stadernode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
+		if wiz.md.Config.StaderNode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Zhejiang {
 			wiz.nativeMetricsModal.show()
 		} else {
 			wiz.nativeMevModal.show()

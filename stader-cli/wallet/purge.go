@@ -40,7 +40,7 @@ func purge(c *cli.Context) error {
 	}
 
 	if !cfg.IsNativeMode {
-		projectName := cfg.Stadernode.ProjectName.Value.(string)
+		projectName := cfg.StaderNode.ProjectName.Value.(string)
 		nodeName := projectName + service.NodeContainerSuffix
 		guardianName := projectName + service.GuardianContainerSuffix
 

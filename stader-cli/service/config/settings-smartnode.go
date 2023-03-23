@@ -7,23 +7,23 @@ import (
 )
 
 // The page wrapper for the Stader Node config
-type SmartnodeConfigPage struct {
+type StaderNodeConfigPage struct {
 	home   *settingsHome
 	page   *page
 	layout *standardLayout
 }
 
 // Creates a new page for the Stader Node settings
-func NewSmartnodeConfigPage(home *settingsHome) *SmartnodeConfigPage {
+func NewStaderNodeConfigPage(home *settingsHome) *StaderNodeConfigPage {
 
-	configPage := &SmartnodeConfigPage{
+	configPage := &StaderNodeConfigPage{
 		home: home,
 	}
 
 	configPage.createContent()
 	configPage.page = newPage(
 		home.homePage,
-		"settings-smartnode",
+		"settings-stader-node",
 		"Stader Node and TX Fees",
 		"Select this to configure the settings for the Stader Node itself, including the defaults and limits on transaction fees.",
 		configPage.layout.grid,
@@ -34,18 +34,18 @@ func NewSmartnodeConfigPage(home *settingsHome) *SmartnodeConfigPage {
 }
 
 // Get the underlying page
-func (configPage *SmartnodeConfigPage) getPage() *page {
+func (configPage *StaderNodeConfigPage) getPage() *page {
 	return configPage.page
 }
 
 // Creates the content for the Stader Node settings page
-func (configPage *SmartnodeConfigPage) createContent() {
+func (configPage *StaderNodeConfigPage) createContent() {
 
 	// Create the layout
 	masterConfig := configPage.home.md.Config
 	layout := newStandardLayout()
 	configPage.layout = layout
-	layout.createForm(&masterConfig.Stadernode.Network, "Stader Node and TX Fee Settings")
+	layout.createForm(&masterConfig.StaderNode.Network, "Stader Node and TX Fee Settings")
 
 	// Return to the home page after pressing Escape
 	layout.form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -67,14 +67,14 @@ func (configPage *SmartnodeConfigPage) createContent() {
 	})
 
 	// Set up the form items
-	formItems := createParameterizedFormItems(masterConfig.Stadernode.GetParameters(), layout.descriptionBox)
+	formItems := createParameterizedFormItems(masterConfig.StaderNode.GetParameters(), layout.descriptionBox)
 	for _, formItem := range formItems {
 		layout.form.AddFormItem(formItem.item)
 		layout.parameters[formItem.item] = formItem
 		if formItem.parameter.ID == config.NetworkID {
 			dropDown := formItem.item.(*DropDown)
 			dropDown.SetSelectedFunc(func(text string, index int) {
-				newNetwork := configPage.home.md.Config.Stadernode.Network.Options[index].Value.(cfgtypes.Network)
+				newNetwork := configPage.home.md.Config.StaderNode.Network.Options[index].Value.(cfgtypes.Network)
 				configPage.home.md.Config.ChangeNetwork(newNetwork)
 				configPage.home.refresh()
 			})
@@ -85,6 +85,6 @@ func (configPage *SmartnodeConfigPage) createContent() {
 }
 
 // Handle a bulk redraw request
-func (configPage *SmartnodeConfigPage) handleLayoutChanged() {
+func (configPage *StaderNodeConfigPage) handleLayoutChanged() {
 	configPage.layout.refresh()
 }

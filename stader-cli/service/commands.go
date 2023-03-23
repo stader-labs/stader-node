@@ -86,7 +86,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 	configFlags := []cli.Flag{}
 	cfgTemplate := config.NewStaderConfig("", false)
-	network := cfgTemplate.Stadernode.Network.Value.(cfgtypes.Network)
+	network := cfgTemplate.StaderNode.Network.Value.(cfgtypes.Network)
 
 	// Root params
 	configFlags = createFlagsFromConfigParams("", cfgTemplate.GetParameters(), configFlags, network)

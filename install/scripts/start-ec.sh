@@ -1,5 +1,5 @@
 #!/bin/sh
-# This script launches ETH1 clients for Rocket Pool's docker stack; only edit if you know what you're doing ;)
+# This script launches ETH1 clients for Stader docker stack; only edit if you know what you're doing ;)
 
 # Performance tuning for ARM systems
 define_perf_prefix() {
@@ -32,19 +32,19 @@ define_perf_prefix() {
 # Set up the network-based flags
 if [ "$NETWORK" = "mainnet" ]; then
     GETH_NETWORK=""
-    RP_NETHERMIND_NETWORK="mainnet"
+    STADER_NETHERMIND_NETWORK="mainnet"
     BESU_NETWORK="--network=mainnet"
 elif [ "$NETWORK" = "prater" ]; then
     GETH_NETWORK="--goerli"
-    RP_NETHERMIND_NETWORK="goerli"
+    STADER_NETHERMIND_NETWORK="goerli"
     BESU_NETWORK="--network=goerli"
 elif [ "$NETWORK" = "devnet" ]; then
     GETH_NETWORK="--goerli"
-    RP_NETHERMIND_NETWORK="goerli"
+    STADER_NETHERMIND_NETWORK="goerli"
     BESU_NETWORK="--network=goerli"
 elif [ "$NETWORK" = "zhejiang" ]; then
     GETH_NETWORK="--networkid=1337803"
-    RP_NETHERMIND_NETWORK="/zhejiang/nethermind.json"
+    STADER_NETHERMIND_NETWORK="/zhejiang/nethermind.json"
     BESU_NETWORK="--network-id=1337803"
 else
     echo "Unknown network [$NETWORK]"
@@ -157,7 +157,7 @@ if [ "$CLIENT" = "nethermind" ]; then
 
     # Check for the prune flag
     if [ -f "/ethclient/prune.lock" ]; then
-        RP_NETHERMIND_PRUNE=1
+        STADER_NETHERMIND_PRUNE=1
         rm /ethclient/prune.lock
     fi
 
@@ -172,7 +172,7 @@ if [ "$CLIENT" = "nethermind" ]; then
     sed -i 's/<!-- \(<logger name=\"Synchronization\.Peers\.SyncPeersReport\".*\/>\).*-->/\1/g' /nethermind/NLog.config
 
     CMD="$PERF_PREFIX /nethermind/Nethermind.Runner \
-        --config $RP_NETHERMIND_NETWORK \
+        --config $STADER_NETHERMIND_NETWORK \
         --datadir /ethclient/nethermind \
         --JsonRpc.Enabled true \
         --JsonRpc.Host 0.0.0.0 \
@@ -186,16 +186,16 @@ if [ "$CLIENT" = "nethermind" ]; then
         $EC_ADDITIONAL_FLAGS"
 
     # Add optional supplemental primary JSON-RPC modules
-    if [ ! -z "$RP_NETHERMIND_ADDITIONAL_MODULES" ]; then
-        RP_NETHERMIND_ADDITIONAL_MODULES=",${RP_NETHERMIND_ADDITIONAL_MODULES}"
+    if [ ! -z "$STADER_NETHERMIND_ADDITIONAL_MODULES_NETHERMIND_PRUNE" ]; then
+        STADER_NETHERMIND_ADDITIONAL_MODULES_NETHERMIND_PRUNE=",${STADER_NETHERMIND_ADDITIONAL_MODULES_NETHERMIND_PRUNE}"
     fi
-    CMD="$CMD --JsonRpc.EnabledModules Eth,Net,Web3$RP_NETHERMIND_ADDITIONAL_MODULES"
+    CMD="$CMD --JsonRpc.EnabledModules Eth,Net,Web3$STADER_NETHERMIND_ADDITIONAL_MODULES_NETHERMIND_PRUNE"
 
     # Add optional supplemental JSON-RPC URLs
-    if [ ! -z "$RP_NETHERMIND_ADDITIONAL_URLS" ]; then
-        RP_NETHERMIND_ADDITIONAL_URLS=",${RP_NETHERMIND_ADDITIONAL_URLS}"
+    if [ ! -z "$STADER_NETHERMIND_ADDITIONAL_URLS" ]; then
+        STADER_NETHERMIND_ADDITIONAL_URLS=",${STADER_NETHERMIND_ADDITIONAL_URLS}"
     fi
-    CMD="$CMD --JsonRpc.AdditionalRpcUrls [\"http://127.0.0.1:7434|http|admin\"$RP_NETHERMIND_ADDITIONAL_URLS]"
+    CMD="$CMD --JsonRpc.AdditionalRpcUrls [\"http://127.0.0.1:7434|http|admin\"$STADER_NETHERMIND_ADDITIONAL_URLS]"
 
     if [ ! -z "$ETHSTATS_LABEL" ] && [ ! -z "$ETHSTATS_LOGIN" ]; then
         CMD="$CMD --EthStats.Enabled true --EthStats.Name $ETHSTATS_LABEL --EthStats.Secret $(echo $ETHSTATS_LOGIN | cut -d "@" -f1) --EthStats.Server $(echo $ETHSTATS_LOGIN | cut -d "@" -f2)"
@@ -220,14 +220,14 @@ if [ "$CLIENT" = "nethermind" ]; then
         CMD="$CMD --Network.DiscoveryPort $EC_P2P_PORT --Network.P2PPort $EC_P2P_PORT"
     fi
 
-    if [ ! -z "$RP_NETHERMIND_PRUNE" ]; then
+    if [ ! -z "$STADER_NETHERMIND_PRUNE" ]; then
         CMD="$CMD --Pruning.Mode Full --Pruning.FullPruningCompletionBehavior AlwaysShutdown"
     else
         CMD="$CMD --Pruning.Mode Memory"
     fi
 
-    if [ ! -z "$RP_NETHERMIND_PRUNE_MEM_SIZE" ]; then
-        CMD="$CMD --Pruning.CacheMb $RP_NETHERMIND_PRUNE_MEM_SIZE"
+    if [ ! -z "$STADER_NETHERMIND_PRUNE_MEM_SIZE" ]; then
+        CMD="$CMD --Pruning.CacheMb $STADER_NETHERMIND_PRUNE_MEM_SIZE"
     fi
 
     if [ "$NETWORK" = "zhejiang" ]; then

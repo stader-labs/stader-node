@@ -108,6 +108,11 @@ func (layout *standardLayout) refresh() {
 
 	for i := 0; i < layout.form.GetFormItemCount(); i++ {
 		formItem := layout.form.GetFormItem(i)
+		formItemParam := layout.parameters[formItem]
+
+		if formItemParam == nil {
+			continue
+		}
 		param := layout.parameters[formItem].parameter
 
 		// Set the form item to the current value

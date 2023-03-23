@@ -113,7 +113,7 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 		return err
 	}
 
-	feeRecipientPath := cfg.Stadernode.GetFeeRecipientFilePath()
+	feeRecipientPath := cfg.StaderNode.GetFeeRecipientFilePath()
 	_, err = os.Stat(feeRecipientPath)
 	if os.IsNotExist(err) {
 		// Make sure the validators dir is created
@@ -127,10 +127,10 @@ func deployDefaultFeeRecipientFile(c *cli.Context) error {
 		var defaultFeeRecipientFileContents string
 		if cfg.IsNativeMode {
 			// Native mode needs an environment variable definition
-			defaultFeeRecipientFileContents = fmt.Sprintf("%s=%s", config.FeeRecipientEnvVar, cfg.Stadernode.GetEthxTokenAddress().Hex())
+			defaultFeeRecipientFileContents = fmt.Sprintf("%s=%s", config.FeeRecipientEnvVar, cfg.StaderNode.GetEthxTokenAddress().Hex())
 		} else {
 			// Docker and Hybrid just need the address itself
-			defaultFeeRecipientFileContents = cfg.Stadernode.GetEthxTokenAddress().Hex()
+			defaultFeeRecipientFileContents = cfg.StaderNode.GetEthxTokenAddress().Hex()
 		}
 		err := ioutil.WriteFile(feeRecipientPath, []byte(defaultFeeRecipientFileContents), 0664)
 		if err != nil {

@@ -81,7 +81,7 @@ func installService(c *cli.Context) error {
 		return fmt.Errorf("error loading old configuration: %w", err)
 	}
 	if !isNew {
-		dataPath = cfg.Stadernode.DataPath.Value.(string)
+		dataPath = cfg.StaderNode.DataPath.Value.(string)
 		dataPath, err = homedir.Expand(dataPath)
 		if err != nil {
 			return fmt.Errorf("error getting data path from old configuration: %w", err)
@@ -158,41 +158,6 @@ func printPatchNotes(c *cli.Context) {
 
 	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
 	fmt.Println("The Stadernode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
-
-}
-
-// Install the Stader update tracker for the metrics dashboard
-func installUpdateTracker(c *cli.Context) error {
-
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(
-		"This will add the ability to display any available Operating System updates or new Stader versions on the metrics dashboard. "+
-			"Are you sure you want to install the update tracker?")) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
-	staderClient, err := stader.NewClientFromCtx(c)
-	if err != nil {
-		return err
-	}
-	defer staderClient.Close()
-
-	// Install service
-	err = staderClient.InstallUpdateTracker(c.Bool("verbose"), c.String("version"))
-	if err != nil {
-		return err
-	}
-
-	// Print success message & return
-	colorReset := "\033[0m"
-	colorYellow := "\033[33m"
-	fmt.Println("")
-	fmt.Println("The Stader update tracker service was successfully installed!")
-	fmt.Println("")
-	fmt.Printf("%sNOTE:\nPlease restart the Stadernode stack to enable update tracking on the metrics dashboard.%s\n", colorYellow, colorReset)
-	fmt.Println("")
-	return nil
 
 }
 
@@ -968,7 +933,7 @@ func getContainerPrefix(staderClient *stader.Client) (string, error) {
 		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
-	return cfg.Stadernode.ProjectName.Value.(string), nil
+	return cfg.StaderNode.ProjectName.Value.(string), nil
 }
 
 // Prepares the execution client for pruning
@@ -1028,7 +993,7 @@ func pruneExecutionClient(c *cli.Context) error {
 	}
 
 	// Get the prune provisioner image
-	pruneProvisioner := cfg.Stadernode.GetPruneProvisionerContainerTag()
+	pruneProvisioner := cfg.StaderNode.GetPruneProvisionerContainerTag()
 
 	// Check for enough free space
 	executionContainerName := prefix + ExecutionContainerSuffix
@@ -1630,7 +1595,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 	}
 
 	// Run the migrator
-	ecMigrator := cfg.Stadernode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	fmt.Printf("Exporting data from volume %s to %s...\n", volume, targetDir)
 	err = staderClient.RunEcMigrator(prefix+EcMigratorContainerSuffix, volume, targetDir, "export", ecMigrator)
 	if err != nil {
@@ -1685,7 +1650,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 
 	// Check the source dir
 	fmt.Println("Checking source directory...")
-	ecMigrator := cfg.Stadernode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	sourceBytes, err := staderClient.GetDirSizeViaEcMigrator(prefix+EcMigratorContainerSuffix, sourceDir, ecMigrator)
 	if err != nil {
 		return err
