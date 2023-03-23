@@ -20,11 +20,5 @@ type FeeRecipientInfo struct {
 // TODO - add fee receipient info for socializing pools
 func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, bc beacon.Client, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
 	// TODO - Get fee recipient info from sanjay
-	return &FeeRecipientInfo{
-		SocializingPoolAddress: common.BytesToAddress([]byte("0x1Dd8f12e17519732b56bdcFaea9D10FB55E2cb6C")),
-		FeeDistributorAddress:  common.Address{},
-		IsInSocializingPool:    true,
-		IsInOptOutCooldown:     false,
-		OptOutEpoch:            0,
-	}, nil
+	return nil, nil
 }
