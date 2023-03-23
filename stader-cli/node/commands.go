@@ -66,18 +66,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
 					cli.StringFlag{
-						Name:  "socialize-mev, sm",
-						Usage: "Should Mev be socialized (will default to true, can be be only true or false)",
+						Name:  "socialize-el, sel",
+						Usage: "Should EL rewards be socialized (will default to true, can be only true or false)",
 					},
 				},
 				Action: func(c *cli.Context) error {
-
-					// Validate args
-					fmt.Printf("Operator name is %s\n", c.String("operator-name"))
-					fmt.Printf("Operator reward address is %s\n", c.String("operator-reward-address"))
-					fmt.Printf("socialize mev is %s\n", c.String("socialize-mev"))
-
-					fmt.Printf("c is %v\n", c.Args())
 
 					// Validate flags
 					if c.String("operator-name") == "" {
