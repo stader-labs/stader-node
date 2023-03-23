@@ -4,9 +4,6 @@
 # (except for the macOS daemons, which need to be built manually on a macOS system) and put
 # them into a convenient folder for ease of uploading.
 
-# NOTE: You MUST put this in a directory that has the `stader-node` and `stader-node-install`
-# repositories cloned as subdirectories.
-
 
 # =================
 # === Functions ===
@@ -24,51 +21,31 @@ fail() {
 
 # Builds all of the CLI binaries
 build_cli() {
-    cd stader-node || fail "Directory ${PWD}/stader-node/stader-cli does not exist or you don't have permissions to access it."
-
     echo -n "Building CLI binaries... "
     docker run --rm -v $PWD:/stader-node staderdev/stader-node-builder:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
-    mv stader-cli/stader-cli-* ../$VERSION
-    cd ..
-    # aws s3 cp $VERSION s3://stadernode/$VERSION --recursive
+    mv stader-cli/stader-cli-* build/$VERSION
     echo "done!"
-
-
 }
 
 
 # Builds the .tar.xz file packages with the Stader configuration files
 build_install_packages() {
-    cd stader-node || fail "Directory ${PWD}/stader-node-install does not exist or you don't have permissions to access it."
     rm -f stader-node-install.tar.xz
-
     echo -n "Building Stader node installer packages... "
     tar cfJ stader-node-install.tar.xz install || fail "Error building installer package."
-    mv stader-node-install.tar.xz ../$VERSION
-    cp install.sh ../$VERSION
-    cp install-update-tracker.sh ../$VERSION
-    cd ..
+    mv stader-node-install.tar.xz build/$VERSION
+    cp install.sh build/$VERSION
+    cp install-update-tracker.sh build/$VERSION
     echo "done!"
 
-    cd stader-node-install || fail "Directory ${PWD}/stader-node-install does not exist or you don't have permissions to access it."
-    echo -n "Building update tracker package... "
-    tar cfJ stader-update-tracker.tar.xz stader-update-tracker || fail "Error building update tracker package."
-    mv stader-update-tracker.tar.xz ../$VERSION
-    cd ..
-    aws s3 cp $VERSION s3://temps3node/$VERSION --recursive
-    echo "done!"
-
-    #cd ..
 }
 
 
 # Builds the daemon binaries and Docker images, and pushes them to Docker Hub
 build_daemon() {
-    cd stader-node || fail "Directory ${PWD}/stader-node does not exist or you don't have permissions to access it."
-
     echo -n "Building Daemon binary... "
     ./daemon-build.sh || fail "Error building daemon binary."
-    cp stader/stader-daemon-* ../$VERSION
+    cp stader/stader-daemon-* build/$VERSION
     echo "done!"
         # ensure support for arm64 is installed by  sudo apt install -y qemu-user-static binfmt-support
     echo "Building Docker Stader Daemon image..."
@@ -81,15 +58,11 @@ build_daemon() {
     docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
     rm -f stader/stader-daemon-*
     echo "done!"
-
-    cd ..
 }
 
 
 # Builds the Docker prune provisioner image and pushes it to Docker Hub
 build_docker_prune_provision() {
-    cd stader-node || fail "Directory ${PWD}/stader-node does not exist or you don't have permissions to access it."
-
     echo "Building Docker Prune Provisioner image..."
     docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
     docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
@@ -99,8 +72,6 @@ build_docker_prune_provision() {
     docker push staderdev/eth1-prune-provision:$VERSION-amd64 || fail "Error pushing amd64 Docker Prune Provision image to Docker Hub."
     docker push staderdev/eth1-prune-provision:$VERSION-arm64 || fail "Error pushing arm Docker Prune Provision image to Docker Hub."
     echo "done!"
-
-    cd ..
 }
 
 
@@ -198,8 +169,8 @@ if [ -z "$VERSION" ]; then
 fi
 
 # Cleanup old artifacts
-rm -f ./$VERSION/*
-mkdir -p ./$VERSION
+rm -f build/$VERSION/*
+mkdir -p build/$VERSION
 
 # Build the artifacts
 if [ "$CLI" = true ]; then

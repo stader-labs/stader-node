@@ -161,41 +161,6 @@ func printPatchNotes(c *cli.Context) {
 
 }
 
-// Install the Stader update tracker for the metrics dashboard
-func installUpdateTracker(c *cli.Context) error {
-
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(
-		"This will add the ability to display any available Operating System updates or new Stader versions on the metrics dashboard. "+
-			"Are you sure you want to install the update tracker?")) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
-	staderClient, err := stader.NewClientFromCtx(c)
-	if err != nil {
-		return err
-	}
-	defer staderClient.Close()
-
-	// Install service
-	err = staderClient.InstallUpdateTracker(c.Bool("verbose"), c.String("version"))
-	if err != nil {
-		return err
-	}
-
-	// Print success message & return
-	colorReset := "\033[0m"
-	colorYellow := "\033[33m"
-	fmt.Println("")
-	fmt.Println("The Stader update tracker service was successfully installed!")
-	fmt.Println("")
-	fmt.Printf("%sNOTE:\nPlease restart the Stadernode stack to enable update tracking on the metrics dashboard.%s\n", colorYellow, colorReset)
-	fmt.Println("")
-	return nil
-
-}
-
 // View the Stader service status
 func serviceStatus(c *cli.Context) error {
 
