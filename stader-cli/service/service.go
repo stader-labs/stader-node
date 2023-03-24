@@ -4,6 +4,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/stader-labs/ethcli-ui/pages"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,15 +12,14 @@ import (
 	"time"
 
 	"github.com/mitchellh/go-homedir"
-	"github.com/rivo/tview"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
+	ethcliui "github.com/stader-labs/ethcli-ui"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	cliconfig "github.com/stader-labs/stader-node/stader-cli/service/config"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -181,6 +181,24 @@ func serviceStatus(c *cli.Context) error {
 
 }
 
+func ConvertBoolToString(boolValue bool) string {
+	if boolValue {
+		return "Yes"
+	}
+
+	return "No"
+}
+
+func ConvertStringToBool(stringValue string) bool {
+	if stringValue == "Yes" {
+		return true
+	} else {
+		return false
+	}
+
+	//return false, fmt.Errorf("invalid string value: %s\n", stringValue)
+}
+
 // Configure the service
 
 // Configure the service
@@ -206,7 +224,7 @@ func configureService(c *cli.Context) error {
 	defer staderClient.Close()
 
 	// Load the config, checking to see if it's new (hasn't been installed before)
-	var oldCfg *config.StaderConfig
+	// var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
@@ -234,7 +252,7 @@ func configureService(c *cli.Context) error {
 
 	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
 	if isMigration || isUpdate {
-		oldCfg = cfg
+		// oldCfg = cfg
 		cfg = cfg.CreateCopy()
 		err = cfg.UpdateDefaults()
 		if err != nil {
@@ -251,83 +269,141 @@ func configureService(c *cli.Context) error {
 		return staderClient.SaveConfig(cfg)
 	}
 
-	// Check for native mode
-	isNative := c.GlobalIsSet("daemon-path")
+	currentSettings := pages.SettingsType{
+		Confirmed: false,
+		Network:   "prater",
+		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
+		ExecutionClient: pages.ExecutionClientSettingsType{
+			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
+			External: pages.ExecutionClientExternalType{
+				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
+				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
+			},
+		},
+		ConsensusClient: pages.ConsensusClientSettingsType{
+			Selection:              string(cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
+			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
+			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
+			External: pages.ConsensusClientExternalType{
+				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
+					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
+				},
+				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
+					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
+					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
+				},
+				Teku: pages.ConsensusClientExternalSelectedTekuType{
+					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
+				},
+			},
+		},
+		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
+		MEVBoost:                 string(cfg.MevBoost.Mode.Value.(cfgtypes.Mode)),
+		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
+		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
+		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
+		FallbackClients: pages.FallbackClientsSettingsType{
+			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
+			Lighthouse: pages.FallbackClientsLighthouseType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Prysm: pages.FallbackClientsPrysmType{
+				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
+				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
+			},
+			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+		},
+	}
 
-	app := tview.NewApplication()
-	md := cliconfig.NewMainDisplay(app, oldCfg, cfg, isNew, isMigration, isUpdate, isNative)
-	err = app.Run()
+	set, err := ethcliui.Run(&currentSettings)
 	if err != nil {
 		return err
 	}
 
-	// Deal with saving the config and printing the changes
-	if md.ShouldSave {
-		// Save the config
-		staderClient.SaveConfig(md.Config)
-		fmt.Println("Your changes have been saved!")
-
-		// Exit immediately if we're in native mode
-		if isNative {
-			fmt.Println("Please restart your daemon service for them to take effect.")
-			return nil
-		}
-
-		// Handle network changes
-		prefix := fmt.Sprint(md.PreviousConfig.StaderNode.ProjectName.Value)
-		if md.ChangeNetworks {
-			// Remove the checkpoint sync provider
-			md.Config.ConsensusCommon.CheckpointSyncProvider.Value = ""
-			staderClient.SaveConfig(md.Config)
-
-			fmt.Printf("%sWARNING: You have requested to change networks.\n\nAll of your existing chain data, your node wallet, and your validator keys will be removed. If you had a Checkpoint Sync URL provided for your Consensus client, it will be removed and you will need to specify a different one that supports the new network.\n\nPlease confirm you have backed up everything you want to keep, because it will be deleted if you answer `y` to the prompt below.\n\n%s", colorYellow, colorReset)
-
-			if !cliutils.Confirm("Would you like the Stader node to automatically switch networks for you? This will destroy and rebuild your `data` folder and all of Docker containers.") {
-				return nil
-			}
-
-			err = changeNetworks(c, staderClient, fmt.Sprintf("%s%s", prefix, ApiContainerSuffix))
-			if err != nil {
-				fmt.Printf("%s%s%s\nThe Stadernode could not automatically change networks for you, so you will have to run the steps manually.\n", colorRed, err.Error(), colorReset)
-			}
-			return nil
-		}
-
-		// Query for service start if this is a new installation
-		if isNew {
-			if !cliutils.Confirm("Would you like to start the Stadernode services automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
-				return nil
-			}
-			return startService(c, true)
-		}
-
-		// Query for service start if this is old and there are containers to change
-		if len(md.ContainersToRestart) > 0 {
-			fmt.Println("The following containers must be restarted for the changes to take effect:")
-			for _, container := range md.ContainersToRestart {
-				fmt.Printf("\t%s_%s\n", prefix, container)
-			}
-			if !cliutils.Confirm("Would you like to restart them automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
-				return nil
-			}
-
-			fmt.Println()
-			for _, container := range md.ContainersToRestart {
-				fullName := fmt.Sprintf("%s_%s", prefix, container)
-				fmt.Printf("Stopping %s... ", fullName)
-				staderClient.StopContainer(fullName)
-				fmt.Print("done!\n")
-			}
-
-			fmt.Println()
-			fmt.Println("Applying changes and restarting containers...")
-			return startService(c, true)
-		}
-	} else {
-		fmt.Println("Your changes have not been saved. Your Stadernode configuration is the same as it was before.")
+	newSettings := set()
+	if !newSettings.Confirmed {
+		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
 		return nil
+	}
+
+	// update the network
+	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
+
+	// update the consensus and execution client
+	cfg.ConsensusClientMode.Value = newSettings.EthClient
+	cfg.ExecutionClientMode.Value = newSettings.EthClient
+
+	if newSettings.EthClient == "local" {
+		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
+		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
+	} else if newSettings.EthClient == "external" {
+		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
+		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
+		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
+		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
+		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+	}
+	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
+	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
+
+	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
+	// get the consensus client we are using for fallback
+	fallBackConsensusClient := newSettings.ConsensusClient.Selection
+	if newSettings.EthClient == "external" {
+		fallBackConsensusClient = newSettings.ConsensusClient.ExternalSelection
+	}
+
+	switch fallBackConsensusClient {
+	case "prysm":
+		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings.FallbackClients.Prysm.ExecutionClientUrl
+		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeHttpUrl
+		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeJsonRpcpUrl
+	case "lighthouse":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.BeaconNodeHttpUrl
+	case "teku":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
+	}
+
+	// update monitoring
+	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
+
+	// update mev boost
+	if newSettings.MEVBoost == "external" {
+		cfg.EnableMevBoost.Value = true
+		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
+	} else if newSettings.MEVBoost == "local" {
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
+		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
+		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
+		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
+	}
+
+	err = staderClient.SaveConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	// Restart the services
+	err = startService(c, false)
+	if err != nil {
+		return err
 	}
 
 	return err
@@ -525,13 +601,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Stadernode before running it.")
 	}
 
-	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
-	if err != nil {
-		return fmt.Errorf("error checking for first-run status: %w", err)
-	}
-
-	if isUpdate && !ignoreConfigSuggestion {
+	if !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {
@@ -583,33 +653,6 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		fmt.Printf("%sIgnoring anti-slashing safety delay.%s\n", colorYellow, colorReset)
 	}
 
-	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
-	//isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	//isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	//if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
-	//	previousVersion := "0.0.0"
-	//	backupCfg, err := staderClient.LoadBackupConfig()
-	//	if err != nil {
-	//		fmt.Printf("WARNING: Couldn't determine previous Stadernode version from backup settings: %s\n", err.Error())
-	//	} else if backupCfg != nil {
-	//		previousVersion = backupCfg.Version
-	//	}
-	//
-	//	oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
-	//	if err != nil {
-	//		fmt.Printf("WARNING: Backup configuration states the previous Stadernode installation used version %s, which is not a valid version\n", previousVersion)
-	//		oldVersion, _ = version.NewVersion("0.0.0")
-	//	}
-	//
-	//	vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
-	//	if vulnerableConstraint.Check(oldVersion) {
-	//		err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
-	//		if err != nil {
-	//			return err
-	//		}
-	//	}
-	//}
-
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
 	if err != nil {
@@ -643,6 +686,7 @@ func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *c
 		return fmt.Errorf("Error getting validator container prefix: %w", err)
 	}
 
+	fmt.Printf("prefix is %d\n", prefix)
 	// Get the current validator client
 	currentValidatorImageString, err := staderClient.GetDockerImage(prefix + ValidatorContainerSuffix)
 	if err != nil {
