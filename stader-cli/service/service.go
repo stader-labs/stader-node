@@ -7,6 +7,7 @@ import (
 	"github.com/stader-labs/ethcli-ui/pages"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -195,8 +196,14 @@ func ConvertStringToBool(stringValue string) bool {
 	} else {
 		return false
 	}
+}
 
-	//return false, fmt.Errorf("invalid string value: %s\n", stringValue)
+func HasBeenUpdated(settings1 pages.SettingsType, settings2 pages.SettingsType) bool {
+	if reflect.DeepEqual(settings1, settings2) {
+		return false
+	}
+
+	return true
 }
 
 // Configure the service
@@ -269,6 +276,7 @@ func configureService(c *cli.Context) error {
 		return staderClient.SaveConfig(cfg)
 	}
 
+	// TODO - bchain - refactor this entire logic to make it much more modular
 	currentSettings := pages.SettingsType{
 		Confirmed: false,
 		Network:   "prater",
@@ -330,6 +338,10 @@ func configureService(c *cli.Context) error {
 	newSettings := set()
 	if !newSettings.Confirmed {
 		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
+		return nil
+	}
+	if !HasBeenUpdated(currentSettings, newSettings) {
+		fmt.Printf("Your settings have not changed.\n")
 		return nil
 	}
 
