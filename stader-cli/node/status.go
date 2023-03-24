@@ -7,6 +7,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
+	"time"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -95,12 +96,12 @@ func getStatus(c *cli.Context) error {
 				fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 
 				if validatorInfo.Status > 3 {
-					fmt.Printf("-Deposit time: %d\n\n", validatorInfo.DepositTime)
+					fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
 				}
 
 				// Validator has withdrawn
 				if validatorInfo.Status == 8 {
-					fmt.Printf("-Withdrawn time: %d\n\n", validatorInfo.WithdrawnTime)
+					fmt.Printf("-Withdrawn time: %d\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
 				}
 				fmt.Printf("\n\n")
 			}
