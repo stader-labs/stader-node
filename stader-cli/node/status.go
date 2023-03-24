@@ -42,7 +42,11 @@ func getStatus(c *cli.Context) error {
 
 	totalRegisteredValidators := len(status.ValidatorInfos)
 	totalRegisterableValidators := status.SdCollateralWorthValidators
-	noOfValidatorsWhichWeCanRegister := totalRegisterableValidators.Int64() - int64(totalRegisteredValidators)
+
+	noOfValidatorsWhichWeCanRegister := int64(0)
+	if totalRegisterableValidators.Int64() > int64(totalRegisteredValidators) {
+		noOfValidatorsWhichWeCanRegister = totalRegisterableValidators.Int64() - int64(totalRegisteredValidators)
+	}
 
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", log.ColorGreen, log.ColorReset)
