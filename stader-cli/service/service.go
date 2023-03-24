@@ -323,19 +323,15 @@ func configureService(c *cli.Context) error {
 	}
 
 	set, err := ethcliui.Run(&currentSettings)
-	fmt.Printf("Checking if there was any error or not\n")
 	if err != nil {
 		return err
 	}
 
 	newSettings := set()
-
 	if !newSettings.Confirmed {
 		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
 		return nil
 	}
-
-	fmt.Printf("set in configureService is %v\n", set())
 
 	// update the network
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
