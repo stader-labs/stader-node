@@ -1,6 +1,6 @@
 package shared
 
-const StaderVersion string = "0.3.0-dev"
+const StaderVersion string = "0.2.9-dev"
 const Logo string = ` 
   _____ _            _             _           _       𝅺 	
  / ____| |          | |           | |         | |      𝅺                                                        

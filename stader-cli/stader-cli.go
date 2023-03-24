@@ -788,7 +788,6 @@ Public License instead of this License. But first, please read
 	}
 
 	node.RegisterCommands(app, "node", []string{"n"})
-	// odao.RegisterCommands(app, "odao", []string{"o"})
 	service.RegisterCommands(app, "service", []string{"s"})
 	wallet.RegisterCommands(app, "wallet", []string{"w"})
 	app.Commands = append(app.Commands, cli.Command{
