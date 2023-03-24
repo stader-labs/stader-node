@@ -36,7 +36,7 @@ import (
 
 // Config
 const (
-	InstallerURL string = "https://temps3node.s3.amazonaws.com/%s/install.sh"
+	InstallerURL string = "https://stader-cli-beta.s3.amazonaws.com/%s/install.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"

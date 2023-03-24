@@ -35,7 +35,7 @@ build_install_packages() {
     tar cfJ stader-node-install.tar.xz install || fail "Error building installer package."
     mv stader-node-install.tar.xz build/$VERSION
     cp install.sh build/$VERSION
-    aws s3 cp build/$VERSION s3://temps3node/$VERSION --recursive
+    aws s3 cp build/$VERSION s3://stader-cli-beta/$VERSION --recursive
     echo "done!"
 
 }

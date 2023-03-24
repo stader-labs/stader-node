@@ -114,9 +114,9 @@ fi
 
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://temps3node.s3.amazonaws.com/latest/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/latest/stader-node-install.tar.xz"
 else
-    PACKAGE_URL="https://temps3node.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
 fi
 
 
