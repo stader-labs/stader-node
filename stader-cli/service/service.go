@@ -278,7 +278,7 @@ func configureService(c *cli.Context) error {
 
 	// TODO - bchain - refactor this entire logic to make it much more modular
 	currentSettings := pages.SettingsType{
-		Confirmed: false,
+		Confirmed: true,
 		Network:   "prater",
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
