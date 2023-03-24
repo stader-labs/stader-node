@@ -240,7 +240,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
         --beacon-node-api-endpoints=$CC_URL_STRING \
         --validators-keystore-locking-enabled=false \
         --log-destination=CONSOLE \
-        --validators-proposer-default-fee-recipient=0xe10C21b6A033b97cD19DFb170cDbD3154d69Aa46 \
+        --validators-proposer-default-fee-recipient=$(cat /validators/$FEE_RECIPIENT_FILE) \
         $VC_ADDITIONAL_FLAGS"
 
     if [ "$ENABLE_MEV_BOOST" = "true" ]; then
