@@ -300,7 +300,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
         --eth1-deposit-contract-max-request-size=150 \
         --log-destination=CONSOLE \
         --ee-jwt-secret-file=/secrets/jwtsecret \
-        --validators-proposer-default-fee-recipient=$ETHX_ADDRESS \
+        --validators-proposer-default-fee-recipient=$(cat /validators/$FEE_RECIPIENT_FILE) \
         $BN_ADDITIONAL_FLAGS"
 
     if [ "$TEKU_ARCHIVE_MODE" = "true" ]; then
