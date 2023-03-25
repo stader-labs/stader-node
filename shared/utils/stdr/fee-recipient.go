@@ -3,6 +3,7 @@ package stdr
 // ROCKETPOOL-OWNED
 
 import (
+	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -19,6 +20,6 @@ type FeeRecipientInfo struct {
 
 // TODO - add fee receipient info for socializing pools
 func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, bc beacon.Client, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
-	// TODO - Get fee recipient info from sanjay
-	return nil, nil
+	// TODO - Get fee recipient info
+	return nil, fmt.Errorf("unimplemented Fee recipient logic")
 }

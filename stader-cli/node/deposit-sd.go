@@ -13,7 +13,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/math"
 )
 
-// TODO - bchain make user experience such that we suggest users how much sd to stake
 func nodeDepositSd(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)

@@ -221,8 +221,6 @@ func (p *ExecutionClientManager) SendTransaction(ctx context.Context, tx *types.
 
 // FilterLogs executes a log filter operation, blocking during execution and
 // returning all the results in one batch.
-//
-// TODO(karalabe): Deprecate when the subscription one can return past data too.
 func (p *ExecutionClientManager) FilterLogs(ctx context.Context, query ethereum.FilterQuery) ([]types.Log, error) {
 	result, err := p.runFunction(func(client *ethclient.Client) (interface{}, error) {
 		return client.FilterLogs(ctx, query)
@@ -299,7 +297,6 @@ func (p *ExecutionClientManager) TransactionByHash(ctx context.Context, hash com
 		return nil, false, err
 	}
 
-	// TODO: Can we just use the named return values inside the closer to skip this?
 	resultArray := result.([]interface{})
 	tx = resultArray[0].(*types.Transaction)
 	isPending = resultArray[1].(bool)
