@@ -41,7 +41,7 @@ func main() {
 			// Email: "kane@rocketpool.net",
 		},
 	}
-	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd."
+	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd.\n   (c) 2023 Stader"
 
 	const GPLv3 = `                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -818,7 +818,7 @@ Public License instead of this License. But first, please read
 		Aliases: []string{"c"},
 		Usage:   "Show the copyright",
 		Action: func(c *cli.Context) error {
-			fmt.Println("(c) 2023 Rocket Pool Pty Ltd")
+			fmt.Println("(c) 2023 Rocket Pool Pty Ltd.\n (c) 2023 Stader")
 			return nil
 		},
 	})
