@@ -293,7 +293,6 @@ func configureService(c *cli.Context) error {
 		return staderClient.SaveConfig(cfg)
 	}
 
-	// TODO - bchain - refactor this entire logic to make it much more modular
 	currentSettings := pages.SettingsType{
 		Confirmed: true,
 		Network:   "prater",
