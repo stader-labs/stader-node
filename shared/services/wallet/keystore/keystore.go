@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package keystore
 
-// ROCKETPOOL-OWNED
-
 import (
 	"github.com/sethvargo/go-password/password"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"

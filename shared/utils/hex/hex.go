@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package hex
 
-// ROCKETPOOL-OWNED
-
 // Add a prefix to a hex string if not present
 func AddPrefix(value string) string {
 	if len(value) < 2 || value[0:2] != "0x" {

@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package api
 
-// ROCKETPOOL-OWNED
-
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"

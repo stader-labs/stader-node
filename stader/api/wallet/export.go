@@ -1,5 +1,5 @@
 /*
-This work is licensed and released under GNU GPL v3 or any other later versions. 
+This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
 (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
@@ -18,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package wallet
-
-// ROCKETPOOL-OWNED
 
 import (
 	"encoding/hex"

@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package eth2
 
-// ROCKETPOOL-OWNED
-
 import (
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 )

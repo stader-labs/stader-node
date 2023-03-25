@@ -19,14 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package services
 
-// ROCKETPOOL-OWNED
-
 import (
 	"context"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 )
-
-// ROCKETPOOL-OWNED
 
 func GetEthClientLatestBlockTimestamp(ec stader.ExecutionClient) (uint64, error) {
 	// Get latest block

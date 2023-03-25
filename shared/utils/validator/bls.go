@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package validator
 
-// ROCKETPOOL-OWNED
-
 // BLS signing root with domain
 type signingRoot struct {
 	ObjectRoot []byte `ssz-size:"32"`

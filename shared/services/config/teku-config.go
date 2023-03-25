@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package config
 
-// ROCKETPOOL-OWNED
-
 import (
 	"github.com/pbnjay/memory"
 	"github.com/stader-labs/stader-node/shared/types/config"

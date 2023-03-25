@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package net
 
-// ROCKETPOOL-OWNED
-
 import (
 	"fmt"
 	"regexp"

@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package api
 
-// ROCKETPOOL-OWNED
-
 import (
 	"encoding/json"
 	"errors"
@@ -29,8 +27,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
-
-// ROCKETPOOL-OWNED
 
 // Print an API response
 // response must be a pointer to a struct type with Error and Status string fields

@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package nimbus
 
-// ROCKETPOOL-OWNED
-
 import (
 	"encoding/json"
 	"fmt"
