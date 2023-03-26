@@ -1,7 +1,5 @@
 package stdr
 
-// ROCKETPOOL-OWNED
-
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
