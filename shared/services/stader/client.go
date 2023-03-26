@@ -1,5 +1,5 @@
 /*
-This work is licensed and released under GNU GPL v3 or any other later versions. 
+This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
 (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
@@ -150,7 +150,7 @@ func NewClient(configPath string, daemonPath string, maxFee float64, maxPrioFee 
 		originalGasLimit:   gasLimit,
 		customNonce:        customNonceBigInt,
 		client:             sshClient,
-		debugPrint:         true,
+		debugPrint:         false,
 		forceFallbacks:     false,
 		ignoreSyncCheck:    false,
 	}
