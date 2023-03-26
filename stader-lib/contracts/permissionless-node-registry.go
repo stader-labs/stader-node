@@ -47,11 +47,13 @@ type Validator struct {
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
 }
 
 // PermissionlessNodeRegistryMetaData contains all meta data concerning the PermissionlessNodeRegistry contract.
 var PermissionlessNodeRegistryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"EmptyNameString\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InSufficientBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidBondEthValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfpubkey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidSizeOfInputKeys\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidStartAndEndIndex\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NameCrossedMaxLength\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoKeysProvided\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorAlreadyOnBoarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorIsDeactivate\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorNotOnBoarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"pubkeyAlreadyExist\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"AddedKeys\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"OnboardedOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"}],\"name\":\"UpdatedELRewardSocializePool\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_nextQueuedValidatorIndex\",\"type\":\"uint256\"}],\"name\":\"UpdatedNextQueuedValidatorIndex\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_rewardAddress\",\"type\":\"address\"}],\"name\":\"UpdatedOperatorDetails\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"UpdatedPermissionlessPoolAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"UpdatedPoolFactoryAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"UpdatedSDCollateralAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"_optedForSocializingPool\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"UpdatedSocializingPoolState\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"}],\"name\":\"UpdatedStaderPenaltyFund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"}],\"name\":\"UpdatedVaultFactoryAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_frontRunnedPubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorMarkedAsFrontRunned\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorMarkedReadyToDeposit\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FRONT_RUN_PENALTY\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY_OWNER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_STATUS_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_preDepositSignature\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_depositSignature\",\"type\":\"bytes[]\"}],\"name\":\"addValidatorKeys\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_optedForSocializingPool\",\"type\":\"bool\"}],\"name\":\"changeSocializingPoolState\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"collateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"decreaseTotalActiveValidatorCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"elRewardSocializePool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllActiveValidators\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"}],\"internalType\":\"structValidator[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalKeys\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonWithdrawnKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"getSocializingPoolStateChangeTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"increaseTotalActiveValidatorCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_adminOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_readyToDepositPubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_frontRunnedPubkey\",\"type\":\"bytes[]\"}],\"name\":\"markValidatorReadyToDeposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextOperatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextQueuedValidatorIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextValidatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_optInForMevSocialize\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"_operatorRewardAddress\",\"type\":\"address\"}],\"name\":\"onboardNodeOperator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"mevFeeRecipientAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorIDByAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"operatorStructById\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"permissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolFactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"queuedValidators\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sdCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"socializingPoolStateChangeTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderPenaltyFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferCollateralToPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"}],\"name\":\"updateELRewardSocializePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nextQueuedValidatorIndex\",\"type\":\"uint256\"}],\"name\":\"updateNextQueuedValidatorIndex\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"_rewardAddress\",\"type\":\"address\"}],\"name\":\"updateOperatorDetails\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPoolAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"updatePoolFactoryAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateralAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"}],\"name\":\"updateStaderPenaltyFundAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"enumValidatorStatus\",\"name\":\"_status\",\"type\":\"uint8\"}],\"name\":\"updateValidatorStatus\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"}],\"name\":\"updateVaultFactoryAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"validatorIdByPubkey\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validatorIdsByOperatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorQueueSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validatorRegistry\",\"outputs\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vaultFactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"CooldownNotComplete\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EmptyNameString\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InSufficientBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidBondEthValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidKeyCount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfPubkey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidStartAndEndIndex\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MisMatchingInputKeysSize\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NameCrossedMaxLength\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoChangeInState\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorAlreadyOnBoarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorIsDeactivate\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorNotOnBoarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyAlreadyExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyDoesNotExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyNotFoundOrDuplicateInput\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UNEXPECTED_STATUS\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"maxKeyLimitReached\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"AddedKeys\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"OnboardedOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"}],\"name\":\"UpdatedELRewardSocializePool\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"_inputKeyCountLimit\",\"type\":\"uint16\"}],\"name\":\"UpdatedInputKeyCountLimit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"_keyDepositLimit\",\"type\":\"uint64\"}],\"name\":\"UpdatedMaxKeyPerOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_nextQueuedValidatorIndex\",\"type\":\"uint256\"}],\"name\":\"UpdatedNextQueuedValidatorIndex\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_rewardAddress\",\"type\":\"address\"}],\"name\":\"UpdatedOperatorDetails\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"UpdatedPermissionlessPoolAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"UpdatedPoolFactoryAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"UpdatedSDCollateralAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"_optedForSocializingPool\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"UpdatedSocializingPoolState\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"}],\"name\":\"UpdatedStaderPenaltyFund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"}],\"name\":\"UpdatedVaultFactoryAddress\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_depositTime\",\"type\":\"uint256\"}],\"name\":\"ValidatorDepositTimeSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"_frontRunnedPubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorMarkedAsFrontRunned\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorMarkedReadyToDeposit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"invalidSignaturePubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorStatusMarkedAsInvalidSignature\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"ValidatorWithdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FRONT_RUN_PENALTY\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY_OWNER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_STATUS_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_preDepositSignature\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_depositSignature\",\"type\":\"bytes[]\"}],\"name\":\"addValidatorKeys\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_optInForSocializingPool\",\"type\":\"bool\"}],\"name\":\"changeSocializingPoolState\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"feeRecipientAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"collateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"elRewardSocializePool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllActiveValidators\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"internalType\":\"structValidator[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"getOperatorRewardAddress\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_totalKeys\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"getSocializingPoolStateChangeTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"increaseTotalActiveValidatorCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_adminOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"inputKeyCountLimit\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_readyToDepositPubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_frontRunnedPubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_invalidSignaturePubkey\",\"type\":\"bytes[]\"}],\"name\":\"markValidatorReadyToDeposit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxKeyPerOperator\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextOperatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextQueuedValidatorIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextValidatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_optInForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"_operatorRewardAddress\",\"type\":\"address\"}],\"name\":\"onboardNodeOperator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"feeRecipientAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorIDByAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"operatorStructById\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"permissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolFactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"queuedValidators\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sdCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"socializePoolRewardDistributionCycle\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"socializingPoolStateChangeTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderPenaltyFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferCollateralToPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"updateDepositStatusAndTime\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_elRewardSocializePool\",\"type\":\"address\"}],\"name\":\"updateELRewardSocializePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_inputKeyCountLimit\",\"type\":\"uint16\"}],\"name\":\"updateInputKeyCountLimit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"_maxKeyPerOperator\",\"type\":\"uint64\"}],\"name\":\"updateMaxKeyPerOperator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nextQueuedValidatorIndex\",\"type\":\"uint256\"}],\"name\":\"updateNextQueuedValidatorIndex\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"_rewardAddress\",\"type\":\"address\"}],\"name\":\"updateOperatorDetails\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPoolAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolFactoryAddress\",\"type\":\"address\"}],\"name\":\"updatePoolFactoryAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateralAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"}],\"name\":\"updateStaderPenaltyFundAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"enumValidatorStatus\",\"name\":\"_status\",\"type\":\"uint8\"}],\"name\":\"updateValidatorStatus\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactoryAddress\",\"type\":\"address\"}],\"name\":\"updateVaultFactoryAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"validatorIdByPubkey\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validatorIdsByOperatorId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorQueueSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"validatorRegistry\",\"outputs\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vaultFactoryAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkeys\",\"type\":\"bytes[]\"}],\"name\":\"withdrawnValidators\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PermissionlessNodeRegistryABI is the input ABI used to generate the binding from.
@@ -512,7 +514,7 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) ElRe
 
 // GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256)[])
+// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetAllActiveValidators(opts *bind.CallOpts) ([]Validator, error) {
 	var out []interface{}
 	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getAllActiveValidators")
@@ -529,16 +531,47 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetAllActiv
 
 // GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256)[])
+// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetAllActiveValidators() ([]Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetAllActiveValidators(&_PermissionlessNodeRegistry.CallOpts)
 }
 
 // GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256)[])
+// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetAllActiveValidators() ([]Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetAllActiveValidators(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// GetCollateralETH is a free data retrieval call binding the contract method 0xb01db078.
+//
+// Solidity: function getCollateralETH() pure returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetCollateralETH(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getCollateralETH")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetCollateralETH is a free data retrieval call binding the contract method 0xb01db078.
+//
+// Solidity: function getCollateralETH() pure returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetCollateralETH() (*big.Int, error) {
+	return _PermissionlessNodeRegistry.Contract.GetCollateralETH(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// GetCollateralETH is a free data retrieval call binding the contract method 0xb01db078.
+//
+// Solidity: function getCollateralETH() pure returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetCollateralETH() (*big.Int, error) {
+	return _PermissionlessNodeRegistry.Contract.GetCollateralETH(&_PermissionlessNodeRegistry.CallOpts)
 }
 
 // GetOperator is a free data retrieval call binding the contract method 0x9eaffa96.
@@ -572,6 +605,37 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetO
 	return _PermissionlessNodeRegistry.Contract.GetOperator(&_PermissionlessNodeRegistry.CallOpts, _pubkey)
 }
 
+// GetOperatorRewardAddress is a free data retrieval call binding the contract method 0x83ea2358.
+//
+// Solidity: function getOperatorRewardAddress(uint256 _operatorId) view returns(address)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetOperatorRewardAddress(opts *bind.CallOpts, _operatorId *big.Int) (common.Address, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getOperatorRewardAddress", _operatorId)
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetOperatorRewardAddress is a free data retrieval call binding the contract method 0x83ea2358.
+//
+// Solidity: function getOperatorRewardAddress(uint256 _operatorId) view returns(address)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetOperatorRewardAddress(_operatorId *big.Int) (common.Address, error) {
+	return _PermissionlessNodeRegistry.Contract.GetOperatorRewardAddress(&_PermissionlessNodeRegistry.CallOpts, _operatorId)
+}
+
+// GetOperatorRewardAddress is a free data retrieval call binding the contract method 0x83ea2358.
+//
+// Solidity: function getOperatorRewardAddress(uint256 _operatorId) view returns(address)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetOperatorRewardAddress(_operatorId *big.Int) (common.Address, error) {
+	return _PermissionlessNodeRegistry.Contract.GetOperatorRewardAddress(&_PermissionlessNodeRegistry.CallOpts, _operatorId)
+}
+
 // GetOperatorTotalKeys is a free data retrieval call binding the contract method 0xc34ade5c.
 //
 // Solidity: function getOperatorTotalKeys(uint256 _operatorId) view returns(uint256 _totalKeys)
@@ -603,35 +667,35 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetO
 	return _PermissionlessNodeRegistry.Contract.GetOperatorTotalKeys(&_PermissionlessNodeRegistry.CallOpts, _operatorId)
 }
 
-// GetOperatorTotalNonWithdrawnKeys is a free data retrieval call binding the contract method 0xd145163a.
+// GetOperatorTotalNonTerminalKeys is a free data retrieval call binding the contract method 0x8a25bcec.
 //
-// Solidity: function getOperatorTotalNonWithdrawnKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint256)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetOperatorTotalNonWithdrawnKeys(opts *bind.CallOpts, _nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (*big.Int, error) {
+// Solidity: function getOperatorTotalNonTerminalKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetOperatorTotalNonTerminalKeys(opts *bind.CallOpts, _nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (uint64, error) {
 	var out []interface{}
-	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getOperatorTotalNonWithdrawnKeys", _nodeOperator, startIndex, endIndex)
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getOperatorTotalNonTerminalKeys", _nodeOperator, startIndex, endIndex)
 
 	if err != nil {
-		return *new(*big.Int), err
+		return *new(uint64), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
 
 	return out0, err
 
 }
 
-// GetOperatorTotalNonWithdrawnKeys is a free data retrieval call binding the contract method 0xd145163a.
+// GetOperatorTotalNonTerminalKeys is a free data retrieval call binding the contract method 0x8a25bcec.
 //
-// Solidity: function getOperatorTotalNonWithdrawnKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint256)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetOperatorTotalNonWithdrawnKeys(_nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (*big.Int, error) {
-	return _PermissionlessNodeRegistry.Contract.GetOperatorTotalNonWithdrawnKeys(&_PermissionlessNodeRegistry.CallOpts, _nodeOperator, startIndex, endIndex)
+// Solidity: function getOperatorTotalNonTerminalKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetOperatorTotalNonTerminalKeys(_nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (uint64, error) {
+	return _PermissionlessNodeRegistry.Contract.GetOperatorTotalNonTerminalKeys(&_PermissionlessNodeRegistry.CallOpts, _nodeOperator, startIndex, endIndex)
 }
 
-// GetOperatorTotalNonWithdrawnKeys is a free data retrieval call binding the contract method 0xd145163a.
+// GetOperatorTotalNonTerminalKeys is a free data retrieval call binding the contract method 0x8a25bcec.
 //
-// Solidity: function getOperatorTotalNonWithdrawnKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint256)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetOperatorTotalNonWithdrawnKeys(_nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (*big.Int, error) {
-	return _PermissionlessNodeRegistry.Contract.GetOperatorTotalNonWithdrawnKeys(&_PermissionlessNodeRegistry.CallOpts, _nodeOperator, startIndex, endIndex)
+// Solidity: function getOperatorTotalNonTerminalKeys(address _nodeOperator, uint256 startIndex, uint256 endIndex) view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetOperatorTotalNonTerminalKeys(_nodeOperator common.Address, startIndex *big.Int, endIndex *big.Int) (uint64, error) {
+	return _PermissionlessNodeRegistry.Contract.GetOperatorTotalNonTerminalKeys(&_PermissionlessNodeRegistry.CallOpts, _nodeOperator, startIndex, endIndex)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
@@ -760,7 +824,7 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetT
 
 // GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
 //
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetValidator(opts *bind.CallOpts, _pubkey []byte) (Validator, error) {
 	var out []interface{}
 	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getValidator", _pubkey)
@@ -777,21 +841,21 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetValidato
 
 // GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
 //
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetValidator(_pubkey []byte) (Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetValidator(&_PermissionlessNodeRegistry.CallOpts, _pubkey)
 }
 
 // GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
 //
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetValidator(_pubkey []byte) (Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetValidator(&_PermissionlessNodeRegistry.CallOpts, _pubkey)
 }
 
 // GetValidator0 is a free data retrieval call binding the contract method 0xb5d89627.
 //
-// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetValidator0(opts *bind.CallOpts, _validatorId *big.Int) (Validator, error) {
 	var out []interface{}
 	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "getValidator0", _validatorId)
@@ -808,14 +872,14 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) GetValidato
 
 // GetValidator0 is a free data retrieval call binding the contract method 0xb5d89627.
 //
-// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) GetValidator0(_validatorId *big.Int) (Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetValidator0(&_PermissionlessNodeRegistry.CallOpts, _validatorId)
 }
 
 // GetValidator0 is a free data retrieval call binding the contract method 0xb5d89627.
 //
-// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256))
+// Solidity: function getValidator(uint256 _validatorId) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) GetValidator0(_validatorId *big.Int) (Validator, error) {
 	return _PermissionlessNodeRegistry.Contract.GetValidator0(&_PermissionlessNodeRegistry.CallOpts, _validatorId)
 }
@@ -849,6 +913,99 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) HasRole(ro
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
 	return _PermissionlessNodeRegistry.Contract.HasRole(&_PermissionlessNodeRegistry.CallOpts, role, account)
+}
+
+// InputKeyCountLimit is a free data retrieval call binding the contract method 0xe0bf8b53.
+//
+// Solidity: function inputKeyCountLimit() view returns(uint16)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) InputKeyCountLimit(opts *bind.CallOpts) (uint16, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "inputKeyCountLimit")
+
+	if err != nil {
+		return *new(uint16), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint16)).(*uint16)
+
+	return out0, err
+
+}
+
+// InputKeyCountLimit is a free data retrieval call binding the contract method 0xe0bf8b53.
+//
+// Solidity: function inputKeyCountLimit() view returns(uint16)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) InputKeyCountLimit() (uint16, error) {
+	return _PermissionlessNodeRegistry.Contract.InputKeyCountLimit(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// InputKeyCountLimit is a free data retrieval call binding the contract method 0xe0bf8b53.
+//
+// Solidity: function inputKeyCountLimit() view returns(uint16)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) InputKeyCountLimit() (uint16, error) {
+	return _PermissionlessNodeRegistry.Contract.InputKeyCountLimit(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// IsExistingPubkey is a free data retrieval call binding the contract method 0x36514d9f.
+//
+// Solidity: function isExistingPubkey(bytes _pubkey) view returns(bool)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) IsExistingPubkey(opts *bind.CallOpts, _pubkey []byte) (bool, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "isExistingPubkey", _pubkey)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsExistingPubkey is a free data retrieval call binding the contract method 0x36514d9f.
+//
+// Solidity: function isExistingPubkey(bytes _pubkey) view returns(bool)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) IsExistingPubkey(_pubkey []byte) (bool, error) {
+	return _PermissionlessNodeRegistry.Contract.IsExistingPubkey(&_PermissionlessNodeRegistry.CallOpts, _pubkey)
+}
+
+// IsExistingPubkey is a free data retrieval call binding the contract method 0x36514d9f.
+//
+// Solidity: function isExistingPubkey(bytes _pubkey) view returns(bool)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) IsExistingPubkey(_pubkey []byte) (bool, error) {
+	return _PermissionlessNodeRegistry.Contract.IsExistingPubkey(&_PermissionlessNodeRegistry.CallOpts, _pubkey)
+}
+
+// MaxKeyPerOperator is a free data retrieval call binding the contract method 0xdf606985.
+//
+// Solidity: function maxKeyPerOperator() view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) MaxKeyPerOperator(opts *bind.CallOpts) (uint64, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "maxKeyPerOperator")
+
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
+
+}
+
+// MaxKeyPerOperator is a free data retrieval call binding the contract method 0xdf606985.
+//
+// Solidity: function maxKeyPerOperator() view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) MaxKeyPerOperator() (uint64, error) {
+	return _PermissionlessNodeRegistry.Contract.MaxKeyPerOperator(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// MaxKeyPerOperator is a free data retrieval call binding the contract method 0xdf606985.
+//
+// Solidity: function maxKeyPerOperator() view returns(uint64)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) MaxKeyPerOperator() (uint64, error) {
+	return _PermissionlessNodeRegistry.Contract.MaxKeyPerOperator(&_PermissionlessNodeRegistry.CallOpts)
 }
 
 // NextOperatorId is a free data retrieval call binding the contract method 0x2d1dbd74.
@@ -1221,6 +1378,37 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) SdCo
 	return _PermissionlessNodeRegistry.Contract.SdCollateral(&_PermissionlessNodeRegistry.CallOpts)
 }
 
+// SocializePoolRewardDistributionCycle is a free data retrieval call binding the contract method 0xd2986f39.
+//
+// Solidity: function socializePoolRewardDistributionCycle() view returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) SocializePoolRewardDistributionCycle(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "socializePoolRewardDistributionCycle")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// SocializePoolRewardDistributionCycle is a free data retrieval call binding the contract method 0xd2986f39.
+//
+// Solidity: function socializePoolRewardDistributionCycle() view returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) SocializePoolRewardDistributionCycle() (*big.Int, error) {
+	return _PermissionlessNodeRegistry.Contract.SocializePoolRewardDistributionCycle(&_PermissionlessNodeRegistry.CallOpts)
+}
+
+// SocializePoolRewardDistributionCycle is a free data retrieval call binding the contract method 0xd2986f39.
+//
+// Solidity: function socializePoolRewardDistributionCycle() view returns(uint256)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) SocializePoolRewardDistributionCycle() (*big.Int, error) {
+	return _PermissionlessNodeRegistry.Contract.SocializePoolRewardDistributionCycle(&_PermissionlessNodeRegistry.CallOpts)
+}
+
 // SocializingPoolStateChangeTimestamp is a free data retrieval call binding the contract method 0x33f807de.
 //
 // Solidity: function socializingPoolStateChangeTimestamp(uint256 ) view returns(uint256)
@@ -1440,7 +1628,7 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) Vali
 
 // ValidatorRegistry is a free data retrieval call binding the contract method 0x5a1239c1.
 //
-// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth)
+// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth, uint256 depositTime, uint256 withdrawnTime)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) ValidatorRegistry(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	Status               uint8
 	Pubkey               []byte
@@ -1449,6 +1637,8 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) ValidatorRe
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
 }, error) {
 	var out []interface{}
 	err := _PermissionlessNodeRegistry.contract.Call(opts, &out, "validatorRegistry", arg0)
@@ -1461,6 +1651,8 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) ValidatorRe
 		WithdrawVaultAddress common.Address
 		OperatorId           *big.Int
 		InitialBondEth       *big.Int
+		DepositTime          *big.Int
+		WithdrawnTime        *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
@@ -1473,6 +1665,8 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) ValidatorRe
 	outstruct.WithdrawVaultAddress = *abi.ConvertType(out[4], new(common.Address)).(*common.Address)
 	outstruct.OperatorId = *abi.ConvertType(out[5], new(*big.Int)).(**big.Int)
 	outstruct.InitialBondEth = *abi.ConvertType(out[6], new(*big.Int)).(**big.Int)
+	outstruct.DepositTime = *abi.ConvertType(out[7], new(*big.Int)).(**big.Int)
+	outstruct.WithdrawnTime = *abi.ConvertType(out[8], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
@@ -1480,7 +1674,7 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCaller) ValidatorRe
 
 // ValidatorRegistry is a free data retrieval call binding the contract method 0x5a1239c1.
 //
-// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth)
+// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth, uint256 depositTime, uint256 withdrawnTime)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) ValidatorRegistry(arg0 *big.Int) (struct {
 	Status               uint8
 	Pubkey               []byte
@@ -1489,13 +1683,15 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) ValidatorR
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
 }, error) {
 	return _PermissionlessNodeRegistry.Contract.ValidatorRegistry(&_PermissionlessNodeRegistry.CallOpts, arg0)
 }
 
 // ValidatorRegistry is a free data retrieval call binding the contract method 0x5a1239c1.
 //
-// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth)
+// Solidity: function validatorRegistry(uint256 ) view returns(uint8 status, bytes pubkey, bytes preDepositSignature, bytes depositSignature, address withdrawVaultAddress, uint256 operatorId, uint256 initialBondEth, uint256 depositTime, uint256 withdrawnTime)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) ValidatorRegistry(arg0 *big.Int) (struct {
 	Status               uint8
 	Pubkey               []byte
@@ -1504,6 +1700,8 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryCallerSession) Vali
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
 }, error) {
 	return _PermissionlessNodeRegistry.Contract.ValidatorRegistry(&_PermissionlessNodeRegistry.CallOpts, arg0)
 }
@@ -1562,44 +1760,23 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) 
 
 // ChangeSocializingPoolState is a paid mutator transaction binding the contract method 0xf90b0838.
 //
-// Solidity: function changeSocializingPoolState(bool _optedForSocializingPool) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) ChangeSocializingPoolState(opts *bind.TransactOpts, _optedForSocializingPool bool) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.contract.Transact(opts, "changeSocializingPoolState", _optedForSocializingPool)
+// Solidity: function changeSocializingPoolState(bool _optInForSocializingPool) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) ChangeSocializingPoolState(opts *bind.TransactOpts, _optInForSocializingPool bool) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "changeSocializingPoolState", _optInForSocializingPool)
 }
 
 // ChangeSocializingPoolState is a paid mutator transaction binding the contract method 0xf90b0838.
 //
-// Solidity: function changeSocializingPoolState(bool _optedForSocializingPool) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) ChangeSocializingPoolState(_optedForSocializingPool bool) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.ChangeSocializingPoolState(&_PermissionlessNodeRegistry.TransactOpts, _optedForSocializingPool)
+// Solidity: function changeSocializingPoolState(bool _optInForSocializingPool) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) ChangeSocializingPoolState(_optInForSocializingPool bool) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.ChangeSocializingPoolState(&_PermissionlessNodeRegistry.TransactOpts, _optInForSocializingPool)
 }
 
 // ChangeSocializingPoolState is a paid mutator transaction binding the contract method 0xf90b0838.
 //
-// Solidity: function changeSocializingPoolState(bool _optedForSocializingPool) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) ChangeSocializingPoolState(_optedForSocializingPool bool) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.ChangeSocializingPoolState(&_PermissionlessNodeRegistry.TransactOpts, _optedForSocializingPool)
-}
-
-// DecreaseTotalActiveValidatorCount is a paid mutator transaction binding the contract method 0xb7748e71.
-//
-// Solidity: function decreaseTotalActiveValidatorCount(uint256 _count) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) DecreaseTotalActiveValidatorCount(opts *bind.TransactOpts, _count *big.Int) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.contract.Transact(opts, "decreaseTotalActiveValidatorCount", _count)
-}
-
-// DecreaseTotalActiveValidatorCount is a paid mutator transaction binding the contract method 0xb7748e71.
-//
-// Solidity: function decreaseTotalActiveValidatorCount(uint256 _count) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) DecreaseTotalActiveValidatorCount(_count *big.Int) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.DecreaseTotalActiveValidatorCount(&_PermissionlessNodeRegistry.TransactOpts, _count)
-}
-
-// DecreaseTotalActiveValidatorCount is a paid mutator transaction binding the contract method 0xb7748e71.
-//
-// Solidity: function decreaseTotalActiveValidatorCount(uint256 _count) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) DecreaseTotalActiveValidatorCount(_count *big.Int) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.DecreaseTotalActiveValidatorCount(&_PermissionlessNodeRegistry.TransactOpts, _count)
+// Solidity: function changeSocializingPoolState(bool _optInForSocializingPool) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) ChangeSocializingPoolState(_optInForSocializingPool bool) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.ChangeSocializingPoolState(&_PermissionlessNodeRegistry.TransactOpts, _optInForSocializingPool)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
@@ -1665,46 +1842,46 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) 
 	return _PermissionlessNodeRegistry.Contract.Initialize(&_PermissionlessNodeRegistry.TransactOpts, _adminOwner, _sdCollateral, _staderPenaltyFund, _vaultFactoryAddress, _elRewardSocializePool, _poolFactoryAddress)
 }
 
-// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x73b17ad2.
+// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x13797bff.
 //
-// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) MarkValidatorReadyToDeposit(opts *bind.TransactOpts, _readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.contract.Transact(opts, "markValidatorReadyToDeposit", _readyToDepositPubkey, _frontRunnedPubkey)
+// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey, bytes[] _invalidSignaturePubkey) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) MarkValidatorReadyToDeposit(opts *bind.TransactOpts, _readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte, _invalidSignaturePubkey [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "markValidatorReadyToDeposit", _readyToDepositPubkey, _frontRunnedPubkey, _invalidSignaturePubkey)
 }
 
-// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x73b17ad2.
+// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x13797bff.
 //
-// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) MarkValidatorReadyToDeposit(_readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.MarkValidatorReadyToDeposit(&_PermissionlessNodeRegistry.TransactOpts, _readyToDepositPubkey, _frontRunnedPubkey)
+// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey, bytes[] _invalidSignaturePubkey) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) MarkValidatorReadyToDeposit(_readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte, _invalidSignaturePubkey [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.MarkValidatorReadyToDeposit(&_PermissionlessNodeRegistry.TransactOpts, _readyToDepositPubkey, _frontRunnedPubkey, _invalidSignaturePubkey)
 }
 
-// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x73b17ad2.
+// MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x13797bff.
 //
-// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey) returns()
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) MarkValidatorReadyToDeposit(_readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.MarkValidatorReadyToDeposit(&_PermissionlessNodeRegistry.TransactOpts, _readyToDepositPubkey, _frontRunnedPubkey)
-}
-
-// OnboardNodeOperator is a paid mutator transaction binding the contract method 0x044d2fe8.
-//
-// Solidity: function onboardNodeOperator(bool _optInForMevSocialize, string _operatorName, address _operatorRewardAddress) returns(address mevFeeRecipientAddress)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) OnboardNodeOperator(opts *bind.TransactOpts, _optInForMevSocialize bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.contract.Transact(opts, "onboardNodeOperator", _optInForMevSocialize, _operatorName, _operatorRewardAddress)
+// Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunnedPubkey, bytes[] _invalidSignaturePubkey) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) MarkValidatorReadyToDeposit(_readyToDepositPubkey [][]byte, _frontRunnedPubkey [][]byte, _invalidSignaturePubkey [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.MarkValidatorReadyToDeposit(&_PermissionlessNodeRegistry.TransactOpts, _readyToDepositPubkey, _frontRunnedPubkey, _invalidSignaturePubkey)
 }
 
 // OnboardNodeOperator is a paid mutator transaction binding the contract method 0x044d2fe8.
 //
-// Solidity: function onboardNodeOperator(bool _optInForMevSocialize, string _operatorName, address _operatorRewardAddress) returns(address mevFeeRecipientAddress)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) OnboardNodeOperator(_optInForMevSocialize bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.OnboardNodeOperator(&_PermissionlessNodeRegistry.TransactOpts, _optInForMevSocialize, _operatorName, _operatorRewardAddress)
+// Solidity: function onboardNodeOperator(bool _optInForSocializingPool, string _operatorName, address _operatorRewardAddress) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) OnboardNodeOperator(opts *bind.TransactOpts, _optInForSocializingPool bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "onboardNodeOperator", _optInForSocializingPool, _operatorName, _operatorRewardAddress)
 }
 
 // OnboardNodeOperator is a paid mutator transaction binding the contract method 0x044d2fe8.
 //
-// Solidity: function onboardNodeOperator(bool _optInForMevSocialize, string _operatorName, address _operatorRewardAddress) returns(address mevFeeRecipientAddress)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) OnboardNodeOperator(_optInForMevSocialize bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
-	return _PermissionlessNodeRegistry.Contract.OnboardNodeOperator(&_PermissionlessNodeRegistry.TransactOpts, _optInForMevSocialize, _operatorName, _operatorRewardAddress)
+// Solidity: function onboardNodeOperator(bool _optInForSocializingPool, string _operatorName, address _operatorRewardAddress) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) OnboardNodeOperator(_optInForSocializingPool bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.OnboardNodeOperator(&_PermissionlessNodeRegistry.TransactOpts, _optInForSocializingPool, _operatorName, _operatorRewardAddress)
+}
+
+// OnboardNodeOperator is a paid mutator transaction binding the contract method 0x044d2fe8.
+//
+// Solidity: function onboardNodeOperator(bool _optInForSocializingPool, string _operatorName, address _operatorRewardAddress) returns(address feeRecipientAddress)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) OnboardNodeOperator(_optInForSocializingPool bool, _operatorName string, _operatorRewardAddress common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.OnboardNodeOperator(&_PermissionlessNodeRegistry.TransactOpts, _optInForSocializingPool, _operatorName, _operatorRewardAddress)
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x8456cb59.
@@ -1812,6 +1989,27 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) 
 	return _PermissionlessNodeRegistry.Contract.Unpause(&_PermissionlessNodeRegistry.TransactOpts)
 }
 
+// UpdateDepositStatusAndTime is a paid mutator transaction binding the contract method 0x26d70e98.
+//
+// Solidity: function updateDepositStatusAndTime(uint256 _validatorId) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) UpdateDepositStatusAndTime(opts *bind.TransactOpts, _validatorId *big.Int) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "updateDepositStatusAndTime", _validatorId)
+}
+
+// UpdateDepositStatusAndTime is a paid mutator transaction binding the contract method 0x26d70e98.
+//
+// Solidity: function updateDepositStatusAndTime(uint256 _validatorId) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) UpdateDepositStatusAndTime(_validatorId *big.Int) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateDepositStatusAndTime(&_PermissionlessNodeRegistry.TransactOpts, _validatorId)
+}
+
+// UpdateDepositStatusAndTime is a paid mutator transaction binding the contract method 0x26d70e98.
+//
+// Solidity: function updateDepositStatusAndTime(uint256 _validatorId) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) UpdateDepositStatusAndTime(_validatorId *big.Int) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateDepositStatusAndTime(&_PermissionlessNodeRegistry.TransactOpts, _validatorId)
+}
+
 // UpdateELRewardSocializePool is a paid mutator transaction binding the contract method 0x14382841.
 //
 // Solidity: function updateELRewardSocializePool(address _elRewardSocializePool) returns()
@@ -1831,6 +2029,48 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) UpdateELRe
 // Solidity: function updateELRewardSocializePool(address _elRewardSocializePool) returns()
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) UpdateELRewardSocializePool(_elRewardSocializePool common.Address) (*types.Transaction, error) {
 	return _PermissionlessNodeRegistry.Contract.UpdateELRewardSocializePool(&_PermissionlessNodeRegistry.TransactOpts, _elRewardSocializePool)
+}
+
+// UpdateInputKeyCountLimit is a paid mutator transaction binding the contract method 0x2517cfbf.
+//
+// Solidity: function updateInputKeyCountLimit(uint16 _inputKeyCountLimit) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) UpdateInputKeyCountLimit(opts *bind.TransactOpts, _inputKeyCountLimit uint16) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "updateInputKeyCountLimit", _inputKeyCountLimit)
+}
+
+// UpdateInputKeyCountLimit is a paid mutator transaction binding the contract method 0x2517cfbf.
+//
+// Solidity: function updateInputKeyCountLimit(uint16 _inputKeyCountLimit) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) UpdateInputKeyCountLimit(_inputKeyCountLimit uint16) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateInputKeyCountLimit(&_PermissionlessNodeRegistry.TransactOpts, _inputKeyCountLimit)
+}
+
+// UpdateInputKeyCountLimit is a paid mutator transaction binding the contract method 0x2517cfbf.
+//
+// Solidity: function updateInputKeyCountLimit(uint16 _inputKeyCountLimit) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) UpdateInputKeyCountLimit(_inputKeyCountLimit uint16) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateInputKeyCountLimit(&_PermissionlessNodeRegistry.TransactOpts, _inputKeyCountLimit)
+}
+
+// UpdateMaxKeyPerOperator is a paid mutator transaction binding the contract method 0x25cfe633.
+//
+// Solidity: function updateMaxKeyPerOperator(uint64 _maxKeyPerOperator) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) UpdateMaxKeyPerOperator(opts *bind.TransactOpts, _maxKeyPerOperator uint64) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "updateMaxKeyPerOperator", _maxKeyPerOperator)
+}
+
+// UpdateMaxKeyPerOperator is a paid mutator transaction binding the contract method 0x25cfe633.
+//
+// Solidity: function updateMaxKeyPerOperator(uint64 _maxKeyPerOperator) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) UpdateMaxKeyPerOperator(_maxKeyPerOperator uint64) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateMaxKeyPerOperator(&_PermissionlessNodeRegistry.TransactOpts, _maxKeyPerOperator)
+}
+
+// UpdateMaxKeyPerOperator is a paid mutator transaction binding the contract method 0x25cfe633.
+//
+// Solidity: function updateMaxKeyPerOperator(uint64 _maxKeyPerOperator) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) UpdateMaxKeyPerOperator(_maxKeyPerOperator uint64) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.UpdateMaxKeyPerOperator(&_PermissionlessNodeRegistry.TransactOpts, _maxKeyPerOperator)
 }
 
 // UpdateNextQueuedValidatorIndex is a paid mutator transaction binding the contract method 0xb8d2f06c.
@@ -1999,6 +2239,27 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) UpdateVaul
 // Solidity: function updateVaultFactoryAddress(address _vaultFactoryAddress) returns()
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) UpdateVaultFactoryAddress(_vaultFactoryAddress common.Address) (*types.Transaction, error) {
 	return _PermissionlessNodeRegistry.Contract.UpdateVaultFactoryAddress(&_PermissionlessNodeRegistry.TransactOpts, _vaultFactoryAddress)
+}
+
+// WithdrawnValidators is a paid mutator transaction binding the contract method 0x264f27f3.
+//
+// Solidity: function withdrawnValidators(bytes[] _pubkeys) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) WithdrawnValidators(opts *bind.TransactOpts, _pubkeys [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "withdrawnValidators", _pubkeys)
+}
+
+// WithdrawnValidators is a paid mutator transaction binding the contract method 0x264f27f3.
+//
+// Solidity: function withdrawnValidators(bytes[] _pubkeys) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) WithdrawnValidators(_pubkeys [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.WithdrawnValidators(&_PermissionlessNodeRegistry.TransactOpts, _pubkeys)
+}
+
+// WithdrawnValidators is a paid mutator transaction binding the contract method 0x264f27f3.
+//
+// Solidity: function withdrawnValidators(bytes[] _pubkeys) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) WithdrawnValidators(_pubkeys [][]byte) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.WithdrawnValidators(&_PermissionlessNodeRegistry.TransactOpts, _pubkeys)
 }
 
 // PermissionlessNodeRegistryAddedKeysIterator is returned from FilterAddedKeys and is used to iterate over the raw logs and unpacked data for AddedKeys events raised by the PermissionlessNodeRegistry contract.
@@ -3314,6 +3575,274 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseUpda
 	return event, nil
 }
 
+// PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator is returned from FilterUpdatedInputKeyCountLimit and is used to iterate over the raw logs and unpacked data for UpdatedInputKeyCountLimit events raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator struct {
+	Event *PermissionlessNodeRegistryUpdatedInputKeyCountLimit // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessNodeRegistryUpdatedInputKeyCountLimit)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessNodeRegistryUpdatedInputKeyCountLimit)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessNodeRegistryUpdatedInputKeyCountLimit represents a UpdatedInputKeyCountLimit event raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryUpdatedInputKeyCountLimit struct {
+	InputKeyCountLimit uint16
+	Raw                types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpdatedInputKeyCountLimit is a free log retrieval operation binding the contract event 0x16da2836197a2cac50b2d1b5e0fae9874b59cf21a0b06d92f34bab1cd4e893a1.
+//
+// Solidity: event UpdatedInputKeyCountLimit(uint16 _inputKeyCountLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterUpdatedInputKeyCountLimit(opts *bind.FilterOpts) (*PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "UpdatedInputKeyCountLimit")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessNodeRegistryUpdatedInputKeyCountLimitIterator{contract: _PermissionlessNodeRegistry.contract, event: "UpdatedInputKeyCountLimit", logs: logs, sub: sub}, nil
+}
+
+// WatchUpdatedInputKeyCountLimit is a free log subscription operation binding the contract event 0x16da2836197a2cac50b2d1b5e0fae9874b59cf21a0b06d92f34bab1cd4e893a1.
+//
+// Solidity: event UpdatedInputKeyCountLimit(uint16 _inputKeyCountLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchUpdatedInputKeyCountLimit(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryUpdatedInputKeyCountLimit) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "UpdatedInputKeyCountLimit")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessNodeRegistryUpdatedInputKeyCountLimit)
+				if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "UpdatedInputKeyCountLimit", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpdatedInputKeyCountLimit is a log parse operation binding the contract event 0x16da2836197a2cac50b2d1b5e0fae9874b59cf21a0b06d92f34bab1cd4e893a1.
+//
+// Solidity: event UpdatedInputKeyCountLimit(uint16 _inputKeyCountLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseUpdatedInputKeyCountLimit(log types.Log) (*PermissionlessNodeRegistryUpdatedInputKeyCountLimit, error) {
+	event := new(PermissionlessNodeRegistryUpdatedInputKeyCountLimit)
+	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "UpdatedInputKeyCountLimit", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator is returned from FilterUpdatedMaxKeyPerOperator and is used to iterate over the raw logs and unpacked data for UpdatedMaxKeyPerOperator events raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator struct {
+	Event *PermissionlessNodeRegistryUpdatedMaxKeyPerOperator // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessNodeRegistryUpdatedMaxKeyPerOperator)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessNodeRegistryUpdatedMaxKeyPerOperator)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessNodeRegistryUpdatedMaxKeyPerOperator represents a UpdatedMaxKeyPerOperator event raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryUpdatedMaxKeyPerOperator struct {
+	KeyDepositLimit uint64
+	Raw             types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpdatedMaxKeyPerOperator is a free log retrieval operation binding the contract event 0xae32a0fc0865ac1ff229d2eb9e38d025ba79c51aa94e691493815ec2b327ef42.
+//
+// Solidity: event UpdatedMaxKeyPerOperator(uint64 _keyDepositLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterUpdatedMaxKeyPerOperator(opts *bind.FilterOpts) (*PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "UpdatedMaxKeyPerOperator")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessNodeRegistryUpdatedMaxKeyPerOperatorIterator{contract: _PermissionlessNodeRegistry.contract, event: "UpdatedMaxKeyPerOperator", logs: logs, sub: sub}, nil
+}
+
+// WatchUpdatedMaxKeyPerOperator is a free log subscription operation binding the contract event 0xae32a0fc0865ac1ff229d2eb9e38d025ba79c51aa94e691493815ec2b327ef42.
+//
+// Solidity: event UpdatedMaxKeyPerOperator(uint64 _keyDepositLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchUpdatedMaxKeyPerOperator(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryUpdatedMaxKeyPerOperator) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "UpdatedMaxKeyPerOperator")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessNodeRegistryUpdatedMaxKeyPerOperator)
+				if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "UpdatedMaxKeyPerOperator", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpdatedMaxKeyPerOperator is a log parse operation binding the contract event 0xae32a0fc0865ac1ff229d2eb9e38d025ba79c51aa94e691493815ec2b327ef42.
+//
+// Solidity: event UpdatedMaxKeyPerOperator(uint64 _keyDepositLimit)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseUpdatedMaxKeyPerOperator(log types.Log) (*PermissionlessNodeRegistryUpdatedMaxKeyPerOperator, error) {
+	event := new(PermissionlessNodeRegistryUpdatedMaxKeyPerOperator)
+	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "UpdatedMaxKeyPerOperator", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // PermissionlessNodeRegistryUpdatedNextQueuedValidatorIndexIterator is returned from FilterUpdatedNextQueuedValidatorIndex and is used to iterate over the raw logs and unpacked data for UpdatedNextQueuedValidatorIndex events raised by the PermissionlessNodeRegistry contract.
 type PermissionlessNodeRegistryUpdatedNextQueuedValidatorIndexIterator struct {
 	Event *PermissionlessNodeRegistryUpdatedNextQueuedValidatorIndex // Event containing the contract specifics and raw log
@@ -4400,6 +4929,141 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseUpda
 	return event, nil
 }
 
+// PermissionlessNodeRegistryValidatorDepositTimeSetIterator is returned from FilterValidatorDepositTimeSet and is used to iterate over the raw logs and unpacked data for ValidatorDepositTimeSet events raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorDepositTimeSetIterator struct {
+	Event *PermissionlessNodeRegistryValidatorDepositTimeSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessNodeRegistryValidatorDepositTimeSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessNodeRegistryValidatorDepositTimeSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessNodeRegistryValidatorDepositTimeSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessNodeRegistryValidatorDepositTimeSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessNodeRegistryValidatorDepositTimeSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessNodeRegistryValidatorDepositTimeSet represents a ValidatorDepositTimeSet event raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorDepositTimeSet struct {
+	ValidatorId *big.Int
+	DepositTime *big.Int
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorDepositTimeSet is a free log retrieval operation binding the contract event 0xd7d27755850483d7c171ef91a1319df4293f437d249db3d03183d9fec8c2b313.
+//
+// Solidity: event ValidatorDepositTimeSet(uint256 _validatorId, uint256 _depositTime)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorDepositTimeSet(opts *bind.FilterOpts) (*PermissionlessNodeRegistryValidatorDepositTimeSetIterator, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorDepositTimeSet")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessNodeRegistryValidatorDepositTimeSetIterator{contract: _PermissionlessNodeRegistry.contract, event: "ValidatorDepositTimeSet", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorDepositTimeSet is a free log subscription operation binding the contract event 0xd7d27755850483d7c171ef91a1319df4293f437d249db3d03183d9fec8c2b313.
+//
+// Solidity: event ValidatorDepositTimeSet(uint256 _validatorId, uint256 _depositTime)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorDepositTimeSet(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorDepositTimeSet) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorDepositTimeSet")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessNodeRegistryValidatorDepositTimeSet)
+				if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorDepositTimeSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorDepositTimeSet is a log parse operation binding the contract event 0xd7d27755850483d7c171ef91a1319df4293f437d249db3d03183d9fec8c2b313.
+//
+// Solidity: event ValidatorDepositTimeSet(uint256 _validatorId, uint256 _depositTime)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseValidatorDepositTimeSet(log types.Log) (*PermissionlessNodeRegistryValidatorDepositTimeSet, error) {
+	event := new(PermissionlessNodeRegistryValidatorDepositTimeSet)
+	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorDepositTimeSet", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // PermissionlessNodeRegistryValidatorMarkedAsFrontRunnedIterator is returned from FilterValidatorMarkedAsFrontRunned and is used to iterate over the raw logs and unpacked data for ValidatorMarkedAsFrontRunned events raised by the PermissionlessNodeRegistry contract.
 type PermissionlessNodeRegistryValidatorMarkedAsFrontRunnedIterator struct {
 	Event *PermissionlessNodeRegistryValidatorMarkedAsFrontRunned // Event containing the contract specifics and raw log
@@ -4469,17 +5133,22 @@ func (it *PermissionlessNodeRegistryValidatorMarkedAsFrontRunnedIterator) Close(
 
 // PermissionlessNodeRegistryValidatorMarkedAsFrontRunned represents a ValidatorMarkedAsFrontRunned event raised by the PermissionlessNodeRegistry contract.
 type PermissionlessNodeRegistryValidatorMarkedAsFrontRunned struct {
-	FrontRunnedPubkey []byte
+	FrontRunnedPubkey common.Hash
 	ValidatorId       *big.Int
 	Raw               types.Log // Blockchain specific contextual infos
 }
 
 // FilterValidatorMarkedAsFrontRunned is a free log retrieval operation binding the contract event 0x4e93215f00bc729272f0ff71afd3d0f385208cbf6c999fe776ad07c623b83466.
 //
-// Solidity: event ValidatorMarkedAsFrontRunned(bytes _frontRunnedPubkey, uint256 _validatorId)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorMarkedAsFrontRunned(opts *bind.FilterOpts) (*PermissionlessNodeRegistryValidatorMarkedAsFrontRunnedIterator, error) {
+// Solidity: event ValidatorMarkedAsFrontRunned(bytes indexed _frontRunnedPubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorMarkedAsFrontRunned(opts *bind.FilterOpts, _frontRunnedPubkey [][]byte) (*PermissionlessNodeRegistryValidatorMarkedAsFrontRunnedIterator, error) {
 
-	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorMarkedAsFrontRunned")
+	var _frontRunnedPubkeyRule []interface{}
+	for _, _frontRunnedPubkeyItem := range _frontRunnedPubkey {
+		_frontRunnedPubkeyRule = append(_frontRunnedPubkeyRule, _frontRunnedPubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorMarkedAsFrontRunned", _frontRunnedPubkeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4488,10 +5157,15 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterVal
 
 // WatchValidatorMarkedAsFrontRunned is a free log subscription operation binding the contract event 0x4e93215f00bc729272f0ff71afd3d0f385208cbf6c999fe776ad07c623b83466.
 //
-// Solidity: event ValidatorMarkedAsFrontRunned(bytes _frontRunnedPubkey, uint256 _validatorId)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorMarkedAsFrontRunned(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorMarkedAsFrontRunned) (event.Subscription, error) {
+// Solidity: event ValidatorMarkedAsFrontRunned(bytes indexed _frontRunnedPubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorMarkedAsFrontRunned(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorMarkedAsFrontRunned, _frontRunnedPubkey [][]byte) (event.Subscription, error) {
 
-	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorMarkedAsFrontRunned")
+	var _frontRunnedPubkeyRule []interface{}
+	for _, _frontRunnedPubkeyItem := range _frontRunnedPubkey {
+		_frontRunnedPubkeyRule = append(_frontRunnedPubkeyRule, _frontRunnedPubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorMarkedAsFrontRunned", _frontRunnedPubkeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4525,7 +5199,7 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchVali
 
 // ParseValidatorMarkedAsFrontRunned is a log parse operation binding the contract event 0x4e93215f00bc729272f0ff71afd3d0f385208cbf6c999fe776ad07c623b83466.
 //
-// Solidity: event ValidatorMarkedAsFrontRunned(bytes _frontRunnedPubkey, uint256 _validatorId)
+// Solidity: event ValidatorMarkedAsFrontRunned(bytes indexed _frontRunnedPubkey, uint256 _validatorId)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseValidatorMarkedAsFrontRunned(log types.Log) (*PermissionlessNodeRegistryValidatorMarkedAsFrontRunned, error) {
 	event := new(PermissionlessNodeRegistryValidatorMarkedAsFrontRunned)
 	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorMarkedAsFrontRunned", log); err != nil {
@@ -4604,17 +5278,22 @@ func (it *PermissionlessNodeRegistryValidatorMarkedReadyToDepositIterator) Close
 
 // PermissionlessNodeRegistryValidatorMarkedReadyToDeposit represents a ValidatorMarkedReadyToDeposit event raised by the PermissionlessNodeRegistry contract.
 type PermissionlessNodeRegistryValidatorMarkedReadyToDeposit struct {
-	Pubkey      []byte
+	Pubkey      common.Hash
 	ValidatorId *big.Int
 	Raw         types.Log // Blockchain specific contextual infos
 }
 
 // FilterValidatorMarkedReadyToDeposit is a free log retrieval operation binding the contract event 0x21d79a0b22a7d5a18b9535162fe2f0580e24c042b0541a05afc298a77ddf5693.
 //
-// Solidity: event ValidatorMarkedReadyToDeposit(bytes _pubkey, uint256 _validatorId)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorMarkedReadyToDeposit(opts *bind.FilterOpts) (*PermissionlessNodeRegistryValidatorMarkedReadyToDepositIterator, error) {
+// Solidity: event ValidatorMarkedReadyToDeposit(bytes indexed _pubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorMarkedReadyToDeposit(opts *bind.FilterOpts, _pubkey [][]byte) (*PermissionlessNodeRegistryValidatorMarkedReadyToDepositIterator, error) {
 
-	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorMarkedReadyToDeposit")
+	var _pubkeyRule []interface{}
+	for _, _pubkeyItem := range _pubkey {
+		_pubkeyRule = append(_pubkeyRule, _pubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorMarkedReadyToDeposit", _pubkeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4623,10 +5302,15 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterVal
 
 // WatchValidatorMarkedReadyToDeposit is a free log subscription operation binding the contract event 0x21d79a0b22a7d5a18b9535162fe2f0580e24c042b0541a05afc298a77ddf5693.
 //
-// Solidity: event ValidatorMarkedReadyToDeposit(bytes _pubkey, uint256 _validatorId)
-func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorMarkedReadyToDeposit(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorMarkedReadyToDeposit) (event.Subscription, error) {
+// Solidity: event ValidatorMarkedReadyToDeposit(bytes indexed _pubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorMarkedReadyToDeposit(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorMarkedReadyToDeposit, _pubkey [][]byte) (event.Subscription, error) {
 
-	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorMarkedReadyToDeposit")
+	var _pubkeyRule []interface{}
+	for _, _pubkeyItem := range _pubkey {
+		_pubkeyRule = append(_pubkeyRule, _pubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorMarkedReadyToDeposit", _pubkeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4660,10 +5344,300 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchVali
 
 // ParseValidatorMarkedReadyToDeposit is a log parse operation binding the contract event 0x21d79a0b22a7d5a18b9535162fe2f0580e24c042b0541a05afc298a77ddf5693.
 //
-// Solidity: event ValidatorMarkedReadyToDeposit(bytes _pubkey, uint256 _validatorId)
+// Solidity: event ValidatorMarkedReadyToDeposit(bytes indexed _pubkey, uint256 _validatorId)
 func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseValidatorMarkedReadyToDeposit(log types.Log) (*PermissionlessNodeRegistryValidatorMarkedReadyToDeposit, error) {
 	event := new(PermissionlessNodeRegistryValidatorMarkedReadyToDeposit)
 	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorMarkedReadyToDeposit", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator is returned from FilterValidatorStatusMarkedAsInvalidSignature and is used to iterate over the raw logs and unpacked data for ValidatorStatusMarkedAsInvalidSignature events raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator struct {
+	Event *PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature represents a ValidatorStatusMarkedAsInvalidSignature event raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature struct {
+	InvalidSignaturePubkey common.Hash
+	ValidatorId            *big.Int
+	Raw                    types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorStatusMarkedAsInvalidSignature is a free log retrieval operation binding the contract event 0x596ee835bed6cb827d21ba1785c468f0755ee40d33d87132df5d2ec90b645f9f.
+//
+// Solidity: event ValidatorStatusMarkedAsInvalidSignature(bytes indexed invalidSignaturePubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorStatusMarkedAsInvalidSignature(opts *bind.FilterOpts, invalidSignaturePubkey [][]byte) (*PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator, error) {
+
+	var invalidSignaturePubkeyRule []interface{}
+	for _, invalidSignaturePubkeyItem := range invalidSignaturePubkey {
+		invalidSignaturePubkeyRule = append(invalidSignaturePubkeyRule, invalidSignaturePubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorStatusMarkedAsInvalidSignature", invalidSignaturePubkeyRule)
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignatureIterator{contract: _PermissionlessNodeRegistry.contract, event: "ValidatorStatusMarkedAsInvalidSignature", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorStatusMarkedAsInvalidSignature is a free log subscription operation binding the contract event 0x596ee835bed6cb827d21ba1785c468f0755ee40d33d87132df5d2ec90b645f9f.
+//
+// Solidity: event ValidatorStatusMarkedAsInvalidSignature(bytes indexed invalidSignaturePubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorStatusMarkedAsInvalidSignature(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature, invalidSignaturePubkey [][]byte) (event.Subscription, error) {
+
+	var invalidSignaturePubkeyRule []interface{}
+	for _, invalidSignaturePubkeyItem := range invalidSignaturePubkey {
+		invalidSignaturePubkeyRule = append(invalidSignaturePubkeyRule, invalidSignaturePubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorStatusMarkedAsInvalidSignature", invalidSignaturePubkeyRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature)
+				if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorStatusMarkedAsInvalidSignature", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorStatusMarkedAsInvalidSignature is a log parse operation binding the contract event 0x596ee835bed6cb827d21ba1785c468f0755ee40d33d87132df5d2ec90b645f9f.
+//
+// Solidity: event ValidatorStatusMarkedAsInvalidSignature(bytes indexed invalidSignaturePubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseValidatorStatusMarkedAsInvalidSignature(log types.Log) (*PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature, error) {
+	event := new(PermissionlessNodeRegistryValidatorStatusMarkedAsInvalidSignature)
+	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorStatusMarkedAsInvalidSignature", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessNodeRegistryValidatorWithdrawnIterator is returned from FilterValidatorWithdrawn and is used to iterate over the raw logs and unpacked data for ValidatorWithdrawn events raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorWithdrawnIterator struct {
+	Event *PermissionlessNodeRegistryValidatorWithdrawn // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessNodeRegistryValidatorWithdrawnIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessNodeRegistryValidatorWithdrawn)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessNodeRegistryValidatorWithdrawn)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessNodeRegistryValidatorWithdrawnIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessNodeRegistryValidatorWithdrawnIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessNodeRegistryValidatorWithdrawn represents a ValidatorWithdrawn event raised by the PermissionlessNodeRegistry contract.
+type PermissionlessNodeRegistryValidatorWithdrawn struct {
+	Pubkey      common.Hash
+	ValidatorId *big.Int
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterValidatorWithdrawn is a free log retrieval operation binding the contract event 0x450186694fefe67df6156f60235e4073b623160f28a0b85908ebc864316abf79.
+//
+// Solidity: event ValidatorWithdrawn(bytes indexed _pubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) FilterValidatorWithdrawn(opts *bind.FilterOpts, _pubkey [][]byte) (*PermissionlessNodeRegistryValidatorWithdrawnIterator, error) {
+
+	var _pubkeyRule []interface{}
+	for _, _pubkeyItem := range _pubkey {
+		_pubkeyRule = append(_pubkeyRule, _pubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.FilterLogs(opts, "ValidatorWithdrawn", _pubkeyRule)
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessNodeRegistryValidatorWithdrawnIterator{contract: _PermissionlessNodeRegistry.contract, event: "ValidatorWithdrawn", logs: logs, sub: sub}, nil
+}
+
+// WatchValidatorWithdrawn is a free log subscription operation binding the contract event 0x450186694fefe67df6156f60235e4073b623160f28a0b85908ebc864316abf79.
+//
+// Solidity: event ValidatorWithdrawn(bytes indexed _pubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) WatchValidatorWithdrawn(opts *bind.WatchOpts, sink chan<- *PermissionlessNodeRegistryValidatorWithdrawn, _pubkey [][]byte) (event.Subscription, error) {
+
+	var _pubkeyRule []interface{}
+	for _, _pubkeyItem := range _pubkey {
+		_pubkeyRule = append(_pubkeyRule, _pubkeyItem)
+	}
+
+	logs, sub, err := _PermissionlessNodeRegistry.contract.WatchLogs(opts, "ValidatorWithdrawn", _pubkeyRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessNodeRegistryValidatorWithdrawn)
+				if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorWithdrawn", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseValidatorWithdrawn is a log parse operation binding the contract event 0x450186694fefe67df6156f60235e4073b623160f28a0b85908ebc864316abf79.
+//
+// Solidity: event ValidatorWithdrawn(bytes indexed _pubkey, uint256 _validatorId)
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryFilterer) ParseValidatorWithdrawn(log types.Log) (*PermissionlessNodeRegistryValidatorWithdrawn, error) {
+	event := new(PermissionlessNodeRegistryValidatorWithdrawn)
+	if err := _PermissionlessNodeRegistry.contract.UnpackLog(event, "ValidatorWithdrawn", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

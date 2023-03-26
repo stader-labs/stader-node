@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package node
 
 import (
@@ -10,7 +29,6 @@ import (
 
 func getSyncProgress(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -22,29 +40,6 @@ func getSyncProgress(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
-	// Make sure ETH2 is on the correct chain
-	// TODO - bchain check if we need to do such checks
-	//depositContractInfo, err := staderClient.DepositContractInfo()
-	//if err != nil {
-	//	return err
-	//}
-	//if !depositContractInfo.SufficientSync {
-	//	colorReset := "\033[0m"
-	//	colorYellow := "\033[33m"
-	//	fmt.Printf("%sYour eth1 client hasn't synced enough to determine if your eth1 and eth2 clients are on the same network.\n", colorYellow)
-	//	fmt.Printf("To run this safety check, try again later when eth1 has made more sync progress.%s\n\n", colorReset)
-	//} else if depositContractInfo.RPNetwork != depositContractInfo.BeaconNetwork ||
-	//	depositContractInfo.RPDepositContract != depositContractInfo.BeaconDepositContract {
-	//	cliutils.PrintDepositMismatchError(
-	//		depositContractInfo.RPNetwork,
-	//		depositContractInfo.BeaconNetwork,
-	//		depositContractInfo.RPDepositContract,
-	//		depositContractInfo.BeaconDepositContract)
-	//	return nil
-	//} else {
-	//	fmt.Println("Your eth2 client is on the correct network.\n")
-	//}
 
 	// Get node status
 	status, err := staderClient.NodeSync()

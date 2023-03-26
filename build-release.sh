@@ -1,11 +1,26 @@
 #!/bin/bash
 
-# This script will build all of the artifacts involved in a new Stader smartnode release
+# This work is licensed and released under GNU GPL v3 or any other later versions. 
+# The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This script will build all of the artifacts involved in a new Stader Stader node release
 # (except for the macOS daemons, which need to be built manually on a macOS system) and put
 # them into a convenient folder for ease of uploading.
-
-# NOTE: You MUST put this in a directory that has the `smartnode` and `smartnode-install`
-# repositories cloned as subdirectories.
 
 
 # =================
@@ -24,68 +39,48 @@ fail() {
 
 # Builds all of the CLI binaries
 build_cli() {
-    cd stader-node || fail "Directory ${PWD}/stader-node/stader-cli does not exist or you don't have permissions to access it."
-
     echo -n "Building CLI binaries... "
-    docker run --rm -v $PWD:/stader-node rocketpool/smartnode-builder:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
-    mv stader-cli/stader-cli-* ../$VERSION
-    # push to S3 bucket
-    aws s3 cp ../$VERSION s3://stadernode/$VERSION --recursive
+    docker run --rm -v $PWD:/stader-node staderdev/stader-node-builder:latest /stader-node/stader-cli/build.sh || fail "Error building CLI binaries."
+    mv stader-cli/stader-cli-* build/$VERSION
     echo "done!"
-
-    cd ..
 }
 
 
-# Builds the .tar.xz file packages with the RP configuration files
+# Builds the .tar.xz file packages with the Stader configuration files
 build_install_packages() {
-    cd smartnode-install || fail "Directory ${PWD}/smartnode-install does not exist or you don't have permissions to access it."
-    rm -f rp-smartnode-install.tar.xz
-
-    echo -n "Building Smartnode installer packages... "
-    tar cfJ rp-smartnode-install.tar.xz install || fail "Error building installer package."
-    mv rp-smartnode-install.tar.xz ../$VERSION
-    cp install.sh ../$VERSION
-    cp install-update-tracker.sh ../$VERSION
+    rm -f stader-node-install.tar.xz
+    echo -n "Building Stader node installer packages... "
+    tar cfJ stader-node-install.tar.xz install || fail "Error building installer package."
+    mv stader-node-install.tar.xz build/$VERSION
+    cp install.sh build/$VERSION
+    aws s3 cp build/$VERSION s3://stader-cli-beta/$VERSION --recursive
     echo "done!"
 
-    echo -n "Building update tracker package... "
-    tar cfJ rp-update-tracker.tar.xz rp-update-tracker || fail "Error building update tracker package."
-    mv rp-update-tracker.tar.xz ../$VERSION
-    echo "done!"
-
-    cd ..
 }
 
 
-# Builds the daemon binaries and Docker Smartnode images, and pushes them to Docker Hub
+# Builds the daemon binaries and Docker images, and pushes them to Docker Hub
 build_daemon() {
-    cd stader-node || fail "Directory ${PWD}/stader-node does not exist or you don't have permissions to access it."
-
     echo -n "Building Daemon binary... "
     ./daemon-build.sh || fail "Error building daemon binary."
-    cp stader/stader-daemon-* ../$VERSION
+    cp stader/stader-daemon-* build/$VERSION
     echo "done!"
-
-    echo "Building Docker Smartnode image..."
-    docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Smartnode image."
-    #docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Smartnode image."
+        # ensure support for arm64 is installed by  sudo apt install -y qemu-user-static binfmt-support
+    echo "Building Docker Stader Daemon image..."
+    docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
+    docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker push staderdev/stader-node:$VERSION-amd64 || fail "Error pushing amd64 Docker Smartnode image to Docker Hub."
-    #docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Smartnode image to Docker Hub."
+    docker push staderdev/stader-node:$VERSION-amd64 || fail "Error pushing amd64 Docker Stader Daemon image to Docker Hub."
+    docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
     rm -f stader/stader-daemon-*
     echo "done!"
-    
-    cd ..
 }
 
 
 # Builds the Docker prune provisioner image and pushes it to Docker Hub
 build_docker_prune_provision() {
-    cd smartnode || fail "Directory ${PWD}/smartnode does not exist or you don't have permissions to access it."
-
     echo "Building Docker Prune Provisioner image..."
     docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
     docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
@@ -95,8 +90,6 @@ build_docker_prune_provision() {
     docker push staderdev/eth1-prune-provision:$VERSION-amd64 || fail "Error pushing amd64 Docker Prune Provision image to Docker Hub."
     docker push staderdev/eth1-prune-provision:$VERSION-arm64 || fail "Error pushing arm Docker Prune Provision image to Docker Hub."
     echo "done!"
-    
-    cd ..
 }
 
 
@@ -139,10 +132,9 @@ build_docker_prune_provision_manifest() {
 }
 
 send_slack() {
-    # curl -X POST --data-urlencode 'payload={"channel": "'${SLACK_CHAN}'", "username": "'${SLACK_USERNAME}'", "text": "'"${*}"'", "icon_emoji": "'${SLACK_ICON}'"}' ${URL} > /dev/null 2>&1
+    # TODO: @prabhakar087 - please fetch the key from secrets manager and use it here
     curl -X POST --data-urlencode "payload={\"channel\": \"#stader-node-build-alerts\", \"username\": \"webhookbot\", \"text\": \"${*}\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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 > /dev/null 2>&1
 }
-
 
 # Print usage
 usage() {
@@ -151,10 +143,10 @@ usage() {
     echo "Options:"
     echo $'\t-a\tBuild all of the artifacts, except for the prune provisioner'
     echo $'\t-c\tBuild the CLI binaries for all platforms'
-    echo $'\t-p\tBuild the Smartnode installer packages'
-    echo $'\t-d\tBuild the Daemon binaries and Docker Smartnode images, and push them to Docker Hub'
+    echo $'\t-p\tBuild the Stader installer packages'
+    echo $'\t-d\tBuild the Daemon binaries and Docker images, and push them to Docker Hub'
     echo $'\t-x\tBuild the Docker POW Proxy image and push it to Docker Hub'
-    echo $'\t-n\tBuild the Docker manifests (Smartnode and POW Proxy), and push them to Docker Hub'
+    echo $'\t-n\tBuild the Docker manifests (Stader node and POW Proxy), and push them to Docker Hub'
     echo $'\t-r\tBuild the Docker Prune Provisioner image and push it to Docker Hub'
     echo $'\t-f\tBuild the Docker manifest for the Prune Provisioner and push it to Docker Hub'
     exit 0
@@ -195,8 +187,8 @@ if [ -z "$VERSION" ]; then
 fi
 
 # Cleanup old artifacts
-rm -f ./$VERSION/*
-mkdir -p ./$VERSION
+rm -f build/$VERSION/*
+mkdir -p build/$VERSION
 
 # Build the artifacts
 if [ "$CLI" = true ]; then
@@ -223,10 +215,7 @@ fi
 # if all successful, send slack message
 if [ $? -eq 0 ]; then
     send_slack "Stader Node $VERSION has been built and pushed to Docker Hub."
-fi
 # else send failure message
 else
     send_slack "Stader Node $VERSION has failed to build and push to Docker Hub."
 fi
-
-

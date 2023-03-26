@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package wallet
 
 import (
@@ -58,31 +77,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
-				Name:      "init",
-				Aliases:   []string{"i"},
-				Usage:     "Initialize the node wallet",
-				UsageText: "stader-cli api wallet init",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "derivation-path, d",
-						Usage: "Specify the derivation path for the wallet.\nOmit this flag (or leave it blank) for the default of \"m/44'/60'/0'/0/%d\" (where %d is the index).\nSet this to \"ledgerLive\" to use Ledger Live's path of \"m/44'/60'/%d/0/0\".\nSet this to \"mew\" to use MyEtherWallet's path of \"m/44'/60'/0'/%d\".\nFor custom paths, simply enter them here.",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(initWallet(c))
-					return nil
-
-				},
-			},
-
-			{
 				Name:      "recover",
 				Aliases:   []string{"r"},
 				Usage:     "Recover a node wallet from a mnemonic phrase",
@@ -121,43 +115,16 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
-				Name:      "search-and-recover",
-				Aliases:   []string{"r"},
-				Usage:     "Search for and recover a node wallet's derivation key and index using a mnemonic phrase and a well-known address.",
-				UsageText: "stader-cli api wallet search-and-recover mnemonic address",
+				Name:      "init",
+				Aliases:   []string{"i"},
+				Usage:     "Initialize the node wallet",
+				UsageText: "stader-cli api wallet init",
 				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "skip-validator-key-recovery, k",
-						Usage: "Recover the node wallet, but do not regenerate its validator keys",
+					cli.StringFlag{
+						Name:  "derivation-path, d",
+						Usage: "Specify the derivation path for the wallet.\nOmit this flag (or leave it blank) for the default of \"m/44'/60'/0'/0/%d\" (where %d is the index).\nSet this to \"ledgerLive\" to use Ledger Live's path of \"m/44'/60'/%d/0/0\".\nSet this to \"mew\" to use MyEtherWallet's path of \"m/44'/60'/0'/%d\".\nFor custom paths, simply enter them here.",
 					},
 				},
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 2); err != nil {
-						return err
-					}
-					mnemonic, err := cliutils.ValidateWalletMnemonic("mnemonic", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-					address, err := cliutils.ValidateAddress("address", c.Args().Get(1))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(searchAndRecoverWallet(c, mnemonic, address))
-					return nil
-
-				},
-			},
-
-			{
-				Name:      "rebuild",
-				Aliases:   []string{"b"},
-				Usage:     "Rebuild validator keystores from derived keys",
-				UsageText: "stader-cli api wallet rebuild",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -166,78 +133,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(rebuildWallet(c))
-					return nil
-
-				},
-			},
-
-			{
-				Name:      "test-recovery",
-				Aliases:   []string{"r"},
-				Usage:     "Test recovery of a node wallet and its validator keys without actually saving the recovered files",
-				UsageText: "stader-cli api wallet test-recovery mnemonic",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "skip-validator-key-recovery, k",
-						Usage: "Recover the node wallet, but do not regenerate its validator keys",
-					},
-					cli.StringFlag{
-						Name:  "derivation-path, d",
-						Usage: "Specify the derivation path for the wallet.\nOmit this flag (or leave it blank) for the default of \"m/44'/60'/0'/0/%d\" (where %d is the index).\nSet this to \"ledgerLive\" to use Ledger Live's path of \"m/44'/60'/%d/0/0\".\nSet this to \"mew\" to use MyEtherWallet's path of \"m/44'/60'/0'/%d\".\nFor custom paths, simply enter them here.",
-					},
-					cli.UintFlag{
-						Name:  "wallet-index, i",
-						Usage: "Specify the index to use with the derivation path when recovering your wallet",
-						Value: 0,
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					mnemonic, err := cliutils.ValidateWalletMnemonic("mnemonic", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(testRecoverWallet(c, mnemonic))
-					return nil
-
-				},
-			},
-
-			{
-				Name:      "test-search-and-recover",
-				Aliases:   []string{"r"},
-				Usage:     "Test searching for and recovery of a node wallet's derivation key, index, and validator keys using a mnemonic phrase and a well-known address.",
-				UsageText: "stader-cli api wallet test-search-and-recover mnemonic address",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "skip-validator-key-recovery, k",
-						Usage: "Recover the node wallet, but do not regenerate its validator keys",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 2); err != nil {
-						return err
-					}
-					mnemonic, err := cliutils.ValidateWalletMnemonic("mnemonic", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-					address, err := cliutils.ValidateAddress("address", c.Args().Get(1))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(testSearchAndRecoverWallet(c, mnemonic, address))
+					api.PrintResponse(initWallet(c))
 					return nil
 
 				},
@@ -275,40 +171,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 					// Run
 					api.PrintResponse(purge(c))
-					return nil
-
-				},
-			},
-			{
-				Name:      "estimate-gas-set-ens-name",
-				Usage:     "Estimate the gas required to set the name for the node wallet's ENS reverse record",
-				UsageText: "stader-cli api node estimate-gas-set-ens-name name",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(setEnsName(c, c.Args().Get(0), true))
-					return nil
-
-				},
-			},
-			{
-				Name:      "set-ens-name",
-				Usage:     "Set a name to the node wallet's ENS reverse record",
-				UsageText: "stader-cli api node set-ens-name name",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(setEnsName(c, c.Args().Get(0), false))
 					return nil
 
 				},

@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package services
 
 import (
@@ -219,8 +238,6 @@ func (p *ExecutionClientManager) SendTransaction(ctx context.Context, tx *types.
 
 // FilterLogs executes a log filter operation, blocking during execution and
 // returning all the results in one batch.
-//
-// TODO(karalabe): Deprecate when the subscription one can return past data too.
 func (p *ExecutionClientManager) FilterLogs(ctx context.Context, query ethereum.FilterQuery) ([]types.Log, error) {
 	result, err := p.runFunction(func(client *ethclient.Client) (interface{}, error) {
 		return client.FilterLogs(ctx, query)
@@ -297,7 +314,6 @@ func (p *ExecutionClientManager) TransactionByHash(ctx context.Context, hash com
 		return nil, false, err
 	}
 
-	// TODO: Can we just use the named return values inside the closer to skip this?
 	resultArray := result.([]interface{})
 	tx = resultArray[0].(*types.Transaction)
 	isPending = resultArray[1].(bool)
@@ -359,7 +375,7 @@ func (p *ExecutionClientManager) CheckStatus(cfg *config.StaderConfig) *api.Clie
 	if status.FallbackEnabled {
 		status.FallbackClientStatus = checkEcStatus(p.fallbackEc)
 		// Check if fallback is using the expected network
-		expectedChainID := cfg.Smartnode.GetChainID()
+		expectedChainID := cfg.StaderNode.GetChainID()
 		if status.FallbackClientStatus.NetworkId != expectedChainID {
 			p.fallbackReady = false
 			colorReset := "\033[0m"

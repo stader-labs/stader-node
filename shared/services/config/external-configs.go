@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package config
 
 import (
@@ -103,10 +122,10 @@ func NewExternalExecutionConfig(cfg *StaderConfig) *ExternalExecutionConfig {
 		HttpUrl: config.Parameter{
 			ID:                   "httpUrl",
 			Name:                 "HTTP URL",
-			Description:          "The URL of the HTTP RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the HTTP RPC endpoint for your external Execution client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{"EC_HTTP_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -115,10 +134,10 @@ func NewExternalExecutionConfig(cfg *StaderConfig) *ExternalExecutionConfig {
 		WsUrl: config.Parameter{
 			ID:                   "wsUrl",
 			Name:                 "Websocket URL",
-			Description:          "The URL of the Websocket RPC endpoint for your %s Execution client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the Websocket RPC endpoint for your %s Execution client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Watchtower},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Eth2, config.ContainerID_Node, config.ContainerID_Guardian},
 			EnvironmentVariables: []string{"EC_WS_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -134,10 +153,10 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 		HttpUrl: config.Parameter{
 			ID:                   "httpUrl",
 			Name:                 "HTTP URL",
-			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Watchtower, config.ContainerID_Node},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Guardian, config.ContainerID_Node},
 			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -171,7 +190,7 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Lighthouse container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Lighthouse container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  getLighthouseTagProd(),
@@ -188,7 +207,7 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Lighthouse's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Lighthouse's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -207,10 +226,10 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 		HttpUrl: config.Parameter{
 			ID:                   "httpUrl",
 			Name:                 "HTTP URL",
-			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Watchtower, config.ContainerID_Node},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Guardian, config.ContainerID_Node},
 			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -219,7 +238,7 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 		JsonRpcUrl: config.Parameter{
 			ID:                   "jsonRpcUrl",
 			Name:                 "gRPC URL",
-			Description:          "The URL of the gRPC API endpoint for your external client. Prysm's validator client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the gRPC API endpoint for your external client. Prysm's validator client will need this in order to connect to it.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
@@ -256,7 +275,7 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  getPrysmVcProdTag(),
@@ -273,7 +292,7 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Prysm's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Prysm's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -293,10 +312,10 @@ func NewExternalNimbusConfig(cfg *StaderConfig) *ExternalNimbusConfig {
 		HttpUrl: config.Parameter{
 			ID:                   "httpUrl",
 			Name:                 "HTTP URL",
-			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Watchtower, config.ContainerID_Node},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Guardian, config.ContainerID_Node},
 			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -330,7 +349,7 @@ func NewExternalNimbusConfig(cfg *StaderConfig) *ExternalNimbusConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Nimbus validator container you want to use from Docker Hub. This will be used for the Validator Client that Rocket Pool manages with your minipool keys.",
+			Description: "The tag name of the Nimbus validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  nimbusVcTagProd,
@@ -347,7 +366,7 @@ func NewExternalNimbusConfig(cfg *StaderConfig) *ExternalNimbusConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Nimbus's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Nimbus's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -366,10 +385,10 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 		HttpUrl: config.Parameter{
 			ID:                   "httpUrl",
 			Name:                 "HTTP URL",
-			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Smartnode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the Stadernode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Watchtower, config.ContainerID_Node},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Guardian, config.ContainerID_Node},
 			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,
@@ -391,7 +410,7 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 		ContainerTag: config.Parameter{
 			ID:          "containerTag",
 			Name:        "Container Tag",
-			Description: "The tag name of the Teku container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your minipool keys.",
+			Description: "The tag name of the Teku container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet:  tekuTagProd,
@@ -408,7 +427,7 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Teku's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Teku's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},

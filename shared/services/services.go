@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package services
 
 import (
@@ -7,13 +26,10 @@ import (
 	"sync"
 
 	"github.com/docker/docker/client"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
-	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
@@ -21,15 +37,13 @@ import (
 	nmkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/nimbus"
 	prkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/prysm"
 	tkkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/teku"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // Config
 const (
-	DockerAPIVersion        string = "1.40"
-	EcContainerName         string = "eth1"
-	FallbackEcContainerName string = "eth1-fallback"
-	BnContainerName         string = "eth2"
+	DockerAPIVersion string = "1.40"
+	BnContainerName  string = "eth2"
 )
 
 // Service instances & initializers
@@ -39,21 +53,14 @@ var (
 	nodeWallet      *wallet.Wallet
 	ecManager       *ExecutionClientManager
 	bcManager       *BeaconClientManager
-	rocketPool      *rocketpool.RocketPool
-	beaconClient    beacon.Client
 	docker          *client.Client
 
-	initCfg                sync.Once
-	initPasswordManager    sync.Once
-	initNodeWallet         sync.Once
-	initECManager          sync.Once
-	initBCManager          sync.Once
-	initRocketPool         sync.Once
-	initOneInchOracle      sync.Once
-	initRplFaucet          sync.Once
-	initSnapshotDelegation sync.Once
-	initBeaconClient       sync.Once
-	initDocker             sync.Once
+	initCfg             sync.Once
+	initPasswordManager sync.Once
+	initNodeWallet      sync.Once
+	initECManager       sync.Once
+	initBCManager       sync.Once
+	initDocker          sync.Once
 )
 
 //
@@ -103,7 +110,7 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 		return nil, err
 	}
 
-	return stader.NewPermissionlessNodeRegistry(ec, cfg.Smartnode.GetPermissionlessNodeRegistryAddress())
+	return stader.NewPermissionlessNodeRegistry(ec, cfg.StaderNode.GetPermissionlessNodeRegistryAddress())
 }
 
 func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error) {
@@ -116,7 +123,7 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 		return nil, err
 	}
 
-	return stader.NewVaultFactory(ec, cfg.Smartnode.GetVaultFactoryAddress())
+	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
 }
 
 func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
@@ -129,7 +136,7 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 		return nil, err
 	}
 
-	return stader.NewSdCollateralContract(ec, cfg.Smartnode.GetSdCollateralContractAddress())
+	return stader.NewSdCollateralContract(ec, cfg.StaderNode.GetSdCollateralContractAddress())
 }
 
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -142,7 +149,7 @@ func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, erro
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetSdTokenAddress())
+	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetSdTokenAddress())
 }
 
 func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -155,20 +162,7 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.Smartnode.GetEthxTokenAddress())
-}
-
-func GetRocketPool(c *cli.Context) (*rocketpool.RocketPool, error) {
-	cfg, err := getConfig(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := getEthClient(c, cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	return getRocketPool(cfg, ec)
+	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetEthxTokenAddress())
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
@@ -191,7 +185,7 @@ func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 	var err error
 	initCfg.Do(func() {
 		settingsFile := os.ExpandEnv(c.GlobalString("settings"))
-		cfg, err = rp.LoadConfigFromFile(settingsFile)
+		cfg, err = staderUtils.LoadConfigFromFile(settingsFile)
 		if cfg == nil && err == nil {
 			err = fmt.Errorf("Settings file [%s] not found.", settingsFile)
 		}
@@ -201,7 +195,7 @@ func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 
 func getPasswordManager(cfg *config.StaderConfig) *passwords.PasswordManager {
 	initPasswordManager.Do(func() {
-		passwordManager = passwords.NewPasswordManager(os.ExpandEnv(cfg.Smartnode.GetPasswordPath()))
+		passwordManager = passwords.NewPasswordManager(os.ExpandEnv(cfg.StaderNode.GetPasswordPath()))
 	})
 	return passwordManager
 }
@@ -212,7 +206,7 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 		var maxFee *big.Int
 		maxFeeFloat := c.GlobalFloat64("maxFee")
 		if maxFeeFloat == 0 {
-			maxFeeFloat = cfg.Smartnode.ManualMaxFee.Value.(float64)
+			maxFeeFloat = cfg.StaderNode.ManualMaxFee.Value.(float64)
 		}
 		if maxFeeFloat != 0 {
 			maxFee = eth.GweiToWei(maxFeeFloat)
@@ -221,24 +215,24 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 		var maxPriorityFee *big.Int
 		maxPriorityFeeFloat := c.GlobalFloat64("maxPrioFee")
 		if maxPriorityFeeFloat == 0 {
-			maxPriorityFeeFloat = cfg.Smartnode.PriorityFee.Value.(float64)
+			maxPriorityFeeFloat = cfg.StaderNode.PriorityFee.Value.(float64)
 		}
 		if maxPriorityFeeFloat != 0 {
 			maxPriorityFee = eth.GweiToWei(maxPriorityFeeFloat)
 		}
 
-		chainId := cfg.Smartnode.GetChainID()
+		chainId := cfg.StaderNode.GetChainID()
 
-		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.Smartnode.GetWalletPath()), chainId, maxFee, maxPriorityFee, 0, pm)
+		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.StaderNode.GetWalletPath()), chainId, maxFee, maxPriorityFee, 0, pm)
 		if err != nil {
 			return
 		}
 
 		// Keystores
-		lighthouseKeystore := lhkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
-		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.Smartnode.GetValidatorKeychainPath()), pm)
+		lighthouseKeystore := lhkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
+		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
+		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
+		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
 		nodeWallet.AddKeystore("lighthouse", lighthouseKeystore)
 		nodeWallet.AddKeystore("nimbus", nimbusKeystore)
 		nodeWallet.AddKeystore("prysm", prysmKeystore)
@@ -263,14 +257,6 @@ func getEthClient(c *cli.Context, cfg *config.StaderConfig) (*ExecutionClientMan
 		}
 	})
 	return ecManager, err
-}
-
-func getRocketPool(cfg *config.StaderConfig, client rocketpool.ExecutionClient) (*rocketpool.RocketPool, error) {
-	var err error
-	initRocketPool.Do(func() {
-		rocketPool, err = rocketpool.NewRocketPool(client, common.HexToAddress(cfg.Smartnode.GetStorageAddress()))
-	})
-	return rocketPool, err
 }
 
 func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientManager, error) {

@@ -1,4 +1,25 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package service
+
+// ROCKETPOOL-OWNED
 
 import (
 	"fmt"
@@ -84,7 +105,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 	configFlags := []cli.Flag{}
 	cfgTemplate := config.NewStaderConfig("", false)
-	network := cfgTemplate.Smartnode.Network.Value.(cfgtypes.Network)
+	network := cfgTemplate.StaderNode.Network.Value.(cfgtypes.Network)
 
 	// Root params
 	configFlags = createFlagsFromConfigParams("", cfgTemplate.GetParameters(), configFlags, network)
@@ -133,7 +154,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.StringFlag{
 						Name:  "version, v",
-						Usage: "The smart node package version to install",
+						Usage: "The stader node package version to install",
 						Value: fmt.Sprintf("v%s", shared.StaderVersion),
 					},
 				},
@@ -500,7 +521,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "terminate",
 				Aliases:   []string{"t"},
-				Usage:     fmt.Sprintf("%sDeletes all of the Stader Docker containers and volumes, including your ETH1 and ETH2 chain data and your Prometheus database (if metrics are enabled). Only use this if you are cleaning up the Smartnode and want to start over!%s", colorRed, colorReset),
+				Usage:     fmt.Sprintf("%sDeletes all of the Stader Docker containers and volumes, including your ETH1 and ETH2 chain data and your Prometheus database (if metrics are enabled). Only use this if you are cleaning up the Stadernode and want to start over!%s", colorRed, colorReset),
 				UsageText: "stader-cli service terminate [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{

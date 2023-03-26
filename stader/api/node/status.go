@@ -3,10 +3,12 @@ package node
 import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
@@ -41,7 +43,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	}
 
 	response.AccountAddress = nodeAccount.Address
-	response.AccountAddressFormatted = formatResolvedAddress(c, response.AccountAddress)
 
 	accountEthBalance, err := tokens.GetEthBalance(pnr.Client, nodeAccount.Address, nil)
 	if err != nil {
@@ -77,13 +78,37 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.DepositedSdCollateral = operatorSdCollateral
 
-		// TODO - bchain - work on getting validator statuses
-		//totalOperatorValidators, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
-		//if err != nil {
-		//	return nil, err
-		//}
+		// total registerable validators
+		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SdCollateralWorthValidators = totalSdWorthValidators
+
+		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+		if err != nil {
+			return nil, err
+		}
+		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
+
+		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
+			validatorIndex, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
+			if err != nil {
+				return nil, err
+			}
+			validatorInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
+			if err != nil {
+				return nil, err
+			}
+			validatorInfoArray[i] = validatorInfo
+		}
+
+		response.ValidatorInfos = validatorInfoArray
 
 	} else {
+		response.DepositedSdCollateral = big.NewInt(0)
+		response.SdCollateralWorthValidators = big.NewInt(0)
+		response.ValidatorInfos = []stdr.ValidatorInfo{}
 		response.Registered = false
 	}
 

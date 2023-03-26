@@ -1,20 +1,40 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package node
 
 import (
 	"fmt"
 
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+
 	"github.com/docker/docker/client"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	rpsvc "github.com/stader-labs/stader-node/shared/services/stader"
+	staderService "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	rputils "github.com/stader-labs/stader-node/shared/utils/rp"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
@@ -24,7 +44,7 @@ type manageFeeRecipient struct {
 	log log.ColorLogger
 	cfg *config.StaderConfig
 	w   *wallet.Wallet
-	rp  *rocketpool.RocketPool
+	prn *stader.PermissionlessNodeRegistryContractManager
 	d   *client.Client
 	bc  beacon.Client
 }
@@ -41,7 +61,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +80,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 		log: logger,
 		cfg: cfg,
 		w:   w,
-		rp:  rp,
+		prn: prn,
 		d:   d,
 		bc:  bc,
 	}, nil
@@ -82,21 +102,21 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Get the fee recipient info for the node
-	feeRecipientInfo, err := rputils.GetFeeRecipientInfo(m.rp, m.bc, nodeAccount.Address, nil)
+	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.bc, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}
 
 	// Get the correct fee recipient address
 	var correctFeeRecipient common.Address
-	if feeRecipientInfo.IsInSmoothingPool || feeRecipientInfo.IsInOptOutCooldown {
-		correctFeeRecipient = feeRecipientInfo.SmoothingPoolAddress
+	if feeRecipientInfo.IsInSocializingPool || feeRecipientInfo.IsInOptOutCooldown {
+		correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
 	} else {
 		correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
 	}
 
 	// Check if the VC is using the correct fee recipient
-	fileExists, correctAddress, err := rpsvc.CheckFeeRecipientFile(correctFeeRecipient, m.cfg)
+	fileExists, correctAddress, err := staderService.CheckFeeRecipientFile(correctFeeRecipient, m.cfg)
 	if err != nil {
 		return fmt.Errorf("error validating fee recipient files: %w", err)
 	}
@@ -111,7 +131,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Regenerate the fee recipient files
-	err = rpsvc.UpdateFeeRecipientFile(correctFeeRecipient, m.cfg)
+	err = staderService.UpdateFeeRecipientFile(correctFeeRecipient, m.cfg)
 	if err != nil {
 		m.log.Println("***ERROR***")
 		m.log.Printlnf("Error updating fee recipient files: %s", err.Error())

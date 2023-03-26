@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package wallet
 
 import (
@@ -7,8 +26,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/rocket-pool/rocketpool-go/types"
-	rptypes "github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	eth2util "github.com/wealdtech/go-eth2-util"
 )
@@ -55,7 +74,7 @@ func (w *Wallet) GetValidatorKeyAt(index uint) (*eth2types.BLSPrivateKey, error)
 }
 
 // Get a validator key by public key
-func (w *Wallet) GetValidatorKeyByPubkey(pubkey rptypes.ValidatorPubkey) (*eth2types.BLSPrivateKey, error) {
+func (w *Wallet) GetValidatorKeyByPubkey(pubkey stadertypes.ValidatorPubkey) (*eth2types.BLSPrivateKey, error) {
 
 	// Check wallet is initialized
 	if !w.IsInitialized() {
@@ -248,7 +267,7 @@ func (w *Wallet) SaveValidatorKey(key ValidatorKey) error {
 }
 
 // Recover a validator key by public key
-func (w *Wallet) RecoverValidatorKey(pubkey rptypes.ValidatorPubkey, startIndex uint) (uint, error) {
+func (w *Wallet) RecoverValidatorKey(pubkey stadertypes.ValidatorPubkey, startIndex uint) (uint, error) {
 
 	// Check wallet is initialized
 	if !w.IsInitialized() {
@@ -294,7 +313,7 @@ func (w *Wallet) RecoverValidatorKey(pubkey rptypes.ValidatorPubkey, startIndex 
 }
 
 // Test recovery of a validator key by public key
-func (w *Wallet) TestRecoverValidatorKey(pubkey rptypes.ValidatorPubkey, startIndex uint) (uint, error) {
+func (w *Wallet) TestRecoverValidatorKey(pubkey stadertypes.ValidatorPubkey, startIndex uint) (uint, error) {
 
 	// Check wallet is initialized
 	if !w.IsInitialized() {

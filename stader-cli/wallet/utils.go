@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package wallet
 
 import (
@@ -9,8 +28,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/stader-labs/stader-node/shared/utils/log"
+
 	"github.com/mitchellh/go-homedir"
-	"github.com/rocket-pool/rocketpool-go/types"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -18,6 +38,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
 	"github.com/stader-labs/stader-node/stader-cli/wallet/bip39"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"gopkg.in/yaml.v2"
 )
 
@@ -100,10 +121,10 @@ func confirmMnemonic(mnemonic string) {
 }
 
 // Check for custom keys, prompt for their passwords, and store them in the custom keys file
-func promptForCustomKeyPasswords(rp *stader.Client, cfg *config.StaderConfig, testOnly bool) (string, error) {
+func promptForCustomKeyPasswords(sd *stader.Client, cfg *config.StaderConfig, testOnly bool) (string, error) {
 
 	// Check for the custom key directory
-	datapath, err := homedir.Expand(cfg.Smartnode.DataPath.Value.(string))
+	datapath, err := homedir.Expand(cfg.StaderNode.DataPath.Value.(string))
 	if err != nil {
 		return "", fmt.Errorf("error expanding data directory: %w", err)
 	}
@@ -124,7 +145,7 @@ func promptForCustomKeyPasswords(rp *stader.Client, cfg *config.StaderConfig, te
 
 	// Prompt the user with a warning message
 	if !testOnly {
-		fmt.Printf("%sWARNING:\nThe Smartnode has detected that you have custom (externally-derived) validator keys for your validators.\nIf these keys were actively used for validation by a service such as Allnodes, you MUST CONFIRM WITH THAT SERVICE that they have stopped validating and disabled those keys, and will NEVER validate with them again.\nOtherwise, you may both run the same keys at the same time which WILL RESULT IN YOUR VALIDATORS BEING SLASHED.%s\n\n", colorRed, colorReset)
+		fmt.Printf("%sWARNING:\nThe Stadernode has detected that you have custom (externally-derived) validator keys for your validators.\nIf these keys were actively used for validation by a service such as Allnodes, you MUST CONFIRM WITH THAT SERVICE that they have stopped validating and disabled those keys, and will NEVER validate with them again.\nOtherwise, you may both run the same keys at the same time which WILL RESULT IN YOUR VALIDATORS BEING SLASHED.%s\n\n", log.ColorRed, log.ColorReset)
 
 		if !cliutils.Confirm("Please confirm that you have coordinated with the service that was running your validators previously to ensure they have STOPPED validation for your validators, will NEVER start them again, and you have manually confirmed on a Blockchain explorer such as https://beaconcha.in that your validators are no longer attesting.") {
 			fmt.Println("Cancelled.")
@@ -152,7 +173,7 @@ func promptForCustomKeyPasswords(rp *stader.Client, cfg *config.StaderConfig, te
 	}
 
 	// Notify the user
-	fmt.Println("It looks like you have some custom keystores for your minipool's validators.\nYou will be prompted for the passwords each one was encrypted with, so they can be loaded into the Validator Client that Rocket Pool manages for you.\n")
+	fmt.Println("It looks like you have some custom keystores for your stader validators.\nYou will be prompted for the passwords each one was encrypted with, so they can be loaded into the Validator Client that stader manages for you.")
 
 	// Get the passwords for each one
 	pubkeyPasswords := map[string]string{}

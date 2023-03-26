@@ -1,19 +1,31 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package eth1
 
 import (
 	"context"
 	"fmt"
-	"math/big"
-	"strings"
-
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-node/shared/services"
-	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 // Sets the nonce of the provided transaction options to the latest nonce if requested
@@ -59,56 +71,5 @@ func CheckForNonceOverride(c *cli.Context, opts *bind.TransactOpts) error {
 		opts.Nonce = customNonce
 	}
 	return nil
-
-}
-
-// Determines if the primary EC can be used for historical queries, or if the Archive EC is required
-func GetBestApiClient(primary *rocketpool.RocketPool, cfg *config.StaderConfig, printMessage func(string), blockNumber *big.Int) (*rocketpool.RocketPool, error) {
-
-	client := primary
-
-	opts := &bind.CallOpts{
-		BlockNumber: blockNumber,
-	}
-	address, err := client.RocketStorage.GetAddress(opts, crypto.Keccak256Hash([]byte("contract.addressrocketTokenRETH")))
-	if err != nil {
-		errMessage := err.Error()
-		printMessage(fmt.Sprintf("Error getting state for block %d: %s", blockNumber.Uint64(), errMessage))
-		if strings.Contains(errMessage, "missing trie node") || // Geth
-			strings.Contains(errMessage, "No state available for block") || // Nethermind
-			strings.Contains(errMessage, "Internal error") { // Besu
-
-			// The state was missing so fall back to the archive node
-			archiveEcUrl := cfg.Smartnode.ArchiveECUrl.Value.(string)
-			if archiveEcUrl != "" {
-				printMessage(fmt.Sprintf("Primary EC cannot retrieve state for historical block %d, using archive EC [%s]", blockNumber.Uint64(), archiveEcUrl))
-				ec, err := ethclient.Dial(archiveEcUrl)
-				if err != nil {
-					return nil, fmt.Errorf("Error connecting to archive EC: %w", err)
-				}
-				client, err = rocketpool.NewRocketPool(ec, common.HexToAddress(cfg.Smartnode.GetStorageAddress()))
-				if err != nil {
-					return nil, fmt.Errorf("%s Error creating Stader client connected to archive EC: %w", err)
-				}
-
-				// Get the rETH address from the archive EC
-				address, err = client.RocketStorage.GetAddress(opts, crypto.Keccak256Hash([]byte("contract.addressrocketTokenRETH")))
-				if err != nil {
-					return nil, fmt.Errorf("%s Error verifying rETH address with Archive EC: %w", err)
-				}
-			} else {
-				// No archive node specified
-				return nil, fmt.Errorf("***ERROR*** Primary EC cannot retrieve state for historical block %d and the Archive EC is not specified.", blockNumber.Uint64())
-			}
-
-		}
-	}
-
-	// Sanity check the rETH address to make sure the client is working right
-	if address != cfg.Smartnode.GetRethAddress() {
-		return nil, fmt.Errorf("***ERROR*** Your Primary EC provided %s as the rETH address, but it should have been %s!", address.Hex(), cfg.Smartnode.GetRethAddress().Hex())
-	}
-
-	return client, nil
 
 }

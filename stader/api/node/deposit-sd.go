@@ -15,7 +15,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 )
 
-func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplResponse, error) {
+func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSdResponse, error) {
 
 	// Get services
 	w, err := services.GetWallet(c)
@@ -32,7 +32,7 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplR
 	}
 
 	// Response
-	response := api.CanNodeStakeRplResponse{}
+	response := api.CanNodeDepositSdResponse{}
 
 	// Get node account
 	nodeAccount, err := w.GetNodeAccount()
@@ -41,7 +41,6 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplR
 	}
 
 	// Check Sd balance
-	// TODO - bchain we should abstract this out
 	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, nodeAccount.Address)
 	if err != nil {
 		return nil, err
@@ -60,12 +59,12 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeStakeRplR
 	response.GasInfo = gasInfo
 
 	// Update & return response
-	response.CanStake = !response.InsufficientBalance
+	response.CanDeposit = !response.InsufficientBalance
 	return &response, nil
 
 }
 
-func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveGasResponse, error) {
+func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdApproveGasResponse, error) {
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -84,7 +83,7 @@ func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStake
 	}
 
 	// Response
-	response := api.NodeStakeRplApproveGasResponse{}
+	response := api.NodeDepositSdApproveGasResponse{}
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()
@@ -99,7 +98,7 @@ func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeStake
 	return &response, nil
 }
 
-func allowanceSd(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
+func allowanceSd(c *cli.Context) (*api.NodeDepositSdAllowanceResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
@@ -119,7 +118,7 @@ func allowanceSd(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 	}
 
 	// Response
-	response := api.NodeStakeRplAllowanceResponse{}
+	response := api.NodeDepositSdAllowanceResponse{}
 
 	// Get node account
 	account, err := w.GetNodeAccount()
@@ -127,7 +126,6 @@ func allowanceSd(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 		return nil, err
 	}
 
-	// Get node's RPL allowance
 	allowance, err := tokens.Allowance(sdt, account.Address, *sdc.SdCollateralContract.Address, nil)
 	if err != nil {
 		return nil, err
@@ -138,7 +136,7 @@ func allowanceSd(c *cli.Context) (*api.NodeStakeRplAllowanceResponse, error) {
 	return &response, nil
 }
 
-func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveResponse, error) {
+func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdApproveResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
@@ -157,9 +155,8 @@ func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveResp
 		return nil, err
 	}
 	// Response
-	response := api.NodeStakeRplApproveResponse{}
+	response := api.NodeDepositSdApproveResponse{}
 
-	// Approve RPL allowance
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
@@ -180,19 +177,18 @@ func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplApproveResp
 
 }
 
-func waitForApprovalAndDepositSd(c *cli.Context, amountWei *big.Int, hash common.Hash) (*api.NodeStakeRplStakeResponse, error) {
+func waitForApprovalAndDepositSd(c *cli.Context, amountWei *big.Int, hash common.Hash) (*api.NodeDepositSdResponse, error) {
 
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 
-	// Wait for the RPL approval TX to successfully get included in a block
-	_, err = utils.WaitForTransaction(rp.Client, hash)
+	_, err = utils.WaitForTransaction(prn.Client, hash)
 	if err != nil {
 		return nil, err
 	}
@@ -202,7 +198,7 @@ func waitForApprovalAndDepositSd(c *cli.Context, amountWei *big.Int, hash common
 
 }
 
-func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRplStakeResponse, error) {
+func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdResponse, error) {
 
 	// Get services
 	w, err := services.GetWallet(c)
@@ -215,9 +211,8 @@ func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRp
 	}
 
 	// Response
-	response := api.NodeStakeRplStakeResponse{}
+	response := api.NodeDepositSdResponse{}
 
-	// Stake RPL
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
@@ -231,7 +226,7 @@ func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeStakeRp
 		return nil, err
 	}
 
-	response.StakeTxHash = tx.Hash()
+	response.DepositTxHash = tx.Hash()
 
 	// Return response
 	return &response, nil

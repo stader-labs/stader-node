@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package stader
 
 import (
@@ -26,16 +45,15 @@ import (
 	"github.com/blang/semver/v4"
 	externalip "github.com/glendc/go-external-ip"
 	"github.com/mitchellh/go-homedir"
-	"github.com/stader-labs/stader-node/addons/graffiti_wall_writer"
+
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/shared/utils/rp"
+	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 )
 
 // Config
 const (
-	InstallerURL     string = "https://temps3node.s3.amazonaws.com/zhejiang/install.sh"
-	UpdateTrackerURL string = "https://github.com/rocket-pool/smartnode-install/releases/download/%s/install-update-tracker.sh"
+	InstallerURL string = "https://stader-cli-beta.s3.amazonaws.com/%s/install.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
@@ -48,11 +66,9 @@ const (
 	APIContainerSuffix string = "_api"
 	APIBinPath         string = "/go/bin/stader"
 
-	templatesDir                  string = "templates"
-	overrideDir                   string = "override"
-	runtimeDir                    string = "runtime"
-	defaultFeeRecipientFile       string = "fr-default.tmpl"
-	defaultNativeFeeRecipientFile string = "fr-default-env.tmpl"
+	templatesDir string = "templates"
+	overrideDir  string = "override"
+	runtimeDir   string = "runtime"
 
 	templateSuffix    string = ".tmpl"
 	composeFileSuffix string = ".yml"
@@ -158,7 +174,7 @@ func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 		return nil, false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
 
-	cfg, err := rp.LoadConfigFromFile(expandedPath)
+	cfg, err := staderUtils.LoadConfigFromFile(expandedPath)
 	if err != nil {
 		return nil, false, err
 	}
@@ -179,7 +195,7 @@ func (c *Client) LoadBackupConfig() (*config.StaderConfig, error) {
 		return nil, fmt.Errorf("error expanding backup settings file path: %w", err)
 	}
 
-	return rp.LoadConfigFromFile(expandedPath)
+	return staderUtils.LoadConfigFromFile(expandedPath)
 }
 
 // Save the config
@@ -189,7 +205,7 @@ func (c *Client) SaveConfig(cfg *config.StaderConfig) error {
 	if err != nil {
 		return err
 	}
-	return rp.SaveConfig(cfg, expandedPath)
+	return staderUtils.SaveConfig(cfg, expandedPath)
 }
 
 // Remove the upgrade flag file
@@ -198,7 +214,7 @@ func (c *Client) RemoveUpgradeFlagFile() error {
 	if err != nil {
 		return err
 	}
-	return rp.RemoveUpgradeFlagFile(expandedPath)
+	return staderUtils.RemoveUpgradeFlagFile(expandedPath)
 }
 
 // Returns whether or not this is the first run of the configurator since a previous installation
@@ -207,7 +223,7 @@ func (c *Client) IsFirstRun() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error expanding settings file path: %w", err)
 	}
-	return rp.IsFirstRun(expandedPath), nil
+	return staderUtils.IsFirstRun(expandedPath), nil
 }
 
 // Load the legacy config if one exists
@@ -317,7 +333,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	default:
 		return nil, fmt.Errorf("legacy config had an unknown chain ID [%s]", chainID)
 	}
-	cfg.Smartnode.Network.Value = network
+	cfg.StaderNode.Network.Value = network
 
 	// Migrate the EC
 	err = c.migrateProviderInfo(legacyCfg.Chains.Eth1.Provider, legacyCfg.Chains.Eth1.WsProvider, "eth1", &cfg.ExecutionClientMode, &cfg.ExecutionCommon.HttpPort, &cfg.ExecutionCommon.WsPort, &cfg.ExternalExecution.HttpUrl, &cfg.ExternalExecution.WsUrl)
@@ -416,8 +432,8 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			convertUintParam(param, &cfg.NodeMetricsPort, network, 16)
 		case "EXPORTER_METRICS_PORT":
 			convertUintParam(param, &cfg.ExporterMetricsPort, network, 16)
-		case "WATCHTOWER_METRICS_PORT":
-			convertUintParam(param, &cfg.WatchtowerMetricsPort, network, 16)
+		case "GUARDIAN_METRICS_PORT":
+			convertUintParam(param, &cfg.GuardianMetricsPort, network, 16)
 		case "PROMETHEUS_PORT":
 			convertUintParam(param, &cfg.Prometheus.Port, network, 16)
 		case "GRAFANA_PORT":
@@ -431,11 +447,10 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 		cfg.ReconnectDelay.Value = cfg.ReconnectDelay.Default[cfgtypes.Network_All]
 	}
 
-	// Smartnode settings
-	cfg.Smartnode.ProjectName.Value = legacyCfg.Smartnode.ProjectName
-	cfg.Smartnode.ManualMaxFee.Value = legacyCfg.Smartnode.MaxFee
-	cfg.Smartnode.PriorityFee.Value = legacyCfg.Smartnode.MaxPriorityFee
-	cfg.Smartnode.MinipoolStakeGasThreshold.Value = legacyCfg.Smartnode.MinipoolStakeGasThreshold
+	// Stadernode settings
+	cfg.StaderNode.ProjectName.Value = legacyCfg.StaderNode.ProjectName
+	cfg.StaderNode.ManualMaxFee.Value = legacyCfg.StaderNode.MaxFee
+	cfg.StaderNode.PriorityFee.Value = legacyCfg.StaderNode.MaxPriorityFee
 
 	// Docker images
 	for _, option := range legacyCfg.Chains.Eth1.Client.Options {
@@ -464,8 +479,8 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	cfg.Native.EcHttpUrl.Value = legacyCfg.Chains.Eth1.Provider
 	cfg.Native.CcHttpUrl.Value = legacyCfg.Chains.Eth2.Provider
 	c.migrateCcSelection(legacyCfg.Chains.Eth2.Client.Selected, &cfg.Native.ConsensusClient)
-	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.Smartnode.ValidatorRestartCommand
-	cfg.Smartnode.DataPath.Value = filepath.Join(c.configPath, "data")
+	cfg.Native.ValidatorRestartCommand.Value = legacyCfg.StaderNode.ValidatorRestartCommand
+	cfg.StaderNode.DataPath.Value = filepath.Join(c.configPath, "data")
 
 	return cfg, nil
 
@@ -495,7 +510,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
@@ -547,72 +562,10 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 
 }
 
-// Install the update tracker
-func (c *Client) InstallUpdateTracker(verbose bool, version string) error {
-
-	// Get installation script downloader type
-	downloader, err := c.getDownloader()
-	if err != nil {
-		return err
-	}
-
-	// Get installation script flags
-	flags := []string{
-		"-v", fmt.Sprintf("%s", shellescape.Quote(version)),
-	}
-
-	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(UpdateTrackerURL, version), strings.Join(flags, " ")))
-	if err != nil {
-		return err
-	}
-	defer func() {
-		_ = cmd.Close()
-	}()
-
-	// Get command output pipes
-	cmdOut, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
-	cmdErr, err := cmd.StderrPipe()
-	if err != nil {
-		return err
-	}
-
-	// Print progress from stdout
-	go (func() {
-		scanner := bufio.NewScanner(cmdOut)
-		for scanner.Scan() {
-			fmt.Println(scanner.Text())
-		}
-	})()
-
-	// Read command & error output from stderr; render in verbose mode
-	var errMessage string
-	go (func() {
-		c := color.New(DebugColor)
-		scanner := bufio.NewScanner(cmdErr)
-		for scanner.Scan() {
-			errMessage = scanner.Text()
-			if verbose {
-				_, _ = c.Println(scanner.Text())
-			}
-		}
-	})()
-
-	// Run command and return error output
-	err = cmd.Run()
-	if err != nil {
-		return fmt.Errorf("Could not install Stader update tracker: %s", errMessage)
-	}
-	return nil
-
-}
-
 // Start the Stader service
 func (c *Client) StartService(composeFiles []string) error {
 
+	fmt.Printf("compose files are %v\n", composeFiles)
 	// Start the API container first
 	cmd, err := c.compose([]string{}, "up -d")
 	if err != nil {
@@ -999,7 +952,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the wallet
-	walletPath, err := homedir.Expand(cfg.Smartnode.GetWalletPathInCLI())
+	walletPath, err := homedir.Expand(cfg.StaderNode.GetWalletPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading wallet path: %w", err)
 	}
@@ -1011,7 +964,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the password
-	passwordPath, err := homedir.Expand(cfg.Smartnode.GetPasswordPathInCLI())
+	passwordPath, err := homedir.Expand(cfg.StaderNode.GetPasswordPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading password path: %w", err)
 	}
@@ -1023,7 +976,7 @@ func (c *Client) PurgeAllKeys(composeFiles []string) error {
 	}
 
 	// Delete the validators dir
-	validatorsPath, err := homedir.Expand(cfg.Smartnode.GetValidatorKeychainPathInCLI())
+	validatorsPath, err := homedir.Expand(cfg.StaderNode.GetValidatorKeychainPathInCLI())
 	if err != nil {
 		return fmt.Errorf("error loading validators folder path: %w", err)
 	}
@@ -1323,7 +1276,7 @@ func (c *Client) compose(composeFiles []string, args string) (string, error) {
 	}
 
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode before starting it.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode before starting it.")
 	}
 
 	// Check config
@@ -1449,18 +1402,18 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	deployedContainers = append(deployedContainers, nodeComposePath)
 	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.NodeContainerName+composeFileSuffix))
 
-	// Watchtower
-	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.WatchtowerContainerName+templateSuffix))
+	// Guardian
+	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.GuardianContainerName+templateSuffix))
 	if err != nil {
-		return []string{}, fmt.Errorf("error reading and substituting watchtower container template: %w", err)
+		return []string{}, fmt.Errorf("error reading and substituting guardian container template: %w", err)
 	}
-	watchtowerComposePath := filepath.Join(runtimeFolder, config.WatchtowerContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(watchtowerComposePath, contents, 0664)
+	guardianComposePath := filepath.Join(runtimeFolder, config.GuardianContainerName+composeFileSuffix)
+	err = ioutil.WriteFile(guardianComposePath, contents, 0664)
 	if err != nil {
-		return []string{}, fmt.Errorf("could not write watchtower container file to %s: %w", watchtowerComposePath, err)
+		return []string{}, fmt.Errorf("could not write guardian container file to %s: %w", guardianComposePath, err)
 	}
-	deployedContainers = append(deployedContainers, watchtowerComposePath)
-	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.WatchtowerContainerName+composeFileSuffix))
+	deployedContainers = append(deployedContainers, guardianComposePath)
+	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GuardianContainerName+composeFileSuffix))
 
 	// Validator
 	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ValidatorContainerName+templateSuffix))
@@ -1563,14 +1516,14 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Create the custom keys dir
-	customKeyDir, err := homedir.Expand(filepath.Join(cfg.Smartnode.DataPath.Value.(string), "custom-keys"))
+	customKeyDir, err := homedir.Expand(filepath.Join(cfg.StaderNode.DataPath.Value.(string), "custom-keys"))
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Smartnode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
+		fmt.Printf("%sWARNING: Couldn't expand the custom validator key directory (%s). You will not be able to recover any validator keys you created outside of the Stadernode until you create the folder manually.%s\n", colorYellow, err.Error(), colorReset)
 		return deployedContainers, nil
 	}
 	err = os.MkdirAll(customKeyDir, 0775)
 	if err != nil {
-		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any minipool keys you created outside of the Smartnode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
+		fmt.Printf("%sWARNING: Couldn't create the custom validator key directory (%s). You will not be able to recover any validator keys you created outside of the Stadernode until you create the folder [%s] manually.%s\n", colorYellow, err.Error(), customKeyDir, colorReset)
 	}
 
 	return c.composeAddons(cfg, staderDir, settings, deployedContainers)
@@ -1579,31 +1532,6 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 
 // Handle composing for addons
 func (c *Client) composeAddons(cfg *config.StaderConfig, staderDir string, settings map[string]string, deployedContainers []string) ([]string, error) {
-
-	// GWW
-	if cfg.GraffitiWallWriter.GetEnabledParameter().Value == true {
-		runtimeFolder := filepath.Join(staderDir, runtimeDir, "addons", "gww")
-		templatesFolder := filepath.Join(staderDir, templatesDir, "addons", "gww")
-		overrideFolder := filepath.Join(staderDir, overrideDir, "addons", "gww")
-
-		// Make the addon folder
-		err := os.MkdirAll(runtimeFolder, 0775)
-		if err != nil {
-			return []string{}, fmt.Errorf("error creating addon runtime folder (%s): %w", runtimeFolder, err)
-		}
-
-		contents, err := envsubst.ReadFile(filepath.Join(templatesFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+templateSuffix))
-		if err != nil {
-			return []string{}, fmt.Errorf("error reading and substituting GWW addon container template: %w", err)
-		}
-		composePath := filepath.Join(runtimeFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(composePath, contents, 0664)
-		if err != nil {
-			return []string{}, fmt.Errorf("could not write GWW addon container file to %s: %w", composePath, err)
-		}
-		deployedContainers = append(deployedContainers, composePath)
-		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, graffiti_wall_writer.GraffitiWallWriterContainerName+composeFileSuffix))
-	}
 
 	return deployedContainers, nil
 
@@ -1735,10 +1663,10 @@ func (c *Client) getAPIContainerName() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if cfg.Smartnode.ProjectName.Value == "" {
+	if cfg.StaderNode.ProjectName.Value == "" {
 		return "", errors.New("Stader docker project name not set")
 	}
-	return cfg.Smartnode.ProjectName.Value.(string) + APIContainerSuffix, nil
+	return cfg.StaderNode.ProjectName.Value.(string) + APIContainerSuffix, nil
 }
 
 // Get gas price & limit flags

@@ -145,12 +145,11 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 			return nil, err
 		}
 
-		// Get validator deposit data for 1 eth and 31eth
+		// Get validator deposit data for 1 eth
 		preDepositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 1000000000)
 		if err != nil {
 			return nil, err
 		}
-		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 		preDepositSignature := stadertypes.BytesToValidatorSignature(preDepositData.Signature)
 
 		depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
@@ -158,6 +157,8 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 			return nil, err
 		}
 		depositSignature := stadertypes.BytesToValidatorSignature(depositData.Signature)
+
+		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
@@ -282,13 +283,14 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 			return nil, err
 		}
 
-		// Get validator deposit data for 1 eth and 31eth
+		// Get validator deposit data for 1 eth
 		preDepositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 1000000000)
 		if err != nil {
 			return nil, err
 		}
-		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 		preDepositSignature := stadertypes.BytesToValidatorSignature(preDepositData.Signature)
+
+		pubKey := stadertypes.BytesToValidatorPubkey(preDepositData.PublicKey)
 
 		depositData, _, err := validator.GetDepositData(validatorKey, withdrawCredentials, eth2Config, 31000000000)
 		if err != nil {

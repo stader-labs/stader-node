@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package cli
 
 import (
@@ -9,17 +28,12 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/types"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/tyler-smith/go-bip39"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	hexutils "github.com/stader-labs/stader-node/shared/utils/hex"
-)
-
-// Config
-const (
-	MinDAOMemberIDLength = 3
 )
 
 //
@@ -187,7 +201,7 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	if !(val == 0 || val == 16 || val == 32) {
+	if !(val == 0 || val == 4 || val == 32) {
 		return 0, fmt.Errorf("invalid %s '%s' - valid values are 0, 16 and 32 ether", name, value)
 	}
 	return val, nil
@@ -215,15 +229,6 @@ func ValidateTimezoneLocation(name, value string) (string, error) {
 		return "", fmt.Errorf("invalid %s '%s' - must be in the format 'Country/City'", name, value)
 	}
 	return value, nil
-}
-
-// Validate a DAO member ID
-func ValidateDAOMemberID(name, value string) (string, error) {
-	val := strings.TrimSpace(value)
-	if len(val) < MinDAOMemberIDLength {
-		return "", fmt.Errorf("invalid %s '%s' - must be at least %d characters long", name, val, MinDAOMemberIDLength)
-	}
-	return val, nil
 }
 
 // Validate a transaction hash

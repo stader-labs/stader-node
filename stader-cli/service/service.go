@@ -1,24 +1,43 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package service
 
 import (
 	"fmt"
+	"github.com/stader-labs/ethcli-ui/pages"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
-	"github.com/rivo/tview"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
+	ethcliui "github.com/stader-labs/ethcli-ui"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	cliconfig "github.com/stader-labs/stader-node/stader-cli/service/config"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -34,7 +53,7 @@ const (
 	ExecutionContainerSuffix        string = "_eth1"
 	NodeContainerSuffix             string = "_node"
 	ApiContainerSuffix              string = "_api"
-	WatchtowerContainerSuffix       string = "_watchtower"
+	GuardianContainerSuffix         string = "guardian"
 	PruneProvisionerContainerSuffix string = "_prune_provisioner"
 	EcMigratorContainerSuffix       string = "_ec_migrator"
 	clientDataVolumeName            string = "/ethclient"
@@ -68,7 +87,6 @@ func installService(c *cli.Context) error {
 		return nil
 	}
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -81,7 +99,7 @@ func installService(c *cli.Context) error {
 		return fmt.Errorf("error loading old configuration: %w", err)
 	}
 	if !isNew {
-		dataPath = cfg.Smartnode.DataPath.Value.(string)
+		dataPath = cfg.StaderNode.DataPath.Value.(string)
 		dataPath, err = homedir.Expand(dataPath)
 		if err != nil {
 			return fmt.Errorf("error getting data path from old configuration: %w", err)
@@ -147,60 +165,23 @@ func printPatchNotes(c *cli.Context) {
  |_____/ \__\__,_|\__,_|\___|_|    |______\__,_|_.__/|___/
 
 `, "\033[34m")
-	fmt.Printf("%s=== Smartnode v%s ===%s\n\n", colorGreen, shared.StaderVersion, colorReset)
+	fmt.Printf("%s=== Stadernode v%s ===%s\n\n", colorGreen, shared.StaderVersion, colorReset)
 	fmt.Printf("Changes you should be aware of before starting:\n\n")
 
 	fmt.Printf("%s=== MEV-Boost Updates ===%s\n", colorGreen, colorReset)
-	fmt.Println("MEV-Boost is now opt-out instead of opt-in. Furthermore, there is a new way to select relays: you can now select \"profiles\" instead of individual relays. As new relays are added to the Smartnode, any that belong to the profiles you've selected will automatically be enabled for you.\nNOTE: everyone will have to configure either profile-mode or individual-relay mode when first upgrading from v1.6, even if you had previously configured MEV-Boost.")
+	fmt.Println("MEV-Boost is now opt-out instead of opt-in. Furthermore, there is a new way to select relays: you can now select \"profiles\" instead of individual relays. As new relays are added to the Stadernode, any that belong to the profiles you've selected will automatically be enabled for you.\nNOTE: everyone will have to configure either profile-mode or individual-relay mode when first upgrading from v1.6, even if you had previously configured MEV-Boost.")
 
 	fmt.Printf("%s=== ENS Support ===%s\n", colorGreen, colorReset)
 	fmt.Println("`stader-cli node set-withdrawal-address`, `stader-cli node send`, and `stader-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stader-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
 
 	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
-	fmt.Println("The Smartnode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
-
-}
-
-// Install the Stader update tracker for the metrics dashboard
-func installUpdateTracker(c *cli.Context) error {
-
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(
-		"This will add the ability to display any available Operating System updates or new Stader versions on the metrics dashboard. "+
-			"Are you sure you want to install the update tracker?")) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
-	// Get RP client
-	staderClient, err := stader.NewClientFromCtx(c)
-	if err != nil {
-		return err
-	}
-	defer staderClient.Close()
-
-	// Install service
-	err = staderClient.InstallUpdateTracker(c.Bool("verbose"), c.String("version"))
-	if err != nil {
-		return err
-	}
-
-	// Print success message & return
-	colorReset := "\033[0m"
-	colorYellow := "\033[33m"
-	fmt.Println("")
-	fmt.Println("The Stader update tracker service was successfully installed!")
-	fmt.Println("")
-	fmt.Printf("%sNOTE:\nPlease restart the Smartnode stack to enable update tracking on the metrics dashboard.%s\n", colorYellow, colorReset)
-	fmt.Println("")
-	return nil
+	fmt.Println("The Stadernode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
 
 }
 
 // View the Stader service status
 func serviceStatus(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -218,6 +199,30 @@ func serviceStatus(c *cli.Context) error {
 
 }
 
+func ConvertBoolToString(boolValue bool) string {
+	if boolValue {
+		return "Yes"
+	}
+
+	return "No"
+}
+
+func ConvertStringToBool(stringValue string) bool {
+	if stringValue == "Yes" {
+		return true
+	} else {
+		return false
+	}
+}
+
+func HasBeenUpdated(settings1 pages.SettingsType, settings2 pages.SettingsType) bool {
+	if reflect.DeepEqual(settings1, settings2) {
+		return false
+	}
+
+	return true
+}
+
 // Configure the service
 
 // Configure the service
@@ -225,6 +230,7 @@ func configureService(c *cli.Context) error {
 
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
+	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
 		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
@@ -235,7 +241,6 @@ func configureService(c *cli.Context) error {
 		return nil
 	}
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -243,7 +248,7 @@ func configureService(c *cli.Context) error {
 	defer staderClient.Close()
 
 	// Load the config, checking to see if it's new (hasn't been installed before)
-	var oldCfg *config.StaderConfig
+	// var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
@@ -271,7 +276,7 @@ func configureService(c *cli.Context) error {
 
 	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
 	if isMigration || isUpdate {
-		oldCfg = cfg
+		// oldCfg = cfg
 		cfg = cfg.CreateCopy()
 		err = cfg.UpdateDefaults()
 		if err != nil {
@@ -288,84 +293,145 @@ func configureService(c *cli.Context) error {
 		return staderClient.SaveConfig(cfg)
 	}
 
-	// Check for native mode
-	isNative := c.GlobalIsSet("daemon-path")
+	currentSettings := pages.SettingsType{
+		Confirmed: true,
+		Network:   "prater",
+		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
+		ExecutionClient: pages.ExecutionClientSettingsType{
+			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
+			External: pages.ExecutionClientExternalType{
+				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
+				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
+			},
+		},
+		ConsensusClient: pages.ConsensusClientSettingsType{
+			Selection:              string(cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
+			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
+			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
+			External: pages.ConsensusClientExternalType{
+				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
+					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
+				},
+				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
+					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
+					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
+				},
+				Teku: pages.ConsensusClientExternalSelectedTekuType{
+					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
+				},
+			},
+		},
+		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
+		MEVBoost:                 string(cfg.MevBoost.Mode.Value.(cfgtypes.Mode)),
+		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
+		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
+		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
+		FallbackClients: pages.FallbackClientsSettingsType{
+			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
+			Lighthouse: pages.FallbackClientsLighthouseType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Prysm: pages.FallbackClientsPrysmType{
+				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
+				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
+			},
+			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+		},
+	}
 
-	app := tview.NewApplication()
-	md := cliconfig.NewMainDisplay(app, oldCfg, cfg, isNew, isMigration, isUpdate, isNative)
-	err = app.Run()
+	set, err := ethcliui.Run(&currentSettings)
 	if err != nil {
 		return err
 	}
 
-	// Deal with saving the config and printing the changes
-	if md.ShouldSave {
-		// Save the config
-		staderClient.SaveConfig(md.Config)
-		fmt.Println("Your changes have been saved!")
-
-		// Exit immediately if we're in native mode
-		if isNative {
-			fmt.Println("Please restart your daemon service for them to take effect.")
-			return nil
-		}
-
-		// Handle network changes
-		prefix := fmt.Sprint(md.PreviousConfig.Smartnode.ProjectName.Value)
-		if md.ChangeNetworks {
-			// Remove the checkpoint sync provider
-			md.Config.ConsensusCommon.CheckpointSyncProvider.Value = ""
-			staderClient.SaveConfig(md.Config)
-
-			fmt.Printf("%sWARNING: You have requested to change networks.\n\nAll of your existing chain data, your node wallet, and your validator keys will be removed. If you had a Checkpoint Sync URL provided for your Consensus client, it will be removed and you will need to specify a different one that supports the new network.\n\nPlease confirm you have backed up everything you want to keep, because it will be deleted if you answer `y` to the prompt below.\n\n%s", colorYellow, colorReset)
-
-			if !cliutils.Confirm("Would you like the Smartnode to automatically switch networks for you? This will destroy and rebuild your `data` folder and all of Rocket Pool's Docker containers.") {
-				// fmt.Println("To change networks manually, please follow the steps laid out in the Node Operator's guide (https://docs.rocketpool.net/guides/node/mainnet.html).")
-				return nil
-			}
-
-			err = changeNetworks(c, staderClient, fmt.Sprintf("%s%s", prefix, ApiContainerSuffix))
-			if err != nil {
-				fmt.Printf("%s%s%s\nThe Smartnode could not automatically change networks for you, so you will have to run the steps manually.\n", colorRed, err.Error(), colorReset)
-			}
-			return nil
-		}
-
-		// Query for service start if this is a new installation
-		if isNew {
-			if !cliutils.Confirm("Would you like to start the Smartnode services automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to launch.")
-				return nil
-			}
-			return startService(c, true)
-		}
-
-		// Query for service start if this is old and there are containers to change
-		if len(md.ContainersToRestart) > 0 {
-			fmt.Println("The following containers must be restarted for the changes to take effect:")
-			for _, container := range md.ContainersToRestart {
-				fmt.Printf("\t%s_%s\n", prefix, container)
-			}
-			if !cliutils.Confirm("Would you like to restart them automatically now?") {
-				fmt.Println("Please run `stader-cli service start` when you are ready to apply the changes.")
-				return nil
-			}
-
-			fmt.Println()
-			for _, container := range md.ContainersToRestart {
-				fullName := fmt.Sprintf("%s_%s", prefix, container)
-				fmt.Printf("Stopping %s... ", fullName)
-				staderClient.StopContainer(fullName)
-				fmt.Print("done!\n")
-			}
-
-			fmt.Println()
-			fmt.Println("Applying changes and restarting containers...")
-			return startService(c, true)
-		}
-	} else {
-		fmt.Println("Your changes have not been saved. Your Smartnode configuration is the same as it was before.")
+	newSettings := set()
+	if !newSettings.Confirmed {
+		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
 		return nil
+	}
+	if !HasBeenUpdated(currentSettings, newSettings) {
+		fmt.Printf("Your settings have not changed.\n")
+		return nil
+	}
+
+	// update the network
+	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
+
+	// update the consensus and execution client
+	cfg.ConsensusClientMode.Value = newSettings.EthClient
+	cfg.ExecutionClientMode.Value = newSettings.EthClient
+
+	if newSettings.EthClient == "local" {
+		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
+		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
+	} else if newSettings.EthClient == "external" {
+		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
+		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
+		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
+		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
+		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+	}
+	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
+	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
+
+	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
+	// get the consensus client we are using for fallback
+	fallBackConsensusClient := newSettings.ConsensusClient.Selection
+	if newSettings.EthClient == "external" {
+		fallBackConsensusClient = newSettings.ConsensusClient.ExternalSelection
+	}
+
+	switch fallBackConsensusClient {
+	case "prysm":
+		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings.FallbackClients.Prysm.ExecutionClientUrl
+		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeHttpUrl
+		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeJsonRpcpUrl
+	case "lighthouse":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.BeaconNodeHttpUrl
+	case "teku":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
+	}
+
+	// update monitoring
+	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
+
+	// update mev boost
+	if newSettings.MEVBoost == "external" {
+		cfg.EnableMevBoost.Value = true
+		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
+	} else if newSettings.MEVBoost == "local" {
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
+		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
+		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
+		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
+	}
+
+	err = staderClient.SaveConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	// Restart the services
+	err = startService(c, false)
+	if err != nil {
+		return err
 	}
 
 	return err
@@ -445,11 +511,11 @@ func updateConfigParamFromCliArg(c *cli.Context, sectionName string, param *cfgt
 }
 
 // Handle a network change by terminating the service, deleting everything, and starting over
-func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) error {
+func changeNetworks(c *cli.Context, stader *stader.Client, apiContainerName string) error {
 
 	// Stop all of the containers
 	fmt.Print("Stopping containers... ")
-	err := rp.PauseService(getComposeFiles(c))
+	err := stader.PauseService(getComposeFiles(c))
 	if err != nil {
 		return fmt.Errorf("error stopping service: %w", err)
 	}
@@ -457,7 +523,7 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 
 	// Restart the API container
 	fmt.Print("Starting API container... ")
-	output, err := rp.StartContainer(apiContainerName)
+	output, err := stader.StartContainer(apiContainerName)
 	if err != nil {
 		return fmt.Errorf("error starting API container: %w", err)
 	}
@@ -468,7 +534,7 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 
 	// Get the path of the user's data folder
 	fmt.Print("Retrieving data folder path... ")
-	volumePath, err := rp.GetClientVolumeSource(apiContainerName, dataFolderVolumeName)
+	volumePath, err := stader.GetClientVolumeSource(apiContainerName, dataFolderVolumeName)
 	if err != nil {
 		return fmt.Errorf("error getting data folder path: %w", err)
 	}
@@ -476,7 +542,7 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 
 	// Delete the data folder
 	fmt.Print("Removing data folder... ")
-	_, err = rp.TerminateDataFolder()
+	_, err = stader.TerminateDataFolder()
 	if err != nil {
 		return err
 	}
@@ -484,7 +550,7 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 
 	// Terminate the current setup
 	fmt.Print("Removing old installation... ")
-	err = rp.StopService(getComposeFiles(c))
+	err = stader.StopService(getComposeFiles(c))
 	if err != nil {
 		return fmt.Errorf("error terminating old installation: %w", err)
 	}
@@ -499,7 +565,7 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 
 	// Start the service
 	fmt.Print("Starting Stader... ")
-	err = rp.StartService(getComposeFiles(c))
+	err = stader.StartService(getComposeFiles(c))
 	if err != nil {
 		return fmt.Errorf("error starting service: %w", err)
 	}
@@ -512,7 +578,6 @@ func changeNetworks(c *cli.Context, rp *stader.Client, apiContainerName string) 
 // Start the Stader service
 func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -559,19 +624,13 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	if isMigration {
-		return fmt.Errorf("You must upgrade your configuration before starting the Smartnode.\nPlease run `stader-cli service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
+		return fmt.Errorf("You must upgrade your configuration before starting the Stadernode.\nPlease run `stader-cli service config` to confirm your settings were migrated correctly, and enjoy the new configuration UI!")
 	} else if isNew {
-		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Smartnode before running it.")
+		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Stadernode before running it.")
 	}
 
-	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
-	if err != nil {
-		return fmt.Errorf("error checking for first-run status: %w", err)
-	}
-
-	if isUpdate && !ignoreConfigSuggestion {
-		if c.Bool("yes") || cliutils.Confirm("Smartnode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
+	if !ignoreConfigSuggestion {
+		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
@@ -622,33 +681,6 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		fmt.Printf("%sIgnoring anti-slashing safety delay.%s\n", colorYellow, colorReset)
 	}
 
-	// Force a delay if using Teku and upgrading from v1.3.0 or below because of the slashing protection DB migration in v1.3.1+
-	isLocalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local && cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	isExternalTeku := (cfg.ConsensusClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External && cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient) == cfgtypes.ConsensusClient_Teku)
-	if isUpdate && !isNew && !cfg.IsNativeMode && (isLocalTeku || isExternalTeku) && !c.Bool("ignore-slash-timer") {
-		previousVersion := "0.0.0"
-		backupCfg, err := staderClient.LoadBackupConfig()
-		if err != nil {
-			fmt.Printf("WARNING: Couldn't determine previous Smartnode version from backup settings: %s\n", err.Error())
-		} else if backupCfg != nil {
-			previousVersion = backupCfg.Version
-		}
-
-		oldVersion, err := version.NewVersion(strings.TrimPrefix(previousVersion, "v"))
-		if err != nil {
-			fmt.Printf("WARNING: Backup configuration states the previous Smartnode installation used version %s, which is not a valid version\n", previousVersion)
-			oldVersion, _ = version.NewVersion("0.0.0")
-		}
-
-		vulnerableConstraint, _ := version.NewConstraint("<= 0.0.0")
-		if vulnerableConstraint.Check(oldVersion) {
-			err = handleTekuSlashProtectionMigrationDelay(staderClient, cfg)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	// Write a note on doppelganger protection
 	doppelgangerEnabled, err := cfg.IsDoppelgangerEnabled()
 	if err != nil {
@@ -670,89 +702,16 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 }
 
-// Versions prior to v1.3.1 didn't preserve Teku's slashing DB, so force a delay when upgrading to ensure the user doesn't get slashed by accident
-func handleTekuSlashProtectionMigrationDelay(staderClient *stader.Client, cfg *config.StaderConfig) error {
-
-	fmt.Printf("%s=== NOTICE ===\n", colorYellow)
-	fmt.Printf("You are currently using Teku as your Consensus client.\nv1.3.1+ fixes an issue that would cause Teku's slashing protection database to be lost after an upgrade.\nIt will now be rebuilt.\n\nFor the absolute safety of your funds, your node will wait for 15 minutes before starting.\nYou will miss a few attestations during this process; this is expected.\n\nThis delay only needs to happen the first time you start the Smartnode after upgrading to v1.3.1 or higher.%s\n\nIf you are installing the Smartnode for the first time or don't have any validators yet, you can skip this with `stader-cli service start --ignore-slash-timer`. Otherwise, we strongly recommend you wait for the full delay.\n\n", colorReset)
+func checkForValidatorChange(stader *stader.Client, cfg *config.StaderConfig) error {
 
 	// Get the container prefix
-	prefix, err := getContainerPrefix(staderClient)
+	prefix, err := getContainerPrefix(stader)
 	if err != nil {
 		return fmt.Errorf("Error getting validator container prefix: %w", err)
 	}
 
 	// Get the current validator client
-	currentValidatorImageString, err := staderClient.GetDockerImage(prefix + ValidatorContainerSuffix)
-	if err != nil {
-		return fmt.Errorf("Error getting current validator image: %w", err)
-	}
-
-	currentValidatorName, err := getDockerImageName(currentValidatorImageString)
-	if err != nil {
-		return fmt.Errorf("Error getting current validator image name: %w", err)
-	}
-
-	// Get the time that the container responsible for validator duties exited
-	validatorDutyContainerName, err := getContainerNameForValidatorDuties(currentValidatorName, staderClient)
-	if err != nil {
-		return fmt.Errorf("Error getting validator container name: %w", err)
-	}
-	validatorFinishTime, err := staderClient.GetDockerContainerShutdownTime(validatorDutyContainerName)
-	if err != nil {
-		return fmt.Errorf("Error getting validator shutdown time: %w", err)
-	}
-
-	// If it hasn't exited yet, shut it down
-	zeroTime := time.Time{}
-	status, err := staderClient.GetDockerStatus(validatorDutyContainerName)
-	if err != nil {
-		return fmt.Errorf("Error getting container [%s] status: %w", validatorDutyContainerName, err)
-	}
-	if validatorFinishTime == zeroTime || status == "running" {
-		fmt.Printf("%sValidator is currently running, stopping it...%s\n", colorYellow, colorReset)
-		response, err := staderClient.StopContainer(validatorDutyContainerName)
-		validatorFinishTime = time.Now()
-		if err != nil {
-			return fmt.Errorf("Error stopping container [%s]: %w", validatorDutyContainerName, err)
-		}
-		if response != validatorDutyContainerName {
-			return fmt.Errorf("Unexpected response when stopping container [%s]: %s", validatorDutyContainerName, response)
-		}
-	}
-
-	// Print the warning and start the time lockout
-	safeStartTime := validatorFinishTime.Add(15 * time.Minute)
-	remainingTime := time.Until(safeStartTime)
-	if remainingTime <= 0 {
-		fmt.Printf("The validator has been offline for %s, which is long enough to prevent slashing.\n", time.Since(validatorFinishTime))
-		fmt.Println("The new client can be safely started.")
-	} else {
-		// Wait for 15 minutes
-		for remainingTime > 0 {
-			fmt.Printf("Remaining time: %s", remainingTime)
-			time.Sleep(1 * time.Second)
-			remainingTime = time.Until(safeStartTime)
-			fmt.Printf("%s\r", clearLine)
-		}
-
-		fmt.Println(colorReset)
-		fmt.Println("You may now safely start the validator without fear of being slashed.")
-	}
-
-	return nil
-}
-
-func checkForValidatorChange(rp *stader.Client, cfg *config.StaderConfig) error {
-
-	// Get the container prefix
-	prefix, err := getContainerPrefix(rp)
-	if err != nil {
-		return fmt.Errorf("Error getting validator container prefix: %w", err)
-	}
-
-	// Get the current validator client
-	currentValidatorImageString, err := rp.GetDockerImage(prefix + ValidatorContainerSuffix)
+	currentValidatorImageString, err := stader.GetDockerImage(prefix + ValidatorContainerSuffix)
 	if err != nil {
 		return fmt.Errorf("Error getting current validator image: %w", err)
 	}
@@ -780,24 +739,24 @@ func checkForValidatorChange(rp *stader.Client, cfg *config.StaderConfig) error 
 	} else {
 
 		// Get the time that the container responsible for validator duties exited
-		validatorDutyContainerName, err := getContainerNameForValidatorDuties(currentValidatorName, rp)
+		validatorDutyContainerName, err := getContainerNameForValidatorDuties(currentValidatorName, stader)
 		if err != nil {
 			return fmt.Errorf("Error getting validator container name: %w", err)
 		}
-		validatorFinishTime, err := rp.GetDockerContainerShutdownTime(validatorDutyContainerName)
+		validatorFinishTime, err := stader.GetDockerContainerShutdownTime(validatorDutyContainerName)
 		if err != nil {
 			return fmt.Errorf("Error getting validator shutdown time: %w", err)
 		}
 
 		// If it hasn't exited yet, shut it down
 		zeroTime := time.Time{}
-		status, err := rp.GetDockerStatus(validatorDutyContainerName)
+		status, err := stader.GetDockerStatus(validatorDutyContainerName)
 		if err != nil {
 			return fmt.Errorf("Error getting container [%s] status: %w", validatorDutyContainerName, err)
 		}
 		if validatorFinishTime == zeroTime || status == "running" {
 			fmt.Printf("%sValidator is currently running, stopping it...%s\n", colorYellow, colorReset)
-			response, err := rp.StopContainer(validatorDutyContainerName)
+			response, err := stader.StopContainer(validatorDutyContainerName)
 			validatorFinishTime = time.Now()
 			if err != nil {
 				return fmt.Errorf("Error stopping container [%s]: %w", validatorDutyContainerName, err)
@@ -838,9 +797,9 @@ func checkForValidatorChange(rp *stader.Client, cfg *config.StaderConfig) error 
 
 // Get the name of the container responsible for validator duties based on the client name
 // TODO: this is temporary and can change, clean it up when Nimbus supports split mode
-func getContainerNameForValidatorDuties(CurrentValidatorClientName string, rp *stader.Client) (string, error) {
+func getContainerNameForValidatorDuties(CurrentValidatorClientName string, sd *stader.Client) (string, error) {
 
-	prefix, err := getContainerPrefix(rp)
+	prefix, err := getContainerPrefix(sd)
 	if err != nil {
 		return "", err
 	}
@@ -902,16 +861,15 @@ func getContainerPrefix(staderClient *stader.Client) (string, error) {
 		return "", err
 	}
 	if isNew {
-		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return "", fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
-	return cfg.Smartnode.ProjectName.Value.(string), nil
+	return cfg.StaderNode.ProjectName.Value.(string), nil
 }
 
 // Prepares the execution client for pruning
 func pruneExecutionClient(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -924,16 +882,16 @@ func pruneExecutionClient(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
 	// Sanity checks
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_External {
-		fmt.Println("You are using an externally managed Execution client.\nThe Smartnode cannot prune it for you.")
+		fmt.Println("You are using an externally managed Execution client.\nThe Stadernode cannot prune it for you.")
 		return nil
 	}
 	if cfg.IsNativeMode {
-		fmt.Println("You are using Native Mode.\nThe Smartnode cannot prune your Execution client for you, you'll have to do it manually.")
+		fmt.Println("You are using Native Mode.\nThe Stadernode cannot prune your Execution client for you, you'll have to do it manually.")
 	}
 	selectedEc := cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)
 	switch selectedEc {
@@ -966,7 +924,7 @@ func pruneExecutionClient(c *cli.Context) error {
 	}
 
 	// Get the prune provisioner image
-	pruneProvisioner := cfg.Smartnode.GetPruneProvisionerContainerTag()
+	pruneProvisioner := cfg.StaderNode.GetPruneProvisionerContainerTag()
 
 	// Check for enough free space
 	executionContainerName := prefix + ExecutionContainerSuffix
@@ -1050,7 +1008,6 @@ func pruneExecutionClient(c *cli.Context) error {
 // Pause the Stader service
 func pauseService(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1091,7 +1048,6 @@ func stopService(c *cli.Context) error {
 		return nil
 	}
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1106,7 +1062,6 @@ func stopService(c *cli.Context) error {
 // View the Stader service logs
 func serviceLogs(c *cli.Context, serviceNames ...string) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1121,7 +1076,6 @@ func serviceLogs(c *cli.Context, serviceNames ...string) error {
 // View the Stader service stats
 func serviceStats(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1136,7 +1090,6 @@ func serviceStats(c *cli.Context) error {
 // View the Stader service compose config
 func serviceCompose(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1151,7 +1104,6 @@ func serviceCompose(c *cli.Context) error {
 // View the Stader service version information
 func serviceVersion(c *cli.Context) error {
 
-	// Get RP client
 	stader, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1164,7 +1116,6 @@ func serviceVersion(c *cli.Context) error {
 		return err
 	}
 
-	// Get RP service version
 	serviceVersion, err := stader.GetServiceVersion()
 	if err != nil {
 		return err
@@ -1176,7 +1127,7 @@ func serviceVersion(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Smartnode")
+		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Stadernode")
 	}
 
 	// Handle native mode
@@ -1268,7 +1219,6 @@ func getComposeFiles(c *cli.Context) []string {
 // Destroy and resync the eth1 client from scratch
 func resyncEth1(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1281,7 +1231,7 @@ func resyncEth1(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
 	fmt.Println("This will delete the chain data of your primary ETH1 client and resync it from scratch.")
@@ -1352,7 +1302,6 @@ func resyncEth1(c *cli.Context) error {
 // Destroy and resync the eth2 client from scratch
 func resyncEth2(c *cli.Context) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1365,7 +1314,7 @@ func resyncEth2(c *cli.Context) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
 	fmt.Println("This will delete the chain data of your ETH2 client and resync it from scratch.")
@@ -1488,7 +1437,6 @@ func getConfigYaml(c *cli.Context) error {
 // Export the EC volume to an external folder
 func exportEcData(c *cli.Context, targetDir string) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1501,7 +1449,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
 	// Make the path absolute
@@ -1578,7 +1526,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 	}
 
 	// Run the migrator
-	ecMigrator := cfg.Smartnode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	fmt.Printf("Exporting data from volume %s to %s...\n", volume, targetDir)
 	err = staderClient.RunEcMigrator(prefix+EcMigratorContainerSuffix, volume, targetDir, "export", ecMigrator)
 	if err != nil {
@@ -1604,7 +1552,6 @@ func exportEcData(c *cli.Context, targetDir string) error {
 // Import the EC volume from an external folder
 func importEcData(c *cli.Context, sourceDir string) error {
 
-	// Get RP client
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -1617,7 +1564,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 		return err
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 	}
 
 	// Make the path absolute
@@ -1634,7 +1581,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 
 	// Check the source dir
 	fmt.Println("Checking source directory...")
-	ecMigrator := cfg.Smartnode.GetEcMigratorContainerTag()
+	ecMigrator := cfg.StaderNode.GetEcMigratorContainerTag()
 	sourceBytes, err := staderClient.GetDirSizeViaEcMigrator(prefix+EcMigratorContainerSuffix, sourceDir, ecMigrator)
 	if err != nil {
 		return err

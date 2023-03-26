@@ -1,25 +1,42 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package api
 
 import (
 	"fmt"
 	"math/big"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
-	"github.com/rocket-pool/rocketpool-go/settings/protocol"
-	"github.com/rocket-pool/rocketpool-go/utils"
-	"github.com/rocket-pool/rocketpool-go/utils/eth"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
 // The fraction of the timeout period to trigger overdue transactions
 const TimeoutSafetyFactor int = 2
 
 // Print the gas price and cost of a TX
-func PrintAndCheckGasInfo(gasInfo rocketpool.GasInfo, checkThreshold bool, gasThresholdGwei float64, logger log.ColorLogger, maxFeeWei *big.Int, gasLimit uint64) bool {
+func PrintAndCheckGasInfo(gasInfo stader.GasInfo, checkThreshold bool, gasThresholdGwei float64, logger log.ColorLogger, maxFeeWei *big.Int, gasLimit uint64) bool {
 
 	// Check the gas threshold if requested
 	if checkThreshold {
@@ -55,9 +72,9 @@ func PrintAndCheckGasInfo(gasInfo rocketpool.GasInfo, checkThreshold bool, gasTh
 }
 
 // Print a TX's details to the logger and waits for it to validated.
-func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec rocketpool.ExecutionClient, logger log.ColorLogger) error {
+func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec stader.ExecutionClient, logger log.ColorLogger) error {
 
-	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
+	txWatchUrl := cfg.StaderNode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	logger.Printlnf("Transaction has been submitted with hash %s.", hashString)
@@ -73,21 +90,5 @@ func PrintAndWaitForTransaction(cfg *config.StaderConfig, hash common.Hash, ec r
 	}
 
 	return nil
-
-}
-
-// True if a transaction is due and needs to bypass the gas threshold
-func IsTransactionDue(rp *rocketpool.RocketPool, startTime time.Time) (bool, time.Duration, error) {
-
-	// Get the dissolve timeout
-	timeout, err := protocol.GetMinipoolLaunchTimeout(rp, nil)
-	if err != nil {
-		return false, 0, err
-	}
-
-	dueTime := timeout / time.Duration(TimeoutSafetyFactor)
-	isDue := time.Since(startTime) > dueTime
-	timeUntilDue := time.Until(startTime.Add(dueTime))
-	return isDue, timeUntilDue, nil
 
 }

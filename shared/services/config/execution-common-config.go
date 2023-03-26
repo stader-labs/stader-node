@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package config
 
 import (
@@ -56,7 +75,7 @@ func NewExecutionCommonConfig(cfg *StaderConfig) *ExecutionCommonConfig {
 			Description:          "The port your Execution client should use for its HTTP RPC endpoint.",
 			Type:                 config.ParameterType_Uint16,
 			Default:              map[config.Network]interface{}{config.Network_All: defaultEcHttpPort},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Watchtower, config.ContainerID_Eth1, config.ContainerID_Eth2},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth1, config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"EC_HTTP_PORT"},
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   false,

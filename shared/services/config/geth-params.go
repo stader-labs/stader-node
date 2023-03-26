@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package config
 
 import (
@@ -9,8 +28,8 @@ import (
 
 // Constants
 const (
-	gethTagProd          string = "ethereum/client-go:v1.11.2"
-	gethTagTest          string = "rocketpool/client-go:15e5e61"
+	gethTagProd          string = "ethereum/client-go:v1.11.4"
+	gethTagTest          string = "ethereum/client-go:v1.11.4"
 	gethEventLogInterval int    = 1000
 	gethStopSignal       string = "SIGTERM"
 )
@@ -86,7 +105,7 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 		UsePebble: config.Parameter{
 			ID:                   "usePebble",
 			Name:                 "Use Pebble DB",
-			Description:          "Use the new Pebble database for Geth instead of the old LevelDB database. Pebble offers better performance and stability, and reduces the number of instances where a crash causes database corruption that requires a resync.\n\n[orange]NOTE: You will need to resync Geth after enabling this by running `rocketpool service resync-eth1`.",
+			Description:          "Use the new Pebble database for Geth instead of the old LevelDB database. Pebble offers better performance and stability, and reduces the number of instances where a crash causes database corruption that requires a resync.\n\n[orange]NOTE: You will need to resync Geth after enabling this by running `stader-cli service resync-eth1`.",
 			Type:                 config.ParameterType_Bool,
 			Default:              map[config.Network]interface{}{config.Network_All: false},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
@@ -115,7 +134,7 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 		AdditionalFlags: config.Parameter{
 			ID:                   "additionalFlags",
 			Name:                 "Additional Flags",
-			Description:          "Additional custom command line flags you want to pass to Geth, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass to Geth, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

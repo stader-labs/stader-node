@@ -1,10 +1,30 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package gas
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/utils/log"
 	"math/big"
 	"strconv"
+
+	"github.com/stader-labs/stader-node/shared/utils/log"
 
 	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"
@@ -22,7 +42,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 		return fmt.Errorf("Error getting Stader configuration: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		return fmt.Errorf("couldn't locate settings file. Execute the stader-cli service config command to set up your Stader Node")
 	}
 
 	// Get the current settings from the CLI arguments
@@ -30,7 +50,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 	// Get the max fee - prioritize the CLI arguments, default to the config file setting
 	if maxFeeGwei == 0 {
-		maxFee := eth.GweiToWei(cfg.Smartnode.ManualMaxFee.Value.(float64))
+		maxFee := eth.GweiToWei(cfg.StaderNode.ManualMaxFee.Value.(float64))
 		if maxFee != nil && maxFee.Uint64() != 0 {
 			maxFeeGwei = eth.WeiToGwei(maxFee)
 		}
@@ -38,7 +58,7 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 	// Get the priority fee - prioritize the CLI arguments, default to the config file setting
 	if maxPriorityFeeGwei == 0 {
-		maxPriorityFee := eth.GweiToWei(cfg.Smartnode.PriorityFee.Value.(float64))
+		maxPriorityFee := eth.GweiToWei(cfg.StaderNode.PriorityFee.Value.(float64))
 		if maxPriorityFee == nil || maxPriorityFee.Uint64() == 0 {
 			fmt.Printf("%sNOTE: max priority fee not set or set to 0, defaulting to 2 gwei%s\n", log.ColorYellow, log.ColorReset)
 			maxPriorityFeeGwei = 2

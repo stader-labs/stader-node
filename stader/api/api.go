@@ -1,16 +1,33 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package api
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/stader/api/debug"
 	"github.com/urfave/cli"
 
-	"github.com/rocket-pool/rocketpool-go/utils"
 	"github.com/stader-labs/stader-node/shared/services"
 	apitypes "github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/stader/api/network"
+	"github.com/stader-labs/stader-node/stader-lib/utils"
 	"github.com/stader-labs/stader-node/stader/api/node"
 	apiservice "github.com/stader-labs/stader-node/stader/api/service"
 	"github.com/stader-labs/stader-node/stader/api/wallet"
@@ -19,14 +36,14 @@ import (
 // Waits for an auction transaction
 func waitForTransaction(c *cli.Context, hash common.Hash) (*apitypes.APIResponse, error) {
 
-	rp, err := services.GetRocketPool(c)
+	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 
 	// Response
 	response := apitypes.APIResponse{}
-	_, err = utils.WaitForTransaction(rp.Client, hash)
+	_, err = utils.WaitForTransaction(prn.Client, hash)
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +70,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	}
 
 	// Register subcommands
-	network.RegisterSubcommands(&command, "network", []string{"e"})
 	node.RegisterSubcommands(&command, "node", []string{"n"})
 	wallet.RegisterSubcommands(&command, "wallet", []string{"w"})
 	apiservice.RegisterSubcommands(&command, "service", []string{"s"})
-	debug.RegisterSubcommands(&command, "debug", []string{"d"})
 
 	// Append a general wait-for-transaction command to support async operations
 	command.Subcommands = append(command.Subcommands, cli.Command{

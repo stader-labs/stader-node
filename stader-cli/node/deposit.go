@@ -3,9 +3,10 @@ package node
 import (
 	"crypto/rand"
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -13,9 +14,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
-
-// Config
-const DefaultMaxNodeFeeSlippage = 0.01 // 1% below current network fee
 
 func nodeDeposit(c *cli.Context) error {
 
@@ -35,10 +33,8 @@ func nodeDeposit(c *cli.Context) error {
 
 	numValidators := c.Uint64("num-validators")
 
-	// Force 4 ETH minipools as the only option after much community discussion
 	baseAmount := eth.EthToWei(4.0)
 
-	// Get minipool salt
 	var salt *big.Int
 	if c.String("salt") != "" {
 		var success bool
@@ -116,7 +112,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	// Log and wait for the minipool address
 	fmt.Printf("Creating %d validators...\n", numValidators)
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)

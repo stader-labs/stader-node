@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions.
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package node
 
 import (
@@ -52,7 +71,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "register",
 				Aliases:   []string{"r"},
-				Usage:     "Register the node with stader",
+				Usage:     "Register the node with Stader",
 				UsageText: "stader-cli node register [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
@@ -64,18 +83,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
 					cli.StringFlag{
-						Name:  "socialize-mev, sm",
-						Usage: "Should Mev be socialized (will default to true, can be be only true or false)",
+						Name:  "socialize-el, sel",
+						Usage: "Should EL rewards be socialized (will default to true, can be only true or false)",
 					},
 				},
 				Action: func(c *cli.Context) error {
-
-					// Validate args
-					fmt.Printf("Operator name is %s\n", c.String("operator-name"))
-					fmt.Printf("Operator reward address is %s\n", c.String("operator-reward-address"))
-					fmt.Printf("socialize mev is %s\n", c.String("socialize-mev"))
-
-					fmt.Printf("c is %v\n", c.Args())
 
 					// Validate flags
 					if c.String("operator-name") == "" {
@@ -101,7 +113,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit-sd",
 				Aliases:   []string{"k"},
 				Usage:     "Deposit SD against the node",
-				UsageText: "stader-cli node stake-rpl [options]",
+				UsageText: "stader-cli node deposit-sd [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",
@@ -220,30 +232,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return getContractsInfo(c)
-				},
-			},
-			{
-				Name:      "debug-exit",
-				Aliases:   []string{"c"},
-				Usage:     "get the debug exit info",
-				UsageText: "stader-cli node debug-exit index",
-				Flags: []cli.Flag{
-					cli.Uint64Flag{
-						Name:  "validator-index, vi",
-						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 0); err != nil {
-					//	return err
-					//}
-					index := c.Uint64("validator-index")
-					fmt.Printf("index is %d\n", index)
-
-					// Run
-					return debugExitMsg(c, index)
 				},
 			},
 		},

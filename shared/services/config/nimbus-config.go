@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package config
 
 import (
@@ -8,12 +27,12 @@ import (
 
 const (
 	// Prater
-	nimbusBnTagTest string = "rocketpool/nimbus-eth2:unstable-cdca079-bn"
-	nimbusVcTagTest string = "rocketpool/nimbus-eth2:unstable-cdca079-vc"
+	nimbusBnTagTest string = "statusim/nimbus-eth2:multiarch-v23.3.1"
+	nimbusVcTagTest string = "statusim/nimbus-validator-client:multiarch-v23.3.1"
 
 	// Mainnet
-	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v23.2.0"
-	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v23.2.0"
+	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v23.3.1"
+	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v23.3.1"
 
 	defaultNimbusMaxPeersArm uint16 = 100
 	defaultNimbusMaxPeersAmd uint16 = 160
@@ -112,7 +131,7 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 				Value:       config.NimbusPruningMode_Archive,
 			}, {
 				Name:        "Pruned",
-				Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync using `rocketpool service resync-eth2`. Make sure you have a checkpoint sync provider specified first!",
+				Description: "Nimbus will only keep the last 5 months of data available, and will delete everything older than that. This will make Nimbus use less disk space overall, but you won't be able to access state older than 5 months (such as regenerating old rewards trees).\n\n[orange]WARNING: Pruning an *existing* database will take a VERY long time when Nimbus first starts. If you change from Archive to Pruned, you should delete your old chain data and do a checkpoint sync using `stader-cli service resync-eth2`. Make sure you have a checkpoint sync provider specified first!",
 				Value:       config.NimbusPruningMode_Prune,
 			}},
 		},
@@ -120,7 +139,7 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 		AdditionalBnFlags: config.Parameter{
 			ID:                   "additionalBnFlags",
 			Name:                 "Additional Beacon Client Flags",
-			Description:          "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Nimbus's Beacon Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
@@ -132,7 +151,7 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Nimbus's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Nimbus's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},

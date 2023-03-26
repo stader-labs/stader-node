@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package services
 
 import (
@@ -8,11 +27,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/rocket-pool/rocketpool-go/dao/trustednode"
-	"github.com/rocket-pool/rocketpool-go/rocketpool"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 )
 
@@ -21,8 +38,6 @@ const EthClientSyncTimeout = 16    // 16 seconds
 const BeaconClientSyncTimeout = 16 // 16 seconds
 var checkNodePasswordInterval, _ = time.ParseDuration("15s")
 var checkNodeWalletInterval, _ = time.ParseDuration("15s")
-var checkRocketStorageInterval, _ = time.ParseDuration("15s")
-var checkNodeRegisteredInterval, _ = time.ParseDuration("15s")
 var ethClientSyncPollInterval, _ = time.ParseDuration("5s")
 var beaconClientSyncPollInterval, _ = time.ParseDuration("5s")
 var ethClientRecentBlockThreshold, _ = time.ParseDuration("5m")
@@ -79,48 +94,6 @@ func RequireBeaconClientSynced(c *cli.Context) error {
 	return nil
 }
 
-func RequireRocketStorage(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	rocketStorageLoaded, err := getRocketStorageLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !rocketStorageLoaded {
-		return errors.New("The Stader storage contract was not found; the configured address may be incorrect, or the Eth 1.0 node may not be synced. Please try again later.")
-	}
-	return nil
-}
-
-func RequireOneInchOracle(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	oneInchOracleLoaded, err := getOneInchOracleLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !oneInchOracleLoaded {
-		return errors.New("The 1inch oracle contract was not found; the configured address may be incorrect, or the mainnet Eth 1.0 node may not be synced. Please try again later.")
-	}
-	return nil
-}
-
-func RequireRplFaucet(c *cli.Context) error {
-	if err := RequireEthClientSynced(c); err != nil {
-		return err
-	}
-	rplFaucetLoaded, err := getRplFaucetLoaded(c)
-	if err != nil {
-		return err
-	}
-	if !rplFaucetLoaded {
-		return errors.New("The RPL faucet contract was not found; the configured address may be incorrect, or the Eth 1.0 node may not be synced. Please try again later.")
-	}
-	return nil
-}
-
 func RequireNodeRegistered(c *cli.Context) error {
 	if err := RequireNodeWallet(c); err != nil {
 		return err
@@ -131,23 +104,6 @@ func RequireNodeRegistered(c *cli.Context) error {
 	}
 	if !nodeRegistered {
 		return errors.New("The node is not registered with Stader. Please run 'stader-cli node register' and try again.")
-	}
-	return nil
-}
-
-func RequireNodeTrusted(c *cli.Context) error {
-	if err := RequireNodeWallet(c); err != nil {
-		return err
-	}
-	if err := RequireRocketStorage(c); err != nil {
-		return err
-	}
-	nodeTrusted, err := getNodeTrusted(c)
-	if err != nil {
-		return err
-	}
-	if !nodeTrusted {
-		return errors.New("The node is not a member of the oracle DAO. Nodes can only join the oracle DAO by invite.")
 	}
 	return nil
 }
@@ -201,47 +157,6 @@ func WaitBeaconClientSynced(c *cli.Context, verbose bool) error {
 	return err
 }
 
-func WaitRocketStorage(c *cli.Context, verbose bool) error {
-	if err := WaitEthClientSynced(c, verbose); err != nil {
-		return err
-	}
-	for {
-		rocketStorageLoaded, err := getRocketStorageLoaded(c)
-		if err != nil {
-			return err
-		}
-		if rocketStorageLoaded {
-			return nil
-		}
-		if verbose {
-			log.Printf("The Stader storage contract was not found, retrying in %s...\n", checkRocketStorageInterval.String())
-		}
-		time.Sleep(checkRocketStorageInterval)
-	}
-}
-
-func WaitNodeRegistered(c *cli.Context, verbose bool) error {
-	if err := WaitNodeWallet(c, verbose); err != nil {
-		return err
-	}
-	if err := WaitRocketStorage(c, verbose); err != nil {
-		return err
-	}
-	for {
-		nodeRegistered, err := getNodeRegistered(c)
-		if err != nil {
-			return err
-		}
-		if nodeRegistered {
-			return nil
-		}
-		if verbose {
-			log.Printf("The node is not registered with Stader, retrying in %s...\n", checkNodeRegisteredInterval.String())
-		}
-		time.Sleep(checkNodeRegisteredInterval)
-	}
-}
-
 //
 // Helpers
 //
@@ -262,57 +177,6 @@ func getNodeWalletInitialized(c *cli.Context) (bool, error) {
 		return false, err
 	}
 	return w.GetInitialized()
-}
-
-// Check if the RocketStorage contract is loaded
-func getRocketStorageLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetStorageAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
-}
-
-// Check if the 1inch exchange oracle contract is loaded
-func getOneInchOracleLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetOneInchOracleAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
-}
-
-// Check if the RPL faucet contract is loaded
-func getRplFaucetLoaded(c *cli.Context) (bool, error) {
-	cfg, err := GetConfig(c)
-	if err != nil {
-		return false, err
-	}
-	ec, err := GetEthClient(c)
-	if err != nil {
-		return false, err
-	}
-	code, err := ec.CodeAt(context.Background(), common.HexToAddress(cfg.Smartnode.GetRplFaucetAddress()), nil)
-	if err != nil {
-		return false, err
-	}
-	return (len(code) > 0), nil
 }
 
 // Check if the node is registered
@@ -337,28 +201,11 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	return operatorId.Int64() != 0, nil
 }
 
-// Check if the node is a member of the oracle DAO
-func getNodeTrusted(c *cli.Context) (bool, error) {
-	w, err := GetWallet(c)
-	if err != nil {
-		return false, err
-	}
-	rp, err := GetRocketPool(c)
-	if err != nil {
-		return false, err
-	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return false, err
-	}
-	return trustednode.GetMemberExists(rp, nodeAccount.Address, nil)
-}
-
 // Wait for the eth client to sync
 // timeout of 0 indicates no timeout
 var ethClientSyncLock sync.Mutex
 
-func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.StaderConfig) (bool, rocketpool.ExecutionClient, error) {
+func checkExecutionClientStatus(ecMgr *ExecutionClientManager, cfg *config.StaderConfig) (bool, stader.ExecutionClient, error) {
 
 	// Check the EC status
 	mgrStatus := ecMgr.CheckStatus(cfg)
@@ -600,7 +447,7 @@ func waitBeaconClientSynced(c *cli.Context, verbose bool, timeout int64) (bool, 
 }
 
 // Confirm the EC's latest block is within the threshold of the current system clock
-func IsSyncWithinThreshold(ec rocketpool.ExecutionClient) (bool, time.Time, error) {
+func IsSyncWithinThreshold(ec stader.ExecutionClient) (bool, time.Time, error) {
 	timestamp, err := GetEthClientLatestBlockTimestamp(ec)
 	if err != nil {
 		return false, time.Time{}, err

@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package cli
 
 import (
@@ -52,11 +71,11 @@ func printTransactionHashImpl(staderClient *stader.Client, hash common.Hash, fin
 	}
 
 	if isNew {
-		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Smartnode.")
+		fmt.Print("Settings file not found. Please run `stader-cli service config` to set up your Stadernode.")
 		return
 	}
 
-	txWatchUrl := cfg.Smartnode.GetTxWatchUrl()
+	txWatchUrl := cfg.StaderNode.GetTxWatchUrl()
 	hashString := hash.String()
 
 	fmt.Printf("Transaction has been submitted with hash %s.\n", hashString)
@@ -100,23 +119,6 @@ func PrettyPrintError(err error) {
 	fmt.Println(prettyErr)
 }
 
-// Prints an error message when the Beacon client is not using the deposit contract address that Stader expects
-func PrintDepositMismatchError(rpNetwork, beaconNetwork uint64, rpDepositAddress, beaconDepositAddress common.Address) {
-	fmt.Printf("%s***ALERT***\n", colorRed)
-	fmt.Println("YOUR ETH2 CLIENT IS NOT CONNECTED TO THE SAME NETWORK THAT Stader IS USING!")
-	fmt.Println("This is likely because your ETH2 client is using the wrong configuration.")
-	fmt.Println("For the safety of your funds, Stader will not let you deposit your ETH until this is resolved.")
-	fmt.Println()
-	fmt.Println("To fix it if you are in Docker mode:")
-	fmt.Println("\t1. Run 'stader-cli service install -d' to get the latest configuration")
-	fmt.Println("\t2. Run 'stader-cli service stop' and 'stader-cli service start' to apply the configuration.")
-	fmt.Println("If you are using Hybrid or Native mode, please correct the network flags in your ETH2 launch script.")
-	fmt.Println()
-	fmt.Println("Details:")
-	fmt.Printf("\tStader expects deposit contract %s on chain %d.\n", rpDepositAddress.Hex(), rpNetwork)
-	fmt.Printf("\tYour Beacon client is using deposit contract %s on chain %d.%s\n", beaconDepositAddress.Hex(), beaconNetwork, colorReset)
-}
-
 // Prints what network you're currently on
 func PrintNetwork(staderClient *stader.Client) error {
 	cfg, isNew, err := staderClient.LoadConfig()
@@ -124,19 +126,19 @@ func PrintNetwork(staderClient *stader.Client) error {
 		return fmt.Errorf("error loading global config: %w", err)
 	}
 	if isNew {
-		return fmt.Errorf("settings file not found. Please run `stader-client service config` to set up your Smartnode")
+		return fmt.Errorf("settings file not found. Please run `stader-cli service config` to set up your Stader Node")
 	}
 
-	currentNetwork := cfg.Smartnode.Network.Value.(cfgtypes.Network)
+	currentNetwork := cfg.StaderNode.Network.Value.(cfgtypes.Network)
 	switch currentNetwork {
 	case cfgtypes.Network_Mainnet:
-		fmt.Printf("Your Smartnode is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
 	case cfgtypes.Network_Prater:
-		fmt.Printf("Your Smartnode is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
 	case cfgtypes.Network_Devnet:
-		fmt.Printf("Your Smartnode is currently using the %sPrater Development Network.%s\n\n", colorYellow, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sPrater Development Network.%s\n\n", colorYellow, colorReset)
 	case cfgtypes.Network_Zhejiang:
-		fmt.Printf("Your Smartnode is currently using the %sZhejiang Test Network.%s\n\n", colorYellow, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sZhejiang Test Network.%s\n\n", colorYellow, colorReset)
 	default:
 		fmt.Printf("%sYou are on an unexpected network [%v].%s\n\n", colorYellow, currentNetwork, colorReset)
 	}

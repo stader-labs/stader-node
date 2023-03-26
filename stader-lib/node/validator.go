@@ -26,6 +26,24 @@ func GetTotalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager
 	return pnr.PermissionlessNodeRegistry.GetOperatorTotalKeys(opts, operatorId)
 }
 
+func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, validatorIndex *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
+}
+
+func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (struct {
+	Status               uint8
+	Pubkey               []byte
+	PreDepositSignature  []byte
+	DepositSignature     []byte
+	WithdrawVaultAddress common.Address
+	OperatorId           *big.Int
+	InitialBondEth       *big.Int
+	DepositTime          *big.Int
+	WithdrawnTime        *big.Int
+}, error) {
+	return pnr.PermissionlessNodeRegistry.ValidatorRegistry(opts, validatorId)
+}
+
 func ComputeWithdrawVaultAddress(vfcm *stader.VaultFactoryContractManager, poolType uint8, operatorId *big.Int, validatorCount *big.Int, opts *bind.CallOpts) (common.Address, error) {
 	return vfcm.VaultFactory.ComputeWithdrawVaultAddress(opts, poolType, operatorId, validatorCount)
 }

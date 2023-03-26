@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package config
 
 import (
@@ -8,13 +27,12 @@ import (
 )
 
 const (
-	prysmBnTagAmd64Test string = "prysmaticlabs/prysm-beacon-chain:HEAD-ec13d5-debug"
-	prysmVcTagAmd64Test string = "prysmaticlabs/prysm-validator:HEAD-ec13d5-debug"
-	prysmTagArm64Test   string = "rocketpool/prysm:v3.2.1-ec13d52-arm64"
-
-	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-0cf1ca-debug"
-	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-0cf1ca-debug"
-	prysmTagArm64Prod       string = "rocketpool/prysm:v3.2.1"
+	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
+	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
+	prysmTagArm64Test       string = "staderdev/prysm:v3.2.2-rc.3"
+	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
+	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
+	prysmTagArm64Prod       string = "staderdev/prysm:v3.2.2-rc.3"
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45
@@ -129,7 +147,7 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 		AdditionalBnFlags: config.Parameter{
 			ID:                   "additionalBnFlags",
 			Name:                 "Additional Beacon Node Flags",
-			Description:          "Additional custom command line flags you want to pass Prysm's Beacon Node, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Prysm's Beacon Node, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
@@ -141,7 +159,7 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 		AdditionalVcFlags: config.Parameter{
 			ID:                   "additionalVcFlags",
 			Name:                 "Additional Validator Client Flags",
-			Description:          "Additional custom command line flags you want to pass Prysm's Validator Client, to take advantage of other settings that the Smartnode's configuration doesn't cover.",
+			Description:          "Additional custom command line flags you want to pass Prysm's Validator Client, to take advantage of other settings that the Stadernode's configuration doesn't cover.",
 			Type:                 config.ParameterType_String,
 			Default:              map[config.Network]interface{}{config.Network_All: ""},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},

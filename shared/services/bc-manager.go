@@ -1,3 +1,22 @@
+/*
+This work is licensed and released under GNU GPL v3 or any other later versions. 
+The full text of the license is below/ found at <http://www.gnu.org/licenses/>
+
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package services
 
 import (
@@ -73,17 +92,10 @@ func NewBeaconClientManager(cfg *config.StaderConfig) (*BeaconClientManager, err
 
 	var primaryBc beacon.Client
 	var fallbackBc beacon.Client
-	switch selectedCC {
-	case cfgtypes.ConsensusClient_Nimbus:
-		primaryBc = client.NewNimbusClient(primaryProvider)
-		if fallbackProvider != "" {
-			fallbackBc = client.NewNimbusClient(fallbackProvider)
-		}
-	default:
-		primaryBc = client.NewStandardHttpClient(primaryProvider)
-		if fallbackProvider != "" {
-			fallbackBc = client.NewStandardHttpClient(fallbackProvider)
-		}
+
+	primaryBc = client.NewStandardHttpClient(primaryProvider)
+	if fallbackProvider != "" {
+		fallbackBc = client.NewStandardHttpClient(fallbackProvider)
 	}
 
 	return &BeaconClientManager{
@@ -244,9 +256,9 @@ func (m *BeaconClientManager) GetValidatorProposerDuties(indices []uint64, epoch
 }
 
 // Get the Beacon chain's domain data
-func (m *BeaconClientManager) GetDomainData(domainType []byte, epoch uint64) ([]byte, error) {
+func (m *BeaconClientManager) GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error) {
 	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
-		return client.GetDomainData(domainType, epoch)
+		return client.GetDomainData(domainType, epoch, useGenesisFork)
 	})
 	if err != nil {
 		return nil, err
@@ -322,8 +334,8 @@ func (m *BeaconClientManager) CheckStatus() *api.ClientManagerStatus {
 	}
 
 	// Flag the ready clients
-	m.primaryReady = status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced
-	m.fallbackReady = status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced
+	m.primaryReady = (status.PrimaryClientStatus.IsWorking && status.PrimaryClientStatus.IsSynced)
+	m.fallbackReady = (status.FallbackEnabled && status.FallbackClientStatus.IsWorking && status.FallbackClientStatus.IsSynced)
 
 	return status
 
