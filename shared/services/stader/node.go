@@ -175,7 +175,6 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not decode can node deposit response: %w", err)
 	}
-	fmt.Printf("response in CanNodeDeposit is %v\n", response)
 	if response.Error != "" {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can node deposit status: %s", response.Error)
 	}
