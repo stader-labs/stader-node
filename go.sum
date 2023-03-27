@@ -1313,6 +1313,8 @@ github.com/stader-labs/ethcli-ui v0.0.0-20230324094336-4a445b0a14de h1:6HtFptLjf
 github.com/stader-labs/ethcli-ui v0.0.0-20230324094336-4a445b0a14de/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
 github.com/stader-labs/ethcli-ui v0.0.0-20230327072604-ea1205bccf3e h1:CdTVnzdA2gVbOrzD7KQRWF587efVxUHenMMbPigCNaI=
 github.com/stader-labs/ethcli-ui v0.0.0-20230327072604-ea1205bccf3e/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
+github.com/stader-labs/ethcli-ui v0.0.0-20230327084847-cc1c2ac36c35 h1:nDbJ0cS7Pm9gNRJWh5E6p61ajPFc5C0Z/sOGwr4vP1s=
+github.com/stader-labs/ethcli-ui v0.0.0-20230327084847-cc1c2ac36c35/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
 github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 h1:Oo2KZNP70KE0+IUJSidPj/BFS/RXNHmKIJOdckzml2E=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
