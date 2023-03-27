@@ -412,7 +412,7 @@ func configureService(c *cli.Context) error {
 	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
 
 	// update mev boost
-	if newSettings.MEVBoost == "external" {
+	if newSettings.MEVBoost == "external" && newSettings.MEVBoostExternalMevUrl != "" {
 		cfg.EnableMevBoost.Value = true
 		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
@@ -422,6 +422,12 @@ func configureService(c *cli.Context) error {
 		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
 		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
 		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
+	}
+
+	// unset mev boost mode value if mev boost is disabled
+	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
+		cfg.MevBoost.Mode.Value = ""
+		cfg.MevBoost.SelectionMode.Value = ""
 	}
 
 	err = staderClient.SaveConfig(cfg)
