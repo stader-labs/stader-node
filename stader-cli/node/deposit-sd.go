@@ -38,16 +38,13 @@ func nodeDepositSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("amount is %f\n", amount)
 	amountWei := eth.EthToWei(amount)
-	fmt.Printf("amountWei is %d\n", amountWei)
 
 	// Check allowance
 	allowance, err := staderClient.GetNodeDepositSdAllowance()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("allowance is %d\n", allowance.Allowance.Int64())
 
 	// Calculate max uint256 value
 	maxApproval := big.NewInt(2)
