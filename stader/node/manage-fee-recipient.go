@@ -1,5 +1,5 @@
 /*
-This work is licensed and released under GNU GPL v3 or any other later versions. 
+This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
 (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
@@ -45,6 +45,8 @@ type manageFeeRecipient struct {
 	cfg *config.StaderConfig
 	w   *wallet.Wallet
 	prn *stader.PermissionlessNodeRegistryContractManager
+	vf  *stader.VaultFactoryContractManager
+	pp  *stader.PermissionlessPoolContractManager
 	d   *client.Client
 	bc  beacon.Client
 }
@@ -65,6 +67,14 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
+	vf, err := services.GetVaultFactory(c)
+	if err != nil {
+		return nil, err
+	}
+	pp, err := services.GetPermissionlessPoolFactory(c)
+	if err != nil {
+		return nil, err
+	}
 	d, err := services.GetDocker(c)
 	if err != nil {
 		return nil, err
@@ -81,6 +91,8 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 		cfg: cfg,
 		w:   w,
 		prn: prn,
+		vf:  vf,
+		pp:  pp,
 		d:   d,
 		bc:  bc,
 	}, nil
@@ -102,14 +114,14 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Get the fee recipient info for the node
-	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.bc, nodeAccount.Address, nil)
+	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.pp, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}
 
 	// Get the correct fee recipient address
 	var correctFeeRecipient common.Address
-	if feeRecipientInfo.IsInSocializingPool || feeRecipientInfo.IsInOptOutCooldown {
+	if feeRecipientInfo.IsInSocializingPool {
 		correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
 	} else {
 		correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress

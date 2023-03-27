@@ -1,5 +1,5 @@
 /*
-This work is licensed and released under GNU GPL v3 or any other later versions. 
+This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
 (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
@@ -91,6 +91,9 @@ type StaderNodeConfig struct {
 
 	// The contract address of the permissionless node operator registry
 	permissionlessNodeRegistryAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the permissionless pool
+	permissionlessPoolAddress map[config.Network]string `yaml:"-"`
 
 	// The contract address of the withdraw vault factory
 	vaultFactoryAddress map[config.Network]string `yaml:"-"`
@@ -211,6 +214,13 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		permissionlessNodeRegistryAddress: map[config.Network]string{
+			config.Network_Devnet:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
+			config.Network_Prater:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
+			config.Network_Mainnet:  "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
+			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
+		},
+
+		permissionlessPoolAddress: map[config.Network]string{
 			config.Network_Devnet:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
 			config.Network_Prater:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
 			config.Network_Mainnet:  "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
@@ -353,6 +363,10 @@ func (cfg *StaderNodeConfig) GetConfigTitle() string {
 
 func (cfg *StaderNodeConfig) GetPermissionlessNodeRegistryAddress() common.Address {
 	return common.HexToAddress(cfg.permissionlessNodeRegistryAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetPermissionlessPoolAddress() common.Address {
+	return common.HexToAddress(cfg.permissionlessPoolAddress[cfg.Network.Value.(config.Network)])
 }
 
 func (cfg *StaderNodeConfig) GetVaultFactoryAddress() common.Address {

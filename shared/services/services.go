@@ -1,5 +1,5 @@
 /*
-This work is licensed and released under GNU GPL v3 or any other later versions. 
+This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
 (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3.
@@ -124,6 +124,19 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	}
 
 	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
+}
+
+func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPermissionlessPoolFactory(ec, cfg.StaderNode.GetPermissionlessPoolAddress())
 }
 
 func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
