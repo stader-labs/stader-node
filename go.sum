@@ -1156,6 +1156,8 @@ github.com/rivo/tview v0.0.0-20200712113419-c65badfc3d92/go.mod h1:6lkG1x+13OShE
 github.com/rivo/tview v0.0.0-20230307144320-cc10b288e304/go.mod h1:nVwGv4MP47T0jvlk7KuTTjjuSmrGO4JF0iaiNt4bufE=
 github.com/rivo/tview v0.0.0-20230320095235-84f9c0ff9de8 h1:wthS/rREJ6WlALtQ3Ysp4Cty/qiY2LNslV90U71bNg0=
 github.com/rivo/tview v0.0.0-20230320095235-84f9c0ff9de8/go.mod h1:nVwGv4MP47T0jvlk7KuTTjjuSmrGO4JF0iaiNt4bufE=
+github.com/rivo/tview v0.0.0-20230325211341-281d14d896d7 h1:8sjyhdBA9HmxHGUeAM/43uSHfyFhFodbxekw2mYhpo0=
+github.com/rivo/tview v0.0.0-20230325211341-281d14d896d7/go.mod h1:nVwGv4MP47T0jvlk7KuTTjjuSmrGO4JF0iaiNt4bufE=
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.3/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=
@@ -1309,6 +1311,8 @@ github.com/stader-labs/ethcli-ui v0.0.0-20230324061735-4526efdff7da h1:6+FLbmrS2
 github.com/stader-labs/ethcli-ui v0.0.0-20230324061735-4526efdff7da/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
 github.com/stader-labs/ethcli-ui v0.0.0-20230324094336-4a445b0a14de h1:6HtFptLjfz6ydzN5rJNr32Nn48bHUzfkXmoSW6OpWyA=
 github.com/stader-labs/ethcli-ui v0.0.0-20230324094336-4a445b0a14de/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
+github.com/stader-labs/ethcli-ui v0.0.0-20230327072604-ea1205bccf3e h1:CdTVnzdA2gVbOrzD7KQRWF587efVxUHenMMbPigCNaI=
+github.com/stader-labs/ethcli-ui v0.0.0-20230327072604-ea1205bccf3e/go.mod h1:ovJW90CxIm4Zjyd2iOXFYICasvF6cEIq4IpJrf+bNbM=
 github.com/status-im/keycard-go v0.0.0-20190316090335-8537d3370df4/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969 h1:Oo2KZNP70KE0+IUJSidPj/BFS/RXNHmKIJOdckzml2E=
 github.com/status-im/keycard-go v0.0.0-20200402102358-957c09536969/go.mod h1:RZLeN1LMWmRsyYjvAu+I6Dm9QmlDaIIt+Y+4Kd7Tp+Q=

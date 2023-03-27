@@ -32,11 +32,11 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
-	github.com/rivo/tview v0.0.0-20230320095235-84f9c0ff9de8
+	github.com/rivo/tview v0.0.0-20230325211341-281d14d896d7
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/ethcli-ui v0.0.0-20230324094336-4a445b0a14de
+	github.com/stader-labs/ethcli-ui v0.0.0-20230327072604-ea1205bccf3e
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
