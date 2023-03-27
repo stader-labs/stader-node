@@ -126,6 +126,19 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
 }
 
+func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPermissionlessPoolFactory(ec, cfg.StaderNode.GetPermissionlessPoolAddress())
+}
+
 func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

@@ -35,18 +35,15 @@ func registerNode(c *cli.Context) error {
 	if operatorRewardAddressString == "" {
 		operatorRewardAddressString = walletStatus.AccountAddress.String()
 	}
-	socializeMev := c.String("socialize-mev")
-	// default socialize mev to true
-	if socializeMev == "" {
-		socializeMev = "true"
+	socializeEl := c.String("socialize-el")
+	// default socialize el to true
+	if socializeEl == "" {
+		socializeEl = "true"
 	}
-	socializeMevBool := parseToBool(socializeMev)
-
-	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddressString))
-	fmt.Printf("cli: Register-Node: socializeMevBool is %d\n", socializeMevBool)
+	socializeElBool := parseToBool(socializeEl)
 
 	// Check node can be registered
-	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeMevBool)
+	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeElBool)
 	if err != nil {
 		return err
 	}
@@ -74,7 +71,7 @@ func registerNode(c *cli.Context) error {
 	}
 
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeMevBool)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeElBool)
 	if err != nil {
 		return err
 	}

@@ -36,7 +36,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
-var tasksInterval, _ = time.ParseDuration("5m")
+// TODO - increase the tasksInterval to 5m
+var tasksInterval, _ = time.ParseDuration("10s")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (

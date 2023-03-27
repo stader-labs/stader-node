@@ -131,3 +131,34 @@ func NewVaultFactory(client ExecutionClient, vaultFactoryAddress common.Address)
 	}, nil
 
 }
+
+type PermissionlessPoolContractManager struct {
+	Client                     ExecutionClient
+	PermissionlessPool         *contracts.PermissionlessPool
+	PermissionlessPoolContract *Contract
+}
+
+func NewPermissionlessPoolFactory(client ExecutionClient, permissionPoolAddress common.Address) (*PermissionlessPoolContractManager, error) {
+	permissionlessPool, err := contracts.NewPermissionlessPool(permissionPoolAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	permissionlessPoolContractAbi, err := abi.JSON(strings.NewReader(contracts.PermissionlessPoolMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	permissionlessPoolContract := &Contract{
+		Contract: bind.NewBoundContract(permissionPoolAddress, permissionlessPoolContractAbi, client, client, client),
+		Address:  &permissionPoolAddress,
+		ABI:      &permissionlessPoolContractAbi,
+		Client:   client,
+	}
+
+	return &PermissionlessPoolContractManager{
+		Client:                     client,
+		PermissionlessPool:         permissionlessPool,
+		PermissionlessPoolContract: permissionlessPoolContract,
+	}, nil
+
+}

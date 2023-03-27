@@ -100,8 +100,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					}
 
-					if c.String("socialize-mev") != "" && c.String("socialize-mev") != "true" && c.String("socialize-mev") != "false" {
-						return fmt.Errorf("invalid value for socialize mev, it should be exactly true or false")
+					if c.String("socialize-el") != "" && c.String("socialize-el") != "true" && c.String("socialize-el") != "false" {
+						return fmt.Errorf("invalid value for socialize el, it should be exactly true or false")
 					}
 
 					// Run

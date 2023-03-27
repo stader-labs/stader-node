@@ -565,7 +565,6 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 // Start the Stader service
 func (c *Client) StartService(composeFiles []string) error {
 
-	fmt.Printf("compose files are %v\n", composeFiles)
 	// Start the API container first
 	cmd, err := c.compose([]string{}, "up -d")
 	if err != nil {

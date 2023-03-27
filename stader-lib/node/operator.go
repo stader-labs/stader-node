@@ -51,3 +51,11 @@ func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, oper
 
 	return operatorInfo, nil
 }
+
+func GetNodeElRewardAddress(vf *stader.VaultFactoryContractManager, poolId uint8, operatorId *big.Int, opts *bind.CallOpts) (common.Address, error) {
+	return vf.VaultFactory.ComputeNodeELRewardVaultAddress(opts, poolId, operatorId)
+}
+
+func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, opts *bind.CallOpts) (common.Address, error) {
+	return pp.PermissionlessPool.GetSocializingPoolAddress(opts)
+}
