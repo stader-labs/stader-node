@@ -412,7 +412,7 @@ func configureService(c *cli.Context) error {
 	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
 
 	// update mev boost
-	if newSettings.MEVBoost == "external" && newSettings.MEVBoostExternalMevUrl != "" {
+	if newSettings.MEVBoost == "external" {
 		cfg.EnableMevBoost.Value = true
 		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
