@@ -119,7 +119,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %f ETH was made successfully!\n", uint64(baseAmountInEth)*numValidators)
+	fmt.Printf("The node deposit of %d ETH was made successfully!\n", uint64(baseAmountInEth)*numValidators)
 	fmt.Printf("Total %d validators were created\n", numValidators)
 
 	fmt.Println("Your validators are now in Initialized status.")
