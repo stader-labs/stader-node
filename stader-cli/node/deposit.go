@@ -94,13 +94,11 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	totalDeposited := baseAmount.Uint64() * numValidators
-
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %d ETH to create %d validators."+
+		"You are about to deposit %d ETH to create %d validators.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
-		eth.WeiToEth(big.NewInt(int64(totalDeposited))), numValidators,
+		uint64(baseAmountInEth)*numValidators, numValidators,
 		log.ColorYellow,
 		log.ColorReset))) {
 		fmt.Println("Cancelled.")
