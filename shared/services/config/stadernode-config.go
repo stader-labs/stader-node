@@ -214,44 +214,44 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		permissionlessNodeRegistryAddress: map[config.Network]string{
-			config.Network_Devnet:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
-			config.Network_Prater:   "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
-			config.Network_Mainnet:  "0x94345f6f16082081f794BeFCeC7f0247b76A3b78",
+			config.Network_Devnet:   "0x0bf620171483E543f7964a6067D9CEf3AE130056",
+			config.Network_Prater:   "0x0bf620171483E543f7964a6067D9CEf3AE130056",
+			config.Network_Mainnet:  "0x0bf620171483E543f7964a6067D9CEf3AE130056",
 			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 
 		permissionlessPoolAddress: map[config.Network]string{
-			config.Network_Devnet:   "0xdb000E6Bb2E87aE4A3Dd5073BE30E639626Bf0aF",
-			config.Network_Prater:   "0xdb000E6Bb2E87aE4A3Dd5073BE30E639626Bf0aF",
-			config.Network_Mainnet:  "0xdb000E6Bb2E87aE4A3Dd5073BE30E639626Bf0aF",
+			config.Network_Devnet:   "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
+			config.Network_Prater:   "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
+			config.Network_Mainnet:  "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
 			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 
 		vaultFactoryAddress: map[config.Network]string{
-			config.Network_Prater:   "0x398c0aC14b666E0f5a5b9c040482ED527B05fB24",
-			config.Network_Devnet:   "0x398c0aC14b666E0f5a5b9c040482ED527B05fB24",
-			config.Network_Mainnet:  "0x398c0aC14b666E0f5a5b9c040482ED527B05fB24",
+			config.Network_Prater:   "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
+			config.Network_Devnet:   "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
+			config.Network_Mainnet:  "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
 			config.Network_Zhejiang: "0xacC1766b4a6dacbB67063a639F588EaB8b6b5A2d",
 		},
 
 		sdTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
-			config.Network_Devnet:   "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
-			config.Network_Mainnet:  "0xD311878a010a94e4500eb5B056DfeaEcAc349AD2",
+			config.Network_Prater:   "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
+			config.Network_Devnet:   "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
+			config.Network_Mainnet:  "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
 			config.Network_Zhejiang: "0x117f8c20b91e34049798ca66f9234dea4a700f19",
 		},
 
 		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:   "0xeE06e2483B297D63a25849D732d092C7aCebC30f",
-			config.Network_Devnet:   "0xeE06e2483B297D63a25849D732d092C7aCebC30f",
-			config.Network_Mainnet:  "0xeE06e2483B297D63a25849D732d092C7aCebC30f",
+			config.Network_Prater:   "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
+			config.Network_Devnet:   "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
+			config.Network_Mainnet:  "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
 			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0xe10C21b6A033b97cD19DFb170cDbD3154d69Aa46",
-			config.Network_Devnet:   "0xe10C21b6A033b97cD19DFb170cDbD3154d69Aa46",
-			config.Network_Mainnet:  "0xe10C21b6A033b97cD19DFb170cDbD3154d69Aa46",
+			config.Network_Prater:   "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
+			config.Network_Devnet:   "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
+			config.Network_Mainnet:  "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
