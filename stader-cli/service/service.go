@@ -426,8 +426,9 @@ func configureService(c *cli.Context) error {
 
 	// unset mev boost mode value if mev boost is disabled
 	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
-		cfg.MevBoost.Mode.Value = ""
+		cfg.MevBoost.Mode.Value = "local"
 		cfg.MevBoost.SelectionMode.Value = ""
+		cfg.EnableMevBoost.Value = false
 	}
 
 	err = staderClient.SaveConfig(cfg)
