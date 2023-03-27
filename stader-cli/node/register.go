@@ -36,7 +36,7 @@ func registerNode(c *cli.Context) error {
 		operatorRewardAddressString = walletStatus.AccountAddress.String()
 	}
 	socializeEl := c.String("socialize-el")
-	// default socialize mev to true
+	// default socialize el to true
 	if socializeEl == "" {
 		socializeEl = "true"
 	}
