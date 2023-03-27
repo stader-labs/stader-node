@@ -42,9 +42,6 @@ func registerNode(c *cli.Context) error {
 	}
 	socializeElBool := parseToBool(socializeEl)
 
-	fmt.Printf("cli: Register-Node: operator reward address is %s\n\n", common.HexToAddress(operatorRewardAddressString))
-	fmt.Printf("cli: Register-Node: socializeElBool is %d\n", socializeElBool)
-
 	// Check node can be registered
 	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeElBool)
 	if err != nil {
