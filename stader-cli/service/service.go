@@ -411,12 +411,9 @@ func configureService(c *cli.Context) error {
 	// update monitoring
 	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
 
-	// default mev boost
-	cfg.EnableMevBoost.Value = true
-	cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
-	cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
-	cfg.MevBoost.EnableRegulatedAllMev.Value = true
-	cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
+	if newSettings.MEVBoost == "external" && newSettings.MEVBoostExternalMevUrl == "" {
+		return fmt.Errorf("MEV boost external URL cannot be empty")
+	}
 
 	// update mev boost
 	if newSettings.MEVBoost == "external" && newSettings.MEVBoostExternalMevUrl != "" {
