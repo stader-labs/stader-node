@@ -139,7 +139,7 @@ func (m *manageFeeRecipient) run() error {
 		m.log.Printlnf("WARNING: Fee recipient files did not contain the correct fee recipient of %s, regenerating...", correctFeeRecipient.Hex())
 	} else {
 		// Files are all correct, return.
-		fmt.Printf("Fee recipient files are all correct, no action required.")
+		m.log.Printlnf("Fee recipient files are all correct, no action required.")
 		return nil
 	}
 
