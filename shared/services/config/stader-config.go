@@ -1110,7 +1110,7 @@ func (cfg *StaderConfig) Validate() []string {
 				}
 			case config.Mode_External:
 				// In external MEV-boost mode, the user has to have an external URL if they're running Docker mode
-				if cfg.ExecutionClientMode.Value.(config.Mode) == config.Mode_Local && cfg.MevBoost.ExternalUrl.Value.(string) == "" {
+				if cfg.MevBoost.ExternalUrl.Value.(string) == "" {
 					errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
 				}
 			default:
