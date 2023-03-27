@@ -66,7 +66,6 @@ func CheckFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfig
 // Writes the given address to the fee recipient file. The VC should be restarted to pick up the new file.
 func UpdateFeeRecipientFile(feeRecipient common.Address, cfg *config.StaderConfig) error {
 
-	fmt.Printf("Updating fee recipient file to %s", feeRecipient.Hex())
 	// Create the distributor address string for the node
 	expectedString := getFeeRecipientFileContents(feeRecipient, cfg)
 	bytes := []byte(expectedString)
