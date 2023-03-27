@@ -33,6 +33,7 @@ func nodeDeposit(c *cli.Context) error {
 
 	numValidators := c.Uint64("num-validators")
 
+	baseAmountInEth := 4
 	baseAmount := eth.EthToWei(4.0)
 
 	var salt *big.Int
@@ -120,12 +121,12 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %d ETH was made successfully!\n", totalDeposited)
+	fmt.Printf("The node deposit of %f ETH was made successfully!\n", uint64(baseAmountInEth)*numValidators)
 	fmt.Printf("Total %d validators were created\n", numValidators)
 
 	fmt.Println("Your validators are now in Initialized status.")
-	fmt.Println("Once the ETH deposits have been matched by the staking pool, it will move to Prelaunch status.")
-	fmt.Println("You can watch its progress using `stader-cli service logs node`.")
+	fmt.Println("Once the ETH deposits have been matched by the remaining 28ETH, it will move to Deposited status.")
+	fmt.Println("You can check the status of your validator with `stader-cli node status`.")
 
 	return nil
 
