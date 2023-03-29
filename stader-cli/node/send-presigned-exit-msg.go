@@ -41,7 +41,18 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 		}
 	}
 
-	// check if we can send pre signed msg TODO later
+	canSendPresignedMsgRes, err := staderClient.CanSendPresignedMessage(validatorPubKey)
+	if err != nil {
+		return err
+	}
+	if canSendPresignedMsgRes.ValidatorNotRegistered {
+		fmt.Println("Validator not registered!")
+		return nil
+	}
+	if canSendPresignedMsgRes.ValidatorPreSignKeyAlreadyRegistered {
+		fmt.Println("Validator pre sign key is already registered!")
+		return nil
+	}
 
 	// send presigned message
 	res, err := staderClient.SendPresignedMessage(validatorPubKey)
