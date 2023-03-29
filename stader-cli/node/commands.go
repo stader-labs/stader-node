@@ -268,7 +268,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "exit",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
-				UsageText: "stader-cli node exit validator-pub-key",
+				UsageText: "stader-cli node exit --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
@@ -278,15 +278,13 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-
-					validatorPubKey, err := cliutils.ValidateAddress("validator-pub-key", c.String("validator-pub-key"))
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
 					if err != nil {
 						return err
 					}
-					fmt.Printf("validator pub key is %s\n", validatorPubKey)
 
 					// Run
 					return ExitValidator(c, validatorPubKey)
@@ -310,9 +308,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
 					index := c.Uint64("validator-index")
 					fmt.Printf("index is %d\n", index)
 					epochDelta := c.Uint64("epoch-delta")

@@ -29,8 +29,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Your eth2 client is on the correct network.")
-
 	numValidators := c.Uint64("num-validators")
 
 	baseAmountInEth := 4

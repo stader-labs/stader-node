@@ -133,6 +133,18 @@ type DebugExitResponse struct {
 	SignatureDomain common.Hash              `json:"signatureDomain"`
 }
 
+type CanExitValidatorResponse struct {
+	Status                 string `json:"status"`
+	Error                  string `json:"error"`
+	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
+	CanExit                bool   `json:"canExit"`
+}
+
+type ExitValidatorResponse struct {
+	Status string `json:"status"`
+	Error  string `json:"error"`
+}
+
 type NodeSignResponse struct {
 	Status     string `json:"status"`
 	Error      string `json:"error"`
