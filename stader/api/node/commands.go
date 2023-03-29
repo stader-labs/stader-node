@@ -450,6 +450,35 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "debug-exit",
+				Usage:     "Get exit msg info for a given validator",
+				UsageText: "stader-cli api node debug-exit validator-index",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					valIndex := c.Args().Get(0)
+
+					validatorIndex, err := cliutils.ValidateBigInt("validator-index", valIndex)
+					if err != nil {
+						return err
+					}
+
+					epochDelta, err := cliutils.ValidateBigInt("epoch-delta", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(DebugExit(c, validatorIndex, epochDelta))
+					return nil
+
+				},
+			},
 		},
 	})
 }
