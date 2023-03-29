@@ -59,7 +59,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("validator private key is %s\n", validatorPrivateKey)
 
 	currentHead, err := bc.GetBeaconHead()
 	if err != nil {
@@ -78,10 +77,11 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	exitEpoch := currentHead.Epoch + 1
 	epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
 	if epochsSinceActivation < 256 {
-		exitEpoch = exitEpoch + (256 - epochsSinceActivation) + 1
+		exitEpoch = exitEpoch + (256 - epochsSinceActivation)
 	}
+	fmt.Printf("exitEpoch is %d\n", exitEpoch)
 
-	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch)
+	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 	if err != nil {
 		return nil, err
 	}
@@ -92,10 +92,12 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	}
 
 	// get the public key
+	fmt.Printf("Getting public key!")
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("Got the public key! %v\n", publicKey)
 
 	exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey(exitMsg.Bytes(), publicKey)
 	if err != nil {
@@ -109,6 +111,7 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 
 	fmt.Printf("encrypted oaep message hash is %s\n", messageHashEncrypted)
 
+	fmt.Printf("Sending the presigned message\n")
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
 		Message: struct {
@@ -123,10 +126,11 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		ValidatorPublicKey: validatorPubKey.Hex(),
 	}
 
-	_, err = stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)
+	res, err := stader.SendPresignedMessageToStaderBackend(preSignedMessageRequest)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("res of send presigned message to stader backend is %v\n", res)
 
 	response.ValidatorIndex = validatorStatus.Index
 	response.ValidatorPubKey = validatorPubKey

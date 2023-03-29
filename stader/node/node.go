@@ -21,6 +21,10 @@ package node
 
 import (
 	"fmt"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
+	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -34,17 +38,22 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-// TODO - increase the tasksInterval to 5m
-var tasksInterval, _ = time.ParseDuration("10s")
+// Config
+var preSignedCooldown, _ = time.ParseDuration("12h")
+var preSignedBatchCooldown, _ = time.ParseDuration("30s")
+var preSignBatchSize = 10 // Go thru 100 keys in each pass
+var tasksInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests = 200
-
-	ManageFeeRecipientColor = color.FgHiCyan
-	ErrorColor              = color.FgRed
+	MetricsColor              = color.FgHiYellow
+	ManageFeeRecipientColor   = color.FgHiCyan
+	ErrorColor                = color.FgRed
 )
 
 // Register node command
@@ -68,6 +77,19 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	publicKey, err := stader.GetPublicKey()
+	if err != nil {
+		return err
+	}
+
 	// Configure
 	configureHTTP()
 
@@ -82,7 +104,106 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(1)
+	wg.Add(2)
+
+	// validator presigned loop
+	go func() {
+		for {
+			walletIndex := w.GetNextAccount()
+			noOfBatches := walletIndex / uint(preSignBatchSize)
+			batchIndex := 0
+
+			currentHead, err := bc.GetBeaconHead()
+			if err != nil {
+				// TODO - maybe handle this better?
+				panic("not able to communicate with beacon chain!")
+			}
+
+			for i := uint(0); i < noOfBatches; i++ {
+				for j := batchIndex; j < batchIndex+preSignBatchSize; j++ {
+					// TODO - bchain - parallelize for each validator for each batch
+					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
+					// log the errors and continue. dont need to sleep post an error
+					if err != nil {
+						continue
+					}
+
+					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
+
+					// check if validator has not yet been registered
+					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
+					if err != nil {
+						continue
+					}
+
+					// check if the presigned message has been registered. if it has been registered, then continue
+					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
+					if isRegistered || err != nil {
+						continue
+					}
+
+					// exit epoch should be > activation_epoch + 256
+					// exit epoch should be > current epoch
+					exitEpoch := currentHead.Epoch + 1
+					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
+					if epochsSinceActivation < 256 {
+						exitEpoch = exitEpoch + (256 - epochsSinceActivation) + 1
+					}
+
+					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
+					if err != nil {
+						// TODO - handle this better?
+						panic("not able to communicate with beacon chain")
+					}
+
+					// get the presigned msg
+					exitSignature, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+					if err != nil {
+						continue
+					}
+
+					// encrypt the srHash and signature
+					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey(exitSignature.Bytes(), publicKey)
+					if err != nil {
+						continue
+					}
+
+					messageHashEncrypted, err := crypto.EncryptUsingPublicKey(srHash[:], publicKey)
+					if err != nil {
+						continue
+					}
+
+					// send it to the presigned api
+					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
+						Message: struct {
+							Epoch          uint64 `json:"epoch"`
+							ValidatorIndex uint64 `json:"validator_index"`
+						}{
+							Epoch:          exitEpoch,
+							ValidatorIndex: validatorStatus.Index,
+						},
+						MessageHash:        messageHashEncrypted,
+						Signature:          exitSignatureEncrypted,
+						ValidatorPublicKey: validatorPubKey.String(),
+					})
+					if !backendRes.Success {
+						continue
+					} else if backendRes.Success {
+						continue
+					} else if err != nil {
+						continue
+					}
+
+					time.Sleep(preSignedBatchCooldown)
+				}
+
+				batchIndex = batchIndex + preSignBatchSize
+			}
+
+			// run loop every 12 hours
+			time.Sleep(preSignedCooldown)
+		}
+	}()
 
 	// Run task loop
 	go func() {
