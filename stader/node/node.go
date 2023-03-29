@@ -23,6 +23,8 @@ import (
 	"fmt"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
@@ -38,8 +40,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/shared/utils/stader"
-	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
 // Config
