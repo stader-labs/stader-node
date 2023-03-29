@@ -31,6 +31,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 
@@ -176,14 +177,14 @@ func run(c *cli.Context) error {
 					// send it to the presigned api
 					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
 						Message: struct {
-							Epoch          uint64 `json:"epoch"`
-							ValidatorIndex uint64 `json:"validator_index"`
+							Epoch          string `json:"epoch"`
+							ValidatorIndex string `json:"validator_index"`
 						}{
-							Epoch:          exitEpoch,
-							ValidatorIndex: validatorStatus.Index,
+							Epoch:          strconv.FormatUint(exitEpoch, 10),
+							ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 						},
-						MessageHash:        messageHashEncrypted,
-						Signature:          exitSignatureEncrypted,
+						MessageHash:        string(messageHashEncrypted),
+						Signature:          string(exitSignatureEncrypted),
 						ValidatorPublicKey: validatorPubKey.String(),
 					})
 					if !backendRes.Success {
