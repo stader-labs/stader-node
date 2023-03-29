@@ -162,7 +162,6 @@ func run(c *cli.Context) error {
 					if err != nil {
 						continue
 					}
-					srHashHex := common.Bytes2Hex(srHash[:])
 
 					// encrypt the srHash and signature
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey(exitSignature.Bytes(), publicKey)
@@ -170,7 +169,7 @@ func run(c *cli.Context) error {
 						continue
 					}
 
-					messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
+					messageHashEncrypted, err := crypto.EncryptUsingPublicKey(srHash[:], publicKey)
 					if err != nil {
 						continue
 					}
@@ -202,7 +201,6 @@ func run(c *cli.Context) error {
 				batchIndex = batchIndex + preSignBatchSize
 			}
 
-			errorLog.Printf("Done with the pass of presign daemon")
 			// run loop every 12 hours
 			time.Sleep(preSignedCooldown)
 		}
