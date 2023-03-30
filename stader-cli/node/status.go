@@ -2,12 +2,15 @@ package node
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"time"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -36,6 +39,11 @@ func getStatus(c *cli.Context) error {
 
 	// Get node status
 	status, err := staderClient.NodeStatus()
+	if err != nil {
+		return err
+	}
+
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return err
 	}
@@ -83,40 +91,45 @@ func getStatus(c *cli.Context) error {
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
 
-	if status.Registered {
-		fmt.Printf("The node is registered with Stader. Below are node details:\n")
-		fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
-		fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
-		fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
-
-		fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
-		// display validators
-		if totalRegisteredValidators > 0 {
-			for i := 0; i < totalRegisteredValidators; i++ {
-				fmt.Printf("%d)\n", i+1)
-				validatorInfo := status.ValidatorInfos[i]
-				fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
-				fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
-				fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
-
-				if validatorInfo.Status > 3 {
-					fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
-				}
-
-				// Validator has withdrawn
-				if validatorInfo.Status == 8 {
-					fmt.Printf("-Withdrawn time: %d\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
-				}
-				fmt.Printf("\n\n")
-			}
-		} else {
-			fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader", log.ColorGreen, log.ColorReset)
-		}
-	} else {
+	if status.Registered == false {
 		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with Stader", log.ColorGreen, log.ColorReset)
+		return nil
+	}
+	operatorReward, err := tokens.GetEthBalance(pnr.Client, status.OperatorRewardAddress, nil)
+	if err != nil {
+		return err
 	}
 
-	// Return
-	return nil
+	fmt.Printf("The node is registered with Stader. Below are node details:\n")
+	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
+	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
+	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
+	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", operatorReward.Text(10))
 
+	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
+
+	if totalRegisteredValidators <= 0 {
+		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader", log.ColorGreen, log.ColorReset)
+		return nil
+	}
+
+	for i := 0; i < totalRegisteredValidators; i++ {
+		fmt.Printf("%d)\n", i+1)
+		validatorInfo := status.ValidatorInfos[i]
+		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
+		fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
+		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+
+		if validatorInfo.Status > 3 {
+			fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
+		}
+
+		// Validator has withdrawn
+		if validatorInfo.Status == 8 {
+			fmt.Printf("-Withdrawn time: %d\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
+		}
+		fmt.Printf("\n\n")
+	}
+
+	return nil
 }
