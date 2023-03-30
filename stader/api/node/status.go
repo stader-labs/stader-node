@@ -1,6 +1,8 @@
 package node
 
 import (
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
@@ -8,7 +10,6 @@ import (
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
@@ -70,6 +71,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
+
+		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.OperatorRewardInETH = operatorReward
 
 		// get operator deposited sd collateral
 		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)

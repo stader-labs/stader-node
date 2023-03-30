@@ -1,10 +1,11 @@
 package api
 
 import (
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 
@@ -20,6 +21,7 @@ type NodeStatusResponse struct {
 	OperatorId                   *big.Int             `json:"operatorId"`
 	OperatorName                 string               `json:"operatorName"`
 	OperatorRewardAddress        common.Address       `json:"operatorRewardAddress"`
+	OperatorRewardInETH          *big.Int             `json:"operatorRewardInETH"`
 	DepositedSdCollateral        *big.Int             `json:"depositedSdCollateral"`
 	SdCollateralWorthValidators  *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                   bool                 `json:"registered"`
