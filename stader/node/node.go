@@ -87,7 +87,7 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	// TODO - if public key changes, we will have to restart node
+
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return err
@@ -126,7 +126,6 @@ func run(c *cli.Context) error {
 			for i := uint(0); i <= noOfBatches; i++ {
 				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
 					infoLog.Printf("Checking validator index %d\n", j)
-					// TODO - bchain - parallelize for each validator for each batch
 					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
 					// log the errors and continue. dont need to sleep post an error
 					if err != nil {
