@@ -21,6 +21,7 @@ type NodeStatusResponse struct {
 	OperatorId                   *big.Int             `json:"operatorId"`
 	OperatorName                 string               `json:"operatorName"`
 	OperatorRewardAddress        common.Address       `json:"operatorRewardAddress"`
+	OperatorRewardInETH          *big.Int             `json:"operatorRewardInETH"`
 	DepositedSdCollateral        *big.Int             `json:"depositedSdCollateral"`
 	SdCollateralWorthValidators  *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                   bool                 `json:"registered"`
