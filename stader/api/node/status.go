@@ -72,12 +72,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 
-		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
-		if err != nil {
-			return nil, err
-		}
-		response.OperatorRewardInETH = operatorReward
-
 		// get operator deposited sd collateral
 		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
 		if err != nil {
