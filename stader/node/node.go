@@ -134,6 +134,7 @@ func run(c *cli.Context) error {
 					}
 
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
+					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
 
 					// check if validator has not yet been registered
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
