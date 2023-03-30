@@ -89,22 +89,24 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		noOfValidatorsWhichWeCanRegister)
 
-	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
-
-	if status.Registered == false {
-		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with Stader", log.ColorGreen, log.ColorReset)
-		return nil
-	}
 	operatorReward, err := tokens.GetEthBalance(pnr.Client, status.OperatorRewardAddress, nil)
 	if err != nil {
 		return err
+	}
+
+	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", operatorReward.Text(10))
+
+	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
+
+	if !status.Registered {
+		fmt.Printf("The node is not registered with Stader. Please use the %sstader-cli node register%s to register with Stader", log.ColorGreen, log.ColorReset)
+		return nil
 	}
 
 	fmt.Printf("The node is registered with Stader. Below are node details:\n")
 	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
-	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", operatorReward.Text(10))
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
