@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
-	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -39,11 +37,6 @@ func getStatus(c *cli.Context) error {
 
 	// Get node status
 	status, err := staderClient.NodeStatus()
-	if err != nil {
-		return err
-	}
-
-	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return err
 	}
@@ -89,12 +82,7 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		noOfValidatorsWhichWeCanRegister)
 
-	operatorReward, err := tokens.GetEthBalance(pnr.Client, status.OperatorRewardAddress, nil)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", operatorReward.Text(10))
+	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", status.OperatorRewardInETH)
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
 
