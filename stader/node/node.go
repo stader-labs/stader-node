@@ -154,10 +154,11 @@ func run(c *cli.Context) error {
 
 					// exit epoch should be > activation_epoch + 256
 					// exit epoch should be > current epoch
-					exitEpoch := currentHead.Epoch + 1
+					// TODO - bchain - verify with sigma prime
+					exitEpoch := currentHead.Epoch
 					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
 					if epochsSinceActivation < 256 {
-						exitEpoch = exitEpoch + (256 - epochsSinceActivation) + 1
+						exitEpoch = exitEpoch + (256 - epochsSinceActivation)
 					}
 
 					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
