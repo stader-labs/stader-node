@@ -189,6 +189,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.NodeDepositResponse, error) {
 
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -206,6 +210,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
+	d, err := services.GetDocker(c)
 	if err != nil {
 		return nil, err
 	}
@@ -322,6 +330,12 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		}
 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+	}
+
+	// Restart the validator container when a new key have been saved
+	err = validator.RestartValidator(cfg, bc, nil, d)
+	if err != nil {
+		return nil, err
 	}
 
 	// Override the provided pending TX if requested

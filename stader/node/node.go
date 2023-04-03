@@ -44,6 +44,7 @@ const (
 	MaxConcurrentEth1Requests = 200
 
 	ManageFeeRecipientColor = color.FgHiCyan
+	ValidatorLauncher       = color.FgHiGreen
 	ErrorColor              = color.FgRed
 )
 
@@ -76,34 +77,18 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	//
+	//validatorLauncher, err := newValidatorLauncher(c, log.NewColorLogger(ValidatorLauncher))
+	//if err != nil {
+	//	return err
+	//}
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
-
-	// Run validator client restart loop
-	go func() {
-		for {
-			// Check the EC status
-			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-			if err != nil {
-				errorLog.Println(err)
-			} else {
-				// Check the BC status
-				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-				if err != nil {
-					errorLog.Println(err)
-				} else {
-
-				}
-			}
-			time.Sleep(tasksInterval)
-		}
-		wg.Done()
-	}()
+	wg.Add(1)
 
 	// Run task loop
 	go func() {
