@@ -70,6 +70,13 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 	fmt.Printf(
+		"The node reward address %s%s%s has accrued %.6f ETH as rewards.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(status.OperatorRewardInETH), 18))
+
+	fmt.Printf(
 		"The node %s%s%s has registered %d validators.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
@@ -81,8 +88,6 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		noOfValidatorsWhichWeCanRegister)
-
-	fmt.Printf("Operator Reward Amount in ETH: %s\n\n", status.OperatorRewardInETH)
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
 
