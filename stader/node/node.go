@@ -82,7 +82,28 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(1)
+	wg.Add(2)
+
+	// Run validator client restart loop
+	go func() {
+		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				} else {
+
+				}
+			}
+			time.Sleep(tasksInterval)
+		}
+		wg.Done()
+	}()
 
 	// Run task loop
 	go func() {
