@@ -84,7 +84,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if epochsSinceActivation < 256 {
 		exitEpoch = exitEpoch + (256 - epochsSinceActivation)
 	}
-	//fmt.Printf("exitEpoch is %d\n", exitEpoch)
 
 	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 	if err != nil {
@@ -95,39 +94,27 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("exitMsg is %s\n", exitMsg.String())
 	srHashHex := common.Bytes2Hex(srHash[:])
-	//fmt.Printf("srHash is %s\n", srHashHex)
-	//fmt.Printf("srHash wihtout 0x is %s\n", srHashHex[2:])
 
 	// get the public key
-	//fmt.Printf("Getting public key!")
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Got the public key! %v\n", publicKey)
 
-	//fmt.Println("Encrypting exitSignature!")
 	exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitMsg.String()), publicKey)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("exitSigntaure encrypted is %s\n", exitSignatureEncrypted)
 	exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
-	//fmt.Printf("base64 encoded exit signature is %s\n", exitSignatureEncryptedString)
 
-	//fmt.Println("Encrypting message hash")
 	messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println("Encrypted message hash")
-	//fmt.Printf("message hash encrypted is %s\n", messageHashEncrypted)
-	messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
-	//fmt.Printf("base64 encoded message hash is %s\n", messageHashEncryptedString)
 
-	//fmt.Printf("Sending the presigned message\n")
+	messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
+
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
 		Message: struct {
@@ -146,7 +133,9 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("res of send presigned message to stader backend is %v\n", res)
+	if !res.Success {
+		return nil, fmt.Errorf("send-presigned-message failed: %s\n", res.Message)
+	}
 
 	response.ValidatorIndex = validatorStatus.Index
 	response.ValidatorPubKey = validatorPubKey
