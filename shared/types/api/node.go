@@ -128,10 +128,40 @@ type DebugExitResponse struct {
 	Error           string                   `json:"error"`
 	ValidatorPubKey types.ValidatorPubkey    `json:"validatorPubKey"`
 	ExitEpoch       uint64                   `json:"exitEpoch"`
+	CurrentEpoch    uint64                   `json:"currentEpoch"`
 	ValidatorIndex  uint64                   `json:"validatorIndex"`
 	SrHash          common.Hash              `json:"srHash"`
 	SignedMsg       types.ValidatorSignature `json:"signedMsg"`
 	SignatureDomain common.Hash              `json:"signatureDomain"`
+}
+
+type CanSendPresignedMsgResponse struct {
+	Status                               string `json:"status"`
+	Error                                string `json:"error"`
+	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
+	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
+	ValidatorIsExiting                   bool   `json:"validatorIsExiting"`
+}
+
+type SendPresignedMsgResponse struct {
+	Status          string                   `json:"status"`
+	Error           string                   `json:"error"`
+	ValidatorPubKey types.ValidatorPubkey    `json:"validatorPubKey"`
+	ExitEpoch       uint64                   `json:"exitEpoch"`
+	ValidatorIndex  uint64                   `json:"validatorIndex"`
+	SignedMsg       types.ValidatorSignature `json:"signedMsg"`
+}
+
+type CanExitValidatorResponse struct {
+	Status                 string `json:"status"`
+	Error                  string `json:"error"`
+	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
+	CanExit                bool   `json:"canExit"`
+}
+
+type ExitValidatorResponse struct {
+	Status string `json:"status"`
+	Error  string `json:"error"`
 }
 
 type NodeSignResponse struct {

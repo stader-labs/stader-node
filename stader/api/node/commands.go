@@ -450,6 +450,119 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "debug-exit",
+				Usage:     "Get exit msg info for a given validator",
+				UsageText: "stader-cli api node debug-exit validator-index",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+
+					valIndex := c.Args().Get(0)
+
+					validatorIndex, err := cliutils.ValidateBigInt("validator-index", valIndex)
+					if err != nil {
+						return err
+					}
+
+					epochDelta, err := cliutils.ValidateBigInt("epoch-delta", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(DebugExit(c, validatorIndex, epochDelta))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-exit",
+				Usage:     "Can validator exit",
+				UsageText: "stader-cli api node can-exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canExitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "exit",
+				Usage:     "Exit validator",
+				UsageText: "stader-cli api node exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(exitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-send-presigned-msg",
+				Usage:     "Can we send presigned msg",
+				UsageText: "stader-cli api node can-send-presigned-msg --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canSendPresignedMsg(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "send-presigned-msg",
+				Usage:     "Send Presigned Message",
+				UsageText: "stader-cli api node send-presigned-msg --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(sendPresignedMsg(c, validatorPubKey))
+					return nil
+
+				},
+			},
 		},
 	})
 }
