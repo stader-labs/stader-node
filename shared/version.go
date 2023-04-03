@@ -19,7 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package shared
 
+<<<<<<< HEAD
 const StaderVersion string = "0.0.1-bharath-vc-restart-fix"
+=======
+const StaderVersion string = "0.3.1-stage"
+>>>>>>> d32c27836eebda2d21da82af29b6518abddba72c
 
 const Logo string = ` 
   _____ _            _             _           _       𝅺 	
