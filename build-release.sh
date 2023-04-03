@@ -131,10 +131,6 @@ build_docker_prune_provision_manifest() {
     echo "done!"
 }
 
-send_slack() {
-    # TODO: @prabhakar087 - add slack messaging
-}
-
 # Print usage
 usage() {
     echo "Usage: build-release.sh [options] -v <version number>"
@@ -210,11 +206,4 @@ if [ "$PRUNE" = true ]; then
 fi
 if [ "$PRUNE_MANIFEST" = true ]; then
     build_docker_prune_provision_manifest
-fi
-# if all successful, send slack message
-if [ $? -eq 0 ]; then
-    send_slack "Stader Node $VERSION has been built and pushed to Docker Hub."
-# else send failure message
-else
-    send_slack "Stader Node $VERSION has failed to build and push to Docker Hub."
 fi
