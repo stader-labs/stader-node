@@ -82,13 +82,12 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-reward-address, ora",
 						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
-					cli.StringFlag{
+					cli.BoolTFlag{
 						Name:  "socialize-el, sel",
-						Usage: "Should EL rewards be socialized (will default to true, can be only true or false)",
+						Usage: "Should EL rewards be socialized (will default to true)",
 					},
 				},
 				Action: func(c *cli.Context) error {
-
 					// Validate flags
 					if c.String("operator-name") == "" {
 						return fmt.Errorf("operator-name is required")
@@ -98,10 +97,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
 							return err
 						}
-					}
-
-					if c.String("socialize-el") != "" && c.String("socialize-el") != "true" && c.String("socialize-el") != "false" {
-						return fmt.Errorf("invalid value for socialize el, it should be exactly true or false")
 					}
 
 					// Run
