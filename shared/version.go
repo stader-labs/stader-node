@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package shared
 
-const StaderVersion string = "0.3.0-stage"
+const StaderVersion string = "0.3.1-beta"
 
 const Logo string = ` 
   _____ _            _             _           _       𝅺 	
