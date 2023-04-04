@@ -69,6 +69,37 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "update-socialize-el",
+				Aliases:   []string{"y"},
+				Usage:     "Opt in or Opt out of socializing pool",
+				UsageText: "stader-cli node socialize-el [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "socialize-el, sel",
+						Usage: "Should EL rewards be socialized (will default to true)",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
+					if err != nil {
+						return err
+					}
+
+					fmt.Printf("socializeEl is %t\n", socializeEl)
+					fmt.Printf("args are %v\n", c.Args())
+
+					// Run
+					return UpdateSocializeEl(c, socializeEl)
+
+				},
+			},
+			{
 				Name:      "register",
 				Aliases:   []string{"r"},
 				Usage:     "Register the node with Stader",
