@@ -164,6 +164,20 @@ type ExitValidatorResponse struct {
 	Error  string `json:"error"`
 }
 
+type CanUpdateSocializeElResponse struct {
+	Status          string         `json:"status"`
+	Error           string         `json:"error"`
+	AlreadyOptedIn  bool           `json:"alreadyOptedIn"`
+	AlreadyOptedOut bool           `json:"alreadyOptedOut"`
+	GasInfo         stader.GasInfo `json:"gasInfo"`
+}
+
+type UpdateSocializeElResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
 type NodeSignResponse struct {
 	Status     string `json:"status"`
 	Error      string `json:"error"`

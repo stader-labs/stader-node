@@ -150,6 +150,36 @@ func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeDepositSdResponse, e
 	return response, nil
 }
 
+func (c *Client) CanUpdateSocializeEl(socializeEl bool) (api.CanUpdateSocializeElResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-socialize-el %s", strconv.FormatBool(socializeEl)))
+	if err != nil {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not opt-in or opt-out of socializing pool: %w", err)
+	}
+	var response api.CanUpdateSocializeElResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not decode opt-in or opt-out of socializing pool response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not opt-in ot opt-out of socializing pool: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateSocializeEl(socializeEl bool) (api.UpdateSocializeElResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node update-socialize-el %s", strconv.FormatBool(socializeEl)))
+	if err != nil {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not opt-in or opt-out of socializing pool: %w", err)
+	}
+	var response api.UpdateSocializeElResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not decode opt-in or opt-out of socializing pool response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not opt-in ot opt-out of socializing pool: %s", response.Error)
+	}
+	return response, nil
+}
+
 // Get the node's SD allowance
 func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))

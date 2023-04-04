@@ -22,6 +22,19 @@ func OnboardNodeOperator(pnr *stader.PermissionlessNodeRegistryContractManager, 
 	return tx, nil
 }
 
+func EstimateChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "changeSocializingPoolState", socializeEl)
+}
+
+func ChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.ChangeSocializingPoolState(opts, socializeEl)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
 func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
 	operatorId, err := pnr.PermissionlessNodeRegistry.OperatorIDByAddress(opts, nodeAddress)
 	if err != nil {
@@ -58,4 +71,8 @@ func GetNodeElRewardAddress(vf *stader.VaultFactoryContractManager, poolId uint8
 
 func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return pp.PermissionlessPool.GetSocializingPoolAddress(opts)
+}
+
+func GetSocializingPoolStateChangeTimestamp(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeTimestamp(opts, operatorId)
 }

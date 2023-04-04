@@ -563,6 +563,48 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-update-socialize-el",
+				Usage:     "Can opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node can-update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canUpdateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-socialize-el",
+				Usage:     "Opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(updateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
 		},
 	})
 }

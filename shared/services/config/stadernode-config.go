@@ -106,6 +106,9 @@ type StaderNodeConfig struct {
 
 	// The contract address of EthX ERC20
 	ethxTokenAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of stader config
+	staderConfig map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -254,6 +257,13 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet:  "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
+
+		staderConfig: map[config.Network]string{
+			config.Network_Prater:   "0x6edc838058652ab89e9aC2F4916800E5a8d60E09",
+			config.Network_Devnet:   "0x6edc838058652ab89e9aC2F4916800E5a8d60E09",
+			config.Network_Mainnet:  "0x6edc838058652ab89e9aC2F4916800E5a8d60E09",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
 	}
 
 }
@@ -383,6 +393,10 @@ func (cfg *StaderNodeConfig) GetSdTokenAddress() common.Address {
 
 func (cfg *StaderNodeConfig) GetEthxTokenAddress() common.Address {
 	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetStaderConfigAddress() common.Address {
+	return common.HexToAddress(cfg.staderConfig[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {
