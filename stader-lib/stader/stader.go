@@ -224,3 +224,34 @@ func NewValidatorWithdrawVaultFactory(client ExecutionClient, validatorWithdrawV
 	}, nil
 
 }
+
+type StaderConfigContractManager struct {
+	Client               ExecutionClient
+	StaderConfig         *contracts.StaderConfig
+	StaderConfigContract *Contract
+}
+
+func NewStaderConfig(client ExecutionClient, staderConfigAddress common.Address) (*StaderConfigContractManager, error) {
+	staderConfig, err := contracts.NewStaderConfig(staderConfigAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	staderConfigContractAbi, err := abi.JSON(strings.NewReader(contracts.StaderConfigMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	staderConfigContract := &Contract{
+		Contract: bind.NewBoundContract(staderConfigAddress, staderConfigContractAbi, client, client, client),
+		Address:  &staderConfigAddress,
+		ABI:      &staderConfigContractAbi,
+		Client:   client,
+	}
+
+	return &StaderConfigContractManager{
+		Client:               client,
+		StaderConfig:         staderConfig,
+		StaderConfigContract: staderConfigContract,
+	}, nil
+
+}

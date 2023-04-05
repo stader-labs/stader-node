@@ -152,6 +152,19 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 	return stader.NewSdCollateralContract(ec, cfg.StaderNode.GetSdCollateralContractAddress())
 }
 
+func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
+}
+
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

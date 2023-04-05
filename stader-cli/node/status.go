@@ -107,12 +107,20 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
 	fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-	fmt.Printf("Operator Socializing Pool Address: %s\n\n", status.SocializingPoolContract.String())
+	if status.OperatorELRewardsAddressBalance.Int64() > 0 {
+		fmt.Printf("Operator El Reward Share from Personal Fee Recepient: %.6f\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 18))
+		fmt.Printf("To withdraw el rewards use the %sstader-cli node withdraw-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+	}
+	if !status.OptedInForSocializingPool {
+		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
+	} else {
+		fmt.Printf("Operator has Opted out for Socializing Pool\n\n")
+	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	if totalRegisteredValidators <= 0 {
-		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader", log.ColorGreen, log.ColorReset)
+		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
 		return nil
 	}
 
@@ -122,7 +130,10 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
 		fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
-		fmt.Printf("-Validator Undistributed Skimmed Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultBalance), 18))
+		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 {
+			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
+			fmt.Printf("To withdraw skimmed rewards use the %sstader-cli node withdraw-cl-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		}
 
 		if validatorInfo.Status > 3 {
 			fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
@@ -130,7 +141,11 @@ func getStatus(c *cli.Context) error {
 
 		// Validator has withdrawn
 		if validatorInfo.Status == 8 {
-			fmt.Printf("-Withdrawn time: %d\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
+			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
+				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
+				fmt.Printf("To withdraw exit amount use the %sstader-cli node withdraw-exit%s command\n\n", log.ColorGreen, log.ColorReset)
+			}
+			fmt.Printf("-Withdrawn time: %s\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
 		}
 		fmt.Printf("\n\n")
 	}

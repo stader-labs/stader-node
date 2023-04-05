@@ -75,3 +75,37 @@ func GetValidatorWithdrawalCredential(vfcm *stader.VaultFactoryContractManager, 
 
 	return *withdrawalCredentials, nil
 }
+
+func CalculateValidatorWithdrawVaultRewardShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, totalRewards *big.Int, opts *bind.CallOpts) (struct {
+	UserShare     *big.Int
+	OperatorShare *big.Int
+	ProtocolShare *big.Int
+}, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return struct {
+			UserShare     *big.Int
+			OperatorShare *big.Int
+			ProtocolShare *big.Int
+		}{}, err
+	}
+
+	return vwv.ValidatorWithdrawVault.CalculateRewardShare(opts, totalRewards)
+}
+
+func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (struct {
+	UserShare     *big.Int
+	OperatorShare *big.Int
+	ProtocolShare *big.Int
+}, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return struct {
+			UserShare     *big.Int
+			OperatorShare *big.Int
+			ProtocolShare *big.Int
+		}{}, err
+	}
+
+	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
+}

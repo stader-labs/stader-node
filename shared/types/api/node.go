@@ -25,7 +25,6 @@ type NodeStatusResponse struct {
 	OptedInForSocializingPool       bool                 `json:"optedInForSocializingPool"`
 	OperatorELRewardsAddress        common.Address       `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance *big.Int             `json:"operatorELRewardsAddressBalance"`
-	SocializingPoolContract         common.Address       `json:"socializingPoolContract"`
 	DepositedSdCollateral           *big.Int             `json:"depositedSdCollateral"`
 	SdCollateralWorthValidators     *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                      bool                 `json:"registered"`

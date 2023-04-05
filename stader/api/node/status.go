@@ -1,6 +1,7 @@
 package node
 
 import (
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -38,7 +39,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	pp, err := services.GetPermissionlessPoolFactory(c)
+	sdcfg, err := services.GetStaderConfigContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -90,15 +91,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		response.OperatorELRewardsAddress = operatorElRewardAddress
-		response.OperatorELRewardsAddressBalance = elRewardAddressBalance
-
-		// get socializing pool contract
-		socializingPoolAddress, err := node.GetSocializingPoolContract(pp, nil)
+		operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
 		if err != nil {
 			return nil, err
 		}
-		response.SocializingPoolContract = socializingPoolAddress
+		response.OperatorELRewardsAddress = operatorElRewardAddress
+		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
 
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
@@ -139,17 +137,42 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			if err != nil {
 				return nil, err
 			}
+			withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
+			if err != nil {
+				return nil, err
+			}
+			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
+			if err != nil {
+				return nil, err
+			}
+			crossedRewardThreshold := false
+			if withdrawVaultBalance.Cmp(rewardsThreshold) == 1 {
+				crossedRewardThreshold = true
+			}
+
+			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
+			// TODO - bchain abstract this to a function
+			if validatorContractInfo.Status == 8 {
+				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+				if err != nil {
+					return nil, err
+				}
+				validatorWithdrawVaultWithdrawShares = withdrawVaultWithdrawShares.OperatorShare
+			}
+
 			validatorInfo := stdr.ValidatorInfo{
-				Status:               validatorContractInfo.Status,
-				Pubkey:               validatorContractInfo.Pubkey,
-				PreDepositSignature:  validatorContractInfo.PreDepositSignature,
-				DepositSignature:     validatorContractInfo.DepositSignature,
-				WithdrawVaultAddress: validatorContractInfo.WithdrawVaultAddress,
-				WithdrawVaultBalance: withdrawVaultBalance,
-				OperatorId:           validatorContractInfo.OperatorId,
-				InitialBondEth:       validatorContractInfo.InitialBondEth,
-				DepositTime:          validatorContractInfo.DepositTime,
-				WithdrawnTime:        validatorContractInfo.WithdrawnTime,
+				Status:                           validatorContractInfo.Status,
+				Pubkey:                           validatorContractInfo.Pubkey,
+				PreDepositSignature:              validatorContractInfo.PreDepositSignature,
+				DepositSignature:                 validatorContractInfo.DepositSignature,
+				WithdrawVaultAddress:             validatorContractInfo.WithdrawVaultAddress,
+				WithdrawVaultRewardBalance:       withdrawVaultRewardShares.OperatorShare,
+				CrossedRewardsThreshold:          crossedRewardThreshold,
+				WithdrawVaultWithdrawableBalance: validatorWithdrawVaultWithdrawShares,
+				OperatorId:                       validatorContractInfo.OperatorId,
+				InitialBondEth:                   validatorContractInfo.InitialBondEth,
+				DepositTime:                      validatorContractInfo.DepositTime,
+				WithdrawnTime:                    validatorContractInfo.WithdrawnTime,
 			}
 
 			validatorInfoArray[i] = validatorInfo
