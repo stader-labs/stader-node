@@ -189,6 +189,24 @@ type WithdrawElRewardsResponse struct {
 	TxHash                common.Hash    `json:"txHash"`
 }
 
+type CanWithdrawClRewardsResponse struct {
+	Status            string         `json:"status"`
+	Error             string         `json:"error"`
+	ValidatorExited   bool           `json:"validatorExited"`
+	NoClRewards       bool           `json:"noClRewards"`
+	TooManyClRewards  bool           `json:"tooManyClRewards"`
+	ValidatorNotFound bool           `json:"validatorNotFound"`
+	GasInfo           stader.GasInfo `json:"gasInfo"`
+}
+
+type WithdrawClRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ClRewardsAmount       *big.Int       `json:"clRewardsAmount"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
 type CanWithdrawElRewardsResponse struct {
 	Status      string         `json:"status"`
 	Error       string         `json:"error"`
