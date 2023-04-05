@@ -181,6 +181,21 @@ type UpdateSocializeElResponse struct {
 	TxHash common.Hash `json:"txHash"`
 }
 
+type WithdrawElRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ElRewardsAmount       *big.Int       `json:"elRewardsAmount"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
+type CanWithdrawElRewardsResponse struct {
+	Status      string         `json:"status"`
+	Error       string         `json:"error"`
+	NoElRewards bool           `json:"noElRewards"`
+	GasInfo     stader.GasInfo `json:"gasInfo"`
+}
+
 type NodeSignResponse struct {
 	Status     string `json:"status"`
 	Error      string `json:"error"`

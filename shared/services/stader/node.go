@@ -383,3 +383,35 @@ func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	}
 	return response, nil
 }
+
+func (c *Client) CanWithdrawElRewards() (api.CanWithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node can-withdraw-el-rewards")
+	if err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %w", err)
+	}
+	var response api.CanWithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawElRewards() (api.WithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node withdraw-el-rewards")
+	if err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %w", err)
+	}
+	var response api.WithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not decode node withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}

@@ -29,10 +29,10 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 			"Reason: %s\n%s", log.ColorRed, err, log.ColorReset)
 	} else {
 		if syncResponse.BcStatus.PrimaryClientStatus.IsSynced {
-			fmt.Printf("Your consensus client is synced, you may safely create a validator.\n")
+			fmt.Printf("Your consensus client is synced, you may safely exit your validator.\n")
 		} else if syncResponse.BcStatus.FallbackEnabled {
 			if syncResponse.BcStatus.FallbackClientStatus.IsSynced {
-				fmt.Printf("Your fallback consensus client is synced, you may safely create a validator.\n")
+				fmt.Printf("Your fallback consensus client is synced, you may exit your validator.\n")
 			} else {
 				fmt.Printf("%s**WARNING**: neither your primary nor fallback consensus clients are fully synced.\nYOU WILL LOSE ETH if your validator is activated before they are fully synced.\n%s", log.ColorRed, log.ColorReset)
 			}

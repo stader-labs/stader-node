@@ -338,6 +338,26 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return SendSignedPresignedMessage(c, validatorPubKey)
 				},
 			},
+			{
+				Name:      "withdraw-el-rewards",
+				Aliases:   []string{"wer"},
+				Usage:     "Withdraw all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
+				UsageText: "stader-cli node withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+					// Run
+					return WithdrawElRewards(c)
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Aliases:   []string{"wcr"},
+				Usage:     "Withdraw all Consensus Layer rewards to the node reward address.",
+				UsageText: "stader-cli node withdraw-cl-rewards",
+				Action: func(c *cli.Context) error {
+					// Run
+					return WithdrawClRewards(c)
+				},
+			},
 		},
 	})
 }
