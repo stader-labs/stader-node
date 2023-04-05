@@ -34,6 +34,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	vf, err := services.GetVaultFactory(c)
+	if err != nil {
+		return nil, err
+	}
+	pp, err := services.GetPermissionlessPoolFactory(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -71,6 +79,26 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
+		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
+
+		// non socializing pool fee recepient
+		operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+		if err != nil {
+			return nil, err
+		}
+		elRewardAddressBalance, err := tokens.GetEthBalance(pnr.Client, operatorElRewardAddress, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.OperatorELRewardsAddress = operatorElRewardAddress
+		response.OperatorELRewardsAddressBalance = elRewardAddressBalance
+
+		// get socializing pool contract
+		socializingPoolAddress, err := node.GetSocializingPoolContract(pp, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SocializingPoolContract = socializingPoolAddress
 
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
@@ -103,10 +131,27 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			if err != nil {
 				return nil, err
 			}
-			validatorInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
+			validatorContractInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
 			if err != nil {
 				return nil, err
 			}
+			withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+			if err != nil {
+				return nil, err
+			}
+			validatorInfo := stdr.ValidatorInfo{
+				Status:               validatorContractInfo.Status,
+				Pubkey:               validatorContractInfo.Pubkey,
+				PreDepositSignature:  validatorContractInfo.PreDepositSignature,
+				DepositSignature:     validatorContractInfo.DepositSignature,
+				WithdrawVaultAddress: validatorContractInfo.WithdrawVaultAddress,
+				WithdrawVaultBalance: withdrawVaultBalance,
+				OperatorId:           validatorContractInfo.OperatorId,
+				InitialBondEth:       validatorContractInfo.InitialBondEth,
+				DepositTime:          validatorContractInfo.DepositTime,
+				WithdrawnTime:        validatorContractInfo.WithdrawnTime,
+			}
+
 			validatorInfoArray[i] = validatorInfo
 		}
 

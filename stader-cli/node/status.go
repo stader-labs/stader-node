@@ -58,6 +58,12 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
 	fmt.Printf(
+		"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
+	fmt.Printf(
 		"The node %s%s%s has a balance of %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
@@ -100,6 +106,8 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
+	fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
+	fmt.Printf("Operator Socializing Pool Address: %s\n\n", status.SocializingPoolContract.String())
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
@@ -114,6 +122,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
 		fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+		fmt.Printf("-Validator Undistributed Skimmed Rewards: %s\n\n", validatorInfo.WithdrawVaultBalance)
 
 		if validatorInfo.Status > 3 {
 			fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))

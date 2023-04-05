@@ -24,6 +24,7 @@ type ValidatorInfo struct {
 	PreDepositSignature  []byte
 	DepositSignature     []byte
 	WithdrawVaultAddress common.Address
+	WithdrawVaultBalance *big.Int
 	OperatorId           *big.Int
 	InitialBondEth       *big.Int
 	DepositTime          *big.Int
