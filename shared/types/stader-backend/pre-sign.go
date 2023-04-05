@@ -18,7 +18,6 @@ type PreSignSendApiRequestType struct {
 		Epoch          string `json:"epoch"`
 		ValidatorIndex string `json:"validator_index"`
 	} `json:"message"`
-	MessageHash        string `json:"messageHash"`
 	Signature          string `json:"signature"`
 	ValidatorPublicKey string `json:"validatorPublicKey"`
 }

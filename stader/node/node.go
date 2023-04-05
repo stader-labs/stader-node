@@ -21,7 +21,6 @@ package node
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
@@ -111,6 +110,7 @@ func run(c *cli.Context) error {
 	wg.Add(2)
 
 	// validator presigned loop
+	// TODO - bchain - clean up code
 	go func() {
 		for {
 			infoLog.Println("Starting a pass of the presign daemon!")
@@ -168,12 +168,11 @@ func run(c *cli.Context) error {
 					}
 
 					// get the presigned msg
-					exitSignature, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+					exitSignature, _, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
 					if err != nil {
 						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
 						continue
 					}
-					srHashHex := common.Bytes2Hex(srHash[:])
 
 					// encrypt the signature and srHash
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
@@ -181,15 +180,7 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Failed to encrypt exit signature for validator: %s\n", validatorPubKey)
 						continue
 					}
-					// TODO - bchain - revise the naming
 					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
-
-					messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
-					if err != nil {
-						errorLog.Printf("Failed to encrypt message hash for validator: %s\n", validatorPubKey)
-						continue
-					}
-					messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
 
 					// send it to the presigned api
 					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
@@ -200,7 +191,6 @@ func run(c *cli.Context) error {
 							Epoch:          strconv.FormatUint(exitEpoch, 10),
 							ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 						},
-						MessageHash:        messageHashEncryptedString,
 						Signature:          exitSignatureEncryptedString,
 						ValidatorPublicKey: validatorPubKey.String(),
 					})
