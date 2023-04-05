@@ -122,7 +122,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
 		fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
-		fmt.Printf("-Validator Undistributed Skimmed Rewards: %s\n\n", validatorInfo.WithdrawVaultBalance)
+		fmt.Printf("-Validator Undistributed Skimmed Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultBalance), 18))
 
 		if validatorInfo.Status > 3 {
 			fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
