@@ -22,6 +22,25 @@ func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pub
 	return tx, nil
 }
 
+func EstimateSettleFunds(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return stader.GasInfo{}, err
+	}
+
+	return vwv.ValidatorWithdrawVaultContract.GetTransactionGasInfo(opts, "settleFunds")
+
+}
+
+func SettleFunds(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return vwv.ValidatorWithdrawVault.SettleFunds(opts)
+}
+
 func GetTotalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetOperatorTotalKeys(opts, operatorId)
 }
@@ -55,4 +74,38 @@ func GetValidatorWithdrawalCredential(vfcm *stader.VaultFactoryContractManager, 
 	}
 
 	return *withdrawalCredentials, nil
+}
+
+func CalculateValidatorWithdrawVaultRewardShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, totalRewards *big.Int, opts *bind.CallOpts) (struct {
+	UserShare     *big.Int
+	OperatorShare *big.Int
+	ProtocolShare *big.Int
+}, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return struct {
+			UserShare     *big.Int
+			OperatorShare *big.Int
+			ProtocolShare *big.Int
+		}{}, err
+	}
+
+	return vwv.ValidatorWithdrawVault.CalculateRewardShare(opts, totalRewards)
+}
+
+func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (struct {
+	UserShare     *big.Int
+	OperatorShare *big.Int
+	ProtocolShare *big.Int
+}, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return struct {
+			UserShare     *big.Int
+			OperatorShare *big.Int
+			ProtocolShare *big.Int
+		}{}, err
+	}
+
+	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
 }

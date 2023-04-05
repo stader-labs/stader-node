@@ -13,20 +13,23 @@ import (
 )
 
 type NodeStatusResponse struct {
-	Status                       string               `json:"status"`
-	Error                        string               `json:"error"`
-	NumberOfValidatorsRegistered string               `json:"numberOfValidatorsRegistered"`
-	AccountAddress               common.Address       `json:"accountAddress"`
-	AccountAddressFormatted      string               `json:"accountAddressFormatted"`
-	OperatorId                   *big.Int             `json:"operatorId"`
-	OperatorName                 string               `json:"operatorName"`
-	OperatorRewardAddress        common.Address       `json:"operatorRewardAddress"`
-	OperatorRewardInETH          *big.Int             `json:"operatorRewardInETH"`
-	DepositedSdCollateral        *big.Int             `json:"depositedSdCollateral"`
-	SdCollateralWorthValidators  *big.Int             `json:"sdCollateralWorthValidators"`
-	Registered                   bool                 `json:"registered"`
-	AccountBalances              tokens.Balances      `json:"accountBalances"`
-	ValidatorInfos               []stdr.ValidatorInfo `json:"validatorInfos"`
+	Status                          string               `json:"status"`
+	Error                           string               `json:"error"`
+	NumberOfValidatorsRegistered    string               `json:"numberOfValidatorsRegistered"`
+	AccountAddress                  common.Address       `json:"accountAddress"`
+	AccountAddressFormatted         string               `json:"accountAddressFormatted"`
+	OperatorId                      *big.Int             `json:"operatorId"`
+	OperatorName                    string               `json:"operatorName"`
+	OperatorRewardAddress           common.Address       `json:"operatorRewardAddress"`
+	OperatorRewardInETH             *big.Int             `json:"operatorRewardInETH"`
+	OptedInForSocializingPool       bool                 `json:"optedInForSocializingPool"`
+	OperatorELRewardsAddress        common.Address       `json:"operatorELRewardsAddress"`
+	OperatorELRewardsAddressBalance *big.Int             `json:"operatorELRewardsAddressBalance"`
+	DepositedSdCollateral           *big.Int             `json:"depositedSdCollateral"`
+	SdCollateralWorthValidators     *big.Int             `json:"sdCollateralWorthValidators"`
+	Registered                      bool                 `json:"registered"`
+	AccountBalances                 tokens.Balances      `json:"accountBalances"`
+	ValidatorInfos                  []stdr.ValidatorInfo `json:"validatorInfos"`
 }
 
 type CanRegisterNodeResponse struct {

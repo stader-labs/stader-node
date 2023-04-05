@@ -35,6 +35,22 @@ func ChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractMa
 	return tx, nil
 }
 
+func EstimateWithdrawFromNodeElVault(client stader.ExecutionClient, nevAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	if err != nil {
+		return stader.GasInfo{}, err
+	}
+	return nev.NodeElRewardVaultContract.GetTransactionGasInfo(opts, "withdraw")
+}
+
+func WithdrawFromNodeElVault(client stader.ExecutionClient, nevAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	if err != nil {
+		return nil, err
+	}
+	return nev.NodeElRewardVault.Withdraw(opts)
+}
+
 func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
 	operatorId, err := pnr.PermissionlessNodeRegistry.OperatorIDByAddress(opts, nodeAddress)
 	if err != nil {
@@ -51,7 +67,7 @@ func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, oper
 	OperatorRewardAddress   common.Address
 	OperatorAddress         common.Address
 }, error) {
-	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(nil, operatorId)
+	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(opts, operatorId)
 	if err != nil {
 		return struct {
 			Active                  bool
@@ -75,4 +91,21 @@ func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, op
 
 func GetSocializingPoolStateChangeTimestamp(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeTimestamp(opts, operatorId)
+}
+
+func CalculateElRewardShare(client stader.ExecutionClient, nevAddress common.Address, totalRewards *big.Int, opts *bind.CallOpts) (struct {
+	UserShare     *big.Int
+	OperatorShare *big.Int
+	ProtocolShare *big.Int
+}, error) {
+	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	if err != nil {
+		return struct {
+			UserShare     *big.Int
+			OperatorShare *big.Int
+			ProtocolShare *big.Int
+		}{}, err
+	}
+
+	return nev.NodeElRewardVault.CalculateRewardShare(opts, totalRewards)
 }
