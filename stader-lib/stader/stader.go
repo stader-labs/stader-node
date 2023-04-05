@@ -162,3 +162,65 @@ func NewPermissionlessPoolFactory(client ExecutionClient, permissionPoolAddress 
 	}, nil
 
 }
+
+type NodeElRewardVaultContractManager struct {
+	Client                    ExecutionClient
+	NodeElRewardVault         *contracts.NodeElRewardVault
+	NodeElRewardVaultContract *Contract
+}
+
+func NewNodeElRewardVaultFactory(client ExecutionClient, nodeElRewardVaultAddress common.Address) (*NodeElRewardVaultContractManager, error) {
+	nodeElRewardVault, err := contracts.NewNodeElRewardVault(nodeElRewardVaultAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	nodeElRewardVaultContractAbi, err := abi.JSON(strings.NewReader(contracts.NodeElRewardVaultMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	nodeElRewardContract := &Contract{
+		Contract: bind.NewBoundContract(nodeElRewardVaultAddress, nodeElRewardVaultContractAbi, client, client, client),
+		Address:  &nodeElRewardVaultAddress,
+		ABI:      &nodeElRewardVaultContractAbi,
+		Client:   client,
+	}
+
+	return &NodeElRewardVaultContractManager{
+		Client:                    client,
+		NodeElRewardVault:         nodeElRewardVault,
+		NodeElRewardVaultContract: nodeElRewardContract,
+	}, nil
+
+}
+
+type ValidatorWithdrawVaultContractManager struct {
+	Client                         ExecutionClient
+	ValidatorWithdrawVault         *contracts.ValidatorWithdrawVault
+	ValidatorWithdrawVaultContract *Contract
+}
+
+func NewValidatorWithdrawVaultFactory(client ExecutionClient, validatorWithdrawVaultAddress common.Address) (*ValidatorWithdrawVaultContractManager, error) {
+	validatorWithdrawVault, err := contracts.NewValidatorWithdrawVault(validatorWithdrawVaultAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	validatorWithdrawVaultContractAbi, err := abi.JSON(strings.NewReader(contracts.ValidatorWithdrawVaultMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	validatorWithdrawContract := &Contract{
+		Contract: bind.NewBoundContract(validatorWithdrawVaultAddress, validatorWithdrawVaultContractAbi, client, client, client),
+		Address:  &validatorWithdrawVaultAddress,
+		ABI:      &validatorWithdrawVaultContractAbi,
+		Client:   client,
+	}
+
+	return &ValidatorWithdrawVaultContractManager{
+		Client:                         client,
+		ValidatorWithdrawVault:         validatorWithdrawVault,
+		ValidatorWithdrawVaultContract: validatorWithdrawContract,
+	}, nil
+
+}
