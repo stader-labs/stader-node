@@ -2,7 +2,6 @@ package node
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -90,11 +89,10 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	exitMsg, srHash, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+	exitMsg, _, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
 	if err != nil {
 		return nil, err
 	}
-	srHashHex := common.Bytes2Hex(srHash[:])
 
 	// get the public key
 	publicKey, err := stader.GetPublicKey()
@@ -108,13 +106,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	}
 	exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
 
-	messageHashEncrypted, err := crypto.EncryptUsingPublicKey([]byte(srHashHex), publicKey)
-	if err != nil {
-		return nil, err
-	}
-
-	messageHashEncryptedString := crypto.EncodeBase64(messageHashEncrypted)
-
 	// encrypt the presigned exit message object
 	preSignedMessageRequest := stader_backend.PreSignSendApiRequestType{
 		Message: struct {
@@ -124,7 +115,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 			Epoch:          strconv.FormatUint(exitEpoch, 10),
 			ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
 		},
-		MessageHash:        messageHashEncryptedString,
 		Signature:          exitSignatureEncryptedString,
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
