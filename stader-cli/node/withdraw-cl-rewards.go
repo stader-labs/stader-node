@@ -43,8 +43,8 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 		fmt.Printf("Validator %s not found\n", validatorPubKey.String())
 		return nil
 	}
-	if canWithdrawClRewardsResponse.ValidatorExited {
-		fmt.Printf("Validator %s exited\n", validatorPubKey.String())
+	if canWithdrawClRewardsResponse.ValidatorWithdrawn {
+		fmt.Printf("Validator %s has withdrawn all the staked funds\n", validatorPubKey.String())
 		return nil
 	}
 

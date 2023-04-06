@@ -40,10 +40,11 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	if err != nil {
 		return nil, err
 	}
-	if validatorContractInfo.Status > 7 {
-		response.ValidatorExited = true
+	if validatorContractInfo.Status > 8 {
+		response.ValidatorWithdrawn = true
 		return &response, nil
 	}
+
 	withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 	if err != nil {
 		return nil, err

@@ -143,7 +143,7 @@ func getStatus(c *cli.Context) error {
 		if validatorInfo.Status > 8 {
 			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
 				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-				fmt.Printf("To withdraw exit amount use the %sstader-cli node withdraw-exit%s command\n\n", log.ColorGreen, log.ColorReset)
+				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
 			}
 			fmt.Printf("-Withdrawn time: %s\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
 		}

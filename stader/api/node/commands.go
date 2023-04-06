@@ -637,6 +637,38 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-withdraw-cl-rewards",
+				Usage:     "Can withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node can-withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Usage:     "Withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
 		},
 	})
 }

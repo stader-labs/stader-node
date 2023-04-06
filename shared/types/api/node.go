@@ -190,16 +190,32 @@ type WithdrawElRewardsResponse struct {
 }
 
 type CanWithdrawClRewardsResponse struct {
-	Status            string         `json:"status"`
-	Error             string         `json:"error"`
-	ValidatorExited   bool           `json:"validatorExited"`
-	NoClRewards       bool           `json:"noClRewards"`
-	TooManyClRewards  bool           `json:"tooManyClRewards"`
-	ValidatorNotFound bool           `json:"validatorNotFound"`
-	GasInfo           stader.GasInfo `json:"gasInfo"`
+	Status             string         `json:"status"`
+	Error              string         `json:"error"`
+	ValidatorWithdrawn bool           `json:"validatorWithdrawn"`
+	NoClRewards        bool           `json:"noClRewards"`
+	TooManyClRewards   bool           `json:"tooManyClRewards"`
+	ValidatorNotFound  bool           `json:"validatorNotFound"`
+	GasInfo            stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawClRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ClRewardsAmount       *big.Int       `json:"clRewardsAmount"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
+type CanSettleExitFunds struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ValidatorNotExited    bool           `json:"validatorNotExited"`
+	ValidatorNotWithdrawn bool           `json:"validatorNotWithdrawn"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
+}
+
+type SettleExitFunds struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
 	ClRewardsAmount       *big.Int       `json:"clRewardsAmount"`
