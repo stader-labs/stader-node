@@ -369,6 +369,27 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return WithdrawClRewards(c, validatorPubKey)
 				},
 			},
+			{
+				Name:      "settle-exit-funds",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node settle-exit-funds --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return SettleExitFunds(c, validatorPubKey)
+				},
+			},
 		},
 	})
 }

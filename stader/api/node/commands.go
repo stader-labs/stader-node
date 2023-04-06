@@ -669,6 +669,38 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-settle-exit-funds",
+				Usage:     "Can settle exit funds of a validator",
+				UsageText: "stader-cli api node can-settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanSettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "settle-exit-funds",
+				Usage:     "settle exit funds of a validator",
+				UsageText: "stader-cli api node settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(SettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
 		},
 	})
 }
