@@ -224,144 +224,10 @@ func HasBeenUpdated(settings1 pages.SettingsType, settings2 pages.SettingsType) 
 	return true
 }
 
-// Configure the service
+func UpdateConfigFromConfigUI(staderClient *stader.Client, cfg *config.StaderConfig) {
 
-// Configure the service
-func configureService(c *cli.Context) error {
-
-	// Make sure the config directory exists first
-	configPath := c.GlobalString("config-path")
-	fmt.Println("configPath", configPath)
-	path, err := homedir.Expand(configPath)
-	if err != nil {
-		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
-	}
-	_, err = os.Stat(path)
-	if os.IsNotExist(err) {
-		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
-		return nil
-	}
-
-	staderClient, err := stader.NewClientFromCtx(c)
-	if err != nil {
-		return err
-	}
-	defer staderClient.Close()
-
-	// Load the config, checking to see if it's new (hasn't been installed before)
-	// var oldCfg *config.StaderConfig
-	cfg, isNew, err := staderClient.LoadConfig()
-	if err != nil {
-		return fmt.Errorf("error loading user settings: %w", err)
-	}
-
-	// Check to see if this is a migration from a legacy config
-	isMigration := false
-	if isNew {
-		// Look for a legacy config to migrate
-		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
-		if err != nil {
-			return err
-		}
-		if migratedConfig != nil {
-			cfg = migratedConfig
-			isMigration = true
-		}
-	}
-
-	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
-	if err != nil {
-		return fmt.Errorf("error checking for first-run status: %w", err)
-	}
-
-	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
-	if isMigration || isUpdate {
-		// oldCfg = cfg
-		cfg = cfg.CreateCopy()
-		err = cfg.UpdateDefaults()
-		if err != nil {
-			return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
-		}
-	}
-
-	// Save the config and exit in headless mode
-	if c.NumFlags() > 0 {
-		err := configureHeadless(c, cfg)
-		if err != nil {
-			return fmt.Errorf("error updating config from provided arguments: %w", err)
-		}
-		return staderClient.SaveConfig(cfg)
-	}
-
-	currentSettings := pages.SettingsType{
-		Confirmed: true,
-		Network:   "prater",
-		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
-		ExecutionClient: pages.ExecutionClientSettingsType{
-			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
-			External: pages.ExecutionClientExternalType{
-				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
-				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
-			},
-		},
-		ConsensusClient: pages.ConsensusClientSettingsType{
-			Selection:              string(cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient)),
-			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
-			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
-			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
-			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
-			External: pages.ConsensusClientExternalType{
-				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
-					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
-				},
-				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
-					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
-					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
-				},
-				Teku: pages.ConsensusClientExternalSelectedTekuType{
-					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
-				},
-			},
-		},
-		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
-		MEVBoost:                 string(cfg.MevBoost.Mode.Value.(cfgtypes.Mode)),
-		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
-		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
-		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
-		FallbackClients: pages.FallbackClientsSettingsType{
-			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
-			Lighthouse: pages.FallbackClientsLighthouseType{
-				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
-				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
-			},
-			Prysm: pages.FallbackClientsPrysmType{
-				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
-				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
-				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
-			},
-			Teku: pages.FallbackClientsTekuType{
-				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
-				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
-			},
-		},
-	}
-
-	set, err := ethcliui.Run(&currentSettings)
-	if err != nil {
-		return err
-	}
-
-	newSettings := set()
-	if !newSettings.Confirmed {
-		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
-		return nil
-	}
-	if !HasBeenUpdated(currentSettings, newSettings) {
-		fmt.Printf("Your settings have not changed.\n")
-		return nil
-	}
-
+}
+func UpdateConfig(staderClient *stader.Client, cfg *config.StaderConfig, newSettings *pages.SettingsType) error {
 	// update the network
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
@@ -431,10 +297,158 @@ func configureService(c *cli.Context) error {
 		cfg.EnableMevBoost.Value = false
 	}
 
-	err = staderClient.SaveConfig(cfg)
+	err := staderClient.SaveConfig(cfg)
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
+
+	currentSettings := pages.SettingsType{
+		Confirmed: true,
+		Network:   "prater",
+		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
+		ExecutionClient: pages.ExecutionClientSettingsType{
+			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
+			External: pages.ExecutionClientExternalType{
+				HTTPBasedRpcApi:      cfg.ExternalExecution.HttpUrl.Value.(string),
+				WebsocketBasedRpcApi: cfg.ExternalExecution.WsUrl.Value.(string),
+			},
+		},
+		ConsensusClient: pages.ConsensusClientSettingsType{
+			Selection:              string(cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
+			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
+			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
+			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
+			External: pages.ConsensusClientExternalType{
+				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
+					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
+				},
+				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
+					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
+					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
+				},
+				Teku: pages.ConsensusClientExternalSelectedTekuType{
+					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
+				},
+			},
+		},
+		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
+		MEVBoost:                 string(cfg.MevBoost.Mode.Value.(cfgtypes.Mode)),
+		MEVBoostExternalMevUrl:   cfg.MevBoost.ExternalUrl.Value.(string),
+		MEVBoostLocalRegulated:   cfg.MevBoost.EnableRegulatedAllMev.Value.(bool),
+		MEVBoostLocalUnregulated: cfg.MevBoost.EnableUnregulatedAllMev.Value.(bool),
+		FallbackClients: pages.FallbackClientsSettingsType{
+			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
+			Lighthouse: pages.FallbackClientsLighthouseType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Prysm: pages.FallbackClientsPrysmType{
+				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
+				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
+			},
+			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+		},
+	}
+
+	return currentSettings
+}
+
+// Configure the service
+func configureService(c *cli.Context) error {
+
+	// Make sure the config directory exists first
+	configPath := c.GlobalString("config-path")
+	fmt.Println("configPath", configPath)
+	path, err := homedir.Expand(configPath)
+	if err != nil {
+		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
+	}
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
+		return nil
+	}
+
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return err
+	}
+	defer staderClient.Close()
+
+	// Load the config, checking to see if it's new (hasn't been installed before)
+	// var oldCfg *config.StaderConfig
+	cfg, isNew, err := staderClient.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("error loading user settings: %w", err)
+	}
+
+	// Check to see if this is a migration from a legacy config
+	isMigration := false
+	if isNew {
+		// Look for a legacy config to migrate
+		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
+		if err != nil {
+			return err
+		}
+		if migratedConfig != nil {
+			cfg = migratedConfig
+			isMigration = true
+		}
+	}
+
+	// Check if this is a new install
+	isUpdate, err := staderClient.IsFirstRun()
+	if err != nil {
+		return fmt.Errorf("error checking for first-run status: %w", err)
+	}
+
+	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
+	if isMigration || isUpdate {
+		// oldCfg = cfg
+		cfg = cfg.CreateCopy()
+		err = cfg.UpdateDefaults()
+		if err != nil {
+			return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
+		}
+	}
+
+	// Save the config and exit in headless mode
+	if c.NumFlags() > 0 {
+		err := configureHeadless(c, cfg)
+		if err != nil {
+			return fmt.Errorf("error updating config from provided arguments: %w", err)
+		}
+		return staderClient.SaveConfig(cfg)
+	}
+
+	currentSettings := NewSettingsType(cfg)
+
+	set, err := ethcliui.Run(&currentSettings)
+	if err != nil {
+		return err
+	}
+
+	newSettings := set()
+	if !newSettings.Confirmed {
+		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
+		return nil
+	}
+	if !HasBeenUpdated(currentSettings, newSettings) {
+		fmt.Printf("Your settings have not changed.\n")
+		return nil
+	}
+
+	UpdateConfig(staderClient, cfg, &newSettings)
 
 	// Restart the services
 	err = startService(c, false)
