@@ -50,6 +50,12 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.AccountBalances.Sd == nil {
 		response.AccountBalances.Sd = big.NewInt(0)
 	}
+	if response.OperatorELRewardsAddressBalance == nil {
+		response.OperatorELRewardsAddressBalance = big.NewInt(0)
+	}
+	if response.OperatorRewardInETH == nil {
+		response.OperatorRewardInETH = big.NewInt(0)
+	}
 
 	return response, nil
 }
