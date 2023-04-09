@@ -126,11 +126,34 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 		settings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
 		settings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
 
-		spew.Dump("cfg.ExternalConsensusClient.Value.", cfg.ExternalConsensusClient.Value)
 		settings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
+		setUIConsensusClient(cfg, settings)
 	}
 	return settings
+}
+func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
+
+	// case cfgtypes.ConsensusClient_Teku:
+	newSettings[keys.E2cc_em_custom_graffiti_teku] = cfg.ExternalTeku.Graffiti.Value
+	newSettings[keys.E2cc_em_http_url_teku] = cfg.ExternalTeku.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_teku] = cfg.ExternalTeku.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_teku] = cfg.ExternalTeku.AdditionalVcFlags.Value
+	// case cfgtypes.ConsensusClient_Lighthouse:
+	newSettings[keys.E2cc_em_custom_graffiti_lighthouse] = cfg.ExternalLighthouse.Graffiti.Value
+	newSettings[keys.E2cc_em_http_url_lighthouse] = cfg.ExternalLighthouse.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_lighthouse] = cfg.ExternalLighthouse.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_lighthouse] = cfg.ExternalLighthouse.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_lighthouse] = cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool)
+
+	// case cfgtypes.ConsensusClient_Prysm:
+	newSettings[keys.E2cc_em_custom_graffiti_prysm] = cfg.ExternalPrysm.Graffiti.Value
+	newSettings[keys.E2cc_em_http_url_prysm] = cfg.ExternalPrysm.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_prysm] = cfg.ExternalPrysm.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_prysm] = cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool)
+
+	return nil
 }
 
 func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
@@ -148,30 +171,26 @@ func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]inter
 		if !ok {
 			return fmt.Errorf("Invalid External client %+v", newSettings[keys.E2cc_em_consensus_client])
 		}
-		consensusClient := cfgtypes.ConsensusClient(strings.ToLower(clientStr))
-		switch consensusClient {
-		case cfgtypes.ConsensusClient_Teku:
-			cfg.ExternalTeku.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_teku]
-			cfg.ExternalTeku.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_teku]
-			cfg.ExternalTeku.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_teku]
-			cfg.ExternalTeku.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_teku]
-		case cfgtypes.ConsensusClient_Lighthouse:
-			cfg.ExternalLighthouse.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lighthouse]
-			cfg.ExternalLighthouse.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_lighthouse]
-			cfg.ExternalLighthouse.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lighthouse]
-			cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
-			cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(format(newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]))
 
-		case cfgtypes.ConsensusClient_Prysm:
-			cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
-			cfg.ExternalPrysm.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_prysm]
-			cfg.ExternalPrysm.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_prysm]
-			cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
-			cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(format(newSettings[keys.E2cc_em_doppelganger_detection_prysm]))
+		// case cfgtypes.ConsensusClient_Teku:
+		cfg.ExternalTeku.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_teku]
+		cfg.ExternalTeku.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_teku]
+		cfg.ExternalTeku.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_teku]
+		cfg.ExternalTeku.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_teku]
 
-		default:
-			return fmt.Errorf("Invalid External client %+v", newSettings[keys.E2cc_em_consensus_client])
-		}
+		// case cfgtypes.ConsensusClient_Lighthouse:
+		cfg.ExternalLighthouse.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lighthouse]
+		cfg.ExternalLighthouse.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_lighthouse]
+		cfg.ExternalLighthouse.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lighthouse]
+		cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]
+
+		// case cfgtypes.ConsensusClient_Prysm:
+		cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
+		cfg.ExternalPrysm.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_prysm]
+		cfg.ExternalPrysm.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_prysm]
+		cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_prysm]
 
 		cfg.ConsensusClient.Value = strings.ToLower(clientStr)
 		cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
