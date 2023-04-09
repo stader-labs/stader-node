@@ -701,6 +701,48 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-node-withdraw-sd",
+				Usage:     "Check whether the node can withdraw staked SD",
+				UsageText: "stader-cli api node can-node-withdraw-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canWithdrawSd(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-withdraw-sd",
+				Usage:     "Withdraw staked SD",
+				UsageText: "stader-cli api node node-withdraw-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(withdrawSd(c, amountWei))
+					return nil
+
+				},
+			},
 		},
 	})
 }

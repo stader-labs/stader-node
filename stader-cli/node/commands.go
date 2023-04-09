@@ -390,6 +390,31 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return SettleExitFunds(c, validatorPubKey)
 				},
 			},
+			{
+				Name:      "withdraw-sd-collateral",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node withdraw-sd-collateral --amount",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to deposit",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return WithdrawSd(c)
+				},
+			},
 		},
 	})
 }

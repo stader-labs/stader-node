@@ -485,3 +485,36 @@ func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.Set
 
 	return response, nil
 }
+
+func (c *Client) CanWithdrawSdCollateral(amount *big.Int) (api.CanWithdrawSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-withdraw-sd %s", amount.String()))
+	if err != nil {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %w", err)
+	}
+	var response api.CanWithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-withdraw-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-withdraw-sd %s", amount.String()))
+	if err != nil {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %w", err)
+	}
+	var response api.WithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not decode node node-withdraw-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
