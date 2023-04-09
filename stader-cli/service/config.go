@@ -97,11 +97,9 @@ func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interf
 
 func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	settings := make(map[string]interface{})
-	// The StaderNode configuration
-
 	staderNode := cfg.StaderNode
 
-	settings[keys.Sn_node_network] = "prater"
+	settings[keys.Sn_node_network] = "prater" // TODO
 	settings[keys.Sn_project_title] = staderNode.ProjectName.Value
 	settings[keys.Sn_storage_location] = staderNode.DataPath.Value
 
@@ -114,22 +112,20 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 		format(staderNode.PriorityFee.Value)
 	settings[keys.Fr_archive_mode_ec_url] = staderNode.ArchiveECUrl.Value
 
-	spew.Dump("XXXXXXXXXX ", cfg.ExecutionClientMode.Value)
 	settings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
 	settings[keys.E2cc_consensus_client] = makeUIExecutionMode(cfg.ConsensusClientMode.Value)
 
-	switch cfg.ExecutionClientMode.Value.(cfgtypes.Mode) {
-	case cfgtypes.Mode_Local:
-		// cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
-		// cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
-	case cfgtypes.Mode_External:
-		settings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
-		settings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
+	// switch cfg.ExecutionClientMode.Value.(cfgtypes.Mode) {
+	// case cfgtypes.Mode_Local:
+	// cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
+	// cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
+	// case cfgtypes.Mode_External:
+	settings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
+	settings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
 
-		settings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
+	settings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
-		setUIConsensusClient(cfg, settings)
-	}
+	setUIConsensusClient(cfg, settings)
 	return settings
 }
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
