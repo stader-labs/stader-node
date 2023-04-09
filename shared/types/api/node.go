@@ -217,10 +217,11 @@ type SettleExitFunds struct {
 }
 
 type CanWithdrawElRewardsResponse struct {
-	Status      string         `json:"status"`
-	Error       string         `json:"error"`
-	NoElRewards bool           `json:"noElRewards"`
-	GasInfo     stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	NoElRewards           bool           `json:"noElRewards"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawElRewardsResponse struct {

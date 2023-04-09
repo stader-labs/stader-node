@@ -35,7 +35,10 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		return nil, err
 	}
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil || operatorId.Int64() == 0 {
+	if err != nil {
+		return nil, err
+	}
+	if operatorId.Uint64() == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}

@@ -37,6 +37,10 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err != nil {
 		return nil, err
 	}
+	if operatorId.Uint64() == 0 {
+		response.OperatorNotRegistered = true
+		return &response, nil
+	}
 
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
