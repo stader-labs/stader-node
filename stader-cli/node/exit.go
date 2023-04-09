@@ -27,7 +27,11 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return err
 	}
 	if response.ValidatorNotRegistered {
-		fmt.Printf("Validator not registered!")
+		fmt.Println("Validator not registered!")
+		return nil
+	}
+	if response.ValidatorTooYoung {
+		fmt.Println("Validator too young!")
 		return nil
 	}
 
