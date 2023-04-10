@@ -100,9 +100,9 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("To withdraw el rewards use the %sstader-cli node withdraw-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 	if !status.OptedInForSocializingPool {
-		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
+		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
 	} else {
-		fmt.Printf("Operator has Opted out for Socializing Pool\n\n")
+		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf(
 			"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
 			log.ColorBlue,
