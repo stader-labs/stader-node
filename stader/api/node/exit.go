@@ -23,9 +23,20 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	// Response
 	response := api.CanExitValidatorResponse{}
 
-	_, err = bc.GetValidatorStatus(validatorPubKey, nil)
-	if err != nil {
+	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
+	if err != nil || !res.Exists {
 		response.ValidatorNotRegistered = true
+		return &response, nil
+	}
+
+	beaconHead, err := bc.GetBeaconHead()
+	if err != nil {
+		return nil, err
+	}
+	currentEpoch := beaconHead.Epoch
+
+	if res.ActivationEpoch > currentEpoch {
+		response.ValidatorTooYoung = true
 		return &response, nil
 	}
 

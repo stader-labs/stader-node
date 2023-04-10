@@ -50,6 +50,12 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.AccountBalances.Sd == nil {
 		response.AccountBalances.Sd = big.NewInt(0)
 	}
+	if response.OperatorELRewardsAddressBalance == nil {
+		response.OperatorELRewardsAddressBalance = big.NewInt(0)
+	}
+	if response.OperatorRewardInETH == nil {
+		response.OperatorRewardInETH = big.NewInt(0)
+	}
 
 	return response, nil
 }
@@ -381,5 +387,134 @@ func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	if response.Error != "" {
 		return api.NodeSignResponse{}, fmt.Errorf("could not sign message: %s", response.Error)
 	}
+	return response, nil
+}
+
+func (c *Client) CanWithdrawElRewards() (api.CanWithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node can-withdraw-el-rewards")
+	if err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %w", err)
+	}
+	var response api.CanWithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawElRewards() (api.WithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node withdraw-el-rewards")
+	if err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %w", err)
+	}
+	var response api.WithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not decode node withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanWithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.CanWithdrawClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-withdraw-cl-rewards %s", validatorPubKey))
+	if err != nil {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %w", err)
+	}
+	var response api.CanWithdrawClRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-cl-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.WithdrawClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node withdraw-cl-rewards %s", validatorPubKey))
+	if err != nil {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %w", err)
+	}
+	var response api.WithdrawClRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not decode node withdraw-cl-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanSettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.CanSettleExitFunds, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-settle-exit-funds %s", validatorPubKey))
+	if err != nil {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %w", err)
+	}
+	var response api.CanSettleExitFunds
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not decode node can-settle-exit-funds response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.SettleExitFunds, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node settle-exit-funds %s", validatorPubKey))
+	if err != nil {
+		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %w", err)
+	}
+	var response api.SettleExitFunds
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.SettleExitFunds{}, fmt.Errorf("could not decode node settle-exit-funds response: %w", err)
+	}
+	if response.Error != "" {
+		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanWithdrawSdCollateral(amount *big.Int) (api.CanWithdrawSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-withdraw-sd %s", amount.String()))
+	if err != nil {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %w", err)
+	}
+	var response api.CanWithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-withdraw-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-withdraw-sd %s", amount.String()))
+	if err != nil {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %w", err)
+	}
+	var response api.WithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not decode node node-withdraw-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %s", response.Error)
+	}
+
 	return response, nil
 }

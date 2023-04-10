@@ -41,6 +41,24 @@ func SettleFunds(executionClient stader.ExecutionClient, validatorWithdrawVaultA
 	return vwv.ValidatorWithdrawVault.SettleFunds(opts)
 }
 
+func EstimateDistributeRewards(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return stader.GasInfo{}, err
+	}
+
+	return vwv.ValidatorWithdrawVaultContract.GetTransactionGasInfo(opts, "distributeRewards")
+}
+
+func DistributeRewards(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return vwv.ValidatorWithdrawVault.DistributeRewards(opts)
+}
+
 func GetTotalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetOperatorTotalKeys(opts, operatorId)
 }
@@ -108,4 +126,8 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 	}
 
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
+}
+
+func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.ValidatorIdByPubkey(opts, validatorPubKey)
 }

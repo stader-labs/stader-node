@@ -338,6 +338,83 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return SendSignedPresignedMessage(c, validatorPubKey)
 				},
 			},
+			{
+				Name:      "withdraw-el-rewards",
+				Aliases:   []string{"wer"},
+				Usage:     "Withdraw all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
+				UsageText: "stader-cli node withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+					// Run
+					return WithdrawElRewards(c)
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Aliases:   []string{"wcr"},
+				Usage:     "Withdraw all Consensus Layer rewards to the node reward address.",
+				UsageText: "stader-cli node withdraw-cl-rewards --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator we want to exit",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return WithdrawClRewards(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "settle-exit-funds",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node settle-exit-funds --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return SettleExitFunds(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "withdraw-sd-collateral",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node withdraw-sd-collateral --amount",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to deposit",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return WithdrawSd(c)
+				},
+			},
 		},
 	})
 }
