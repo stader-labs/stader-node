@@ -432,8 +432,6 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			convertUintParam(param, &cfg.NodeMetricsPort, network, 16)
 		case "EXPORTER_METRICS_PORT":
 			convertUintParam(param, &cfg.ExporterMetricsPort, network, 16)
-		case "GUARDIAN_METRICS_PORT":
-			convertUintParam(param, &cfg.GuardianMetricsPort, network, 16)
 		case "PROMETHEUS_PORT":
 			convertUintParam(param, &cfg.Prometheus.Port, network, 16)
 		case "GRAFANA_PORT":
