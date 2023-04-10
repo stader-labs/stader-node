@@ -17,7 +17,7 @@ import (
 func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 	// Get services
-	fmt.Printf("starting getStatus!")
+	fmt.Println("starting getStatus!")
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 
-	fmt.Printf("Fetched all operator info!")
+	fmt.Println("Fetched all operator info!")
 	if operatorRegistry.OperatorName != "" {
 		response.Registered = true
 		response.OperatorId = operatorId
@@ -94,13 +94,13 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		//operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
-		//if err != nil {
-		//	return nil, err
-		//}
+		operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+		if err != nil {
+			return nil, err
+		}
 		response.OperatorELRewardsAddress = operatorElRewardAddress
-		response.OperatorELRewardsAddressBalance = elRewardAddressBalance
-		fmt.Printf("Fetched operator el reward address balance!")
+		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
+		fmt.Println("Fetched operator el reward address balance!\n")
 
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
@@ -109,6 +109,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorRewardInETH = operatorReward
 
 		// get operator deposited sd collateral
+		fmt.Println("Fetching operator sd collateral!")
 		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
 		if err != nil {
 			return nil, err
@@ -116,6 +117,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.DepositedSdCollateral = operatorSdCollateral
 
 		// total registerable validators
+		fmt.Println("Fetching total registerable validators!")
 		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
 		if err != nil {
 			return nil, err
@@ -128,27 +130,38 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
+		fmt.Println("Fetched all validator keys! Going thru them to get validator info!")
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
+			fmt.Println("Fetching validator info for validator key: ", i)
 			validatorIndex, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("Validator index: ", validatorIndex)
+			fmt.Printf("Fetching validator info for validator index: %v", validatorIndex)
 			validatorContractInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("Fetched validator info!")
+			fmt.Println("Fetching validator eth balance!")
 			withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("Fetched validator eth balance!")
+			fmt.Println("Fetching validator withdraw vault reward shares!")
 			withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("Fetched validator withdraw vault reward shares!")
+			fmt.Println("Fetching rewards threshold!")
 			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("Fetched rewards threshold!")
 			crossedRewardThreshold := false
 			if withdrawVaultBalance.Cmp(rewardsThreshold) == 1 {
 				crossedRewardThreshold = true
