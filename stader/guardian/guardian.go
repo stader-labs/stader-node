@@ -20,6 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package guardian
 
 import (
+	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/services/state"
+	"github.com/stader-labs/stader-node/stader/guardian/collector"
 	"net/http"
 	"sync"
 	"time"
@@ -31,13 +36,14 @@ import (
 )
 
 // Config
-var minTasksInterval, _ = time.ParseDuration("4m")
-var maxTasksInterval, _ = time.ParseDuration("6m")
+var tasksInterval, _ = time.ParseDuration("5m")
+var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests = 200
 
 	ErrorColor   = color.FgRed
+	UpdateColor  = color.FgBlue
 	MetricsColor = color.FgHiYellow
 )
 
@@ -61,21 +67,77 @@ func run(c *cli.Context) error {
 
 	// Initialize error logger
 	errorLog := log.NewColorLogger(ErrorColor)
+	updateLog := log.NewColorLogger(UpdateColor)
+
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return err
+	}
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return err
+	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
+
+	m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
+	if err != nil {
+		return err
+	}
+	stateLocker := collector.NewStateLocker()
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(1)
+	wg.Add(2)
 
 	// Run metrics loop
 	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor))
+		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+
+			// Check the BC status
+			err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+			if err != nil {
+				errorLog.Println(err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+
+			state, err := updateNetworkState(m, &updateLog, nodeAccount.Address)
+			if err != nil {
+				errorLog.Println(err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+			stateLocker.UpdateState(state)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateLocker)
 		if err != nil {
 			errorLog.Println(err)
 		}
 		wg.Done()
 	}()
 
-	// Wait for both threads to stop
 	wg.Wait()
 	return nil
 }
@@ -87,5 +149,13 @@ func configureHTTP() {
 	// The HTTP transport is set to cache connections for future re-use equal to the maximum expected number of concurrent requests
 	// This prevents issues related to memory consumption and address allowance from repeatedly opening and closing connections
 	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = MaxConcurrentEth1Requests
+}
 
+func updateNetworkState(m *state.NetworkStateManager, log *log.ColorLogger, nodeAddress common.Address) (*state.NetworkState, error) {
+	// Get the state of the network
+	state, err := m.GetHeadStateForNode(nodeAddress)
+	if err != nil {
+		return nil, fmt.Errorf("error updating network state: %w", err)
+	}
+	return state, nil
 }
