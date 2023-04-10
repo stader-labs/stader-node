@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 
@@ -16,6 +17,7 @@ import (
 func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 	// Get services
+	fmt.Printf("starting getStatus!")
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -75,6 +77,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 
+	fmt.Printf("Fetched all operator info!")
 	if operatorRegistry.OperatorName != "" {
 		response.Registered = true
 		response.OperatorId = operatorId
@@ -97,6 +100,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		//}
 		response.OperatorELRewardsAddress = operatorElRewardAddress
 		response.OperatorELRewardsAddressBalance = elRewardAddressBalance
+		fmt.Printf("Fetched operator el reward address balance!")
 
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
