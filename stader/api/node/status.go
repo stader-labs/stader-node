@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 
@@ -125,7 +124,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
-		fmt.Println("Fetched all validator keys! Going thru them to get validator info!")
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
 			validatorIndex, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
 			if err != nil {
