@@ -31,7 +31,7 @@ var (
 
 // SdCollateralMetaData contains all meta data concerning the SdCollateral contract.
 var SdCollateralMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToShares\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_numShares\",\"type\":\"uint256\"}],\"name\":\"convertSharesToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getMaxValidatorSpawnable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"_numValidators\",\"type\":\"uint32\"}],\"name\":\"getMinimumAmountToDeposit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidators\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_sdERC20Addr\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_priceFetcherAddr\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorShares\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"priceFetcher\",\"outputs\":[{\"internalType\":\"contractIPriceFetcher\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sdERC20\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSDCollateral\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalShares\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorSDCollateral\",\"type\":\"uint256\"}],\"name\":\"InsufficientSDCollateral\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"withdrawableSD\",\"type\":\"uint256\"}],\"name\":\"InsufficientWithdrawableSD\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolLimit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NODE_REGISTRY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getMaxValidatorSpawnable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getMinimumSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_minSDToBond\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorPoolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getRemainingSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spenderAddr\",\"type\":\"address\"}],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"poolIdByOperator\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdToSlash\",\"type\":\"uint256\"}],\"name\":\"slashSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdSlashed\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSDCollateral\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"updatePoolIdForOperator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SdCollateralABI is the input ABI used to generate the binding from.
@@ -211,6 +211,68 @@ func (_SdCollateral *SdCollateralCallerSession) DEFAULTADMINROLE() ([32]byte, er
 	return _SdCollateral.Contract.DEFAULTADMINROLE(&_SdCollateral.CallOpts)
 }
 
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_SdCollateral *SdCollateralCaller) MANAGER(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _SdCollateral.contract.Call(opts, &out, "MANAGER")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_SdCollateral *SdCollateralSession) MANAGER() ([32]byte, error) {
+	return _SdCollateral.Contract.MANAGER(&_SdCollateral.CallOpts)
+}
+
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_SdCollateral *SdCollateralCallerSession) MANAGER() ([32]byte, error) {
+	return _SdCollateral.Contract.MANAGER(&_SdCollateral.CallOpts)
+}
+
+// NODEREGISTRYCONTRACT is a free data retrieval call binding the contract method 0xf8bc93a5.
+//
+// Solidity: function NODE_REGISTRY_CONTRACT() view returns(bytes32)
+func (_SdCollateral *SdCollateralCaller) NODEREGISTRYCONTRACT(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _SdCollateral.contract.Call(opts, &out, "NODE_REGISTRY_CONTRACT")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// NODEREGISTRYCONTRACT is a free data retrieval call binding the contract method 0xf8bc93a5.
+//
+// Solidity: function NODE_REGISTRY_CONTRACT() view returns(bytes32)
+func (_SdCollateral *SdCollateralSession) NODEREGISTRYCONTRACT() ([32]byte, error) {
+	return _SdCollateral.Contract.NODEREGISTRYCONTRACT(&_SdCollateral.CallOpts)
+}
+
+// NODEREGISTRYCONTRACT is a free data retrieval call binding the contract method 0xf8bc93a5.
+//
+// Solidity: function NODE_REGISTRY_CONTRACT() view returns(bytes32)
+func (_SdCollateral *SdCollateralCallerSession) NODEREGISTRYCONTRACT() ([32]byte, error) {
+	return _SdCollateral.Contract.NODEREGISTRYCONTRACT(&_SdCollateral.CallOpts)
+}
+
 // ConvertETHToSD is a free data retrieval call binding the contract method 0xe614e17c.
 //
 // Solidity: function convertETHToSD(uint256 _ethAmount) view returns(uint256)
@@ -273,68 +335,6 @@ func (_SdCollateral *SdCollateralCallerSession) ConvertSDToETH(_sdAmount *big.In
 	return _SdCollateral.Contract.ConvertSDToETH(&_SdCollateral.CallOpts, _sdAmount)
 }
 
-// ConvertSDToShares is a free data retrieval call binding the contract method 0x2f0356e6.
-//
-// Solidity: function convertSDToShares(uint256 _sdAmount) view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) ConvertSDToShares(opts *bind.CallOpts, _sdAmount *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "convertSDToShares", _sdAmount)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ConvertSDToShares is a free data retrieval call binding the contract method 0x2f0356e6.
-//
-// Solidity: function convertSDToShares(uint256 _sdAmount) view returns(uint256)
-func (_SdCollateral *SdCollateralSession) ConvertSDToShares(_sdAmount *big.Int) (*big.Int, error) {
-	return _SdCollateral.Contract.ConvertSDToShares(&_SdCollateral.CallOpts, _sdAmount)
-}
-
-// ConvertSDToShares is a free data retrieval call binding the contract method 0x2f0356e6.
-//
-// Solidity: function convertSDToShares(uint256 _sdAmount) view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) ConvertSDToShares(_sdAmount *big.Int) (*big.Int, error) {
-	return _SdCollateral.Contract.ConvertSDToShares(&_SdCollateral.CallOpts, _sdAmount)
-}
-
-// ConvertSharesToSD is a free data retrieval call binding the contract method 0xd4513719.
-//
-// Solidity: function convertSharesToSD(uint256 _numShares) view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) ConvertSharesToSD(opts *bind.CallOpts, _numShares *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "convertSharesToSD", _numShares)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// ConvertSharesToSD is a free data retrieval call binding the contract method 0xd4513719.
-//
-// Solidity: function convertSharesToSD(uint256 _numShares) view returns(uint256)
-func (_SdCollateral *SdCollateralSession) ConvertSharesToSD(_numShares *big.Int) (*big.Int, error) {
-	return _SdCollateral.Contract.ConvertSharesToSD(&_SdCollateral.CallOpts, _numShares)
-}
-
-// ConvertSharesToSD is a free data retrieval call binding the contract method 0xd4513719.
-//
-// Solidity: function convertSharesToSD(uint256 _numShares) view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) ConvertSharesToSD(_numShares *big.Int) (*big.Int, error) {
-	return _SdCollateral.Contract.ConvertSharesToSD(&_SdCollateral.CallOpts, _numShares)
-}
-
 // GetMaxValidatorSpawnable is a free data retrieval call binding the contract method 0xabe43d97.
 //
 // Solidity: function getMaxValidatorSpawnable(uint256 _sdAmount, uint8 _poolId) view returns(uint256)
@@ -366,12 +366,12 @@ func (_SdCollateral *SdCollateralCallerSession) GetMaxValidatorSpawnable(_sdAmou
 	return _SdCollateral.Contract.GetMaxValidatorSpawnable(&_SdCollateral.CallOpts, _sdAmount, _poolId)
 }
 
-// GetMinimumAmountToDeposit is a free data retrieval call binding the contract method 0x7b5b23da.
+// GetMinimumSDToBond is a free data retrieval call binding the contract method 0x379b727e.
 //
-// Solidity: function getMinimumAmountToDeposit(address _operator, uint8 _poolId, uint32 _numValidators) view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) GetMinimumAmountToDeposit(opts *bind.CallOpts, _operator common.Address, _poolId uint8, _numValidators uint32) (*big.Int, error) {
+// Solidity: function getMinimumSDToBond(uint8 _poolId, uint256 _numValidator) view returns(uint256 _minSDToBond)
+func (_SdCollateral *SdCollateralCaller) GetMinimumSDToBond(opts *bind.CallOpts, _poolId uint8, _numValidator *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "getMinimumAmountToDeposit", _operator, _poolId, _numValidators)
+	err := _SdCollateral.contract.Call(opts, &out, "getMinimumSDToBond", _poolId, _numValidator)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -383,26 +383,57 @@ func (_SdCollateral *SdCollateralCaller) GetMinimumAmountToDeposit(opts *bind.Ca
 
 }
 
-// GetMinimumAmountToDeposit is a free data retrieval call binding the contract method 0x7b5b23da.
+// GetMinimumSDToBond is a free data retrieval call binding the contract method 0x379b727e.
 //
-// Solidity: function getMinimumAmountToDeposit(address _operator, uint8 _poolId, uint32 _numValidators) view returns(uint256)
-func (_SdCollateral *SdCollateralSession) GetMinimumAmountToDeposit(_operator common.Address, _poolId uint8, _numValidators uint32) (*big.Int, error) {
-	return _SdCollateral.Contract.GetMinimumAmountToDeposit(&_SdCollateral.CallOpts, _operator, _poolId, _numValidators)
+// Solidity: function getMinimumSDToBond(uint8 _poolId, uint256 _numValidator) view returns(uint256 _minSDToBond)
+func (_SdCollateral *SdCollateralSession) GetMinimumSDToBond(_poolId uint8, _numValidator *big.Int) (*big.Int, error) {
+	return _SdCollateral.Contract.GetMinimumSDToBond(&_SdCollateral.CallOpts, _poolId, _numValidator)
 }
 
-// GetMinimumAmountToDeposit is a free data retrieval call binding the contract method 0x7b5b23da.
+// GetMinimumSDToBond is a free data retrieval call binding the contract method 0x379b727e.
 //
-// Solidity: function getMinimumAmountToDeposit(address _operator, uint8 _poolId, uint32 _numValidators) view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) GetMinimumAmountToDeposit(_operator common.Address, _poolId uint8, _numValidators uint32) (*big.Int, error) {
-	return _SdCollateral.Contract.GetMinimumAmountToDeposit(&_SdCollateral.CallOpts, _operator, _poolId, _numValidators)
+// Solidity: function getMinimumSDToBond(uint8 _poolId, uint256 _numValidator) view returns(uint256 _minSDToBond)
+func (_SdCollateral *SdCollateralCallerSession) GetMinimumSDToBond(_poolId uint8, _numValidator *big.Int) (*big.Int, error) {
+	return _SdCollateral.Contract.GetMinimumSDToBond(&_SdCollateral.CallOpts, _poolId, _numValidator)
 }
 
-// GetOperatorSDBalance is a free data retrieval call binding the contract method 0xbbd65e26.
+// GetOperatorPoolId is a free data retrieval call binding the contract method 0x8e43c53a.
 //
-// Solidity: function getOperatorSDBalance(address _operator) view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) GetOperatorSDBalance(opts *bind.CallOpts, _operator common.Address) (*big.Int, error) {
+// Solidity: function getOperatorPoolId(address _operator) view returns(uint8 _poolId)
+func (_SdCollateral *SdCollateralCaller) GetOperatorPoolId(opts *bind.CallOpts, _operator common.Address) (uint8, error) {
 	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "getOperatorSDBalance", _operator)
+	err := _SdCollateral.contract.Call(opts, &out, "getOperatorPoolId", _operator)
+
+	if err != nil {
+		return *new(uint8), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
+
+	return out0, err
+
+}
+
+// GetOperatorPoolId is a free data retrieval call binding the contract method 0x8e43c53a.
+//
+// Solidity: function getOperatorPoolId(address _operator) view returns(uint8 _poolId)
+func (_SdCollateral *SdCollateralSession) GetOperatorPoolId(_operator common.Address) (uint8, error) {
+	return _SdCollateral.Contract.GetOperatorPoolId(&_SdCollateral.CallOpts, _operator)
+}
+
+// GetOperatorPoolId is a free data retrieval call binding the contract method 0x8e43c53a.
+//
+// Solidity: function getOperatorPoolId(address _operator) view returns(uint8 _poolId)
+func (_SdCollateral *SdCollateralCallerSession) GetOperatorPoolId(_operator common.Address) (uint8, error) {
+	return _SdCollateral.Contract.GetOperatorPoolId(&_SdCollateral.CallOpts, _operator)
+}
+
+// GetRemainingSDToBond is a free data retrieval call binding the contract method 0x351691ab.
+//
+// Solidity: function getRemainingSDToBond(address _operator, uint8 _poolId, uint256 _numValidator) view returns(uint256)
+func (_SdCollateral *SdCollateralCaller) GetRemainingSDToBond(opts *bind.CallOpts, _operator common.Address, _poolId uint8, _numValidator *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _SdCollateral.contract.Call(opts, &out, "getRemainingSDToBond", _operator, _poolId, _numValidator)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -414,18 +445,18 @@ func (_SdCollateral *SdCollateralCaller) GetOperatorSDBalance(opts *bind.CallOpt
 
 }
 
-// GetOperatorSDBalance is a free data retrieval call binding the contract method 0xbbd65e26.
+// GetRemainingSDToBond is a free data retrieval call binding the contract method 0x351691ab.
 //
-// Solidity: function getOperatorSDBalance(address _operator) view returns(uint256)
-func (_SdCollateral *SdCollateralSession) GetOperatorSDBalance(_operator common.Address) (*big.Int, error) {
-	return _SdCollateral.Contract.GetOperatorSDBalance(&_SdCollateral.CallOpts, _operator)
+// Solidity: function getRemainingSDToBond(address _operator, uint8 _poolId, uint256 _numValidator) view returns(uint256)
+func (_SdCollateral *SdCollateralSession) GetRemainingSDToBond(_operator common.Address, _poolId uint8, _numValidator *big.Int) (*big.Int, error) {
+	return _SdCollateral.Contract.GetRemainingSDToBond(&_SdCollateral.CallOpts, _operator, _poolId, _numValidator)
 }
 
-// GetOperatorSDBalance is a free data retrieval call binding the contract method 0xbbd65e26.
+// GetRemainingSDToBond is a free data retrieval call binding the contract method 0x351691ab.
 //
-// Solidity: function getOperatorSDBalance(address _operator) view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) GetOperatorSDBalance(_operator common.Address) (*big.Int, error) {
-	return _SdCollateral.Contract.GetOperatorSDBalance(&_SdCollateral.CallOpts, _operator)
+// Solidity: function getRemainingSDToBond(address _operator, uint8 _poolId, uint256 _numValidator) view returns(uint256)
+func (_SdCollateral *SdCollateralCallerSession) GetRemainingSDToBond(_operator common.Address, _poolId uint8, _numValidator *big.Int) (*big.Int, error) {
+	return _SdCollateral.Contract.GetRemainingSDToBond(&_SdCollateral.CallOpts, _operator, _poolId, _numValidator)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
@@ -461,10 +492,10 @@ func (_SdCollateral *SdCollateralCallerSession) GetRoleAdmin(role [32]byte) ([32
 
 // HasEnoughSDCollateral is a free data retrieval call binding the contract method 0xb178e38e.
 //
-// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidators) view returns(bool)
-func (_SdCollateral *SdCollateralCaller) HasEnoughSDCollateral(opts *bind.CallOpts, _operator common.Address, _poolId uint8, _numValidators *big.Int) (bool, error) {
+// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidator) view returns(bool)
+func (_SdCollateral *SdCollateralCaller) HasEnoughSDCollateral(opts *bind.CallOpts, _operator common.Address, _poolId uint8, _numValidator *big.Int) (bool, error) {
 	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "hasEnoughSDCollateral", _operator, _poolId, _numValidators)
+	err := _SdCollateral.contract.Call(opts, &out, "hasEnoughSDCollateral", _operator, _poolId, _numValidator)
 
 	if err != nil {
 		return *new(bool), err
@@ -478,16 +509,16 @@ func (_SdCollateral *SdCollateralCaller) HasEnoughSDCollateral(opts *bind.CallOp
 
 // HasEnoughSDCollateral is a free data retrieval call binding the contract method 0xb178e38e.
 //
-// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidators) view returns(bool)
-func (_SdCollateral *SdCollateralSession) HasEnoughSDCollateral(_operator common.Address, _poolId uint8, _numValidators *big.Int) (bool, error) {
-	return _SdCollateral.Contract.HasEnoughSDCollateral(&_SdCollateral.CallOpts, _operator, _poolId, _numValidators)
+// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidator) view returns(bool)
+func (_SdCollateral *SdCollateralSession) HasEnoughSDCollateral(_operator common.Address, _poolId uint8, _numValidator *big.Int) (bool, error) {
+	return _SdCollateral.Contract.HasEnoughSDCollateral(&_SdCollateral.CallOpts, _operator, _poolId, _numValidator)
 }
 
 // HasEnoughSDCollateral is a free data retrieval call binding the contract method 0xb178e38e.
 //
-// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidators) view returns(bool)
-func (_SdCollateral *SdCollateralCallerSession) HasEnoughSDCollateral(_operator common.Address, _poolId uint8, _numValidators *big.Int) (bool, error) {
-	return _SdCollateral.Contract.HasEnoughSDCollateral(&_SdCollateral.CallOpts, _operator, _poolId, _numValidators)
+// Solidity: function hasEnoughSDCollateral(address _operator, uint8 _poolId, uint256 _numValidator) view returns(bool)
+func (_SdCollateral *SdCollateralCallerSession) HasEnoughSDCollateral(_operator common.Address, _poolId uint8, _numValidator *big.Int) (bool, error) {
+	return _SdCollateral.Contract.HasEnoughSDCollateral(&_SdCollateral.CallOpts, _operator, _poolId, _numValidator)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
@@ -521,12 +552,12 @@ func (_SdCollateral *SdCollateralCallerSession) HasRole(role [32]byte, account c
 	return _SdCollateral.Contract.HasRole(&_SdCollateral.CallOpts, role, account)
 }
 
-// OperatorShares is a free data retrieval call binding the contract method 0x371e21e9.
+// OperatorSDBalance is a free data retrieval call binding the contract method 0xf9af40b8.
 //
-// Solidity: function operatorShares(address ) view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) OperatorShares(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+// Solidity: function operatorSDBalance(address ) view returns(uint256)
+func (_SdCollateral *SdCollateralCaller) OperatorSDBalance(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
 	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "operatorShares", arg0)
+	err := _SdCollateral.contract.Call(opts, &out, "operatorSDBalance", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -538,18 +569,18 @@ func (_SdCollateral *SdCollateralCaller) OperatorShares(opts *bind.CallOpts, arg
 
 }
 
-// OperatorShares is a free data retrieval call binding the contract method 0x371e21e9.
+// OperatorSDBalance is a free data retrieval call binding the contract method 0xf9af40b8.
 //
-// Solidity: function operatorShares(address ) view returns(uint256)
-func (_SdCollateral *SdCollateralSession) OperatorShares(arg0 common.Address) (*big.Int, error) {
-	return _SdCollateral.Contract.OperatorShares(&_SdCollateral.CallOpts, arg0)
+// Solidity: function operatorSDBalance(address ) view returns(uint256)
+func (_SdCollateral *SdCollateralSession) OperatorSDBalance(arg0 common.Address) (*big.Int, error) {
+	return _SdCollateral.Contract.OperatorSDBalance(&_SdCollateral.CallOpts, arg0)
 }
 
-// OperatorShares is a free data retrieval call binding the contract method 0x371e21e9.
+// OperatorSDBalance is a free data retrieval call binding the contract method 0xf9af40b8.
 //
-// Solidity: function operatorShares(address ) view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) OperatorShares(arg0 common.Address) (*big.Int, error) {
-	return _SdCollateral.Contract.OperatorShares(&_SdCollateral.CallOpts, arg0)
+// Solidity: function operatorSDBalance(address ) view returns(uint256)
+func (_SdCollateral *SdCollateralCallerSession) OperatorSDBalance(arg0 common.Address) (*big.Int, error) {
+	return _SdCollateral.Contract.OperatorSDBalance(&_SdCollateral.CallOpts, arg0)
 }
 
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
@@ -581,6 +612,37 @@ func (_SdCollateral *SdCollateralSession) Paused() (bool, error) {
 // Solidity: function paused() view returns(bool)
 func (_SdCollateral *SdCollateralCallerSession) Paused() (bool, error) {
 	return _SdCollateral.Contract.Paused(&_SdCollateral.CallOpts)
+}
+
+// PoolIdByOperator is a free data retrieval call binding the contract method 0xee2d1319.
+//
+// Solidity: function poolIdByOperator(address ) view returns(uint8)
+func (_SdCollateral *SdCollateralCaller) PoolIdByOperator(opts *bind.CallOpts, arg0 common.Address) (uint8, error) {
+	var out []interface{}
+	err := _SdCollateral.contract.Call(opts, &out, "poolIdByOperator", arg0)
+
+	if err != nil {
+		return *new(uint8), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
+
+	return out0, err
+
+}
+
+// PoolIdByOperator is a free data retrieval call binding the contract method 0xee2d1319.
+//
+// Solidity: function poolIdByOperator(address ) view returns(uint8)
+func (_SdCollateral *SdCollateralSession) PoolIdByOperator(arg0 common.Address) (uint8, error) {
+	return _SdCollateral.Contract.PoolIdByOperator(&_SdCollateral.CallOpts, arg0)
+}
+
+// PoolIdByOperator is a free data retrieval call binding the contract method 0xee2d1319.
+//
+// Solidity: function poolIdByOperator(address ) view returns(uint8)
+func (_SdCollateral *SdCollateralCallerSession) PoolIdByOperator(arg0 common.Address) (uint8, error) {
+	return _SdCollateral.Contract.PoolIdByOperator(&_SdCollateral.CallOpts, arg0)
 }
 
 // PoolThresholdbyPoolId is a free data retrieval call binding the contract method 0x8a9b3738.
@@ -633,12 +695,12 @@ func (_SdCollateral *SdCollateralCallerSession) PoolThresholdbyPoolId(arg0 uint8
 	return _SdCollateral.Contract.PoolThresholdbyPoolId(&_SdCollateral.CallOpts, arg0)
 }
 
-// PriceFetcher is a free data retrieval call binding the contract method 0x2421d726.
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
 //
-// Solidity: function priceFetcher() view returns(address)
-func (_SdCollateral *SdCollateralCaller) PriceFetcher(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function staderConfig() view returns(address)
+func (_SdCollateral *SdCollateralCaller) StaderConfig(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "priceFetcher")
+	err := _SdCollateral.contract.Call(opts, &out, "staderConfig")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -650,49 +712,18 @@ func (_SdCollateral *SdCollateralCaller) PriceFetcher(opts *bind.CallOpts) (comm
 
 }
 
-// PriceFetcher is a free data retrieval call binding the contract method 0x2421d726.
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
 //
-// Solidity: function priceFetcher() view returns(address)
-func (_SdCollateral *SdCollateralSession) PriceFetcher() (common.Address, error) {
-	return _SdCollateral.Contract.PriceFetcher(&_SdCollateral.CallOpts)
+// Solidity: function staderConfig() view returns(address)
+func (_SdCollateral *SdCollateralSession) StaderConfig() (common.Address, error) {
+	return _SdCollateral.Contract.StaderConfig(&_SdCollateral.CallOpts)
 }
 
-// PriceFetcher is a free data retrieval call binding the contract method 0x2421d726.
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
 //
-// Solidity: function priceFetcher() view returns(address)
-func (_SdCollateral *SdCollateralCallerSession) PriceFetcher() (common.Address, error) {
-	return _SdCollateral.Contract.PriceFetcher(&_SdCollateral.CallOpts)
-}
-
-// SdERC20 is a free data retrieval call binding the contract method 0xf493540a.
-//
-// Solidity: function sdERC20() view returns(address)
-func (_SdCollateral *SdCollateralCaller) SdERC20(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "sdERC20")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// SdERC20 is a free data retrieval call binding the contract method 0xf493540a.
-//
-// Solidity: function sdERC20() view returns(address)
-func (_SdCollateral *SdCollateralSession) SdERC20() (common.Address, error) {
-	return _SdCollateral.Contract.SdERC20(&_SdCollateral.CallOpts)
-}
-
-// SdERC20 is a free data retrieval call binding the contract method 0xf493540a.
-//
-// Solidity: function sdERC20() view returns(address)
-func (_SdCollateral *SdCollateralCallerSession) SdERC20() (common.Address, error) {
-	return _SdCollateral.Contract.SdERC20(&_SdCollateral.CallOpts)
+// Solidity: function staderConfig() view returns(address)
+func (_SdCollateral *SdCollateralCallerSession) StaderConfig() (common.Address, error) {
+	return _SdCollateral.Contract.StaderConfig(&_SdCollateral.CallOpts)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -757,37 +788,6 @@ func (_SdCollateral *SdCollateralCallerSession) TotalSDCollateral() (*big.Int, e
 	return _SdCollateral.Contract.TotalSDCollateral(&_SdCollateral.CallOpts)
 }
 
-// TotalShares is a free data retrieval call binding the contract method 0x3a98ef39.
-//
-// Solidity: function totalShares() view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) TotalShares(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "totalShares")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// TotalShares is a free data retrieval call binding the contract method 0x3a98ef39.
-//
-// Solidity: function totalShares() view returns(uint256)
-func (_SdCollateral *SdCollateralSession) TotalShares() (*big.Int, error) {
-	return _SdCollateral.Contract.TotalShares(&_SdCollateral.CallOpts)
-}
-
-// TotalShares is a free data retrieval call binding the contract method 0x3a98ef39.
-//
-// Solidity: function totalShares() view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) TotalShares() (*big.Int, error) {
-	return _SdCollateral.Contract.TotalShares(&_SdCollateral.CallOpts)
-}
-
 // DepositSDAsCollateral is a paid mutator transaction binding the contract method 0xfcb7e032.
 //
 // Solidity: function depositSDAsCollateral(uint256 _sdAmount) returns()
@@ -830,25 +830,46 @@ func (_SdCollateral *SdCollateralTransactorSession) GrantRole(role [32]byte, acc
 	return _SdCollateral.Contract.GrantRole(&_SdCollateral.TransactOpts, role, account)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _admin, address _sdERC20Addr, address _priceFetcherAddr) returns()
-func (_SdCollateral *SdCollateralTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _sdERC20Addr common.Address, _priceFetcherAddr common.Address) (*types.Transaction, error) {
-	return _SdCollateral.contract.Transact(opts, "initialize", _admin, _sdERC20Addr, _priceFetcherAddr)
+// Solidity: function initialize(address _staderConfig) returns()
+func (_SdCollateral *SdCollateralTransactor) Initialize(opts *bind.TransactOpts, _staderConfig common.Address) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "initialize", _staderConfig)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _admin, address _sdERC20Addr, address _priceFetcherAddr) returns()
-func (_SdCollateral *SdCollateralSession) Initialize(_admin common.Address, _sdERC20Addr common.Address, _priceFetcherAddr common.Address) (*types.Transaction, error) {
-	return _SdCollateral.Contract.Initialize(&_SdCollateral.TransactOpts, _admin, _sdERC20Addr, _priceFetcherAddr)
+// Solidity: function initialize(address _staderConfig) returns()
+func (_SdCollateral *SdCollateralSession) Initialize(_staderConfig common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.Initialize(&_SdCollateral.TransactOpts, _staderConfig)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc0c53b8b.
+// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
 //
-// Solidity: function initialize(address _admin, address _sdERC20Addr, address _priceFetcherAddr) returns()
-func (_SdCollateral *SdCollateralTransactorSession) Initialize(_admin common.Address, _sdERC20Addr common.Address, _priceFetcherAddr common.Address) (*types.Transaction, error) {
-	return _SdCollateral.Contract.Initialize(&_SdCollateral.TransactOpts, _admin, _sdERC20Addr, _priceFetcherAddr)
+// Solidity: function initialize(address _staderConfig) returns()
+func (_SdCollateral *SdCollateralTransactorSession) Initialize(_staderConfig common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.Initialize(&_SdCollateral.TransactOpts, _staderConfig)
+}
+
+// MaxApproveSD is a paid mutator transaction binding the contract method 0x201734fc.
+//
+// Solidity: function maxApproveSD(address spenderAddr) returns()
+func (_SdCollateral *SdCollateralTransactor) MaxApproveSD(opts *bind.TransactOpts, spenderAddr common.Address) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "maxApproveSD", spenderAddr)
+}
+
+// MaxApproveSD is a paid mutator transaction binding the contract method 0x201734fc.
+//
+// Solidity: function maxApproveSD(address spenderAddr) returns()
+func (_SdCollateral *SdCollateralSession) MaxApproveSD(spenderAddr common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.MaxApproveSD(&_SdCollateral.TransactOpts, spenderAddr)
+}
+
+// MaxApproveSD is a paid mutator transaction binding the contract method 0x201734fc.
+//
+// Solidity: function maxApproveSD(address spenderAddr) returns()
+func (_SdCollateral *SdCollateralTransactorSession) MaxApproveSD(spenderAddr common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.MaxApproveSD(&_SdCollateral.TransactOpts, spenderAddr)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -891,6 +912,48 @@ func (_SdCollateral *SdCollateralSession) RevokeRole(role [32]byte, account comm
 // Solidity: function revokeRole(bytes32 role, address account) returns()
 func (_SdCollateral *SdCollateralTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
 	return _SdCollateral.Contract.RevokeRole(&_SdCollateral.TransactOpts, role, account)
+}
+
+// SlashSD is a paid mutator transaction binding the contract method 0x82e36bd2.
+//
+// Solidity: function slashSD(address _operator, uint256 _sdToSlash) returns(uint256 _sdSlashed)
+func (_SdCollateral *SdCollateralTransactor) SlashSD(opts *bind.TransactOpts, _operator common.Address, _sdToSlash *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "slashSD", _operator, _sdToSlash)
+}
+
+// SlashSD is a paid mutator transaction binding the contract method 0x82e36bd2.
+//
+// Solidity: function slashSD(address _operator, uint256 _sdToSlash) returns(uint256 _sdSlashed)
+func (_SdCollateral *SdCollateralSession) SlashSD(_operator common.Address, _sdToSlash *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.SlashSD(&_SdCollateral.TransactOpts, _operator, _sdToSlash)
+}
+
+// SlashSD is a paid mutator transaction binding the contract method 0x82e36bd2.
+//
+// Solidity: function slashSD(address _operator, uint256 _sdToSlash) returns(uint256 _sdSlashed)
+func (_SdCollateral *SdCollateralTransactorSession) SlashSD(_operator common.Address, _sdToSlash *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.SlashSD(&_SdCollateral.TransactOpts, _operator, _sdToSlash)
+}
+
+// UpdatePoolIdForOperator is a paid mutator transaction binding the contract method 0xfff2b13f.
+//
+// Solidity: function updatePoolIdForOperator(uint8 _poolId, address _operator) returns()
+func (_SdCollateral *SdCollateralTransactor) UpdatePoolIdForOperator(opts *bind.TransactOpts, _poolId uint8, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "updatePoolIdForOperator", _poolId, _operator)
+}
+
+// UpdatePoolIdForOperator is a paid mutator transaction binding the contract method 0xfff2b13f.
+//
+// Solidity: function updatePoolIdForOperator(uint8 _poolId, address _operator) returns()
+func (_SdCollateral *SdCollateralSession) UpdatePoolIdForOperator(_poolId uint8, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.UpdatePoolIdForOperator(&_SdCollateral.TransactOpts, _poolId, _operator)
+}
+
+// UpdatePoolIdForOperator is a paid mutator transaction binding the contract method 0xfff2b13f.
+//
+// Solidity: function updatePoolIdForOperator(uint8 _poolId, address _operator) returns()
+func (_SdCollateral *SdCollateralTransactorSession) UpdatePoolIdForOperator(_poolId uint8, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.UpdatePoolIdForOperator(&_SdCollateral.TransactOpts, _poolId, _operator)
 }
 
 // UpdatePoolThreshold is a paid mutator transaction binding the contract method 0x401bd27a.

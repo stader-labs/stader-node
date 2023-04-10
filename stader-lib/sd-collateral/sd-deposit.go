@@ -35,7 +35,7 @@ func WithdrawSdCollateral(sdc *stader.SdCollateralContractManager, amount *big.I
 }
 
 func GetOperatorSdBalance(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	balance, err := sdc.SdCollateral.GetOperatorSDBalance(opts, operatorAddress)
+	balance, err := sdc.SdCollateral.OperatorSDBalance(opts, operatorAddress)
 	if err != nil {
 		return nil, err
 	}
