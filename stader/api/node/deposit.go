@@ -163,9 +163,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
-		fmt.Printf("canNodeDeposit: pub keys is %s\n", pubKey.String())
-		fmt.Printf("canNodeDeposit: preDepositSignatures is %s\n", preDepositSignature.String())
-		fmt.Printf("canNodeDeposit: depositSignatures is %s\n", depositSignature.String())
 
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
@@ -312,9 +309,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
-		fmt.Printf("pub keys is %s\n", pubKey.String())
-		fmt.Printf("preDepositSignatures is %s\n", preDepositSignature.String())
-		fmt.Printf("depositSignatures is %s\n", depositSignature.String())
 
 		// Make sure a validator with this pubkey doesn't already exist
 		status, err := bc.GetValidatorStatus(pubKey, nil)

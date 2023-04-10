@@ -12,7 +12,7 @@ import (
 )
 
 // Represents the collector for the beaconchain metrics
-type BeaconCollector struct {
+type NodeCollector struct {
 	// The number of this node's validators is currently in a sync committee
 	activeSyncCommittee *prometheus.Desc
 
@@ -39,9 +39,9 @@ type BeaconCollector struct {
 }
 
 // Create a new NodeCollector instance
-func NewBeaconCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *BeaconCollector {
+func NewNodeCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *NodeCollector {
 	subsystem := "beacon"
-	return &BeaconCollector{
+	return &NodeCollector{
 		activeSyncCommittee: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "active_sync_committee"),
 			"The number of validators on a current sync committee",
 			nil, nil,
@@ -58,19 +58,19 @@ func NewBeaconCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress
 		ec:          ec,
 		nodeAddress: nodeAddress,
 		stateLocker: stateLocker,
-		logPrefix:   "Beacon Collector",
+		logPrefix:   "Node Collector",
 	}
 }
 
 // Write metric descriptions to the Prometheus channel
-func (collector *BeaconCollector) Describe(channel chan<- *prometheus.Desc) {
+func (collector *NodeCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.activeSyncCommittee
 	channel <- collector.upcomingSyncCommittee
 	channel <- collector.upcomingProposals
 }
 
 // Collect the latest metric values and pass them to Prometheus
-func (collector *BeaconCollector) Collect(channel chan<- prometheus.Metric) {
+func (collector *NodeCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
@@ -160,6 +160,6 @@ func (collector *BeaconCollector) Collect(channel chan<- prometheus.Metric) {
 }
 
 // Log error messages
-func (collector *BeaconCollector) logError(err error) {
+func (collector *NodeCollector) logError(err error) {
 	fmt.Printf("[%s] %s\n", collector.logPrefix, err.Error())
 }

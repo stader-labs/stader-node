@@ -14,6 +14,16 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
+type NetworkDetails struct {
+	SdPrice               *big.Int
+	TotalValidators       *big.Int
+	TotalOperators        *big.Int
+	TotalStakedSd         *big.Int
+	TotalStakedEthByNos   *big.Int
+	TotalEthxSupply       *big.Int
+	TotalStakedEthByUsers *big.Int
+}
+
 type NetworkState struct {
 	// Block / slot for this state
 	ElBlockNumber    uint64
@@ -29,11 +39,16 @@ type NetworkState struct {
 
 func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger, slotNumber uint64, beaconConfig beacon.Eth2Config, nodeAddress common.Address) (*NetworkState, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
+	//sdcAddress := cfg.GetSdCollateralContractAddress()
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
 		return nil, err
 	}
+	//sdc, err := stader.NewSdCollateralContract(ec, sdcAddress)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
@@ -56,6 +71,7 @@ func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient,
 	}
 
 	state.logLine("Getting network state for EL block %d, Beacon slot %d", elBlockNumber, slotNumber)
+
 	start := time.Now()
 
 	// fetch all validator pub keys
@@ -92,6 +108,30 @@ func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient,
 	}
 	state.ValidatorDetails = statusMap
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
+
+	state.logLine("Getting Stader Network Details")
+
+	//// TODO - bchain - parallelize these calls
+	//start := time.Now()
+	//
+	//networkDetails := NetworkDetails{}
+	//
+	//sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1), nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//totalOperators, err := node.GetNextOperatorId(prn, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//totalValidators, err := node.GetNextValidatorId(prn, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 
 	return state, nil
 }

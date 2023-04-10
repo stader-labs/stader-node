@@ -131,3 +131,7 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorIdByPubkey(opts, validatorPubKey)
 }
+
+func GetNextValidatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.NextValidatorId(opts)
+}

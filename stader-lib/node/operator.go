@@ -109,3 +109,7 @@ func CalculateElRewardShare(client stader.ExecutionClient, nevAddress common.Add
 
 	return nev.NodeElRewardVault.CalculateRewardShare(opts, totalRewards)
 }
+
+func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.NextOperatorId(opts)
+}

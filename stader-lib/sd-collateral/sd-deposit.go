@@ -60,3 +60,12 @@ func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount 
 
 	return maxValidatorSpawanable, nil
 }
+
+func ConvertEthToSd(sdc *stader.SdCollateralContractManager, ethAmount *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return sdAmount, nil
+}
