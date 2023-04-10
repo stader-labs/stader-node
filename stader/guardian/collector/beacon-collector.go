@@ -32,14 +32,14 @@ type BeaconCollector struct {
 	nodeAddress common.Address
 
 	// The thread-safe locker for the network state
-	stateLocker *StateLocker
+	stateLocker *StateCache
 
 	// Prefix for logging
 	logPrefix string
 }
 
 // Create a new NetworkCollector instance
-func NewBeaconCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *BeaconCollector {
+func NewBeaconCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateCache) *BeaconCollector {
 	subsystem := "beacon"
 	return &BeaconCollector{
 		activeSyncCommittee: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "active_sync_committee"),

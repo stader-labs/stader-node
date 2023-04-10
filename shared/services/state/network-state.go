@@ -26,7 +26,7 @@ type NetworkDetails struct {
 	TotalStakedEthByUsers *big.Int
 }
 
-type NetworkState struct {
+type NetworkStateCache struct {
 	// Block / slot for this state
 	ElBlockNumber    uint64
 	BeaconSlotNumber uint64
@@ -41,7 +41,7 @@ type NetworkState struct {
 	log *log.ColorLogger
 }
 
-func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger, slotNumber uint64, beaconConfig beacon.Eth2Config, nodeAddress common.Address) (*NetworkState, error) {
+func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger, slotNumber uint64, beaconConfig beacon.Eth2Config, nodeAddress common.Address) (*NetworkStateCache, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
 	sdcAddress := cfg.GetSdCollateralContractAddress()
 	ethxAddress := cfg.GetEthxTokenAddress()
@@ -72,7 +72,7 @@ func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient,
 	elBlockNumber := beaconBlock.ExecutionBlockNumber
 
 	// Create the state wrapper
-	state := &NetworkState{
+	state := &NetworkStateCache{
 		BeaconSlotNumber: slotNumber,
 		ElBlockNumber:    elBlockNumber,
 		BeaconConfig:     beaconConfig,
@@ -162,7 +162,7 @@ func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient,
 }
 
 // Logs a line if the logger is specified
-func (s *NetworkState) logLine(format string, v ...interface{}) {
+func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
 	if s.log != nil {
 		s.log.Printlnf(format, v...)
 	}

@@ -50,7 +50,7 @@ func NewNetworkStateManager(cfg *config.StaderConfig, ec stader.ExecutionClient,
 }
 
 // Get the state of the network using the latest Execution layer block
-func (m *NetworkStateManager) GetHeadState(nodeAddress common.Address) (*NetworkState, error) {
+func (m *NetworkStateManager) GetHeadState(nodeAddress common.Address) (*NetworkStateCache, error) {
 	targetSlot, err := m.GetHeadSlot()
 	if err != nil {
 		return nil, fmt.Errorf("error getting latest Beacon slot: %w", err)
@@ -59,7 +59,7 @@ func (m *NetworkStateManager) GetHeadState(nodeAddress common.Address) (*Network
 }
 
 // Get the state of the network for a single node using the latest Execution layer block, along with the total effective RPL stake for the network
-func (m *NetworkStateManager) GetHeadStateForNode(nodeAddress common.Address) (*NetworkState, error) {
+func (m *NetworkStateManager) GetHeadStateForNode(nodeAddress common.Address) (*NetworkStateCache, error) {
 	targetSlot, err := m.GetHeadSlot()
 	if err != nil {
 		return nil, fmt.Errorf("error getting latest Beacon slot: %w", err)
@@ -68,7 +68,7 @@ func (m *NetworkStateManager) GetHeadStateForNode(nodeAddress common.Address) (*
 }
 
 // Get the state of the network at the provided Beacon slot
-func (m *NetworkStateManager) GetStateForSlot(nodeAddress common.Address, slotNumber uint64) (*NetworkState, error) {
+func (m *NetworkStateManager) GetStateForSlot(nodeAddress common.Address, slotNumber uint64) (*NetworkStateCache, error) {
 	return m.getStateForNode(nodeAddress, slotNumber)
 }
 
@@ -127,8 +127,8 @@ func (m *NetworkStateManager) getLatestProposedBeaconBlock(targetSlot uint64) (b
 }
 
 // Get the state of the network for a specific node only at the provided Beacon slot
-func (m *NetworkStateManager) getStateForNode(nodeAddress common.Address, slotNumber uint64) (*NetworkState, error) {
-	state, err := CreateNetworkState(m.cfg.StaderNode, m.ec, m.bc, m.log, slotNumber, m.BeaconConfig, nodeAddress)
+func (m *NetworkStateManager) getStateForNode(nodeAddress common.Address, slotNumber uint64) (*NetworkStateCache, error) {
+	state, err := CreateNetworkStateCache(m.cfg.StaderNode, m.ec, m.bc, m.log, slotNumber, m.BeaconConfig, nodeAddress)
 	if err != nil {
 		return nil, err
 	}

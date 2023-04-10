@@ -44,14 +44,14 @@ type NetworkCollector struct {
 	nodeAddress common.Address
 
 	// The thread-safe locker for the network state
-	stateLocker *StateLocker
+	stateLocker *StateCache
 
 	// Prefix for logging
 	logPrefix string
 }
 
 // Create a new NetworkCollector instance
-func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *NetworkCollector {
+func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateCache) *NetworkCollector {
 	subsystem := "network"
 	return &NetworkCollector{
 		SdPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_price"),

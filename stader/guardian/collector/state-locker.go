@@ -5,25 +5,25 @@ import (
 	"sync"
 )
 
-type StateLocker struct {
-	state *state.NetworkState
+type StateCache struct {
+	state *state.NetworkStateCache
 
 	lock *sync.Mutex
 }
 
-func NewStateLocker() *StateLocker {
-	return &StateLocker{
+func NewStateCache() *StateCache {
+	return &StateCache{
 		lock: &sync.Mutex{},
 	}
 }
 
-func (l *StateLocker) UpdateState(state *state.NetworkState) {
+func (l *StateCache) UpdateState(state *state.NetworkStateCache) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	l.state = state
 }
 
-func (l *StateLocker) GetState() *state.NetworkState {
+func (l *StateCache) GetState() *state.NetworkStateCache {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	return l.state
