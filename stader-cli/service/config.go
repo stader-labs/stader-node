@@ -63,6 +63,8 @@ func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]int
 	updateFeeAndReward(&newCfg, settings)
 	updateExecutionClient(&newCfg, settings)
 	updateConsensusClient(&newCfg, settings)
+	updateFallbackClient(&newCfg, settings)
+	updateMEVBoost(&newCfg, settings)
 
 	return newCfg
 }
@@ -73,6 +75,8 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	setUIStaderNode(cfg, settings)
 	setUIExecutionClient(cfg, settings)
 	setUIConsensusClient(cfg, settings)
+	setUIFallbackClient(cfg, settings)
+	setUIMEVBoost(cfg, settings)
 	return settings
 }
 

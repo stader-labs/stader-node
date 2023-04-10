@@ -23,12 +23,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 )
 
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	spew.Dump("cfg.ConsensusClient.Value", cfg.ConsensusClient.Value)
 	newSettings[keys.E2cc_lc_consensus_client] = strings.Title(format(cfg.ConsensusClient.Value))
 	newSettings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
