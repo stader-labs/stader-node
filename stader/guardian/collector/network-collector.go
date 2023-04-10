@@ -11,8 +11,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-// Represents the collector for the beaconchain metrics
-type NodeCollector struct {
+// Represents the collector for the stader network metrics
+type NetworkCollector struct {
 	// The current SD price
 	SdPrice *prometheus.Desc
 
@@ -50,10 +50,10 @@ type NodeCollector struct {
 	logPrefix string
 }
 
-// Create a new NodeCollector instance
-func NewNodeCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *NodeCollector {
+// Create a new NetworkCollector instance
+func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *NetworkCollector {
 	subsystem := "network"
-	return &NodeCollector{
+	return &NetworkCollector{
 		SdPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_price"),
 			"The current SD price",
 			nil, nil,
@@ -91,7 +91,7 @@ func NewNodeCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress c
 }
 
 // Write metric descriptions to the Prometheus channel
-func (collector *NodeCollector) Describe(channel chan<- *prometheus.Desc) {
+func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.SdPrice
 	channel <- collector.TotalValidatorsCreated
 	channel <- collector.TotalOperators
@@ -102,7 +102,7 @@ func (collector *NodeCollector) Describe(channel chan<- *prometheus.Desc) {
 }
 
 // Collect the latest metric values and pass them to Prometheus
-func (collector *NodeCollector) Collect(channel chan<- prometheus.Metric) {
+func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
@@ -123,6 +123,6 @@ func (collector *NodeCollector) Collect(channel chan<- prometheus.Metric) {
 }
 
 // Log error messages
-func (collector *NodeCollector) logError(err error) {
+func (collector *NetworkCollector) logError(err error) {
 	fmt.Printf("[%s] %s\n", collector.logPrefix, err.Error())
 }

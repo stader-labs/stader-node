@@ -38,7 +38,7 @@ type BeaconCollector struct {
 	logPrefix string
 }
 
-// Create a new NodeCollector instance
+// Create a new NetworkCollector instance
 func NewBeaconCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *BeaconCollector {
 	subsystem := "beacon"
 	return &BeaconCollector{

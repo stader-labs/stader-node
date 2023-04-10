@@ -68,12 +68,12 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *colle
 	}
 
 	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccount.Address, stateLocker)
-	nodeCollector := collector.NewNodeCollector(bc, ec, nodeAccount.Address, stateLocker)
+	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccount.Address, stateLocker)
 
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(beaconCollector)
-	registry.MustRegister(nodeCollector)
+	registry.MustRegister(networkCollector)
 
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 
