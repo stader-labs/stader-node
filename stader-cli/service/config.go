@@ -65,6 +65,7 @@ func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]int
 	updateConsensusClient(&newCfg, settings)
 	updateFallbackClient(&newCfg, settings)
 	updateMEVBoost(&newCfg, settings)
+	updateMonitoring(&newCfg, settings)
 
 	return newCfg
 }
@@ -77,6 +78,7 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	setUIConsensusClient(cfg, settings)
 	setUIFallbackClient(cfg, settings)
 	setUIMEVBoost(cfg, settings)
+	setUIMonitoring(cfg, settings)
 	return settings
 }
 
