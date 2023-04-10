@@ -94,7 +94,7 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	stateLocker := collector.NewStateCache()
+	stateCache := collector.NewStateCache()
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
@@ -119,19 +119,19 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkState(m, &updateLog, nodeAccount.Address)
+			state, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
 				errorLog.Println(err)
 				time.Sleep(taskCooldown)
 				continue
 			}
-			stateLocker.UpdateState(state)
+			stateCache.UpdateState(state)
 		}
 		wg.Done()
 	}()
 
 	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateLocker)
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
 		if err != nil {
 			errorLog.Println(err)
 		}
@@ -151,7 +151,7 @@ func configureHTTP() {
 	http.DefaultTransport.(*http.Transport).MaxIdleConnsPerHost = MaxConcurrentEth1Requests
 }
 
-func updateNetworkState(m *state.NetworkStateManager, log *log.ColorLogger, nodeAddress common.Address) (*state.NetworkStateCache, error) {
+func updateNetworkStateCache(m *state.NetworkStateManager, nodeAddress common.Address) (*state.NetworkStateCache, error) {
 	// Get the state of the network
 	state, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
