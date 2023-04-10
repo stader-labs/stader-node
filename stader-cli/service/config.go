@@ -41,36 +41,6 @@ func format(v interface{}) string {
 	return fmt.Sprintf("%v", v)
 }
 
-func makeUIExecutionMode(i interface{}) string {
-	mod, ok := i.(cfgtypes.Mode)
-	if !ok {
-		return ""
-	}
-	switch mod {
-	case cfgtypes.Mode_Local:
-		return "Locally Managed"
-	case cfgtypes.Mode_External:
-		return "Externally Managed"
-	default:
-		return ""
-	}
-}
-
-func makeCfgExecutionMode(i interface{}) string {
-	mod, ok := i.(string)
-	if !ok {
-		return ""
-	}
-	switch mod {
-	case "Locally Managed":
-		return "local"
-	case "Externally Managed":
-		return "external"
-	default:
-		return ""
-	}
-}
-
 var keys = config.GetFieldKey()
 
 func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interface{}) stdCf.StaderConfig {
@@ -79,11 +49,15 @@ func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interf
 	spew.Dump(settings)
 
 	// update the network
-	// newCfg.ChangeNetwork(cfgtypes.Network("mainnet"))
+	network := settings[keys.Sn_node_network].(string)
+	if network == "Goerli Testnet" {
+		newCfg.ChangeNetwork(cfgtypes.Network("prater"))
+	} else {
+		newCfg.ChangeNetwork(cfgtypes.Network("mainnet"))
+	}
 
 	// Stader node config
 	staderNode := newCfg.StaderNode
-	staderNode.Network.Value = settings[keys.Sn_node_network]
 	staderNode.ProjectName.Value = settings[keys.Sn_project_title]
 	staderNode.DataPath.Value = settings[keys.Sn_storage_location]
 
@@ -97,29 +71,12 @@ func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interf
 
 func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	settings := make(map[string]interface{})
-	staderNode := cfg.StaderNode
 
-	settings[keys.Sn_node_network] = "prater" // TODO
-	settings[keys.Sn_project_title] = staderNode.ProjectName.Value
-	settings[keys.Sn_storage_location] = staderNode.DataPath.Value
-
-	// Fee and reward
-	spew.Dump(cfg.ConsensusClientMode.Value)
-	spew.Dump(cfg.ExecutionClientMode.Value)
-
-	settings[keys.Fr_max_fee_limit] = format(staderNode.ManualMaxFee.Value)
-	settings[keys.Fr_priority_fee] =
-		format(staderNode.PriorityFee.Value)
-	settings[keys.Fr_archive_mode_ec_url] = staderNode.ArchiveECUrl.Value
+	setUIStaderNode(cfg, settings)
 
 	settings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
 	settings[keys.E2cc_consensus_client] = makeUIExecutionMode(cfg.ConsensusClientMode.Value)
 
-	// switch cfg.ExecutionClientMode.Value.(cfgtypes.Mode) {
-	// case cfgtypes.Mode_Local:
-	// cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
-	// cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
-	// case cfgtypes.Mode_External:
 	settings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
 	settings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
 
@@ -128,6 +85,27 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	setUIConsensusClient(cfg, settings)
 	return settings
 }
+
+func setUIStaderNode(cfg *stdCf.StaderConfig, settings map[string]interface{}) error {
+	staderNode := cfg.StaderNode
+
+	switch staderNode.Network.Value.(cfgtypes.Network) {
+	case cfgtypes.Network_Prater:
+		settings[keys.Sn_node_network] = "Goerli Testnet"
+	case cfgtypes.Network_Mainnet:
+		settings[keys.Sn_node_network] = "Ethereum Mainnet"
+	}
+
+	settings[keys.Sn_project_title] = staderNode.ProjectName.Value
+	settings[keys.Sn_storage_location] = staderNode.DataPath.Value
+
+	settings[keys.Fr_max_fee_limit] = format(staderNode.ManualMaxFee.Value)
+	settings[keys.Fr_priority_fee] =
+		format(staderNode.PriorityFee.Value)
+	settings[keys.Fr_archive_mode_ec_url] = staderNode.ArchiveECUrl.Value
+	return nil
+}
+
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 
 	// case cfgtypes.ConsensusClient_Teku:
@@ -152,58 +130,13 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	return nil
 }
 
-func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	// update the execution client
-	cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
-	switch newSettings[keys.E1ec_execution_client_mode] {
-	case "Externally Managed":
-		cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
-		cfg.ExternalExecution.HttpUrl.Value = newSettings[keys.E1ec_em_http_url]
-
-		cfg.ExternalConsensusClient.Value = newSettings[keys.E2cc_em_consensus_client]
-
-		spew.Dump(" newSettings[keys.E2cc_consensus_client] ")
-		clientStr, ok := newSettings[keys.E2cc_em_consensus_client].(string)
-		if !ok {
-			return fmt.Errorf("Invalid External client %+v", newSettings[keys.E2cc_em_consensus_client])
-		}
-
-		// case cfgtypes.ConsensusClient_Teku:
-		cfg.ExternalTeku.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_teku]
-		cfg.ExternalTeku.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_teku]
-		cfg.ExternalTeku.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_teku]
-		cfg.ExternalTeku.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_teku]
-
-		// case cfgtypes.ConsensusClient_Lighthouse:
-		cfg.ExternalLighthouse.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lighthouse]
-		cfg.ExternalLighthouse.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_lighthouse]
-		cfg.ExternalLighthouse.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lighthouse]
-		cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
-		cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]
-
-		// case cfgtypes.ConsensusClient_Prysm:
-		cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
-		cfg.ExternalPrysm.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_prysm]
-		cfg.ExternalPrysm.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_prysm]
-		cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
-		cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_prysm]
-
-		cfg.ConsensusClient.Value = strings.ToLower(clientStr)
-		cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
-		cfg.ExternalExecution.HttpUrl.Value = newSettings[keys.E1ec_em_http_url]
-
-	case "Locally Managed":
-	}
-
-	return nil
-}
-
 func updateFeeAndReward(newCfg *stdCf.StaderConfig, settings map[string]interface{}) {
 	staderNode := newCfg.StaderNode
 	staderNode.ManualMaxFee.Value = settings[keys.Fr_max_fee_limit]
 	staderNode.PriorityFee.Value = settings[keys.Fr_priority_fee]
 	staderNode.ArchiveECUrl.Value = settings[keys.Fr_archive_mode_ec_url]
 }
+
 func configureNode(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
