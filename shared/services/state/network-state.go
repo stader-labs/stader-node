@@ -6,7 +6,9 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"time"
@@ -30,6 +32,8 @@ type NetworkState struct {
 	BeaconSlotNumber uint64
 	BeaconConfig     beacon.Eth2Config
 
+	StaderNetworkDetails NetworkDetails
+
 	// Validator details
 	ValidatorDetails map[types.ValidatorPubkey]beacon.ValidatorStatus
 
@@ -39,16 +43,21 @@ type NetworkState struct {
 
 func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger, slotNumber uint64, beaconConfig beacon.Eth2Config, nodeAddress common.Address) (*NetworkState, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
-	//sdcAddress := cfg.GetSdCollateralContractAddress()
+	sdcAddress := cfg.GetSdCollateralContractAddress()
+	ethxAddress := cfg.GetEthxTokenAddress()
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
 		return nil, err
 	}
-	//sdc, err := stader.NewSdCollateralContract(ec, sdcAddress)
-	//if err != nil {
-	//	return nil, err
-	//}
+	sdc, err := stader.NewSdCollateralContract(ec, sdcAddress)
+	if err != nil {
+		return nil, err
+	}
+	ethx, err := stader.NewErc20TokenContract(ec, ethxAddress)
+	if err != nil {
+		return nil, err
+	}
 
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
@@ -112,24 +121,40 @@ func CreateNetworkState(cfg *config.StaderNodeConfig, ec stader.ExecutionClient,
 	state.logLine("Getting Stader Network Details")
 
 	//// TODO - bchain - parallelize these calls
-	//start := time.Now()
-	//
-	//networkDetails := NetworkDetails{}
-	//
-	//sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1), nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//totalOperators, err := node.GetNextOperatorId(prn, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//totalValidators, err := node.GetNextValidatorId(prn, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
+	start = time.Now()
+
+	networkDetails := NetworkDetails{}
+
+	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1), nil)
+	if err != nil {
+		return nil, err
+	}
+	totalOperators, err := node.GetNextOperatorId(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidators, err := node.GetNextValidatorId(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalSdCollateral, err := sd_collateral.GetTotalSdCollateral(sdc, nil)
+	if err != nil {
+		return nil, err
+	}
+	ethxSupply, err := tokens.TotalSupply(ethx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	networkDetails.SdPrice = sdPrice
+	networkDetails.TotalOperators = totalOperators
+	networkDetails.TotalValidators = totalValidators
+	networkDetails.TotalStakedSd = totalSdCollateral
+	networkDetails.TotalEthxSupply = ethxSupply
+	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
+	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+
+	state.StaderNetworkDetails = networkDetails
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 

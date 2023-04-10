@@ -3,24 +3,36 @@ package collector
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"golang.org/x/sync/errgroup"
 )
 
 // Represents the collector for the beaconchain metrics
 type NodeCollector struct {
-	// The number of this node's validators is currently in a sync committee
-	activeSyncCommittee *prometheus.Desc
+	// The current SD price
+	SdPrice *prometheus.Desc
 
-	// The number of this node's validators on the next sync committee
-	upcomingSyncCommittee *prometheus.Desc
+	// The total number of validators created
+	TotalValidatorsCreated *prometheus.Desc
 
-	// The number of upcoming proposals for this node's validators
-	upcomingProposals *prometheus.Desc
+	// The total number of registered operators
+	TotalOperators *prometheus.Desc
+
+	// Total SD staked as collateral
+	TotalStakedSd *prometheus.Desc
+
+	// Total Eth staked by Users
+	TotalStakedEthByUsers *prometheus.Desc
+
+	// Total Eth staked by NOs
+	TotalStakedEthByNos *prometheus.Desc
+
+	// Total EthX supply
+	TotalEthxSupply *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -40,33 +52,53 @@ type NodeCollector struct {
 
 // Create a new NodeCollector instance
 func NewNodeCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateLocker) *NodeCollector {
-	subsystem := "beacon"
+	subsystem := "network"
 	return &NodeCollector{
-		activeSyncCommittee: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "active_sync_committee"),
-			"The number of validators on a current sync committee",
+		SdPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_price"),
+			"The current SD price",
 			nil, nil,
 		),
-		upcomingSyncCommittee: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "upcoming_sync_committee"),
-			"The number of validators on the next sync committee",
+		TotalValidatorsCreated: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_created"),
+			"The total number of validators created in the Stader network",
 			nil, nil,
 		),
-		upcomingProposals: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "upcoming_proposals"),
-			"The number of proposals assigned to validators in this epoch and the next",
+		TotalOperators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_operator_registered"),
+			"The total number of operator registered in the Stader network",
+			nil, nil,
+		),
+		TotalStakedSd: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_sd_collateral"),
+			"The total amount of SD staked as collateral",
+			nil, nil,
+		),
+		TotalStakedEthByUsers: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_user_eth"),
+			"The total amount of SD staked as collateral",
+			nil, nil,
+		),
+		TotalStakedEthByNos: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_nos_eth"),
+			"The total amount of SD staked as collateral",
+			nil, nil,
+		),
+		TotalEthxSupply: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_ethx_supply"),
+			"The total amount of SD staked as collateral",
 			nil, nil,
 		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
 		stateLocker: stateLocker,
-		logPrefix:   "Node Collector",
+		logPrefix:   "Network Collector",
 	}
 }
 
 // Write metric descriptions to the Prometheus channel
 func (collector *NodeCollector) Describe(channel chan<- *prometheus.Desc) {
-	channel <- collector.activeSyncCommittee
-	channel <- collector.upcomingSyncCommittee
-	channel <- collector.upcomingProposals
+	channel <- collector.SdPrice
+	channel <- collector.TotalValidatorsCreated
+	channel <- collector.TotalOperators
+	channel <- collector.TotalEthxSupply
+	channel <- collector.TotalStakedEthByUsers
+	channel <- collector.TotalStakedEthByNos
+	channel <- collector.TotalStakedSd
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -74,89 +106,20 @@ func (collector *NodeCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
-	var wg errgroup.Group
-	activeSyncCommittee := float64(0)
-	upcomingSyncCommittee := float64(0)
-	upcomingProposals := float64(0)
-
-	var validatorIndices []uint64
-	var head beacon.BeaconHead
-
-	// Get sync committee duties
-	for _, validator := range state.ValidatorDetails {
-		if validator.Exists {
-			validatorIndices = append(validatorIndices, validator.Index)
-		}
-	}
-
-	head, err := collector.bc.GetBeaconHead()
-	if err != nil {
-		collector.logError(fmt.Errorf("error getting Beacon chain head: %w", err))
-		return
-	}
-
-	wg.Go(func() error {
-		// Get current duties
-		duties, err := collector.bc.GetValidatorSyncDuties(validatorIndices, head.Epoch)
-		if err != nil {
-			return fmt.Errorf("Error getting sync duties: %w", err)
-		}
-
-		for _, duty := range duties {
-			if duty {
-				activeSyncCommittee++
-			}
-		}
-
-		return nil
-	})
-
-	wg.Go(func() error {
-		// Get epochs per sync committee period config to query next period
-		config := state.BeaconConfig
-
-		// Get upcoming duties
-		duties, err := collector.bc.GetValidatorSyncDuties(validatorIndices, head.Epoch+config.EpochsPerSyncCommitteePeriod)
-		if err != nil {
-			return fmt.Errorf("Error getting sync duties: %w", err)
-		}
-
-		for _, duty := range duties {
-			if duty {
-				upcomingSyncCommittee++
-			}
-		}
-
-		return nil
-	})
-
-	wg.Go(func() error {
-		// Get proposals in this epoch
-		duties, err := collector.bc.GetValidatorProposerDuties(validatorIndices, head.Epoch)
-		if err != nil {
-			return fmt.Errorf("Error getting proposer duties: %w", err)
-		}
-
-		for _, duty := range duties {
-			upcomingProposals += float64(duty)
-		}
-
-		return nil
-	})
-
-	// Wait for data
-	if err := wg.Wait(); err != nil {
-		collector.logError(err)
-		return
-	}
-
 	channel <- prometheus.MustNewConstMetric(
-		collector.activeSyncCommittee, prometheus.GaugeValue, activeSyncCommittee)
+		collector.SdPrice, prometheus.GaugeValue, eth.WeiToEth(state.StaderNetworkDetails.SdPrice))
 	channel <- prometheus.MustNewConstMetric(
-		collector.upcomingSyncCommittee, prometheus.GaugeValue, upcomingSyncCommittee)
+		collector.TotalValidatorsCreated, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.upcomingProposals, prometheus.GaugeValue, upcomingProposals)
-
+		collector.TotalOperators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalOperators.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalEthxSupply, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalEthxSupply.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalStakedEthByUsers, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByUsers.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
 }
 
 // Log error messages
