@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -45,36 +44,6 @@ func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]inter
 func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
 	cfg.ExternalExecution.HttpUrl.Value = newSettings[keys.E1ec_em_http_url]
-
-	clientStr, ok := newSettings[keys.E2cc_em_consensus_client].(string)
-	if !ok {
-		return fmt.Errorf("Invalid External client %+v", newSettings[keys.E2cc_em_consensus_client])
-	}
-
-	// case cfgtypes.ConsensusClient_Teku:
-	cfg.ExternalTeku.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_teku]
-	cfg.ExternalTeku.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_teku]
-	cfg.ExternalTeku.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_teku]
-	cfg.ExternalTeku.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_teku]
-
-	// case cfgtypes.ConsensusClient_Lighthouse:
-	cfg.ExternalLighthouse.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lighthouse]
-	cfg.ExternalLighthouse.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_lighthouse]
-	cfg.ExternalLighthouse.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lighthouse]
-	cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
-	cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]
-
-	// case cfgtypes.ConsensusClient_Prysm:
-	cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
-	cfg.ExternalPrysm.HttpUrl.Value = newSettings[keys.E2cc_em_http_url_prysm]
-	cfg.ExternalPrysm.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_prysm]
-	cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
-	cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_prysm]
-
-	cfg.ConsensusClient.Value = strings.ToLower(clientStr)
-	cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
-	cfg.ExternalExecution.HttpUrl.Value = newSettings[keys.E1ec_em_http_url]
-
 	return nil
 }
 
