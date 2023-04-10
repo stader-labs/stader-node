@@ -58,12 +58,6 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
 	fmt.Printf(
-		"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
-	fmt.Printf(
 		"The node %s%s%s has a balance of %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
@@ -75,12 +69,6 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
-	fmt.Printf(
-		"The node reward address %s%s%s has accrued %.6f ETH as rewards.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.OperatorRewardInETH), 18))
 
 	fmt.Printf(
 		"The node %s%s%s has registered %d validators.\n\n",
@@ -115,7 +103,19 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 	} else {
 		fmt.Printf("Operator has Opted out for Socializing Pool\n\n")
+		fmt.Printf(
+			"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
+			log.ColorBlue,
+			status.AccountAddress,
+			log.ColorReset,
+			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
 	}
+	fmt.Printf(
+		"The node reward address %s%s%s has accrued %.6f ETH as rewards.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(status.OperatorRewardInETH), 18))
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
@@ -140,10 +140,10 @@ func getStatus(c *cli.Context) error {
 		}
 
 		// Validator has withdrawn
-		if validatorInfo.Status == 8 {
+		if validatorInfo.Status > 8 {
 			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
 				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-				fmt.Printf("To withdraw exit amount use the %sstader-cli node withdraw-exit%s command\n\n", log.ColorGreen, log.ColorReset)
+				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
 			}
 			fmt.Printf("-Withdrawn time: %s\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
 		}

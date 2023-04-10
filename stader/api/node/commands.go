@@ -605,6 +605,144 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-withdraw-el-rewards",
+				Usage:     "Can withdraw el rewards",
+				UsageText: "stader-cli api node can-withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-el-rewards",
+				Usage:     "Withdraw el rewards",
+				UsageText: "stader-cli api node withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-withdraw-cl-rewards",
+				Usage:     "Can withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node can-withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Usage:     "Withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-settle-exit-funds",
+				Usage:     "Can settle exit funds of a validator",
+				UsageText: "stader-cli api node can-settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanSettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "settle-exit-funds",
+				Usage:     "settle exit funds of a validator",
+				UsageText: "stader-cli api node settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(SettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-node-withdraw-sd",
+				Usage:     "Check whether the node can withdraw staked SD",
+				UsageText: "stader-cli api node can-node-withdraw-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canWithdrawSd(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-withdraw-sd",
+				Usage:     "Withdraw staked SD",
+				UsageText: "stader-cli api node node-withdraw-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(withdrawSd(c, amountWei))
+					return nil
+
+				},
+			},
 		},
 	})
 }
