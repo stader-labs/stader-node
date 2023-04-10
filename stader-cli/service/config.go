@@ -21,7 +21,6 @@ package service
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/davecgh/go-spew/spew"
 	ethCfUI "github.com/stader-labs/ethcli-configuration-ui"
@@ -43,8 +42,8 @@ func format(v interface{}) string {
 
 var keys = config.GetFieldKey()
 
-func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interface{}) stdCf.StaderConfig {
-	newCfg := *cfg
+func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) stdCf.StaderConfig {
+	newCfg := *oldCfg
 
 	spew.Dump(settings)
 
@@ -63,9 +62,8 @@ func makeConfigFromUISetting(cfg *stdCf.StaderConfig, settings map[string]interf
 
 	updateFeeAndReward(&newCfg, settings)
 	updateExecutionClient(&newCfg, settings)
+	updateConsensusClient(&newCfg, settings)
 
-	// update the consensus client
-	newCfg.ConsensusClientMode.Value = makeCfgExecutionMode(settings[keys.E1ec_execution_client_mode])
 	return newCfg
 }
 
@@ -73,15 +71,7 @@ func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
 	settings := make(map[string]interface{})
 
 	setUIStaderNode(cfg, settings)
-
-	settings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
-	settings[keys.E2cc_consensus_client] = makeUIExecutionMode(cfg.ConsensusClientMode.Value)
-
-	settings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
-	settings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
-
-	settings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
-
+	setUIExecutionClient(cfg, settings)
 	setUIConsensusClient(cfg, settings)
 	return settings
 }
@@ -103,30 +93,6 @@ func setUIStaderNode(cfg *stdCf.StaderConfig, settings map[string]interface{}) e
 	settings[keys.Fr_priority_fee] =
 		format(staderNode.PriorityFee.Value)
 	settings[keys.Fr_archive_mode_ec_url] = staderNode.ArchiveECUrl.Value
-	return nil
-}
-
-func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-
-	// case cfgtypes.ConsensusClient_Teku:
-	newSettings[keys.E2cc_em_custom_graffiti_teku] = cfg.ExternalTeku.Graffiti.Value
-	newSettings[keys.E2cc_em_http_url_teku] = cfg.ExternalTeku.HttpUrl.Value
-	newSettings[keys.E2cc_em_container_tag_teku] = cfg.ExternalTeku.ContainerTag.Value
-	newSettings[keys.E2cc_em_additional_client_flags_teku] = cfg.ExternalTeku.AdditionalVcFlags.Value
-	// case cfgtypes.ConsensusClient_Lighthouse:
-	newSettings[keys.E2cc_em_custom_graffiti_lighthouse] = cfg.ExternalLighthouse.Graffiti.Value
-	newSettings[keys.E2cc_em_http_url_lighthouse] = cfg.ExternalLighthouse.HttpUrl.Value
-	newSettings[keys.E2cc_em_container_tag_lighthouse] = cfg.ExternalLighthouse.ContainerTag.Value
-	newSettings[keys.E2cc_em_additional_client_flags_lighthouse] = cfg.ExternalLighthouse.AdditionalVcFlags.Value
-	newSettings[keys.E2cc_em_doppelganger_detection_lighthouse] = cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool)
-
-	// case cfgtypes.ConsensusClient_Prysm:
-	newSettings[keys.E2cc_em_custom_graffiti_prysm] = cfg.ExternalPrysm.Graffiti.Value
-	newSettings[keys.E2cc_em_http_url_prysm] = cfg.ExternalPrysm.HttpUrl.Value
-	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
-	newSettings[keys.E2cc_em_additional_client_flags_prysm] = cfg.ExternalPrysm.AdditionalVcFlags.Value
-	newSettings[keys.E2cc_em_doppelganger_detection_prysm] = cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool)
-
 	return nil
 }
 

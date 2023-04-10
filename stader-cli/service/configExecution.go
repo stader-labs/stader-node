@@ -31,11 +31,12 @@ import (
 func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	// update the execution client
 	cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
-	switch newSettings[keys.E1ec_execution_client_mode] {
-	case "Externally Managed":
-		updateExternalExecutionClient(cfg, newSettings)
 
-	case "Locally Managed":
+	if err := updateExternalExecutionClient(cfg, newSettings); err != nil {
+		return err
+	}
+	if err := updateLocalExecutionClient(cfg, newSettings); err != nil {
+		return err
 	}
 
 	return nil
@@ -45,9 +46,6 @@ func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalExecution.WsUrl.Value = newSettings[keys.E1ec_em_websocket_url]
 	cfg.ExternalExecution.HttpUrl.Value = newSettings[keys.E1ec_em_http_url]
 
-	cfg.ExternalConsensusClient.Value = newSettings[keys.E2cc_em_consensus_client]
-
-	spew.Dump(" newSettings[keys.E2cc_consensus_client] ")
 	clientStr, ok := newSettings[keys.E2cc_em_consensus_client].(string)
 	if !ok {
 		return fmt.Errorf("Invalid External client %+v", newSettings[keys.E2cc_em_consensus_client])
@@ -79,6 +77,82 @@ func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[stri
 
 	return nil
 }
+
+func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
+	cfg.ExecutionClient.Value = strings.ToLower(newSettings[keys.E1ec_lm_execution_client].(string))
+
+	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_http_port]
+	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_websocket_port]
+	cfg.ExecutionCommon.P2pPort.Value = newSettings[keys.E1ec_lm_p2p_port]
+	cfg.ExecutionCommon.EnginePort.Value = newSettings[keys.E1ec_lm_engine_api_port]
+	cfg.ExecutionCommon.OpenRpcPorts.Value = newSettings[keys.E1ec_lm_expose_rpc_port]
+	cfg.ExecutionCommon.EthstatsLabel.Value = newSettings[keys.E1ec_lm_ethstats_label]
+	cfg.ExecutionCommon.EthstatsLogin.Value = newSettings[keys.E1ec_lm_ethstats_login]
+
+	cfg.Geth.CacheSize.Value = newSettings[keys.E1ec_lm_geth_cache_size]
+	cfg.Geth.MaxPeers.Value = newSettings[keys.E1ec_lm_geth_max_peers]
+	cfg.Geth.ContainerTag.Value = newSettings[keys.E1ec_lm_geth_container_tag]
+	cfg.Geth.AdditionalFlags.Value = newSettings[keys.E1ec_lm_geth_additional_flags]
+
+	// Nethermind
+	cfg.Nethermind.CacheSize.Value = newSettings[keys.E1ec_lm_nethermind_cache_size]
+	cfg.Nethermind.MaxPeers.Value = newSettings[keys.E1ec_lm_nethermind_max_peers]
+	cfg.Nethermind.ContainerTag.Value = newSettings[keys.E1ec_lm_nethermind_container_tag]
+	cfg.Nethermind.AdditionalFlags.Value = newSettings[keys.E1ec_lm_nethermind_additional_flags]
+	cfg.Nethermind.PruneMemSize.Value = newSettings[keys.E1ec_lm_nethermind_pruning_cache_size]
+	cfg.Nethermind.AdditionalModules.Value = newSettings[keys.E1ec_lm_nethermind_additional_modules]
+	cfg.Nethermind.AdditionalUrls.Value = newSettings[keys.E1ec_lm_nethermind_additional_urls]
+
+	// Besu
+	cfg.Besu.JvmHeapSize.Value = newSettings[keys.E1ec_lm_besu_jvm_heap_size]
+	cfg.Besu.MaxPeers.Value = newSettings[keys.E1ec_lm_besu_max_peers]
+	cfg.Besu.ContainerTag.Value = newSettings[keys.E1ec_lm_besu_container_tag]
+	cfg.Besu.AdditionalFlags.Value = newSettings[keys.E1ec_lm_besu_additional_flags]
+	//E1ec_lm_besu_in_memory_pruning_cache_size TODO? MaxBackLayers
+
+	return nil
+}
+
+func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
+
+	newSettings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
+	newSettings[keys.E1ec_lm_execution_client] = strings.Title(string((cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient))))
+
+	spew.Dump("ExecutionCommon ", cfg.ExecutionCommon.HttpPort.Value)
+	// Common
+	newSettings[keys.E1ec_lm_http_port] = format(cfg.ExecutionCommon.HttpPort.Value)
+	newSettings[keys.E1ec_lm_websocket_port] = format(cfg.ExecutionCommon.WsPort.Value)
+	newSettings[keys.E1ec_lm_expose_rpc_port] = cfg.ExecutionCommon.OpenRpcPorts.Value
+	newSettings[keys.E1ec_lm_p2p_port] = format(cfg.ExecutionCommon.P2pPort.Value)
+	newSettings[keys.E1ec_lm_engine_api_port] = format(cfg.ExecutionCommon.EnginePort.Value)
+	newSettings[keys.E1ec_lm_ethstats_label] = cfg.ExecutionCommon.EthstatsLabel.Value
+	newSettings[keys.E1ec_lm_ethstats_login] = cfg.ExecutionCommon.EthstatsLogin.Value
+
+	// Geth
+	newSettings[keys.E1ec_lm_geth_cache_size] = format(cfg.Geth.CacheSize.Value)
+	newSettings[keys.E1ec_lm_geth_max_peers] = format(cfg.Geth.MaxPeers.Value)
+	newSettings[keys.E1ec_lm_geth_container_tag] = cfg.Geth.ContainerTag.Value
+	newSettings[keys.E1ec_lm_geth_additional_flags] = cfg.Geth.AdditionalFlags.Value
+
+	// Nethermind
+	newSettings[keys.E1ec_lm_nethermind_cache_size] = format(cfg.Nethermind.CacheSize.Value)
+	newSettings[keys.E1ec_lm_nethermind_max_peers] = format(cfg.Nethermind.MaxPeers.Value)
+	newSettings[keys.E1ec_lm_nethermind_container_tag] = cfg.Nethermind.ContainerTag.Value
+	newSettings[keys.E1ec_lm_nethermind_additional_flags] = cfg.Nethermind.AdditionalFlags.Value
+	newSettings[keys.E1ec_lm_nethermind_pruning_cache_size] = format(cfg.Nethermind.PruneMemSize.Value)
+	newSettings[keys.E1ec_lm_nethermind_additional_modules] = cfg.Nethermind.AdditionalModules.Value
+	newSettings[keys.E1ec_lm_nethermind_additional_urls] = cfg.Nethermind.AdditionalUrls.Value
+
+	// Besu
+	newSettings[keys.E1ec_lm_besu_jvm_heap_size] = format(cfg.Besu.JvmHeapSize.Value)
+	newSettings[keys.E1ec_lm_besu_max_peers] = format(cfg.Besu.MaxPeers.Value)
+	newSettings[keys.E1ec_lm_besu_container_tag] = cfg.Besu.ContainerTag.Value
+	newSettings[keys.E1ec_lm_besu_additional_flags] = cfg.Besu.AdditionalFlags.Value
+	// newSettings[keys.E1ec_lm_besu_in_memory_pruning_cache_size] = cfg.Nethermind.AdditionalFlags.Value
+
+	return nil
+}
+
 func makeCfgExecutionMode(i interface{}) string {
 	mod, ok := i.(string)
 	if !ok {
