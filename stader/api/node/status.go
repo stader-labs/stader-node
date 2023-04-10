@@ -91,12 +91,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
-		if err != nil {
-			return nil, err
-		}
+		//operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+		//if err != nil {
+		//	return nil, err
+		//}
 		response.OperatorELRewardsAddress = operatorElRewardAddress
-		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
+		response.OperatorELRewardsAddressBalance = elRewardAddressBalance
 
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
