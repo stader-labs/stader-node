@@ -113,8 +113,11 @@ type StaderNodeConfig struct {
 	// The contract address of stader config
 	staderConfigAddress map[config.Network]string `yaml:"-"`
 
-	// The contract address of the socializing pool contract
+	// The contract address of the socializing pool
 	socializingPoolAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the stader oracle
+	staderOracleAddress map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -277,6 +280,13 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet:  "0xe34c84A15326f7980F59DE6b5A77C57ca2043c48",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
+
+		staderOracleAddress: map[config.Network]string{
+			config.Network_Prater:   "0x3360e21bc4E41Aa46B2342e311f940dfaF4B8a2b",
+			config.Network_Devnet:   "0x3360e21bc4E41Aa46B2342e311f940dfaF4B8a2b",
+			config.Network_Mainnet:  "0x3360e21bc4E41Aa46B2342e311f940dfaF4B8a2b",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
 	}
 
 }
@@ -414,6 +424,11 @@ func (cfg *StaderNodeConfig) GetStaderConfigAddress() common.Address {
 
 func (cfg *StaderNodeConfig) GetSocializingPoolAddress() common.Address {
 	return common.HexToAddress(cfg.socializingPoolAddress[cfg.Network.Value.(config.Network)])
+}
+
+// Write getter for staderOracleAddress
+func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
+	return common.HexToAddress(cfg.staderOracleAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

@@ -286,3 +286,34 @@ func NewSocializingPool(client ExecutionClient, socializingPoolAddress common.Ad
 	}, nil
 
 }
+
+type StaderOracleContractManager struct {
+	Client               ExecutionClient
+	StaderOracle         *contracts.StaderOracle
+	StaderOracleContract *Contract
+}
+
+func NewStaderOracle(client ExecutionClient, staderOracleAddress common.Address) (*StaderOracleContractManager, error) {
+	staderOracle, err := contracts.NewStaderOracle(staderOracleAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	staderOracleContractAbi, err := abi.JSON(strings.NewReader(contracts.StaderOracleMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	staderOracleContract := &Contract{
+		Contract: bind.NewBoundContract(staderOracleAddress, staderOracleContractAbi, client, client, client),
+		Address:  &staderOracleAddress,
+		ABI:      &staderOracleContractAbi,
+		Client:   client,
+	}
+
+	return &StaderOracleContractManager{
+		Client:               client,
+		StaderOracle:         staderOracle,
+		StaderOracleContract: staderOracleContract,
+	}, nil
+
+}
