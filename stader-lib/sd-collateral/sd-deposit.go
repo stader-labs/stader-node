@@ -35,7 +35,7 @@ func WithdrawSdCollateral(sdc *stader.SdCollateralContractManager, amount *big.I
 }
 
 func GetOperatorSdBalance(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	balance, err := sdc.SdCollateral.GetOperatorSDBalance(opts, operatorAddress)
+	balance, err := sdc.SdCollateral.OperatorSDBalance(opts, operatorAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -59,4 +59,22 @@ func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount 
 	}
 
 	return maxValidatorSpawanable, nil
+}
+
+func ConvertEthToSd(sdc *stader.SdCollateralContractManager, ethAmount *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return sdAmount, nil
+}
+
+func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	totalSdCollateral, err := sdc.SdCollateral.TotalSDCollateral(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return totalSdCollateral, nil
 }

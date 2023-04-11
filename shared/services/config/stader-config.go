@@ -59,9 +59,8 @@ const (
 // Defaults
 const defaultBnMetricsPort uint16 = 9100
 const defaultVcMetricsPort uint16 = 9101
-const defaultNodeMetricsPort uint16 = 9102
+const defaultNodeMetricsPort uint16 = 9104
 const defaultExporterMetricsPort uint16 = 9103
-const defaultGuardianMetricsPort uint16 = 9104
 const defaultEcMetricsPort uint16 = 9105
 
 // The master configuration struct
@@ -95,7 +94,6 @@ type StaderConfig struct {
 	VcMetricsPort           config.Parameter `yaml:"vcMetricsPort,omitempty"`
 	NodeMetricsPort         config.Parameter `yaml:"nodeMetricsPort,omitempty"`
 	ExporterMetricsPort     config.Parameter `yaml:"exporterMetricsPort,omitempty"`
-	GuardianMetricsPort     config.Parameter `yaml:"guardianMetricsPort,omitempty"`
 	EnableBitflyNodeMetrics config.Parameter `yaml:"enableBitflyNodeMetrics,omitempty"`
 
 	// The StaderNode configuration
@@ -416,18 +414,6 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
-		GuardianMetricsPort: config.Parameter{
-			ID:                   "guardianMetricsPort",
-			Name:                 "Guardian Oracle Port",
-			Description:          "The port your Guardian Oracle container should expose its metrics on.\nThis is only relevant for Oracle Nodes.",
-			Type:                 config.ParameterType_Uint16,
-			Default:              map[config.Network]interface{}{config.Network_All: defaultGuardianMetricsPort},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Guardian, config.ContainerID_Prometheus},
-			EnvironmentVariables: []string{"GUARDIAN_METRICS_PORT"},
-			CanBeBlank:           false,
-			OverwriteOnUpgrade:   false,
-		},
-
 		EnableMevBoost: config.Parameter{
 			ID:                   "enableMevBoost",
 			Name:                 "Enable MEV-Boost",
@@ -535,7 +521,6 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.VcMetricsPort,
 		&cfg.NodeMetricsPort,
 		&cfg.ExporterMetricsPort,
-		&cfg.GuardianMetricsPort,
 		&cfg.EnableMevBoost,
 	}
 }
