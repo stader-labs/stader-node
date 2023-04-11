@@ -104,6 +104,10 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 	if err != nil {
 		return nil, err
 	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
 
 	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
 	if err != nil {
@@ -175,8 +179,13 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		merkleProofs = append(merkleProofs, cycleMerkleProofs)
 	}
 
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
 	//fmt.Printf("Claiming rewards for %d cycles", len(cycles))
-	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, nil)
+	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
 	if err != nil {
 		return nil, err
 	}
