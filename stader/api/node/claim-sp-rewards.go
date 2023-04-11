@@ -185,6 +185,10 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 	}
 
 	//fmt.Printf("Claiming rewards for %d cycles", len(cycles))
+	fmt.Printf("claimSpRewards: cycles %v\n", cycles)
+	fmt.Printf("claimSpRewards: amountSd %v\n", amountSd)
+	fmt.Printf("claimSpRewards: amountEth %v\n", amountEth)
+	fmt.Printf("claimSpRewards: merkleProofs %v\n", merkleProofs)
 	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
 	if err != nil {
 		return nil, err
