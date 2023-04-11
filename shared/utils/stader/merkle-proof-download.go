@@ -26,5 +26,27 @@ func GetAllMerkleProofsForOperator(operator common.Address) ([]*stader_backend.C
 	if err != nil {
 		return nil, err
 	}
-	return allMerkleProofs, nil
+	return []*stader_backend.CycleMerkleProofs{
+		{
+			Cycle: 1,
+			Proof: []string{},
+			Eth:   "1000000000000000000",
+			Sd:    "1000000000000000000",
+			Root:  "0x7c13648108d8172a507408b98160a0f09d22eb409c4911c7cab4a24b59c90042",
+		},
+		{
+			Cycle: 2,
+			Proof: []string{},
+			Eth:   "2000000000000000000",
+			Sd:    "2000000000000000000",
+			Root:  "0xf2c90d506b4a46d0fa5b7517ec6df08614cc507c52212d0f7da0df38526ccf8b",
+		},
+		{
+			Cycle: 3,
+			Proof: []string{},
+			Eth:   "3000000000000000000",
+			Sd:    "3000000000000000000",
+			Root:  "0xaa6e55e3ab5e25bd672c48f695de4321cdae4b591dd8607dd5f8e3983266c1b3",
+		},
+	}, nil
 }
