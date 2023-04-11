@@ -5,5 +5,5 @@ type CycleMerkleProofs struct {
 	Eth   string   `json:"eth"`
 	Sd    string   `json:"sd"`
 	Proof []string `json:"proof"`
-	Cycle uint64   `json:"cycle"`
+	Cycle int64    `json:"cycle"`
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	arr_utils "github.com/stader-labs/stader-node/shared/utils/arr-utils"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
@@ -120,14 +121,17 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 		}
 	}
 
-	for _, cycle := range missingCycles {
-		cycleMerkleProof, err := stader.GetCycleMerkleProofsForOperator(cycle, nodeAccount.Address)
-		if err != nil {
-			return nil, err
-		}
-		fmt.Printf("downloadSpMerkleProof: cycleMerkleProof: %+v", cycleMerkleProof)
+	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(nodeAccount.Address)
+	if err != nil {
+		return nil, err
+	}
 
-		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycle, true)
+	for _, cycleMerkleProof := range allMerkleProofs {
+		if !arr_utils.ElementExistsInNumArray(missingCycles, cycleMerkleProof.Cycle) {
+			continue
+		}
+
+		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 		fmt.Printf("downloadSpMerkleProof: absolutePathOfProofFile: %+v", absolutePathOfProofFile)
 		if err != nil {
