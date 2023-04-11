@@ -105,6 +105,8 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 		return nil, err
 	}
 
+	response := api.DownloadSpMerkleProofsResponse{}
+
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
@@ -125,6 +127,8 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 	if err != nil {
 		return nil, err
 	}
+
+	downloadedCycles := []int64{}
 
 	for _, cycleMerkleProof := range allMerkleProofs {
 		if !arr_utils.ElementExistsInNumArray(missingCycles, cycleMerkleProof.Cycle) {
@@ -148,7 +152,11 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 		if err != nil {
 			return nil, fmt.Errorf("Error encoding JSON: %v", err)
 		}
+
+		downloadedCycles = append(downloadedCycles, cycleMerkleProof.Cycle)
 	}
 
-	return nil, nil
+	response.DownloadedCycles = downloadedCycles
+
+	return &response, nil
 }

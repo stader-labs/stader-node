@@ -257,9 +257,9 @@ type CanDownloadSpMerkleProofsResponse struct {
 }
 
 type DownloadSpMerkleProofsResponse struct {
-	Status           string     `json:"status"`
-	Error            string     `json:"error"`
-	DownloadedCycles []*big.Int `json:"downloadedCycles"`
+	Status           string  `json:"status"`
+	Error            string  `json:"error"`
+	DownloadedCycles []int64 `json:"downloadedCycles"`
 }
 
 type CanClaimSpRewardsResponse struct {
