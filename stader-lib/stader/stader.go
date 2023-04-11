@@ -255,3 +255,34 @@ func NewStaderConfig(client ExecutionClient, staderConfigAddress common.Address)
 	}, nil
 
 }
+
+type SocializingPoolContractManager struct {
+	Client                  ExecutionClient
+	SocializingPool         *contracts.SocializingPool
+	SocializingPoolContract *Contract
+}
+
+func NewSocializingPool(client ExecutionClient, socializingPoolAddress common.Address) (*SocializingPoolContractManager, error) {
+	socializingPool, err := contracts.NewSocializingPool(socializingPoolAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	socializingPoolContractAbi, err := abi.JSON(strings.NewReader(contracts.SocializingPoolMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	socializingPoolContract := &Contract{
+		Contract: bind.NewBoundContract(socializingPoolAddress, socializingPoolContractAbi, client, client, client),
+		Address:  &socializingPoolAddress,
+		ABI:      &socializingPoolContractAbi,
+		Client:   client,
+	}
+
+	return &SocializingPoolContractManager{
+		Client:                  client,
+		SocializingPool:         socializingPool,
+		SocializingPoolContract: socializingPoolContract,
+	}, nil
+
+}

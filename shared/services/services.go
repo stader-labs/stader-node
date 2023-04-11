@@ -165,6 +165,19 @@ func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManage
 	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
 }
 
+func GetSocializingPoolContract(c *cli.Context) (*stader.SocializingPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSocializingPool(ec, cfg.StaderNode.GetStaderConfigAddress())
+}
+
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

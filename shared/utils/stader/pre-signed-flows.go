@@ -21,6 +21,8 @@ func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSign
 		return nil, err
 	}
 
+	// TODO - bchain99 - check for status code of response
+
 	var preSignSendResponse stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
@@ -37,6 +39,7 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 	}
 
 	preSignCheckRes, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
+	// TODO - bchain99 - check for status code of response
 
 	defer preSignCheckRes.Body.Close()
 	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
@@ -54,6 +57,8 @@ func GetPublicKey() (*rsa.PublicKey, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	// TODO - bchain99 - check for status code of response
 
 	var publicKeyResponse stader_backend.PublicKeyApiResponse
 	err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)
