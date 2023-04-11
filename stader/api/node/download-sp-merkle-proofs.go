@@ -63,11 +63,11 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err := os.Stat(cycleMerkleRewardFile)
+		if !os.IsNotExist(err) && err != nil {
+			return nil, err
+		}
 		if os.IsNotExist(err) {
 			missingCycles = append(missingCycles, i)
-		}
-		if err != nil {
-			return nil, err
 		}
 	}
 
