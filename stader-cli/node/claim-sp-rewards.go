@@ -30,6 +30,7 @@ func ClaimSpRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("canClaimSpRewards: %+v\n", canClaimSpRewards)
 	if canClaimSpRewards.OperatorNotRegistered {
 		fmt.Println("Operator not registered!")
 		return nil
