@@ -175,7 +175,7 @@ func GetSocializingPoolContract(c *cli.Context) (*stader.SocializingPoolContract
 		return nil, err
 	}
 
-	return stader.NewSocializingPool(ec, cfg.StaderNode.GetStaderConfigAddress())
+	return stader.NewSocializingPool(ec, cfg.StaderNode.GetSocializingPoolAddress())
 }
 
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
