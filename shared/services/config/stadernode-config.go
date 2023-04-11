@@ -485,7 +485,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 	}
 
-	// if strings.HasSuffix(shared.StaderVersion, "-dev") {
+	// if string-utils.HasSuffix(shared.StaderVersion, "-dev") {
 	// 	options = append(options, config.ParameterOption{
 	// 		Name:        "Devnet",
 	// 		Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",

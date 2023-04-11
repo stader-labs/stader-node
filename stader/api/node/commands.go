@@ -777,6 +777,41 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-claim-sp-rewards",
+				Usage:     "Can we claim the SP rewards",
+				UsageText: "stader-cli api node can-claim-sp-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canClaimSpRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "claim-sp-rewards",
+				Usage:     "Claim the SP rewards",
+				UsageText: "stader-cli api node claim-sp-rewards cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					// Run
+					api.PrintResponse(claimSpRewards(c, cycles))
+					return nil
+
+				},
+			},
 		},
 	})
 }

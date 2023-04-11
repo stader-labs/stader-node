@@ -1045,7 +1045,7 @@ func (cfg *StaderConfig) GetChanges(oldConfig *StaderConfig) (map[string][]confi
 func (cfg *StaderConfig) Validate() []string {
 	errors := []string{}
 
-	// Check for illegal blank strings
+	// Check for illegal blank string-utils
 	/* TODO - this needs to be smarter and ignore irrelevant settings
 	for _, param := range config.GetParameters() {
 		if param.Type == ParameterType_String && !param.CanBeBlank && param.Value == "" {

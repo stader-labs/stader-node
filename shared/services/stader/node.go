@@ -22,11 +22,11 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"strconv"
-
-	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
@@ -519,33 +519,66 @@ func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, 
 	return response, nil
 }
 
-func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofs, error) {
+func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofsResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-download-sp-merkle-proofs"))
 	if err != nil {
-		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %w", err)
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %w", err)
 	}
-	var response api.CanDownloadSpMerkleProofs
+	var response api.CanDownloadSpMerkleProofsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not decode node can-download-sp-merkle-proofs response: %w", err)
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node can-download-sp-merkle-proofs response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %s", response.Error)
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofs, error) {
+func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofsResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node download-sp-merkle-proofs"))
 	if err != nil {
-		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
 	}
-	var response api.DownloadSpMerkleProofs
+	var response api.DownloadSpMerkleProofsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
 	}
 	if response.Error != "" {
-		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-claim-sp-rewards"))
+	if err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %w", err)
+	}
+	var response api.CanClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not decode node can-claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
+	if err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
+	}
+	var response api.ClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not decode node claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %s", response.Error)
 	}
 
 	return response, nil

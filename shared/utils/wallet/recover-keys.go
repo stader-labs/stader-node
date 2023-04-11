@@ -95,7 +95,7 @@ func RecoverMinipoolKeys(c *cli.Context, pnr stader.PermissionlessNodeRegistryCo
 	//			}
 	//
 	//			// Get the password for it
-	//			formattedPubkey := strings.ToUpper(hexutils.RemovePrefix(keystore.Pubkey.Hex()))
+	//			formattedPubkey := string-utils.ToUpper(hexutils.RemovePrefix(keystore.Pubkey.Hex()))
 	//			password, exists := passwords[formattedPubkey]
 	//			if !exists {
 	//				return nil, fmt.Errorf("custom keystore for pubkey %s needs a password, but none was provided", keystore.Pubkey.Hex())

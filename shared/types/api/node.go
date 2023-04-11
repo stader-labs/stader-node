@@ -241,7 +241,13 @@ type CanWithdrawSdResponse struct {
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
-type CanDownloadSpMerkleProofs struct {
+type WithdrawSdResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanDownloadSpMerkleProofsResponse struct {
 	Status                string  `json:"status"`
 	Error                 string  `json:"error"`
 	OperatorNotRegistered bool    `json:"operatorNotRegistered"`
@@ -250,13 +256,23 @@ type CanDownloadSpMerkleProofs struct {
 	CurrentCycle          int64   `json:"currentCycle"`
 }
 
-type DownloadSpMerkleProofs struct {
+type DownloadSpMerkleProofsResponse struct {
 	Status           string     `json:"status"`
 	Error            string     `json:"error"`
 	DownloadedCycles []*big.Int `json:"downloadedCycles"`
 }
 
-type WithdrawSdResponse struct {
+type CanClaimSpRewardsResponse struct {
+	Status                string     `json:"status"`
+	Error                 string     `json:"error"`
+	OperatorNotRegistered bool       `json:"operatorNotRegistered"`
+	IneligibleCycles      []*big.Int `json:"ineligibleCycles"`
+	ClaimedCycles         []*big.Int `json:"claimedCycles"`
+	UnclaimedCycles       []*big.Int `json:"unclaimedCycles"`
+	CyclesToDownload      []*big.Int `json:"cyclesToDownload"`
+}
+
+type ClaimSpRewardsResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

@@ -13,7 +13,7 @@ import (
 	"os"
 )
 
-func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofs, error) {
+func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsResponse, error) {
 	// check if operator is registered or not
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -37,7 +37,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofs, 
 		return nil, err
 	}
 
-	response := api.CanDownloadSpMerkleProofs{}
+	response := api.CanDownloadSpMerkleProofsResponse{}
 	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -58,6 +58,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofs, 
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
 	for i := int64(1); i <= currentIndex; i++ {
+		// TODO - check if operator is eligible for cycle before downloading it
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err := os.Stat(cycleMerkleRewardFile)
@@ -81,7 +82,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofs, 
 	return &response, nil
 }
 
-func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofs, error) {
+func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse, error) {
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -107,6 +108,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofs, error)
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
 	for i := int64(1); i <= currentIndex; i++ {
+		// TODO - bchain - add check for eligibility
 		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err := os.Stat(cycleRewardFile)
@@ -140,8 +142,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofs, error)
 		encoder := json.NewEncoder(file)
 		err = encoder.Encode(cycleMerkleProof)
 		if err != nil {
-			fmt.Println("Error encoding JSON:", err)
-			return nil, err
+			return nil, fmt.Errorf("Error encoding JSON: %v", err)
 		}
 	}
 

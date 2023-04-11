@@ -430,6 +430,31 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return downloadSPMerkleProofs(c)
 				},
 			},
+			{
+				Name:      "claim-sp-rewards",
+				Aliases:   []string{"cspr"},
+				Usage:     "Claim Socializing Pool Rewards for given cycles",
+				UsageText: "stader-cli node claim-sp-rewards --download-merkles-proofs --yes",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "download-merkles-proofs, dmp",
+						Usage: "Download merkle proofs for the missing cycles to claim if not present",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm claim of rewards",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					return ClaimSpRewards(c)
+				},
+			},
 		},
 	})
 }
