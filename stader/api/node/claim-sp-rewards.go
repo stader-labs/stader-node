@@ -51,6 +51,7 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	claimedCycles := []*big.Int{}
 	unclaimedCycles := []*big.Int{}
+	// TODO - bchain - add check for this
 	ineligibleCycles := []*big.Int{}
 	cyclesToDownload := []*big.Int{}
 
