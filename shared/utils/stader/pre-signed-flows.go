@@ -26,8 +26,6 @@ func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSign
 		return nil, fmt.Errorf("error in sending pre-signed message to stader backend: %v", res.Status)
 	}
 
-	// TODO - bchain99 - check for status code of response
-
 	var preSignSendResponse stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {

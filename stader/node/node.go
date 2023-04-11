@@ -110,7 +110,6 @@ func run(c *cli.Context) error {
 	wg.Add(2)
 
 	// validator presigned loop
-	// TODO - bchain - clean up code
 	go func() {
 		for {
 			infoLog.Println("Starting a pass of the presign daemon!")
@@ -152,11 +151,7 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
 					}
 
-					exitEpoch := currentHead.Epoch
-					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
-					if epochsSinceActivation < 256 {
-						exitEpoch = exitEpoch + (256 - epochsSinceActivation)
-					}
+					exitEpoch := currentHead.Epoch + 1
 
 					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 					if err != nil {
