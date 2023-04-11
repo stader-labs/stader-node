@@ -25,7 +25,7 @@ func GetRewardDetails(sp *stader.SocializingPoolContractManager, opts *bind.Call
 	NextStartBlock    *big.Int
 	NextEndBlock      *big.Int
 }, error) {
-	return sp.SocializingPool.GetRewardDetails(nil)
+	return sp.SocializingPool.GetRewardDetails(opts)
 }
 
 func HasClaimedRewards(sp *stader.SocializingPoolContractManager, address common.Address, index *big.Int, opts *bind.CallOpts) (bool, error) {
