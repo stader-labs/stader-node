@@ -2,8 +2,6 @@ package node
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -136,7 +134,7 @@ func getStatus(c *cli.Context) error {
 		}
 
 		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit time: %s\n\n", time.Unix(validatorInfo.DepositTime.Int64(), 0))
+			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositTime)
 		}
 
 		// Validator has withdrawn
@@ -145,7 +143,7 @@ func getStatus(c *cli.Context) error {
 				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
 				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
 			}
-			fmt.Printf("-Withdrawn time: %s\n\n", time.Unix(validatorInfo.WithdrawnTime.Int64(), 0))
+			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnTime)
 		}
 		fmt.Printf("\n\n")
 	}
