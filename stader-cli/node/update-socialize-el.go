@@ -42,6 +42,12 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return err
 	}
 
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to update socializing pool participation? (y/n)"))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	fmt.Printf("socializeEl is %t\n", socializeEl)
 	// update the socializing pool el
 	response, err := staderClient.UpdateSocializeEl(socializeEl)

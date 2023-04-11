@@ -78,6 +78,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "socialize-el, sel",
 						Usage: "Should EL rewards be socialized (will default to true)",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm socialize-el update",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
@@ -284,7 +288,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm validator exit",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -311,7 +315,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm pre-signed message sending",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -332,7 +336,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				UsageText: "stader-cli node withdraw-el-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
 					Name:  "yes, y",
-					Usage: "Automatically confirm token send",
+					Usage: "Automatically confirm EL rewards withdrawal",
 				}},
 				Action: func(c *cli.Context) error {
 					// Run
@@ -351,7 +355,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm CL rewards withdrawal",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -376,7 +380,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm exit funds settling",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -401,7 +405,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm withdraw sd collateral",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -426,7 +430,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm token send",
+						Usage: "Automatically confirm merkle proofs download",
 					},
 				},
 				Action: func(c *cli.Context) error {
