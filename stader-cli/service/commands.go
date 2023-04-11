@@ -187,26 +187,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
-			{
-				Name:      "config-node",
-				Aliases:   []string{"cn"},
-				Usage:     "Configure the Stader service",
-				UsageText: "stader-cli service config",
-				Flags:     configFlags,
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run command
-					return configureNode(c)
-
-				},
-			},
-
 			{
 				Name:      "status",
 				Aliases:   []string{"u"},

@@ -22,7 +22,6 @@ package service
 import (
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
@@ -87,7 +86,6 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
 	newSettings[keys.E1ec_lm_execution_client] = strings.Title(string((cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient))))
 
-	spew.Dump("ExecutionCommon ", cfg.ExecutionCommon.HttpPort.Value)
 	// Common
 	newSettings[keys.E1ec_lm_http_port] = format(cfg.ExecutionCommon.HttpPort.Value)
 	newSettings[keys.E1ec_lm_websocket_port] = format(cfg.ExecutionCommon.WsPort.Value)

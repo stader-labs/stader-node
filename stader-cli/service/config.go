@@ -44,9 +44,6 @@ var keys = config.GetFieldKey()
 
 func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) stdCf.StaderConfig {
 	newCfg := *oldCfg
-
-	spew.Dump(settings)
-
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
 	if network == "Goerli Testnet" {
@@ -109,27 +106,28 @@ func updateFeeAndReward(newCfg *stdCf.StaderConfig, settings map[string]interfac
 	staderNode.ArchiveECUrl.Value = settings[keys.Fr_archive_mode_ec_url]
 }
 
-func configureNode(c *cli.Context) error {
+func openConfigurationSetting(c *cli.Context) (bool, error) {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return err
+		return false, err
 	}
 	defer staderClient.Close()
 
 	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
-		return fmt.Errorf("error loading user settings: %w", err)
+		return false, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	oldSetting := makeUISettingFromConfig(cfg)
-	_, _, m := ethCfUI.Run(oldSetting)
+	saved, openConfig, m := ethCfUI.Run(oldSetting)
+	spew.Dump("saved: ", saved, "openConfig: ", openConfig)
 
 	fmt.Printf("APP DONE \n")
 	newConfig := makeConfigFromUISetting(cfg, m)
 	err = staderClient.SaveConfig(&newConfig)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return openConfig, nil
 }

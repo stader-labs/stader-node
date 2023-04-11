@@ -363,8 +363,21 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 	return currentSettings
 }
 
-// Configure the service
 func configureService(c *cli.Context) error {
+	openWizard, err := openConfigurationSetting(c)
+	if err != nil {
+		return fmt.Errorf("ERR in config page %w", err)
+	}
+
+	if openWizard == false {
+		return nil
+	}
+
+	return openWizardPage(c)
+}
+
+// Configure the service
+func openWizardPage(c *cli.Context) error {
 
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
