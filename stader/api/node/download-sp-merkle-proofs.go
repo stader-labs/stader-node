@@ -113,7 +113,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err := os.Stat(cycleRewardFile)
-		if err != nil {
+		if !os.IsNotExist(err) && err != nil {
 			return nil, err
 		}
 		if os.IsNotExist(err) {
