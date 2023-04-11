@@ -28,6 +28,13 @@ func GetRewardDetails(sp *stader.SocializingPoolContractManager, opts *bind.Call
 	return sp.SocializingPool.GetRewardDetails(opts)
 }
 
+func GetRewardCycleDetails(sp *stader.SocializingPoolContractManager, cycle *big.Int, opts *bind.CallOpts) (struct {
+	StartBlock *big.Int
+	EndBlock   *big.Int
+}, error) {
+	return sp.SocializingPool.GetRewardCycleDetails(opts, cycle)
+}
+
 func HasClaimedRewards(sp *stader.SocializingPoolContractManager, address common.Address, index *big.Int, opts *bind.CallOpts) (bool, error) {
 	return sp.SocializingPool.ClaimedRewards(opts, address, index)
 }

@@ -53,6 +53,25 @@ func ClaimSpRewards(c *cli.Context) error {
 	}
 	fmt.Println("Merkle proofs downloaded!")
 
+	//fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:")
+	//for i, cycle := range canClaimSpRewards.UnclaimedCycles {
+	//	fmt.Printf("%d) %d\n", i, cycle.Int64())
+	//}
+	//
+	//cyclesToClaim := []int64{}
+	//cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
+	//if cycleSelection == "" {
+	//	for _, cycle := range canClaimSpRewards.UnclaimedCycles {
+	//		cyclesToClaim = append(cyclesToClaim, cycle.Int64())
+	//	}
+	//} else {
+	//	elements := strings.Split(cycleSelection, ",")
+	//	for _, element := range elements {
+	//
+	//	}
+	//
+	//}
+
 	fmt.Println("Claiming rewards...")
 	res, err := staderClient.ClaimSpRewards(canClaimSpRewards.UnclaimedCycles)
 	if err != nil {

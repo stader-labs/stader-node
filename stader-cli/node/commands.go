@@ -91,9 +91,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					fmt.Printf("socializeEl is %t\n", socializeEl)
-					fmt.Printf("args are %v\n", c.Args())
-
 					// Run
 					return UpdateSocializeEl(c, socializeEl)
 

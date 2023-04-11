@@ -89,7 +89,7 @@ func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, op
 	return pp.PermissionlessPool.GetSocializingPoolAddress(opts)
 }
 
-func GetSocializingPoolStateChangeTimestamp(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+func GetSocializingPoolStateChangeBlock(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeTimestamp(opts, operatorId)
 }
 
