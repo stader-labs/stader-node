@@ -51,6 +51,4 @@ require (
 	gotest.tools/v3 v3.3.0 // indirect
 )
 
-replace github.com/stader-labs/ethcli-configuration-ui => /Users/batphonghan/coding/stader_labs/utils/src/ethcli-configuration-ui
-
 replace github.com/rivo/tview => github.com/hamidraza/tview v0.0.0-20230406022610-62c55f74c35f
