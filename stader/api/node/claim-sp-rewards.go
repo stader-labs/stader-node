@@ -133,29 +133,37 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		if os.IsNotExist(err) {
 			return nil, err
 		}
+		fmt.Printf("Successfully checked that merkle files exists for cycle %d\n", cycle.Int64())
+		fmt.Printf("Reading merkle data\n")
 		merkleData := stader_backend.CycleMerkleProofs{}
 		err = json.Unmarshal(data, &merkleData)
 		if err != nil {
 			return nil, err
 		}
+		fmt.Printf("Read merkle data! %v\n", merkleData)
 
+		fmt.Printf("Parsing amountSdBigInt!\n")
 		var amountSdBigInt *big.Int
 		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
 		if !ok {
 			return nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
 		}
+		fmt.Printf("Parsed amountSdBigInt! %d\n", amountSdBigInt)
 
+		fmt.Printf("Parsing amountEthBigInt!\n")
 		// same thing above for eth
 		var amountEthBigInt *big.Int
 		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
 		if !ok {
 			return nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
 		}
+		fmt.Printf("Parsed amountEthBigInt! %d\n", amountEthBigInt)
 
 		amountSd = append(amountSd, amountSdBigInt)
 		amountEth = append(amountEth, amountEthBigInt)
 
 		// convert merkle proofs to [32]byte
+		fmt.Printf("Converting merkle proofs to [32]byte\n")
 		cycleMerkleProofs := [][32]byte{}
 		for _, proof := range merkleData.Proof {
 			var proofBytes [32]byte
@@ -163,6 +171,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
 		}
 
+		fmt.Printf("Successfully converted merkle proofs to [32]byte: %s\n", cycleMerkleProofs)
 		merkleProofs = append(merkleProofs, cycleMerkleProofs)
 	}
 
