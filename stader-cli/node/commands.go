@@ -464,8 +464,12 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
+					downloadMerkleProofs, err := cliutils.ValidateBool("download-merkles-proofs", c.String("download-merkles-proofs"))
+					if err != nil {
+						return err
+					}
 					// Run
-					return ClaimSpRewards(c)
+					return ClaimSpRewards(c, downloadMerkleProofs)
 				},
 			},
 		},

@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func ClaimSpRewards(c *cli.Context) error {
+func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -40,7 +40,7 @@ func ClaimSpRewards(c *cli.Context) error {
 		return nil
 	}
 
-	if len(canClaimSpRewards.CyclesToDownload) > 0 && !c.Bool("download-merkles-proofs") {
+	if len(canClaimSpRewards.CyclesToDownload) > 0 && !downloadMerkleProofs {
 		fmt.Println("You have unclaimed rewards from cycles that you have not downloaded the merkle proofs for. Please download the merkle proofs for these cycles before claiming your rewards.")
 		return nil
 	}
