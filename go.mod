@@ -9,7 +9,6 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/btcsuite/btcd v0.23.1
 	github.com/btcsuite/btcd/btcutil v1.1.2
-	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.18+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect

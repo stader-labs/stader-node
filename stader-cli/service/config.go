@@ -22,7 +22,6 @@ package service
 import (
 	"fmt"
 
-	"github.com/davecgh/go-spew/spew"
 	ethCfUI "github.com/stader-labs/ethcli-configuration-ui"
 	"github.com/stader-labs/ethcli-configuration-ui/config"
 	"github.com/stader-labs/ethcli-configuration-ui/logger"
@@ -119,8 +118,7 @@ func openConfigurationSetting(c *cli.Context) (bool, error) {
 	}
 
 	oldSetting := makeUISettingFromConfig(cfg)
-	saved, openConfig, m := ethCfUI.Run(oldSetting)
-	spew.Dump("saved: ", saved, "openConfig: ", openConfig)
+	_, openConfig, m := ethCfUI.Run(oldSetting)
 
 	fmt.Printf("APP DONE \n")
 	newConfig := makeConfigFromUISetting(cfg, m)
