@@ -72,7 +72,7 @@ func ClaimSpRewards(c *cli.Context) error {
 	//
 	//}
 
-	fmt.Println("Claiming rewards...")
+	fmt.Printf("Claiming rewards for cycles %v\n", canClaimSpRewards.UnclaimedCycles)
 	res, err := staderClient.ClaimSpRewards(canClaimSpRewards.UnclaimedCycles)
 	if err != nil {
 		return err
