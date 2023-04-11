@@ -33,8 +33,8 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 		fmt.Println("Validator pre sign key is already registered!")
 		return nil
 	}
-	if canSendPresignedMsgRes.ValidatorIsExiting {
-		fmt.Println("Validator is exiting")
+	if canSendPresignedMsgRes.ValidatorIsNotActive {
+		fmt.Println("Validator is not active")
 		return nil
 	}
 

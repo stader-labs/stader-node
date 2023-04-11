@@ -41,7 +41,7 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 
 	if eth2.IsValidatorExiting(validatorStatus) {
-		canSendPresignedMsgResponse.ValidatorIsExiting = true
+		canSendPresignedMsgResponse.ValidatorIsNotActive = true
 		return &canSendPresignedMsgResponse, nil
 	}
 
@@ -76,13 +76,8 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	// exit epoch should be > activation_epoch + 256
 	// exit epoch should be > current epoch
-	exitEpoch := currentHead.Epoch + 1
-	epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
-	if epochsSinceActivation < 256 {
-		exitEpoch = exitEpoch + (256 - epochsSinceActivation)
-	}
+	exitEpoch := currentHead.Epoch
 
 	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 	if err != nil {

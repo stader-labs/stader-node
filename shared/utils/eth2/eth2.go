@@ -38,3 +38,12 @@ func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
 
 	return true
 }
+
+func IsValidatorActive(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveOngoing:
+		return true
+	}
+
+	return false
+}

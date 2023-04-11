@@ -143,7 +143,7 @@ type CanSendPresignedMsgResponse struct {
 	Error                                string `json:"error"`
 	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
 	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
-	ValidatorIsExiting                   bool   `json:"validatorIsExiting"`
+	ValidatorIsNotActive                 bool   `json:"validatorIsNotActive"`
 }
 
 type SendPresignedMsgResponse struct {
