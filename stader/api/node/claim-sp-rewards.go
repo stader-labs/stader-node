@@ -79,7 +79,7 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 			return nil, err
 		}
 		_, err = os.Stat(expandedCycleMerkleRewardFile)
-		if err != nil {
+		if !os.IsNotExist(err) && err != nil {
 			return nil, err
 		}
 		if os.IsNotExist(err) {
