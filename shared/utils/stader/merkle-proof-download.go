@@ -12,7 +12,7 @@ import (
 
 func GetAllMerkleProofsForOperator(operator common.Address) ([]*stader_backend.CycleMerkleProofs, error) {
 	res, err := net.MakeGetRequest(fmt.Sprintf(stader.MerkleProofAggregateGetterApi, operator.Hex()), struct{}{})
-	fmt.Printf("Making api call to %s\n", fmt.Sprintf(stader.MerkleProofAggregateGetterApi, operator.Hex()))
+	//fmt.Printf("Making api call to %s\n", fmt.Sprintf(stader.MerkleProofAggregateGetterApi, operator.Hex()))
 	if err != nil {
 		return nil, err
 	}

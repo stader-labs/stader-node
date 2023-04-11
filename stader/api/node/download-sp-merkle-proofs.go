@@ -133,7 +133,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
-		fmt.Printf("downloadSpMerkleProof: absolutePathOfProofFile: %+v", absolutePathOfProofFile)
+		//fmt.Printf("downloadSpMerkleProof: absolutePathOfProofFile: %+v", absolutePathOfProofFile)
 		if err != nil {
 			return nil, err
 		}
