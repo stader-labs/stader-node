@@ -109,6 +109,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("claimSpRewards: cycles are %v\n", cycles)
 
 	// data to pass to socializing pool contract
 	amountSd := []*big.Int{}
@@ -116,6 +117,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 	merkleProofs := [][][32]byte{}
 
 	response := api.ClaimSpRewardsResponse{}
+	fmt.Printf("Building the claimSpRewards data for %d cycles", len(cycles))
 	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
 	for _, cycle := range cycles {
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(cycle.Int64(), true)
@@ -164,6 +166,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		merkleProofs = append(merkleProofs, cycleMerkleProofs)
 	}
 
+	fmt.Printf("Claiming rewards for %d cycles", len(cycles))
 	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, nil)
 	if err != nil {
 		return nil, err
