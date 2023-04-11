@@ -415,6 +415,21 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return WithdrawSd(c)
 				},
 			},
+			{
+				Name:      "download-sp-merkle-proofs",
+				Aliases:   []string{"dspmp"},
+				Usage:     "Download all the missing Socializing Pool merkle proofs for the operator",
+				UsageText: "stader-cli node download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					return downloadSPMerkleProofs(c)
+				},
+			},
 		},
 	})
 }

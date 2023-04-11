@@ -743,6 +743,40 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-download-sp-merkle-proofs",
+				Usage:     "Can we Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node can-download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canDownloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "download-sp-merkle-proofs",
+				Usage:     "Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(downloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
 		},
 	})
 }

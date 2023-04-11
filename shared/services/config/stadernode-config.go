@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -29,15 +30,17 @@ import (
 
 // Constants
 const (
-	stadernodeTag                     = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
-	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
-	NetworkID                  string = "network"
-	ProjectNameID              string = "projectName"
-	DaemonDataPath             string = "/.stader/data"
-	GuardianFolder             string = "guardian"
-	FeeRecipientFilename       string = "stader-fee-recipient.txt"
-	NativeFeeRecipientFilename string = "stader-fee-recipient-env.txt"
+	stadernodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v0.0.1"
+	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
+	NetworkID                   string = "network"
+	ProjectNameID               string = "projectName"
+	DaemonDataPath              string = "/.stader/data"
+	GuardianFolder              string = "guardian"
+	SpRewardsMerkleProofsFolder string = "sp-rewards-merkle-proofs"
+	MerkleProofsFormat          string = "cycle-%s-%d.json"
+	FeeRecipientFilename        string = "stader-fee-recipient.txt"
+	NativeFeeRecipientFilename  string = "stader-fee-recipient-env.txt"
 )
 
 // --ignore-sync-check
@@ -423,6 +426,22 @@ func (cfg *StaderNodeConfig) GetGuardianFolder(daemon bool) string {
 	}
 
 	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardsMerkleProofFolder(daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder)
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {

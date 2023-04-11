@@ -518,3 +518,35 @@ func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, 
 
 	return response, nil
 }
+
+func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofs, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-download-sp-merkle-proofs"))
+	if err != nil {
+		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.CanDownloadSpMerkleProofs
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not decode node can-download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanDownloadSpMerkleProofs{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofs, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node download-sp-merkle-proofs"))
+	if err != nil {
+		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.DownloadSpMerkleProofs
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.DownloadSpMerkleProofs{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}

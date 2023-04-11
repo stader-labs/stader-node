@@ -241,6 +241,21 @@ type CanWithdrawSdResponse struct {
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
+type CanDownloadSpMerkleProofs struct {
+	Status                string  `json:"status"`
+	Error                 string  `json:"error"`
+	OperatorNotRegistered bool    `json:"operatorNotRegistered"`
+	NoMissingCycles       bool    `json:"noMissingCycles"`
+	MissingCycles         []int64 `json:"missingCycles"`
+	CurrentCycle          int64   `json:"currentCycle"`
+}
+
+type DownloadSpMerkleProofs struct {
+	Status           string     `json:"status"`
+	Error            string     `json:"error"`
+	DownloadedCycles []*big.Int `json:"downloadedCycles"`
+}
+
 type WithdrawSdResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
