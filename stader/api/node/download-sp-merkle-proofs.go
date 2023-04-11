@@ -58,7 +58,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
-	for i := int64(1); i <= currentIndex; i++ {
+	for i := int64(1); i < currentIndex; i++ {
 		// TODO - check if operator is eligible for cycle before downloading it
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
@@ -108,7 +108,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
-	for i := int64(1); i <= currentIndex; i++ {
+	for i := int64(1); i < currentIndex; i++ {
 		// TODO - bchain - add check for eligibility
 		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not

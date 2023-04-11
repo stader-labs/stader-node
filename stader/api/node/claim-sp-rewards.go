@@ -60,7 +60,7 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 		return nil, err
 	}
 
-	for i := int64(1); i <= rewardDetails.CurrentIndex.Int64(); i++ {
+	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycle := big.NewInt(i)
 		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
 		if err != nil {
