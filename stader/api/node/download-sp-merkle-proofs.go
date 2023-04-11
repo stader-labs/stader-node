@@ -47,11 +47,13 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofs, 
 		return &response, nil
 	}
 
+	fmt.Printf("Getting reward details for socializing pool...\n")
 	// check if all cycles are present
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("Reward details: %v\n", rewardDetails)
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
