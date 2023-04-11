@@ -569,6 +569,7 @@ func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
 
 func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s", stringifiedCycleList)
 	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
 	if err != nil {
 		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
