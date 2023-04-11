@@ -118,9 +118,13 @@ func openConfigurationSetting(c *cli.Context) (bool, error) {
 	}
 
 	oldSetting := makeUISettingFromConfig(cfg)
-	_, openConfig, m := ethCfUI.Run(oldSetting)
+	saved, openConfig, m := ethCfUI.Run(oldSetting)
 
-	fmt.Printf("APP DONE \n")
+	if saved == false {
+		fmt.Printf("Your settings have not changed.\n")
+		return openConfig, nil
+	}
+
 	newConfig := makeConfigFromUISetting(cfg, m)
 	err = staderClient.SaveConfig(&newConfig)
 	if err != nil {
