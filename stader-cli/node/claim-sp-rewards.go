@@ -53,6 +53,12 @@ func ClaimSpRewards(c *cli.Context) error {
 	}
 	fmt.Println("Merkle proofs downloaded!")
 
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to claim the rewards for cycles %v? (y/n)", canClaimSpRewards.UnclaimedCycles))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	//fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:")
 	//for i, cycle := range canClaimSpRewards.UnclaimedCycles {
 	//	fmt.Printf("%d) %d\n", i, cycle.Int64())

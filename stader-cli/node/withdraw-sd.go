@@ -53,6 +53,13 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to withdraw %.6f SD from the collateral contract? (y/n) ", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	res, err := staderClient.WithdrawSdCollateral(amountWei)
 	if err != nil {
 		return err

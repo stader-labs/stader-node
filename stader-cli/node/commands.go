@@ -82,10 +82,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
 					if err != nil {
 						return err
@@ -149,11 +145,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
 						return err
 					}
@@ -184,12 +175,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					fmt.Printf("num-validator is %d\n", c.Uint64("num-validators"))
 					// Validate flags
 					if c.String("amount") != "" {
 						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {
@@ -297,13 +282,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-pub-key, vpk",
 						Usage: "Public key of validator we want to exit",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
 					if err != nil {
 						return err
@@ -323,6 +309,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-pub-key, vpk",
 						Usage: "Validator index for whom we want to generate the debug exit",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					//// Validate args
@@ -340,6 +330,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Aliases:   []string{"wer"},
 				Usage:     "Withdraw all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
 				UsageText: "stader-cli node withdraw-el-rewards",
+				Flags: []cli.Flag{cli.BoolFlag{
+					Name:  "yes, y",
+					Usage: "Automatically confirm token send",
+				}},
 				Action: func(c *cli.Context) error {
 					// Run
 					return WithdrawElRewards(c)
@@ -354,6 +348,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
 						Usage: "Public key of validator we want to exit",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -376,6 +374,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-pub-key, vpk",
 						Usage: "Public key of validator",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
@@ -397,6 +399,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "amount, a",
 						Usage: "The amount of SD to deposit",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
@@ -417,6 +423,12 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Aliases:   []string{"dspmp"},
 				Usage:     "Download all the missing Socializing Pool merkle proofs for the operator",
 				UsageText: "stader-cli node download-sp-merkle-proofs",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm token send",
+					},
+				},
 				Action: func(c *cli.Context) error {
 
 					if err := cliutils.ValidateArgCount(c, 0); err != nil {

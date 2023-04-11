@@ -35,6 +35,13 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return nil
 	}
 
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to exit validator %s? (y/n)", validatorPubKey))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	// now exit
 	_, err = staderClient.ExitValidator(validatorPubKey)
 	if err != nil {

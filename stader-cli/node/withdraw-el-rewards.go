@@ -41,6 +41,13 @@ func WithdrawElRewards(c *cli.Context) error {
 		return err
 	}
 
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to withdraw El Rewards? (y/n)"))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	// Withdraw El Rewards
 	res, err := staderClient.WithdrawElRewards()
 	if err != nil {

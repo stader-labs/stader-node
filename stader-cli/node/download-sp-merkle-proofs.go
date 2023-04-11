@@ -35,6 +35,14 @@ func downloadSPMerkleProofs(c *cli.Context) error {
 	}
 
 	fmt.Printf("Following cycles are missing: %v\n", canDownloadSpMerkleProofs.MissingCycles)
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to download the missing merkle proofs? (y/n)"))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	fmt.Println("Downloading missing merkle proofs.....")
 
 	res, err := staderClient.DownloadSpMerkleProofs()
