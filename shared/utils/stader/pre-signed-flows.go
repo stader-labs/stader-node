@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/stader"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
@@ -11,13 +12,8 @@ import (
 	"net/http"
 )
 
-// TODO - refactor these urls somehow
-const preSignSendApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/presign"
-const preSignCheckApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/msgSubmitted"
-const publicKeyApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/publicKey"
-
 func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
-	res, err := net.MakePostRequest(preSignSendApi, preSignedMessage)
+	res, err := net.MakePostRequest(stader.PreSignSendApi, preSignedMessage)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +37,7 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
 
-	res, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
+	res, err := net.MakePostRequest(stader.PreSignCheckApi, preSignCheckRequest)
 	if res.StatusCode != http.StatusOK {
 		return false, fmt.Errorf("error in checking presigned key from stader backend: %v", res.Status)
 	}
@@ -57,7 +53,7 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 
 func GetPublicKey() (*rsa.PublicKey, error) {
 	// get public key from api
-	res, err := net.MakeGetRequest(publicKeyApi, struct{}{})
+	res, err := net.MakeGetRequest(stader.PublicKeyApi, struct{}{})
 	if err != nil {
 		return nil, err
 	}
