@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/stader-labs/stader-node/stader-lib/types"
+	"net/http"
 )
 
 // TODO - refactor these urls somehow
@@ -19,6 +20,10 @@ func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSign
 	res, err := net.MakePostRequest(preSignSendApi, preSignedMessage)
 	if err != nil {
 		return nil, err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error in sending pre-signed message to stader backend: %v", res.Status)
 	}
 
 	// TODO - bchain99 - check for status code of response
@@ -38,12 +43,14 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
 
-	preSignCheckRes, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
-	// TODO - bchain99 - check for status code of response
+	res, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
+	if res.StatusCode != http.StatusOK {
+		return false, fmt.Errorf("error in checking presigned key from stader backend: %v", res.Status)
+	}
 
-	defer preSignCheckRes.Body.Close()
+	defer res.Body.Close()
 	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
-	err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
+	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
 	if err != nil {
 		return false, err
 	}
@@ -58,7 +65,9 @@ func GetPublicKey() (*rsa.PublicKey, error) {
 	}
 	defer res.Body.Close()
 
-	// TODO - bchain99 - check for status code of response
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("error in getting public key from stader backend: %v", res.Status)
+	}
 
 	var publicKeyResponse stader_backend.PublicKeyApiResponse
 	err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)

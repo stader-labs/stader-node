@@ -43,6 +43,6 @@ func downloadSPMerkleProofs(c *cli.Context) error {
 	}
 
 	fmt.Printf("Successfully downloaded the merkle proofs for cycles: %v\n", res.DownloadedCycles)
-	
+
 	return nil
 }

@@ -152,9 +152,6 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
 					}
 
-					// exit epoch should be > activation_epoch + 256
-					// exit epoch should be > current epoch
-					// TODO - bchain - verify with sigma prime
 					exitEpoch := currentHead.Epoch
 					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
 					if epochsSinceActivation < 256 {
