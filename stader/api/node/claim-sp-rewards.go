@@ -143,7 +143,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		fmt.Printf("Read merkle data! %v\n", merkleData)
 
 		fmt.Printf("Parsing amountSdBigInt!\n")
-		var amountSdBigInt *big.Int
+		amountSdBigInt := big.NewInt(0)
 		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
 		if !ok {
 			return nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
@@ -152,7 +152,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 
 		fmt.Printf("Parsing amountEthBigInt!\n")
 		// same thing above for eth
-		var amountEthBigInt *big.Int
+		amountEthBigInt := big.NewInt(0)
 		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
 		if !ok {
 			return nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
