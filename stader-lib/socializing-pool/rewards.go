@@ -8,6 +8,10 @@ import (
 	"math/big"
 )
 
+func EstimateClaimRewards(sp *stader.SocializingPoolContractManager, index []*big.Int, amountSd []*big.Int, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sp.SocializingPoolContract.GetTransactionGasInfo(opts, "claim", index, amountSd, amountEth, merkleProof)
+}
+
 func ClaimRewards(sp *stader.SocializingPoolContractManager, index []*big.Int, amountSd []*big.Int, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
 	tx, err := sp.SocializingPool.Claim(opts, index, amountSd, amountEth, merkleProof)
 	if err != nil {

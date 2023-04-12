@@ -16,6 +16,72 @@ import (
 	"os"
 )
 
+func getClaimData(c *cli.Context, cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	// data to pass to socializing pool contract
+	amountSd := []*big.Int{}
+	amountEth := []*big.Int{}
+	merkleProofs := [][][32]byte{}
+
+	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
+	for _, cycle := range cycles {
+		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(cycle.Int64(), true)
+		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		data, err := os.ReadFile(expandedCycleMerkleRewardFile)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		// need to make sure we have downloaded the data
+		if os.IsNotExist(err) {
+			return nil, nil, nil, err
+		}
+		merkleData := stader_backend.CycleMerkleProofs{}
+		err = json.Unmarshal(data, &merkleData)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		amountSdBigInt := big.NewInt(0)
+		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
+		if !ok {
+			return nil, nil, nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
+		}
+
+		// same thing above for eth
+		amountEthBigInt := big.NewInt(0)
+		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
+		if !ok {
+			return nil, nil, nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
+		}
+
+		amountSd = append(amountSd, amountSdBigInt)
+		amountEth = append(amountEth, amountEthBigInt)
+
+		// convert merkle proofs to [32]byte
+		cycleMerkleProofs := [][32]byte{}
+		for _, proof := range merkleData.Proof {
+			merkleProofBytes, err := hex.DecodeString(proof[2:])
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			var proofBytes [32]byte
+			copy(proofBytes[:], merkleProofBytes[:32])
+			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
+		}
+
+		merkleProofs = append(merkleProofs, cycleMerkleProofs)
+	}
+
+	return amountSd, amountEth, merkleProofs, nil
+}
+
 func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
@@ -96,11 +162,44 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	return &response, nil
 }
 
-func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewardsResponse, error) {
-	cfg, err := services.GetConfig(c)
+func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.EstimateClaimSpRewardsGasResponse, error) {
+	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
 	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response := api.EstimateClaimSpRewardsGasResponse{}
+
+	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
+	if err != nil {
+		return nil, err
+	}
+
+	amountSd, amountEth, merkleProofs, err := getClaimData(c, cycles)
+	if err != nil {
+		return nil, err
+	}
+
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := socializing_pool.EstimateClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	response.GasInfo = gasInfo
+
+	return &response, nil
+}
+
+func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewardsResponse, error) {
 	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
@@ -114,74 +213,12 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("claimSpRewards: cycles are %v\n", cycles)
-
-	// data to pass to socializing pool contract
-	amountSd := []*big.Int{}
-	amountEth := []*big.Int{}
-	merkleProofs := [][][32]byte{}
 
 	response := api.ClaimSpRewardsResponse{}
-	//fmt.Printf("Building the claimSpRewards data for %d cycles", len(cycles))
-	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
-	for _, cycle := range cycles {
-		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(cycle.Int64(), true)
-		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-		if err != nil {
-			return nil, err
-		}
-		data, err := os.ReadFile(expandedCycleMerkleRewardFile)
-		if err != nil {
-			return nil, err
-		}
-		// need to make sure we have downloaded the data
-		if os.IsNotExist(err) {
-			return nil, err
-		}
-		//fmt.Printf("Successfully checked that merkle files exists for cycle %d\n", cycle.Int64())
-		//fmt.Printf("Reading merkle data\n")
-		merkleData := stader_backend.CycleMerkleProofs{}
-		err = json.Unmarshal(data, &merkleData)
-		if err != nil {
-			return nil, err
-		}
-		fmt.Printf("Read merkle data! %v\n", merkleData)
 
-		//fmt.Printf("Parsing amountSdBigInt!\n")
-		amountSdBigInt := big.NewInt(0)
-		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
-		if !ok {
-			return nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
-		}
-		//fmt.Printf("Parsed amountSdBigInt! %d\n", amountSdBigInt)
-
-		//fmt.Printf("Parsing amountEthBigInt!\n")
-		// same thing above for eth
-		amountEthBigInt := big.NewInt(0)
-		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
-		if !ok {
-			return nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
-		}
-		//fmt.Printf("Parsed amountEthBigInt! %d\n", amountEthBigInt)
-
-		amountSd = append(amountSd, amountSdBigInt)
-		amountEth = append(amountEth, amountEthBigInt)
-
-		// convert merkle proofs to [32]byte
-		//fmt.Printf("Converting merkle proofs to [32]byte\n")
-		cycleMerkleProofs := [][32]byte{}
-		for _, proof := range merkleData.Proof {
-			fmt.Printf("proof: %v\n", proof[2:])
-			merkleProofBytes, err := hex.DecodeString(proof[2:])
-			if err != nil {
-				return nil, err
-			}
-			var proofBytes [32]byte
-			copy(proofBytes[:], merkleProofBytes[:32])
-			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
-		}
-
-		merkleProofs = append(merkleProofs, cycleMerkleProofs)
+	amountSd, amountEth, merkleProofs, err := getClaimData(c, cycles)
+	if err != nil {
+		return nil, err
 	}
 
 	opts, err := w.GetNodeAccountTransactor()
@@ -189,11 +226,6 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		return nil, err
 	}
 
-	//fmt.Printf("Claiming rewards for %d cycles", len(cycles))
-	fmt.Printf("claimSpRewards: cycles %v\n", cycles)
-	fmt.Printf("claimSpRewards: amountSd %v\n", amountSd)
-	fmt.Printf("claimSpRewards: amountEth %v\n", amountEth)
-	fmt.Printf("claimSpRewards: merkleProofs %v\n", merkleProofs)
 	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
 	if err != nil {
 		return nil, err

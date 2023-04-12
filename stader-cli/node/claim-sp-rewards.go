@@ -2,9 +2,13 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/urfave/cli"
+	"math/big"
+	"strconv"
+	"strings"
 )
 
 func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
@@ -61,33 +65,79 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("Merkle proofs downloaded!")
 	}
 
+	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:")
+
+	cyclesToClaim := map[int64]bool{}
+	for {
+		// TODO - add cycle info like amount of rewards. These are UX things and can be done later
+		for i, cycle := range canClaimSpRewards.UnclaimedCycles {
+			fmt.Printf("%d) %d\n", i, cycle.Int64())
+		}
+
+		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
+		if cycleSelection == "" {
+			for _, cycle := range canClaimSpRewards.UnclaimedCycles {
+				cyclesToClaim[cycle.Int64()] = true
+			}
+			break
+		} else {
+			elements := strings.Split(cycleSelection, ",")
+			allValid := true
+			for _, element := range elements {
+				cycle, err := strconv.ParseUint(element, 0, 64)
+				if err != nil {
+					fmt.Printf("Unable to parse element: %s", element)
+					allValid = false
+				}
+
+				// check if unclaimedCycles contains the cycle
+				found := false
+				for _, unclaimedCycle := range canClaimSpRewards.UnclaimedCycles {
+					if unclaimedCycle.Int64() == int64(cycle) {
+						found = true
+						break
+					}
+				}
+				if !found {
+					fmt.Printf("Cycle %d is not in the list of unclaimed cycles. Please enter a valid cycle number", cycle)
+				} else {
+					cyclesToClaim[int64(cycle)] = true
+				}
+			}
+
+			if allValid {
+				break
+			}
+		}
+	}
+
+	// convert the map to a cycle big int array
+	cyclesToClaimArray := []*big.Int{}
+	for cycle := range cyclesToClaim {
+		cyclesToClaimArray = append(cyclesToClaimArray, big.NewInt(cycle))
+	}
+
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"Are you sure you want to claim the rewards for cycles %v? (y/n)", canClaimSpRewards.UnclaimedCycles))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	//fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:")
-	//for i, cycle := range canClaimSpRewards.UnclaimedCycles {
-	//	fmt.Printf("%d) %d\n", i, cycle.Int64())
-	//}
-	//
-	//cyclesToClaim := []int64{}
-	//cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
-	//if cycleSelection == "" {
-	//	for _, cycle := range canClaimSpRewards.UnclaimedCycles {
-	//		cyclesToClaim = append(cyclesToClaim, cycle.Int64())
-	//	}
-	//} else {
-	//	elements := strings.Split(cycleSelection, ",")
-	//	for _, element := range elements {
-	//
-	//	}
-	//
-	//}
+	// estimate gas
+	fmt.Println("Estimating gas...")
+	estimateGasResponse, err := staderClient.EstimateClaimSpRewardsGas(cyclesToClaimArray)
+	if err != nil {
+		return err
+	}
 
-	fmt.Printf("Claiming rewards for cycles %v\n", canClaimSpRewards.UnclaimedCycles)
-	res, err := staderClient.ClaimSpRewards(canClaimSpRewards.UnclaimedCycles)
+	//Assign max fees
+	err = gas.AssignMaxFeeAndLimit(estimateGasResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Claiming rewards for cycles %v\n", cyclesToClaimArray)
+	res, err := staderClient.ClaimSpRewards(cyclesToClaimArray)
 	if err != nil {
 		return err
 	}

@@ -284,6 +284,12 @@ type CanClaimSpRewardsResponse struct {
 	CyclesToDownload      []*big.Int `json:"cyclesToDownload"`
 }
 
+type EstimateClaimSpRewardsGasResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
 type ClaimSpRewardsResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`

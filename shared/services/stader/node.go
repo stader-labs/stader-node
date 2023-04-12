@@ -567,6 +567,24 @@ func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
 	return response, nil
 }
 
+func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s\n", stringifiedCycleList)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
+	if err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	var response api.EstimateClaimSpRewardsGasResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not decode node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	if response.Error != "" {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
 func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
 	fmt.Printf("stringifiedCycleList: %s", stringifiedCycleList)
