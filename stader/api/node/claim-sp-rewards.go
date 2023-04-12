@@ -171,8 +171,8 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		//fmt.Printf("Converting merkle proofs to [32]byte\n")
 		cycleMerkleProofs := [][32]byte{}
 		for _, proof := range merkleData.Proof {
-			fmt.Printf("proof: %v\n", proof)
-			merkleProofBytes, err := hex.DecodeString(proof)
+			fmt.Printf("proof: %v\n", proof[2:])
+			merkleProofBytes, err := hex.DecodeString(proof[2:])
 			if err != nil {
 				return nil, err
 			}
