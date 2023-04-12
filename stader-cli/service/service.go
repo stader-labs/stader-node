@@ -364,37 +364,36 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 }
 
 func configureService(c *cli.Context) error {
-	openWizard, err := openConfigurationSetting(c)
+	ctx, err := openConfigurationSetting(c)
 	if err != nil {
 		return fmt.Errorf("ERR in config page %w", err)
 	}
 
-	if openWizard == false {
+	if ctx.openWizardPage == false {
 		return nil
 	}
 
-	return openWizardPage(c)
+	return openWizardPage(ctx)
 }
 
 // Configure the service
-func openWizardPage(c *cli.Context) error {
+func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
 	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
-		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
+		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
 	}
 	_, err = os.Stat(path)
 	if os.IsNotExist(err) {
-		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
-		return nil
+		return nil, fmt.Errorf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
 	}
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer staderClient.Close()
 
@@ -402,7 +401,7 @@ func openWizardPage(c *cli.Context) error {
 	// var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
-		return fmt.Errorf("error loading user settings: %w", err)
+		return nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	// Check to see if this is a migration from a legacy config
@@ -411,7 +410,7 @@ func openWizardPage(c *cli.Context) error {
 		// Look for a legacy config to migrate
 		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if migratedConfig != nil {
 			cfg = migratedConfig
@@ -422,7 +421,7 @@ func openWizardPage(c *cli.Context) error {
 	// Check if this is a new install
 	isUpdate, err := staderClient.IsFirstRun()
 	if err != nil {
-		return fmt.Errorf("error checking for first-run status: %w", err)
+		return nil, fmt.Errorf("error checking for first-run status: %w", err)
 	}
 
 	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
@@ -431,7 +430,7 @@ func openWizardPage(c *cli.Context) error {
 		cfg = cfg.CreateCopy()
 		err = cfg.UpdateDefaults()
 		if err != nil {
-			return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
+			return nil, fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 		}
 	}
 
@@ -439,13 +438,15 @@ func openWizardPage(c *cli.Context) error {
 	if c.NumFlags() > 0 {
 		err := configureHeadless(c, cfg)
 		if err != nil {
-			return fmt.Errorf("error updating config from provided arguments: %w", err)
+			return nil, fmt.Errorf("error updating config from provided arguments: %w", err)
 		}
-		return staderClient.SaveConfig(cfg)
+		return nil, staderClient.SaveConfig(cfg)
 	}
+	return cfg, nil
+}
 
-	currentSettings := NewSettingsType(cfg)
-
+func openWizardPage(ctx *ConfigContext) error {
+	currentSettings := NewSettingsType(&ctx.newConfigFromUI)
 	set, err := ethcliui.Run(&currentSettings)
 	if err != nil {
 		return err
@@ -461,10 +462,10 @@ func openWizardPage(c *cli.Context) error {
 		return nil
 	}
 
-	UpdateConfig(staderClient, cfg, &newSettings)
+	UpdateConfig(ctx.staderClient, &ctx.newConfigFromUI, &newSettings)
 
 	// Restart the services
-	err = startService(c, false)
+	err = startService(ctx.cliCtx, false)
 	if err != nil {
 		return err
 	}

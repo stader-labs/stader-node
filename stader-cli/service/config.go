@@ -35,6 +35,13 @@ var (
 	log = logger.Log
 )
 
+type ConfigContext struct {
+	staderClient    *stader.Client
+	openWizardPage  bool
+	newConfigFromUI stdCf.StaderConfig
+	cliCtx          *cli.Context
+}
+
 func format(v interface{}) string {
 	return fmt.Sprintf("%v", v)
 }
@@ -105,33 +112,38 @@ func updateFeeAndReward(newCfg *stdCf.StaderConfig, settings map[string]interfac
 	staderNode.ArchiveECUrl.Value = settings[keys.Fr_archive_mode_ec_url]
 }
 
-func openConfigurationSetting(c *cli.Context) (bool, error) {
+func openConfigurationSetting(c *cli.Context) (*ConfigContext, error) {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	defer staderClient.Close()
 
-	cfg, _, err := staderClient.LoadConfig()
+	cfg, err := loadConfig(c)
 	if err != nil {
-		return false, fmt.Errorf("error loading user settings: %w", err)
+		return nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	oldSetting := makeUISettingFromConfig(cfg)
-	saved, openConfig, m := ethCfUI.Run(oldSetting)
+	saved, openWizardPage, m := ethCfUI.Run(oldSetting)
 
+	newConfigFromUI := makeConfigFromUISetting(cfg, m)
 	if saved {
 		fmt.Printf("Your settings have not changed.\n")
-		newConfig := makeConfigFromUISetting(cfg, m)
-		err = staderClient.SaveConfig(&newConfig)
+		err = staderClient.SaveConfig(&newConfigFromUI)
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 	}
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return openConfig, nil
+	return &ConfigContext{
+		openWizardPage:  openWizardPage,
+		staderClient:    staderClient,
+		newConfigFromUI: newConfigFromUI,
+		cliCtx:          c,
+	}, nil
 }

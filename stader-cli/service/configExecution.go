@@ -47,7 +47,7 @@ func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[stri
 }
 
 func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	cfg.ExecutionClient.Value = strings.ToLower(newSettings[keys.E1ec_lm_execution_client].(string))
+	cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings[keys.E1ec_lm_execution_client].(string)))
 
 	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_http_port]
 	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_websocket_port]
@@ -123,18 +123,18 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	return nil
 }
 
-func makeCfgExecutionMode(i interface{}) string {
+func makeCfgExecutionMode(i interface{}) cfgtypes.Mode {
 	mod, ok := i.(string)
 	if !ok {
 		return ""
 	}
 	switch mod {
 	case "Locally Managed":
-		return "local"
+		return cfgtypes.Mode_External
 	case "Externally Managed":
-		return "external"
+		return cfgtypes.Mode_Local
 	default:
-		return ""
+		return cfgtypes.Mode_Unknown
 	}
 }
 

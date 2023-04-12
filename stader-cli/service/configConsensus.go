@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
+	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
 
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
@@ -105,7 +106,7 @@ func updateConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]inter
 }
 
 func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	cfg.ExternalConsensusClient.Value = strings.ToLower(newSettings[keys.E2cc_em_consensus_client].(string))
+	cfg.ExternalConsensusClient.Value = cfgtypes.ConsensusClient(strings.ToLower(newSettings[keys.E2cc_em_consensus_client].(string)))
 	cfg.ConsensusClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
 
 	// case cfgtypes.ConsensusClient_Teku:
@@ -145,7 +146,7 @@ func updateLocalConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]
 		return fmt.Errorf("Invalid External client %+v", settings[keys.E2cc_em_consensus_client])
 	}
 
-	newCfg.ConsensusClient.Value = strings.ToLower(clientStr)
+	newCfg.ConsensusClient.Value = cfgtypes.ConsensusClient(strings.ToLower(clientStr))
 	newCfg.Lighthouse.MaxPeers.Value = settings[keys.E2cc_lc_max_peer_lighthouse]
 	newCfg.Lighthouse.ContainerTag.Value = settings[keys.E2cc_lc_container_tag_lighthouse]
 	newCfg.Lighthouse.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_beacon_node_flags_lighthouse]
