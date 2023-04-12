@@ -78,12 +78,17 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, err
 	}
-	operatorRegistryInfo, err := node.GetOperatorInfo(prn, operatorId, nil)
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
+		canNodeDepositResponse.OperatorNotRegistered = true
+		return &canNodeDepositResponse, nil
+	}
+
+	operatorInfo, err := node.GetOperatorInfo(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	if operatorRegistryInfo.OperatorName == "" {
-		canNodeDepositResponse.NotRegistered = true
+	if !operatorInfo.Active {
+		canNodeDepositResponse.OperatorNotActive = true
 		return &canNodeDepositResponse, nil
 	}
 
@@ -175,6 +180,8 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
+
+	// TODO - bchain - check for max keys limit
 
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {

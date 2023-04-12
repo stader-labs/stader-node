@@ -12,9 +12,6 @@ import (
 
 func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanWithdrawClRewardsResponse, error) {
 	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -23,9 +20,35 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	if err != nil {
 		return nil, err
 	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.CanWithdrawClRewardsResponse{}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if operatorId.Int64() == 0 {
+		response.OperatorNotRegistered = true
+		return &response, nil
+	}
+
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !operatorInfo.Active {
+		response.OperatorNotActive = true
+		return &response, nil
+	}
 
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
@@ -44,6 +67,8 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		response.ValidatorWithdrawn = true
 		return &response, nil
 	}
+
+	// TODO - bchain - check if withdraw vault is settled
 
 	withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 	if err != nil {

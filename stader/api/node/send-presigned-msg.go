@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
@@ -16,11 +17,32 @@ import (
 )
 
 func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSendPresignedMsgResponse, error) {
-	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
-
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return nil, err
+	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if operatorId.Int64() == 0 {
+		canSendPresignedMsgResponse.OperatorNotRegistered = true
+		return &canSendPresignedMsgResponse, nil
 	}
 
 	// check if validator is present by querying validator index

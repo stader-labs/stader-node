@@ -34,9 +34,18 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	if err != nil {
 		return nil, err
 	}
+	if operatorId.Int64() == 0 {
+		response.OperatorNotRegistered = true
+		return &response, nil
+	}
+
 	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
+	}
+	if !operatorInfo.Active {
+		response.OperatorNotActive = true
+		return &response, nil
 	}
 	if operatorInfo.OptedForSocializingPool && socializeEl {
 		response.AlreadyOptedIn = true

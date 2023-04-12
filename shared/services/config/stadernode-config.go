@@ -426,6 +426,10 @@ func (cfg *StaderNodeConfig) GetSocializingPoolAddress() common.Address {
 	return common.HexToAddress(cfg.socializingPoolAddress[cfg.Network.Value.(config.Network)])
 }
 
+func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
+	return common.HexToAddress(cfg.staderOracleAddress[cfg.Network.Value.(config.Network)])
+}
+
 func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.StaderDirectory, "data")
 }

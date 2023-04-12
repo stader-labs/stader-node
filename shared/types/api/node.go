@@ -81,7 +81,8 @@ type CanNodeDepositResponse struct {
 	CanDeposit            bool           `json:"CanDeposit"`
 	InsufficientBalance   bool           `json:"insufficientBalance"`
 	InvalidAmount         bool           `json:"invalidAmount"`
-	NotRegistered         bool           `json:"notRegistered"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
 	DepositPaused         bool           `json:"depositPaused"`
 	NotEnoughSdCollateral bool           `json:"notEnoughSdCollateral"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
@@ -124,6 +125,9 @@ type ContractsInfoResponse struct {
 	EthxToken                  common.Address `json:"ethxToken"`
 	SdToken                    common.Address `json:"sdToken"`
 	SdCollateralContract       common.Address `json:"sdCollateralContract"`
+	SocializingPoolContract    common.Address `json:"socializingPoolContract"`
+	PermisionlessPool          common.Address `json:"permisionlessPool"`
+	StaderOracle               common.Address `json:"staderOracle"`
 }
 
 type DebugExitResponse struct {
@@ -141,6 +145,7 @@ type DebugExitResponse struct {
 type CanSendPresignedMsgResponse struct {
 	Status                               string `json:"status"`
 	Error                                string `json:"error"`
+	OperatorNotRegistered                bool   `json:"operatorNotRegistered"`
 	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
 	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
 	ValidatorIsNotActive                 bool   `json:"validatorIsNotActive"`
@@ -158,6 +163,8 @@ type SendPresignedMsgResponse struct {
 type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
+	OperatorNotRegistered  bool   `json:"operatorNotRegistered"`
+	OperatorNotActive      bool   `json:"operatorNotActive"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	CanExit                bool   `json:"canExit"`
@@ -169,11 +176,13 @@ type ExitValidatorResponse struct {
 }
 
 type CanUpdateSocializeElResponse struct {
-	Status          string         `json:"status"`
-	Error           string         `json:"error"`
-	AlreadyOptedIn  bool           `json:"alreadyOptedIn"`
-	AlreadyOptedOut bool           `json:"alreadyOptedOut"`
-	GasInfo         stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
+	AlreadyOptedIn        bool           `json:"alreadyOptedIn"`
+	AlreadyOptedOut       bool           `json:"alreadyOptedOut"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateSocializeElResponse struct {
@@ -183,13 +192,15 @@ type UpdateSocializeElResponse struct {
 }
 
 type CanWithdrawClRewardsResponse struct {
-	Status             string         `json:"status"`
-	Error              string         `json:"error"`
-	ValidatorWithdrawn bool           `json:"validatorWithdrawn"`
-	NoClRewards        bool           `json:"noClRewards"`
-	TooManyClRewards   bool           `json:"tooManyClRewards"`
-	ValidatorNotFound  bool           `json:"validatorNotFound"`
-	GasInfo            stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
+	ValidatorWithdrawn    bool           `json:"validatorWithdrawn"`
+	NoClRewards           bool           `json:"noClRewards"`
+	TooManyClRewards      bool           `json:"tooManyClRewards"`
+	ValidatorNotFound     bool           `json:"validatorNotFound"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawClRewardsResponse struct {
@@ -221,6 +232,7 @@ type CanWithdrawElRewardsResponse struct {
 	Error                 string         `json:"error"`
 	NoElRewards           bool           `json:"noElRewards"`
 	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
