@@ -69,7 +69,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		return &response, nil
 	}
 
-	gasInfo, err := sd_collateral.EstimateWithdrawSdCollateral(sdc, amountWei, nil)
+	gasInfo, err := sd_collateral.EstimateRequestSdCollateralWithdraw(sdc, amountWei, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.WithdrawSdResponse, er
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
-	tx, err := sd_collateral.WithdrawSdCollateral(sdc, amountWei, opts)
+	tx, err := sd_collateral.RequestSdCollateralWithdraw(sdc, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}

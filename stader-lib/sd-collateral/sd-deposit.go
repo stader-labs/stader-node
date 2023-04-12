@@ -21,12 +21,25 @@ func DepositSdAsCollateral(sdc *stader.SdCollateralContractManager, amount *big.
 	return tx, nil
 }
 
-func EstimateWithdrawSdCollateral(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "withdraw", amount)
+func EstimateRequestSdCollateralWithdraw(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "requestWithdraw", amount)
 }
 
-func WithdrawSdCollateral(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := sdc.SdCollateral.Withdraw(opts, amount)
+func RequestSdCollateralWithdraw(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := sdc.SdCollateral.RequestWithdraw(opts, amount)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func EstimateClaimWithdrawnSd(sdc *stader.SdCollateralContractManager, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "claimWithdraw")
+}
+
+func ClaimWithdrawnSd(sdc *stader.SdCollateralContractManager, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := sdc.SdCollateral.ClaimWithdraw(opts)
 	if err != nil {
 		return nil, err
 	}
