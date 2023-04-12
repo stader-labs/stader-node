@@ -23,11 +23,6 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 
-	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
-		cliutils.PrintMultiTransactionNonceWarning()
-	}
-
 	// Get stake mount
 	amountInString := c.String("amount")
 	amount, err := strconv.ParseFloat(amountInString, 64)
@@ -36,7 +31,7 @@ func WithdrawSd(c *cli.Context) error {
 	}
 	amountWei := eth.EthToWei(amount)
 
-	canWithdrawSdResponse, err := staderClient.CanWithdrawSdCollateral(amountWei)
+	canWithdrawSdResponse, err := staderClient.CanRequestSdCollateralWithdraw(amountWei)
 	if err != nil {
 		return err
 	}
@@ -60,7 +55,7 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
-	res, err := staderClient.WithdrawSdCollateral(amountWei)
+	res, err := staderClient.RequestSdCollateralWithdraw(amountWei)
 	if err != nil {
 		return err
 	}

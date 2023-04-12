@@ -11,7 +11,7 @@ import (
 	"math/big"
 )
 
-func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdResponse, error) {
+func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawSdResponse, error) {
 	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -27,7 +27,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 	}
 
 	// Response
-	response := api.CanWithdrawSdResponse{}
+	response := api.CanRequestWithdrawSdResponse{}
 
 	// Get node account
 	nodeAccount, err := w.GetNodeAccount()
@@ -69,7 +69,12 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		return &response, nil
 	}
 
-	gasInfo, err := sd_collateral.EstimateRequestSdCollateralWithdraw(sdc, amountWei, nil)
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := sd_collateral.EstimateRequestSdCollateralWithdraw(sdc, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +83,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 	return &response, nil
 }
 
-func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.WithdrawSdResponse, error) {
+func requestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.RequestWithdrawSdResponse, error) {
 	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -90,7 +95,7 @@ func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.WithdrawSdResponse, er
 	}
 
 	// Response
-	response := api.WithdrawSdResponse{}
+	response := api.RequestWithdrawSdResponse{}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
@@ -108,5 +113,69 @@ func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.WithdrawSdResponse, er
 	response.TxHash = tx.Hash()
 
 	// Return response
+	return &response, nil
+}
+
+func canClaimSd(c *cli.Context) (*api.CanClaimSdResponse, error) {
+	sdc, err := services.GetSdCollateralContract(c)
+	if err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO - bchain - go thru the pre-checks with manoj
+
+	// TODO - bchain - check if there is anything to claim at all
+
+	// TODO - bchain - check if we crossed the claim unbonding period
+
+	response := api.CanClaimSdResponse{}
+
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := sd_collateral.EstimateClaimWithdrawnSd(sdc, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	response.GasInfo = gasInfo
+
+	return &response, nil
+}
+
+func claimSd(c *cli.Context) (*api.ClaimSdResponse, error) {
+	sdc, err := services.GetSdCollateralContract(c)
+	if err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Response
+	response := api.ClaimSdResponse{}
+
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+	err = eth1.CheckForNonceOverride(c, opts)
+	if err != nil {
+		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
+	}
+	tx, err := sd_collateral.ClaimWithdrawnSd(sdc, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	response.TxHash = tx.Hash()
+
 	return &response, nil
 }

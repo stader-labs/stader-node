@@ -67,7 +67,12 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 		return &response, nil
 	}
 
-	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, nil)
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
 	if err != nil {
 		return nil, err
 	}

@@ -93,7 +93,12 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return &response, nil
 	}
 
-	gasInfo, err := node.EstimateDistributeRewards(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := node.EstimateDistributeRewards(pnr.Client, validatorContractInfo.WithdrawVaultAddress, opts)
 	if err != nil {
 		return nil, err
 	}

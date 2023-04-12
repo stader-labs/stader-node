@@ -246,7 +246,7 @@ type WithdrawElRewardsResponse struct {
 	TxHash                common.Hash    `json:"txHash"`
 }
 
-type CanWithdrawSdResponse struct {
+type CanRequestWithdrawSdResponse struct {
 	Status                     string         `json:"status"`
 	Error                      string         `json:"error"`
 	OperatorNotRegistered      bool           `json:"operatorNotRegistered"`
@@ -255,7 +255,21 @@ type CanWithdrawSdResponse struct {
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
-type WithdrawSdResponse struct {
+type RequestWithdrawSdResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanClaimSdResponse struct {
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	NoExistingClaim          bool           `json:"noExistingClaim"`
+	ClaimIsInUnbondingPeriod bool           `json:"claimIsInUnbondingPeriod"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
+}
+
+type ClaimSdResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

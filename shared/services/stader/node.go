@@ -486,34 +486,68 @@ func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.Set
 	return response, nil
 }
 
-func (c *Client) CanWithdrawSdCollateral(amount *big.Int) (api.CanWithdrawSdResponse, error) {
+func (c *Client) CanRequestSdCollateralWithdraw(amount *big.Int) (api.CanRequestWithdrawSdResponse, error) {
 	// TODO - bchain - normalize these response messages
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-withdraw-sd %s", amount.String()))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %w", err)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %w", err)
 	}
-	var response api.CanWithdrawSdResponse
+	var response api.CanRequestWithdrawSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-withdraw-sd response: %w", err)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-request-sd-withdraw response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %s", response.Error)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node node-withdraw-sd %s", amount.String()))
+func (c *Client) RequestSdCollateralWithdraw(amount *big.Int) (api.RequestWithdrawSdResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %w", err)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %w", err)
 	}
-	var response api.WithdrawSdResponse
+	var response api.RequestWithdrawSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not decode node node-withdraw-sd response: %w", err)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not decode node node-request-sd-withdraw response: %w", err)
 	}
 	if response.Error != "" {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %s", response.Error)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanClaimSd() (api.CanClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-claim-sd"))
+	if err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %w", err)
+	}
+	var response api.CanClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not decode node can-node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSd() (api.ClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-claim-sd"))
+	if err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %w", err)
+	}
+	var response api.ClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not decode node node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %s", response.Error)
 	}
 
 	return response, nil
