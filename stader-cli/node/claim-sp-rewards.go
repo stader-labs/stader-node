@@ -24,11 +24,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 
-	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
-		cliutils.PrintMultiTransactionNonceWarning()
-	}
-
 	// prompt user to select the cycles to claim from
 	canClaimSpRewards, err := staderClient.CanClaimSpRewards()
 	if err != nil {
