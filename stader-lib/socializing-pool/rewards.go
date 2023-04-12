@@ -42,3 +42,7 @@ func GetRewardCycleDetails(sp *stader.SocializingPoolContractManager, cycle *big
 func HasClaimedRewards(sp *stader.SocializingPoolContractManager, address common.Address, index *big.Int, opts *bind.CallOpts) (bool, error) {
 	return sp.SocializingPool.ClaimedRewards(opts, address, index)
 }
+
+func IsSocializingPoolPaused(sp *stader.SocializingPoolContractManager, opts *bind.CallOpts) (bool, error) {
+	return sp.SocializingPool.Paused(opts)
+}
