@@ -1,6 +1,7 @@
 package node
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/mitchellh/go-homedir"
@@ -170,8 +171,11 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		//fmt.Printf("Converting merkle proofs to [32]byte\n")
 		cycleMerkleProofs := [][32]byte{}
 		for _, proof := range merkleData.Proof {
-			merkleProofBytes := []byte(proof)
-			fmt.Printf("merkleProofBytes: %v\n", merkleProofBytes)
+			fmt.Printf("proof: %v\n", proof)
+			merkleProofBytes, err := hex.DecodeString(proof)
+			if err != nil {
+				return nil, err
+			}
 			var proofBytes [32]byte
 			copy(proofBytes[:], merkleProofBytes[:32])
 			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
