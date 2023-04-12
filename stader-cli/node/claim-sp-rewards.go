@@ -45,14 +45,21 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return nil
 	}
 
-	fmt.Println("Downloading the merkle proofs for the cycles you have unclaimed rewards for...")
-	if len(canClaimSpRewards.CyclesToDownload) > 0 {
-		_, err := staderClient.DownloadSpMerkleProofs()
-		if err != nil {
-			return err
+	if downloadMerkleProofs {
+		fmt.Println("Downloading the merkle proofs for the cycles you have unclaimed rewards for...")
+		if len(canClaimSpRewards.CyclesToDownload) > 0 {
+			if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+				"Are you sure you want to download the merkle proofs for cycles %v? (y/n)", canClaimSpRewards.CyclesToDownload))) {
+				fmt.Println("Cancelled.")
+				return nil
+			}
+			_, err := staderClient.DownloadSpMerkleProofs()
+			if err != nil {
+				return err
+			}
 		}
+		fmt.Println("Merkle proofs downloaded!")
 	}
-	fmt.Println("Merkle proofs downloaded!")
 
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"Are you sure you want to claim the rewards for cycles %v? (y/n)", canClaimSpRewards.UnclaimedCycles))) {
