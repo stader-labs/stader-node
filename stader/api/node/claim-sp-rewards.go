@@ -171,6 +171,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		cycleMerkleProofs := [][32]byte{}
 		for _, proof := range merkleData.Proof {
 			merkleProofBytes := []byte(proof)
+			fmt.Printf("merkleProofBytes: %v\n", merkleProofBytes)
 			var proofBytes [32]byte
 			copy(proofBytes[:], merkleProofBytes[:32])
 			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
