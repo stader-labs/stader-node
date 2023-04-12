@@ -813,6 +813,24 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "estimate-claim-sp-rewards-gas",
+				Usage:     "Estimate the gas required to claim the SP rewards",
+				UsageText: "stader-cli api node estimate-claim-sp-rewards-gas cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					// Run
+					api.PrintResponse(estimateSpRewardsGas(c, cycles))
+					return nil
+
+				},
+			},
 		},
 	})
 }
