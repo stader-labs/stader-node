@@ -169,26 +169,13 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		// convert merkle proofs to [32]byte
 		//fmt.Printf("Converting merkle proofs to [32]byte\n")
 		cycleMerkleProofs := [][32]byte{}
-		//for _, proof := range merkleData.Proof {
-		//	var proofBytes [32]byte
-		//	copy(proofBytes[:], proof)
-		//	cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
-		//}
-		for index, proof := range merkleData.Proof {
-			for i := 0; i < 32; i++ {
-				cycleMerkleProofs[index][i] = proof[i]
-			}
+		for _, proof := range merkleData.Proof {
+			merkleProofBytes := []byte(proof)
+			var proofBytes [32]byte
+			copy(proofBytes[:], merkleProofBytes[:32])
+			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
 		}
 
-		// convert cycleMerkleProofs to array of strings
-		//fmt.Printf("Converting merkle proofs to array of strings\n")
-		//cycleMerkleProofsString := []string{}
-		//for _, proof := range cycleMerkleProofs {
-		//	cycleMerkleProofsString = append(cycleMerkleProofsString, hex.EncodeToString(proof[:]))
-		//}
-		//fmt.Printf("cycleMerkleProofsString: %v\n", cycleMerkleProofsString)
-
-		//fmt.Printf("Successfully converted merkle proofs to [32]byte: %s\n", cycleMerkleProofs)
 		merkleProofs = append(merkleProofs, cycleMerkleProofs)
 	}
 
