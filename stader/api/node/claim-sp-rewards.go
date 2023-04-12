@@ -16,6 +16,58 @@ import (
 	"os"
 )
 
+// TODO - bchain - test a couple of merkle before integrating this logic
+func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
+	sp, err := services.GetSocializingPoolContract(c)
+	if err != nil {
+		return false, err
+	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return false, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return false, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return false, err
+	}
+
+	cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
+	if err != nil {
+		return false, err
+	}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return false, err
+	}
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return false, err
+	}
+
+	lastSocializingPoolChangeBlock, err := node.GetSocializingPoolStateChangeBlock(pnr, operatorId, nil)
+	if err != nil {
+		return false, err
+	}
+	lastSocializingPoolChangeBlockUint := lastSocializingPoolChangeBlock.Uint64()
+	cycleStartBlock := cycleDetails.StartBlock.Uint64()
+	cycleEndBlock := cycleDetails.EndBlock.Uint64()
+
+	switch operatorInfo.OptedForSocializingPool {
+	case true:
+		return lastSocializingPoolChangeBlockUint < cycleStartBlock || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || !(lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
+	case false:
+		return !(lastSocializingPoolChangeBlockUint < cycleStartBlock) || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || (lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
+	default:
+		// will never happen
+		return false, fmt.Errorf("operator info opted for socializing pool is not a boolean")
+	}
+}
+
 func getClaimData(c *cli.Context, cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
 	cfg, err := services.GetConfig(c)
 	if err != nil {
