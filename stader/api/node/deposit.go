@@ -74,6 +74,15 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		canNodeDepositResponse.InsufficientBalance = true
 	}
 
+	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPermissionlessNodeRegistryPaused {
+		canNodeDepositResponse.DepositPaused = true
+		return &canNodeDepositResponse, nil
+	}
+
 	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -92,21 +101,30 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
-	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-	if isPermissionlessNodeRegistryPaused {
-		canNodeDepositResponse.DepositPaused = true
-		return &canNodeDepositResponse, nil
-	}
-
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
 	if err != nil {
 		return nil, err
 	}
 	if !hasEnoughSdCollateral {
 		canNodeDepositResponse.NotEnoughSdCollateral = true
+		return &canNodeDepositResponse, nil
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
+		canNodeDepositResponse.MaxValidatorLimitReached = true
 		return &canNodeDepositResponse, nil
 	}
 

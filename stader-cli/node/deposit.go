@@ -88,6 +88,10 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("Not enough SD as collateral")
 		return nil
 	}
+	if canNodeDepositResponse.MaxValidatorLimitReached {
+		fmt.Printf("Max validator limit reached")
+		return nil
+	}
 
 	//Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))

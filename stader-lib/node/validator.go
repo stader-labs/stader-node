@@ -63,6 +63,14 @@ func GetTotalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager
 	return pnr.PermissionlessNodeRegistry.GetOperatorTotalKeys(opts, operatorId)
 }
 
+func GetTotalNonTerminalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, maxPaginationIndex *big.Int, opts *bind.CallOpts) (uint64, error) {
+	return pnr.PermissionlessNodeRegistry.GetOperatorTotalNonTerminalKeys(opts, operatorAddress, big.NewInt(0), maxPaginationIndex)
+}
+
+func GetMaxValidatorKeysPerOperator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (uint64, error) {
+	return pnr.PermissionlessNodeRegistry.MaxKeyPerOperator(opts)
+}
+
 func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, validatorIndex *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
 }
