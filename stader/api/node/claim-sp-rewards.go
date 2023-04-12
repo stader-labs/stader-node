@@ -144,7 +144,7 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Read merkle data! %v\n", merkleData)
+		fmt.Printf("Read merkle data! %v\n", merkleData)
 
 		//fmt.Printf("Parsing amountSdBigInt!\n")
 		amountSdBigInt := big.NewInt(0)
