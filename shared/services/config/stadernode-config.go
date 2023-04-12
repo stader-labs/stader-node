@@ -275,16 +275,16 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		socializingPoolAddress: map[config.Network]string{
-			config.Network_Prater:   "0x36155Adc8cFDB740d01d22d3dA0Ab90d90Be81b8",
-			config.Network_Devnet:   "0x36155Adc8cFDB740d01d22d3dA0Ab90d90Be81b8",
-			config.Network_Mainnet:  "0x36155Adc8cFDB740d01d22d3dA0Ab90d90Be81b8",
+			config.Network_Prater:   "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
+			config.Network_Devnet:   "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
+			config.Network_Mainnet:  "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		staderOracleAddress: map[config.Network]string{
-			config.Network_Prater:   "0x8C52bDf855dE047Eeb7c03DDCAdf75988c974B0F",
-			config.Network_Devnet:   "0x8C52bDf855dE047Eeb7c03DDCAdf75988c974B0F",
-			config.Network_Mainnet:  "0x8C52bDf855dE047Eeb7c03DDCAdf75988c974B0F",
+			config.Network_Prater:   "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
+			config.Network_Devnet:   "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
+			config.Network_Mainnet:  "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
