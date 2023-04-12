@@ -22,9 +22,9 @@ package service
 import (
 	"fmt"
 
-	ethCfUI "github.com/stader-labs/ethcli-configuration-ui"
-	"github.com/stader-labs/ethcli-configuration-ui/config"
-	"github.com/stader-labs/ethcli-configuration-ui/logger"
+	"github.com/stader-labs/ethcli-ui/configuration/config"
+	"github.com/stader-labs/ethcli-ui/logger"
+	"github.com/stader-labs/ethcli-ui/ui"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -112,38 +112,28 @@ func updateFeeAndReward(newCfg *stdCf.StaderConfig, settings map[string]interfac
 	staderNode.ArchiveECUrl.Value = settings[keys.Fr_archive_mode_ec_url]
 }
 
-func openConfigurationSetting(c *cli.Context) (*ConfigContext, error) {
+func configureService(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer staderClient.Close()
 
 	cfg, err := loadConfig(c)
 	if err != nil {
-		return nil, fmt.Errorf("error loading user settings: %w", err)
+		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	oldSetting := makeUISettingFromConfig(cfg)
-	saved, openWizardPage, m := ethCfUI.Run(oldSetting)
+	wizardConfig := NewSettingsType(cfg)
 
-	newConfigFromUI := makeConfigFromUISetting(cfg, m)
-	if saved {
+	saved, _, configurationSettings := ui.Run(&wizardConfig, &oldSetting)
+	newConfigFromUI := makeConfigFromUISetting(cfg, *configurationSettings)
+	fmt.Printf("SAVCED %+v", saved)
+	if !saved {
 		fmt.Printf("Your settings have not changed.\n")
-		err = staderClient.SaveConfig(&newConfigFromUI)
-		if err != nil {
-			return nil, err
-		}
+		return nil
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &ConfigContext{
-		openWizardPage:  openWizardPage,
-		staderClient:    staderClient,
-		newConfigFromUI: newConfigFromUI,
-		cliCtx:          c,
-	}, nil
+	return staderClient.SaveConfig(&newConfigFromUI)
 }

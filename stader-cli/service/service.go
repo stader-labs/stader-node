@@ -28,18 +28,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stader-labs/ethcli-ui/pages"
-
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
-	ethcliui "github.com/stader-labs/ethcli-ui"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
 
+	"github.com/stader-labs/ethcli-ui/wizard/pages"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -308,7 +306,6 @@ func UpdateConfig(staderClient *stader.Client, cfg *config.StaderConfig, newSett
 func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 
 	currentSettings := pages.SettingsType{
-		Confirmed: true,
 		Network:   "prater",
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
@@ -361,19 +358,6 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 	}
 
 	return currentSettings
-}
-
-func configureService(c *cli.Context) error {
-	ctx, err := openConfigurationSetting(c)
-	if err != nil {
-		return fmt.Errorf("ERR in config page %w", err)
-	}
-
-	if ctx.openWizardPage == false {
-		return nil
-	}
-
-	return openWizardPage(ctx)
 }
 
 // Configure the service
@@ -443,34 +427,6 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 		return nil, staderClient.SaveConfig(cfg)
 	}
 	return cfg, nil
-}
-
-func openWizardPage(ctx *ConfigContext) error {
-	currentSettings := NewSettingsType(&ctx.newConfigFromUI)
-	set, err := ethcliui.Run(&currentSettings)
-	if err != nil {
-		return err
-	}
-
-	newSettings := set()
-	if !newSettings.Confirmed {
-		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
-		return nil
-	}
-	if !HasBeenUpdated(currentSettings, newSettings) {
-		fmt.Printf("Your settings have not changed.\n")
-		return nil
-	}
-
-	UpdateConfig(ctx.staderClient, &ctx.newConfigFromUI, &newSettings)
-
-	// Restart the services
-	err = startService(ctx.cliCtx, false)
-	if err != nil {
-		return err
-	}
-
-	return err
 }
 
 // Updates a configuration from the provided CLI arguments headlessly
