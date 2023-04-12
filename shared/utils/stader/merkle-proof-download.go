@@ -29,24 +29,21 @@ func GetAllMerkleProofsForOperator(operator common.Address) ([]*stader_backend.C
 	return []*stader_backend.CycleMerkleProofs{
 		{
 			Cycle: 1,
-			Proof: []string{},
-			Eth:   "1000000000000000000",
-			Sd:    "1000000000000000000",
-			Root:  "0x7c13648108d8172a507408b98160a0f09d22eb409c4911c7cab4a24b59c90042",
+			Proof: []string{
+				"0x7899e58593b56ccecf51b92a0480a83450306b3eae6bdd610200ecac651faa9b",
+			},
+			Eth:  "1000000000000000000",
+			Sd:   "1000000000000000000",
+			Root: "0x813f98cbd1ddea7097db5c5eca5da343a4625ecdbab384ab681ef6df307dfaa2",
 		},
 		{
 			Cycle: 2,
-			Proof: []string{},
-			Eth:   "2000000000000000000",
-			Sd:    "2000000000000000000",
-			Root:  "0xf2c90d506b4a46d0fa5b7517ec6df08614cc507c52212d0f7da0df38526ccf8b",
-		},
-		{
-			Cycle: 3,
-			Proof: []string{},
-			Eth:   "3000000000000000000",
-			Sd:    "3000000000000000000",
-			Root:  "0xaa6e55e3ab5e25bd672c48f695de4321cdae4b591dd8607dd5f8e3983266c1b3",
+			Proof: []string{
+				"0xf95a29cc9b510fc71767250ad824809eb15bcc79b1ba9a89816671a1579635d4",
+			},
+			Eth:  "2000000000000000000",
+			Sd:   "2000000000000000000",
+			Root: "0xeb6a5b823dbe72a46a224e32fd396e634ce4439fab72791627d02a67fb04cb1a",
 		},
 	}, nil
 }
