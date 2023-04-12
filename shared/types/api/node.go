@@ -183,6 +183,7 @@ type CanUpdateSocializeElResponse struct {
 	OperatorNotActive     bool           `json:"operatorNotActive"`
 	AlreadyOptedIn        bool           `json:"alreadyOptedIn"`
 	AlreadyOptedOut       bool           `json:"alreadyOptedOut"`
+	InCooldown            bool           `json:"inCooldown"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 

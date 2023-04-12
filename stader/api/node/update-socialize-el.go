@@ -6,20 +6,21 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	node "github.com/stader-labs/stader-node/stader-lib/node"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
 )
 
 func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocializeElResponse, error) {
 
-	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
 	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return nil, err
+	}
+	sdcfg, err := services.GetStaderConfigContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +54,23 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	}
 	if !operatorInfo.OptedForSocializingPool && !socializeEl {
 		response.AlreadyOptedOut = true
+		return &response, nil
+	}
+
+	currentBlock, err := eth1.GetCurrentBlockNumber(c)
+	if err != nil {
+		return nil, err
+	}
+	lastChangeBlock, err := node.GetSocializingPoolStateChangeBlock(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	coolDownPeriod, err := stader_config.GetSocializingPoolChangeThreshold(sdcfg, nil)
+	if err != nil {
+		return nil, err
+	}
+	if currentBlock < lastChangeBlock.Add(lastChangeBlock, coolDownPeriod).Uint64() {
+		response.InCooldown = true
 		return &response, nil
 	}
 

@@ -44,6 +44,10 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		fmt.Println("You have already opted out of the socializing pool!")
 		return nil
 	}
+	if res.InCooldown {
+		fmt.Println("You are in cooldown period!")
+		return nil
+	}
 
 	err = gas.AssignMaxFeeAndLimit(res.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {

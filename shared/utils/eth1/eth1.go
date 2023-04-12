@@ -74,3 +74,11 @@ func CheckForNonceOverride(c *cli.Context, opts *bind.TransactOpts) error {
 	return nil
 
 }
+
+func GetCurrentBlockNumber(c *cli.Context) (uint64, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return 0, err
+	}
+	return ec.BlockNumber(context.Background())
+}
