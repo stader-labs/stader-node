@@ -33,13 +33,15 @@ type NodeStatusResponse struct {
 }
 
 type CanRegisterNodeResponse struct {
-	Status             string         `json:"status"`
-	Error              string         `json:"error"`
-	CanRegister        bool           `json:"canRegister"`
-	AlreadyRegistered  bool           `json:"alreadyRegistered"`
-	RegistrationPaused bool           `json:"registrationPaused"`
-	GasInfo            stader.GasInfo `json:"gasInfo"`
+	Status                    string         `json:"status"`
+	Error                     string         `json:"error"`
+	AlreadyRegistered         bool           `json:"alreadyRegistered"`
+	RegistrationPaused        bool           `json:"registrationPaused"`
+	OperatorNameTooLong       bool           `json:"operatorNameTooLong"`
+	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
+	GasInfo                   stader.GasInfo `json:"gasInfo"`
 }
+
 type RegisterNodeResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
@@ -309,6 +311,23 @@ type EstimateClaimSpRewardsGasResponse struct {
 }
 
 type ClaimSpRewardsResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanUpdateOperatorDetails struct {
+	Status                    string         `json:"status"`
+	Error                     string         `json:"error"`
+	OperatorNotRegistered     bool           `json:"operatorNotRegistered"`
+	OperatorNotActive         bool           `json:"operatorNotActive"`
+	OperatorNameTooLong       bool           `json:"operatorNameTooLong"`
+	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
+	NothingToUpdate           bool           `json:"nothingToUpdate"`
+	GasInfo                   stader.GasInfo `json:"gasInfo"`
+}
+
+type UpdateOperatorDetails struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

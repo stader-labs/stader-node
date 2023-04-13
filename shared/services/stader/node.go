@@ -636,3 +636,33 @@ func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, 
 
 	return response, nil
 }
+
+func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	if err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
+	}
+	var response api.CanUpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not decode can-update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	if err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
+	}
+	var response api.UpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not decode update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %s", response.Error)
+	}
+	return response, nil
+}

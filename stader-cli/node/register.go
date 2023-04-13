@@ -42,14 +42,20 @@ func registerNode(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if !canRegister.CanRegister {
-		fmt.Println("The node cannot be registered:")
-		if canRegister.AlreadyRegistered {
-			fmt.Println("The node is already registered with Stader.")
-		}
-		if canRegister.RegistrationPaused {
-			fmt.Println("Node registrations are currently disabled.")
-		}
+	if canRegister.AlreadyRegistered {
+		fmt.Println("The node is already registered with Stader.")
+		return nil
+	}
+	if canRegister.RegistrationPaused {
+		fmt.Println("Node registrations are currently disabled.")
+		return nil
+	}
+	if canRegister.OperatorNameTooLong {
+		fmt.Println("The operator name is too long.")
+		return nil
+	}
+	if canRegister.OperatorRewardAddressZero {
+		fmt.Println("The operator reward address cannot be zero.")
 		return nil
 	}
 

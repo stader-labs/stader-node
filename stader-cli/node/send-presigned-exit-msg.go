@@ -40,7 +40,7 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to send presigned message for validator %s? (y/n)", validatorPubKey))) {
+		"Are you sure you want to send presigned message for validator %s?", validatorPubKey))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

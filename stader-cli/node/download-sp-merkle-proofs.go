@@ -38,7 +38,7 @@ func downloadSPMerkleProofs(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to download the missing merkle proofs? (y/n)"))) {
+		"Are you sure you want to download the missing merkle proofs?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

@@ -282,7 +282,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
 
-	nodeAccount, err = w.GetNodeAccount()
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err

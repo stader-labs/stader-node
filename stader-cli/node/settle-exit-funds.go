@@ -46,7 +46,7 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) erro
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw %.6f exited funds for validator %s? (y/n)", math.RoundDown(eth.WeiToEth(res.ExitAmount), 6), validatorPubKey))) {
+		"Are you sure you want to withdraw %.6f exited funds for validator %s?", math.RoundDown(eth.WeiToEth(res.ExitAmount), 6), validatorPubKey))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

@@ -58,7 +58,7 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw CL rewards for validator %s? (y/n)", validatorPubKey))) {
+		"Are you sure you want to withdraw CL rewards for validator %s?", validatorPubKey))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

@@ -35,7 +35,7 @@ func claimSd(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim SD? (y/n) "))) {
+		"Are you sure you want to claim SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

@@ -472,6 +472,41 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return ClaimSpRewards(c, downloadMerkleProofs)
 				},
 			},
+			{
+				Name:      "update-operator-details",
+				Aliases:   []string{"uod"},
+				Usage:     "Update Operator name or Operator reward address",
+				UsageText: "stader-cli node update-operator-details --operator-name --operator-reward-address",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "operator-name, on",
+						Usage: "The new operator name",
+					},
+					cli.StringFlag{
+						Name:  "operator-reward-address, ora",
+						Usage: "New operator reward address",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm claim of rewards",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					//if err := cliutils.ValidateArgCount(c, 2); err != nil {
+					//	return err
+					//}
+
+					operatorName := c.String("operator-name")
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					return updateOperatorDetails(c, operatorName, operatorRewardAddress)
+				},
+			},
 		},
 	})
 }

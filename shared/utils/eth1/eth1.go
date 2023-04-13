@@ -22,6 +22,7 @@ package eth1
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
 
@@ -90,4 +91,9 @@ func GetBlockHeader(c *cli.Context, blockNumber uint64) (*types.Header, error) {
 		return nil, err
 	}
 	return ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
+}
+
+func IsZeroAddress(address common.Address) bool {
+	zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
+	return address == zeroAddress
 }

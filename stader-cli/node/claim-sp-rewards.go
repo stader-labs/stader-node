@@ -52,7 +52,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("Downloading the merkle proofs for the cycles you have unclaimed rewards for...")
 		if len(canClaimSpRewards.CyclesToDownload) > 0 {
 			if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-				"Are you sure you want to download the merkle proofs for cycles %v? (y/n)", canClaimSpRewards.CyclesToDownload))) {
+				"Are you sure you want to download the merkle proofs for cycles %v?", canClaimSpRewards.CyclesToDownload))) {
 				fmt.Println("Cancelled.")
 				return nil
 			}

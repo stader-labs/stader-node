@@ -3,6 +3,7 @@ package node
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -22,6 +23,10 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return nil, err
 	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	sdcfg, err := services.GetStaderConfigContract(c)
+	if err != nil {
+		return nil, err
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -50,6 +55,19 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 	}
 	if operatorId.Int64() != 0 {
 		response.AlreadyRegistered = true
+		return &response, nil
+	}
+
+	operatorNameMaxLength, err := stader_config.GetOperatorNameMaxLength(sdcfg, nil)
+	if err != nil {
+		return nil, err
+	}
+	if len(operatorName) > int(operatorNameMaxLength.Int64()) {
+		response.OperatorNameTooLong = true
+		return &response, nil
+	}
+	if eth1.IsZeroAddress(operatorRewardAddress) {
+		response.OperatorRewardAddressZero = true
 		return &response, nil
 	}
 

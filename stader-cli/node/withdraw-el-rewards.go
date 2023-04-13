@@ -51,7 +51,7 @@ func WithdrawElRewards(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw El Rewards? (y/n)"))) {
+		"Are you sure you want to withdraw El Rewards?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
