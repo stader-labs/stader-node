@@ -22,6 +22,7 @@ package eth1
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -81,4 +82,12 @@ func GetCurrentBlockNumber(c *cli.Context) (uint64, error) {
 		return 0, err
 	}
 	return ec.BlockNumber(context.Background())
+}
+
+func GetBlockHeader(c *cli.Context, blockNumber uint64) (*types.Header, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return nil, err
+	}
+	return ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
 }

@@ -168,6 +168,15 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 		return &response, nil
 	}
 
+	isPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPaused {
+		response.SocializingPoolContractPaused = true
+		return &response, nil
+	}
+
 	claimedCycles := []*big.Int{}
 	unclaimedCycles := []*big.Int{}
 	// TODO - bchain - add check for this

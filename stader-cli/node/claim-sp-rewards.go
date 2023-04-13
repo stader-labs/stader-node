@@ -30,6 +30,10 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 	fmt.Printf("canClaimSpRewards: %+v\n", canClaimSpRewards)
+	if canClaimSpRewards.SocializingPoolContractPaused {
+		fmt.Println("The socializing pool contract is paused!")
+		return nil
+	}
 	if canClaimSpRewards.OperatorNotRegistered {
 		fmt.Println("Operator not registered!")
 		return nil

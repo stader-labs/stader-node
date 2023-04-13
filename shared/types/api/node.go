@@ -291,13 +291,14 @@ type DownloadSpMerkleProofsResponse struct {
 }
 
 type CanClaimSpRewardsResponse struct {
-	Status                string     `json:"status"`
-	Error                 string     `json:"error"`
-	OperatorNotRegistered bool       `json:"operatorNotRegistered"`
-	IneligibleCycles      []*big.Int `json:"ineligibleCycles"`
-	ClaimedCycles         []*big.Int `json:"claimedCycles"`
-	UnclaimedCycles       []*big.Int `json:"unclaimedCycles"`
-	CyclesToDownload      []*big.Int `json:"cyclesToDownload"`
+	Status                        string     `json:"status"`
+	Error                         string     `json:"error"`
+	OperatorNotRegistered         bool       `json:"operatorNotRegistered"`
+	SocializingPoolContractPaused bool       `json:"socializingPoolContractPaused"`
+	IneligibleCycles              []*big.Int `json:"ineligibleCycles"`
+	ClaimedCycles                 []*big.Int `json:"claimedCycles"`
+	UnclaimedCycles               []*big.Int `json:"unclaimedCycles"`
+	CyclesToDownload              []*big.Int `json:"cyclesToDownload"`
 }
 
 type EstimateClaimSpRewardsGasResponse struct {
