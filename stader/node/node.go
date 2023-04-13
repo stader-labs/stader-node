@@ -25,7 +25,9 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
@@ -87,6 +89,14 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
 
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
@@ -106,6 +116,13 @@ func run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
 
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return err
+	}
+
+	// get all registered validators with smart contracts
+
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
@@ -123,6 +140,16 @@ func run(c *cli.Context) error {
 				if err != nil {
 					errorLog.Println(err)
 				}
+			}
+
+			// make a map of all validators actually registered with stader
+			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
+
+			infoLog.Println("Building a map of user validators registered with stader")
+			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			if err != nil {
+				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
+				continue
 			}
 
 			infoLog.Println("Starting a pass of the presign daemon!")
@@ -147,6 +174,12 @@ func run(c *cli.Context) error {
 
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
+
+					_, registered := registeredValidators[validatorPubKey]
+					if !registered {
+						errorLog.Printf("Validator pub key: %s not registered with stader\n", validatorPubKey)
+						continue
+					}
 
 					// check if validator has not yet been registered
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
