@@ -113,7 +113,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	}
 
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim the rewards for cycles %v? (y/n)", canClaimSpRewards.UnclaimedCycles))) {
+		"Are you sure you want to claim the rewards for cycles %v? (y/n)", cyclesToClaimArray))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
