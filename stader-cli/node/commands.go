@@ -114,6 +114,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "socialize-el, sel",
 						Usage: "Should EL rewards be socialized (will default to true)",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm node registration",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					// Validate flags
