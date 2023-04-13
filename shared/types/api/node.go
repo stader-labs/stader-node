@@ -177,14 +177,15 @@ type ExitValidatorResponse struct {
 }
 
 type CanUpdateSocializeElResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	OperatorNotActive     bool           `json:"operatorNotActive"`
-	AlreadyOptedIn        bool           `json:"alreadyOptedIn"`
-	AlreadyOptedOut       bool           `json:"alreadyOptedOut"`
-	InCooldown            bool           `json:"inCooldown"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status                        string         `json:"status"`
+	Error                         string         `json:"error"`
+	OperatorNotRegistered         bool           `json:"operatorNotRegistered"`
+	OperatorNotActive             bool           `json:"operatorNotActive"`
+	SocializingPoolContractPaused bool           `json:"socializingPoolContractPaused"`
+	AlreadyOptedIn                bool           `json:"alreadyOptedIn"`
+	AlreadyOptedOut               bool           `json:"alreadyOptedOut"`
+	InCooldown                    bool           `json:"inCooldown"`
+	GasInfo                       stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateSocializeElResponse struct {

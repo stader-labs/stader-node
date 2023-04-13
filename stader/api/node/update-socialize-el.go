@@ -6,6 +6,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	node "github.com/stader-labs/stader-node/stader-lib/node"
+	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
 )
@@ -24,12 +25,25 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	if err != nil {
 		return nil, err
 	}
+	sp, err := services.GetSocializingPoolContract(c)
+	if err != nil {
+		return nil, err
+	}
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
 	// Response
 	response := api.CanUpdateSocializeElResponse{}
+
+	isSocializingPoolPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isSocializingPoolPaused {
+		response.SocializingPoolContractPaused = true
+		return &response, nil
+	}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
