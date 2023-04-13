@@ -83,16 +83,28 @@ func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]int
 	return &newCfg, nil
 }
 
-func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
+func makeUISettingFromConfig(cfg *stdCf.StaderConfig) (map[string]interface{}, error) {
 	settings := make(map[string]interface{})
 
-	setUIStaderNode(cfg, settings)
-	setUIExecutionClient(cfg, settings)
-	setUIConsensusClient(cfg, settings)
-	setUIFallbackClient(cfg, settings)
-	setUIMEVBoost(cfg, settings)
-	setUIMonitoring(cfg, settings)
-	return settings
+	if err := setUIStaderNode(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIStaderNode %+v ", err)
+	}
+	if err := setUIExecutionClient(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIExecutionClient %+v ", err)
+	}
+	if err := setUIConsensusClient(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIConsensusClient %+v ", err)
+	}
+	if err := setUIFallbackClient(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIFallbackClient %+v ", err)
+	}
+	if err := setUIMEVBoost(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIMonitoring %+v ", err)
+	}
+	if err := setUIMonitoring(cfg, settings); err != nil {
+		return nil, fmt.Errorf("Error setUIMEVBoost %+v ", err)
+	}
+	return settings, nil
 }
 
 func setUIStaderNode(cfg *stdCf.StaderConfig, settings map[string]interface{}) error {
@@ -134,7 +146,12 @@ func configureService(c *cli.Context) error {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	oldSetting := makeUISettingFromConfig(cfg)
+	oldSetting, err := makeUISettingFromConfig(cfg)
+	if err != nil {
+		fmt.Printf("Error from parsing config model to UI model %+v", err)
+		return err
+	}
+
 	wizardConfig := NewSettingsType(cfg)
 
 	saved, _, configurationSettings := ui.Run(&wizardConfig, &oldSetting)
