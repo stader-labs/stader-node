@@ -73,6 +73,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 // Run daemon
 func run(c *cli.Context) error {
 
+	// add a delay to allow the beacon chain to start up
+	time.Sleep(25 * time.Second)
+
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
 	if err != nil {
