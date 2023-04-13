@@ -23,7 +23,6 @@ import (
 	"fmt"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
-	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
@@ -185,10 +184,6 @@ func run(c *cli.Context) error {
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if err != nil {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
-						continue
-					}
-					if !eth2.IsValidatorActive(validatorStatus) {
-						errorLog.Printf("Validator is not active yet. Validator pub key: %s\n", validatorPubKey)
 						continue
 					}
 
