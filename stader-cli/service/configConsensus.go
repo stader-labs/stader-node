@@ -25,24 +25,28 @@ import (
 )
 
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
+	// TODO Hamid check
 	// newSettings[keys.E2cc_lc_consensus_client] = strings.Title(format(cfg.ConsensusClient.Value))
 	// newSettings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
-	// case cfgtypes.ConsensusClient_Teku:
+	// Teku:
 	newSettings[keys.E2cc_em_custom_graffiti_teku] = cfg.ExternalTeku.Graffiti.Value
+
+	// TODO Hamid check
 	// newSettings[keys.E2cc_em_http_url_teku] = cfg.ExternalTeku.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_teku] = cfg.ExternalTeku.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_teku] = cfg.ExternalTeku.AdditionalVcFlags.Value
 
-	// case cfgtypes.ConsensusClient_Lighthouse:
+	// Lighthouse:
 	newSettings[keys.E2cc_em_custom_graffiti_lighthouse] = cfg.ExternalLighthouse.Graffiti.Value
 	// newSettings[keys.E2cc_em_http_url_lighthouse] = cfg.ExternalLighthouse.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_lighthouse] = cfg.ExternalLighthouse.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_lighthouse] = cfg.ExternalLighthouse.AdditionalVcFlags.Value
 	newSettings[keys.E2cc_em_doppelganger_detection_lighthouse] = cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool)
 
-	// case cfgtypes.ConsensusClient_Prysm:
+	// rysm:
 	newSettings[keys.E2cc_em_custom_graffiti_prysm] = cfg.ExternalPrysm.Graffiti.Value
+	// TODO hamid check
 	// newSettings[keys.E2cc_em_http_url_prysm] = cfg.ExternalPrysm.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_prysm] = cfg.ExternalPrysm.AdditionalVcFlags.Value

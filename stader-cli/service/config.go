@@ -23,7 +23,7 @@ import (
 	"fmt"
 
 	"github.com/stader-labs/ethcli-ui/configuration/config"
-	"github.com/stader-labs/ethcli-ui/logger"
+	"github.com/stader-labs/ethcli-ui/configuration/logger"
 	"github.com/stader-labs/ethcli-ui/ui"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -48,7 +48,7 @@ func format(v interface{}) string {
 
 var keys = config.GetFieldKey()
 
-func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) stdCf.StaderConfig {
+func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) (*stdCf.StaderConfig, error) {
 	newCfg := *oldCfg
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
@@ -64,13 +64,23 @@ func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]int
 	staderNode.DataPath.Value = settings[keys.Sn_storage_location]
 
 	updateFeeAndReward(&newCfg, settings)
-	updateExecutionClient(&newCfg, settings)
-	updateConsensusClient(&newCfg, settings)
-	updateFallbackClient(&newCfg, settings)
-	updateMEVBoost(&newCfg, settings)
-	updateMonitoring(&newCfg, settings)
+	if err := updateExecutionClient(&newCfg, settings); err != nil {
+		return nil, fmt.Errorf("Error updateExecutionClient %+v", err)
+	}
+	if err := updateConsensusClient(&newCfg, settings); err != nil {
+		return nil, fmt.Errorf("Error updateConsensusClient %+v", err)
+	}
+	if err := updateFallbackClient(&newCfg, settings); err != nil {
+		return nil, fmt.Errorf("Error updateFallbackClient %+v", err)
+	}
+	if err := updateMEVBoost(&newCfg, settings); err != nil {
+		return nil, fmt.Errorf("Error updateMEVBoost %+v", err)
+	}
+	if err := updateMonitoring(&newCfg, settings); err != nil {
+		return nil, fmt.Errorf("Error updateMonitoring %+v", err)
+	}
 
-	return newCfg
+	return &newCfg, nil
 }
 
 func makeUISettingFromConfig(cfg *stdCf.StaderConfig) map[string]interface{} {
@@ -128,12 +138,17 @@ func configureService(c *cli.Context) error {
 	wizardConfig := NewSettingsType(cfg)
 
 	saved, _, configurationSettings := ui.Run(&wizardConfig, &oldSetting)
-	newConfigFromUI := makeConfigFromUISetting(cfg, *configurationSettings)
-	fmt.Printf("SAVCED %+v", saved)
+	newConfigFromUI, err := makeConfigFromUISetting(cfg, *configurationSettings)
+
+	if err != nil {
+		fmt.Printf("Error from parsing UI to config model %+v", err)
+		return err
+	}
+
 	if !saved {
 		fmt.Printf("Your settings have not changed.\n")
 		return nil
 	}
 
-	return staderClient.SaveConfig(&newConfigFromUI)
+	return staderClient.SaveConfig(newConfigFromUI)
 }

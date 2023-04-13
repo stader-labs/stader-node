@@ -52,8 +52,10 @@ func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]
 	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_http_port]
 	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_websocket_port]
 	cfg.ExecutionCommon.P2pPort.Value = newSettings[keys.E1ec_lm_p2p_port]
-	// cfg.ExecutionCommon.EnginePort.Value = newSettings[keys.E1ec_lm_engine_api_port]
 	cfg.ExecutionCommon.OpenRpcPorts.Value = newSettings[keys.E1ec_lm_expose_rpc_port]
+
+	//TODO Hamid check:
+	// cfg.ExecutionCommon.EnginePort.Value = newSettings[keys.E1ec_lm_engine_api_port]
 	// cfg.ExecutionCommon.EthstatsLabel.Value = newSettings[keys.E1ec_lm_ethstats_label]
 	// cfg.ExecutionCommon.EthstatsLogin.Value = newSettings[keys.E1ec_lm_ethstats_login]
 
@@ -94,6 +96,8 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_websocket_port] = format(cfg.ExecutionCommon.WsPort.Value)
 	newSettings[keys.E1ec_lm_expose_rpc_port] = cfg.ExecutionCommon.OpenRpcPorts.Value
 	newSettings[keys.E1ec_lm_p2p_port] = format(cfg.ExecutionCommon.P2pPort.Value)
+	//TODO Hamid check:
+
 	// newSettings[keys.E1ec_lm_engine_api_port] = format(cfg.ExecutionCommon.EnginePort.Value)
 	// newSettings[keys.E1ec_lm_ethstats_label] = cfg.ExecutionCommon.EthstatsLabel.Value
 	// newSettings[keys.E1ec_lm_ethstats_login] = cfg.ExecutionCommon.EthstatsLogin.Value
@@ -118,7 +122,7 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_besu_max_peers] = format(cfg.Besu.MaxPeers.Value)
 	newSettings[keys.E1ec_lm_besu_container_tag] = cfg.Besu.ContainerTag.Value
 	newSettings[keys.E1ec_lm_besu_additional_flags] = cfg.Besu.AdditionalFlags.Value
-	// newSettings[keys.E1ec_lm_besu_in_memory_pruning_cache_size] = cfg.Nethermind.AdditionalFlags.Value
+	newSettings[keys.E1ec_lm_besu_in_memory_pruning_cache_size] = cfg.Nethermind.AdditionalFlags.Value
 
 	return nil
 }
