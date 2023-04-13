@@ -16,7 +16,6 @@ import (
 	"os"
 )
 
-// TODO - bchain - test a couple of merkle before integrating this logic
 func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
 	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
@@ -179,7 +178,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	claimedCycles := []*big.Int{}
 	unclaimedCycles := []*big.Int{}
-	// TODO - bchain - add check for this
 	ineligibleCycles := []*big.Int{}
 	cyclesToDownload := []*big.Int{}
 
@@ -190,6 +188,15 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycle := big.NewInt(i)
+		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+		if err != nil {
+			return nil, err
+		}
+		if !isEligible {
+			ineligibleCycles = append(ineligibleCycles, cycle)
+			continue
+		}
+
 		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
 		if err != nil {
 			return nil, err

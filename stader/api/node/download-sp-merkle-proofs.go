@@ -11,6 +11,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
+	"math/big"
 	"os"
 )
 
@@ -59,10 +60,17 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
 	for i := int64(1); i < currentIndex; i++ {
-		// TODO - check if operator is eligible for cycle before downloading it
+		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+		if err != nil {
+			return nil, err
+		}
+		if !isEligible {
+			continue
+		}
+
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
-		_, err := os.Stat(cycleMerkleRewardFile)
+		_, err = os.Stat(cycleMerkleRewardFile)
 		if !os.IsNotExist(err) && err != nil {
 			return nil, err
 		}
@@ -111,10 +119,18 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
 	for i := int64(1); i < currentIndex; i++ {
+		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+		if err != nil {
+			return nil, err
+		}
+		if !isEligible {
+			continue
+		}
+
 		// TODO - bchain - add check for eligibility
 		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
-		_, err := os.Stat(cycleRewardFile)
+		_, err = os.Stat(cycleRewardFile)
 		if !os.IsNotExist(err) && err != nil {
 			return nil, err
 		}
@@ -137,7 +153,6 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
-		//fmt.Printf("downloadSpMerkleProof: absolutePathOfProofFile: %+v", absolutePathOfProofFile)
 		if err != nil {
 			return nil, err
 		}
