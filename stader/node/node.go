@@ -23,6 +23,7 @@ import (
 	"fmt"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
@@ -186,11 +187,15 @@ func run(c *cli.Context) error {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
 						continue
 					}
+					if eth2.IsValidatorExiting(validatorStatus) {
+						errorLog.Printf("Validator pub key: %s already exiting", validatorPubKey)
+						continue
+					}
 
 					// check if the presigned message has been registered. if it has been registered, then continue
 					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
 					if isRegistered {
-						infoLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
 						continue
 					} else if err != nil {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
