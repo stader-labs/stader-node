@@ -28,7 +28,8 @@ import (
 
 func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	// update the execution client
-	cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
+	executionMod := makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
+	cfg.ExecutionClientMode.Value = executionMod
 
 	if err := updateExternalExecutionClient(cfg, newSettings); err != nil {
 		return err
@@ -49,6 +50,7 @@ func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[stri
 func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings[keys.E1ec_lm_execution_client].(string)))
 
+	// cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
 	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_http_port]
 	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_websocket_port]
 	cfg.ExecutionCommon.P2pPort.Value = newSettings[keys.E1ec_lm_p2p_port]
@@ -128,25 +130,20 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 }
 
 func makeCfgExecutionMode(i interface{}) cfgtypes.Mode {
-	mod, ok := i.(string)
-	if !ok {
-		return ""
-	}
+	// fmt.Printf("I is %+v \n", i)
+	mod := format(i)
 	switch mod {
 	case "Locally Managed":
-		return cfgtypes.Mode_External
-	case "Externally Managed":
 		return cfgtypes.Mode_Local
+	case "Externally Managed":
+		return cfgtypes.Mode_External
 	default:
 		return cfgtypes.Mode_Unknown
 	}
 }
 
 func makeUIExecutionMode(i interface{}) string {
-	mod, ok := i.(cfgtypes.Mode)
-	if !ok {
-		return ""
-	}
+	mod := i.(cfgtypes.Mode)
 	switch mod {
 	case cfgtypes.Mode_Local:
 		return "Locally Managed"
