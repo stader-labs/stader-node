@@ -73,9 +73,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 // Run daemon
 func run(c *cli.Context) error {
 
-	// add a delay to allow the beacon chain to start up
-	time.Sleep(25 * time.Second)
-
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
 	if err != nil {
@@ -116,6 +113,18 @@ func run(c *cli.Context) error {
 	// validator presigned loop
 	go func() {
 		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				}
+			}
+
 			infoLog.Println("Starting a pass of the presign daemon!")
 			walletIndex := w.GetNextAccount()
 			noOfBatches := walletIndex / uint(preSignBatchSize)

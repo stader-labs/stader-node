@@ -56,6 +56,7 @@ func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
 	cycleStartBlock := cycleDetails.StartBlock.Uint64()
 	cycleEndBlock := cycleDetails.EndBlock.Uint64()
 
+	// TODO - bchain - simplify this logic using boolean algebra and make it succicnt
 	switch operatorInfo.OptedForSocializingPool {
 	case true:
 		return lastSocializingPoolChangeBlockUint < cycleStartBlock || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || !(lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
