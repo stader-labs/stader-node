@@ -30,28 +30,30 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
-	github.com/rivo/tview v0.0.0-20230406072732-e22ce9588bb4 // indirect
-	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sethvargo/go-password v0.2.0
-	github.com/shirou/gopsutil/v3 v3.22.9
-	github.com/stader-labs/ethcli-ui v0.0.2
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230412083342-9409f8319e0f
-	github.com/stader-labs/ethcli-ui/ui v0.0.0-20230412090856-83d611f59e26 // indirect
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230412090856-83d611f59e26 // indirect
+	github.com/shirou/gopsutil/v3 v3.23.1
+	github.com/stader-labs/ethcli-ui v0.0.9 // indirect
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230414075903-e65d5934fe38
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230414075903-e65d5934fe38
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
 	github.com/wealdtech/go-eth2-util v1.7.0
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
-	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.7.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/term v0.7.0
-	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/grpc v1.49.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect
 )
 
 replace github.com/rivo/tview => github.com/hamidraza/tview v0.0.0-20230406022610-62c55f74c35f
+
+// replace github.com/stader-labs/ethcli-ui/ => /Users/batphonghan/coding/stader_labs/ethcli-ui
+
+// replace github.com/stader-labs/ethcli-ui/ui => /Users/batphonghan/coding/stader_labs/ethcli-ui/ui
+
+// replace github.com/stader-labs/ethcli-ui/configuration => /Users/batphonghan/coding/stader_labs/ethcli-ui/configuration
+
+// replace github.com/stader-labs/ethcli-ui/wizard => /Users/batphonghan/coding/stader_labs/ethcli-ui/wizard
