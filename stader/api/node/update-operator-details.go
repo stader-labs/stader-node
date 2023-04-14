@@ -32,7 +32,6 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 
 	response := api.CanUpdateOperatorDetails{}
 
-	fmt.Println("Getting operator id...")
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -42,7 +41,6 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
-	fmt.Println("Getting operator info...")
 	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -52,13 +50,11 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
-	fmt.Println("Checking if operator details need to be updated...")
 	if operatorInfo.OperatorName == operatorName && operatorInfo.OperatorRewardAddress == operatorRewardAddress {
 		response.NothingToUpdate = true
 		return &response, nil
 	}
 
-	fmt.Println("Checking operator name length...")
 	maxNameLength, err := stader_config.GetOperatorNameMaxLength(sdcfg, nil)
 	if err != nil {
 		return nil, err
@@ -68,15 +64,19 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
-	//fmt.Println("Checking operator reward address...")
-	//if eth1.IsZeroAddress(operatorRewardAddress) {
-	//	response.OperatorRewardAddressZero = true
-	//	return &response, nil
-	//}
+	if eth1.IsZeroAddress(operatorRewardAddress) {
+		response.OperatorRewardAddressZero = true
+		return &response, nil
+	}
+
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
 
 	// estimate gas
 	fmt.Println("Estimating gas...")
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, nil)
+	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
