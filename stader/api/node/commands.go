@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package node
 
 import (
+	"fmt"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/utils/api"
@@ -882,6 +883,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					if err != nil {
 						return err
 					}
+
+					fmt.Printf("api: operatorName is %s\n", operatorName)
+					fmt.Printf("api: operatorRewardAddress is %s\n", operatorRewardAddress)
 					// Run
 					api.PrintResponse(CanUpdateOperatorDetails(c, operatorName, operatorRewardAddress))
 					return nil
