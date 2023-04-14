@@ -91,3 +91,12 @@ func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.Ca
 
 	return totalSdCollateral, nil
 }
+
+func GetWithdrawDelay(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	withdrawDelay, err := sdc.SdCollateral.WithdrawDelay(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return withdrawDelay, nil
+}

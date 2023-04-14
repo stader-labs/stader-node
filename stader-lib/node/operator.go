@@ -103,7 +103,7 @@ func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, op
 }
 
 func GetSocializingPoolStateChangeBlock(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
-	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeTimestamp(opts, operatorId)
+	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeBlock(opts, operatorId)
 }
 
 func CalculateElRewardShare(client stader.ExecutionClient, nevAddress common.Address, totalRewards *big.Int, opts *bind.CallOpts) (struct {
@@ -111,16 +111,22 @@ func CalculateElRewardShare(client stader.ExecutionClient, nevAddress common.Add
 	OperatorShare *big.Int
 	ProtocolShare *big.Int
 }, error) {
-	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
-	if err != nil {
-		return struct {
-			UserShare     *big.Int
-			OperatorShare *big.Int
-			ProtocolShare *big.Int
-		}{}, err
-	}
+	//nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	//if err != nil {
+	//	return struct {
+	//		UserShare     *big.Int
+	//		OperatorShare *big.Int
+	//		ProtocolShare *big.Int
+	//	}{}, err
+	//}
+	//
+	//return nev.NodeElRewardVault.CalculateRewardShare(opts, totalRewards)
 
-	return nev.NodeElRewardVault.CalculateRewardShare(opts, totalRewards)
+	return struct {
+		UserShare     *big.Int
+		OperatorShare *big.Int
+		ProtocolShare *big.Int
+	}{}, nil
 }
 
 func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {

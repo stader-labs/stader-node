@@ -68,7 +68,7 @@ func GetTotalNonTerminalValidatorKeys(pnr *stader.PermissionlessNodeRegistryCont
 }
 
 func GetMaxValidatorKeysPerOperator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (uint64, error) {
-	return pnr.PermissionlessNodeRegistry.MaxKeyPerOperator(opts)
+	return pnr.PermissionlessNodeRegistry.MaxNonTerminalKeyPerOperator(opts)
 }
 
 func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, validatorIndex *big.Int, opts *bind.CallOpts) (*big.Int, error) {
@@ -82,9 +82,8 @@ func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, val
 	DepositSignature     []byte
 	WithdrawVaultAddress common.Address
 	OperatorId           *big.Int
-	InitialBondEth       *big.Int
-	DepositTime          *big.Int
-	WithdrawnTime        *big.Int
+	DepositBlock         *big.Int
+	WithdrawnBlock       *big.Int
 }, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorRegistry(opts, validatorId)
 }
@@ -107,16 +106,22 @@ func CalculateValidatorWithdrawVaultRewardShare(executionClient stader.Execution
 	OperatorShare *big.Int
 	ProtocolShare *big.Int
 }, error) {
-	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
-	if err != nil {
-		return struct {
-			UserShare     *big.Int
-			OperatorShare *big.Int
-			ProtocolShare *big.Int
-		}{}, err
-	}
+	//vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	//if err != nil {
+	//	return struct {
+	//		UserShare     *big.Int
+	//		OperatorShare *big.Int
+	//		ProtocolShare *big.Int
+	//	}{}, err
+	//}
 
-	return vwv.ValidatorWithdrawVault.CalculateRewardShare(opts, totalRewards)
+	return struct {
+		UserShare     *big.Int
+		OperatorShare *big.Int
+		ProtocolShare *big.Int
+	}{}, nil
+
+	//return vwv.ValidatorWithdrawVault.CalculateRewardShare(opts, totalRewards)
 }
 
 func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (struct {
