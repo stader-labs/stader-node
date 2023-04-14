@@ -151,7 +151,7 @@ func canClaimSd(c *cli.Context) (*api.CanClaimSdResponse, error) {
 	// this is already in unix timestamp
 	lastWithdrawReqTimestamp := operatorWithdrawInfo.LastWithdrawReqTimestamp.Int64()
 
-	if lastWithdrawReqTimestamp < currentTime {
+	if operatorWithdrawInfo.TotalSDWithdrawReqAmount.Cmp(big.NewInt(0)) == 0 {
 		response.NoExistingClaim = true
 		return &response, nil
 	}
