@@ -109,6 +109,10 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
 
 	response := api.WithdrawElRewardsResponse{}
 
@@ -136,7 +140,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	response.ElRewardsAmount = operatorElRewards.OperatorShare
 	response.OperatorRewardAddress = operatorInfo.OperatorRewardAddress
 
-	tx, err := node.WithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, nil)
+	tx, err := node.WithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
 	if err != nil {
 		return nil, err
 	}

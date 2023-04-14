@@ -133,11 +133,6 @@ func canClaimSd(c *cli.Context) (*api.CanClaimSdResponse, error) {
 
 	response := api.CanClaimSdResponse{}
 
-	// TODO - bchain - go thru the pre-checks with manoj
-
-	// TODO - bchain - check if there is anything to claim at all
-
-	// TODO - bchain - check if we crossed the claim unbonding period
 	operatorWithdrawInfo, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err

@@ -23,9 +23,6 @@ func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAd
 		return err
 	}
 
-	fmt.Printf("operatorName: %s", operatorName)
-	fmt.Printf("operatorRewardAddress: %s", operatorRewardAddress.Hex())
-
 	// check if we can update the el
 	res, err := staderClient.CanUpdateOperatorDetails(operatorName, operatorRewardAddress)
 	if err != nil {

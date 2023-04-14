@@ -118,6 +118,15 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
 }
 
+func GetValidatorWithdrawVaultSettleStatus(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (bool, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return false, err
+	}
+
+	return vwv.ValidatorWithdrawVault.VaultSettleStatus(opts)
+}
+
 func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorIdByPubkey(opts, validatorPubKey)
 }

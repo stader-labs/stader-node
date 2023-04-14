@@ -18,8 +18,6 @@ import (
 )
 
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
-	canNodeDepositResponse := api.CanNodeDepositResponse{}
-
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -65,6 +63,8 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	}
 
 	opts.Value = amountToSend
+
+	canNodeDepositResponse := api.CanNodeDepositResponse{}
 
 	userBalance, err := tokens.GetEthBalance(prn.Client, nodeAccount.Address, nil)
 	if err != nil {
