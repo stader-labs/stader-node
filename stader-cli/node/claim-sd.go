@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/urfave/cli"
@@ -38,6 +39,12 @@ func claimSd(c *cli.Context) error {
 		"Are you sure you want to claim SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
+	}
+
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canClaimSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
 	}
 
 	res, err := staderClient.ClaimSd()
