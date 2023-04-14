@@ -122,11 +122,11 @@ func CalculateElRewardShare(client stader.ExecutionClient, nevAddress common.Add
 	//
 	//return nev.NodeElRewardVault.CalculateRewardShare(opts, totalRewards)
 
-	return struct {
-		UserShare     *big.Int
-		OperatorShare *big.Int
-		ProtocolShare *big.Int
-	}{}, nil
+	//return struct {
+	//	UserShare     *big.Int
+	//	OperatorShare *big.Int
+	//	ProtocolShare *big.Int
+	//}{}, nil
 }
 
 func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
