@@ -86,11 +86,11 @@ func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]
 }
 
 func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-
 	newSettings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
 	newSettings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
 
 	newSettings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
+
 	newSettings[keys.E1ec_lm_execution_client] = strings.Title(string((cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient))))
 
 	// Common
@@ -130,7 +130,6 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 }
 
 func makeCfgExecutionMode(i interface{}) cfgtypes.Mode {
-	// fmt.Printf("I is %+v \n", i)
 	mod := format(i)
 	switch mod {
 	case "Locally Managed":

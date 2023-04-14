@@ -22,9 +22,10 @@ package service
 import (
 	"fmt"
 
+	"github.com/stader-labs/ethcli-ui/configuration"
 	"github.com/stader-labs/ethcli-ui/configuration/config"
 	"github.com/stader-labs/ethcli-ui/configuration/logger"
-	"github.com/stader-labs/ethcli-ui/ui"
+	"github.com/stader-labs/ethcli-ui/wizard"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -48,7 +49,7 @@ func format(v interface{}) string {
 
 var keys = config.GetFieldKey()
 
-func makeConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) (*stdCf.StaderConfig, error) {
+func updateConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]interface{}) (*stdCf.StaderConfig, error) {
 	newCfg := *oldCfg
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
@@ -146,16 +147,7 @@ func configureService(c *cli.Context) error {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	oldSetting, err := makeUISettingFromConfig(cfg)
-	if err != nil {
-		fmt.Printf("Error from parsing config model to UI model %+v", err)
-		return err
-	}
-
-	wizardConfig := NewSettingsType(cfg)
-
-	saved, _, configurationSettings := ui.Run(&wizardConfig, &oldSetting)
-	newConfigFromUI, err := makeConfigFromUISetting(cfg, *configurationSettings)
+	saved, newCg, err := handleUI("configuration", cfg)
 
 	if err != nil {
 		fmt.Printf("Error from parsing UI to config model %+v", err)
@@ -167,5 +159,49 @@ func configureService(c *cli.Context) error {
 		return nil
 	}
 
-	return staderClient.SaveConfig(newConfigFromUI)
+	return staderClient.SaveConfig(newCg)
+}
+
+func handleUI(
+	initialUI string,
+	cfg *stdCf.StaderConfig,
+) (bool, *stdCf.StaderConfig, error) {
+
+	if initialUI == "wizard" {
+		oldWSettings := NewSettingsType(cfg)
+		confirmed, openConfiguring, newWSettings := wizard.Run(&oldWSettings)
+
+		cfg, err := UpdateConfig(cfg, newWSettings)
+
+		if err != nil {
+			return false, nil, err
+		}
+		if openConfiguring {
+			return handleUI("configuration", &cfg)
+		}
+
+		return confirmed, &cfg, nil
+	}
+
+	if initialUI == "configuration" {
+		oldCSetting, err := makeUISettingFromConfig(cfg)
+
+		if err != nil {
+			return false, nil, err
+		}
+		cSaved, cOpenWizard, newCSettings := configuration.Run(&oldCSetting)
+		cfg, err := updateConfigFromUISetting(cfg, *newCSettings)
+
+		if err != nil {
+			return false, nil, err
+		}
+
+		if cOpenWizard {
+			return handleUI("wizard", cfg)
+		}
+
+		return cSaved, cfg, nil
+	}
+
+	return false, cfg, nil
 }

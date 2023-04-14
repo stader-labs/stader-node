@@ -116,6 +116,7 @@ const (
 
 // Enum to describe MEV-Boost relay selection mode
 const (
+	MevSelectionMode_Unknow  MevSelectionMode = ""
 	MevSelectionMode_Profile MevSelectionMode = "profile"
 	MevSelectionMode_Relay   MevSelectionMode = "relay"
 )

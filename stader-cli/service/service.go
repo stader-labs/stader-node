@@ -222,20 +222,18 @@ func HasBeenUpdated(settings1 pages.SettingsType, settings2 pages.SettingsType) 
 	return true
 }
 
-func UpdateConfigFromConfigUI(staderClient *stader.Client, cfg *config.StaderConfig) {
-
-}
-func UpdateConfig(staderClient *stader.Client, cfg *config.StaderConfig, newSettings *pages.SettingsType) error {
+func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (config.StaderConfig, error) {
+	cfg := *_cfg
 	// update the network
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
 	// update the consensus and execution client
-	cfg.ConsensusClientMode.Value = newSettings.EthClient
-	cfg.ExecutionClientMode.Value = newSettings.EthClient
+	cfg.ConsensusClientMode.Value = makeCfgExecutionMode(newSettings.EthClient)
+	cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings.EthClient)
 
 	if newSettings.EthClient == "local" {
-		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
-		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
+		cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings.ExecutionClient.SelectionOption))
+		cfg.ConsensusClient.Value = cfgtypes.ConsensusClient(newSettings.ConsensusClient.Selection)
 	} else if newSettings.EthClient == "external" {
 		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
@@ -290,21 +288,15 @@ func UpdateConfig(staderClient *stader.Client, cfg *config.StaderConfig, newSett
 
 	// unset mev boost mode value if mev boost is disabled
 	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
-		cfg.MevBoost.Mode.Value = "local"
-		cfg.MevBoost.SelectionMode.Value = ""
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Unknow
 		cfg.EnableMevBoost.Value = false
 	}
 
-	err := staderClient.SaveConfig(cfg)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return cfg, nil
 }
 
 func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
-
 	currentSettings := pages.SettingsType{
 		Network:   "prater",
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
