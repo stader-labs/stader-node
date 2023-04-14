@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) (*api.CanUpdateOperatorDetails, error) {
@@ -31,14 +32,17 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 
 	response := api.CanUpdateOperatorDetails{}
 
+	fmt.Println("Getting operator id...")
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}
+
+	fmt.Println("Getting operator info...")
 	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -48,11 +52,13 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
+	fmt.Println("Checking if operator details need to be updated...")
 	if operatorInfo.OperatorName == operatorName && operatorInfo.OperatorRewardAddress == operatorRewardAddress {
 		response.NothingToUpdate = true
 		return &response, nil
 	}
 
+	fmt.Println("Checking operator name length...")
 	maxNameLength, err := stader_config.GetOperatorNameMaxLength(sdcfg, nil)
 	if err != nil {
 		return nil, err
@@ -62,6 +68,7 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
+	fmt.Println("Checking operator reward address...")
 	if eth1.IsZeroAddress(operatorRewardAddress) {
 		response.OperatorRewardAddressZero = true
 		return &response, nil
