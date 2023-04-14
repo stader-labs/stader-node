@@ -100,3 +100,18 @@ func GetWithdrawDelay(sdc *stader.SdCollateralContractManager, opts *bind.CallOp
 
 	return withdrawDelay, nil
 }
+
+func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (struct {
+	LastWithdrawReqTimestamp *big.Int
+	TotalSDWithdrawReqAmount *big.Int
+}, error) {
+	withdrawInfo, err := sdc.SdCollateral.WithdrawReq(opts, operatorAddress)
+	if err != nil {
+		return struct {
+			LastWithdrawReqTimestamp *big.Int
+			TotalSDWithdrawReqAmount *big.Int
+		}{}, err
+	}
+
+	return withdrawInfo, nil
+}
