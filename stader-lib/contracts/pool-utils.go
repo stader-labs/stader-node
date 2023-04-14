@@ -30,25 +30,25 @@ var (
 )
 
 // Operator is an auto generated low-level Go binding around an user-defined struct.
-type Operator struct {
-	Active                  bool
-	OptedForSocializingPool bool
-	OperatorName            string
-	OperatorRewardAddress   common.Address
-	OperatorAddress         common.Address
-}
-
-// Validator is an auto generated low-level Go binding around an user-defined struct.
-type Validator struct {
-	Status               uint8
-	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
-	WithdrawVaultAddress common.Address
-	OperatorId           *big.Int
-	DepositBlock         *big.Int
-	WithdrawnBlock       *big.Int
-}
+//type Operator struct {
+//	Active                  bool
+//	OptedForSocializingPool bool
+//	OperatorName            string
+//	OperatorRewardAddress   common.Address
+//	OperatorAddress         common.Address
+//}
+//
+//// Validator is an auto generated low-level Go binding around an user-defined struct.
+//type Validator struct {
+//	Status               uint8
+//	Pubkey               []byte
+//	PreDepositSignature  []byte
+//	DepositSignature     []byte
+//	WithdrawVaultAddress common.Address
+//	OperatorId           *big.Int
+//	DepositBlock         *big.Int
+//	WithdrawnBlock       *big.Int
+//}
 
 // PoolUtilsMetaData contains all meta data concerning the PoolUtils contract.
 var PoolUtilsMetaData = &bind.MetaData{

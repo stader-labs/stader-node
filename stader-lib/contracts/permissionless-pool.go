@@ -30,29 +30,29 @@ var (
 )
 
 // Operator is an auto generated low-level Go binding around an user-defined struct.
-type Operator struct {
-	Active                  bool
-	OptedForSocializingPool bool
-	OperatorName            string
-	OperatorRewardAddress   common.Address
-	OperatorAddress         common.Address
-}
-
-// Validator is an auto generated low-level Go binding around an user-defined struct.
-type Validator struct {
-	Status               uint8
-	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
-	WithdrawVaultAddress common.Address
-	OperatorId           *big.Int
-	DepositBlock         *big.Int
-	WithdrawnBlock       *big.Int
-}
+//type Operator struct {
+//	Active                  bool
+//	OptedForSocializingPool bool
+//	OperatorName            string
+//	OperatorRewardAddress   common.Address
+//	OperatorAddress         common.Address
+//}
+//
+//// Validator is an auto generated low-level Go binding around an user-defined struct.
+//type Validator struct {
+//	Status               uint8
+//	Pubkey               []byte
+//	PreDepositSignature  []byte
+//	DepositSignature     []byte
+//	WithdrawVaultAddress common.Address
+//	OperatorId           *big.Int
+//	DepositBlock         *big.Int
+//	WithdrawnBlock       *big.Int
+//}
 
 // PermissionlessPoolMetaData contains all meta data concerning the PermissionlessPool contract.
 var PermissionlessPoolMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CommissionFeesMoreThanTOTAL_FEE\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProtocolFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedOperation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedCollateralETH\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedInsuranceFund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TransferredETHToSSPMForDefectiveKeys\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"operatorFee\",\"type\":\"uint256\"}],\"name\":\"UpdatedCommissionFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorDepositedOnBeaconChain\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorPreDepositedOnBeaconChain\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_withdrawCredential\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_depositAmount\",\"type\":\"uint256\"}],\"name\":\"computeDepositDataRoot\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"}],\"name\":\"fullDepositOnBeaconChain\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnBlock\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"isExistingOperator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"protocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"receiveInsuranceFund\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_operatorFee\",\"type\":\"uint256\"}],\"name\":\"setCommissionFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakeUserETHToBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_defectiveKeyCount\",\"type\":\"uint256\"}],\"name\":\"transferETHOfDefectiveKeysToSSPM\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CommissionFeesMoreThanTOTAL_FEE\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProtocolFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedOperation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedCollateralETH\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedInsuranceFund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TransferredETHToSSPMForDefectiveKeys\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"operatorFee\",\"type\":\"uint256\"}],\"name\":\"UpdatedCommissionFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorDepositedOnBeaconChain\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorPreDepositedOnBeaconChain\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEPOSIT_NODE_BOND\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_withdrawCredential\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_depositAmount\",\"type\":\"uint256\"}],\"name\":\"computeDepositDataRoot\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_pageNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_pageSize\",\"type\":\"uint256\"}],\"name\":\"getAllSocializingPoolOptOutOperators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnBlock\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"isExistingOperator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_preDepositSignature\",\"type\":\"bytes[]\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_operatorTotalKeys\",\"type\":\"uint256\"}],\"name\":\"preDepositOnBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"protocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"receiveRemainingCollateralETH\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_operatorFee\",\"type\":\"uint256\"}],\"name\":\"setCommissionFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakeUserETHToBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // PermissionlessPoolABI is the input ABI used to generate the binding from.
@@ -232,6 +232,37 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) DEFAULTADMINROLE() (
 	return _PermissionlessPool.Contract.DEFAULTADMINROLE(&_PermissionlessPool.CallOpts)
 }
 
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
+//
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCaller) DEPOSITNODEBOND(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _PermissionlessPool.contract.Call(opts, &out, "DEPOSIT_NODE_BOND")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
+//
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolSession) DEPOSITNODEBOND() (*big.Int, error) {
+	return _PermissionlessPool.Contract.DEPOSITNODEBOND(&_PermissionlessPool.CallOpts)
+}
+
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
+//
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) DEPOSITNODEBOND() (*big.Int, error) {
+	return _PermissionlessPool.Contract.DEPOSITNODEBOND(&_PermissionlessPool.CallOpts)
+}
+
 // FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
 //
 // Solidity: function FULL_DEPOSIT_SIZE() view returns(uint256)
@@ -323,6 +354,37 @@ func (_PermissionlessPool *PermissionlessPoolSession) ComputeDepositDataRoot(_pu
 // Solidity: function computeDepositDataRoot(bytes _pubkey, bytes _signature, bytes _withdrawCredential, uint256 _depositAmount) pure returns(bytes32)
 func (_PermissionlessPool *PermissionlessPoolCallerSession) ComputeDepositDataRoot(_pubkey []byte, _signature []byte, _withdrawCredential []byte, _depositAmount *big.Int) ([32]byte, error) {
 	return _PermissionlessPool.Contract.ComputeDepositDataRoot(&_PermissionlessPool.CallOpts, _pubkey, _signature, _withdrawCredential, _depositAmount)
+}
+
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
+//
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolCaller) GetAllSocializingPoolOptOutOperators(opts *bind.CallOpts, _pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
+	var out []interface{}
+	err := _PermissionlessPool.contract.Call(opts, &out, "getAllSocializingPoolOptOutOperators", _pageNumber, _pageSize)
+
+	if err != nil {
+		return *new([]common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
+
+	return out0, err
+
+}
+
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
+//
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolSession) GetAllSocializingPoolOptOutOperators(_pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
+	return _PermissionlessPool.Contract.GetAllSocializingPoolOptOutOperators(&_PermissionlessPool.CallOpts, _pageNumber, _pageSize)
+}
+
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
+//
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolCallerSession) GetAllSocializingPoolOptOutOperators(_pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
+	return _PermissionlessPool.Contract.GetAllSocializingPoolOptOutOperators(&_PermissionlessPool.CallOpts, _pageNumber, _pageSize)
 }
 
 // GetCollateralETH is a free data retrieval call binding the contract method 0xb01db078.
@@ -852,27 +914,6 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) SupportsInterface(in
 	return _PermissionlessPool.Contract.SupportsInterface(&_PermissionlessPool.CallOpts, interfaceId)
 }
 
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) FullDepositOnBeaconChain(opts *bind.TransactOpts, _pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "fullDepositOnBeaconChain", _pubkey)
-}
-
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) FullDepositOnBeaconChain(_pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.FullDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey)
-}
-
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) FullDepositOnBeaconChain(_pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.FullDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey)
-}
-
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
@@ -915,25 +956,46 @@ func (_PermissionlessPool *PermissionlessPoolTransactorSession) Initialize(_admi
 	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _admin, _staderConfig)
 }
 
-// ReceiveInsuranceFund is a paid mutator transaction binding the contract method 0x016557e7.
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
 //
-// Solidity: function receiveInsuranceFund() payable returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) ReceiveInsuranceFund(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "receiveInsuranceFund")
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) PreDepositOnBeaconChain(opts *bind.TransactOpts, _pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "preDepositOnBeaconChain", _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
 }
 
-// ReceiveInsuranceFund is a paid mutator transaction binding the contract method 0x016557e7.
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
 //
-// Solidity: function receiveInsuranceFund() payable returns()
-func (_PermissionlessPool *PermissionlessPoolSession) ReceiveInsuranceFund() (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.ReceiveInsuranceFund(&_PermissionlessPool.TransactOpts)
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolSession) PreDepositOnBeaconChain(_pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.PreDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
 }
 
-// ReceiveInsuranceFund is a paid mutator transaction binding the contract method 0x016557e7.
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
 //
-// Solidity: function receiveInsuranceFund() payable returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) ReceiveInsuranceFund() (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.ReceiveInsuranceFund(&_PermissionlessPool.TransactOpts)
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) PreDepositOnBeaconChain(_pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.PreDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) ReceiveRemainingCollateralETH(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "receiveRemainingCollateralETH")
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolSession) ReceiveRemainingCollateralETH() (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.ReceiveRemainingCollateralETH(&_PermissionlessPool.TransactOpts)
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) ReceiveRemainingCollateralETH() (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.ReceiveRemainingCollateralETH(&_PermissionlessPool.TransactOpts)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -1018,27 +1080,6 @@ func (_PermissionlessPool *PermissionlessPoolSession) StakeUserETHToBeaconChain(
 // Solidity: function stakeUserETHToBeaconChain() payable returns()
 func (_PermissionlessPool *PermissionlessPoolTransactorSession) StakeUserETHToBeaconChain() (*types.Transaction, error) {
 	return _PermissionlessPool.Contract.StakeUserETHToBeaconChain(&_PermissionlessPool.TransactOpts)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) TransferETHOfDefectiveKeysToSSPM(opts *bind.TransactOpts, _defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "transferETHOfDefectiveKeysToSSPM", _defectiveKeyCount)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) TransferETHOfDefectiveKeysToSSPM(_defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.TransferETHOfDefectiveKeysToSSPM(&_PermissionlessPool.TransactOpts, _defectiveKeyCount)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) TransferETHOfDefectiveKeysToSSPM(_defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.TransferETHOfDefectiveKeysToSSPM(&_PermissionlessPool.TransactOpts, _defectiveKeyCount)
 }
 
 // UpdateStaderConfig is a paid mutator transaction binding the contract method 0x9ee804cb.
