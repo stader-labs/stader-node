@@ -124,11 +124,11 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		fmt.Println("Getting operator sd collateral worth validators")
 		// total registerable validators
-		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
-		if err != nil {
-			return nil, err
-		}
-		response.SdCollateralWorthValidators = totalSdWorthValidators
+		//totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
+		//if err != nil {
+		//	return nil, err
+		//}
+		response.SdCollateralWorthValidators = big.NewInt(0)
 
 		fmt.Println("getting total operator validators")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
