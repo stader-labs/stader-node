@@ -225,7 +225,7 @@ type CanSettleExitFunds struct {
 	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
 	OperatorNotActive     bool           `json:"operatorNotActive"`
 	ValidatorNotWithdrawn bool           `json:"validatorNotWithdrawn"`
-	NotEthToWithdraw      bool           `json:"notEthToWithdraw"`
+	NoEthToWithdraw       bool           `json:"notEthToWithdraw"`
 	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
 }

@@ -29,7 +29,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("canClaimSpRewards: %+v\n", canClaimSpRewards)
 	if canClaimSpRewards.SocializingPoolContractPaused {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil

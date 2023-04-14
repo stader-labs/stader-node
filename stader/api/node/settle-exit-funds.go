@@ -77,7 +77,7 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	validatorWithdrawVaultWithdrawShares := withdrawVaultWithdrawShares.OperatorShare
 	// make sure validator has eth to withdraw
 	if validatorWithdrawVaultWithdrawShares.Int64() == 0 {
-		response.NotEthToWithdraw = true
+		response.NoEthToWithdraw = true
 		return &response, nil
 	}
 

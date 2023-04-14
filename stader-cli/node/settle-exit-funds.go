@@ -43,7 +43,7 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) erro
 		fmt.Printf("Validator %s funds have not been withdrawn yet\n", validatorPubKey.String())
 		return nil
 	}
-	if canSettleExitFunds.NotEthToWithdraw {
+	if canSettleExitFunds.NoEthToWithdraw {
 		fmt.Printf("No eth to withdraw for validator %s\n", validatorPubKey.String())
 		return nil
 	}
