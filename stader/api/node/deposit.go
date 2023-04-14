@@ -110,23 +110,23 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
-	//totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
-	//	canNodeDepositResponse.MaxValidatorLimitReached = true
-	//	return &canNodeDepositResponse, nil
-	//}
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
+		canNodeDepositResponse.MaxValidatorLimitReached = true
+		return &canNodeDepositResponse, nil
+	}
 
 	pubKeys := make([][]byte, numValidators.Int64())
 	preDepositSignatures := make([][]byte, numValidators.Int64())
