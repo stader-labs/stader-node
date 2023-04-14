@@ -75,11 +75,13 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 	//}
 
 	// estimate gas
+	fmt.Println("Estimating gas...")
 	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, nil)
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println("Done with estimate gas. Returning response...")
 	response.GasInfo = gasInfo
 
 	return &response, nil
