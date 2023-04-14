@@ -68,11 +68,11 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
-	fmt.Println("Checking operator reward address...")
-	if eth1.IsZeroAddress(operatorRewardAddress) {
-		response.OperatorRewardAddressZero = true
-		return &response, nil
-	}
+	//fmt.Println("Checking operator reward address...")
+	//if eth1.IsZeroAddress(operatorRewardAddress) {
+	//	response.OperatorRewardAddressZero = true
+	//	return &response, nil
+	//}
 
 	// estimate gas
 	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, nil)
