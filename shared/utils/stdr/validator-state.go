@@ -32,7 +32,6 @@ type ValidatorInfo struct {
 	WithdrawVaultWithdrawableBalance *big.Int
 	CrossedRewardsThreshold          bool
 	OperatorId                       *big.Int
-	InitialBondEth                   *big.Int
 	DepositTime                      *big.Int
 	WithdrawnTime                    *big.Int
 }

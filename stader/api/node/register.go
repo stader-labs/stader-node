@@ -81,7 +81,6 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return nil, err
 	}
 
-	response.CanRegister = true
 	response.GasInfo = gasInfo
 
 	return &response, nil

@@ -101,6 +101,10 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	putils, err := services.GetPoolUtilsContract(c)
+	if err != nil {
+		return nil, err
+	}
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
@@ -124,7 +128,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package node
 
 import (
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 
@@ -40,6 +41,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 	sdcfg, err := services.GetStaderConfigContract(c)
+	if err != nil {
+		return nil, err
+	}
+	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +96,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+		operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -137,7 +142,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			if err != nil {
 				return nil, err
 			}
-			withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
+			withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
 			if err != nil {
 				return nil, err
 			}
@@ -169,9 +174,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				CrossedRewardsThreshold:          crossedRewardThreshold,
 				WithdrawVaultWithdrawableBalance: validatorWithdrawVaultWithdrawShares,
 				OperatorId:                       validatorContractInfo.OperatorId,
-				InitialBondEth:                   validatorContractInfo.InitialBondEth,
-				DepositTime:                      validatorContractInfo.DepositTime,
-				WithdrawnTime:                    validatorContractInfo.WithdrawnTime,
+				DepositTime:                      validatorContractInfo.DepositBlock,
+				WithdrawnTime:                    validatorContractInfo.WithdrawnBlock,
 			}
 
 			validatorInfoArray[i] = validatorInfo
