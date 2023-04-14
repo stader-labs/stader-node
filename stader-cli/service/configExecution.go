@@ -50,16 +50,13 @@ func updateExternalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[stri
 func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings[keys.E1ec_lm_execution_client].(string)))
 
-	// cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
-	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_http_port]
-	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_websocket_port]
-	cfg.ExecutionCommon.P2pPort.Value = newSettings[keys.E1ec_lm_p2p_port]
-	cfg.ExecutionCommon.OpenRpcPorts.Value = newSettings[keys.E1ec_lm_expose_rpc_port]
-
-	//TODO Hamid check:
-	// cfg.ExecutionCommon.EnginePort.Value = newSettings[keys.E1ec_lm_engine_api_port]
-	// cfg.ExecutionCommon.EthstatsLabel.Value = newSettings[keys.E1ec_lm_ethstats_label]
-	// cfg.ExecutionCommon.EthstatsLogin.Value = newSettings[keys.E1ec_lm_ethstats_login]
+	cfg.ExecutionCommon.HttpPort.Value = newSettings[keys.E1ec_lm_common_http_port]
+	cfg.ExecutionCommon.WsPort.Value = newSettings[keys.E1ec_lm_common_websocket_port]
+	cfg.ExecutionCommon.P2pPort.Value = newSettings[keys.E1ec_lm_common_p2p_port]
+	cfg.ExecutionCommon.OpenRpcPorts.Value = newSettings[keys.E1ec_lm_common_expose_rpc_port]
+	cfg.ExecutionCommon.EnginePort.Value = newSettings[keys.E1ec_lm_common_engine_api_port]
+	cfg.ExecutionCommon.EthstatsLabel.Value = newSettings[keys.E1ec_lm_common_ethstats_label]
+	cfg.ExecutionCommon.EthstatsLogin.Value = newSettings[keys.E1ec_lm_common_ethstats_login]
 
 	cfg.Geth.CacheSize.Value = newSettings[keys.E1ec_lm_geth_cache_size]
 	cfg.Geth.MaxPeers.Value = newSettings[keys.E1ec_lm_geth_max_peers]
@@ -94,15 +91,13 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_execution_client] = strings.Title(string((cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient))))
 
 	// Common
-	newSettings[keys.E1ec_lm_http_port] = format(cfg.ExecutionCommon.HttpPort.Value)
-	newSettings[keys.E1ec_lm_websocket_port] = format(cfg.ExecutionCommon.WsPort.Value)
-	newSettings[keys.E1ec_lm_expose_rpc_port] = cfg.ExecutionCommon.OpenRpcPorts.Value
-	newSettings[keys.E1ec_lm_p2p_port] = format(cfg.ExecutionCommon.P2pPort.Value)
-	//TODO Hamid check:
-
-	// newSettings[keys.E1ec_lm_engine_api_port] = format(cfg.ExecutionCommon.EnginePort.Value)
-	// newSettings[keys.E1ec_lm_ethstats_label] = cfg.ExecutionCommon.EthstatsLabel.Value
-	// newSettings[keys.E1ec_lm_ethstats_login] = cfg.ExecutionCommon.EthstatsLogin.Value
+	newSettings[keys.E1ec_lm_common_http_port] = format(cfg.ExecutionCommon.HttpPort.Value)
+	newSettings[keys.E1ec_lm_common_websocket_port] = format(cfg.ExecutionCommon.WsPort.Value)
+	newSettings[keys.E1ec_lm_common_expose_rpc_port] = cfg.ExecutionCommon.OpenRpcPorts.Value
+	newSettings[keys.E1ec_lm_common_p2p_port] = format(cfg.ExecutionCommon.P2pPort.Value)
+	newSettings[keys.E1ec_lm_common_engine_api_port] = format(cfg.ExecutionCommon.EnginePort.Value)
+	newSettings[keys.E1ec_lm_common_ethstats_label] = cfg.ExecutionCommon.EthstatsLabel.Value
+	newSettings[keys.E1ec_lm_common_ethstats_login] = cfg.ExecutionCommon.EthstatsLogin.Value
 
 	// Geth
 	newSettings[keys.E1ec_lm_geth_cache_size] = format(cfg.Geth.CacheSize.Value)
