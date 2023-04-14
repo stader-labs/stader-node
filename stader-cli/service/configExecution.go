@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
+	"fmt"
 	"strings"
 
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
@@ -28,7 +29,8 @@ import (
 
 func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	// update the execution client
-	executionMod := makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
+	executionMod := makeCfgExecutionMode(newSettings[keys.E1ec_execution_and_consensus_mode])
+	fmt.Printf("executionMod is [%+v]", executionMod)
 	cfg.ExecutionClientMode.Value = executionMod
 
 	if err := updateExternalExecutionClient(cfg, newSettings); err != nil {
@@ -83,10 +85,10 @@ func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]
 }
 
 func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
+	newSettings[keys.E1ec_execution_and_consensus_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
+
 	newSettings[keys.E1ec_em_websocket_url] = cfg.ExternalExecution.WsUrl.Value
 	newSettings[keys.E1ec_em_http_url] = cfg.ExternalExecution.HttpUrl.Value
-
-	newSettings[keys.E1ec_execution_client_mode] = makeUIExecutionMode(cfg.ExecutionClientMode.Value)
 
 	newSettings[keys.E1ec_lm_execution_client] = strings.Title(string((cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient))))
 

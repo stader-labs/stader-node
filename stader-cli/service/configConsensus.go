@@ -28,11 +28,8 @@ import (
 )
 
 func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	// TODO Hamid check
+	// newSettings[keys.E1ec_execution_and_consensus_mode] = makeUIExecutionMode(cfg.ConsensusClientMode.Value)
 
-	newSettings[keys.E2cc_preference] = makeUIExecutionMode(cfg.ConsensusClientMode.Value)
-
-	fmt.Printf("strings.Title(format(cfg.ConsensusClient.Value)) %+v", strings.Title(format(cfg.ConsensusClient.Value)))
 	newSettings[keys.E2cc_lc_consensus_client] = strings.Title(format(cfg.ConsensusClient.Value))
 	newSettings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
@@ -112,7 +109,7 @@ func updateConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]inter
 
 func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	cfg.ExternalConsensusClient.Value = cfgtypes.ConsensusClient(strings.ToLower(newSettings[keys.E2cc_em_consensus_client].(string)))
-	cfg.ConsensusClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_client_mode])
+	cfg.ConsensusClientMode.Value = makeCfgExecutionMode(newSettings[keys.E1ec_execution_and_consensus_mode])
 
 	// case cfgtypes.ConsensusClient_Teku:
 	cfg.ExternalTeku.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_teku]
