@@ -22,11 +22,11 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"strconv"
-
-	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
@@ -486,35 +486,183 @@ func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.Set
 	return response, nil
 }
 
-func (c *Client) CanWithdrawSdCollateral(amount *big.Int) (api.CanWithdrawSdResponse, error) {
+func (c *Client) CanRequestSdCollateralWithdraw(amount *big.Int) (api.CanRequestWithdrawSdResponse, error) {
 	// TODO - bchain - normalize these response messages
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-withdraw-sd %s", amount.String()))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %w", err)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %w", err)
 	}
-	var response api.CanWithdrawSdResponse
+	var response api.CanRequestWithdrawSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-withdraw-sd response: %w", err)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-request-sd-withdraw response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-withdraw-sd response: %s", response.Error)
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) WithdrawSdCollateral(amount *big.Int) (api.WithdrawSdResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node node-withdraw-sd %s", amount.String()))
+func (c *Client) RequestSdCollateralWithdraw(amount *big.Int) (api.RequestWithdrawSdResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %w", err)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %w", err)
 	}
-	var response api.WithdrawSdResponse
+	var response api.RequestWithdrawSdResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not decode node node-withdraw-sd response: %w", err)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not decode node node-request-sd-withdraw response: %w", err)
 	}
 	if response.Error != "" {
-		return api.WithdrawSdResponse{}, fmt.Errorf("could not get node node-withdraw-sd response: %s", response.Error)
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %s", response.Error)
 	}
 
+	return response, nil
+}
+
+func (c *Client) CanClaimSd() (api.CanClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-claim-sd"))
+	if err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %w", err)
+	}
+	var response api.CanClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not decode node can-node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSd() (api.ClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-claim-sd"))
+	if err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %w", err)
+	}
+	var response api.ClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not decode node node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-download-sp-merkle-proofs"))
+	if err != nil {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.CanDownloadSpMerkleProofsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node can-download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node download-sp-merkle-proofs"))
+	if err != nil {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.DownloadSpMerkleProofsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-claim-sp-rewards"))
+	if err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %w", err)
+	}
+	var response api.CanClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not decode node can-claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s\n", stringifiedCycleList)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
+	if err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	var response api.EstimateClaimSpRewardsGasResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not decode node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	if response.Error != "" {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s", stringifiedCycleList)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
+	if err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
+	}
+	var response api.ClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not decode node claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	if err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
+	}
+	var response api.CanUpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not decode can-update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	if err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
+	}
+	var response api.UpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not decode update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %s", response.Error)
+	}
 	return response, nil
 }

@@ -41,6 +41,14 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !operatorInfo.Active {
+		response.OperatorNotActive = true
+		return &response, nil
+	}
 
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
@@ -59,7 +67,12 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 		return &response, nil
 	}
 
-	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, nil)
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
 	if err != nil {
 		return nil, err
 	}

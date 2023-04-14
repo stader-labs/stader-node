@@ -151,7 +151,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			}
 
 			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
-			// TODO - bchain abstract this to a function
 			if validatorContractInfo.Status > 7 {
 				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 				if err != nil {

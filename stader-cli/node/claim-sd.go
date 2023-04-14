@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 )
 
-func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
+func claimSd(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -21,34 +20,39 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return err
 	}
 
-	// check canExit
-	response, err := staderClient.CanExitValidator(validatorPubKey)
+	canClaimSdResponse, err := staderClient.CanClaimSd()
 	if err != nil {
 		return err
 	}
-	if response.ValidatorNotRegistered {
-		fmt.Println("Validator not registered!")
+	if canClaimSdResponse.NoExistingClaim {
+		fmt.Println("No existing claim!")
 		return nil
 	}
-	if response.ValidatorTooYoung {
-		fmt.Println("Validator too young!")
+	if canClaimSdResponse.ClaimIsInUnbondingPeriod {
+		fmt.Println("Claim is in unbonding period!")
 		return nil
 	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to exit validator %s?", validatorPubKey))) {
+		"Are you sure you want to claim SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	// now exit
-	_, err = staderClient.ExitValidator(validatorPubKey)
+	res, err := staderClient.ClaimSd()
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Exiting validator %s, you check check the validator status on the explorer", validatorPubKey)
+	fmt.Printf("Claiming SD... \n")
+	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
+		return err
+	}
+
+	// Log & return
+	fmt.Printf("Claimed SD successfully!\n")
 
 	return nil
 }

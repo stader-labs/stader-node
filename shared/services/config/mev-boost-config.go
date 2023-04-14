@@ -29,11 +29,10 @@ import (
 
 // Constants
 const (
-	mevBoostPortableTag  string = "flashbots/mev-boost:1.4.0-portable"
-	mevBoostModernTag    string = "flashbots/mev-boost:1.4.0"
-	mevBoostUrlEnvVar    string = "MEV_BOOST_URL"
-	mevBoostRelaysEnvVar string = "MEV_BOOST_RELAYS"
-	// TODO: add docs ur
+	mevBoostPortableTag         string = "flashbots/mev-boost:1.4.0-portable"
+	mevBoostModernTag           string = "flashbots/mev-boost:1.4.0"
+	mevBoostUrlEnvVar           string = "MEV_BOOST_URL"
+	mevBoostRelaysEnvVar        string = "MEV_BOOST_RELAYS"
 	mevDocsUrl                  string = "#"
 	RegulatedRelayDescription   string = "Select this to enable the relays that comply with government regulations (e.g. OFAC sanctions), "
 	UnregulatedRelayDescription string = "Select this to enable the relays that do not follow any sanctions lists (do not censor transactions), "

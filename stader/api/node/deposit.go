@@ -74,25 +74,30 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		canNodeDepositResponse.InsufficientBalance = true
 	}
 
-	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	operatorRegistryInfo, err := node.GetOperatorInfo(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorRegistryInfo.OperatorName == "" {
-		canNodeDepositResponse.NotRegistered = true
-		return &canNodeDepositResponse, nil
-	}
-
 	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
 	if err != nil {
 		return nil, err
 	}
 	if isPermissionlessNodeRegistryPaused {
 		canNodeDepositResponse.DepositPaused = true
+		return &canNodeDepositResponse, nil
+	}
+
+	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
+		canNodeDepositResponse.OperatorNotRegistered = true
+		return &canNodeDepositResponse, nil
+	}
+
+	operatorInfo, err := node.GetOperatorInfo(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !operatorInfo.Active {
+		canNodeDepositResponse.OperatorNotActive = true
 		return &canNodeDepositResponse, nil
 	}
 
@@ -104,6 +109,24 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		canNodeDepositResponse.NotEnoughSdCollateral = true
 		return &canNodeDepositResponse, nil
 	}
+
+	//totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
+	//	canNodeDepositResponse.MaxValidatorLimitReached = true
+	//	return &canNodeDepositResponse, nil
+	//}
 
 	pubKeys := make([][]byte, numValidators.Int64())
 	preDepositSignatures := make([][]byte, numValidators.Int64())
@@ -175,6 +198,8 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
+
+	// TODO - bchain - check for max keys limit
 
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
@@ -257,7 +282,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
 
-	nodeAccount, err = w.GetNodeAccount()
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err

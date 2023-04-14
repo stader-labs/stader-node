@@ -8,8 +8,6 @@ import (
 	"net/url"
 )
 
-// TODO - make use of generics to move the response decoding here too
-
 func MakePostRequest(requestUrl string, requestBody interface{}) (*http.Response, error) {
 	requestBodyBytes, err := json.Marshal(requestBody)
 	if err != nil {

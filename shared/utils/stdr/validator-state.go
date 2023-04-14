@@ -1,7 +1,11 @@
 package stdr
 
 import (
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 )
 
@@ -31,4 +35,29 @@ type ValidatorInfo struct {
 	InitialBondEth                   *big.Int
 	DepositTime                      *big.Int
 	WithdrawnTime                    *big.Int
+}
+
+func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]bool, error) {
+	totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	validators := make(map[types.ValidatorPubkey]bool)
+	for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
+		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
+		if err != nil {
+			return nil, err
+		}
+
+		validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
+		if err != nil {
+			return nil, err
+		}
+
+		validators[types.BytesToValidatorPubkey(validatorInfo.Pubkey)] = true
+	}
+
+	return validators, err
+
 }

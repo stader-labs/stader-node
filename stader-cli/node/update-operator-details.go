@@ -2,14 +2,14 @@ package node
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/gas"
-	"github.com/urfave/cli"
-
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/urfave/cli"
 )
 
-func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
+func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -24,7 +24,7 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	}
 
 	// check if we can update the el
-	res, err := staderClient.CanUpdateSocializeEl(socializeEl)
+	res, err := staderClient.CanUpdateOperatorDetails(operatorName, operatorRewardAddress)
 	if err != nil {
 		return err
 	}
@@ -32,24 +32,20 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		fmt.Println("Operator not registered")
 		return nil
 	}
-	if res.SocializingPoolContractPaused {
-		fmt.Println("The socializing pool contract is paused!")
-		return nil
-	}
 	if res.OperatorNotActive {
 		fmt.Println("Operator not active")
 		return nil
 	}
-	if res.AlreadyOptedIn {
-		fmt.Println("You have already opted in to the socializing pool!")
+	if res.OperatorNameTooLong {
+		fmt.Println("Operator name too long")
 		return nil
 	}
-	if res.AlreadyOptedOut {
-		fmt.Println("You have already opted out of the socializing pool!")
+	if res.OperatorRewardAddressZero {
+		fmt.Println("Operator reward address cannot be zero")
 		return nil
 	}
-	if res.InCooldown {
-		fmt.Println("You are in cooldown period!")
+	if res.NothingToUpdate {
+		fmt.Println("Nothing to update")
 		return nil
 	}
 
@@ -59,35 +55,26 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	}
 
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to update socializing pool participation?"))) {
+		"Are you sure you want to update your operator details?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	fmt.Printf("socializeEl is %t\n", socializeEl)
 	// update the socializing pool el
-	response, err := staderClient.UpdateSocializeEl(socializeEl)
+	response, err := staderClient.UpdateOperatorDetails(operatorName, operatorRewardAddress)
 	if err != nil {
 		return err
 	}
 
-	if socializeEl {
-		fmt.Printf("Opting in for socializing pool...\n")
-	} else {
-		fmt.Printf("Opting out for socializing pool...\n")
-	}
+	fmt.Println("Updating operator details...")
+
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
 	if err != nil {
 		return err
 	}
 
-	if socializeEl {
-		fmt.Printf("Opted in of socializing pool...\n")
-	} else {
-		fmt.Printf("Opted out of socializing pool...\n")
-	}
+	fmt.Println("Operator details updated!")
 
 	return nil
-
 }

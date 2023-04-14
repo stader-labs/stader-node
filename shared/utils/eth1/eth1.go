@@ -22,6 +22,8 @@ package eth1
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -73,4 +75,25 @@ func CheckForNonceOverride(c *cli.Context, opts *bind.TransactOpts) error {
 	}
 	return nil
 
+}
+
+func GetCurrentBlockNumber(c *cli.Context) (uint64, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return 0, err
+	}
+	return ec.BlockNumber(context.Background())
+}
+
+func GetBlockHeader(c *cli.Context, blockNumber uint64) (*types.Header, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return nil, err
+	}
+	return ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
+}
+
+func IsZeroAddress(address common.Address) bool {
+	zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
+	return address == zeroAddress
 }

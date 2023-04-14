@@ -35,7 +35,7 @@ func DebugExit(c *cli.Context, valIndex *big.Int, epochDelta *big.Int) (*api.Deb
 		return nil, err
 	}
 
-	exitEpoch := currentHead.Epoch + epochDelta.Uint64()
+	exitEpoch := epochDelta.Uint64()
 
 	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 	if err != nil {

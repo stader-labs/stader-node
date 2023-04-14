@@ -35,10 +35,25 @@ func WithdrawElRewards(c *cli.Context) error {
 		fmt.Printf("No El Rewards to withdraw\n")
 		return nil
 	}
+	if canWithdrawElRewardsResponse.OperatorNotRegistered {
+		fmt.Printf("Operator not registered\n")
+		return nil
+	}
+	if canWithdrawElRewardsResponse.OperatorNotActive {
+		fmt.Printf("Operator not active\n")
+		return nil
+	}
 
 	err = gas.AssignMaxFeeAndLimit(canWithdrawElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
+	}
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to withdraw El Rewards?"))) {
+		fmt.Println("Cancelled.")
+		return nil
 	}
 
 	// Withdraw El Rewards

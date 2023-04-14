@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -29,15 +30,17 @@ import (
 
 // Constants
 const (
-	stadernodeTag                     = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
-	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
-	NetworkID                  string = "network"
-	ProjectNameID              string = "projectName"
-	DaemonDataPath             string = "/.stader/data"
-	GuardianFolder             string = "guardian"
-	FeeRecipientFilename       string = "stader-fee-recipient.txt"
-	NativeFeeRecipientFilename string = "stader-fee-recipient-env.txt"
+	stadernodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v0.0.1"
+	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
+	NetworkID                   string = "network"
+	ProjectNameID               string = "projectName"
+	DaemonDataPath              string = "/.stader/data"
+	GuardianFolder              string = "guardian"
+	SpRewardsMerkleProofsFolder string = "sp-rewards-merkle-proofs"
+	MerkleProofsFormat          string = "cycle-%s-%d.json"
+	FeeRecipientFilename        string = "stader-fee-recipient.txt"
+	NativeFeeRecipientFilename  string = "stader-fee-recipient-env.txt"
 )
 
 // --ignore-sync-check
@@ -108,7 +111,13 @@ type StaderNodeConfig struct {
 	ethxTokenAddress map[config.Network]string `yaml:"-"`
 
 	// The contract address of stader config
-	staderConfig map[config.Network]string `yaml:"-"`
+	staderConfigAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the socializing pool
+	socializingPoolAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the stader oracle
+	staderOracleAddress map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -258,10 +267,24 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
-		staderConfig: map[config.Network]string{
+		staderConfigAddress: map[config.Network]string{
 			config.Network_Prater:   "0xe34c84A15326f7980F59DE6b5A77C57ca2043c48",
 			config.Network_Devnet:   "0xe34c84A15326f7980F59DE6b5A77C57ca2043c48",
 			config.Network_Mainnet:  "0xe34c84A15326f7980F59DE6b5A77C57ca2043c48",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		socializingPoolAddress: map[config.Network]string{
+			config.Network_Prater:   "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
+			config.Network_Devnet:   "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
+			config.Network_Mainnet:  "0x6634Cf254F15f81c46EA1436e6335DBb6E86BDe9",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		staderOracleAddress: map[config.Network]string{
+			config.Network_Prater:   "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
+			config.Network_Devnet:   "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
+			config.Network_Mainnet:  "0xefBa5D4C50FeA5A1d15c80498Ef48Cab16B1F955",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
@@ -396,7 +419,15 @@ func (cfg *StaderNodeConfig) GetEthxTokenAddress() common.Address {
 }
 
 func (cfg *StaderNodeConfig) GetStaderConfigAddress() common.Address {
-	return common.HexToAddress(cfg.staderConfig[cfg.Network.Value.(config.Network)])
+	return common.HexToAddress(cfg.staderConfigAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetSocializingPoolAddress() common.Address {
+	return common.HexToAddress(cfg.socializingPoolAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
+	return common.HexToAddress(cfg.staderOracleAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {
@@ -409,6 +440,22 @@ func (cfg *StaderNodeConfig) GetGuardianFolder(daemon bool) string {
 	}
 
 	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardsMerkleProofFolder(daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder)
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
@@ -437,7 +484,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 	}
 
-	// if strings.HasSuffix(shared.StaderVersion, "-dev") {
+	// if string-utils.HasSuffix(shared.StaderVersion, "-dev") {
 	// 	options = append(options, config.ParameterOption{
 	// 		Name:        "Devnet",
 	// 		Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",

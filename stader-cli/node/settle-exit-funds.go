@@ -44,6 +44,13 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) erro
 		return err
 	}
 
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to withdraw %.6f exited funds for validator %s?", math.RoundDown(eth.WeiToEth(res.ExitAmount), 6), validatorPubKey))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	fmt.Printf("Withdrawing %.6f Exited Funds to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ExitAmount), 6), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {

@@ -9,3 +9,11 @@ import (
 func GetRewardsThreshold(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return sdConfig.StaderConfig.GetRewardsThreshold(opts)
 }
+
+func GetSocializingPoolChangeThreshold(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sdConfig.StaderConfig.GetSocializingPoolOptInCoolingPeriod(opts)
+}
+
+func GetOperatorNameMaxLength(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sdConfig.StaderConfig.GetOperatorMaxNameLength(opts)
+}

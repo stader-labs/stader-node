@@ -31,6 +31,14 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 	if err != nil {
 		return err
 	}
+	if canWithdrawClRewardsResponse.OperatorNotRegistered {
+		fmt.Printf("Operator not registered\n")
+		return nil
+	}
+	if canWithdrawClRewardsResponse.OperatorNotActive {
+		fmt.Printf("Operator not active\n")
+		return nil
+	}
 	if canWithdrawClRewardsResponse.NoClRewards {
 		fmt.Printf("No CL rewards to withdraw for validator %s\n", validatorPubKey.String())
 		return nil
@@ -45,6 +53,13 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 	}
 	if canWithdrawClRewardsResponse.ValidatorWithdrawn {
 		fmt.Printf("Validator %s has withdrawn all the staked funds\n", validatorPubKey.String())
+		return nil
+	}
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to withdraw CL rewards for validator %s?", validatorPubKey))) {
+		fmt.Println("Cancelled.")
 		return nil
 	}
 
