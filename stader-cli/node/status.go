@@ -10,6 +10,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
+	"math/big"
 	"time"
 )
 
@@ -68,7 +69,7 @@ func getStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 
-	if status.SdCollateralRequestedToWithdraw.Int64() > 0 {
+	if status.SdCollateralRequestedToWithdraw.Cmp(big.NewInt(0)) > 0 {
 		currentTime := time.Unix(time.Now().Unix(), 0)
 		if status.SdCollateralWithdrawTime.Int64() > currentTime.Unix() {
 			withdrawTime := time.Unix(status.SdCollateralWithdrawTime.Int64(), 0)
