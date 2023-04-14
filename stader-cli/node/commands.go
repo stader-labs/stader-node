@@ -398,9 +398,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "withdraw-sd-collateral",
+				Name:      "request-withdraw-sd-collateral",
 				Aliases:   []string{"sef"},
-				Usage:     "Settle all funds validator should receive post exit",
+				Usage:     "Request to withdraw SD collateral",
 				UsageText: "stader-cli node withdraw-sd-collateral --amount",
 				Flags: []cli.Flag{
 					cli.StringFlag{
