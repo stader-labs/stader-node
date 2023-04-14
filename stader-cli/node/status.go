@@ -75,6 +75,8 @@ func getStatus(c *cli.Context) error {
 			withdrawTime := time.Unix(status.SdCollateralWithdrawTime.Int64(), 0)
 			timeRemaining := withdrawTime.Sub(currentTime)
 
+			// TODO - bchain - add a 20s buffer maybe to avoid the case where the node is unbonding and the user tries to withdraw
+
 			fmt.Printf(
 				"The node %s%s%s %.6f SD in unbonding phase. You can withdraw it in %v \n\n",
 				log.ColorBlue,
@@ -83,7 +85,7 @@ func getStatus(c *cli.Context) error {
 				math.RoundDown(eth.WeiToEth(status.SdCollateralRequestedToWithdraw), 18), timeRemaining)
 		} else {
 			fmt.Printf(
-				"The node %s%s%s can claim %.6f SD. You can use the  %sstader-cli node claim-sd%s command \n\n",
+				"The node %s%s%s can claim %.6f SD. You can use the %sstader-cli node claim-sd%s command \n\n",
 				log.ColorBlue,
 				status.AccountAddress,
 				log.ColorReset,
