@@ -34,17 +34,17 @@ func claimSd(c *cli.Context) error {
 		return nil
 	}
 
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canClaimSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
+	}
+
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"Are you sure you want to claim SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
-	}
-
-	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canClaimSdResponse.GasInfo, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
 	}
 
 	res, err := staderClient.ClaimSd()

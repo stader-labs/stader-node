@@ -49,17 +49,17 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canWithdrawSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
+	}
+
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"Are you sure you want to withdraw %.6f SD from the collateral contract?", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
 		fmt.Println("Cancelled.")
 		return nil
-	}
-
-	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canWithdrawSdResponse.GasInfo, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
 	}
 
 	res, err := staderClient.RequestSdCollateralWithdraw(amountWei)
