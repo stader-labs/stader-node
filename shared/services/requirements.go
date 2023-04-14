@@ -98,7 +98,7 @@ func RequireNodeRegistered(c *cli.Context) error {
 	if err := RequireNodeWallet(c); err != nil {
 		return err
 	}
-	nodeRegistered, err := getNodeRegistered(c)
+	nodeRegistered, err := isNodeRegistered(c)
 	if err != nil {
 		return err
 	}
@@ -180,7 +180,7 @@ func getNodeWalletInitialized(c *cli.Context) (bool, error) {
 }
 
 // Check if the node is registered
-func getNodeRegistered(c *cli.Context) (bool, error) {
+func isNodeRegistered(c *cli.Context) (bool, error) {
 	w, err := GetWallet(c)
 	if err != nil {
 		return false, err
@@ -199,6 +199,31 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	}
 
 	return operatorId.Int64() != 0, nil
+}
+
+func isNodeActive(c *cli.Context) (bool, error) {
+	w, err := GetWallet(c)
+	if err != nil {
+		return false, err
+	}
+	pnr, err := GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return false, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return false, err
+	}
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return false, err
+	}
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return false, err
+	}
+
+	return operatorInfo.Active, nil
 }
 
 // Wait for the eth client to sync

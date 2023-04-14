@@ -33,8 +33,18 @@ func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
 	case beacon.ValidatorState_PendingInitialized:
 	case beacon.ValidatorState_PendingQueued:
 	case beacon.ValidatorState_ActiveOngoing:
+	case beacon.ValidatorState_ActiveSlashed:
 		return false
 	}
 
 	return true
+}
+
+func IsValidatorActive(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveOngoing:
+		return true
+	}
+
+	return false
 }

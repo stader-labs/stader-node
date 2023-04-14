@@ -23,8 +23,11 @@ import (
 	"fmt"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"io/ioutil"
@@ -86,6 +89,14 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
 
 	publicKey, err := stader.GetPublicKey()
 	if err != nil {
@@ -105,14 +116,42 @@ func run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
 
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return err
+	}
+
+	// get all registered validators with smart contracts
+
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 
 	// validator presigned loop
-	// TODO - bchain - clean up code
 	go func() {
 		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				}
+			}
+
+			// make a map of all validators actually registered with stader
+			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
+
+			infoLog.Println("Building a map of user validators registered with stader")
+			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			if err != nil {
+				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
+				continue
+			}
+
 			infoLog.Println("Starting a pass of the presign daemon!")
 			walletIndex := w.GetNextAccount()
 			noOfBatches := walletIndex / uint(preSignBatchSize)
@@ -136,30 +175,33 @@ func run(c *cli.Context) error {
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
 
+					_, registered := registeredValidators[validatorPubKey]
+					if !registered {
+						errorLog.Printf("Validator pub key: %s not registered with stader\n", validatorPubKey)
+						continue
+					}
+
 					// check if validator has not yet been registered
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if err != nil {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
 						continue
 					}
+					if eth2.IsValidatorExiting(validatorStatus) {
+						errorLog.Printf("Validator pub key: %s already exiting", validatorPubKey)
+						continue
+					}
 
 					// check if the presigned message has been registered. if it has been registered, then continue
 					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
 					if isRegistered {
-						infoLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
 						continue
 					} else if err != nil {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
 					}
 
-					// exit epoch should be > activation_epoch + 256
-					// exit epoch should be > current epoch
-					// TODO - bchain - verify with sigma prime
 					exitEpoch := currentHead.Epoch
-					epochsSinceActivation := currentHead.Epoch - validatorStatus.ActivationEpoch
-					if epochsSinceActivation < 256 {
-						exitEpoch = exitEpoch + (256 - epochsSinceActivation)
-					}
 
 					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 					if err != nil {

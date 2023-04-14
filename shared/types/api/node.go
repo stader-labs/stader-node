@@ -33,13 +33,15 @@ type NodeStatusResponse struct {
 }
 
 type CanRegisterNodeResponse struct {
-	Status             string         `json:"status"`
-	Error              string         `json:"error"`
-	CanRegister        bool           `json:"canRegister"`
-	AlreadyRegistered  bool           `json:"alreadyRegistered"`
-	RegistrationPaused bool           `json:"registrationPaused"`
-	GasInfo            stader.GasInfo `json:"gasInfo"`
+	Status                    string         `json:"status"`
+	Error                     string         `json:"error"`
+	AlreadyRegistered         bool           `json:"alreadyRegistered"`
+	RegistrationPaused        bool           `json:"registrationPaused"`
+	OperatorNameTooLong       bool           `json:"operatorNameTooLong"`
+	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
+	GasInfo                   stader.GasInfo `json:"gasInfo"`
 }
+
 type RegisterNodeResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
@@ -76,15 +78,17 @@ type NodeDepositSdAllowanceResponse struct {
 }
 
 type CanNodeDepositResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	CanDeposit            bool           `json:"CanDeposit"`
-	InsufficientBalance   bool           `json:"insufficientBalance"`
-	InvalidAmount         bool           `json:"invalidAmount"`
-	NotRegistered         bool           `json:"notRegistered"`
-	DepositPaused         bool           `json:"depositPaused"`
-	NotEnoughSdCollateral bool           `json:"notEnoughSdCollateral"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	CanDeposit               bool           `json:"CanDeposit"`
+	InsufficientBalance      bool           `json:"insufficientBalance"`
+	InvalidAmount            bool           `json:"invalidAmount"`
+	OperatorNotRegistered    bool           `json:"operatorNotRegistered"`
+	OperatorNotActive        bool           `json:"operatorNotActive"`
+	DepositPaused            bool           `json:"depositPaused"`
+	NotEnoughSdCollateral    bool           `json:"notEnoughSdCollateral"`
+	MaxValidatorLimitReached bool           `json:"maxValidatorLimitReached"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 
 type NodeDepositResponse struct {
@@ -124,6 +128,9 @@ type ContractsInfoResponse struct {
 	EthxToken                  common.Address `json:"ethxToken"`
 	SdToken                    common.Address `json:"sdToken"`
 	SdCollateralContract       common.Address `json:"sdCollateralContract"`
+	SocializingPoolContract    common.Address `json:"socializingPoolContract"`
+	PermisionlessPool          common.Address `json:"permisionlessPool"`
+	StaderOracle               common.Address `json:"staderOracle"`
 }
 
 type DebugExitResponse struct {
@@ -141,9 +148,10 @@ type DebugExitResponse struct {
 type CanSendPresignedMsgResponse struct {
 	Status                               string `json:"status"`
 	Error                                string `json:"error"`
+	OperatorNotRegistered                bool   `json:"operatorNotRegistered"`
 	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
 	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
-	ValidatorIsExiting                   bool   `json:"validatorIsExiting"`
+	ValidatorIsNotActive                 bool   `json:"validatorIsNotActive"`
 }
 
 type SendPresignedMsgResponse struct {
@@ -158,7 +166,10 @@ type SendPresignedMsgResponse struct {
 type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
+	OperatorNotRegistered  bool   `json:"operatorNotRegistered"`
+	OperatorNotActive      bool   `json:"operatorNotActive"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
+	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	CanExit                bool   `json:"canExit"`
 }
 
@@ -168,14 +179,155 @@ type ExitValidatorResponse struct {
 }
 
 type CanUpdateSocializeElResponse struct {
-	Status          string         `json:"status"`
-	Error           string         `json:"error"`
-	AlreadyOptedIn  bool           `json:"alreadyOptedIn"`
-	AlreadyOptedOut bool           `json:"alreadyOptedOut"`
-	GasInfo         stader.GasInfo `json:"gasInfo"`
+	Status                        string         `json:"status"`
+	Error                         string         `json:"error"`
+	OperatorNotRegistered         bool           `json:"operatorNotRegistered"`
+	OperatorNotActive             bool           `json:"operatorNotActive"`
+	SocializingPoolContractPaused bool           `json:"socializingPoolContractPaused"`
+	AlreadyOptedIn                bool           `json:"alreadyOptedIn"`
+	AlreadyOptedOut               bool           `json:"alreadyOptedOut"`
+	InCooldown                    bool           `json:"inCooldown"`
+	GasInfo                       stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateSocializeElResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanWithdrawClRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
+	ValidatorWithdrawn    bool           `json:"validatorWithdrawn"`
+	NoClRewards           bool           `json:"noClRewards"`
+	TooManyClRewards      bool           `json:"tooManyClRewards"`
+	ValidatorNotFound     bool           `json:"validatorNotFound"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
+}
+
+type WithdrawClRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ClRewardsAmount       *big.Int       `json:"clRewardsAmount"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
+type CanSettleExitFunds struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ValidatorNotWithdrawn bool           `json:"validatorNotWithdrawn"`
+	NotEthToWithdraw      bool           `json:"notEthToWithdraw"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
+}
+
+type SettleExitFunds struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ExitAmount            *big.Int       `json:"exitShare"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
+type CanWithdrawElRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	NoElRewards           bool           `json:"noElRewards"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
+}
+
+type WithdrawElRewardsResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	ElRewardsAmount       *big.Int       `json:"elRewardsAmount"`
+	OperatorRewardAddress common.Address `json:"operatorRewardAddress"`
+	TxHash                common.Hash    `json:"txHash"`
+}
+
+type CanRequestWithdrawSdResponse struct {
+	Status                     string         `json:"status"`
+	Error                      string         `json:"error"`
+	OperatorNotRegistered      bool           `json:"operatorNotRegistered"`
+	InsufficientSdCollateral   bool           `json:"insufficientSdCollateral"`
+	InsufficientWithdrawableSd bool           `json:"insufficientWithdrawableSd"`
+	GasInfo                    stader.GasInfo `json:"gasInfo"`
+}
+
+type RequestWithdrawSdResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanClaimSdResponse struct {
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	NoExistingClaim          bool           `json:"noExistingClaim"`
+	ClaimIsInUnbondingPeriod bool           `json:"claimIsInUnbondingPeriod"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
+}
+
+type ClaimSdResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanDownloadSpMerkleProofsResponse struct {
+	Status                string  `json:"status"`
+	Error                 string  `json:"error"`
+	OperatorNotRegistered bool    `json:"operatorNotRegistered"`
+	NoMissingCycles       bool    `json:"noMissingCycles"`
+	MissingCycles         []int64 `json:"missingCycles"`
+	CurrentCycle          int64   `json:"currentCycle"`
+}
+
+type DownloadSpMerkleProofsResponse struct {
+	Status           string  `json:"status"`
+	Error            string  `json:"error"`
+	DownloadedCycles []int64 `json:"downloadedCycles"`
+}
+
+type CanClaimSpRewardsResponse struct {
+	Status                        string     `json:"status"`
+	Error                         string     `json:"error"`
+	OperatorNotRegistered         bool       `json:"operatorNotRegistered"`
+	SocializingPoolContractPaused bool       `json:"socializingPoolContractPaused"`
+	IneligibleCycles              []*big.Int `json:"ineligibleCycles"`
+	ClaimedCycles                 []*big.Int `json:"claimedCycles"`
+	UnclaimedCycles               []*big.Int `json:"unclaimedCycles"`
+	CyclesToDownload              []*big.Int `json:"cyclesToDownload"`
+}
+
+type EstimateClaimSpRewardsGasResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
+type ClaimSpRewardsResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanUpdateOperatorDetails struct {
+	Status                    string         `json:"status"`
+	Error                     string         `json:"error"`
+	OperatorNotRegistered     bool           `json:"operatorNotRegistered"`
+	OperatorNotActive         bool           `json:"operatorNotActive"`
+	OperatorNameTooLong       bool           `json:"operatorNameTooLong"`
+	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
+	NothingToUpdate           bool           `json:"nothingToUpdate"`
+	GasInfo                   stader.GasInfo `json:"gasInfo"`
+}
+
+type UpdateOperatorDetails struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

@@ -3,7 +3,6 @@ package node
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services/gas"
-	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -24,28 +23,22 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return err
 	}
 
-	syncResponse, err := staderClient.NodeSync()
-	if err != nil {
-		fmt.Printf("%s**WARNING**: Can't verify the sync status of your consensus client.\nYOU WILL LOSE ETH if your validator is activated before it is fully synced.\n"+
-			"Reason: %s\n%s", log.ColorRed, err, log.ColorReset)
-	} else {
-		if syncResponse.BcStatus.PrimaryClientStatus.IsSynced {
-			fmt.Printf("Your consensus client is synced, you may safely create a validator.\n")
-		} else if syncResponse.BcStatus.FallbackEnabled {
-			if syncResponse.BcStatus.FallbackClientStatus.IsSynced {
-				fmt.Printf("Your fallback consensus client is synced, you may safely create a validator.\n")
-			} else {
-				fmt.Printf("%s**WARNING**: neither your primary nor fallback consensus clients are fully synced.\nYOU WILL LOSE ETH if your validator is activated before they are fully synced.\n%s", log.ColorRed, log.ColorReset)
-			}
-		} else {
-			fmt.Printf("%s**WARNING**: your primary consensus client is either not fully synced or offline and you do not have a fallback client configured.\nYOU WILL LOSE ETH if your validator is activated before it is fully synced.\n%s", log.ColorRed, log.ColorReset)
-		}
-	}
-
 	// check if we can update the el
 	res, err := staderClient.CanUpdateSocializeEl(socializeEl)
 	if err != nil {
 		return err
+	}
+	if res.OperatorNotRegistered {
+		fmt.Println("Operator not registered")
+		return nil
+	}
+	if res.SocializingPoolContractPaused {
+		fmt.Println("The socializing pool contract is paused!")
+		return nil
+	}
+	if res.OperatorNotActive {
+		fmt.Println("Operator not active")
+		return nil
 	}
 	if res.AlreadyOptedIn {
 		fmt.Println("You have already opted in to the socializing pool!")
@@ -55,10 +48,20 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		fmt.Println("You have already opted out of the socializing pool!")
 		return nil
 	}
+	if res.InCooldown {
+		fmt.Println("You are in cooldown period!")
+		return nil
+	}
 
 	err = gas.AssignMaxFeeAndLimit(res.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
+	}
+
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to update socializing pool participation?"))) {
+		fmt.Println("Cancelled.")
+		return nil
 	}
 
 	fmt.Printf("socializeEl is %t\n", socializeEl)

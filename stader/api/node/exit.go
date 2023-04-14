@@ -4,6 +4,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
@@ -12,10 +13,19 @@ import (
 func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanExitValidatorResponse, error) {
 
 	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
@@ -23,9 +33,38 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	// Response
 	response := api.CanExitValidatorResponse{}
 
-	_, err = bc.GetValidatorStatus(validatorPubKey, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
+		return nil, err
+	}
+	if operatorId.Int64() != 0 {
+		response.OperatorNotRegistered = true
+		return &response, nil
+	}
+
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !operatorInfo.Active {
+		response.OperatorNotActive = true
+		return &response, nil
+	}
+
+	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
+	if err != nil || !res.Exists {
 		response.ValidatorNotRegistered = true
+		return &response, nil
+	}
+
+	beaconHead, err := bc.GetBeaconHead()
+	if err != nil {
+		return nil, err
+	}
+	currentEpoch := beaconHead.Epoch
+
+	if res.ActivationEpoch+256 > currentEpoch {
+		response.ValidatorTooYoung = true
 		return &response, nil
 	}
 

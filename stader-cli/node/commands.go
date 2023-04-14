@@ -78,21 +78,18 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "socialize-el, sel",
 						Usage: "Should EL rewards be socialized (will default to true)",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm socialize-el update",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
 					if err != nil {
 						return err
 					}
-
-					fmt.Printf("socializeEl is %t\n", socializeEl)
-					fmt.Printf("args are %v\n", c.Args())
 
 					// Run
 					return UpdateSocializeEl(c, socializeEl)
@@ -116,6 +113,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.BoolTFlag{
 						Name:  "socialize-el, sel",
 						Usage: "Should EL rewards be socialized (will default to true)",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm node registration",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -152,11 +153,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
 						return err
 					}
@@ -187,12 +183,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					fmt.Printf("num-validator is %d\n", c.Uint64("num-validators"))
 					// Validate flags
 					if c.String("amount") != "" {
 						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {
@@ -300,13 +290,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-pub-key, vpk",
 						Usage: "Public key of validator we want to exit",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm validator exit",
+					},
 				},
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
 					if err != nil {
 						return err
@@ -326,6 +317,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "validator-pub-key, vpk",
 						Usage: "Validator index for whom we want to generate the debug exit",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm pre-signed message sending",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					//// Validate args
@@ -336,6 +331,184 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return SendSignedPresignedMessage(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "withdraw-el-rewards",
+				Aliases:   []string{"wer"},
+				Usage:     "Withdraw all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
+				UsageText: "stader-cli node withdraw-el-rewards",
+				Flags: []cli.Flag{cli.BoolFlag{
+					Name:  "yes, y",
+					Usage: "Automatically confirm EL rewards withdrawal",
+				}},
+				Action: func(c *cli.Context) error {
+					// Run
+					return WithdrawElRewards(c)
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Aliases:   []string{"wcr"},
+				Usage:     "Withdraw all Consensus Layer rewards to the node reward address.",
+				UsageText: "stader-cli node withdraw-cl-rewards --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator we want to exit",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm CL rewards withdrawal",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return WithdrawClRewards(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "settle-exit-funds",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node settle-exit-funds --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm exit funds settling",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return SettleExitFunds(c, validatorPubKey)
+				},
+			},
+			{
+				Name:      "withdraw-sd-collateral",
+				Aliases:   []string{"sef"},
+				Usage:     "Settle all funds validator should receive post exit",
+				UsageText: "stader-cli node withdraw-sd-collateral --amount",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to deposit",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm withdraw sd collateral",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return WithdrawSd(c)
+				},
+			},
+			{
+				Name:      "download-sp-merkle-proofs",
+				Aliases:   []string{"dspmp"},
+				Usage:     "Download all the missing Socializing Pool merkle proofs for the operator",
+				UsageText: "stader-cli node download-sp-merkle-proofs",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm merkle proofs download",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					return downloadSPMerkleProofs(c)
+				},
+			},
+			{
+				Name:      "claim-sp-rewards",
+				Aliases:   []string{"cspr"},
+				Usage:     "Claim Socializing Pool Rewards for given cycles",
+				UsageText: "stader-cli node claim-sp-rewards --download-merkles-proofs --yes",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "download-merkles-proofs, dmp",
+						Usage: "Download merkle proofs for the missing cycles to claim if not present",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm claim of rewards",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					downloadMerkleProofs, err := cliutils.ValidateBool("download-merkles-proofs", c.String("download-merkles-proofs"))
+					if err != nil {
+						return err
+					}
+					// Run
+					return ClaimSpRewards(c, downloadMerkleProofs)
+				},
+			},
+			{
+				Name:      "update-operator-details",
+				Aliases:   []string{"uod"},
+				Usage:     "Update Operator name or Operator reward address",
+				UsageText: "stader-cli node update-operator-details --operator-name --operator-reward-address",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "operator-name, on",
+						Usage: "The new operator name",
+					},
+					cli.StringFlag{
+						Name:  "operator-reward-address, ora",
+						Usage: "New operator reward address",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm claim of rewards",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					//if err := cliutils.ValidateArgCount(c, 2); err != nil {
+					//	return err
+					//}
+
+					operatorName := c.String("operator-name")
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					return updateOperatorDetails(c, operatorName, operatorRewardAddress)
 				},
 			},
 		},

@@ -4,22 +4,19 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/stader"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
-// TODO - refactor these urls somehow
-const preSignSendApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/presign"
-const preSignCheckApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/msgSubmitted"
-const publicKeyApi = "https://v6s3vqe7va.execute-api.us-east-1.amazonaws.com/prod/publicKey"
-
 func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
-	res, err := net.MakePostRequest(preSignSendApi, preSignedMessage)
+	res, err := net.MakePostRequest(stader.PreSignSendApi, preSignedMessage)
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	var preSignSendResponse stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
@@ -36,11 +33,11 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
 
-	preSignCheckRes, err := net.MakePostRequest(preSignCheckApi, preSignCheckRequest)
+	res, err := net.MakePostRequest(stader.PreSignCheckApi, preSignCheckRequest)
 
-	defer preSignCheckRes.Body.Close()
+	defer res.Body.Close()
 	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
-	err = json.NewDecoder(preSignCheckRes.Body).Decode(&preSignCheckResponse)
+	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
 	if err != nil {
 		return false, err
 	}
@@ -49,7 +46,7 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 
 func GetPublicKey() (*rsa.PublicKey, error) {
 	// get public key from api
-	res, err := net.MakeGetRequest(publicKeyApi, struct{}{})
+	res, err := net.MakeGetRequest(stader.PublicKeyApi, struct{}{})
 	if err != nil {
 		return nil, err
 	}

@@ -41,8 +41,34 @@ func SettleFunds(executionClient stader.ExecutionClient, validatorWithdrawVaultA
 	return vwv.ValidatorWithdrawVault.SettleFunds(opts)
 }
 
+func EstimateDistributeRewards(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return stader.GasInfo{}, err
+	}
+
+	return vwv.ValidatorWithdrawVaultContract.GetTransactionGasInfo(opts, "distributeRewards")
+}
+
+func DistributeRewards(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return vwv.ValidatorWithdrawVault.DistributeRewards(opts)
+}
+
 func GetTotalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetOperatorTotalKeys(opts, operatorId)
+}
+
+func GetTotalNonTerminalValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, maxPaginationIndex *big.Int, opts *bind.CallOpts) (uint64, error) {
+	return pnr.PermissionlessNodeRegistry.GetOperatorTotalNonTerminalKeys(opts, operatorAddress, big.NewInt(0), maxPaginationIndex)
+}
+
+func GetMaxValidatorKeysPerOperator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (uint64, error) {
+	return pnr.PermissionlessNodeRegistry.MaxKeyPerOperator(opts)
 }
 
 func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, validatorIndex *big.Int, opts *bind.CallOpts) (*big.Int, error) {
@@ -108,4 +134,12 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 	}
 
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
+}
+
+func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.ValidatorIdByPubkey(opts, validatorPubKey)
+}
+
+func GetNextValidatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.NextValidatorId(opts)
 }

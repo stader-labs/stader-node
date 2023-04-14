@@ -265,7 +265,7 @@ func (c *StandardHttpClient) GetValidatorStatuses(pubkeys []types.ValidatorPubke
 		}
 	}
 
-	// Convert pubkeys into hex strings
+	// Convert pubkeys into hex string-utils
 	pubkeysHex := make([]string, len(realPubkeys))
 	for vi := 0; vi < len(realPubkeys); vi++ {
 		pubkeysHex[vi] = hexutil.AddPrefix(realPubkeys[vi].Hex())

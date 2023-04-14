@@ -152,7 +152,6 @@ func installService(c *cli.Context) error {
 }
 
 // Print the latest patch notes for this release
-// TODO: get this from an external source and don't hardcode it into the CLI
 func printPatchNotes(c *cli.Context) {
 
 	fmt.Printf(`%s

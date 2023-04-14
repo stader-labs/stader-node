@@ -21,7 +21,10 @@ package guardian
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/stader/guardian/collector"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -30,21 +33,48 @@ import (
 	"github.com/urfave/cli"
 )
 
-func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
+func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *collector.StateCache) error {
 
 	// Get services
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return err
 	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return err
+	}
+
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
 
 	// Return if metrics are disabled
 	if cfg.EnableMetrics.Value == false {
-		return nil
+		if strings.ToLower(os.Getenv("ENABLE_METRICS")) == "true" {
+			logger.Printlnf("ENABLE_METRICS override set to true, will start Metrics exporter anyway!")
+		} else {
+			return nil
+		}
 	}
+
+	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccount.Address, stateLocker)
+	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccount.Address, stateLocker)
 
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
+	registry.MustRegister(beaconCollector)
+	registry.MustRegister(networkCollector)
+
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 
 	// Start the HTTP server
