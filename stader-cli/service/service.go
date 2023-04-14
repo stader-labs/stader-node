@@ -228,8 +228,8 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
 	// update the consensus and execution client
-	cfg.ConsensusClientMode.Value = makeCfgExecutionMode(newSettings.EthClient)
-	cfg.ExecutionClientMode.Value = makeCfgExecutionMode(newSettings.EthClient)
+	cfg.ConsensusClientMode.Value = cfgtypes.Mode(newSettings.EthClient)
+	cfg.ExecutionClientMode.Value = cfgtypes.Mode(newSettings.EthClient)
 
 	if newSettings.EthClient == "local" {
 		cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings.ExecutionClient.SelectionOption))
