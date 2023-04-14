@@ -129,6 +129,18 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.SdCollateralWorthValidators = totalSdWorthValidators
 
+		// get sd collateral in unbonding phase
+		withdrawReqSd, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+		withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
+		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay)
+
 		//fmt.Println("getting total operator validators")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
 		if err != nil {
