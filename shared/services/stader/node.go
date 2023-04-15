@@ -56,6 +56,12 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.OperatorRewardInETH == nil {
 		response.OperatorRewardInETH = big.NewInt(0)
 	}
+	if response.SdCollateralWithdrawTime == nil {
+		response.SdCollateralWithdrawTime = big.NewInt(0)
+	}
+	if response.SdCollateralRequestedToWithdraw == nil {
+		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
+	}
 
 	return response, nil
 }
