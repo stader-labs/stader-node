@@ -13,6 +13,9 @@ import (
 func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanExitValidatorResponse, error) {
 
 	// Get services
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err

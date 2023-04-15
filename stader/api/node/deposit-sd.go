@@ -18,6 +18,9 @@ import (
 func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSdResponse, error) {
 
 	// Get services
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err

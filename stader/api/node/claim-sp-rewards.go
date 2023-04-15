@@ -135,6 +135,9 @@ func getClaimData(c *cli.Context, cycles []*big.Int) ([]*big.Int, []*big.Int, []
 }
 
 func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err

@@ -12,6 +12,9 @@ import (
 )
 
 func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanWithdrawClRewardsResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	// Get services
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {

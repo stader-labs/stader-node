@@ -10,6 +10,9 @@ import (
 )
 
 func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSettleExitFunds, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err

@@ -11,10 +11,10 @@ import (
 )
 
 func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, error) {
-	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
+	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
+	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err

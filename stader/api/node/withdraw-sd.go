@@ -13,6 +13,9 @@ import (
 )
 
 func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawSdResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
