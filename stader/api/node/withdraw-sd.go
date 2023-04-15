@@ -150,7 +150,7 @@ func canClaimSd(c *cli.Context) (*api.CanClaimSdResponse, error) {
 		response.NoExistingClaim = true
 		return &response, nil
 	}
-	if lastWithdrawReqTimestamp+withdrawDelay.Int64() > currentTime {
+	if lastWithdrawReqTimestamp+withdrawDelay.Int64()+20 > currentTime {
 		response.ClaimIsInUnbondingPeriod = true
 		return &response, nil
 	}

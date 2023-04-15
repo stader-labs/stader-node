@@ -75,8 +75,6 @@ func getStatus(c *cli.Context) error {
 			withdrawTime := time.Unix(status.SdCollateralWithdrawTime.Int64(), 0)
 			timeRemaining := withdrawTime.Sub(currentTime)
 
-			// TODO - bchain - add a 20s buffer maybe to avoid the case where the node is unbonding and the user tries to withdraw
-
 			fmt.Printf(
 				"The node %s%s%s %.6f SD in unbonding phase. You can withdraw it in %v \n\n",
 				log.ColorBlue,
