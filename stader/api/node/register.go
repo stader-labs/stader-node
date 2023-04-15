@@ -3,6 +3,7 @@ package node
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -27,6 +28,7 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 	if err != nil {
 		return nil, err
 	}
+	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -49,11 +51,11 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return &response, nil
 	}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	isExistingOperator, err := pool_utils.IsExistingOperator(putils, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() != 0 {
+	if isExistingOperator {
 		response.AlreadyRegistered = true
 		return &response, nil
 	}

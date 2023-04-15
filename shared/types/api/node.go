@@ -51,12 +51,11 @@ type RegisterNodeResponse struct {
 }
 
 type CanNodeDepositSdResponse struct {
-	Status              string         `json:"status"`
-	Error               string         `json:"error"`
-	CanDeposit          bool           `json:"CanDeposit"`
-	InsufficientBalance bool           `json:"insufficientBalance"`
-	InConsensus         bool           `json:"inConsensus"`
-	GasInfo             stader.GasInfo `json:"gasInfo"`
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	CollateralContractPaused bool           `json:"collateralContractPaused"`
+	InsufficientBalance      bool           `json:"insufficientBalance"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 type NodeDepositSdApproveGasResponse struct {
 	Status  string         `json:"status"`
