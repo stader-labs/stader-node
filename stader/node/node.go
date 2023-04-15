@@ -181,12 +181,13 @@ func run(c *cli.Context) error {
 						continue
 					}
 
-					// check if validator has not yet been registered
+					// check if validator has not yet been registered on beacon chain
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if err != nil {
 						errorLog.Printf("Could not find validator status for validator pub key: %s\n", validatorPubKey)
 						continue
 					}
+					// check if validator is already in an exiting phase, then no point sending a pre-signed message
 					if eth2.IsValidatorExiting(validatorStatus) {
 						errorLog.Printf("Validator pub key: %s already exiting", validatorPubKey)
 						continue

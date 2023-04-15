@@ -21,12 +21,12 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 
-	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
@@ -70,16 +70,16 @@ func nodeSend(c *cli.Context, amount float64, token string, toAddressOrENS strin
 	}
 	toAddressString = toAddress.Hex()
 
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to send %.6f %s to %s? This action cannot be undone!", math.RoundDown(eth.WeiToEth(amountWei), 6), token, toAddressString))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	// Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canSend.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
+	}
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to send %.6f %s to %s? This action cannot be undone!", math.RoundDown(eth.WeiToEth(amountWei), 6), token, toAddressString))) {
+		fmt.Println("Cancelled.")
+		return nil
 	}
 
 	// Send tokens

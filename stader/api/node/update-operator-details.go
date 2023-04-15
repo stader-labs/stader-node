@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) (*api.CanUpdateOperatorDetails, error) {
@@ -35,10 +36,11 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}
+
 	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -67,8 +69,13 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, nil)
+	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

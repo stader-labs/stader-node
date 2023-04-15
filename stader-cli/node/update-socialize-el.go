@@ -64,7 +64,6 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return nil
 	}
 
-	fmt.Printf("socializeEl is %t\n", socializeEl)
 	// update the socializing pool el
 	response, err := staderClient.UpdateSocializeEl(socializeEl)
 	if err != nil {

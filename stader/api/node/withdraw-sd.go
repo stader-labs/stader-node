@@ -9,6 +9,7 @@ import (
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/urfave/cli"
 	"math/big"
+	"time"
 )
 
 func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawSdResponse, error) {
@@ -125,14 +126,34 @@ func canClaimSd(c *cli.Context) (*api.CanClaimSdResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO - bchain - go thru the pre-checks with manoj
-
-	// TODO - bchain - check if there is anything to claim at all
-
-	// TODO - bchain - check if we crossed the claim unbonding period
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
 
 	response := api.CanClaimSdResponse{}
+
+	operatorWithdrawInfo, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	currentTime := time.Now().Unix()
+	// this is already in unix timestamp
+	lastWithdrawReqTimestamp := operatorWithdrawInfo.LastWithdrawReqTimestamp.Int64()
+
+	if operatorWithdrawInfo.TotalSDWithdrawReqAmount.Cmp(big.NewInt(0)) == 0 {
+		response.NoExistingClaim = true
+		return &response, nil
+	}
+	if lastWithdrawReqTimestamp+withdrawDelay.Int64()+20 > currentTime {
+		response.ClaimIsInUnbondingPeriod = true
+		return &response, nil
+	}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {

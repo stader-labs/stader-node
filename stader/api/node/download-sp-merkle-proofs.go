@@ -49,13 +49,11 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 		return &response, nil
 	}
 
-	//fmt.Printf("Getting reward details for socializing pool...\n")
 	// check if all cycles are present
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Reward details: %v\n", rewardDetails)
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
@@ -127,7 +125,6 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 			continue
 		}
 
-		// TODO - bchain - add check for eligibility
 		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err = os.Stat(cycleRewardFile)

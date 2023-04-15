@@ -29,7 +29,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("canClaimSpRewards: %+v\n", canClaimSpRewards)
 	if canClaimSpRewards.SocializingPoolContractPaused {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil
@@ -116,12 +115,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		cyclesToClaimArray = append(cyclesToClaimArray, big.NewInt(cycle))
 	}
 
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim the rewards for cycles %v? (y/n)", cyclesToClaimArray))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	// estimate gas
 	fmt.Println("Estimating gas...")
 	estimateGasResponse, err := staderClient.EstimateClaimSpRewardsGas(cyclesToClaimArray)
@@ -133,6 +126,12 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	err = gas.AssignMaxFeeAndLimit(estimateGasResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
+	}
+
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to claim the rewards for cycles %v? (y/n)", cyclesToClaimArray))) {
+		fmt.Println("Cancelled.")
+		return nil
 	}
 
 	fmt.Printf("Claiming rewards for cycles %v\n", cyclesToClaimArray)

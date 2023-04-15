@@ -1,6 +1,7 @@
 package node
 
 import (
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 
@@ -43,6 +44,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	putils, err := services.GetPoolUtilsContract(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -82,22 +87,26 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
 
+		//fmt.Println("Getting operator reward address")
 		// non socializing pool fee recepient
 		operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 		if err != nil {
 			return nil, err
 		}
+		//fmt.Println("Getting el reward address balance")
 		elRewardAddressBalance, err := tokens.GetEthBalance(pnr.Client, operatorElRewardAddress, nil)
 		if err != nil {
 			return nil, err
 		}
-		operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+		//fmt.Println("Computing operator el rewards")
+		operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
 		if err != nil {
 			return nil, err
 		}
 		response.OperatorELRewardsAddress = operatorElRewardAddress
 		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
 
+		//fmt.Println("Getting operator reward address balance")
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
 			return nil, err
@@ -105,12 +114,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorRewardInETH = operatorReward
 
 		// get operator deposited sd collateral
+		//fmt.Println("Getting operator sd collateral")
 		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
 		if err != nil {
 			return nil, err
 		}
 		response.DepositedSdCollateral = operatorSdCollateral
 
+		//fmt.Println("Getting operator sd collateral worth validators")
 		// total registerable validators
 		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
 		if err != nil {
@@ -118,29 +129,48 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.SdCollateralWorthValidators = totalSdWorthValidators
 
+		// get sd collateral in unbonding phase
+		withdrawReqSd, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+		withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
+		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
+
+		//fmt.Println("getting total operator validators")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
 		if err != nil {
 			return nil, err
 		}
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
+		//fmt.Println("Going through validators")
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
+			//fmt.Println("getting validator id")
 			validatorIndex, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
 			if err != nil {
 				return nil, err
 			}
+			//fmt.Println("getting validator info")
 			validatorContractInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
 			if err != nil {
 				return nil, err
 			}
+			//fmt.Println("getting validator eth balance")
 			withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 			if err != nil {
 				return nil, err
 			}
-			withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
+			//fmt.Println("getting validator el rewards")
+			withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
 			if err != nil {
 				return nil, err
 			}
+			//fmt.Println("getting rewards threshold")
 			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
 			if err != nil {
 				return nil, err
@@ -150,6 +180,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				crossedRewardThreshold = true
 			}
 
+			//fmt.Println("getting validator withdrawable balance")
 			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
 			if validatorContractInfo.Status > 7 {
 				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
@@ -169,9 +200,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				CrossedRewardsThreshold:          crossedRewardThreshold,
 				WithdrawVaultWithdrawableBalance: validatorWithdrawVaultWithdrawShares,
 				OperatorId:                       validatorContractInfo.OperatorId,
-				InitialBondEth:                   validatorContractInfo.InitialBondEth,
-				DepositTime:                      validatorContractInfo.DepositTime,
-				WithdrawnTime:                    validatorContractInfo.WithdrawnTime,
+				DepositTime:                      validatorContractInfo.DepositBlock,
+				WithdrawnTime:                    validatorContractInfo.WithdrawnBlock,
 			}
 
 			validatorInfoArray[i] = validatorInfo

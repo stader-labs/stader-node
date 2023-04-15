@@ -56,6 +56,12 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.OperatorRewardInETH == nil {
 		response.OperatorRewardInETH = big.NewInt(0)
 	}
+	if response.SdCollateralWithdrawTime == nil {
+		response.SdCollateralWithdrawTime = big.NewInt(0)
+	}
+	if response.SdCollateralRequestedToWithdraw == nil {
+		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
+	}
 
 	return response, nil
 }
@@ -638,7 +644,7 @@ func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, 
 }
 
 func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	responseBytes, err := c.callAPI("node can-update-operator-details", operatorName, operatorRewardAddress.Hex())
 	if err != nil {
 		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
 	}
@@ -653,7 +659,7 @@ func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAdd
 }
 
 func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	responseBytes, err := c.callAPI("node update-operator-details", operatorName, operatorRewardAddress.Hex())
 	if err != nil {
 		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
 	}

@@ -99,11 +99,13 @@ func nodeDepositSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if !canDeposit.CanDeposit {
-		fmt.Println("Cannot deposit SD:")
-		if canDeposit.InsufficientBalance {
-			fmt.Println("The node's SD balance is insufficient.")
-		}
+	fmt.Println("Cannot deposit SD:")
+	if canDeposit.InsufficientBalance {
+		fmt.Println("The node's SD balance is insufficient.")
+		return nil
+	}
+	if canDeposit.CollateralContractPaused {
+		fmt.Println("The collateral contract is paused.")
 		return nil
 	}
 

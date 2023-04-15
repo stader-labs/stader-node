@@ -26,6 +26,8 @@ type NodeStatusResponse struct {
 	OperatorELRewardsAddress        common.Address       `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance *big.Int             `json:"operatorELRewardsAddressBalance"`
 	DepositedSdCollateral           *big.Int             `json:"depositedSdCollateral"`
+	SdCollateralRequestedToWithdraw *big.Int             `json:"sdCollateralRequestedToWithdraw"`
+	SdCollateralWithdrawTime        *big.Int             `json:"withdrawTime"`
 	SdCollateralWorthValidators     *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                      bool                 `json:"registered"`
 	AccountBalances                 tokens.Balances      `json:"accountBalances"`
@@ -49,12 +51,11 @@ type RegisterNodeResponse struct {
 }
 
 type CanNodeDepositSdResponse struct {
-	Status              string         `json:"status"`
-	Error               string         `json:"error"`
-	CanDeposit          bool           `json:"CanDeposit"`
-	InsufficientBalance bool           `json:"insufficientBalance"`
-	InConsensus         bool           `json:"inConsensus"`
-	GasInfo             stader.GasInfo `json:"gasInfo"`
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	CollateralContractPaused bool           `json:"collateralContractPaused"`
+	InsufficientBalance      bool           `json:"insufficientBalance"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 type NodeDepositSdApproveGasResponse struct {
 	Status  string         `json:"status"`
@@ -202,6 +203,7 @@ type CanWithdrawClRewardsResponse struct {
 	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
 	OperatorNotActive     bool           `json:"operatorNotActive"`
 	ValidatorWithdrawn    bool           `json:"validatorWithdrawn"`
+	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
 	NoClRewards           bool           `json:"noClRewards"`
 	TooManyClRewards      bool           `json:"tooManyClRewards"`
 	ValidatorNotFound     bool           `json:"validatorNotFound"`
@@ -219,8 +221,11 @@ type WithdrawClRewardsResponse struct {
 type CanSettleExitFunds struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
+	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
+	OperatorNotActive     bool           `json:"operatorNotActive"`
 	ValidatorNotWithdrawn bool           `json:"validatorNotWithdrawn"`
-	NotEthToWithdraw      bool           `json:"notEthToWithdraw"`
+	NoEthToWithdraw       bool           `json:"notEthToWithdraw"`
+	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 

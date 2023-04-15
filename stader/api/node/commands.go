@@ -882,6 +882,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					if err != nil {
 						return err
 					}
+
 					// Run
 					api.PrintResponse(CanUpdateOperatorDetails(c, operatorName, operatorRewardAddress))
 					return nil

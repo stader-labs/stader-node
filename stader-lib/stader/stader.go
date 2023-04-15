@@ -286,3 +286,36 @@ func NewSocializingPool(client ExecutionClient, socializingPoolAddress common.Ad
 	}, nil
 
 }
+
+// Write above bindings for PoolUtils
+
+type PoolUtilsContractManager struct {
+	Client            ExecutionClient
+	PoolUtils         *contracts.PoolUtils
+	PoolUtilsContract *Contract
+}
+
+func NewPoolUtils(client ExecutionClient, poolUtilsAddress common.Address) (*PoolUtilsContractManager, error) {
+	poolUtils, err := contracts.NewPoolUtils(poolUtilsAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	poolUtilsContractAbi, err := abi.JSON(strings.NewReader(contracts.PoolUtilsMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	poolUtilsContract := &Contract{
+		Contract: bind.NewBoundContract(poolUtilsAddress, poolUtilsContractAbi, client, client, client),
+		Address:  &poolUtilsAddress,
+		ABI:      &poolUtilsContractAbi,
+		Client:   client,
+	}
+
+	return &PoolUtilsContractManager{
+		Client:            client,
+		PoolUtils:         poolUtils,
+		PoolUtilsContract: poolUtilsContract,
+	}, nil
+
+}

@@ -4,8 +4,10 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, error) {
@@ -22,6 +24,10 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 		return nil, err
 	}
 	vf, err := services.GetVaultFactory(c)
+	if err != nil {
+		return nil, err
+	}
+	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -58,11 +64,12 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
-	if operatorElRewards.OperatorShare.Int64() < 0 {
+
+	if operatorElRewards.OperatorShare.Cmp(new(big.Int).SetUint64(1000000000)) < 0 {
 		response.NoElRewards = true
 		return &response, nil
 	}
@@ -94,7 +101,15 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	putils, err := services.GetPoolUtilsContract(c)
+	if err != nil {
+		return nil, err
+	}
 	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +132,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := node.CalculateElRewardShare(pnr.Client, operatorElRewardAddress, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +140,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	response.ElRewardsAmount = operatorElRewards.OperatorShare
 	response.OperatorRewardAddress = operatorInfo.OperatorRewardAddress
 
-	tx, err := node.WithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, nil)
+	tx, err := node.WithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
 	if err != nil {
 		return nil, err
 	}
