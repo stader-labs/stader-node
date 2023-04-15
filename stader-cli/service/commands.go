@@ -319,22 +319,22 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 
-			// {
-			// 	Name:      "compose",
-			// 	Usage:     "View the Stader service docker compose config",
-			// 	UsageText: "stader-cli service compose",
-			// 	Action: func(c *cli.Context) error {
+			{
+				Name:      "compose",
+				Usage:     "View the Stader service docker compose config",
+				UsageText: "stader-cli service compose",
+				Action: func(c *cli.Context) error {
 
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
 
-			// 		// Run command
-			// 		return serviceCompose(c)
+					// Run command
+					return serviceCompose(c)
 
-			// 	},
-			// },
+				},
+			},
 
 			{
 				Name:      "version",
@@ -354,57 +354,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 
-			// {
-			// 	Name:      "prune-eth1",
-			// 	Aliases:   []string{"n"},
-			// 	Usage:     "Shuts down the main ETH1 client and prunes its database, freeing up disk space, then restarts it when it's done.",
-			// 	UsageText: "stader-cli service prune-eth1",
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run command
-			// 		return pruneExecutionClient(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "install-update-tracker",
-			// 	Aliases:   []string{"d"},
-			// 	Usage:     "Install the update tracker that provides the available system update count to the metrics dashboard",
-			// 	UsageText: "stader-cli service install-update-tracker [options]",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "yes, y",
-			// 			Usage: "Automatically confirm service installation",
-			// 		},
-			// 		cli.BoolFlag{
-			// 			Name:  "verbose, r",
-			// 			Usage: "Print installation script command output",
-			// 		},
-			// 		cli.StringFlag{
-			// 			Name:  "version, v",
-			// 			Usage: "The update tracker package version to install",
-			// 			Value: fmt.Sprintf("v%s", shared.StaderVersion),
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run command
-			// 		return installUpdateTracker(c)
-
-			// 	},
-			// },
-
 			{
 				Name:      "check-cpu-features",
 				Aliases:   []string{"ccf"},
@@ -423,98 +372,22 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 
-			// {
-			// 	Name:      "get-config-yaml",
-			// 	Usage:     "Generate YAML that shows the current configuration schema, including all of the parameters and their descriptions",
-			// 	UsageText: "stader-cli service get-config-yaml",
-			// 	Action: func(c *cli.Context) error {
+			{
+				Name:      "get-config-yaml",
+				Usage:     "Generate YAML that shows the current configuration schema, including all of the parameters and their descriptions",
+				UsageText: "stader-cli service get-config-yaml",
+				Action: func(c *cli.Context) error {
 
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
 
-			// 		// Run command
-			// 		return getConfigYaml(c)
+					// Run command
+					return getConfigYaml(c)
 
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "export-eth1-data",
-			// 	Usage:     "Exports the execution client (eth1) chain data to an external folder. Use this if you want to back up your chain data before switching execution clients.",
-			// 	UsageText: "stader-cli service export-eth1-data target-folder",
-			// 	Flags: []cli.Flag{
-			// 		cli.BoolFlag{
-			// 			Name:  "force",
-			// 			Usage: "Bypass the free space check on the target folder",
-			// 		},
-			// 	},
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 1); err != nil {
-			// 			return err
-			// 		}
-			// 		targetDir := c.Args().Get(0)
-
-			// 		// Run command
-			// 		return exportEcData(c, targetDir)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "import-eth1-data",
-			// 	Usage:     "Imports execution client (eth1) chain data from an external folder. Use this if you want to restore the data from an execution client that you previously backed up.",
-			// 	UsageText: "stader-cli service import-eth1-data source-folder",
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 1); err != nil {
-			// 			return err
-			// 		}
-			// 		sourceDir := c.Args().Get(0)
-
-			// 		// Run command
-			// 		return importEcData(c, sourceDir)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "resync-eth1",
-			// 	Usage:     fmt.Sprintf("%sDeletes the main ETH1 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
-			// 	UsageText: "stader-cli service resync-eth1",
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run command
-			// 		return resyncEth1(c)
-
-			// 	},
-			// },
-
-			// {
-			// 	Name:      "resync-eth2",
-			// 	Usage:     fmt.Sprintf("%sDeletes the ETH2 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
-			// 	UsageText: "stader-cli service resync-eth2",
-			// 	Action: func(c *cli.Context) error {
-
-			// 		// Validate args
-			// 		if err := cliutils.ValidateArgCount(c, 0); err != nil {
-			// 			return err
-			// 		}
-
-			// 		// Run command
-			// 		return resyncEth2(c)
-
-			// 	},
-			// },
+				},
+			},
 
 			{
 				Name:      "terminate",
