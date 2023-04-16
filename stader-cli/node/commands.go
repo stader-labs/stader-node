@@ -251,36 +251,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "debug-exit",
-				Aliases:   []string{"c"},
-				Usage:     "get the debug exit info",
-				UsageText: "stader-cli node debug-exit index",
-				Flags: []cli.Flag{
-					cli.Uint64Flag{
-						Name:  "validator-index, vi",
-						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-					cli.Uint64Flag{
-						Name:  "epoch-delta, ed",
-						Usage: "Delta to add to the epoch",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-					index := c.Uint64("validator-index")
-					fmt.Printf("index is %d\n", index)
-					epochDelta := c.Uint64("epoch-delta")
-					fmt.Printf("epoch delta is %d\n", epochDelta)
-
-					// Run
-					return debugExitMsg(c, index, epochDelta)
-				},
-			},
-			{
 				Name:      "exit",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
@@ -414,10 +384,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd withdraw amount", c.String("amount")); err != nil {
 						return err
 					}
@@ -518,11 +484,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					//if err := cliutils.ValidateArgCount(c, 2); err != nil {
-					//	return err
-					//}
-
 					operatorName := c.String("operator-name")
+					if operatorName == "" {
+						return fmt.Errorf("operator name can't be empty string")
+					}
 					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
 					if err != nil {
 						return err

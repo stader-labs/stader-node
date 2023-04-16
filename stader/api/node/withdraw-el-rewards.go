@@ -47,14 +47,6 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
 
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
@@ -64,7 +56,7 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +124,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}

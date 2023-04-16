@@ -36,10 +36,6 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 		fmt.Printf("Operator not registered\n")
 		return nil
 	}
-	if canWithdrawClRewardsResponse.OperatorNotActive {
-		fmt.Printf("Operator not active\n")
-		return nil
-	}
 	if canWithdrawClRewardsResponse.NoClRewards {
 		fmt.Printf("No CL rewards to withdraw for validator %s\n", validatorPubKey.String())
 		return nil

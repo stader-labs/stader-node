@@ -41,19 +41,14 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 		return &response, nil
 	}
 
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
-
 	// make sure validator state is in withdrawn
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
 		return nil, err
+	}
+	if validatorId.Cmp(big.NewInt(0)) == 0 {
+		response.ValidatorNotRegistered = true
+		return &response, nil
 	}
 	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
 	if err != nil {

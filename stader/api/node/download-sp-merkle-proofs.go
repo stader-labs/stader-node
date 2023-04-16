@@ -16,7 +16,6 @@ import (
 )
 
 func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsResponse, error) {
-	// check if operator is registered or not
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}

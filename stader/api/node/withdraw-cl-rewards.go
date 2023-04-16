@@ -24,6 +24,10 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	if err != nil {
 		return nil, err
 	}
+	putils, err := services.GetPoolUtilsContract(c)
+	if err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -42,15 +46,6 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	}
 	if operatorId.Int64() == 0 {
 		response.OperatorNotRegistered = true
-		return &response, nil
-	}
-
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
 		return &response, nil
 	}
 
@@ -81,7 +76,13 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return &response, nil
 	}
 
-	withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+	//fmt.Println("getting validator eth balance")
+	withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +161,7 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	if err != nil {
 		return nil, err
 	}
-	withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}

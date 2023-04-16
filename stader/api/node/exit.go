@@ -3,6 +3,7 @@ package node
 import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -45,18 +46,17 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
 	if err != nil {
 		return nil, err
 	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
+	if !res.Exists {
+		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
 
-	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
-	if err != nil || !res.Exists {
-		response.ValidatorNotRegistered = true
+	if eth2.IsValidatorExiting(res) {
+		response.ValidatorExiting = true
 		return &response, nil
 	}
 
@@ -71,7 +71,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 
-	response.CanExit = true
 	return &response, nil
 }
 
