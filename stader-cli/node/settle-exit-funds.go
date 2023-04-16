@@ -35,8 +35,8 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) erro
 		fmt.Printf("Operator %s not registered\n", validatorPubKey.String())
 		return nil
 	}
-	if canSettleExitFunds.OperatorNotActive {
-		fmt.Printf("Operator %s not active\n", validatorPubKey.String())
+	if canSettleExitFunds.ValidatorNotRegistered {
+		fmt.Printf("Validator %s not registered\n", validatorPubKey.String())
 		return nil
 	}
 	if canSettleExitFunds.ValidatorNotWithdrawn {

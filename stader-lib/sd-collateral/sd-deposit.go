@@ -125,3 +125,20 @@ func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAd
 
 	return withdrawInfo, nil
 }
+
+func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (struct {
+	MinThreshold      *big.Int
+	WithdrawThreshold *big.Int
+	Units             string
+}, error) {
+	poolThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
+	if err != nil {
+		return struct {
+			MinThreshold      *big.Int
+			WithdrawThreshold *big.Int
+			Units             string
+		}{}, err
+	}
+
+	return poolThreshold, nil
+}

@@ -203,7 +203,6 @@ type CanWithdrawClRewardsResponse struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
 	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	OperatorNotActive     bool           `json:"operatorNotActive"`
 	ValidatorWithdrawn    bool           `json:"validatorWithdrawn"`
 	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
 	NoClRewards           bool           `json:"noClRewards"`
@@ -221,14 +220,14 @@ type WithdrawClRewardsResponse struct {
 }
 
 type CanSettleExitFunds struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	OperatorNotActive     bool           `json:"operatorNotActive"`
-	ValidatorNotWithdrawn bool           `json:"validatorNotWithdrawn"`
-	NoEthToWithdraw       bool           `json:"notEthToWithdraw"`
-	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status                 string         `json:"status"`
+	Error                  string         `json:"error"`
+	OperatorNotRegistered  bool           `json:"operatorNotRegistered"`
+	ValidatorNotWithdrawn  bool           `json:"validatorNotWithdrawn"`
+	ValidatorNotRegistered bool           `json:"validatorNotRegistered"`
+	NoEthToWithdraw        bool           `json:"notEthToWithdraw"`
+	VaultAlreadySettled    bool           `json:"vaultAlreadySettled"`
+	GasInfo                stader.GasInfo `json:"gasInfo"`
 }
 
 type SettleExitFunds struct {
@@ -244,7 +243,6 @@ type CanWithdrawElRewardsResponse struct {
 	Error                 string         `json:"error"`
 	NoElRewards           bool           `json:"noElRewards"`
 	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	OperatorNotActive     bool           `json:"operatorNotActive"`
 	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 

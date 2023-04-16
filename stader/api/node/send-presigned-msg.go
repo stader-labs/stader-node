@@ -40,6 +40,7 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
 
+	// check if validator keystore is present by querying validator index
 	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
 	if err != nil {
 		return nil, err

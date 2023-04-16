@@ -49,15 +49,6 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return &response, nil
 	}
 
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
-
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
 		return nil, err
