@@ -61,8 +61,9 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 
-	if !eth2.IsValidatorActive(res) {
-
+	if eth2.IsValidatorExiting(res) {
+		response.ValidatorExiting = true
+		return &response, nil
 	}
 
 	beaconHead, err := bc.GetBeaconHead()

@@ -64,7 +64,7 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func WithdrawElRewards(c *cli.Context) (*api.WithdrawElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
+	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}

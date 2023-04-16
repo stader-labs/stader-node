@@ -13,6 +13,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
+	"math/big"
 	"strconv"
 )
 
@@ -39,8 +40,10 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
 
-	// TODO - check if the validator is registered with this operator
-	// TODO - check if the validator key is present in the system
+	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
+	if err != nil {
+		return nil, err
+	}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
@@ -51,9 +54,21 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 		return &canSendPresignedMsgResponse, nil
 	}
 
+	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if validatorId.Cmp(big.NewInt(0)) == 0 {
+		canSendPresignedMsgResponse.ValidatorNotRegisteredWithStader = true
+		return &canSendPresignedMsgResponse, nil
+	}
+
 	// check if validator is present by querying validator index
 	validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
-	if validatorStatus.Index == 0 || err != nil {
+	if err != nil {
+		return nil, err
+	}
+	if !validatorStatus.Exists {
 		canSendPresignedMsgResponse.ValidatorNotRegistered = true
 		return &canSendPresignedMsgResponse, nil
 	}

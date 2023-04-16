@@ -7,7 +7,7 @@ import (
 	"math/big"
 )
 
-func CalculateNodeElRewardShare(pool_utils *stader.PoolUtilsContractManager, poolId uint8, totalRewards *big.Int, opts *bind.CallOpts) (struct {
+func CalculateRewardShare(pool_utils *stader.PoolUtilsContractManager, poolId uint8, totalRewards *big.Int, opts *bind.CallOpts) (struct {
 	UserShare     *big.Int
 	OperatorShare *big.Int
 	ProtocolShare *big.Int

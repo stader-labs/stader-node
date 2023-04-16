@@ -150,6 +150,8 @@ type CanSendPresignedMsgResponse struct {
 	Status                               string `json:"status"`
 	Error                                string `json:"error"`
 	OperatorNotRegistered                bool   `json:"operatorNotRegistered"`
+	ValidatorNotRegisteredWithStader     bool   `json:"validatorNotRegisteredWithStader"`
+	ValidatorNotRegisteredWithOperator   bool   `json:"validatorNotRegisteredWithOperator"`
 	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
 	ValidatorPreSignKeyAlreadyRegistered bool   `json:"validatorPreSignKeyAlreadyRegistered"`
 	ValidatorIsNotActive                 bool   `json:"validatorIsNotActive"`
@@ -171,7 +173,7 @@ type CanExitValidatorResponse struct {
 	OperatorNotActive      bool   `json:"operatorNotActive"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
-	ValidatorNotActive     bool   `json:"validatorNotActive"`
+	ValidatorExiting       bool   `json:"validatorExiting"`
 	CanExit                bool   `json:"canExit"`
 }
 

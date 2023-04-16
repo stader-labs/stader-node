@@ -99,7 +99,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			return nil, err
 		}
 		//fmt.Println("Computing operator el rewards")
-		operatorElRewards, err := pool_utils.CalculateNodeElRewardShare(putils, 1, elRewardAddressBalance, nil)
+		operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 		if err != nil {
 			return nil, err
 		}
@@ -166,7 +166,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 			//fmt.Println("getting validator el rewards")
-			withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
+			withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 			if err != nil {
 				return nil, err
 			}

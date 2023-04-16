@@ -518,11 +518,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					//if err := cliutils.ValidateArgCount(c, 2); err != nil {
-					//	return err
-					//}
-
 					operatorName := c.String("operator-name")
+					if operatorName == "" {
+						return fmt.Errorf("operator name can't be empty string")
+					}
 					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
 					if err != nil {
 						return err

@@ -91,7 +91,7 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return nil, err
 	}
 
-	withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +170,7 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	if err != nil {
 		return nil, err
 	}
-	withdrawVaultRewardShares, err := pool_utils.CalculateNodeElRewardShare(putils, 1, withdrawVaultBalance, nil)
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}
