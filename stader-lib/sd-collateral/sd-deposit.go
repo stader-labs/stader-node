@@ -66,12 +66,17 @@ func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddr
 }
 
 func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount *big.Int, poolType uint8, opts *bind.CallOpts) (*big.Int, error) {
-	maxValidatorSpawanable, err := sdc.SdCollateral.GetMaxValidatorSpawnable(opts, sdAmount, poolType)
+	pThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
 	if err != nil {
 		return nil, err
 	}
 
-	return maxValidatorSpawanable, nil
+	ethAmount, err := sdc.SdCollateral.ConvertSDToETH(opts, sdAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return ethAmount.Div(ethAmount, pThreshold.MinThreshold), nil
 }
 
 func ConvertEthToSd(sdc *stader.SdCollateralContractManager, ethAmount *big.Int, opts *bind.CallOpts) (*big.Int, error) {

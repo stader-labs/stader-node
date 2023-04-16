@@ -43,15 +43,6 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSd
 		return nil, err
 	}
 
-	//collateralContractPaused, err := sd_collateral.IsSdCollateralContractPaused(sdc, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if collateralContractPaused {
-	//	response.CollateralContractPaused = true
-	//	return &response, nil
-	//}
-
 	// Check Sd balance
 	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, nodeAccount.Address)
 	if err != nil {
