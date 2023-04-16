@@ -39,6 +39,9 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
 
+	// TODO - check if the validator is registered with this operator
+	// TODO - check if the validator key is present in the system
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -55,6 +58,11 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 		return &canSendPresignedMsgResponse, nil
 	}
 
+	if eth2.IsValidatorExiting(validatorStatus) {
+		canSendPresignedMsgResponse.ValidatorIsNotActive = true
+		return &canSendPresignedMsgResponse, nil
+	}
+
 	// check if already registered
 	isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
 	if err != nil {
@@ -62,11 +70,6 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 	if isRegistered {
 		canSendPresignedMsgResponse.ValidatorPreSignKeyAlreadyRegistered = true
-		return &canSendPresignedMsgResponse, nil
-	}
-
-	if eth2.IsValidatorExiting(validatorStatus) {
-		canSendPresignedMsgResponse.ValidatorIsNotActive = true
 		return &canSendPresignedMsgResponse, nil
 	}
 

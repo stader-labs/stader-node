@@ -1,6 +1,7 @@
 package sd_collateral
 
 import (
+	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -74,6 +75,10 @@ func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount 
 	ethAmount, err := sdc.SdCollateral.ConvertSDToETH(opts, sdAmount)
 	if err != nil {
 		return nil, err
+	}
+
+	if pThreshold.MinThreshold.Cmp(big.NewInt(0)) == 0 {
+		return nil, fmt.Errorf("pool min threshold is 0")
 	}
 
 	return ethAmount.Div(ethAmount, pThreshold.MinThreshold), nil

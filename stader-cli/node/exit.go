@@ -34,6 +34,10 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		fmt.Println("Validator too young!")
 		return nil
 	}
+	if response.ValidatorNotActive {
+		fmt.Println("Validator not active!")
+		return nil
+	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
