@@ -1252,6 +1252,8 @@ github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230412113200-566a57b0b25
 github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230412113200-566a57b0b252/go.mod h1:1aWp76l573sAUYRVwu6nXnL9cSkU2PDdZmLZw7mZ+4U=
 github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230414075903-e65d5934fe38 h1:8LF1imhxUc2NqvMSAYeReys/g2ObqTuL42PPdA341J4=
 github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230414075903-e65d5934fe38/go.mod h1:1aWp76l573sAUYRVwu6nXnL9cSkU2PDdZmLZw7mZ+4U=
+github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230415152554-173e0a8a51a9 h1:hdKtTySDS/kISLg1Xk4Mwfmrxt5U+bBsfbGVlroCIPc=
+github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230415152554-173e0a8a51a9/go.mod h1:1aWp76l573sAUYRVwu6nXnL9cSkU2PDdZmLZw7mZ+4U=
 github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230412113200-566a57b0b252 h1:qkmNhXW8cKs4hXQ6an893BZFxUlVK14T/ttT/aOPJVE=
 github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230412113200-566a57b0b252/go.mod h1:hsVgdTJijflYAKGDE8Io692K28QVyjh68JT45jrCD1M=
 github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230414075903-e65d5934fe38 h1:J1Q4pg7DcTs3ZoFKeHhICd4GnHF5ja9iagTb/WYlTxg=

@@ -28,6 +28,7 @@ func setUIFallbackClient(cfg *stdCf.StaderConfig, newSettings map[string]interfa
 	newSettings[keys.Fc_true_reconnect_delay] = cfg.ReconnectDelay.Value
 	newSettings[keys.Fc_true_execution_client_url] = cfg.FallbackNormal.EcHttpUrl.Value
 	newSettings[keys.Fc_true_beacon_node_url] = cfg.FallbackNormal.CcHttpUrl.Value
+	newSettings[keys.Fc_true_beacon_node_json_rpc_url] = cfg.FallbackPrysm.JsonRpcUrl.Value
 
 	return nil
 }
@@ -39,6 +40,10 @@ func updateFallbackClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 		cfg.ReconnectDelay.Value = newSettings[keys.Fc_true_reconnect_delay]
 		cfg.FallbackNormal.EcHttpUrl.Value = newSettings[keys.Fc_true_execution_client_url]
 		cfg.FallbackNormal.CcHttpUrl.Value = newSettings[keys.Fc_true_beacon_node_url]
+
+		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings[keys.Fc_true_execution_client_url]
+		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings[keys.Fc_true_beacon_node_url]
+		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings[keys.Fc_true_beacon_node_json_rpc_url]
 	}
 	return nil
 }

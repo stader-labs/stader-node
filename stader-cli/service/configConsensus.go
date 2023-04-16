@@ -38,6 +38,7 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_em_http_teku] = cfg.ExternalTeku.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_teku] = cfg.ExternalTeku.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_teku] = cfg.ExternalTeku.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_lc_enable_archive_mode_teku] = cfg.Teku.ArchiveMode.Value.(bool)
 
 	// Lighthouse:
 	newSettings[keys.E2cc_em_custom_graffiti_lighthouse] = cfg.ExternalLighthouse.Graffiti.Value
@@ -168,6 +169,7 @@ func updateLocalConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]
 
 	// Teku
 	newCfg.Teku.JvmHeapSize.Value = settings[keys.E2cc_lc_jvm_heap_size]
+	newCfg.Teku.ArchiveMode.Value = settings[keys.E2cc_lc_enable_archive_mode_teku]
 	newCfg.Teku.ContainerTag.Value = settings[keys.E2cc_lc_container_tag_teku]
 	newCfg.Teku.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_beacon_node_flags_teku]
 	newCfg.Teku.AdditionalVcFlags.Value = settings[keys.E2cc_lc_additional_client_flags_teku]
