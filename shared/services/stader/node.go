@@ -22,10 +22,11 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"strconv"
-
-	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
@@ -48,6 +49,18 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	}
 	if response.AccountBalances.Sd == nil {
 		response.AccountBalances.Sd = big.NewInt(0)
+	}
+	if response.OperatorELRewardsAddressBalance == nil {
+		response.OperatorELRewardsAddressBalance = big.NewInt(0)
+	}
+	if response.OperatorRewardInETH == nil {
+		response.OperatorRewardInETH = big.NewInt(0)
+	}
+	if response.SdCollateralWithdrawTime == nil {
+		response.SdCollateralWithdrawTime = big.NewInt(0)
+	}
+	if response.SdCollateralRequestedToWithdraw == nil {
+		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
 	}
 
 	return response, nil
@@ -149,6 +162,36 @@ func (c *Client) NodeDepositSd(amountWei *big.Int) (api.NodeDepositSdResponse, e
 	return response, nil
 }
 
+func (c *Client) CanUpdateSocializeEl(socializeEl bool) (api.CanUpdateSocializeElResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-socialize-el %s", strconv.FormatBool(socializeEl)))
+	if err != nil {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not opt-in or opt-out of socializing pool: %w", err)
+	}
+	var response api.CanUpdateSocializeElResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not decode opt-in or opt-out of socializing pool response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateSocializeElResponse{}, fmt.Errorf("could not opt-in ot opt-out of socializing pool: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateSocializeEl(socializeEl bool) (api.UpdateSocializeElResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node update-socialize-el %s", strconv.FormatBool(socializeEl)))
+	if err != nil {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not opt-in or opt-out of socializing pool: %w", err)
+	}
+	var response api.UpdateSocializeElResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not decode opt-in or opt-out of socializing pool response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateSocializeElResponse{}, fmt.Errorf("could not opt-in ot opt-out of socializing pool: %s", response.Error)
+	}
+	return response, nil
+}
+
 // Get the node's SD allowance
 func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))
@@ -181,6 +224,66 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators
 	return response, nil
 }
 
+func (c *Client) CanExitValidator(validatorPubKey types.ValidatorPubkey) (api.CanExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-exit %s", validatorPubKey))
+	if err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %w", err)
+	}
+	var response api.CanExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not decode can exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node exit %s", validatorPubKey))
+	if err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+	}
+	var response api.ExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanSendPresignedMessage(validatorPubKey types.ValidatorPubkey) (api.CanSendPresignedMsgResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-send-presigned-msg %s", validatorPubKey))
+	if err != nil {
+		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+	}
+	var response api.CanSendPresignedMsgResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) SendPresignedMessage(validatorPubKey types.ValidatorPubkey) (api.SendPresignedMsgResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node send-presigned-msg %s", validatorPubKey))
+	if err != nil {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+	}
+	var response api.SendPresignedMsgResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
 func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	responseBytes, err := c.callAPI("node get-contracts-info")
 	if err != nil {
@@ -192,22 +295,6 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	}
 	if response.Error != "" {
 		return api.ContractsInfoResponse{}, fmt.Errorf("could not get networks contract info: %s", response.Error)
-	}
-	return response, nil
-}
-
-func (c *Client) DebugExit(validatorIndex *big.Int) (api.DebugExitResponse, error) {
-	fmt.Printf("cli: validatorIndex is %d\n", validatorIndex)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d", validatorIndex))
-	if err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %w", err)
-	}
-	var response api.DebugExitResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not decode debug exit info: %w", err)
-	}
-	if response.Error != "" {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %s", response.Error)
 	}
 	return response, nil
 }
@@ -289,6 +376,283 @@ func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	}
 	if response.Error != "" {
 		return api.NodeSignResponse{}, fmt.Errorf("could not sign message: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanWithdrawElRewards() (api.CanWithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node can-withdraw-el-rewards")
+	if err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %w", err)
+	}
+	var response api.CanWithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawElRewards() (api.WithdrawElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node withdraw-el-rewards")
+	if err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %w", err)
+	}
+	var response api.WithdrawElRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not decode node withdraw-el-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanWithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.CanWithdrawClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-withdraw-cl-rewards %s", validatorPubKey))
+	if err != nil {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %w", err)
+	}
+	var response api.CanWithdrawClRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-cl-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) WithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.WithdrawClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node withdraw-cl-rewards %s", validatorPubKey))
+	if err != nil {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %w", err)
+	}
+	var response api.WithdrawClRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not decode node withdraw-cl-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanSettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.CanSettleExitFunds, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-settle-exit-funds %s", validatorPubKey))
+	if err != nil {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %w", err)
+	}
+	var response api.CanSettleExitFunds
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not decode node can-settle-exit-funds response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.SettleExitFunds, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node settle-exit-funds %s", validatorPubKey))
+	if err != nil {
+		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %w", err)
+	}
+	var response api.SettleExitFunds
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.SettleExitFunds{}, fmt.Errorf("could not decode node settle-exit-funds response: %w", err)
+	}
+	if response.Error != "" {
+		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanRequestSdCollateralWithdraw(amount *big.Int) (api.CanRequestWithdrawSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-request-sd-withdraw %s", amount.String()))
+	if err != nil {
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %w", err)
+	}
+	var response api.CanRequestWithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not decode node can-node-request-sd-withdraw response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) RequestSdCollateralWithdraw(amount *big.Int) (api.RequestWithdrawSdResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-request-sd-withdraw %s", amount.String()))
+	if err != nil {
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %w", err)
+	}
+	var response api.RequestWithdrawSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not decode node node-request-sd-withdraw response: %w", err)
+	}
+	if response.Error != "" {
+		return api.RequestWithdrawSdResponse{}, fmt.Errorf("could not get node node-request-sd-withdraw response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanClaimSd() (api.CanClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-claim-sd"))
+	if err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %w", err)
+	}
+	var response api.CanClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not decode node can-node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSdResponse{}, fmt.Errorf("could not get node can-node-claim-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSd() (api.ClaimSdResponse, error) {
+	// TODO - bchain - normalize these response messages
+	responseBytes, err := c.callAPI(fmt.Sprintf("node node-claim-sd"))
+	if err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %w", err)
+	}
+	var response api.ClaimSdResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not decode node node-claim-sd response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSdResponse{}, fmt.Errorf("could not get node node-claim-sd response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-download-sp-merkle-proofs"))
+	if err != nil {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.CanDownloadSpMerkleProofsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node can-download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanDownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node can-download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node download-sp-merkle-proofs"))
+	if err != nil {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
+	}
+	var response api.DownloadSpMerkleProofsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
+	}
+	if response.Error != "" {
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-claim-sp-rewards"))
+	if err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %w", err)
+	}
+	var response api.CanClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not decode node can-claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanClaimSpRewardsResponse{}, fmt.Errorf("could not get node can-claim-sp-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s\n", stringifiedCycleList)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
+	if err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	var response api.EstimateClaimSpRewardsGasResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not decode node estimate-claim-sp-rewards-gas response: %w", err)
+	}
+	if response.Error != "" {
+		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	fmt.Printf("stringifiedCycleList: %s", stringifiedCycleList)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
+	if err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
+	}
+	var response api.ClaimSpRewardsResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not decode node claim-sp-rewards response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI("node can-update-operator-details", operatorName, operatorRewardAddress.Hex())
+	if err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
+	}
+	var response api.CanUpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not decode can-update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
+	responseBytes, err := c.callAPI("node update-operator-details", operatorName, operatorRewardAddress.Hex())
+	if err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
+	}
+	var response api.UpdateOperatorDetails
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not decode update-operator-details response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %s", response.Error)
 	}
 	return response, nil
 }

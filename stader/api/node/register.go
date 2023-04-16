@@ -3,6 +3,8 @@ package node
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -22,6 +24,11 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return nil, err
 	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	sdcfg, err := services.GetStaderConfigContract(c)
+	if err != nil {
+		return nil, err
+	}
+	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -35,21 +42,6 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 
 	nodeAccount, err := w.GetNodeAccount()
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if operatorId.Int64() != 0 {
-		response.AlreadyRegistered = true
-		return &response, nil
-	}
-
-	opts, err := w.GetNodeAccountTransactor()
-	if err != nil {
-		return nil, err
-	}
-
 	isPermissionlessRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(pnr, nil)
 	if err != nil {
 		return nil, err
@@ -59,12 +51,38 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return &response, nil
 	}
 
+	isExistingOperator, err := pool_utils.IsExistingOperator(putils, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isExistingOperator {
+		response.AlreadyRegistered = true
+		return &response, nil
+	}
+
+	operatorNameMaxLength, err := stader_config.GetOperatorNameMaxLength(sdcfg, nil)
+	if err != nil {
+		return nil, err
+	}
+	if len(operatorName) > int(operatorNameMaxLength.Int64()) {
+		response.OperatorNameTooLong = true
+		return &response, nil
+	}
+	if eth1.IsZeroAddress(operatorRewardAddress) {
+		response.OperatorRewardAddressZero = true
+		return &response, nil
+	}
+
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
 	gasInfo, err := node.EstimateOnboardNodeOperator(pnr, socializeMev, operatorName, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	response.CanRegister = true
 	response.GasInfo = gasInfo
 
 	return &response, nil

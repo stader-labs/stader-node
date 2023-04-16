@@ -22,6 +22,48 @@ func OnboardNodeOperator(pnr *stader.PermissionlessNodeRegistryContractManager, 
 	return tx, nil
 }
 
+func EstimateChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "changeSocializingPoolState", socializeEl)
+}
+
+func ChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.ChangeSocializingPoolState(opts, socializeEl)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func EstimateUpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorDetails", operatorName, operatorRewarderAddress)
+}
+
+func UpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.UpdateOperatorDetails(opts, operatorName, operatorRewarderAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func EstimateWithdrawFromNodeElVault(client stader.ExecutionClient, nevAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	if err != nil {
+		return stader.GasInfo{}, err
+	}
+	return nev.NodeElRewardVaultContract.GetTransactionGasInfo(opts, "withdraw")
+}
+
+func WithdrawFromNodeElVault(client stader.ExecutionClient, nevAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	nev, err := stader.NewNodeElRewardVaultFactory(client, nevAddress)
+	if err != nil {
+		return nil, err
+	}
+	return nev.NodeElRewardVault.Withdraw(opts)
+}
+
 func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
 	operatorId, err := pnr.PermissionlessNodeRegistry.OperatorIDByAddress(opts, nodeAddress)
 	if err != nil {
@@ -38,7 +80,7 @@ func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, oper
 	OperatorRewardAddress   common.Address
 	OperatorAddress         common.Address
 }, error) {
-	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(nil, operatorId)
+	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(opts, operatorId)
 	if err != nil {
 		return struct {
 			Active                  bool
@@ -58,4 +100,12 @@ func GetNodeElRewardAddress(vf *stader.VaultFactoryContractManager, poolId uint8
 
 func GetSocializingPoolContract(pp *stader.PermissionlessPoolContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return pp.PermissionlessPool.GetSocializingPoolAddress(opts)
+}
+
+func GetSocializingPoolStateChangeBlock(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetSocializingPoolStateChangeBlock(opts, operatorId)
+}
+
+func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.NextOperatorId(opts)
 }

@@ -29,8 +29,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Your eth2 client is on the correct network.")
-
 	numValidators := c.Uint64("num-validators")
 	if numValidators > 15 {
 		return fmt.Errorf("Num of validator %d should less than 15", numValidators)
@@ -88,6 +86,10 @@ func nodeDeposit(c *cli.Context) error {
 	}
 	if canNodeDepositResponse.NotEnoughSdCollateral {
 		fmt.Printf("Not enough SD as collateral")
+		return nil
+	}
+	if canNodeDepositResponse.MaxValidatorLimitReached {
+		fmt.Printf("Max validator limit reached")
 		return nil
 	}
 

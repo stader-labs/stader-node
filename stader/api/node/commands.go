@@ -450,6 +450,439 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-exit",
+				Usage:     "Can validator exit",
+				UsageText: "stader-cli api node can-exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canExitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "exit",
+				Usage:     "Exit validator",
+				UsageText: "stader-cli api node exit validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(exitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-send-presigned-msg",
+				Usage:     "Can we send presigned msg",
+				UsageText: "stader-cli api node can-send-presigned-msg --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canSendPresignedMsg(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "send-presigned-msg",
+				Usage:     "Send Presigned Message",
+				UsageText: "stader-cli api node send-presigned-msg --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(sendPresignedMsg(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-update-socialize-el",
+				Usage:     "Can opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node can-update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canUpdateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-socialize-el",
+				Usage:     "Opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(updateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-withdraw-el-rewards",
+				Usage:     "Can withdraw el rewards",
+				UsageText: "stader-cli api node can-withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-el-rewards",
+				Usage:     "Withdraw el rewards",
+				UsageText: "stader-cli api node withdraw-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-withdraw-cl-rewards",
+				Usage:     "Can withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node can-withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-cl-rewards",
+				Usage:     "Withdraw cl rewards of a validator",
+				UsageText: "stader-cli api node withdraw-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-settle-exit-funds",
+				Usage:     "Can settle exit funds of a validator",
+				UsageText: "stader-cli api node can-settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanSettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "settle-exit-funds",
+				Usage:     "settle exit funds of a validator",
+				UsageText: "stader-cli api node settle-exit-funds --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(SettleExitFunds(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-node-request-sd-withdraw",
+				Usage:     "Check whether the node can request to withdraw SD",
+				UsageText: "stader-cli api node can-node-request-sd-withdraw amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canRequestSdWithdraw(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-request-sd-withdraw",
+				Usage:     "Request SD withdraw",
+				UsageText: "stader-cli api node node-request-sd-withdraw amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(requestSdWithdraw(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-node-claim-sd",
+				Usage:     "Check whether the node can claim the SD requested to withdraw",
+				UsageText: "stader-cli api node can-node-claim-sd",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canClaimSd(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-claim-sd",
+				Usage:     "Claim the SD requested to withdraw",
+				UsageText: "stader-cli api node node-claim-sd",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(claimSd(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-download-sp-merkle-proofs",
+				Usage:     "Can we Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node can-download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canDownloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "download-sp-merkle-proofs",
+				Usage:     "Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(downloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-claim-sp-rewards",
+				Usage:     "Can we claim the SP rewards",
+				UsageText: "stader-cli api node can-claim-sp-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canClaimSpRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "claim-sp-rewards",
+				Usage:     "Claim the SP rewards",
+				UsageText: "stader-cli api node claim-sp-rewards cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					//fmt.Printf("cycles is %s\n", cycles)
+					// Run
+					api.PrintResponse(claimSpRewards(c, cycles))
+					return nil
+
+				},
+			},
+			{
+				Name:      "estimate-claim-sp-rewards-gas",
+				Usage:     "Estimate the gas required to claim the SP rewards",
+				UsageText: "stader-cli api node estimate-claim-sp-rewards-gas cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					// Run
+					api.PrintResponse(estimateSpRewardsGas(c, cycles))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-update-operator-details",
+				Usage:     "Can we update the operator details",
+				UsageText: "stader-cli api node can-update-operator-details operator-name operator-reward-address",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(CanUpdateOperatorDetails(c, operatorName, operatorRewardAddress))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-operator-details",
+				Usage:     "Update the operator details",
+				UsageText: "stader-cli api node update-operator-details operator-name operator-reward-address",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+					// Run
+					api.PrintResponse(UpdateOperatorDetails(c, operatorName, operatorRewardAddress))
+					return nil
+
+				},
+			},
 		},
 	})
 }

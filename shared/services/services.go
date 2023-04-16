@@ -152,6 +152,32 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 	return stader.NewSdCollateralContract(ec, cfg.StaderNode.GetSdCollateralContractAddress())
 }
 
+func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
+}
+
+func GetSocializingPoolContract(c *cli.Context) (*stader.SocializingPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSocializingPool(ec, cfg.StaderNode.GetSocializingPoolAddress())
+}
+
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -176,6 +202,19 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 	}
 
 	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetEthxTokenAddress())
+}
+
+func GetPoolUtilsContract(c *cli.Context) (*stader.PoolUtilsContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPoolUtils(ec, cfg.StaderNode.GetPoolUtilsAddress())
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {

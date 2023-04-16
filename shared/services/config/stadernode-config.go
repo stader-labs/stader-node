@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -29,15 +30,17 @@ import (
 
 // Constants
 const (
-	stadernodeTag                     = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag        string = "staderdev/eth1-prune-provision:v0.0.1"
-	ecMigratorTag              string = "staderdev/ec-migrator:v1.0.0"
-	NetworkID                  string = "network"
-	ProjectNameID              string = "projectName"
-	DaemonDataPath             string = "/.stader/data"
-	GuardianFolder             string = "guardian"
-	FeeRecipientFilename       string = "stader-fee-recipient.txt"
-	NativeFeeRecipientFilename string = "stader-fee-recipient-env.txt"
+	stadernodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v0.0.1"
+	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
+	NetworkID                   string = "network"
+	ProjectNameID               string = "projectName"
+	DaemonDataPath              string = "/.stader/data"
+	GuardianFolder              string = "guardian"
+	SpRewardsMerkleProofsFolder string = "sp-rewards-merkle-proofs"
+	MerkleProofsFormat          string = "cycle-%s-%d.json"
+	FeeRecipientFilename        string = "stader-fee-recipient.txt"
+	NativeFeeRecipientFilename  string = "stader-fee-recipient-env.txt"
 )
 
 // --ignore-sync-check
@@ -106,6 +109,18 @@ type StaderNodeConfig struct {
 
 	// The contract address of EthX ERC20
 	ethxTokenAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of stader config
+	staderConfigAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the socializing pool
+	socializingPoolAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the stader oracle
+	staderOracleAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the pool utils contract
+	poolUtilsAddress map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -214,23 +229,23 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		permissionlessNodeRegistryAddress: map[config.Network]string{
-			config.Network_Devnet:   "0x0bf620171483E543f7964a6067D9CEf3AE130056",
-			config.Network_Prater:   "0x0bf620171483E543f7964a6067D9CEf3AE130056",
-			config.Network_Mainnet:  "0x0bf620171483E543f7964a6067D9CEf3AE130056",
+			config.Network_Devnet:   "0x7a9F54B8B6Bb1DBED83e16Bb34257397358752df",
+			config.Network_Prater:   "0x7a9F54B8B6Bb1DBED83e16Bb34257397358752df",
+			config.Network_Mainnet:  "0x7a9F54B8B6Bb1DBED83e16Bb34257397358752df",
 			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 
 		permissionlessPoolAddress: map[config.Network]string{
-			config.Network_Devnet:   "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
-			config.Network_Prater:   "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
-			config.Network_Mainnet:  "0xfb2E1e5854Ba5De7e4611E2352cfe85d91106291",
+			config.Network_Devnet:   "0x8e787323E9E4D6B8A280ae8D5F6C228B91Fa88d1",
+			config.Network_Prater:   "0x8e787323E9E4D6B8A280ae8D5F6C228B91Fa88d1",
+			config.Network_Mainnet:  "0x8e787323E9E4D6B8A280ae8D5F6C228B91Fa88d1",
 			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 
 		vaultFactoryAddress: map[config.Network]string{
-			config.Network_Prater:   "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
-			config.Network_Devnet:   "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
-			config.Network_Mainnet:  "0x1e19BED3C9bB53317eFB01Daa61253281A1dbC08",
+			config.Network_Prater:   "0x9524252b4E9C95A5485C46C5361315abb0d10924",
+			config.Network_Devnet:   "0x9524252b4E9C95A5485C46C5361315abb0d10924",
+			config.Network_Mainnet:  "0x9524252b4E9C95A5485C46C5361315abb0d10924",
 			config.Network_Zhejiang: "0xacC1766b4a6dacbB67063a639F588EaB8b6b5A2d",
 		},
 
@@ -242,20 +257,47 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:   "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
-			config.Network_Devnet:   "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
-			config.Network_Mainnet:  "0xF06E82fa29976886fDBDCf41be39Fde0131fB652",
+			config.Network_Prater:   "0x81Aea0A008017d88746934982C7e647e7C2eAA3B",
+			config.Network_Devnet:   "0x81Aea0A008017d88746934982C7e647e7C2eAA3B",
+			config.Network_Mainnet:  "0x81Aea0A008017d88746934982C7e647e7C2eAA3B",
 			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
-			config.Network_Devnet:   "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
-			config.Network_Mainnet:  "0xe624471812F4fb739dD4eF40A8f9fAbD9474CEAa",
+			config.Network_Prater:   "0xE69C6B61b1Fe3b55D7B31F748089d5066476879B",
+			config.Network_Devnet:   "0xE69C6B61b1Fe3b55D7B31F748089d5066476879B",
+			config.Network_Mainnet:  "0xE69C6B61b1Fe3b55D7B31F748089d5066476879B",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		staderConfigAddress: map[config.Network]string{
+			config.Network_Prater:   "0x135b2070E39978516D0C3b9C9Ebd41b83b79f618",
+			config.Network_Devnet:   "0x135b2070E39978516D0C3b9C9Ebd41b83b79f618",
+			config.Network_Mainnet:  "0x135b2070E39978516D0C3b9C9Ebd41b83b79f618",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		socializingPoolAddress: map[config.Network]string{
+			config.Network_Prater:   "0x6CAF9197230dA991a203D8bb840987A46413bB38",
+			config.Network_Devnet:   "0x6CAF9197230dA991a203D8bb840987A46413bB38",
+			config.Network_Mainnet:  "0x6CAF9197230dA991a203D8bb840987A46413bB38",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		staderOracleAddress: map[config.Network]string{
+			config.Network_Prater:   "0xA710d9BcD676B72bF8c4703Abf35Caf5550365EA",
+			config.Network_Devnet:   "0xA710d9BcD676B72bF8c4703Abf35Caf5550365EA",
+			config.Network_Mainnet:  "0xA710d9BcD676B72bF8c4703Abf35Caf5550365EA",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		poolUtilsAddress: map[config.Network]string{
+			config.Network_Prater:   "0xcf06f79436B308B839B5b3D833cB240011F03903",
+			config.Network_Devnet:   "0xcf06f79436B308B839B5b3D833cB240011F03903",
+			config.Network_Mainnet:  "0xcf06f79436B308B839B5b3D833cB240011F03903",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
-
 }
 
 // Get the parameters for this config
@@ -385,6 +427,22 @@ func (cfg *StaderNodeConfig) GetEthxTokenAddress() common.Address {
 	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
 }
 
+func (cfg *StaderNodeConfig) GetStaderConfigAddress() common.Address {
+	return common.HexToAddress(cfg.staderConfigAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetSocializingPoolAddress() common.Address {
+	return common.HexToAddress(cfg.socializingPoolAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
+	return common.HexToAddress(cfg.staderOracleAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetPoolUtilsAddress() common.Address {
+	return common.HexToAddress(cfg.poolUtilsAddress[cfg.Network.Value.(config.Network)])
+}
+
 func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.StaderDirectory, "data")
 }
@@ -395,6 +453,22 @@ func (cfg *StaderNodeConfig) GetGuardianFolder(daemon bool) string {
 	}
 
 	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardsMerkleProofFolder(daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder)
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), GuardianFolder)
+}
+
+func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) string {
+	if daemon && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
+	}
+
+	return filepath.Join(cfg.DataPath.Value.(string), SpRewardsMerkleProofsFolder, fmt.Sprintf(MerkleProofsFormat, string(cfg.Network.Value.(config.Network)), cycle))
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
@@ -423,7 +497,7 @@ func getNetworkOptions() []config.ParameterOption {
 		},
 	}
 
-	// if strings.HasSuffix(shared.StaderVersion, "-dev") {
+	// if string-utils.HasSuffix(shared.StaderVersion, "-dev") {
 	// 	options = append(options, config.ParameterOption{
 	// 		Name:        "Devnet",
 	// 		Description: "This is a development network used by Stader engineers to test new features and contract upgrades before they are promoted to Prater for staging. You should not use this network unless invited to do so by the developers.",
