@@ -174,7 +174,6 @@ type CanExitValidatorResponse struct {
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	ValidatorExiting       bool   `json:"validatorExiting"`
-	CanExit                bool   `json:"canExit"`
 }
 
 type ExitValidatorResponse struct {

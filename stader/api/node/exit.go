@@ -46,15 +46,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
-
 	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
 	if err != nil || !res.Exists {
 		response.ValidatorNotRegistered = true
@@ -77,7 +68,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 
-	response.CanExit = true
 	return &response, nil
 }
 

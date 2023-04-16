@@ -161,6 +161,15 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	response := api.CanClaimSpRewardsResponse{}
 
+	isPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPaused {
+		response.SocializingPoolContractPaused = true
+		return &response, nil
+	}
+
 	// check if operator is registered
 	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
 	if err != nil {
@@ -168,15 +177,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	}
 	if operatorId.Int64() == 0 {
 		response.OperatorNotRegistered = true
-		return &response, nil
-	}
-
-	isPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
-	if err != nil {
-		return nil, err
-	}
-	if isPaused {
-		response.SocializingPoolContractPaused = true
 		return &response, nil
 	}
 
