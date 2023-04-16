@@ -384,10 +384,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd withdraw amount", c.String("amount")); err != nil {
 						return err
 					}
