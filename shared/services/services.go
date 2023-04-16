@@ -204,6 +204,19 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetEthxTokenAddress())
 }
 
+func GetPoolUtilsContract(c *cli.Context) (*stader.PoolUtilsContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPoolUtils(ec, cfg.StaderNode.GetPoolUtilsAddress())
+}
+
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

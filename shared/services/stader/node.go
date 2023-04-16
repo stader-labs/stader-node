@@ -56,6 +56,12 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.OperatorRewardInETH == nil {
 		response.OperatorRewardInETH = big.NewInt(0)
 	}
+	if response.SdCollateralWithdrawTime == nil {
+		response.SdCollateralWithdrawTime = big.NewInt(0)
+	}
+	if response.SdCollateralRequestedToWithdraw == nil {
+		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
+	}
 
 	return response, nil
 }
@@ -289,22 +295,6 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	}
 	if response.Error != "" {
 		return api.ContractsInfoResponse{}, fmt.Errorf("could not get networks contract info: %s", response.Error)
-	}
-	return response, nil
-}
-
-func (c *Client) DebugExit(validatorIndex *big.Int, epochDelta *big.Int) (api.DebugExitResponse, error) {
-	fmt.Printf("cli: validatorIndex is %d\n", validatorIndex)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d %d", validatorIndex, epochDelta))
-	if err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %w", err)
-	}
-	var response api.DebugExitResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not decode debug exit info: %w", err)
-	}
-	if response.Error != "" {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %s", response.Error)
 	}
 	return response, nil
 }
@@ -638,7 +628,7 @@ func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, 
 }
 
 func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	responseBytes, err := c.callAPI("node can-update-operator-details", operatorName, operatorRewardAddress.Hex())
 	if err != nil {
 		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
 	}
@@ -653,7 +643,7 @@ func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAdd
 }
 
 func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node update-operator-details %s %s", operatorName, operatorRewardAddress.Hex()))
+	responseBytes, err := c.callAPI("node update-operator-details", operatorName, operatorRewardAddress.Hex())
 	if err != nil {
 		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
 	}

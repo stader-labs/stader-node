@@ -251,36 +251,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "debug-exit",
-				Aliases:   []string{"c"},
-				Usage:     "get the debug exit info",
-				UsageText: "stader-cli node debug-exit index",
-				Flags: []cli.Flag{
-					cli.Uint64Flag{
-						Name:  "validator-index, vi",
-						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-					cli.Uint64Flag{
-						Name:  "epoch-delta, ed",
-						Usage: "Delta to add to the epoch",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					//// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-					index := c.Uint64("validator-index")
-					fmt.Printf("index is %d\n", index)
-					epochDelta := c.Uint64("epoch-delta")
-					fmt.Printf("epoch delta is %d\n", epochDelta)
-
-					// Run
-					return debugExitMsg(c, index, epochDelta)
-				},
-			},
-			{
 				Name:      "exit",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
@@ -398,15 +368,36 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "withdraw-sd-collateral",
+				Name:      "request-withdraw-sd-collateral",
 				Aliases:   []string{"sef"},
-				Usage:     "Settle all funds validator should receive post exit",
+				Usage:     "Request to withdraw SD collateral",
 				UsageText: "stader-cli node withdraw-sd-collateral --amount",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "amount, a",
-						Usage: "The amount of SD to deposit",
+						Usage: "The amount of SD to withdraw",
 					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm withdraw sd collateral",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd withdraw amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return WithdrawSd(c)
+				},
+			},
+			{
+				Name:      "claim-sd",
+				Aliases:   []string{"cs"},
+				Usage:     "Claim SD from the stader contract",
+				UsageText: "stader-cli node claim-sd",
+				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm withdraw sd collateral",
@@ -418,12 +409,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
-						return err
-					}
-
 					// Run
-					return WithdrawSd(c)
+					return claimSd(c)
 				},
 			},
 			{
@@ -497,11 +484,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 				Action: func(c *cli.Context) error {
 
-					//if err := cliutils.ValidateArgCount(c, 2); err != nil {
-					//	return err
-					//}
-
 					operatorName := c.String("operator-name")
+					if operatorName == "" {
+						return fmt.Errorf("operator name can't be empty string")
+					}
 					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
 					if err != nil {
 						return err

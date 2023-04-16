@@ -56,7 +56,7 @@ func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
 	cycleStartBlock := cycleDetails.StartBlock.Uint64()
 	cycleEndBlock := cycleDetails.EndBlock.Uint64()
 
-	// TODO - bchain - simplify this logic using boolean algebra and make it succicnt
+	// TODO - bchain - simplify this logic using boolean algebra and make it succint
 	switch operatorInfo.OptedForSocializingPool {
 	case true:
 		return lastSocializingPoolChangeBlockUint < cycleStartBlock || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || !(lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
@@ -135,6 +135,9 @@ func getClaimData(c *cli.Context, cycles []*big.Int) ([]*big.Int, []*big.Int, []
 }
 
 func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -158,6 +161,15 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	response := api.CanClaimSpRewardsResponse{}
 
+	isPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPaused {
+		response.SocializingPoolContractPaused = true
+		return &response, nil
+	}
+
 	// check if operator is registered
 	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
 	if err != nil {
@@ -165,15 +177,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	}
 	if operatorId.Int64() == 0 {
 		response.OperatorNotRegistered = true
-		return &response, nil
-	}
-
-	isPaused, err := socializing_pool.IsSocializingPoolPaused(sp, nil)
-	if err != nil {
-		return nil, err
-	}
-	if isPaused {
-		response.SocializingPoolContractPaused = true
 		return &response, nil
 	}
 

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package shared
 
-const StaderVersion string = "0.0.1-spmp"
+const StaderVersion string = "0.0.1-audit"
 
 const Logo string = ` 
   _____ _            _             _           _       𝅺 	

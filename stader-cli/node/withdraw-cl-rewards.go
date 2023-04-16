@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -35,10 +36,6 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 		fmt.Printf("Operator not registered\n")
 		return nil
 	}
-	if canWithdrawClRewardsResponse.OperatorNotActive {
-		fmt.Printf("Operator not active\n")
-		return nil
-	}
 	if canWithdrawClRewardsResponse.NoClRewards {
 		fmt.Printf("No CL rewards to withdraw for validator %s\n", validatorPubKey.String())
 		return nil
@@ -54,6 +51,15 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 	if canWithdrawClRewardsResponse.ValidatorWithdrawn {
 		fmt.Printf("Validator %s has withdrawn all the staked funds\n", validatorPubKey.String())
 		return nil
+	}
+	if canWithdrawClRewardsResponse.VaultAlreadySettled {
+		fmt.Printf("Vault for validator %s has already been settled\n", validatorPubKey.String())
+		return nil
+	}
+
+	err = gas.AssignMaxFeeAndLimit(canWithdrawClRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
 	}
 
 	// Prompt for confirmation

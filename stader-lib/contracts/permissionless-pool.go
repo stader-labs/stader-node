@@ -31,7 +31,7 @@ var (
 
 // PermissionlessPoolMetaData contains all meta data concerning the PermissionlessPool contract.
 var PermissionlessPoolMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"OperatorFeeMoreThanTOTAL_FEE\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProtocolFeeMoreThanTOTAL_FEE\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProtocolFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedOperation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_operatorFee\",\"type\":\"uint256\"}],\"name\":\"OperatorFeeUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"ProtocolFeeUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedCollateralETH\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorDepositedOnBeaconChain\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"_pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorPreDepositedOnBeaconChain\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_POOL_ADMIN\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOTAL_FEE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_withdrawCredential\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_depositAmount\",\"type\":\"uint256\"}],\"name\":\"computeDepositDataRoot\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"}],\"name\":\"fullDepositOnBeaconChain\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllActiveValidators\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"internalType\":\"structValidator[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialBondEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnTime\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"protocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_operatorFee\",\"type\":\"uint256\"}],\"name\":\"setOperatorFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"setProtocolFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakeUserETHToBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_defectiveKeyCount\",\"type\":\"uint256\"}],\"name\":\"transferETHOfDefectiveKeysToSSPM\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCommission\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ProtocolFeeUnchanged\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UnsupportedOperation\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedCollateralETH\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ReceivedInsuranceFund\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TransferredETHToSSPMForDefectiveKeys\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"operatorFee\",\"type\":\"uint256\"}],\"name\":\"UpdatedCommissionFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"validatorId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorDepositedOnBeaconChain\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes\",\"name\":\"pubKey\",\"type\":\"bytes\"}],\"name\":\"ValidatorPreDepositedOnBeaconChain\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEPOSIT_NODE_BOND\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_COMMISSION_LIMIT_BIPS\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_ID\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_withdrawCredential\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_depositAmount\",\"type\":\"uint256\"}],\"name\":\"computeDepositDataRoot\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_pageNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_pageSize\",\"type\":\"uint256\"}],\"name\":\"getAllSocializingPoolOptOutOperators\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalQueuedValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"isExistingOperator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"operatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_pubkey\",\"type\":\"bytes[]\"},{\"internalType\":\"bytes[]\",\"name\":\"_preDepositSignature\",\"type\":\"bytes[]\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_operatorTotalKeys\",\"type\":\"uint256\"}],\"name\":\"preDepositOnBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"protocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"receiveRemainingCollateralETH\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_operatorFee\",\"type\":\"uint256\"}],\"name\":\"setCommissionFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakeUserETHToBeaconChain\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // PermissionlessPoolABI is the input ABI used to generate the binding from.
@@ -211,12 +211,12 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) DEFAULTADMINROLE() (
 	return _PermissionlessPool.Contract.DEFAULTADMINROLE(&_PermissionlessPool.CallOpts)
 }
 
-// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
 //
-// Solidity: function FULL_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCaller) FULLDEPOSITSIZE(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCaller) DEPOSITNODEBOND(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "FULL_DEPOSIT_SIZE")
+	err := _PermissionlessPool.contract.Call(opts, &out, "DEPOSIT_NODE_BOND")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -228,119 +228,26 @@ func (_PermissionlessPool *PermissionlessPoolCaller) FULLDEPOSITSIZE(opts *bind.
 
 }
 
-// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
 //
-// Solidity: function FULL_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolSession) FULLDEPOSITSIZE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.FULLDEPOSITSIZE(&_PermissionlessPool.CallOpts)
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolSession) DEPOSITNODEBOND() (*big.Int, error) {
+	return _PermissionlessPool.Contract.DEPOSITNODEBOND(&_PermissionlessPool.CallOpts)
 }
 
-// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+// DEPOSITNODEBOND is a free data retrieval call binding the contract method 0x24f69706.
 //
-// Solidity: function FULL_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) FULLDEPOSITSIZE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.FULLDEPOSITSIZE(&_PermissionlessPool.CallOpts)
+// Solidity: function DEPOSIT_NODE_BOND() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) DEPOSITNODEBOND() (*big.Int, error) {
+	return _PermissionlessPool.Contract.DEPOSITNODEBOND(&_PermissionlessPool.CallOpts)
 }
 
-// PERMISSIONEDNODEREGISTRY is a free data retrieval call binding the contract method 0x4191e0fe.
+// MAXCOMMISSIONLIMITBIPS is a free data retrieval call binding the contract method 0x9cd6dd56.
 //
-// Solidity: function PERMISSIONED_NODE_REGISTRY() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCaller) PERMISSIONEDNODEREGISTRY(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function MAX_COMMISSION_LIMIT_BIPS() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCaller) MAXCOMMISSIONLIMITBIPS(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "PERMISSIONED_NODE_REGISTRY")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// PERMISSIONEDNODEREGISTRY is a free data retrieval call binding the contract method 0x4191e0fe.
-//
-// Solidity: function PERMISSIONED_NODE_REGISTRY() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolSession) PERMISSIONEDNODEREGISTRY() ([32]byte, error) {
-	return _PermissionlessPool.Contract.PERMISSIONEDNODEREGISTRY(&_PermissionlessPool.CallOpts)
-}
-
-// PERMISSIONEDNODEREGISTRY is a free data retrieval call binding the contract method 0x4191e0fe.
-//
-// Solidity: function PERMISSIONED_NODE_REGISTRY() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) PERMISSIONEDNODEREGISTRY() ([32]byte, error) {
-	return _PermissionlessPool.Contract.PERMISSIONEDNODEREGISTRY(&_PermissionlessPool.CallOpts)
-}
-
-// PERMISSIONEDPOOLADMIN is a free data retrieval call binding the contract method 0x3a394847.
-//
-// Solidity: function PERMISSIONED_POOL_ADMIN() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCaller) PERMISSIONEDPOOLADMIN(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "PERMISSIONED_POOL_ADMIN")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// PERMISSIONEDPOOLADMIN is a free data retrieval call binding the contract method 0x3a394847.
-//
-// Solidity: function PERMISSIONED_POOL_ADMIN() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolSession) PERMISSIONEDPOOLADMIN() ([32]byte, error) {
-	return _PermissionlessPool.Contract.PERMISSIONEDPOOLADMIN(&_PermissionlessPool.CallOpts)
-}
-
-// PERMISSIONEDPOOLADMIN is a free data retrieval call binding the contract method 0x3a394847.
-//
-// Solidity: function PERMISSIONED_POOL_ADMIN() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) PERMISSIONEDPOOLADMIN() ([32]byte, error) {
-	return _PermissionlessPool.Contract.PERMISSIONEDPOOLADMIN(&_PermissionlessPool.CallOpts)
-}
-
-// POOLMANAGER is a free data retrieval call binding the contract method 0x62308e85.
-//
-// Solidity: function POOL_MANAGER() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCaller) POOLMANAGER(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "POOL_MANAGER")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// POOLMANAGER is a free data retrieval call binding the contract method 0x62308e85.
-//
-// Solidity: function POOL_MANAGER() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolSession) POOLMANAGER() ([32]byte, error) {
-	return _PermissionlessPool.Contract.POOLMANAGER(&_PermissionlessPool.CallOpts)
-}
-
-// POOLMANAGER is a free data retrieval call binding the contract method 0x62308e85.
-//
-// Solidity: function POOL_MANAGER() view returns(bytes32)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) POOLMANAGER() ([32]byte, error) {
-	return _PermissionlessPool.Contract.POOLMANAGER(&_PermissionlessPool.CallOpts)
-}
-
-// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
-//
-// Solidity: function PRE_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCaller) PREDEPOSITSIZE(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "PRE_DEPOSIT_SIZE")
+	err := _PermissionlessPool.contract.Call(opts, &out, "MAX_COMMISSION_LIMIT_BIPS")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -352,49 +259,49 @@ func (_PermissionlessPool *PermissionlessPoolCaller) PREDEPOSITSIZE(opts *bind.C
 
 }
 
-// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
+// MAXCOMMISSIONLIMITBIPS is a free data retrieval call binding the contract method 0x9cd6dd56.
 //
-// Solidity: function PRE_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolSession) PREDEPOSITSIZE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.PREDEPOSITSIZE(&_PermissionlessPool.CallOpts)
+// Solidity: function MAX_COMMISSION_LIMIT_BIPS() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolSession) MAXCOMMISSIONLIMITBIPS() (*big.Int, error) {
+	return _PermissionlessPool.Contract.MAXCOMMISSIONLIMITBIPS(&_PermissionlessPool.CallOpts)
 }
 
-// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
+// MAXCOMMISSIONLIMITBIPS is a free data retrieval call binding the contract method 0x9cd6dd56.
 //
-// Solidity: function PRE_DEPOSIT_SIZE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) PREDEPOSITSIZE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.PREDEPOSITSIZE(&_PermissionlessPool.CallOpts)
+// Solidity: function MAX_COMMISSION_LIMIT_BIPS() view returns(uint256)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) MAXCOMMISSIONLIMITBIPS() (*big.Int, error) {
+	return _PermissionlessPool.Contract.MAXCOMMISSIONLIMITBIPS(&_PermissionlessPool.CallOpts)
 }
 
-// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
+// POOLID is a free data retrieval call binding the contract method 0xe0d7d0e9.
 //
-// Solidity: function TOTAL_FEE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCaller) TOTALFEE(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function POOL_ID() view returns(uint8)
+func (_PermissionlessPool *PermissionlessPoolCaller) POOLID(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "TOTAL_FEE")
+	err := _PermissionlessPool.contract.Call(opts, &out, "POOL_ID")
 
 	if err != nil {
-		return *new(*big.Int), err
+		return *new(uint8), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
 
 	return out0, err
 
 }
 
-// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
+// POOLID is a free data retrieval call binding the contract method 0xe0d7d0e9.
 //
-// Solidity: function TOTAL_FEE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolSession) TOTALFEE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.TOTALFEE(&_PermissionlessPool.CallOpts)
+// Solidity: function POOL_ID() view returns(uint8)
+func (_PermissionlessPool *PermissionlessPoolSession) POOLID() (uint8, error) {
+	return _PermissionlessPool.Contract.POOLID(&_PermissionlessPool.CallOpts)
 }
 
-// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
+// POOLID is a free data retrieval call binding the contract method 0xe0d7d0e9.
 //
-// Solidity: function TOTAL_FEE() view returns(uint256)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) TOTALFEE() (*big.Int, error) {
-	return _PermissionlessPool.Contract.TOTALFEE(&_PermissionlessPool.CallOpts)
+// Solidity: function POOL_ID() view returns(uint8)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) POOLID() (uint8, error) {
+	return _PermissionlessPool.Contract.POOLID(&_PermissionlessPool.CallOpts)
 }
 
 // ComputeDepositDataRoot is a free data retrieval call binding the contract method 0x5c164e53.
@@ -428,35 +335,35 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) ComputeDepositDataRo
 	return _PermissionlessPool.Contract.ComputeDepositDataRoot(&_PermissionlessPool.CallOpts, _pubkey, _signature, _withdrawCredential, _depositAmount)
 }
 
-// GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
-func (_PermissionlessPool *PermissionlessPoolCaller) GetAllActiveValidators(opts *bind.CallOpts) ([]Validator, error) {
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolCaller) GetAllSocializingPoolOptOutOperators(opts *bind.CallOpts, _pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
 	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "getAllActiveValidators")
+	err := _PermissionlessPool.contract.Call(opts, &out, "getAllSocializingPoolOptOutOperators", _pageNumber, _pageSize)
 
 	if err != nil {
-		return *new([]Validator), err
+		return *new([]common.Address), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new([]Validator)).(*[]Validator)
+	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
 
 	return out0, err
 
 }
 
-// GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
-func (_PermissionlessPool *PermissionlessPoolSession) GetAllActiveValidators() ([]Validator, error) {
-	return _PermissionlessPool.Contract.GetAllActiveValidators(&_PermissionlessPool.CallOpts)
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolSession) GetAllSocializingPoolOptOutOperators(_pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
+	return _PermissionlessPool.Contract.GetAllSocializingPoolOptOutOperators(&_PermissionlessPool.CallOpts, _pageNumber, _pageSize)
 }
 
-// GetAllActiveValidators is a free data retrieval call binding the contract method 0xe1fe9d15.
+// GetAllSocializingPoolOptOutOperators is a free data retrieval call binding the contract method 0x61e2f809.
 //
-// Solidity: function getAllActiveValidators() view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256)[])
-func (_PermissionlessPool *PermissionlessPoolCallerSession) GetAllActiveValidators() ([]Validator, error) {
-	return _PermissionlessPool.Contract.GetAllActiveValidators(&_PermissionlessPool.CallOpts)
+// Solidity: function getAllSocializingPoolOptOutOperators(uint256 _pageNumber, uint256 _pageSize) view returns(address[])
+func (_PermissionlessPool *PermissionlessPoolCallerSession) GetAllSocializingPoolOptOutOperators(_pageNumber *big.Int, _pageSize *big.Int) ([]common.Address, error) {
+	return _PermissionlessPool.Contract.GetAllSocializingPoolOptOutOperators(&_PermissionlessPool.CallOpts, _pageNumber, _pageSize)
 }
 
 // GetCollateralETH is a free data retrieval call binding the contract method 0xb01db078.
@@ -490,35 +397,35 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) GetCollateralETH() (
 	return _PermissionlessPool.Contract.GetCollateralETH(&_PermissionlessPool.CallOpts)
 }
 
-// GetOperator is a free data retrieval call binding the contract method 0x9eaffa96.
+// GetNodeRegistry is a free data retrieval call binding the contract method 0xb6fb3fac.
 //
-// Solidity: function getOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PermissionlessPool *PermissionlessPoolCaller) GetOperator(opts *bind.CallOpts, _pubkey []byte) (Operator, error) {
+// Solidity: function getNodeRegistry() view returns(address)
+func (_PermissionlessPool *PermissionlessPoolCaller) GetNodeRegistry(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "getOperator", _pubkey)
+	err := _PermissionlessPool.contract.Call(opts, &out, "getNodeRegistry")
 
 	if err != nil {
-		return *new(Operator), err
+		return *new(common.Address), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(Operator)).(*Operator)
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
 
 	return out0, err
 
 }
 
-// GetOperator is a free data retrieval call binding the contract method 0x9eaffa96.
+// GetNodeRegistry is a free data retrieval call binding the contract method 0xb6fb3fac.
 //
-// Solidity: function getOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PermissionlessPool *PermissionlessPoolSession) GetOperator(_pubkey []byte) (Operator, error) {
-	return _PermissionlessPool.Contract.GetOperator(&_PermissionlessPool.CallOpts, _pubkey)
+// Solidity: function getNodeRegistry() view returns(address)
+func (_PermissionlessPool *PermissionlessPoolSession) GetNodeRegistry() (common.Address, error) {
+	return _PermissionlessPool.Contract.GetNodeRegistry(&_PermissionlessPool.CallOpts)
 }
 
-// GetOperator is a free data retrieval call binding the contract method 0x9eaffa96.
+// GetNodeRegistry is a free data retrieval call binding the contract method 0xb6fb3fac.
 //
-// Solidity: function getOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PermissionlessPool *PermissionlessPoolCallerSession) GetOperator(_pubkey []byte) (Operator, error) {
-	return _PermissionlessPool.Contract.GetOperator(&_PermissionlessPool.CallOpts, _pubkey)
+// Solidity: function getNodeRegistry() view returns(address)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) GetNodeRegistry() (common.Address, error) {
+	return _PermissionlessPool.Contract.GetNodeRegistry(&_PermissionlessPool.CallOpts)
 }
 
 // GetOperatorTotalNonTerminalKeys is a free data retrieval call binding the contract method 0x8a25bcec.
@@ -676,37 +583,6 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) GetTotalQueuedValida
 	return _PermissionlessPool.Contract.GetTotalQueuedValidatorCount(&_PermissionlessPool.CallOpts)
 }
 
-// GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
-//
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
-func (_PermissionlessPool *PermissionlessPoolCaller) GetValidator(opts *bind.CallOpts, _pubkey []byte) (Validator, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "getValidator", _pubkey)
-
-	if err != nil {
-		return *new(Validator), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(Validator)).(*Validator)
-
-	return out0, err
-
-}
-
-// GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
-//
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
-func (_PermissionlessPool *PermissionlessPoolSession) GetValidator(_pubkey []byte) (Validator, error) {
-	return _PermissionlessPool.Contract.GetValidator(&_PermissionlessPool.CallOpts, _pubkey)
-}
-
-// GetValidator is a free data retrieval call binding the contract method 0xb4891bfd.
-//
-// Solidity: function getValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256,uint256))
-func (_PermissionlessPool *PermissionlessPoolCallerSession) GetValidator(_pubkey []byte) (Validator, error) {
-	return _PermissionlessPool.Contract.GetValidator(&_PermissionlessPool.CallOpts, _pubkey)
-}
-
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
@@ -736,6 +612,37 @@ func (_PermissionlessPool *PermissionlessPoolSession) HasRole(role [32]byte, acc
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
 func (_PermissionlessPool *PermissionlessPoolCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
 	return _PermissionlessPool.Contract.HasRole(&_PermissionlessPool.CallOpts, role, account)
+}
+
+// IsExistingOperator is a free data retrieval call binding the contract method 0xf9c4dda4.
+//
+// Solidity: function isExistingOperator(address _operAddr) view returns(bool)
+func (_PermissionlessPool *PermissionlessPoolCaller) IsExistingOperator(opts *bind.CallOpts, _operAddr common.Address) (bool, error) {
+	var out []interface{}
+	err := _PermissionlessPool.contract.Call(opts, &out, "isExistingOperator", _operAddr)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsExistingOperator is a free data retrieval call binding the contract method 0xf9c4dda4.
+//
+// Solidity: function isExistingOperator(address _operAddr) view returns(bool)
+func (_PermissionlessPool *PermissionlessPoolSession) IsExistingOperator(_operAddr common.Address) (bool, error) {
+	return _PermissionlessPool.Contract.IsExistingOperator(&_PermissionlessPool.CallOpts, _operAddr)
+}
+
+// IsExistingOperator is a free data retrieval call binding the contract method 0xf9c4dda4.
+//
+// Solidity: function isExistingOperator(address _operAddr) view returns(bool)
+func (_PermissionlessPool *PermissionlessPoolCallerSession) IsExistingOperator(_operAddr common.Address) (bool, error) {
+	return _PermissionlessPool.Contract.IsExistingOperator(&_PermissionlessPool.CallOpts, _operAddr)
 }
 
 // IsExistingPubkey is a free data retrieval call binding the contract method 0x36514d9f.
@@ -798,68 +705,6 @@ func (_PermissionlessPool *PermissionlessPoolSession) OperatorFee() (*big.Int, e
 // Solidity: function operatorFee() view returns(uint256)
 func (_PermissionlessPool *PermissionlessPoolCallerSession) OperatorFee() (*big.Int, error) {
 	return _PermissionlessPool.Contract.OperatorFee(&_PermissionlessPool.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_PermissionlessPool *PermissionlessPoolCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "paused")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_PermissionlessPool *PermissionlessPoolSession) Paused() (bool, error) {
-	return _PermissionlessPool.Contract.Paused(&_PermissionlessPool.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) Paused() (bool, error) {
-	return _PermissionlessPool.Contract.Paused(&_PermissionlessPool.CallOpts)
-}
-
-// PoolId is a free data retrieval call binding the contract method 0x3e0dc34e.
-//
-// Solidity: function poolId() view returns(uint8)
-func (_PermissionlessPool *PermissionlessPoolCaller) PoolId(opts *bind.CallOpts) (uint8, error) {
-	var out []interface{}
-	err := _PermissionlessPool.contract.Call(opts, &out, "poolId")
-
-	if err != nil {
-		return *new(uint8), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
-
-	return out0, err
-
-}
-
-// PoolId is a free data retrieval call binding the contract method 0x3e0dc34e.
-//
-// Solidity: function poolId() view returns(uint8)
-func (_PermissionlessPool *PermissionlessPoolSession) PoolId() (uint8, error) {
-	return _PermissionlessPool.Contract.PoolId(&_PermissionlessPool.CallOpts)
-}
-
-// PoolId is a free data retrieval call binding the contract method 0x3e0dc34e.
-//
-// Solidity: function poolId() view returns(uint8)
-func (_PermissionlessPool *PermissionlessPoolCallerSession) PoolId() (uint8, error) {
-	return _PermissionlessPool.Contract.PoolId(&_PermissionlessPool.CallOpts)
 }
 
 // ProtocolFee is a free data retrieval call binding the contract method 0xb0e21e8a.
@@ -955,27 +800,6 @@ func (_PermissionlessPool *PermissionlessPoolCallerSession) SupportsInterface(in
 	return _PermissionlessPool.Contract.SupportsInterface(&_PermissionlessPool.CallOpts, interfaceId)
 }
 
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) FullDepositOnBeaconChain(opts *bind.TransactOpts, _pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "fullDepositOnBeaconChain", _pubkey)
-}
-
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) FullDepositOnBeaconChain(_pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.FullDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey)
-}
-
-// FullDepositOnBeaconChain is a paid mutator transaction binding the contract method 0x4bd1e4c5.
-//
-// Solidity: function fullDepositOnBeaconChain(bytes[] _pubkey) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) FullDepositOnBeaconChain(_pubkey [][]byte) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.FullDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey)
-}
-
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
@@ -997,25 +821,67 @@ func (_PermissionlessPool *PermissionlessPoolTransactorSession) GrantRole(role [
 	return _PermissionlessPool.Contract.GrantRole(&_PermissionlessPool.TransactOpts, role, account)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _staderConfig) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) Initialize(opts *bind.TransactOpts, _staderConfig common.Address) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "initialize", _staderConfig)
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "initialize", _admin, _staderConfig)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _staderConfig) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) Initialize(_staderConfig common.Address) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _staderConfig)
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _admin, _staderConfig)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0xc4d66de8.
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
 //
-// Solidity: function initialize(address _staderConfig) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) Initialize(_staderConfig common.Address) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _staderConfig)
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _admin, _staderConfig)
+}
+
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
+//
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) PreDepositOnBeaconChain(opts *bind.TransactOpts, _pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "preDepositOnBeaconChain", _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
+}
+
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
+//
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolSession) PreDepositOnBeaconChain(_pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.PreDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
+}
+
+// PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
+//
+// Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) PreDepositOnBeaconChain(_pubkey [][]byte, _preDepositSignature [][]byte, _operatorId *big.Int, _operatorTotalKeys *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.PreDepositOnBeaconChain(&_PermissionlessPool.TransactOpts, _pubkey, _preDepositSignature, _operatorId, _operatorTotalKeys)
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) ReceiveRemainingCollateralETH(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "receiveRemainingCollateralETH")
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolSession) ReceiveRemainingCollateralETH() (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.ReceiveRemainingCollateralETH(&_PermissionlessPool.TransactOpts)
+}
+
+// ReceiveRemainingCollateralETH is a paid mutator transaction binding the contract method 0x1f033ef0.
+//
+// Solidity: function receiveRemainingCollateralETH() payable returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) ReceiveRemainingCollateralETH() (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.ReceiveRemainingCollateralETH(&_PermissionlessPool.TransactOpts)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -1060,46 +926,25 @@ func (_PermissionlessPool *PermissionlessPoolTransactorSession) RevokeRole(role 
 	return _PermissionlessPool.Contract.RevokeRole(&_PermissionlessPool.TransactOpts, role, account)
 }
 
-// SetOperatorFee is a paid mutator transaction binding the contract method 0x1d095805.
+// SetCommissionFees is a paid mutator transaction binding the contract method 0x21066d18.
 //
-// Solidity: function setOperatorFee(uint256 _operatorFee) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) SetOperatorFee(opts *bind.TransactOpts, _operatorFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "setOperatorFee", _operatorFee)
+// Solidity: function setCommissionFees(uint256 _protocolFee, uint256 _operatorFee) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) SetCommissionFees(opts *bind.TransactOpts, _protocolFee *big.Int, _operatorFee *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "setCommissionFees", _protocolFee, _operatorFee)
 }
 
-// SetOperatorFee is a paid mutator transaction binding the contract method 0x1d095805.
+// SetCommissionFees is a paid mutator transaction binding the contract method 0x21066d18.
 //
-// Solidity: function setOperatorFee(uint256 _operatorFee) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) SetOperatorFee(_operatorFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.SetOperatorFee(&_PermissionlessPool.TransactOpts, _operatorFee)
+// Solidity: function setCommissionFees(uint256 _protocolFee, uint256 _operatorFee) returns()
+func (_PermissionlessPool *PermissionlessPoolSession) SetCommissionFees(_protocolFee *big.Int, _operatorFee *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.SetCommissionFees(&_PermissionlessPool.TransactOpts, _protocolFee, _operatorFee)
 }
 
-// SetOperatorFee is a paid mutator transaction binding the contract method 0x1d095805.
+// SetCommissionFees is a paid mutator transaction binding the contract method 0x21066d18.
 //
-// Solidity: function setOperatorFee(uint256 _operatorFee) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) SetOperatorFee(_operatorFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.SetOperatorFee(&_PermissionlessPool.TransactOpts, _operatorFee)
-}
-
-// SetProtocolFee is a paid mutator transaction binding the contract method 0x787dce3d.
-//
-// Solidity: function setProtocolFee(uint256 _protocolFee) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) SetProtocolFee(opts *bind.TransactOpts, _protocolFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "setProtocolFee", _protocolFee)
-}
-
-// SetProtocolFee is a paid mutator transaction binding the contract method 0x787dce3d.
-//
-// Solidity: function setProtocolFee(uint256 _protocolFee) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) SetProtocolFee(_protocolFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.SetProtocolFee(&_PermissionlessPool.TransactOpts, _protocolFee)
-}
-
-// SetProtocolFee is a paid mutator transaction binding the contract method 0x787dce3d.
-//
-// Solidity: function setProtocolFee(uint256 _protocolFee) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) SetProtocolFee(_protocolFee *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.SetProtocolFee(&_PermissionlessPool.TransactOpts, _protocolFee)
+// Solidity: function setCommissionFees(uint256 _protocolFee, uint256 _operatorFee) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) SetCommissionFees(_protocolFee *big.Int, _operatorFee *big.Int) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.SetCommissionFees(&_PermissionlessPool.TransactOpts, _protocolFee, _operatorFee)
 }
 
 // StakeUserETHToBeaconChain is a paid mutator transaction binding the contract method 0x9b26728e.
@@ -1121,27 +966,6 @@ func (_PermissionlessPool *PermissionlessPoolSession) StakeUserETHToBeaconChain(
 // Solidity: function stakeUserETHToBeaconChain() payable returns()
 func (_PermissionlessPool *PermissionlessPoolTransactorSession) StakeUserETHToBeaconChain() (*types.Transaction, error) {
 	return _PermissionlessPool.Contract.StakeUserETHToBeaconChain(&_PermissionlessPool.TransactOpts)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactor) TransferETHOfDefectiveKeysToSSPM(opts *bind.TransactOpts, _defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.contract.Transact(opts, "transferETHOfDefectiveKeysToSSPM", _defectiveKeyCount)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolSession) TransferETHOfDefectiveKeysToSSPM(_defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.TransferETHOfDefectiveKeysToSSPM(&_PermissionlessPool.TransactOpts, _defectiveKeyCount)
-}
-
-// TransferETHOfDefectiveKeysToSSPM is a paid mutator transaction binding the contract method 0xd5c851a4.
-//
-// Solidity: function transferETHOfDefectiveKeysToSSPM(uint256 _defectiveKeyCount) returns()
-func (_PermissionlessPool *PermissionlessPoolTransactorSession) TransferETHOfDefectiveKeysToSSPM(_defectiveKeyCount *big.Int) (*types.Transaction, error) {
-	return _PermissionlessPool.Contract.TransferETHOfDefectiveKeysToSSPM(&_PermissionlessPool.TransactOpts, _defectiveKeyCount)
 }
 
 // UpdateStaderConfig is a paid mutator transaction binding the contract method 0x9ee804cb.
@@ -1341,408 +1165,6 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) ParseInitialized(log type
 	return event, nil
 }
 
-// PermissionlessPoolOperatorFeeUpdatedIterator is returned from FilterOperatorFeeUpdated and is used to iterate over the raw logs and unpacked data for OperatorFeeUpdated events raised by the PermissionlessPool contract.
-type PermissionlessPoolOperatorFeeUpdatedIterator struct {
-	Event *PermissionlessPoolOperatorFeeUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *PermissionlessPoolOperatorFeeUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(PermissionlessPoolOperatorFeeUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(PermissionlessPoolOperatorFeeUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *PermissionlessPoolOperatorFeeUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *PermissionlessPoolOperatorFeeUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// PermissionlessPoolOperatorFeeUpdated represents a OperatorFeeUpdated event raised by the PermissionlessPool contract.
-type PermissionlessPoolOperatorFeeUpdated struct {
-	OperatorFee *big.Int
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterOperatorFeeUpdated is a free log retrieval operation binding the contract event 0x016cd5b136fa36eed2dc69b8c8407ad0e17c2f6bc694b066f5dccb3da06483a3.
-//
-// Solidity: event OperatorFeeUpdated(uint256 _operatorFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterOperatorFeeUpdated(opts *bind.FilterOpts) (*PermissionlessPoolOperatorFeeUpdatedIterator, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "OperatorFeeUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &PermissionlessPoolOperatorFeeUpdatedIterator{contract: _PermissionlessPool.contract, event: "OperatorFeeUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchOperatorFeeUpdated is a free log subscription operation binding the contract event 0x016cd5b136fa36eed2dc69b8c8407ad0e17c2f6bc694b066f5dccb3da06483a3.
-//
-// Solidity: event OperatorFeeUpdated(uint256 _operatorFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchOperatorFeeUpdated(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolOperatorFeeUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "OperatorFeeUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(PermissionlessPoolOperatorFeeUpdated)
-				if err := _PermissionlessPool.contract.UnpackLog(event, "OperatorFeeUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseOperatorFeeUpdated is a log parse operation binding the contract event 0x016cd5b136fa36eed2dc69b8c8407ad0e17c2f6bc694b066f5dccb3da06483a3.
-//
-// Solidity: event OperatorFeeUpdated(uint256 _operatorFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) ParseOperatorFeeUpdated(log types.Log) (*PermissionlessPoolOperatorFeeUpdated, error) {
-	event := new(PermissionlessPoolOperatorFeeUpdated)
-	if err := _PermissionlessPool.contract.UnpackLog(event, "OperatorFeeUpdated", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// PermissionlessPoolPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the PermissionlessPool contract.
-type PermissionlessPoolPausedIterator struct {
-	Event *PermissionlessPoolPaused // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *PermissionlessPoolPausedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(PermissionlessPoolPaused)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(PermissionlessPoolPaused)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *PermissionlessPoolPausedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *PermissionlessPoolPausedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// PermissionlessPoolPaused represents a Paused event raised by the PermissionlessPool contract.
-type PermissionlessPoolPaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterPaused is a free log retrieval operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
-//
-// Solidity: event Paused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterPaused(opts *bind.FilterOpts) (*PermissionlessPoolPausedIterator, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return &PermissionlessPoolPausedIterator{contract: _PermissionlessPool.contract, event: "Paused", logs: logs, sub: sub}, nil
-}
-
-// WatchPaused is a free log subscription operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
-//
-// Solidity: event Paused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolPaused) (event.Subscription, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(PermissionlessPoolPaused)
-				if err := _PermissionlessPool.contract.UnpackLog(event, "Paused", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
-//
-// Solidity: event Paused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) ParsePaused(log types.Log) (*PermissionlessPoolPaused, error) {
-	event := new(PermissionlessPoolPaused)
-	if err := _PermissionlessPool.contract.UnpackLog(event, "Paused", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// PermissionlessPoolProtocolFeeUpdatedIterator is returned from FilterProtocolFeeUpdated and is used to iterate over the raw logs and unpacked data for ProtocolFeeUpdated events raised by the PermissionlessPool contract.
-type PermissionlessPoolProtocolFeeUpdatedIterator struct {
-	Event *PermissionlessPoolProtocolFeeUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *PermissionlessPoolProtocolFeeUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(PermissionlessPoolProtocolFeeUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(PermissionlessPoolProtocolFeeUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *PermissionlessPoolProtocolFeeUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *PermissionlessPoolProtocolFeeUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// PermissionlessPoolProtocolFeeUpdated represents a ProtocolFeeUpdated event raised by the PermissionlessPool contract.
-type PermissionlessPoolProtocolFeeUpdated struct {
-	ProtocolFee *big.Int
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterProtocolFeeUpdated is a free log retrieval operation binding the contract event 0xd10d75876659a287a59a6ccfa2e3fff42f84d94b542837acd30bc184d562de40.
-//
-// Solidity: event ProtocolFeeUpdated(uint256 _protocolFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterProtocolFeeUpdated(opts *bind.FilterOpts) (*PermissionlessPoolProtocolFeeUpdatedIterator, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ProtocolFeeUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &PermissionlessPoolProtocolFeeUpdatedIterator{contract: _PermissionlessPool.contract, event: "ProtocolFeeUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchProtocolFeeUpdated is a free log subscription operation binding the contract event 0xd10d75876659a287a59a6ccfa2e3fff42f84d94b542837acd30bc184d562de40.
-//
-// Solidity: event ProtocolFeeUpdated(uint256 _protocolFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchProtocolFeeUpdated(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolProtocolFeeUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ProtocolFeeUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(PermissionlessPoolProtocolFeeUpdated)
-				if err := _PermissionlessPool.contract.UnpackLog(event, "ProtocolFeeUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseProtocolFeeUpdated is a log parse operation binding the contract event 0xd10d75876659a287a59a6ccfa2e3fff42f84d94b542837acd30bc184d562de40.
-//
-// Solidity: event ProtocolFeeUpdated(uint256 _protocolFee)
-func (_PermissionlessPool *PermissionlessPoolFilterer) ParseProtocolFeeUpdated(log types.Log) (*PermissionlessPoolProtocolFeeUpdated, error) {
-	event := new(PermissionlessPoolProtocolFeeUpdated)
-	if err := _PermissionlessPool.contract.UnpackLog(event, "ProtocolFeeUpdated", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // PermissionlessPoolReceivedCollateralETHIterator is returned from FilterReceivedCollateralETH and is used to iterate over the raw logs and unpacked data for ReceivedCollateralETH events raised by the PermissionlessPool contract.
 type PermissionlessPoolReceivedCollateralETHIterator struct {
 	Event *PermissionlessPoolReceivedCollateralETH // Event containing the contract specifics and raw log
@@ -1818,7 +1240,7 @@ type PermissionlessPoolReceivedCollateralETH struct {
 
 // FilterReceivedCollateralETH is a free log retrieval operation binding the contract event 0x3726a70cbf9252aacb06774b2f9f7108d837fc60afd7143f86eec77d7e3da94b.
 //
-// Solidity: event ReceivedCollateralETH(uint256 _amount)
+// Solidity: event ReceivedCollateralETH(uint256 amount)
 func (_PermissionlessPool *PermissionlessPoolFilterer) FilterReceivedCollateralETH(opts *bind.FilterOpts) (*PermissionlessPoolReceivedCollateralETHIterator, error) {
 
 	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ReceivedCollateralETH")
@@ -1830,7 +1252,7 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) FilterReceivedCollateralE
 
 // WatchReceivedCollateralETH is a free log subscription operation binding the contract event 0x3726a70cbf9252aacb06774b2f9f7108d837fc60afd7143f86eec77d7e3da94b.
 //
-// Solidity: event ReceivedCollateralETH(uint256 _amount)
+// Solidity: event ReceivedCollateralETH(uint256 amount)
 func (_PermissionlessPool *PermissionlessPoolFilterer) WatchReceivedCollateralETH(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolReceivedCollateralETH) (event.Subscription, error) {
 
 	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ReceivedCollateralETH")
@@ -1867,10 +1289,144 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) WatchReceivedCollateralET
 
 // ParseReceivedCollateralETH is a log parse operation binding the contract event 0x3726a70cbf9252aacb06774b2f9f7108d837fc60afd7143f86eec77d7e3da94b.
 //
-// Solidity: event ReceivedCollateralETH(uint256 _amount)
+// Solidity: event ReceivedCollateralETH(uint256 amount)
 func (_PermissionlessPool *PermissionlessPoolFilterer) ParseReceivedCollateralETH(log types.Log) (*PermissionlessPoolReceivedCollateralETH, error) {
 	event := new(PermissionlessPoolReceivedCollateralETH)
 	if err := _PermissionlessPool.contract.UnpackLog(event, "ReceivedCollateralETH", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessPoolReceivedInsuranceFundIterator is returned from FilterReceivedInsuranceFund and is used to iterate over the raw logs and unpacked data for ReceivedInsuranceFund events raised by the PermissionlessPool contract.
+type PermissionlessPoolReceivedInsuranceFundIterator struct {
+	Event *PermissionlessPoolReceivedInsuranceFund // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessPoolReceivedInsuranceFundIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessPoolReceivedInsuranceFund)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessPoolReceivedInsuranceFund)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessPoolReceivedInsuranceFundIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessPoolReceivedInsuranceFundIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessPoolReceivedInsuranceFund represents a ReceivedInsuranceFund event raised by the PermissionlessPool contract.
+type PermissionlessPoolReceivedInsuranceFund struct {
+	Amount *big.Int
+	Raw    types.Log // Blockchain specific contextual infos
+}
+
+// FilterReceivedInsuranceFund is a free log retrieval operation binding the contract event 0xf43316e35306192a57665c134c0731f8e965fd6b625c620983cc68c2dd183726.
+//
+// Solidity: event ReceivedInsuranceFund(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterReceivedInsuranceFund(opts *bind.FilterOpts) (*PermissionlessPoolReceivedInsuranceFundIterator, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ReceivedInsuranceFund")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessPoolReceivedInsuranceFundIterator{contract: _PermissionlessPool.contract, event: "ReceivedInsuranceFund", logs: logs, sub: sub}, nil
+}
+
+// WatchReceivedInsuranceFund is a free log subscription operation binding the contract event 0xf43316e35306192a57665c134c0731f8e965fd6b625c620983cc68c2dd183726.
+//
+// Solidity: event ReceivedInsuranceFund(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchReceivedInsuranceFund(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolReceivedInsuranceFund) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ReceivedInsuranceFund")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessPoolReceivedInsuranceFund)
+				if err := _PermissionlessPool.contract.UnpackLog(event, "ReceivedInsuranceFund", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseReceivedInsuranceFund is a log parse operation binding the contract event 0xf43316e35306192a57665c134c0731f8e965fd6b625c620983cc68c2dd183726.
+//
+// Solidity: event ReceivedInsuranceFund(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) ParseReceivedInsuranceFund(log types.Log) (*PermissionlessPoolReceivedInsuranceFund, error) {
+	event := new(PermissionlessPoolReceivedInsuranceFund)
+	if err := _PermissionlessPool.contract.UnpackLog(event, "ReceivedInsuranceFund", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2363,9 +1919,9 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) ParseRoleRevoked(log type
 	return event, nil
 }
 
-// PermissionlessPoolUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the PermissionlessPool contract.
-type PermissionlessPoolUnpausedIterator struct {
-	Event *PermissionlessPoolUnpaused // Event containing the contract specifics and raw log
+// PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator is returned from FilterTransferredETHToSSPMForDefectiveKeys and is used to iterate over the raw logs and unpacked data for TransferredETHToSSPMForDefectiveKeys events raised by the PermissionlessPool contract.
+type PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator struct {
+	Event *PermissionlessPoolTransferredETHToSSPMForDefectiveKeys // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2379,7 +1935,7 @@ type PermissionlessPoolUnpausedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *PermissionlessPoolUnpausedIterator) Next() bool {
+func (it *PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2388,7 +1944,7 @@ func (it *PermissionlessPoolUnpausedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(PermissionlessPoolUnpaused)
+			it.Event = new(PermissionlessPoolTransferredETHToSSPMForDefectiveKeys)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2403,7 +1959,7 @@ func (it *PermissionlessPoolUnpausedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(PermissionlessPoolUnpaused)
+		it.Event = new(PermissionlessPoolTransferredETHToSSPMForDefectiveKeys)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2419,41 +1975,41 @@ func (it *PermissionlessPoolUnpausedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *PermissionlessPoolUnpausedIterator) Error() error {
+func (it *PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *PermissionlessPoolUnpausedIterator) Close() error {
+func (it *PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// PermissionlessPoolUnpaused represents a Unpaused event raised by the PermissionlessPool contract.
-type PermissionlessPoolUnpaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+// PermissionlessPoolTransferredETHToSSPMForDefectiveKeys represents a TransferredETHToSSPMForDefectiveKeys event raised by the PermissionlessPool contract.
+type PermissionlessPoolTransferredETHToSSPMForDefectiveKeys struct {
+	Amount *big.Int
+	Raw    types.Log // Blockchain specific contextual infos
 }
 
-// FilterUnpaused is a free log retrieval operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// FilterTransferredETHToSSPMForDefectiveKeys is a free log retrieval operation binding the contract event 0x1149ac7366ffa1a2dee383a534b6742d013df82e7c15fd5720fd1ce82592a36f.
 //
-// Solidity: event Unpaused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterUnpaused(opts *bind.FilterOpts) (*PermissionlessPoolUnpausedIterator, error) {
+// Solidity: event TransferredETHToSSPMForDefectiveKeys(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterTransferredETHToSSPMForDefectiveKeys(opts *bind.FilterOpts) (*PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator, error) {
 
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "Unpaused")
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "TransferredETHToSSPMForDefectiveKeys")
 	if err != nil {
 		return nil, err
 	}
-	return &PermissionlessPoolUnpausedIterator{contract: _PermissionlessPool.contract, event: "Unpaused", logs: logs, sub: sub}, nil
+	return &PermissionlessPoolTransferredETHToSSPMForDefectiveKeysIterator{contract: _PermissionlessPool.contract, event: "TransferredETHToSSPMForDefectiveKeys", logs: logs, sub: sub}, nil
 }
 
-// WatchUnpaused is a free log subscription operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// WatchTransferredETHToSSPMForDefectiveKeys is a free log subscription operation binding the contract event 0x1149ac7366ffa1a2dee383a534b6742d013df82e7c15fd5720fd1ce82592a36f.
 //
-// Solidity: event Unpaused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolUnpaused) (event.Subscription, error) {
+// Solidity: event TransferredETHToSSPMForDefectiveKeys(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchTransferredETHToSSPMForDefectiveKeys(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolTransferredETHToSSPMForDefectiveKeys) (event.Subscription, error) {
 
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "Unpaused")
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "TransferredETHToSSPMForDefectiveKeys")
 	if err != nil {
 		return nil, err
 	}
@@ -2463,8 +2019,8 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) WatchUnpaused(opts *bind.
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(PermissionlessPoolUnpaused)
-				if err := _PermissionlessPool.contract.UnpackLog(event, "Unpaused", log); err != nil {
+				event := new(PermissionlessPoolTransferredETHToSSPMForDefectiveKeys)
+				if err := _PermissionlessPool.contract.UnpackLog(event, "TransferredETHToSSPMForDefectiveKeys", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2485,12 +2041,281 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) WatchUnpaused(opts *bind.
 	}), nil
 }
 
-// ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// ParseTransferredETHToSSPMForDefectiveKeys is a log parse operation binding the contract event 0x1149ac7366ffa1a2dee383a534b6742d013df82e7c15fd5720fd1ce82592a36f.
 //
-// Solidity: event Unpaused(address account)
-func (_PermissionlessPool *PermissionlessPoolFilterer) ParseUnpaused(log types.Log) (*PermissionlessPoolUnpaused, error) {
-	event := new(PermissionlessPoolUnpaused)
-	if err := _PermissionlessPool.contract.UnpackLog(event, "Unpaused", log); err != nil {
+// Solidity: event TransferredETHToSSPMForDefectiveKeys(uint256 amount)
+func (_PermissionlessPool *PermissionlessPoolFilterer) ParseTransferredETHToSSPMForDefectiveKeys(log types.Log) (*PermissionlessPoolTransferredETHToSSPMForDefectiveKeys, error) {
+	event := new(PermissionlessPoolTransferredETHToSSPMForDefectiveKeys)
+	if err := _PermissionlessPool.contract.UnpackLog(event, "TransferredETHToSSPMForDefectiveKeys", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessPoolUpdatedCommissionFeesIterator is returned from FilterUpdatedCommissionFees and is used to iterate over the raw logs and unpacked data for UpdatedCommissionFees events raised by the PermissionlessPool contract.
+type PermissionlessPoolUpdatedCommissionFeesIterator struct {
+	Event *PermissionlessPoolUpdatedCommissionFees // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessPoolUpdatedCommissionFeesIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessPoolUpdatedCommissionFees)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessPoolUpdatedCommissionFees)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessPoolUpdatedCommissionFeesIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessPoolUpdatedCommissionFeesIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessPoolUpdatedCommissionFees represents a UpdatedCommissionFees event raised by the PermissionlessPool contract.
+type PermissionlessPoolUpdatedCommissionFees struct {
+	ProtocolFee *big.Int
+	OperatorFee *big.Int
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpdatedCommissionFees is a free log retrieval operation binding the contract event 0xe8525a7862504bbe091b0440fe96979769664cae1625591ff0a9816512a5287b.
+//
+// Solidity: event UpdatedCommissionFees(uint256 protocolFee, uint256 operatorFee)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterUpdatedCommissionFees(opts *bind.FilterOpts) (*PermissionlessPoolUpdatedCommissionFeesIterator, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "UpdatedCommissionFees")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessPoolUpdatedCommissionFeesIterator{contract: _PermissionlessPool.contract, event: "UpdatedCommissionFees", logs: logs, sub: sub}, nil
+}
+
+// WatchUpdatedCommissionFees is a free log subscription operation binding the contract event 0xe8525a7862504bbe091b0440fe96979769664cae1625591ff0a9816512a5287b.
+//
+// Solidity: event UpdatedCommissionFees(uint256 protocolFee, uint256 operatorFee)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchUpdatedCommissionFees(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolUpdatedCommissionFees) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "UpdatedCommissionFees")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessPoolUpdatedCommissionFees)
+				if err := _PermissionlessPool.contract.UnpackLog(event, "UpdatedCommissionFees", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpdatedCommissionFees is a log parse operation binding the contract event 0xe8525a7862504bbe091b0440fe96979769664cae1625591ff0a9816512a5287b.
+//
+// Solidity: event UpdatedCommissionFees(uint256 protocolFee, uint256 operatorFee)
+func (_PermissionlessPool *PermissionlessPoolFilterer) ParseUpdatedCommissionFees(log types.Log) (*PermissionlessPoolUpdatedCommissionFees, error) {
+	event := new(PermissionlessPoolUpdatedCommissionFees)
+	if err := _PermissionlessPool.contract.UnpackLog(event, "UpdatedCommissionFees", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// PermissionlessPoolUpdatedStaderConfigIterator is returned from FilterUpdatedStaderConfig and is used to iterate over the raw logs and unpacked data for UpdatedStaderConfig events raised by the PermissionlessPool contract.
+type PermissionlessPoolUpdatedStaderConfigIterator struct {
+	Event *PermissionlessPoolUpdatedStaderConfig // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *PermissionlessPoolUpdatedStaderConfigIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(PermissionlessPoolUpdatedStaderConfig)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(PermissionlessPoolUpdatedStaderConfig)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *PermissionlessPoolUpdatedStaderConfigIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *PermissionlessPoolUpdatedStaderConfigIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// PermissionlessPoolUpdatedStaderConfig represents a UpdatedStaderConfig event raised by the PermissionlessPool contract.
+type PermissionlessPoolUpdatedStaderConfig struct {
+	StaderConfig common.Address
+	Raw          types.Log // Blockchain specific contextual infos
+}
+
+// FilterUpdatedStaderConfig is a free log retrieval operation binding the contract event 0xdb2219043d7b197cb235f1af0cf6d782d77dee3de19e3f4fb6d39aae633b4485.
+//
+// Solidity: event UpdatedStaderConfig(address staderConfig)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterUpdatedStaderConfig(opts *bind.FilterOpts) (*PermissionlessPoolUpdatedStaderConfigIterator, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "UpdatedStaderConfig")
+	if err != nil {
+		return nil, err
+	}
+	return &PermissionlessPoolUpdatedStaderConfigIterator{contract: _PermissionlessPool.contract, event: "UpdatedStaderConfig", logs: logs, sub: sub}, nil
+}
+
+// WatchUpdatedStaderConfig is a free log subscription operation binding the contract event 0xdb2219043d7b197cb235f1af0cf6d782d77dee3de19e3f4fb6d39aae633b4485.
+//
+// Solidity: event UpdatedStaderConfig(address staderConfig)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchUpdatedStaderConfig(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolUpdatedStaderConfig) (event.Subscription, error) {
+
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "UpdatedStaderConfig")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(PermissionlessPoolUpdatedStaderConfig)
+				if err := _PermissionlessPool.contract.UnpackLog(event, "UpdatedStaderConfig", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUpdatedStaderConfig is a log parse operation binding the contract event 0xdb2219043d7b197cb235f1af0cf6d782d77dee3de19e3f4fb6d39aae633b4485.
+//
+// Solidity: event UpdatedStaderConfig(address staderConfig)
+func (_PermissionlessPool *PermissionlessPoolFilterer) ParseUpdatedStaderConfig(log types.Log) (*PermissionlessPoolUpdatedStaderConfig, error) {
+	event := new(PermissionlessPoolUpdatedStaderConfig)
+	if err := _PermissionlessPool.contract.UnpackLog(event, "UpdatedStaderConfig", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2573,15 +2398,15 @@ type PermissionlessPoolValidatorDepositedOnBeaconChain struct {
 
 // FilterValidatorDepositedOnBeaconChain is a free log retrieval operation binding the contract event 0xbef89de94658b7ef396ba7f9316542858c893c9011602906b1a2ad18d0a99c35.
 //
-// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed _validatorId, bytes _pubKey)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorDepositedOnBeaconChain(opts *bind.FilterOpts, _validatorId []*big.Int) (*PermissionlessPoolValidatorDepositedOnBeaconChainIterator, error) {
+// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed validatorId, bytes pubKey)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorDepositedOnBeaconChain(opts *bind.FilterOpts, validatorId []*big.Int) (*PermissionlessPoolValidatorDepositedOnBeaconChainIterator, error) {
 
-	var _validatorIdRule []interface{}
-	for _, _validatorIdItem := range _validatorId {
-		_validatorIdRule = append(_validatorIdRule, _validatorIdItem)
+	var validatorIdRule []interface{}
+	for _, validatorIdItem := range validatorId {
+		validatorIdRule = append(validatorIdRule, validatorIdItem)
 	}
 
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ValidatorDepositedOnBeaconChain", _validatorIdRule)
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ValidatorDepositedOnBeaconChain", validatorIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2590,15 +2415,15 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorDepositedO
 
 // WatchValidatorDepositedOnBeaconChain is a free log subscription operation binding the contract event 0xbef89de94658b7ef396ba7f9316542858c893c9011602906b1a2ad18d0a99c35.
 //
-// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed _validatorId, bytes _pubKey)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorDepositedOnBeaconChain(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolValidatorDepositedOnBeaconChain, _validatorId []*big.Int) (event.Subscription, error) {
+// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed validatorId, bytes pubKey)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorDepositedOnBeaconChain(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolValidatorDepositedOnBeaconChain, validatorId []*big.Int) (event.Subscription, error) {
 
-	var _validatorIdRule []interface{}
-	for _, _validatorIdItem := range _validatorId {
-		_validatorIdRule = append(_validatorIdRule, _validatorIdItem)
+	var validatorIdRule []interface{}
+	for _, validatorIdItem := range validatorId {
+		validatorIdRule = append(validatorIdRule, validatorIdItem)
 	}
 
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ValidatorDepositedOnBeaconChain", _validatorIdRule)
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ValidatorDepositedOnBeaconChain", validatorIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2632,7 +2457,7 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorDepositedOn
 
 // ParseValidatorDepositedOnBeaconChain is a log parse operation binding the contract event 0xbef89de94658b7ef396ba7f9316542858c893c9011602906b1a2ad18d0a99c35.
 //
-// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed _validatorId, bytes _pubKey)
+// Solidity: event ValidatorDepositedOnBeaconChain(uint256 indexed validatorId, bytes pubKey)
 func (_PermissionlessPool *PermissionlessPoolFilterer) ParseValidatorDepositedOnBeaconChain(log types.Log) (*PermissionlessPoolValidatorDepositedOnBeaconChain, error) {
 	event := new(PermissionlessPoolValidatorDepositedOnBeaconChain)
 	if err := _PermissionlessPool.contract.UnpackLog(event, "ValidatorDepositedOnBeaconChain", log); err != nil {
@@ -2717,15 +2542,15 @@ type PermissionlessPoolValidatorPreDepositedOnBeaconChain struct {
 
 // FilterValidatorPreDepositedOnBeaconChain is a free log retrieval operation binding the contract event 0xa35366ad083efbaee7949ff15c68508b95e2c0441248e80d73da97ac82bc1f10.
 //
-// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed _pubKey)
-func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorPreDepositedOnBeaconChain(opts *bind.FilterOpts, _pubKey [][]byte) (*PermissionlessPoolValidatorPreDepositedOnBeaconChainIterator, error) {
+// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed pubKey)
+func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorPreDepositedOnBeaconChain(opts *bind.FilterOpts, pubKey [][]byte) (*PermissionlessPoolValidatorPreDepositedOnBeaconChainIterator, error) {
 
-	var _pubKeyRule []interface{}
-	for _, _pubKeyItem := range _pubKey {
-		_pubKeyRule = append(_pubKeyRule, _pubKeyItem)
+	var pubKeyRule []interface{}
+	for _, pubKeyItem := range pubKey {
+		pubKeyRule = append(pubKeyRule, pubKeyItem)
 	}
 
-	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ValidatorPreDepositedOnBeaconChain", _pubKeyRule)
+	logs, sub, err := _PermissionlessPool.contract.FilterLogs(opts, "ValidatorPreDepositedOnBeaconChain", pubKeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2734,15 +2559,15 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) FilterValidatorPreDeposit
 
 // WatchValidatorPreDepositedOnBeaconChain is a free log subscription operation binding the contract event 0xa35366ad083efbaee7949ff15c68508b95e2c0441248e80d73da97ac82bc1f10.
 //
-// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed _pubKey)
-func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorPreDepositedOnBeaconChain(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolValidatorPreDepositedOnBeaconChain, _pubKey [][]byte) (event.Subscription, error) {
+// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed pubKey)
+func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorPreDepositedOnBeaconChain(opts *bind.WatchOpts, sink chan<- *PermissionlessPoolValidatorPreDepositedOnBeaconChain, pubKey [][]byte) (event.Subscription, error) {
 
-	var _pubKeyRule []interface{}
-	for _, _pubKeyItem := range _pubKey {
-		_pubKeyRule = append(_pubKeyRule, _pubKeyItem)
+	var pubKeyRule []interface{}
+	for _, pubKeyItem := range pubKey {
+		pubKeyRule = append(pubKeyRule, pubKeyItem)
 	}
 
-	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ValidatorPreDepositedOnBeaconChain", _pubKeyRule)
+	logs, sub, err := _PermissionlessPool.contract.WatchLogs(opts, "ValidatorPreDepositedOnBeaconChain", pubKeyRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2776,7 +2601,7 @@ func (_PermissionlessPool *PermissionlessPoolFilterer) WatchValidatorPreDeposite
 
 // ParseValidatorPreDepositedOnBeaconChain is a log parse operation binding the contract event 0xa35366ad083efbaee7949ff15c68508b95e2c0441248e80d73da97ac82bc1f10.
 //
-// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed _pubKey)
+// Solidity: event ValidatorPreDepositedOnBeaconChain(bytes indexed pubKey)
 func (_PermissionlessPool *PermissionlessPoolFilterer) ParseValidatorPreDepositedOnBeaconChain(log types.Log) (*PermissionlessPoolValidatorPreDepositedOnBeaconChain, error) {
 	event := new(PermissionlessPoolValidatorPreDepositedOnBeaconChain)
 	if err := _PermissionlessPool.contract.UnpackLog(event, "ValidatorPreDepositedOnBeaconChain", log); err != nil {

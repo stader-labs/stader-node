@@ -31,7 +31,7 @@ var (
 
 // StaderConfigMetaData contains all meta data concerning the StaderConfig contract.
 var StaderConfigMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"InvalidMaxDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetAccount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"SetConstant\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetContract\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"SetVariable\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMIN\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"AUCTION_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_DEPOSIT_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_PER_NODE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETHx\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_DELAY_TO_FINALIZE_WITHDRAW_REQUEST\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PENALTY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_FACTORY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_SELECTOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRICE_FETCHER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"REWARD_THRESHOLD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD_COLLATERAL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_CYCLE_DURATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_OPT_IN_COOLING_PERIOD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_INSURANCE_FUND\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_PENALTY_FUND\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_TREASURY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKE_POOL_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TWAP_GETTER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_WITHDRAW_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VAULT_FACTORY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WETH\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAuctionContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHDepositContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHxToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinDelayToFinalizeWithdrawRequest\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOperatorMaxNameLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPenaltyContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolSelector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPriceFetcher\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardsThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSDCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolCycleDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolOptInCoolingPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderInsuranceFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderPenaltyFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakePoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakedEthPerNode\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTWAPGetter\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getUserWithdrawManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getVaultFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getWethToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethDepositContract\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"updateAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_auctionContract\",\"type\":\"address\"}],\"name\":\"updateAuctionContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_ethX\",\"type\":\"address\"}],\"name\":\"updateETHxToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minDelay\",\"type\":\"uint256\"}],\"name\":\"updateMinDelayToFinalizeWithdrawRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_penaltyContract\",\"type\":\"address\"}],\"name\":\"updatePenaltyContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionedNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedPool\",\"type\":\"address\"}],\"name\":\"updatePermissionedPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionedSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionlessNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolFactory\",\"type\":\"address\"}],\"name\":\"updatePoolFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolSelector\",\"type\":\"address\"}],\"name\":\"updatePoolSelector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_priceFetcher\",\"type\":\"address\"}],\"name\":\"updatePriceFetcher\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardsThreshold\",\"type\":\"uint256\"}],\"name\":\"updateRewardsThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_socializingPoolCycleDuration\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolCycleDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_SocializePoolOptInCoolingPeriod\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolOptInCoolingPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderInsuranceFund\",\"type\":\"address\"}],\"name\":\"updateStaderInsuranceFund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderOracle\",\"type\":\"address\"}],\"name\":\"updateStaderOracle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderPenaltyFund\",\"type\":\"address\"}],\"name\":\"updateStaderPenaltyFund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderToken\",\"type\":\"address\"}],\"name\":\"updateStaderToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderTreasury\",\"type\":\"address\"}],\"name\":\"updateStaderTreasury\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_stakePoolManager\",\"type\":\"address\"}],\"name\":\"updateStakePoolManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_twapGetter\",\"type\":\"address\"}],\"name\":\"updateTWAPGetter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userWithdrawManager\",\"type\":\"address\"}],\"name\":\"updateUserWithdrawManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactory\",\"type\":\"address\"}],\"name\":\"updateVaultFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_wethToken\",\"type\":\"address\"}],\"name\":\"updateWethToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"InvalidLimits\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetAccount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"SetConstant\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetContract\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"SetToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"SetVariable\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMIN\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"AUCTION_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_DEPOSIT_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_PER_NODE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETHx\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PENALTY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_SELECTOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_UTILS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"REWARD_THRESHOLD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD_COLLATERAL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_CYCLE_DURATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_OPT_IN_COOLING_PERIOD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_INSURANCE_FUND\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_TREASURY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKE_POOL_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOTAL_FEE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_WITHDRAW_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VAULT_FACTORY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WITHDRAWN_KEYS_BATCH_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAuctionContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHDepositContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHxToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getFullDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOperatorMaxNameLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPenaltyContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolSelector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolUtils\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPreDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardsThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSDCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolCycleDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolOptInCoolingPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderInsuranceFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakePoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakedEthPerNode\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getUserWithdrawManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getVaultFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getWithdrawnKeyBatchSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethDepositContract\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyManagerRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyOperatorRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_contractName\",\"type\":\"bytes32\"}],\"name\":\"onlyStaderContract\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"updateAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_auctionContract\",\"type\":\"address\"}],\"name\":\"updateAuctionContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_ethX\",\"type\":\"address\"}],\"name\":\"updateETHxToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minBlockDelay\",\"type\":\"uint256\"}],\"name\":\"updateMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_penaltyContract\",\"type\":\"address\"}],\"name\":\"updatePenaltyContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionedNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedPool\",\"type\":\"address\"}],\"name\":\"updatePermissionedPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionedSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionlessNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolSelector\",\"type\":\"address\"}],\"name\":\"updatePoolSelector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolUtils\",\"type\":\"address\"}],\"name\":\"updatePoolUtils\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardsThreshold\",\"type\":\"uint256\"}],\"name\":\"updateRewardsThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_socializingPoolCycleDuration\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolCycleDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_SocializePoolOptInCoolingPeriod\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolOptInCoolingPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderInsuranceFund\",\"type\":\"address\"}],\"name\":\"updateStaderInsuranceFund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderOracle\",\"type\":\"address\"}],\"name\":\"updateStaderOracle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderToken\",\"type\":\"address\"}],\"name\":\"updateStaderToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderTreasury\",\"type\":\"address\"}],\"name\":\"updateStaderTreasury\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_stakePoolManager\",\"type\":\"address\"}],\"name\":\"updateStakePoolManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userWithdrawManager\",\"type\":\"address\"}],\"name\":\"updateUserWithdrawManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactory\",\"type\":\"address\"}],\"name\":\"updateVaultFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_withdrawnKeysBatchSize\",\"type\":\"uint256\"}],\"name\":\"updateWithdrawnKeysBatchSize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // StaderConfigABI is the input ABI used to generate the binding from.
@@ -397,6 +397,68 @@ func (_StaderConfig *StaderConfigCallerSession) ETHx() ([32]byte, error) {
 	return _StaderConfig.Contract.ETHx(&_StaderConfig.CallOpts)
 }
 
+// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+//
+// Solidity: function FULL_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) FULLDEPOSITSIZE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "FULL_DEPOSIT_SIZE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+//
+// Solidity: function FULL_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) FULLDEPOSITSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.FULLDEPOSITSIZE(&_StaderConfig.CallOpts)
+}
+
+// FULLDEPOSITSIZE is a free data retrieval call binding the contract method 0x792c8cc3.
+//
+// Solidity: function FULL_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) FULLDEPOSITSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.FULLDEPOSITSIZE(&_StaderConfig.CallOpts)
+}
+
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) MANAGER(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "MANAGER")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) MANAGER() ([32]byte, error) {
+	return _StaderConfig.Contract.MANAGER(&_StaderConfig.CallOpts)
+}
+
+// MANAGER is a free data retrieval call binding the contract method 0x1b2df850.
+//
+// Solidity: function MANAGER() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) MANAGER() ([32]byte, error) {
+	return _StaderConfig.Contract.MANAGER(&_StaderConfig.CallOpts)
+}
+
 // MAXDEPOSITAMOUNT is a free data retrieval call binding the contract method 0x4c34a982.
 //
 // Solidity: function MAX_DEPOSIT_AMOUNT() view returns(bytes32)
@@ -459,12 +521,12 @@ func (_StaderConfig *StaderConfigCallerSession) MAXWITHDRAWAMOUNT() ([32]byte, e
 	return _StaderConfig.Contract.MAXWITHDRAWAMOUNT(&_StaderConfig.CallOpts)
 }
 
-// MINDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x747e5ad8.
+// MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x6176bbde.
 //
-// Solidity: function MIN_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) MINDELAYTOFINALIZEWITHDRAWREQUEST(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "MIN_DELAY_TO_FINALIZE_WITHDRAW_REQUEST")
+	err := _StaderConfig.contract.Call(opts, &out, "MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -476,18 +538,18 @@ func (_StaderConfig *StaderConfigCaller) MINDELAYTOFINALIZEWITHDRAWREQUEST(opts 
 
 }
 
-// MINDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x747e5ad8.
+// MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x6176bbde.
 //
-// Solidity: function MIN_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) MINDELAYTOFINALIZEWITHDRAWREQUEST() ([32]byte, error) {
-	return _StaderConfig.Contract.MINDELAYTOFINALIZEWITHDRAWREQUEST(&_StaderConfig.CallOpts)
+// Solidity: function MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST() ([32]byte, error) {
+	return _StaderConfig.Contract.MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST(&_StaderConfig.CallOpts)
 }
 
-// MINDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x747e5ad8.
+// MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST is a free data retrieval call binding the contract method 0x6176bbde.
 //
-// Solidity: function MIN_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) MINDELAYTOFINALIZEWITHDRAWREQUEST() ([32]byte, error) {
-	return _StaderConfig.Contract.MINDELAYTOFINALIZEWITHDRAWREQUEST(&_StaderConfig.CallOpts)
+// Solidity: function MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST() ([32]byte, error) {
+	return _StaderConfig.Contract.MINBLOCKDELAYTOFINALIZEWITHDRAWREQUEST(&_StaderConfig.CallOpts)
 }
 
 // MINDEPOSITAMOUNT is a free data retrieval call binding the contract method 0x1ea30fef.
@@ -550,6 +612,37 @@ func (_StaderConfig *StaderConfigSession) MINWITHDRAWAMOUNT() ([32]byte, error) 
 // Solidity: function MIN_WITHDRAW_AMOUNT() view returns(bytes32)
 func (_StaderConfig *StaderConfigCallerSession) MINWITHDRAWAMOUNT() ([32]byte, error) {
 	return _StaderConfig.Contract.MINWITHDRAWAMOUNT(&_StaderConfig.CallOpts)
+}
+
+// OPERATOR is a free data retrieval call binding the contract method 0x983d2737.
+//
+// Solidity: function OPERATOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) OPERATOR(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "OPERATOR")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// OPERATOR is a free data retrieval call binding the contract method 0x983d2737.
+//
+// Solidity: function OPERATOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) OPERATOR() ([32]byte, error) {
+	return _StaderConfig.Contract.OPERATOR(&_StaderConfig.CallOpts)
+}
+
+// OPERATOR is a free data retrieval call binding the contract method 0x983d2737.
+//
+// Solidity: function OPERATOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) OPERATOR() ([32]byte, error) {
+	return _StaderConfig.Contract.OPERATOR(&_StaderConfig.CallOpts)
 }
 
 // OPERATORMAXNAMELENGTH is a free data retrieval call binding the contract method 0x5455e472.
@@ -800,37 +893,6 @@ func (_StaderConfig *StaderConfigCallerSession) PERMISSIONLESSSOCIALIZINGPOOL() 
 	return _StaderConfig.Contract.PERMISSIONLESSSOCIALIZINGPOOL(&_StaderConfig.CallOpts)
 }
 
-// POOLFACTORY is a free data retrieval call binding the contract method 0xd8e31608.
-//
-// Solidity: function POOL_FACTORY() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) POOLFACTORY(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "POOL_FACTORY")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// POOLFACTORY is a free data retrieval call binding the contract method 0xd8e31608.
-//
-// Solidity: function POOL_FACTORY() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) POOLFACTORY() ([32]byte, error) {
-	return _StaderConfig.Contract.POOLFACTORY(&_StaderConfig.CallOpts)
-}
-
-// POOLFACTORY is a free data retrieval call binding the contract method 0xd8e31608.
-//
-// Solidity: function POOL_FACTORY() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) POOLFACTORY() ([32]byte, error) {
-	return _StaderConfig.Contract.POOLFACTORY(&_StaderConfig.CallOpts)
-}
-
 // POOLSELECTOR is a free data retrieval call binding the contract method 0xdde63e8f.
 //
 // Solidity: function POOL_SELECTOR() view returns(bytes32)
@@ -862,12 +924,12 @@ func (_StaderConfig *StaderConfigCallerSession) POOLSELECTOR() ([32]byte, error)
 	return _StaderConfig.Contract.POOLSELECTOR(&_StaderConfig.CallOpts)
 }
 
-// PRICEFETCHER is a free data retrieval call binding the contract method 0xee810c9b.
+// POOLUTILS is a free data retrieval call binding the contract method 0x85e2fcd3.
 //
-// Solidity: function PRICE_FETCHER() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) PRICEFETCHER(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function POOL_UTILS() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) POOLUTILS(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "PRICE_FETCHER")
+	err := _StaderConfig.contract.Call(opts, &out, "POOL_UTILS")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -879,18 +941,49 @@ func (_StaderConfig *StaderConfigCaller) PRICEFETCHER(opts *bind.CallOpts) ([32]
 
 }
 
-// PRICEFETCHER is a free data retrieval call binding the contract method 0xee810c9b.
+// POOLUTILS is a free data retrieval call binding the contract method 0x85e2fcd3.
 //
-// Solidity: function PRICE_FETCHER() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) PRICEFETCHER() ([32]byte, error) {
-	return _StaderConfig.Contract.PRICEFETCHER(&_StaderConfig.CallOpts)
+// Solidity: function POOL_UTILS() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) POOLUTILS() ([32]byte, error) {
+	return _StaderConfig.Contract.POOLUTILS(&_StaderConfig.CallOpts)
 }
 
-// PRICEFETCHER is a free data retrieval call binding the contract method 0xee810c9b.
+// POOLUTILS is a free data retrieval call binding the contract method 0x85e2fcd3.
 //
-// Solidity: function PRICE_FETCHER() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) PRICEFETCHER() ([32]byte, error) {
-	return _StaderConfig.Contract.PRICEFETCHER(&_StaderConfig.CallOpts)
+// Solidity: function POOL_UTILS() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) POOLUTILS() ([32]byte, error) {
+	return _StaderConfig.Contract.POOLUTILS(&_StaderConfig.CallOpts)
+}
+
+// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
+//
+// Solidity: function PRE_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) PREDEPOSITSIZE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "PRE_DEPOSIT_SIZE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
+//
+// Solidity: function PRE_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) PREDEPOSITSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.PREDEPOSITSIZE(&_StaderConfig.CallOpts)
+}
+
+// PREDEPOSITSIZE is a free data retrieval call binding the contract method 0x0430246e.
+//
+// Solidity: function PRE_DEPOSIT_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) PREDEPOSITSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.PREDEPOSITSIZE(&_StaderConfig.CallOpts)
 }
 
 // REWARDTHRESHOLD is a free data retrieval call binding the contract method 0xe7bdba32.
@@ -1110,37 +1203,6 @@ func (_StaderConfig *StaderConfigCallerSession) STADERORACLE() ([32]byte, error)
 	return _StaderConfig.Contract.STADERORACLE(&_StaderConfig.CallOpts)
 }
 
-// STADERPENALTYFUND is a free data retrieval call binding the contract method 0x56aab10f.
-//
-// Solidity: function STADER_PENALTY_FUND() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) STADERPENALTYFUND(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "STADER_PENALTY_FUND")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// STADERPENALTYFUND is a free data retrieval call binding the contract method 0x56aab10f.
-//
-// Solidity: function STADER_PENALTY_FUND() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) STADERPENALTYFUND() ([32]byte, error) {
-	return _StaderConfig.Contract.STADERPENALTYFUND(&_StaderConfig.CallOpts)
-}
-
-// STADERPENALTYFUND is a free data retrieval call binding the contract method 0x56aab10f.
-//
-// Solidity: function STADER_PENALTY_FUND() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) STADERPENALTYFUND() ([32]byte, error) {
-	return _StaderConfig.Contract.STADERPENALTYFUND(&_StaderConfig.CallOpts)
-}
-
 // STADERTREASURY is a free data retrieval call binding the contract method 0x841b83b3.
 //
 // Solidity: function STADER_TREASURY() view returns(bytes32)
@@ -1203,12 +1265,12 @@ func (_StaderConfig *StaderConfigCallerSession) STAKEPOOLMANAGER() ([32]byte, er
 	return _StaderConfig.Contract.STAKEPOOLMANAGER(&_StaderConfig.CallOpts)
 }
 
-// TWAPGETTER is a free data retrieval call binding the contract method 0xa2408c32.
+// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
 //
-// Solidity: function TWAP_GETTER() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) TWAPGETTER(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function TOTAL_FEE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) TOTALFEE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "TWAP_GETTER")
+	err := _StaderConfig.contract.Call(opts, &out, "TOTAL_FEE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -1220,18 +1282,18 @@ func (_StaderConfig *StaderConfigCaller) TWAPGETTER(opts *bind.CallOpts) ([32]by
 
 }
 
-// TWAPGETTER is a free data retrieval call binding the contract method 0xa2408c32.
+// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
 //
-// Solidity: function TWAP_GETTER() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) TWAPGETTER() ([32]byte, error) {
-	return _StaderConfig.Contract.TWAPGETTER(&_StaderConfig.CallOpts)
+// Solidity: function TOTAL_FEE() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) TOTALFEE() ([32]byte, error) {
+	return _StaderConfig.Contract.TOTALFEE(&_StaderConfig.CallOpts)
 }
 
-// TWAPGETTER is a free data retrieval call binding the contract method 0xa2408c32.
+// TOTALFEE is a free data retrieval call binding the contract method 0x63db7eae.
 //
-// Solidity: function TWAP_GETTER() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) TWAPGETTER() ([32]byte, error) {
-	return _StaderConfig.Contract.TWAPGETTER(&_StaderConfig.CallOpts)
+// Solidity: function TOTAL_FEE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) TOTALFEE() ([32]byte, error) {
+	return _StaderConfig.Contract.TOTALFEE(&_StaderConfig.CallOpts)
 }
 
 // USERWITHDRAWMANAGER is a free data retrieval call binding the contract method 0x36854d63.
@@ -1296,12 +1358,12 @@ func (_StaderConfig *StaderConfigCallerSession) VAULTFACTORY() ([32]byte, error)
 	return _StaderConfig.Contract.VAULTFACTORY(&_StaderConfig.CallOpts)
 }
 
-// WETH is a free data retrieval call binding the contract method 0xad5c4648.
+// WITHDRAWNKEYSBATCHSIZE is a free data retrieval call binding the contract method 0x88993d8b.
 //
-// Solidity: function WETH() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) WETH(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function WITHDRAWN_KEYS_BATCH_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) WITHDRAWNKEYSBATCHSIZE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "WETH")
+	err := _StaderConfig.contract.Call(opts, &out, "WITHDRAWN_KEYS_BATCH_SIZE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -1313,18 +1375,18 @@ func (_StaderConfig *StaderConfigCaller) WETH(opts *bind.CallOpts) ([32]byte, er
 
 }
 
-// WETH is a free data retrieval call binding the contract method 0xad5c4648.
+// WITHDRAWNKEYSBATCHSIZE is a free data retrieval call binding the contract method 0x88993d8b.
 //
-// Solidity: function WETH() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) WETH() ([32]byte, error) {
-	return _StaderConfig.Contract.WETH(&_StaderConfig.CallOpts)
+// Solidity: function WITHDRAWN_KEYS_BATCH_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) WITHDRAWNKEYSBATCHSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.WITHDRAWNKEYSBATCHSIZE(&_StaderConfig.CallOpts)
 }
 
-// WETH is a free data retrieval call binding the contract method 0xad5c4648.
+// WITHDRAWNKEYSBATCHSIZE is a free data retrieval call binding the contract method 0x88993d8b.
 //
-// Solidity: function WETH() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) WETH() ([32]byte, error) {
-	return _StaderConfig.Contract.WETH(&_StaderConfig.CallOpts)
+// Solidity: function WITHDRAWN_KEYS_BATCH_SIZE() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) WITHDRAWNKEYSBATCHSIZE() ([32]byte, error) {
+	return _StaderConfig.Contract.WITHDRAWNKEYSBATCHSIZE(&_StaderConfig.CallOpts)
 }
 
 // GetAdmin is a free data retrieval call binding the contract method 0x6e9960c3.
@@ -1482,6 +1544,37 @@ func (_StaderConfig *StaderConfigCallerSession) GetETHxToken() (common.Address, 
 	return _StaderConfig.Contract.GetETHxToken(&_StaderConfig.CallOpts)
 }
 
+// GetFullDepositSize is a free data retrieval call binding the contract method 0xfa71fcbb.
+//
+// Solidity: function getFullDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCaller) GetFullDepositSize(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getFullDepositSize")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetFullDepositSize is a free data retrieval call binding the contract method 0xfa71fcbb.
+//
+// Solidity: function getFullDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigSession) GetFullDepositSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetFullDepositSize(&_StaderConfig.CallOpts)
+}
+
+// GetFullDepositSize is a free data retrieval call binding the contract method 0xfa71fcbb.
+//
+// Solidity: function getFullDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCallerSession) GetFullDepositSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetFullDepositSize(&_StaderConfig.CallOpts)
+}
+
 // GetMaxDepositAmount is a free data retrieval call binding the contract method 0x5726a356.
 //
 // Solidity: function getMaxDepositAmount() view returns(uint256)
@@ -1544,12 +1637,12 @@ func (_StaderConfig *StaderConfigCallerSession) GetMaxWithdrawAmount() (*big.Int
 	return _StaderConfig.Contract.GetMaxWithdrawAmount(&_StaderConfig.CallOpts)
 }
 
-// GetMinDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0x34f6ecb0.
+// GetMinBlockDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0xd2cee8ba.
 //
-// Solidity: function getMinDelayToFinalizeWithdrawRequest() view returns(uint256)
-func (_StaderConfig *StaderConfigCaller) GetMinDelayToFinalizeWithdrawRequest(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function getMinBlockDelayToFinalizeWithdrawRequest() view returns(uint256)
+func (_StaderConfig *StaderConfigCaller) GetMinBlockDelayToFinalizeWithdrawRequest(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getMinDelayToFinalizeWithdrawRequest")
+	err := _StaderConfig.contract.Call(opts, &out, "getMinBlockDelayToFinalizeWithdrawRequest")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -1561,18 +1654,18 @@ func (_StaderConfig *StaderConfigCaller) GetMinDelayToFinalizeWithdrawRequest(op
 
 }
 
-// GetMinDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0x34f6ecb0.
+// GetMinBlockDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0xd2cee8ba.
 //
-// Solidity: function getMinDelayToFinalizeWithdrawRequest() view returns(uint256)
-func (_StaderConfig *StaderConfigSession) GetMinDelayToFinalizeWithdrawRequest() (*big.Int, error) {
-	return _StaderConfig.Contract.GetMinDelayToFinalizeWithdrawRequest(&_StaderConfig.CallOpts)
+// Solidity: function getMinBlockDelayToFinalizeWithdrawRequest() view returns(uint256)
+func (_StaderConfig *StaderConfigSession) GetMinBlockDelayToFinalizeWithdrawRequest() (*big.Int, error) {
+	return _StaderConfig.Contract.GetMinBlockDelayToFinalizeWithdrawRequest(&_StaderConfig.CallOpts)
 }
 
-// GetMinDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0x34f6ecb0.
+// GetMinBlockDelayToFinalizeWithdrawRequest is a free data retrieval call binding the contract method 0xd2cee8ba.
 //
-// Solidity: function getMinDelayToFinalizeWithdrawRequest() view returns(uint256)
-func (_StaderConfig *StaderConfigCallerSession) GetMinDelayToFinalizeWithdrawRequest() (*big.Int, error) {
-	return _StaderConfig.Contract.GetMinDelayToFinalizeWithdrawRequest(&_StaderConfig.CallOpts)
+// Solidity: function getMinBlockDelayToFinalizeWithdrawRequest() view returns(uint256)
+func (_StaderConfig *StaderConfigCallerSession) GetMinBlockDelayToFinalizeWithdrawRequest() (*big.Int, error) {
+	return _StaderConfig.Contract.GetMinBlockDelayToFinalizeWithdrawRequest(&_StaderConfig.CallOpts)
 }
 
 // GetMinDepositAmount is a free data retrieval call binding the contract method 0xf4914d33.
@@ -1885,37 +1978,6 @@ func (_StaderConfig *StaderConfigCallerSession) GetPermissionlessSocializingPool
 	return _StaderConfig.Contract.GetPermissionlessSocializingPool(&_StaderConfig.CallOpts)
 }
 
-// GetPoolFactory is a free data retrieval call binding the contract method 0x6bd969b3.
-//
-// Solidity: function getPoolFactory() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetPoolFactory(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getPoolFactory")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetPoolFactory is a free data retrieval call binding the contract method 0x6bd969b3.
-//
-// Solidity: function getPoolFactory() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetPoolFactory() (common.Address, error) {
-	return _StaderConfig.Contract.GetPoolFactory(&_StaderConfig.CallOpts)
-}
-
-// GetPoolFactory is a free data retrieval call binding the contract method 0x6bd969b3.
-//
-// Solidity: function getPoolFactory() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetPoolFactory() (common.Address, error) {
-	return _StaderConfig.Contract.GetPoolFactory(&_StaderConfig.CallOpts)
-}
-
 // GetPoolSelector is a free data retrieval call binding the contract method 0x5458a106.
 //
 // Solidity: function getPoolSelector() view returns(address)
@@ -1947,12 +2009,12 @@ func (_StaderConfig *StaderConfigCallerSession) GetPoolSelector() (common.Addres
 	return _StaderConfig.Contract.GetPoolSelector(&_StaderConfig.CallOpts)
 }
 
-// GetPriceFetcher is a free data retrieval call binding the contract method 0x9d76f3ff.
+// GetPoolUtils is a free data retrieval call binding the contract method 0x6ccb9d70.
 //
-// Solidity: function getPriceFetcher() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetPriceFetcher(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function getPoolUtils() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetPoolUtils(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getPriceFetcher")
+	err := _StaderConfig.contract.Call(opts, &out, "getPoolUtils")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -1964,18 +2026,49 @@ func (_StaderConfig *StaderConfigCaller) GetPriceFetcher(opts *bind.CallOpts) (c
 
 }
 
-// GetPriceFetcher is a free data retrieval call binding the contract method 0x9d76f3ff.
+// GetPoolUtils is a free data retrieval call binding the contract method 0x6ccb9d70.
 //
-// Solidity: function getPriceFetcher() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetPriceFetcher() (common.Address, error) {
-	return _StaderConfig.Contract.GetPriceFetcher(&_StaderConfig.CallOpts)
+// Solidity: function getPoolUtils() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetPoolUtils() (common.Address, error) {
+	return _StaderConfig.Contract.GetPoolUtils(&_StaderConfig.CallOpts)
 }
 
-// GetPriceFetcher is a free data retrieval call binding the contract method 0x9d76f3ff.
+// GetPoolUtils is a free data retrieval call binding the contract method 0x6ccb9d70.
 //
-// Solidity: function getPriceFetcher() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetPriceFetcher() (common.Address, error) {
-	return _StaderConfig.Contract.GetPriceFetcher(&_StaderConfig.CallOpts)
+// Solidity: function getPoolUtils() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetPoolUtils() (common.Address, error) {
+	return _StaderConfig.Contract.GetPoolUtils(&_StaderConfig.CallOpts)
+}
+
+// GetPreDepositSize is a free data retrieval call binding the contract method 0x08297645.
+//
+// Solidity: function getPreDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCaller) GetPreDepositSize(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getPreDepositSize")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetPreDepositSize is a free data retrieval call binding the contract method 0x08297645.
+//
+// Solidity: function getPreDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigSession) GetPreDepositSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetPreDepositSize(&_StaderConfig.CallOpts)
+}
+
+// GetPreDepositSize is a free data retrieval call binding the contract method 0x08297645.
+//
+// Solidity: function getPreDepositSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCallerSession) GetPreDepositSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetPreDepositSize(&_StaderConfig.CallOpts)
 }
 
 // GetRewardsThreshold is a free data retrieval call binding the contract method 0x18829fc3.
@@ -2195,37 +2288,6 @@ func (_StaderConfig *StaderConfigCallerSession) GetStaderOracle() (common.Addres
 	return _StaderConfig.Contract.GetStaderOracle(&_StaderConfig.CallOpts)
 }
 
-// GetStaderPenaltyFund is a free data retrieval call binding the contract method 0xd30ec694.
-//
-// Solidity: function getStaderPenaltyFund() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetStaderPenaltyFund(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getStaderPenaltyFund")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetStaderPenaltyFund is a free data retrieval call binding the contract method 0xd30ec694.
-//
-// Solidity: function getStaderPenaltyFund() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetStaderPenaltyFund() (common.Address, error) {
-	return _StaderConfig.Contract.GetStaderPenaltyFund(&_StaderConfig.CallOpts)
-}
-
-// GetStaderPenaltyFund is a free data retrieval call binding the contract method 0xd30ec694.
-//
-// Solidity: function getStaderPenaltyFund() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetStaderPenaltyFund() (common.Address, error) {
-	return _StaderConfig.Contract.GetStaderPenaltyFund(&_StaderConfig.CallOpts)
-}
-
 // GetStaderToken is a free data retrieval call binding the contract method 0xe069f714.
 //
 // Solidity: function getStaderToken() view returns(address)
@@ -2350,35 +2412,35 @@ func (_StaderConfig *StaderConfigCallerSession) GetStakedEthPerNode() (*big.Int,
 	return _StaderConfig.Contract.GetStakedEthPerNode(&_StaderConfig.CallOpts)
 }
 
-// GetTWAPGetter is a free data retrieval call binding the contract method 0x3e9bf2b4.
+// GetTotalFee is a free data retrieval call binding the contract method 0x7ae316d0.
 //
-// Solidity: function getTWAPGetter() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetTWAPGetter(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function getTotalFee() view returns(uint256)
+func (_StaderConfig *StaderConfigCaller) GetTotalFee(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getTWAPGetter")
+	err := _StaderConfig.contract.Call(opts, &out, "getTotalFee")
 
 	if err != nil {
-		return *new(common.Address), err
+		return *new(*big.Int), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
 
 }
 
-// GetTWAPGetter is a free data retrieval call binding the contract method 0x3e9bf2b4.
+// GetTotalFee is a free data retrieval call binding the contract method 0x7ae316d0.
 //
-// Solidity: function getTWAPGetter() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetTWAPGetter() (common.Address, error) {
-	return _StaderConfig.Contract.GetTWAPGetter(&_StaderConfig.CallOpts)
+// Solidity: function getTotalFee() view returns(uint256)
+func (_StaderConfig *StaderConfigSession) GetTotalFee() (*big.Int, error) {
+	return _StaderConfig.Contract.GetTotalFee(&_StaderConfig.CallOpts)
 }
 
-// GetTWAPGetter is a free data retrieval call binding the contract method 0x3e9bf2b4.
+// GetTotalFee is a free data retrieval call binding the contract method 0x7ae316d0.
 //
-// Solidity: function getTWAPGetter() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetTWAPGetter() (common.Address, error) {
-	return _StaderConfig.Contract.GetTWAPGetter(&_StaderConfig.CallOpts)
+// Solidity: function getTotalFee() view returns(uint256)
+func (_StaderConfig *StaderConfigCallerSession) GetTotalFee() (*big.Int, error) {
+	return _StaderConfig.Contract.GetTotalFee(&_StaderConfig.CallOpts)
 }
 
 // GetUserWithdrawManager is a free data retrieval call binding the contract method 0xecf170a8.
@@ -2443,35 +2505,35 @@ func (_StaderConfig *StaderConfigCallerSession) GetVaultFactory() (common.Addres
 	return _StaderConfig.Contract.GetVaultFactory(&_StaderConfig.CallOpts)
 }
 
-// GetWethToken is a free data retrieval call binding the contract method 0x4c252f91.
+// GetWithdrawnKeyBatchSize is a free data retrieval call binding the contract method 0xb479a517.
 //
-// Solidity: function getWethToken() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetWethToken(opts *bind.CallOpts) (common.Address, error) {
+// Solidity: function getWithdrawnKeyBatchSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCaller) GetWithdrawnKeyBatchSize(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getWethToken")
+	err := _StaderConfig.contract.Call(opts, &out, "getWithdrawnKeyBatchSize")
 
 	if err != nil {
-		return *new(common.Address), err
+		return *new(*big.Int), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 
 	return out0, err
 
 }
 
-// GetWethToken is a free data retrieval call binding the contract method 0x4c252f91.
+// GetWithdrawnKeyBatchSize is a free data retrieval call binding the contract method 0xb479a517.
 //
-// Solidity: function getWethToken() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetWethToken() (common.Address, error) {
-	return _StaderConfig.Contract.GetWethToken(&_StaderConfig.CallOpts)
+// Solidity: function getWithdrawnKeyBatchSize() view returns(uint256)
+func (_StaderConfig *StaderConfigSession) GetWithdrawnKeyBatchSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetWithdrawnKeyBatchSize(&_StaderConfig.CallOpts)
 }
 
-// GetWethToken is a free data retrieval call binding the contract method 0x4c252f91.
+// GetWithdrawnKeyBatchSize is a free data retrieval call binding the contract method 0xb479a517.
 //
-// Solidity: function getWethToken() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetWethToken() (common.Address, error) {
-	return _StaderConfig.Contract.GetWethToken(&_StaderConfig.CallOpts)
+// Solidity: function getWithdrawnKeyBatchSize() view returns(uint256)
+func (_StaderConfig *StaderConfigCallerSession) GetWithdrawnKeyBatchSize() (*big.Int, error) {
+	return _StaderConfig.Contract.GetWithdrawnKeyBatchSize(&_StaderConfig.CallOpts)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
@@ -2503,6 +2565,99 @@ func (_StaderConfig *StaderConfigSession) HasRole(role [32]byte, account common.
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
 func (_StaderConfig *StaderConfigCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
 	return _StaderConfig.Contract.HasRole(&_StaderConfig.CallOpts, role, account)
+}
+
+// OnlyManagerRole is a free data retrieval call binding the contract method 0x6240fb9c.
+//
+// Solidity: function onlyManagerRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigCaller) OnlyManagerRole(opts *bind.CallOpts, account common.Address) (bool, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "onlyManagerRole", account)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// OnlyManagerRole is a free data retrieval call binding the contract method 0x6240fb9c.
+//
+// Solidity: function onlyManagerRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigSession) OnlyManagerRole(account common.Address) (bool, error) {
+	return _StaderConfig.Contract.OnlyManagerRole(&_StaderConfig.CallOpts, account)
+}
+
+// OnlyManagerRole is a free data retrieval call binding the contract method 0x6240fb9c.
+//
+// Solidity: function onlyManagerRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigCallerSession) OnlyManagerRole(account common.Address) (bool, error) {
+	return _StaderConfig.Contract.OnlyManagerRole(&_StaderConfig.CallOpts, account)
+}
+
+// OnlyOperatorRole is a free data retrieval call binding the contract method 0x53f5713b.
+//
+// Solidity: function onlyOperatorRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigCaller) OnlyOperatorRole(opts *bind.CallOpts, account common.Address) (bool, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "onlyOperatorRole", account)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// OnlyOperatorRole is a free data retrieval call binding the contract method 0x53f5713b.
+//
+// Solidity: function onlyOperatorRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigSession) OnlyOperatorRole(account common.Address) (bool, error) {
+	return _StaderConfig.Contract.OnlyOperatorRole(&_StaderConfig.CallOpts, account)
+}
+
+// OnlyOperatorRole is a free data retrieval call binding the contract method 0x53f5713b.
+//
+// Solidity: function onlyOperatorRole(address account) view returns(bool)
+func (_StaderConfig *StaderConfigCallerSession) OnlyOperatorRole(account common.Address) (bool, error) {
+	return _StaderConfig.Contract.OnlyOperatorRole(&_StaderConfig.CallOpts, account)
+}
+
+// OnlyStaderContract is a free data retrieval call binding the contract method 0xb3123922.
+//
+// Solidity: function onlyStaderContract(address _addr, bytes32 _contractName) view returns(bool)
+func (_StaderConfig *StaderConfigCaller) OnlyStaderContract(opts *bind.CallOpts, _addr common.Address, _contractName [32]byte) (bool, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "onlyStaderContract", _addr, _contractName)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// OnlyStaderContract is a free data retrieval call binding the contract method 0xb3123922.
+//
+// Solidity: function onlyStaderContract(address _addr, bytes32 _contractName) view returns(bool)
+func (_StaderConfig *StaderConfigSession) OnlyStaderContract(_addr common.Address, _contractName [32]byte) (bool, error) {
+	return _StaderConfig.Contract.OnlyStaderContract(&_StaderConfig.CallOpts, _addr, _contractName)
+}
+
+// OnlyStaderContract is a free data retrieval call binding the contract method 0xb3123922.
+//
+// Solidity: function onlyStaderContract(address _addr, bytes32 _contractName) view returns(bool)
+func (_StaderConfig *StaderConfigCallerSession) OnlyStaderContract(_addr common.Address, _contractName [32]byte) (bool, error) {
+	return _StaderConfig.Contract.OnlyStaderContract(&_StaderConfig.CallOpts, _addr, _contractName)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -2725,25 +2880,25 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdateMaxWithdrawAmount(_max
 	return _StaderConfig.Contract.UpdateMaxWithdrawAmount(&_StaderConfig.TransactOpts, _maxWithdrawAmount)
 }
 
-// UpdateMinDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0xf62310a5.
+// UpdateMinBlockDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0x723b732c.
 //
-// Solidity: function updateMinDelayToFinalizeWithdrawRequest(uint256 _minDelay) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdateMinDelayToFinalizeWithdrawRequest(opts *bind.TransactOpts, _minDelay *big.Int) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updateMinDelayToFinalizeWithdrawRequest", _minDelay)
+// Solidity: function updateMinBlockDelayToFinalizeWithdrawRequest(uint256 _minBlockDelay) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdateMinBlockDelayToFinalizeWithdrawRequest(opts *bind.TransactOpts, _minBlockDelay *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updateMinBlockDelayToFinalizeWithdrawRequest", _minBlockDelay)
 }
 
-// UpdateMinDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0xf62310a5.
+// UpdateMinBlockDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0x723b732c.
 //
-// Solidity: function updateMinDelayToFinalizeWithdrawRequest(uint256 _minDelay) returns()
-func (_StaderConfig *StaderConfigSession) UpdateMinDelayToFinalizeWithdrawRequest(_minDelay *big.Int) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateMinDelayToFinalizeWithdrawRequest(&_StaderConfig.TransactOpts, _minDelay)
+// Solidity: function updateMinBlockDelayToFinalizeWithdrawRequest(uint256 _minBlockDelay) returns()
+func (_StaderConfig *StaderConfigSession) UpdateMinBlockDelayToFinalizeWithdrawRequest(_minBlockDelay *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateMinBlockDelayToFinalizeWithdrawRequest(&_StaderConfig.TransactOpts, _minBlockDelay)
 }
 
-// UpdateMinDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0xf62310a5.
+// UpdateMinBlockDelayToFinalizeWithdrawRequest is a paid mutator transaction binding the contract method 0x723b732c.
 //
-// Solidity: function updateMinDelayToFinalizeWithdrawRequest(uint256 _minDelay) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdateMinDelayToFinalizeWithdrawRequest(_minDelay *big.Int) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateMinDelayToFinalizeWithdrawRequest(&_StaderConfig.TransactOpts, _minDelay)
+// Solidity: function updateMinBlockDelayToFinalizeWithdrawRequest(uint256 _minBlockDelay) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdateMinBlockDelayToFinalizeWithdrawRequest(_minBlockDelay *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateMinBlockDelayToFinalizeWithdrawRequest(&_StaderConfig.TransactOpts, _minBlockDelay)
 }
 
 // UpdateMinDepositAmount is a paid mutator transaction binding the contract method 0x84780205.
@@ -2935,27 +3090,6 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdatePermissionlessSocializ
 	return _StaderConfig.Contract.UpdatePermissionlessSocializingPool(&_StaderConfig.TransactOpts, _permissionlessSocializePool)
 }
 
-// UpdatePoolFactory is a paid mutator transaction binding the contract method 0x45f8f010.
-//
-// Solidity: function updatePoolFactory(address _poolFactory) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdatePoolFactory(opts *bind.TransactOpts, _poolFactory common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updatePoolFactory", _poolFactory)
-}
-
-// UpdatePoolFactory is a paid mutator transaction binding the contract method 0x45f8f010.
-//
-// Solidity: function updatePoolFactory(address _poolFactory) returns()
-func (_StaderConfig *StaderConfigSession) UpdatePoolFactory(_poolFactory common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdatePoolFactory(&_StaderConfig.TransactOpts, _poolFactory)
-}
-
-// UpdatePoolFactory is a paid mutator transaction binding the contract method 0x45f8f010.
-//
-// Solidity: function updatePoolFactory(address _poolFactory) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdatePoolFactory(_poolFactory common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdatePoolFactory(&_StaderConfig.TransactOpts, _poolFactory)
-}
-
 // UpdatePoolSelector is a paid mutator transaction binding the contract method 0x047cb439.
 //
 // Solidity: function updatePoolSelector(address _poolSelector) returns()
@@ -2977,25 +3111,25 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdatePoolSelector(_poolSele
 	return _StaderConfig.Contract.UpdatePoolSelector(&_StaderConfig.TransactOpts, _poolSelector)
 }
 
-// UpdatePriceFetcher is a paid mutator transaction binding the contract method 0xaee263c1.
+// UpdatePoolUtils is a paid mutator transaction binding the contract method 0x2651644c.
 //
-// Solidity: function updatePriceFetcher(address _priceFetcher) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdatePriceFetcher(opts *bind.TransactOpts, _priceFetcher common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updatePriceFetcher", _priceFetcher)
+// Solidity: function updatePoolUtils(address _poolUtils) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdatePoolUtils(opts *bind.TransactOpts, _poolUtils common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updatePoolUtils", _poolUtils)
 }
 
-// UpdatePriceFetcher is a paid mutator transaction binding the contract method 0xaee263c1.
+// UpdatePoolUtils is a paid mutator transaction binding the contract method 0x2651644c.
 //
-// Solidity: function updatePriceFetcher(address _priceFetcher) returns()
-func (_StaderConfig *StaderConfigSession) UpdatePriceFetcher(_priceFetcher common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdatePriceFetcher(&_StaderConfig.TransactOpts, _priceFetcher)
+// Solidity: function updatePoolUtils(address _poolUtils) returns()
+func (_StaderConfig *StaderConfigSession) UpdatePoolUtils(_poolUtils common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePoolUtils(&_StaderConfig.TransactOpts, _poolUtils)
 }
 
-// UpdatePriceFetcher is a paid mutator transaction binding the contract method 0xaee263c1.
+// UpdatePoolUtils is a paid mutator transaction binding the contract method 0x2651644c.
 //
-// Solidity: function updatePriceFetcher(address _priceFetcher) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdatePriceFetcher(_priceFetcher common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdatePriceFetcher(&_StaderConfig.TransactOpts, _priceFetcher)
+// Solidity: function updatePoolUtils(address _poolUtils) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdatePoolUtils(_poolUtils common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePoolUtils(&_StaderConfig.TransactOpts, _poolUtils)
 }
 
 // UpdateRewardsThreshold is a paid mutator transaction binding the contract method 0x572c686a.
@@ -3124,27 +3258,6 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdateStaderOracle(_staderOr
 	return _StaderConfig.Contract.UpdateStaderOracle(&_StaderConfig.TransactOpts, _staderOracle)
 }
 
-// UpdateStaderPenaltyFund is a paid mutator transaction binding the contract method 0xd26058c2.
-//
-// Solidity: function updateStaderPenaltyFund(address _staderPenaltyFund) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdateStaderPenaltyFund(opts *bind.TransactOpts, _staderPenaltyFund common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updateStaderPenaltyFund", _staderPenaltyFund)
-}
-
-// UpdateStaderPenaltyFund is a paid mutator transaction binding the contract method 0xd26058c2.
-//
-// Solidity: function updateStaderPenaltyFund(address _staderPenaltyFund) returns()
-func (_StaderConfig *StaderConfigSession) UpdateStaderPenaltyFund(_staderPenaltyFund common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateStaderPenaltyFund(&_StaderConfig.TransactOpts, _staderPenaltyFund)
-}
-
-// UpdateStaderPenaltyFund is a paid mutator transaction binding the contract method 0xd26058c2.
-//
-// Solidity: function updateStaderPenaltyFund(address _staderPenaltyFund) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdateStaderPenaltyFund(_staderPenaltyFund common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateStaderPenaltyFund(&_StaderConfig.TransactOpts, _staderPenaltyFund)
-}
-
 // UpdateStaderToken is a paid mutator transaction binding the contract method 0x83148593.
 //
 // Solidity: function updateStaderToken(address _staderToken) returns()
@@ -3208,27 +3321,6 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdateStakePoolManager(_stak
 	return _StaderConfig.Contract.UpdateStakePoolManager(&_StaderConfig.TransactOpts, _stakePoolManager)
 }
 
-// UpdateTWAPGetter is a paid mutator transaction binding the contract method 0xb9c0b6ce.
-//
-// Solidity: function updateTWAPGetter(address _twapGetter) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdateTWAPGetter(opts *bind.TransactOpts, _twapGetter common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updateTWAPGetter", _twapGetter)
-}
-
-// UpdateTWAPGetter is a paid mutator transaction binding the contract method 0xb9c0b6ce.
-//
-// Solidity: function updateTWAPGetter(address _twapGetter) returns()
-func (_StaderConfig *StaderConfigSession) UpdateTWAPGetter(_twapGetter common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateTWAPGetter(&_StaderConfig.TransactOpts, _twapGetter)
-}
-
-// UpdateTWAPGetter is a paid mutator transaction binding the contract method 0xb9c0b6ce.
-//
-// Solidity: function updateTWAPGetter(address _twapGetter) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdateTWAPGetter(_twapGetter common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateTWAPGetter(&_StaderConfig.TransactOpts, _twapGetter)
-}
-
 // UpdateUserWithdrawManager is a paid mutator transaction binding the contract method 0x088ee72d.
 //
 // Solidity: function updateUserWithdrawManager(address _userWithdrawManager) returns()
@@ -3271,25 +3363,25 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdateVaultFactory(_vaultFac
 	return _StaderConfig.Contract.UpdateVaultFactory(&_StaderConfig.TransactOpts, _vaultFactory)
 }
 
-// UpdateWethToken is a paid mutator transaction binding the contract method 0x4c7f86ad.
+// UpdateWithdrawnKeysBatchSize is a paid mutator transaction binding the contract method 0xbbb99bb5.
 //
-// Solidity: function updateWethToken(address _wethToken) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdateWethToken(opts *bind.TransactOpts, _wethToken common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updateWethToken", _wethToken)
+// Solidity: function updateWithdrawnKeysBatchSize(uint256 _withdrawnKeysBatchSize) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdateWithdrawnKeysBatchSize(opts *bind.TransactOpts, _withdrawnKeysBatchSize *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updateWithdrawnKeysBatchSize", _withdrawnKeysBatchSize)
 }
 
-// UpdateWethToken is a paid mutator transaction binding the contract method 0x4c7f86ad.
+// UpdateWithdrawnKeysBatchSize is a paid mutator transaction binding the contract method 0xbbb99bb5.
 //
-// Solidity: function updateWethToken(address _wethToken) returns()
-func (_StaderConfig *StaderConfigSession) UpdateWethToken(_wethToken common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateWethToken(&_StaderConfig.TransactOpts, _wethToken)
+// Solidity: function updateWithdrawnKeysBatchSize(uint256 _withdrawnKeysBatchSize) returns()
+func (_StaderConfig *StaderConfigSession) UpdateWithdrawnKeysBatchSize(_withdrawnKeysBatchSize *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateWithdrawnKeysBatchSize(&_StaderConfig.TransactOpts, _withdrawnKeysBatchSize)
 }
 
-// UpdateWethToken is a paid mutator transaction binding the contract method 0x4c7f86ad.
+// UpdateWithdrawnKeysBatchSize is a paid mutator transaction binding the contract method 0xbbb99bb5.
 //
-// Solidity: function updateWethToken(address _wethToken) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdateWethToken(_wethToken common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateWethToken(&_StaderConfig.TransactOpts, _wethToken)
+// Solidity: function updateWithdrawnKeysBatchSize(uint256 _withdrawnKeysBatchSize) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdateWithdrawnKeysBatchSize(_withdrawnKeysBatchSize *big.Int) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateWithdrawnKeysBatchSize(&_StaderConfig.TransactOpts, _withdrawnKeysBatchSize)
 }
 
 // StaderConfigInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the StaderConfig contract.

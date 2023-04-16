@@ -2,15 +2,16 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/stader"
+	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-
-	"github.com/stader-labs/stader-node/shared/services/stader"
-	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
+	"math/big"
+	"time"
 )
 
 func getStatus(c *cli.Context) error {
@@ -67,6 +68,28 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
+
+	if status.SdCollateralRequestedToWithdraw.Cmp(big.NewInt(0)) > 0 {
+		currentTime := time.Unix(time.Now().Unix(), 0)
+		if status.SdCollateralWithdrawTime.Int64() > currentTime.Unix() {
+			withdrawTime := time.Unix(status.SdCollateralWithdrawTime.Int64(), 0)
+			timeRemaining := withdrawTime.Sub(currentTime)
+
+			fmt.Printf(
+				"The node %s%s%s %.6f SD in unbonding phase. You can withdraw it in %v \n\n",
+				log.ColorBlue,
+				status.AccountAddress,
+				log.ColorReset,
+				math.RoundDown(eth.WeiToEth(status.SdCollateralRequestedToWithdraw), 18), timeRemaining)
+		} else {
+			fmt.Printf(
+				"The node %s%s%s can claim %.6f SD. You can use the %sstader-cli node claim-sd%s command \n\n",
+				log.ColorBlue,
+				status.AccountAddress,
+				log.ColorReset,
+				math.RoundDown(eth.WeiToEth(status.SdCollateralRequestedToWithdraw), 18), log.ColorGreen, log.ColorReset)
+		}
+	}
 
 	fmt.Printf(
 		"The node %s%s%s has registered %d validators.\n\n",

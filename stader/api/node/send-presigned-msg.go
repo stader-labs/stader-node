@@ -13,10 +13,14 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
+	"math/big"
 	"strconv"
 )
 
 func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSendPresignedMsgResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -36,6 +40,12 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
 
+	// check if validator keystore is present by querying validator index
+	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
+	if err != nil {
+		return nil, err
+	}
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -45,10 +55,27 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 		return &canSendPresignedMsgResponse, nil
 	}
 
+	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if validatorId.Cmp(big.NewInt(0)) == 0 {
+		canSendPresignedMsgResponse.ValidatorNotRegisteredWithStader = true
+		return &canSendPresignedMsgResponse, nil
+	}
+
 	// check if validator is present by querying validator index
 	validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
-	if validatorStatus.Index == 0 || err != nil {
+	if err != nil {
+		return nil, err
+	}
+	if !validatorStatus.Exists {
 		canSendPresignedMsgResponse.ValidatorNotRegistered = true
+		return &canSendPresignedMsgResponse, nil
+	}
+
+	if eth2.IsValidatorExiting(validatorStatus) {
+		canSendPresignedMsgResponse.ValidatorIsNotActive = true
 		return &canSendPresignedMsgResponse, nil
 	}
 
@@ -59,11 +86,6 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	}
 	if isRegistered {
 		canSendPresignedMsgResponse.ValidatorPreSignKeyAlreadyRegistered = true
-		return &canSendPresignedMsgResponse, nil
-	}
-
-	if eth2.IsValidatorExiting(validatorStatus) {
-		canSendPresignedMsgResponse.ValidatorIsNotActive = true
 		return &canSendPresignedMsgResponse, nil
 	}
 

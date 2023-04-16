@@ -1,6 +1,7 @@
 package sd_collateral
 
 import (
+	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -66,12 +67,21 @@ func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddr
 }
 
 func GetMaxValidatorSpawnable(sdc *stader.SdCollateralContractManager, sdAmount *big.Int, poolType uint8, opts *bind.CallOpts) (*big.Int, error) {
-	maxValidatorSpawanable, err := sdc.SdCollateral.GetMaxValidatorSpawnable(opts, sdAmount, poolType)
+	pThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
 	if err != nil {
 		return nil, err
 	}
 
-	return maxValidatorSpawanable, nil
+	ethAmount, err := sdc.SdCollateral.ConvertSDToETH(opts, sdAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	if pThreshold.MinThreshold.Cmp(big.NewInt(0)) == 0 {
+		return nil, fmt.Errorf("pool min threshold is 0")
+	}
+
+	return ethAmount.Div(ethAmount, pThreshold.MinThreshold), nil
 }
 
 func ConvertEthToSd(sdc *stader.SdCollateralContractManager, ethAmount *big.Int, opts *bind.CallOpts) (*big.Int, error) {
@@ -90,4 +100,45 @@ func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.Ca
 	}
 
 	return totalSdCollateral, nil
+}
+
+func GetWithdrawDelay(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	withdrawDelay, err := sdc.SdCollateral.WithdrawDelay(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return withdrawDelay, nil
+}
+
+func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (struct {
+	LastWithdrawReqTimestamp *big.Int
+	TotalSDWithdrawReqAmount *big.Int
+}, error) {
+	withdrawInfo, err := sdc.SdCollateral.WithdrawReq(opts, operatorAddress)
+	if err != nil {
+		return struct {
+			LastWithdrawReqTimestamp *big.Int
+			TotalSDWithdrawReqAmount *big.Int
+		}{}, err
+	}
+
+	return withdrawInfo, nil
+}
+
+func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (struct {
+	MinThreshold      *big.Int
+	WithdrawThreshold *big.Int
+	Units             string
+}, error) {
+	poolThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
+	if err != nil {
+		return struct {
+			MinThreshold      *big.Int
+			WithdrawThreshold *big.Int
+			Units             string
+		}{}, err
+	}
+
+	return poolThreshold, nil
 }

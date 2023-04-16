@@ -4,6 +4,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -11,12 +12,19 @@ import (
 )
 
 func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanWithdrawClRewardsResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	// Get services
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 	sdcfg, err := services.GetStaderConfigContract(c)
+	if err != nil {
+		return nil, err
+	}
+	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -41,15 +49,6 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return &response, nil
 	}
 
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
-
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
 		return nil, err
@@ -68,13 +67,22 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 		return &response, nil
 	}
 
-	// TODO - bchain - check if withdraw vault is settled
+	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+	if vaultSettleStatus {
+		response.VaultAlreadySettled = true
+		return &response, nil
+	}
 
+	//fmt.Println("getting validator eth balance")
 	withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
+
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -116,8 +124,15 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	if err != nil {
 		return nil, err
 	}
-
+	putils, err := services.GetPoolUtilsContract(c)
+	if err != nil {
+		return nil, err
+	}
 	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +161,7 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	if err != nil {
 		return nil, err
 	}
-	withdrawVaultRewardShares, err := node.CalculateValidatorWithdrawVaultRewardShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, withdrawVaultBalance, nil)
+	withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +169,7 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	response.ClRewardsAmount = withdrawVaultRewardShares.OperatorShare
 	response.OperatorRewardAddress = operatorInfo.OperatorRewardAddress
 
-	tx, err := node.DistributeRewards(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+	tx, err := node.DistributeRewards(pnr.Client, validatorContractInfo.WithdrawVaultAddress, opts)
 	if err != nil {
 		return nil, err
 	}

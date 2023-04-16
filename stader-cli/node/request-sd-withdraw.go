@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
@@ -46,6 +47,12 @@ func WithdrawSd(c *cli.Context) error {
 	if canWithdrawSdResponse.InsufficientSdCollateral {
 		fmt.Println("Insufficient SD collateral!")
 		return nil
+	}
+
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canWithdrawSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
 	}
 
 	// Prompt for confirmation

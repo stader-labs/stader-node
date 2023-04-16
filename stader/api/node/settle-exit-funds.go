@@ -6,22 +6,49 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSettleExitFunds, error) {
-	if err := services.RequireNodeRegistered(c); err != nil {
+	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
 
 	response := api.CanSettleExitFunds{}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
+		response.OperatorNotRegistered = true
+		return &response, nil
+	}
+
 	// make sure validator state is in withdrawn
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
 		return nil, err
+	}
+	if validatorId.Cmp(big.NewInt(0)) == 0 {
+		response.ValidatorNotRegistered = true
+		return &response, nil
 	}
 	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
 	if err != nil {
@@ -32,6 +59,15 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 		return &response, nil
 	}
 
+	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+	if vaultSettleStatus {
+		response.VaultAlreadySettled = true
+		return &response, nil
+	}
+
 	withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
 	if err != nil {
 		return nil, err
@@ -39,11 +75,11 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	validatorWithdrawVaultWithdrawShares := withdrawVaultWithdrawShares.OperatorShare
 	// make sure validator has eth to withdraw
 	if validatorWithdrawVaultWithdrawShares.Int64() == 0 {
-		response.NotEthToWithdraw = true
+		response.NoEthToWithdraw = true
 		return &response, nil
 	}
 
-	gasInfo, err := node.EstimateSettleFunds(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
+	gasInfo, err := node.EstimateSettleFunds(pnr.Client, validatorInfo.WithdrawVaultAddress, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +98,10 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*ap
 		return nil, err
 	}
 	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +134,7 @@ func SettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*ap
 	response.OperatorRewardAddress = operatorInfo.OperatorRewardAddress
 	response.ExitAmount = validatorWithdrawVaultWithdrawShares
 
-	tx, err := node.SettleFunds(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
+	tx, err := node.SettleFunds(pnr.Client, validatorInfo.WithdrawVaultAddress, opts)
 	if err != nil {
 		return nil, err
 	}

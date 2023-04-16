@@ -18,6 +18,9 @@ import (
 func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSdResponse, error) {
 
 	// Get services
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -45,7 +48,10 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSd
 	if err != nil {
 		return nil, err
 	}
-	response.InsufficientBalance = amountWei.Cmp(sdBalance) > 0
+	if amountWei.Cmp(sdBalance) > 0 {
+		response.InsufficientBalance = true
+		return &response, nil
+	}
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()
@@ -58,8 +64,6 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSd
 	}
 	response.GasInfo = gasInfo
 
-	// Update & return response
-	response.CanDeposit = !response.InsufficientBalance
 	return &response, nil
 
 }
