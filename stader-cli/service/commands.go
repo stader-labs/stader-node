@@ -187,7 +187,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "status",
 				Aliases:   []string{"u"},
