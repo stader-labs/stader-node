@@ -29,30 +29,9 @@ var (
 	_ = abi.ConvertType
 )
 
-// Operator is an auto generated low-level Go binding around an user-defined struct.
-//type Operator struct {
-//	Active                  bool
-//	OptedForSocializingPool bool
-//	OperatorName            string
-//	OperatorRewardAddress   common.Address
-//	OperatorAddress         common.Address
-//}
-//
-//// Validator is an auto generated low-level Go binding around an user-defined struct.
-//type Validator struct {
-//	Status               uint8
-//	Pubkey               []byte
-//	PreDepositSignature  []byte
-//	DepositSignature     []byte
-//	WithdrawVaultAddress common.Address
-//	OperatorId           *big.Int
-//	DepositBlock         *big.Int
-//	WithdrawnBlock       *big.Int
-//}
-
 // PoolUtilsMetaData contains all meta data concerning the PoolUtils contract.
 var PoolUtilsMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EmptyNameString\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExistingOrMismatchingPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfPubkey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NameCrossedMaxLength\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorIsNotOnboarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PoolIdNotPresent\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyAlreadyExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyDoesNotExit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"DeactivatedPool\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"PoolAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"PoolAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_poolAddress\",\"type\":\"address\"}],\"name\":\"addNewPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_totalRewards\",\"type\":\"uint256\"}],\"name\":\"calculateRewardShare\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"userShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolShare\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getActiveValidatorCountByPool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getOperatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"getOperatorPoolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolIdArray\",\"outputs\":[{\"internalType\":\"uint8[]\",\"name\":\"\",\"type\":\"uint8[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getProtocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getQueuedValidatorCountByPool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidatorByPool\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnBlock\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidatorPoolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"isExistingOperator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_depositSignature\",\"type\":\"bytes\"}],\"name\":\"onlyValidKeys\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"name\":\"onlyValidName\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolAddressById\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"poolIdArray\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"retrieveOperator\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"optedForSocializingPool\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"operatorName\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"operatorRewardAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operatorAddress\",\"type\":\"address\"}],\"internalType\":\"structOperator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"retrieveValidator\",\"outputs\":[{\"components\":[{\"internalType\":\"enumValidatorStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"depositSignature\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"withdrawVaultAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"depositBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawnBlock\",\"type\":\"uint256\"}],\"internalType\":\"structValidator\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_newPoolAddress\",\"type\":\"address\"}],\"name\":\"updatePoolAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EmptyNameString\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ExistingOrMismatchingPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfPubkey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidLengthOfSignature\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NameCrossedMaxLength\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OperatorIsNotOnboarded\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PoolIdNotPresent\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyAlreadyExist\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"PubkeyDoesNotExit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"DeactivatedPool\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"PoolAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\"}],\"name\":\"PoolAddressUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_poolAddress\",\"type\":\"address\"}],\"name\":\"addNewPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_totalRewards\",\"type\":\"uint256\"}],\"name\":\"calculateRewardShare\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"userShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolShare\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getActiveValidatorCountByPool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getCollateralETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getOperatorFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"getOperatorPoolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_nodeOperator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_startIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endIndex\",\"type\":\"uint256\"}],\"name\":\"getOperatorTotalNonTerminalKeys\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolIdArray\",\"outputs\":[{\"internalType\":\"uint8[]\",\"name\":\"\",\"type\":\"uint8[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getProtocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getQueuedValidatorCountByPool\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"getSocializingPoolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalActiveValidatorCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"getValidatorPoolId\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operAddr\",\"type\":\"address\"}],\"name\":\"isExistingOperator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"isExistingPoolId\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"}],\"name\":\"isExistingPubkey\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_pubkey\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_preDepositSignature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_depositSignature\",\"type\":\"bytes\"}],\"name\":\"onlyValidKeys\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"name\":\"onlyValidName\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolAddressById\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"poolIdArray\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"address\",\"name\":\"_newPoolAddress\",\"type\":\"address\"}],\"name\":\"updatePoolAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // PoolUtilsABI is the input ABI used to generate the binding from.
@@ -375,37 +354,6 @@ func (_PoolUtils *PoolUtilsCallerSession) GetNodeRegistry(_poolId uint8) (common
 	return _PoolUtils.Contract.GetNodeRegistry(&_PoolUtils.CallOpts, _poolId)
 }
 
-// GetOperator is a free data retrieval call binding the contract method 0x53e89bc4.
-//
-// Solidity: function getOperator(uint8 _poolId, bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsCaller) GetOperator(opts *bind.CallOpts, _poolId uint8, _pubkey []byte) (Operator, error) {
-	var out []interface{}
-	err := _PoolUtils.contract.Call(opts, &out, "getOperator", _poolId, _pubkey)
-
-	if err != nil {
-		return *new(Operator), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(Operator)).(*Operator)
-
-	return out0, err
-
-}
-
-// GetOperator is a free data retrieval call binding the contract method 0x53e89bc4.
-//
-// Solidity: function getOperator(uint8 _poolId, bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsSession) GetOperator(_poolId uint8, _pubkey []byte) (Operator, error) {
-	return _PoolUtils.Contract.GetOperator(&_PoolUtils.CallOpts, _poolId, _pubkey)
-}
-
-// GetOperator is a free data retrieval call binding the contract method 0x53e89bc4.
-//
-// Solidity: function getOperator(uint8 _poolId, bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsCallerSession) GetOperator(_poolId uint8, _pubkey []byte) (Operator, error) {
-	return _PoolUtils.Contract.GetOperator(&_PoolUtils.CallOpts, _poolId, _pubkey)
-}
-
 // GetOperatorFee is a free data retrieval call binding the contract method 0xb0ef1e18.
 //
 // Solidity: function getOperatorFee(uint8 _poolId) view returns(uint256)
@@ -497,37 +445,6 @@ func (_PoolUtils *PoolUtilsSession) GetOperatorTotalNonTerminalKeys(_poolId uint
 // Solidity: function getOperatorTotalNonTerminalKeys(uint8 _poolId, address _nodeOperator, uint256 _startIndex, uint256 _endIndex) view returns(uint256)
 func (_PoolUtils *PoolUtilsCallerSession) GetOperatorTotalNonTerminalKeys(_poolId uint8, _nodeOperator common.Address, _startIndex *big.Int, _endIndex *big.Int) (*big.Int, error) {
 	return _PoolUtils.Contract.GetOperatorTotalNonTerminalKeys(&_PoolUtils.CallOpts, _poolId, _nodeOperator, _startIndex, _endIndex)
-}
-
-// GetPoolCount is a free data retrieval call binding the contract method 0x8eec5d70.
-//
-// Solidity: function getPoolCount() view returns(uint256)
-func (_PoolUtils *PoolUtilsCaller) GetPoolCount(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _PoolUtils.contract.Call(opts, &out, "getPoolCount")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// GetPoolCount is a free data retrieval call binding the contract method 0x8eec5d70.
-//
-// Solidity: function getPoolCount() view returns(uint256)
-func (_PoolUtils *PoolUtilsSession) GetPoolCount() (*big.Int, error) {
-	return _PoolUtils.Contract.GetPoolCount(&_PoolUtils.CallOpts)
-}
-
-// GetPoolCount is a free data retrieval call binding the contract method 0x8eec5d70.
-//
-// Solidity: function getPoolCount() view returns(uint256)
-func (_PoolUtils *PoolUtilsCallerSession) GetPoolCount() (*big.Int, error) {
-	return _PoolUtils.Contract.GetPoolCount(&_PoolUtils.CallOpts)
 }
 
 // GetPoolIdArray is a free data retrieval call binding the contract method 0xa92e1faf.
@@ -716,37 +633,6 @@ func (_PoolUtils *PoolUtilsCallerSession) GetTotalActiveValidatorCount() (*big.I
 	return _PoolUtils.Contract.GetTotalActiveValidatorCount(&_PoolUtils.CallOpts)
 }
 
-// GetValidatorByPool is a free data retrieval call binding the contract method 0x88169031.
-//
-// Solidity: function getValidatorByPool(uint8 _poolId, bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsCaller) GetValidatorByPool(opts *bind.CallOpts, _poolId uint8, _pubkey []byte) (Validator, error) {
-	var out []interface{}
-	err := _PoolUtils.contract.Call(opts, &out, "getValidatorByPool", _poolId, _pubkey)
-
-	if err != nil {
-		return *new(Validator), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(Validator)).(*Validator)
-
-	return out0, err
-
-}
-
-// GetValidatorByPool is a free data retrieval call binding the contract method 0x88169031.
-//
-// Solidity: function getValidatorByPool(uint8 _poolId, bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsSession) GetValidatorByPool(_poolId uint8, _pubkey []byte) (Validator, error) {
-	return _PoolUtils.Contract.GetValidatorByPool(&_PoolUtils.CallOpts, _poolId, _pubkey)
-}
-
-// GetValidatorByPool is a free data retrieval call binding the contract method 0x88169031.
-//
-// Solidity: function getValidatorByPool(uint8 _poolId, bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsCallerSession) GetValidatorByPool(_poolId uint8, _pubkey []byte) (Validator, error) {
-	return _PoolUtils.Contract.GetValidatorByPool(&_PoolUtils.CallOpts, _poolId, _pubkey)
-}
-
 // GetValidatorPoolId is a free data retrieval call binding the contract method 0xbda0bc89.
 //
 // Solidity: function getValidatorPoolId(bytes _pubkey) view returns(uint8)
@@ -838,6 +724,37 @@ func (_PoolUtils *PoolUtilsSession) IsExistingOperator(_operAddr common.Address)
 // Solidity: function isExistingOperator(address _operAddr) view returns(bool)
 func (_PoolUtils *PoolUtilsCallerSession) IsExistingOperator(_operAddr common.Address) (bool, error) {
 	return _PoolUtils.Contract.IsExistingOperator(&_PoolUtils.CallOpts, _operAddr)
+}
+
+// IsExistingPoolId is a free data retrieval call binding the contract method 0x6cdf1252.
+//
+// Solidity: function isExistingPoolId(uint8 _poolId) view returns(bool)
+func (_PoolUtils *PoolUtilsCaller) IsExistingPoolId(opts *bind.CallOpts, _poolId uint8) (bool, error) {
+	var out []interface{}
+	err := _PoolUtils.contract.Call(opts, &out, "isExistingPoolId", _poolId)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsExistingPoolId is a free data retrieval call binding the contract method 0x6cdf1252.
+//
+// Solidity: function isExistingPoolId(uint8 _poolId) view returns(bool)
+func (_PoolUtils *PoolUtilsSession) IsExistingPoolId(_poolId uint8) (bool, error) {
+	return _PoolUtils.Contract.IsExistingPoolId(&_PoolUtils.CallOpts, _poolId)
+}
+
+// IsExistingPoolId is a free data retrieval call binding the contract method 0x6cdf1252.
+//
+// Solidity: function isExistingPoolId(uint8 _poolId) view returns(bool)
+func (_PoolUtils *PoolUtilsCallerSession) IsExistingPoolId(_poolId uint8) (bool, error) {
+	return _PoolUtils.Contract.IsExistingPoolId(&_PoolUtils.CallOpts, _poolId)
 }
 
 // IsExistingPubkey is a free data retrieval call binding the contract method 0x36514d9f.
@@ -989,68 +906,6 @@ func (_PoolUtils *PoolUtilsSession) PoolIdArray(arg0 *big.Int) (uint8, error) {
 // Solidity: function poolIdArray(uint256 ) view returns(uint8)
 func (_PoolUtils *PoolUtilsCallerSession) PoolIdArray(arg0 *big.Int) (uint8, error) {
 	return _PoolUtils.Contract.PoolIdArray(&_PoolUtils.CallOpts, arg0)
-}
-
-// RetrieveOperator is a free data retrieval call binding the contract method 0xfd8a378b.
-//
-// Solidity: function retrieveOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsCaller) RetrieveOperator(opts *bind.CallOpts, _pubkey []byte) (Operator, error) {
-	var out []interface{}
-	err := _PoolUtils.contract.Call(opts, &out, "retrieveOperator", _pubkey)
-
-	if err != nil {
-		return *new(Operator), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(Operator)).(*Operator)
-
-	return out0, err
-
-}
-
-// RetrieveOperator is a free data retrieval call binding the contract method 0xfd8a378b.
-//
-// Solidity: function retrieveOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsSession) RetrieveOperator(_pubkey []byte) (Operator, error) {
-	return _PoolUtils.Contract.RetrieveOperator(&_PoolUtils.CallOpts, _pubkey)
-}
-
-// RetrieveOperator is a free data retrieval call binding the contract method 0xfd8a378b.
-//
-// Solidity: function retrieveOperator(bytes _pubkey) view returns((bool,bool,string,address,address))
-func (_PoolUtils *PoolUtilsCallerSession) RetrieveOperator(_pubkey []byte) (Operator, error) {
-	return _PoolUtils.Contract.RetrieveOperator(&_PoolUtils.CallOpts, _pubkey)
-}
-
-// RetrieveValidator is a free data retrieval call binding the contract method 0xb172d3b3.
-//
-// Solidity: function retrieveValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsCaller) RetrieveValidator(opts *bind.CallOpts, _pubkey []byte) (Validator, error) {
-	var out []interface{}
-	err := _PoolUtils.contract.Call(opts, &out, "retrieveValidator", _pubkey)
-
-	if err != nil {
-		return *new(Validator), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(Validator)).(*Validator)
-
-	return out0, err
-
-}
-
-// RetrieveValidator is a free data retrieval call binding the contract method 0xb172d3b3.
-//
-// Solidity: function retrieveValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsSession) RetrieveValidator(_pubkey []byte) (Validator, error) {
-	return _PoolUtils.Contract.RetrieveValidator(&_PoolUtils.CallOpts, _pubkey)
-}
-
-// RetrieveValidator is a free data retrieval call binding the contract method 0xb172d3b3.
-//
-// Solidity: function retrieveValidator(bytes _pubkey) view returns((uint8,bytes,bytes,bytes,address,uint256,uint256,uint256))
-func (_PoolUtils *PoolUtilsCallerSession) RetrieveValidator(_pubkey []byte) (Validator, error) {
-	return _PoolUtils.Contract.RetrieveValidator(&_PoolUtils.CallOpts, _pubkey)
 }
 
 // StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.

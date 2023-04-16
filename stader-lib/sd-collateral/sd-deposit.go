@@ -120,12 +120,3 @@ func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAd
 
 	return withdrawInfo, nil
 }
-
-func IsSdCollateralContractPaused(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (bool, error) {
-	isPaused, err := sdc.SdCollateral.Paused(opts)
-	if err != nil {
-		return false, err
-	}
-
-	return isPaused, nil
-}
