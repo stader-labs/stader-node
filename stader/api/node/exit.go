@@ -47,7 +47,10 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	}
 
 	res, err := bc.GetValidatorStatus(validatorPubKey, nil)
-	if err != nil || !res.Exists {
+	if err != nil {
+		return nil, err
+	}
+	if !res.Exists {
 		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
