@@ -88,7 +88,7 @@ func run(c *cli.Context) error {
 	}
 
 	// Handle the initial fee recipient file deployment
-	err := deployDefaultFeeRecipientFile(c)
+	err = deployDefaultFeeRecipientFile(c)
 	if err != nil {
 		return err
 	}
