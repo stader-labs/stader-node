@@ -207,10 +207,11 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 		}
 		if isClaimed {
 			claimedCycles = append(claimedCycles, cycle)
-			continue
+		} else {
+			unclaimedCycles = append(unclaimedCycles, cycle)
 		}
 
-		unclaimedCycles = append(unclaimedCycles, cycle)
+		// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
 		// check if this cycle has been downloaded
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)

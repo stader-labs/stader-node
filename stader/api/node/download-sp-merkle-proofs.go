@@ -68,6 +68,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 			continue
 		}
 
+		// download all cycles irrespective if the NO claim or not claimed.
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
 		_, err = os.Stat(cycleMerkleRewardFile)

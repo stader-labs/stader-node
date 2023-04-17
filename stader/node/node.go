@@ -181,7 +181,7 @@ func run(c *cli.Context) error {
 						continue
 					}
 					if stdr.IsValidatorTerminal(validatorInfo) {
-						errorLog.Printf("Validator pub key: %s is terminal\n", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
 						continue
 					}
 
