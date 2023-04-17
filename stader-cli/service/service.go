@@ -391,6 +391,9 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 			cfg = migratedConfig
 			isMigration = true
 		}
+		if err := installService(c); err != nil {
+			return nil, fmt.Errorf("error installService: %w", err)
+		}
 	}
 
 	// Check if this is a new install
