@@ -361,16 +361,22 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
 	}
-	_, err = os.Stat(path)
-	if os.IsNotExist(err) {
-		return nil, fmt.Errorf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
-	}
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return nil, err
 	}
 	defer staderClient.Close()
+
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
+
+		err = staderClient.InstallService(false, false, "prater", fmt.Sprintf("v%s", shared.StaderVersion), path, path)
+
+		if err != nil {
+			return nil, fmt.Errorf("error installService: %w", err)
+		}
+	}
 
 	// Load the config, checking to see if it's new (hasn't been installed before)
 	// var oldCfg *config.StaderConfig

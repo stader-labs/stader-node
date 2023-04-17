@@ -159,7 +159,18 @@ func configureService(c *cli.Context) error {
 		return nil
 	}
 
-	return staderClient.SaveConfig(newCg)
+	err = staderClient.SaveConfig(newCg)
+	if err != nil {
+		return fmt.Errorf("error SaveConfig: %w", err)
+	}
+
+	// Restart the services
+	err = startService(c, false)
+	if err != nil {
+		return fmt.Errorf("error startService: %w", err)
+	}
+
+	return nil
 }
 
 func handleUI(
