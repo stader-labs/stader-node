@@ -75,6 +75,7 @@ func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractMa
 	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
 }
 
+// TODO - bchain - make these inline structs into types
 func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (struct {
 	Status               uint8
 	Pubkey               []byte

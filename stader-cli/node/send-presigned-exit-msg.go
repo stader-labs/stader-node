@@ -26,7 +26,7 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 		return err
 	}
 	if canSendPresignedMsgRes.ValidatorNotRegistered {
-		fmt.Println("Validator not registered!")
+		fmt.Println("Validator not registered on beacon chain!")
 		return nil
 	}
 	if canSendPresignedMsgRes.ValidatorPreSignKeyAlreadyRegistered {
@@ -35,6 +35,14 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 	}
 	if canSendPresignedMsgRes.ValidatorIsNotActive {
 		fmt.Println("Validator is not active")
+		return nil
+	}
+	if canSendPresignedMsgRes.OperatorNotRegistered {
+		fmt.Println("Operator not registered!")
+		return nil
+	}
+	if canSendPresignedMsgRes.ValidatorNotRegisteredWithStader {
+		fmt.Println("Validator not registered with stader!")
 		return nil
 	}
 

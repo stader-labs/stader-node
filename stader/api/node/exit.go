@@ -37,6 +37,12 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	// Response
 	response := api.CanExitValidatorResponse{}
 
+	// check if the validator is key is available to sign the exit message
+	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
+	if err != nil {
+		return nil, err
+	}
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err

@@ -20,6 +20,7 @@ type NodeStatusResponse struct {
 	AccountAddressFormatted         string               `json:"accountAddressFormatted"`
 	OperatorId                      *big.Int             `json:"operatorId"`
 	OperatorName                    string               `json:"operatorName"`
+	OperatorActive                  bool                 `json:"operatorActive"`
 	OperatorRewardAddress           common.Address       `json:"operatorRewardAddress"`
 	OperatorRewardInETH             *big.Int             `json:"operatorRewardInETH"`
 	OptedInForSocializingPool       bool                 `json:"optedInForSocializingPool"`
@@ -170,7 +171,6 @@ type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
 	OperatorNotRegistered  bool   `json:"operatorNotRegistered"`
-	OperatorNotActive      bool   `json:"operatorNotActive"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	ValidatorExiting       bool   `json:"validatorExiting"`

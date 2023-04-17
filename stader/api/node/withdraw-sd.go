@@ -63,7 +63,27 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 		effectiveOperatorSdCollateralBalance = operatorSdCollateral.Sub(operatorSdCollateral, withdrawReq.TotalSDWithdrawReqAmount)
 	}
 
-	if effectiveOperatorSdCollateralBalance.Cmp(amountWei) < 0 {
+	totalKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	nonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+	if err != nil {
+		return nil, err
+	}
+	withdrawThreshold := poolThreshold.WithdrawThreshold.Mul(poolThreshold.WithdrawThreshold, big.NewInt(int64(nonTerminalKeys)))
+	withdrawThresholdInSd, err := sd_collateral.ConvertEthToSd(sdc, withdrawThreshold, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	thresholdSdRequiredToWithdraw := withdrawThresholdInSd.Add(withdrawThresholdInSd, amountWei)
+
+	if effectiveOperatorSdCollateralBalance.Cmp(thresholdSdRequiredToWithdraw) < 0 {
 		response.InsufficientSdCollateral = true
 		return &response, nil
 	}

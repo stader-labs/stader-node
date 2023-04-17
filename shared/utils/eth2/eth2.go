@@ -29,10 +29,14 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 }
 
 func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
+	//fmt.Printf("Validator status: %v", validatorStatus)
 	switch validatorStatus.Status {
 	case beacon.ValidatorState_PendingInitialized:
+		return false
 	case beacon.ValidatorState_PendingQueued:
+		return false
 	case beacon.ValidatorState_ActiveOngoing:
+		return false
 	case beacon.ValidatorState_ActiveSlashed:
 		return false
 	}
@@ -43,6 +47,8 @@ func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
 func IsValidatorActive(validatorStatus beacon.ValidatorStatus) bool {
 	switch validatorStatus.Status {
 	case beacon.ValidatorState_ActiveOngoing:
+		return true
+	case beacon.ValidatorState_ActiveSlashed:
 		return true
 	}
 

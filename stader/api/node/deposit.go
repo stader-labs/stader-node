@@ -202,8 +202,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	// Do not send transaction unless requested
 	opts.NoSend = !submit
 
-	// TODO - bchain - check for max keys limit
-
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err

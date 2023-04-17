@@ -24,7 +24,6 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 
-	// Get stake mount
 	amountInString := c.String("amount")
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {

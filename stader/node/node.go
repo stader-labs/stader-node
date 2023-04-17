@@ -175,9 +175,13 @@ func run(c *cli.Context) error {
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
 
-					_, registered := registeredValidators[validatorPubKey]
+					validatorInfo, registered := registeredValidators[validatorPubKey]
 					if !registered {
 						errorLog.Printf("Validator pub key: %s not registered with stader\n", validatorPubKey)
+						continue
+					}
+					if stdr.IsValidatorTerminal(validatorInfo) {
+						errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
 						continue
 					}
 
@@ -189,7 +193,7 @@ func run(c *cli.Context) error {
 					}
 					// check if validator is already in an exiting phase, then no point sending a pre-signed message
 					if eth2.IsValidatorExiting(validatorStatus) {
-						errorLog.Printf("Validator pub key: %s already exiting", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s already exiting or exited with status %s", validatorPubKey, validatorStatus.Status)
 						continue
 					}
 
