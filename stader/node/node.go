@@ -75,20 +75,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 // Run daemon
 func run(c *cli.Context) error {
 
-	// wait for eth1 and eth2 clients to sync
-	err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-	if err != nil {
-		return err
-	}
-
-	// Check the BC status
-	err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-	if err != nil {
-		return err
-	}
-
 	// Handle the initial fee recipient file deployment
-	err = deployDefaultFeeRecipientFile(c)
+	err := deployDefaultFeeRecipientFile(c)
 	if err != nil {
 		return err
 	}
@@ -219,7 +207,7 @@ func run(c *cli.Context) error {
 					// check if the presigned message has been registered. if it has been registered, then continue
 					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
 					if isRegistered {
-						errorLog.Printf("Validator pub key: %s already registered\n", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
 						continue
 					} else if err != nil {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
