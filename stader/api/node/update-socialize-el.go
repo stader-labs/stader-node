@@ -105,13 +105,6 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 
 func updateSocializeEl(c *cli.Context, socializeEl bool) (*api.UpdateSocializeElResponse, error) {
 
-	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireBeaconClientSynced(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
