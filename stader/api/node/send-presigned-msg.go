@@ -120,7 +120,6 @@ func sendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	// exit epoch should be > current epoch
 	exitEpoch := currentHead.Epoch
 
 	signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
