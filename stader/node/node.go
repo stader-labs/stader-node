@@ -134,11 +134,13 @@ func run(c *cli.Context) error {
 			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
 			if err != nil {
 				errorLog.Println(err)
+				continue
 			} else {
 				// Check the BC status
 				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
 				if err != nil {
 					errorLog.Println(err)
+					continue
 				}
 			}
 
