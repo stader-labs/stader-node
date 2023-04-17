@@ -382,6 +382,9 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	// Check to see if this is a migration from a legacy config
 	isMigration := false
 	if isNew {
+		if err := installService(c); err != nil {
+			return nil, fmt.Errorf("error installService: %w", err)
+		}
 		// Look for a legacy config to migrate
 		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
 		if err != nil {
@@ -390,9 +393,6 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 		if migratedConfig != nil {
 			cfg = migratedConfig
 			isMigration = true
-		}
-		if err := installService(c); err != nil {
-			return nil, fmt.Errorf("error installService: %w", err)
 		}
 	}
 
