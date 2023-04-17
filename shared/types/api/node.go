@@ -170,7 +170,6 @@ type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
 	OperatorNotRegistered  bool   `json:"operatorNotRegistered"`
-	OperatorNotActive      bool   `json:"operatorNotActive"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	ValidatorExiting       bool   `json:"validatorExiting"`
