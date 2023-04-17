@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package eth2
 
 import (
+	"fmt"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 )
 
@@ -29,6 +30,7 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 }
 
 func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
+	fmt.Printf("Validator status: %v", validatorStatus)
 	switch validatorStatus.Status {
 	case beacon.ValidatorState_PendingInitialized:
 	case beacon.ValidatorState_PendingQueued:
