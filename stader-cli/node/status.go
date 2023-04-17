@@ -115,7 +115,11 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
-	fmt.Printf("Operator Status: %t\n\n", status.OperatorActive)
+	if status.OperatorActive {
+		fmt.Printf("Operator Status: Active\n\n")
+	} else {
+		fmt.Printf("Operator Status: Not Active\n\n")
+	}
 	fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 	if status.OperatorELRewardsAddressBalance.Int64() > 0 {
 		fmt.Printf("Operator El Reward Share from Personal Fee Recepient: %.6f\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 18))
