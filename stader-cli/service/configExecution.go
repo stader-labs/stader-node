@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
-	"fmt"
 	"strings"
 
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
@@ -30,7 +29,6 @@ import (
 func updateExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	// update the execution client
 	executionMod := makeCfgExecutionMode(newSettings[keys.E1ec_execution_and_consensus_mode])
-	fmt.Printf("executionMod is [%+v]", executionMod)
 	cfg.ExecutionClientMode.Value = executionMod
 
 	if err := updateExternalExecutionClient(cfg, newSettings); err != nil {
