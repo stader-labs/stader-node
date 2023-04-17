@@ -75,6 +75,18 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 // Run daemon
 func run(c *cli.Context) error {
 
+	// wait for eth1 and eth2 clients to sync
+	err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+	if err != nil {
+		return err
+	}
+
+	// Check the BC status
+	err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+	if err != nil {
+		return err
+	}
+
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
 	if err != nil {
