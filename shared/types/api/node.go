@@ -20,6 +20,7 @@ type NodeStatusResponse struct {
 	AccountAddressFormatted         string               `json:"accountAddressFormatted"`
 	OperatorId                      *big.Int             `json:"operatorId"`
 	OperatorName                    string               `json:"operatorName"`
+	OperatorActive                  bool                 `json:"operatorActive"`
 	OperatorRewardAddress           common.Address       `json:"operatorRewardAddress"`
 	OperatorRewardInETH             *big.Int             `json:"operatorRewardInETH"`
 	OptedInForSocializingPool       bool                 `json:"optedInForSocializingPool"`
