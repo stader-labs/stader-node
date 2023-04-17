@@ -371,9 +371,9 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	if os.IsNotExist(err) {
 		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
 
-		staderClient.InstallService(false, false, "prater", fmt.Sprintf("v%s", shared.StaderVersion), path, path)
+		err = staderClient.InstallService(false, false, "prater", fmt.Sprintf("v%s", shared.StaderVersion), path, path)
 
-		if err := installService(c); err != nil {
+		if err != nil {
 			return nil, fmt.Errorf("error installService: %w", err)
 		}
 	}
