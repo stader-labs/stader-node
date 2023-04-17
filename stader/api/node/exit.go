@@ -82,13 +82,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 
 func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.ExitValidatorResponse, error) {
 
-	// Get services
-	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireBeaconClientSynced(c); err != nil {
-		return nil, err
-	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
