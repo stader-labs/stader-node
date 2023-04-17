@@ -200,8 +200,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				CrossedRewardsThreshold:          crossedRewardThreshold,
 				WithdrawVaultWithdrawableBalance: validatorWithdrawVaultWithdrawShares,
 				OperatorId:                       validatorContractInfo.OperatorId,
-				DepositTime:                      validatorContractInfo.DepositBlock,
-				WithdrawnTime:                    validatorContractInfo.WithdrawnBlock,
+				DepositBlock:                     validatorContractInfo.DepositBlock,
+				WithdrawnBlock:                   validatorContractInfo.WithdrawnBlock,
 			}
 
 			validatorInfoArray[i] = validatorInfo

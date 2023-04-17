@@ -157,7 +157,7 @@ func getStatus(c *cli.Context) error {
 		}
 
 		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositTime)
+			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositBlock)
 		}
 
 		// Validator has withdrawn
@@ -166,7 +166,7 @@ func getStatus(c *cli.Context) error {
 				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
 				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
 			}
-			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnTime)
+			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnBlock)
 		}
 		fmt.Printf("\n\n")
 	}

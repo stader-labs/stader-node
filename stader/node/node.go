@@ -175,9 +175,13 @@ func run(c *cli.Context) error {
 					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
 					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
 
-					_, registered := registeredValidators[validatorPubKey]
+					validatorInfo, registered := registeredValidators[validatorPubKey]
 					if !registered {
-						errorLog.Printf("Validator pub key: %s not registered with stader\n", validatorPubKey)
+						errorLog.Printf("Validator pub key: %s not registered with stader or is terminal\n", validatorPubKey)
+						continue
+					}
+					if stdr.IsValidatorTerminal(validatorInfo) {
+						errorLog.Printf("Validator pub key: %s is terminal\n", validatorPubKey)
 						continue
 					}
 
