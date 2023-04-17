@@ -193,7 +193,7 @@ func run(c *cli.Context) error {
 					}
 					// check if validator is already in an exiting phase, then no point sending a pre-signed message
 					if eth2.IsValidatorExiting(validatorStatus) {
-						errorLog.Printf("Validator pub key: %s already exiting with status %s", validatorPubKey, validatorStatus.Status)
+						errorLog.Printf("Validator pub key: %s already exiting or exited with status %s", validatorPubKey, validatorStatus.Status)
 						continue
 					}
 
