@@ -66,18 +66,6 @@ func run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	updateLog := log.NewColorLogger(UpdateColor)
 
-	// wait for eth1 and eth2 clients to sync
-	err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-	if err != nil {
-		return err
-	}
-
-	// Check the BC status
-	err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-	if err != nil {
-		return err
-	}
-
 	// Configure
 	configureHTTP()
 
