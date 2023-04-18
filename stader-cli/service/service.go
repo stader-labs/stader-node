@@ -352,29 +352,26 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 }
 
 // Configure the service
-func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
-
+func loadConfig(c *cli.Context) (*config.StaderConfig, string, error) {
+	landingUI := "configuration"
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
 	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
-		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
+		return nil, landingUI, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
 	}
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return nil, err
+		return nil, landingUI, err
 	}
 	defer staderClient.Close()
 
 	_, err = os.Stat(path)
 	if os.IsNotExist(err) {
 		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
-
-		err = staderClient.InstallService(false, false, "prater", fmt.Sprintf("v%s", shared.StaderVersion), path, path)
-
 		if err != nil {
-			return nil, fmt.Errorf("error installService: %w", err)
+			return nil, landingUI, fmt.Errorf("error installService: %w", err)
 		}
 	}
 
@@ -382,16 +379,17 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	// var oldCfg *config.StaderConfig
 	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
-		return nil, fmt.Errorf("error loading user settings: %w", err)
+		return nil, landingUI, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	// Check to see if this is a migration from a legacy config
 	isMigration := false
 	if isNew {
+		landingUI = "wizard"
 		// Look for a legacy config to migrate
 		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
 		if err != nil {
-			return nil, err
+			return nil, landingUI, err
 		}
 		if migratedConfig != nil {
 			cfg = migratedConfig
@@ -402,7 +400,7 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	// Check if this is a new install
 	isUpdate, err := staderClient.IsFirstRun()
 	if err != nil {
-		return nil, fmt.Errorf("error checking for first-run status: %w", err)
+		return nil, landingUI, fmt.Errorf("error checking for first-run status: %w", err)
 	}
 
 	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
@@ -411,7 +409,7 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 		cfg = cfg.CreateCopy()
 		err = cfg.UpdateDefaults()
 		if err != nil {
-			return nil, fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
+			return nil, landingUI, fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 		}
 	}
 
@@ -419,11 +417,11 @@ func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	if c.NumFlags() > 0 {
 		err := configureHeadless(c, cfg)
 		if err != nil {
-			return nil, fmt.Errorf("error updating config from provided arguments: %w", err)
+			return nil, landingUI, fmt.Errorf("error updating config from provided arguments: %w", err)
 		}
-		return nil, staderClient.SaveConfig(cfg)
+		return nil, landingUI, staderClient.SaveConfig(cfg)
 	}
-	return cfg, nil
+	return cfg, landingUI, nil
 }
 
 // Updates a configuration from the provided CLI arguments headlessly

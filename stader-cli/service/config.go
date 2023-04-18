@@ -142,12 +142,12 @@ func configureService(c *cli.Context) error {
 	}
 	defer staderClient.Close()
 
-	cfg, err := loadConfig(c)
+	cfg, landingUI, err := loadConfig(c)
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	saved, newCg, err := handleUI("configuration", cfg)
+	saved, newCg, err := handleUI(landingUI, cfg)
 
 	if err != nil {
 		fmt.Printf("Error from parsing UI to config model %+v", err)
