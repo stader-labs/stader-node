@@ -16,7 +16,7 @@
 #stader
 #stader-cli
 #.vscode
-#.DS_Store
+.DS_Store
 #stader-cli/stader-cli
 
 *.log
