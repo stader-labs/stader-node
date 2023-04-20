@@ -25,10 +25,10 @@ func registerNode(c *cli.Context, operatorName string, socializeEl bool) error {
 	}
 
 	// Check and assign the EC status
-	//err = cliutils.CheckClientStatus(staderClient)
-	//if err != nil {
-	//	return err
-	//}
+	err = cliutils.CheckClientStatus(staderClient)
+	if err != nil {
+		return err
+	}
 
 	operatorRewardAddressString := c.String("operator-reward-address")
 	if operatorRewardAddressString == "" {
