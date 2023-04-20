@@ -3,7 +3,7 @@ package collector
 const namespace = "stader"
 
 // Validator rewards & performance => stader_validator_rewards_performance + key
-const ValidatorSub = "validator_rewards_performance"
+const RewardSub = "rewards"
 
 const ActiveValidators = "active_validators"   //GetAllActiveValidators _PermissionlessNodeRegistry
 const QueuedValidators = "queued_validators"   //QueuedValidators _PermissionlessNodeRegistry

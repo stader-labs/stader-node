@@ -2,6 +2,9 @@ package state
 
 import (
 	"fmt"
+	"math/big"
+	"time"
+
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -10,8 +13,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -24,6 +25,31 @@ type NetworkDetails struct {
 	TotalStakedEthByNos   *big.Int
 	TotalEthxSupply       *big.Int
 	TotalStakedEthByUsers *big.Int
+
+	ActiveValidators                  *big.Int
+	QueuedValidators                  *big.Int
+	SlashedValidators                 *big.Int
+	TotalETHBonded                    *big.Int
+	TotalSDBonded                     *big.Int
+	SdCollateral                      *big.Int
+	BeaconchainReward                 *big.Int
+	ElReward                          *big.Int
+	SDReward                          *big.Int
+	ETHAPR                            *big.Int
+	SDAPR                             *big.Int
+	CumulativePenalty                 *big.Int
+	ClaimedBeaconchainRewards         *big.Int
+	ClaimedELRewards                  *big.Int
+	ClaimedSDrewards                  *big.Int
+	UnclaimedELRewards                *big.Int
+	UnclaimedSDRewards                *big.Int
+	NextSDOrELAndSDRewardsCheckpoint  *big.Int
+	TotalAttestations                 *big.Int
+	AttestationPercent                *big.Int
+	BlocksProduced                    *big.Int
+	BlocksProducedPercent             *big.Int
+	AttestationInclusionEffectiveness *big.Int
+	UptimePercent                     *big.Int
 }
 
 type NetworkStateCache struct {
@@ -153,6 +179,31 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 	networkDetails.TotalEthxSupply = ethxSupply
 	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+
+	networkDetails.ActiveValidators = totalOperators
+	networkDetails.QueuedValidators = totalOperators
+	networkDetails.SlashedValidators = totalOperators
+	networkDetails.TotalETHBonded = ethxSupply
+	networkDetails.TotalSDBonded = sdPrice
+	networkDetails.SdCollateral = sdPrice
+	networkDetails.BeaconchainReward = sdPrice
+	networkDetails.ElReward = sdPrice
+	networkDetails.SDReward = sdPrice
+	networkDetails.ETHAPR = sdPrice
+	networkDetails.SDAPR = sdPrice
+	networkDetails.CumulativePenalty = sdPrice
+	networkDetails.ClaimedBeaconchainRewards = sdPrice
+	networkDetails.ClaimedELRewards = sdPrice
+	networkDetails.ClaimedSDrewards = sdPrice
+	networkDetails.UnclaimedELRewards = sdPrice
+	networkDetails.UnclaimedSDRewards = sdPrice
+	networkDetails.NextSDOrELAndSDRewardsCheckpoint = sdPrice
+	networkDetails.TotalAttestations = sdPrice
+	networkDetails.AttestationPercent = sdPrice
+	networkDetails.BlocksProduced = sdPrice
+	networkDetails.BlocksProducedPercent = sdPrice
+	networkDetails.AttestationInclusionEffectiveness = sdPrice
+	networkDetails.UptimePercent = sdPrice
 
 	state.StaderNetworkDetails = networkDetails
 

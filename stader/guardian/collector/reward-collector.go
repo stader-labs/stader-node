@@ -63,58 +63,58 @@ func NewRewardCollector(
 ) *RewardCollector {
 	return &RewardCollector{
 		ActiveValidators: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ActiveValidators), "", nil, nil,
+			prometheus.BuildFQName(namespace, RewardSub, ActiveValidators), "", nil, nil,
 		),
 		QueuedValidators: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, QueuedValidators), "", nil, nil,
+			prometheus.BuildFQName(namespace, RewardSub, QueuedValidators), "", nil, nil,
 		),
 		SlashedValidators: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, SlashedValidators), "", nil, nil,
+			prometheus.BuildFQName(namespace, RewardSub, SlashedValidators), "", nil, nil,
 		),
 		TotalETHBonded: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, TotalETHBonded), "", nil, nil,
+			prometheus.BuildFQName(namespace, RewardSub, TotalETHBonded), "", nil, nil,
 		),
 		TotalSDBonded: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, TotalSDBonded), "", nil, nil,
+			prometheus.BuildFQName(namespace, RewardSub, TotalSDBonded), "", nil, nil,
 		),
 		SdCollateral: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, SdCollateral), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, SdCollateral), "", nil, nil),
 		BeaconchainReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, BeaconchainReward), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, BeaconchainReward), "", nil, nil),
 		ElReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ElReward), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, ElReward), "", nil, nil),
 		SDReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, SDReward), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, SDReward), "", nil, nil),
 		ETHAPR: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ETHAPR), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, ETHAPR), "", nil, nil),
 		SDAPR: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, SDAPR), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, SDAPR), "", nil, nil),
 		CumulativePenalty: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, CumulativePenalty), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, CumulativePenalty), "", nil, nil),
 		ClaimedBeaconchainRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ClaimedBeaconchainRewards), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, ClaimedBeaconchainRewards), "", nil, nil),
 		ClaimedELRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ClaimedELRewards), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, ClaimedELRewards), "", nil, nil),
 		ClaimedSDrewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, ClaimedSDrewards), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, ClaimedSDrewards), "", nil, nil),
 		UnclaimedELRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, UnclaimedELRewards), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, UnclaimedELRewards), "", nil, nil),
 		UnclaimedSDRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, UnclaimedSDRewards), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, UnclaimedSDRewards), "", nil, nil),
 		NextSDOrELAndSDRewardsCheckpoint: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, NextSDOrELAndSDRewardsCheckpoint), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, NextSDOrELAndSDRewardsCheckpoint), "", nil, nil),
 		TotalAttestations: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, TotalAttestations), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, TotalAttestations), "", nil, nil),
 		AttestationPercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, AttestationPercent), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, AttestationPercent), "", nil, nil),
 		BlocksProduced: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, BlocksProduced), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, BlocksProduced), "", nil, nil),
 		BlocksProducedPercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, BlocksProducedPercent), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, BlocksProducedPercent), "", nil, nil),
 		AttestationInclusionEffectiveness: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, AttestationInclusionEffectiveness), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, AttestationInclusionEffectiveness), "", nil, nil),
 		UptimePercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, ValidatorSub, UptimePercent), "", nil, nil),
+			prometheus.BuildFQName(namespace, RewardSub, UptimePercent), "", nil, nil),
 
 		bc:          bc,
 		ec:          ec,
@@ -159,31 +159,30 @@ func (collector *RewardCollector) Collect(channel chan<- prometheus.Metric) {
 	state := collector.stateLocker.GetState()
 
 	fmt.Printf("%+v", state)
-	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.TotalETHBonded, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDBonded, prometheus.GaugeValue, float64(9696969))
-
-	channel <- prometheus.MustNewConstMetric(collector.SdCollateral, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.BeaconchainReward, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.ElReward, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.SDReward, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.ETHAPR, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.SDAPR, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedBeaconchainRewards, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedELRewards, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedSDrewards, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedELRewards, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSDRewards, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.NextSDOrELAndSDRewardsCheckpoint, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.TotalAttestations, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.AttestationPercent, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.BlocksProduced, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.BlocksProducedPercent, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.AttestationInclusionEffectiveness, prometheus.GaugeValue, float64(8888))
-	channel <- prometheus.MustNewConstMetric(collector.UptimePercent, prometheus.GaugeValue, float64(8888))
+	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ActiveValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.TotalETHBonded, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalETHBonded.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDBonded, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalSDBonded.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.SdCollateral, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SdCollateral.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.BeaconchainReward, prometheus.GaugeValue, float64(state.StaderNetworkDetails.BeaconchainReward.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ElReward, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ElReward.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.SDReward, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SDReward.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ETHAPR, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ETHAPR.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.SDAPR, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SDAPR.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(state.StaderNetworkDetails.CumulativePenalty.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedBeaconchainRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedBeaconchainRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedELRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedELRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSDrewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSDrewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedELRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedELRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSDRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSDRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.NextSDOrELAndSDRewardsCheckpoint, prometheus.GaugeValue, float64(state.StaderNetworkDetails.NextSDOrELAndSDRewardsCheckpoint.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.TotalAttestations, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalAttestations.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.AttestationPercent, prometheus.GaugeValue, float64(state.StaderNetworkDetails.AttestationPercent.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.BlocksProduced, prometheus.GaugeValue, float64(state.StaderNetworkDetails.BlocksProduced.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.BlocksProducedPercent, prometheus.GaugeValue, float64(state.StaderNetworkDetails.BlocksProducedPercent.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.AttestationInclusionEffectiveness, prometheus.GaugeValue, float64(state.StaderNetworkDetails.AttestationInclusionEffectiveness.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UptimePercent, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UptimePercent.Int64()))
 }
 
 // Log error messages
