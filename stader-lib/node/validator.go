@@ -2,11 +2,12 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"math/big"
 )
 
 func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
@@ -134,4 +135,26 @@ func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManage
 
 func GetNextValidatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.NextValidatorId(opts)
+}
+
+func GetActiveValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetTotalActiveValidatorCount(opts)
+}
+
+func GetQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetTotalQueuedValidatorCount(opts)
+}
+
+// TODO
+func GetSlashedValidator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	vals, err := pnr.PermissionlessNodeRegistry.GetAllActiveValidators(opts, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return big.NewInt(int64(len(vals))), nil
+}
+
+func GetCollateralETH(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetCollateralETH(opts)
 }

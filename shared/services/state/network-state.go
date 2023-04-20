@@ -85,6 +85,10 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 		return nil, err
 	}
 
+	vf, err := stader.NewVaultFactory(ec, cfg.GetVaultFactoryAddress())
+	if err != nil {
+		return nil, err
+	}
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
 	if err != nil {
@@ -180,30 +184,66 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 
-	networkDetails.ActiveValidators = totalOperators
-	networkDetails.QueuedValidators = totalOperators
-	networkDetails.SlashedValidators = totalOperators
-	networkDetails.TotalETHBonded = ethxSupply
-	networkDetails.TotalSDBonded = sdPrice
-	networkDetails.SdCollateral = sdPrice
-	networkDetails.BeaconchainReward = sdPrice
-	networkDetails.ElReward = sdPrice
-	networkDetails.SDReward = sdPrice
-	networkDetails.ETHAPR = sdPrice
-	networkDetails.SDAPR = sdPrice
-	networkDetails.CumulativePenalty = sdPrice
-	networkDetails.ClaimedBeaconchainRewards = sdPrice
-	networkDetails.ClaimedELRewards = sdPrice
-	networkDetails.ClaimedSDrewards = sdPrice
-	networkDetails.UnclaimedELRewards = sdPrice
-	networkDetails.UnclaimedSDRewards = sdPrice
-	networkDetails.NextSDOrELAndSDRewardsCheckpoint = sdPrice
-	networkDetails.TotalAttestations = sdPrice
-	networkDetails.AttestationPercent = sdPrice
-	networkDetails.BlocksProduced = sdPrice
-	networkDetails.BlocksProducedPercent = sdPrice
-	networkDetails.AttestationInclusionEffectiveness = sdPrice
-	networkDetails.UptimePercent = sdPrice
+	activeValidators, err := node.GetActiveValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	queuedValidators, err := node.GetQueuedValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO
+	slashedValidators, err := node.GetSlashedValidator(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalETHBonded, err := node.GetCollateralETH(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalSDBonded, err := node.GetCollateralETH(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	elRewardBalance, err := tokens.GetEthBalance(ec, operatorElRewardAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	networkDetails.ActiveValidators = activeValidators // OK
+	networkDetails.QueuedValidators = queuedValidators // OK
+
+	networkDetails.SlashedValidators = slashedValidators // CHECK
+	networkDetails.TotalETHBonded = totalETHBonded       // CHECK
+	networkDetails.TotalSDBonded = totalSDBonded         // CHECK
+
+	networkDetails.SdCollateral = totalSdCollateral                      // OK
+	networkDetails.BeaconchainReward = totalSdCollateral                 // CHECK
+	networkDetails.ElReward = elRewardBalance                            // OK
+	networkDetails.SDReward = totalSdCollateral                          // CHECK
+	networkDetails.ETHAPR = totalSdCollateral                            // CHECK
+	networkDetails.SDAPR = totalSdCollateral                             // CHECK
+	networkDetails.CumulativePenalty = totalSdCollateral                 // CHECK
+	networkDetails.ClaimedBeaconchainRewards = totalSdCollateral         // CHECK
+	networkDetails.ClaimedELRewards = totalSdCollateral                  // CHECK
+	networkDetails.ClaimedSDrewards = totalSdCollateral                  // CHECK
+	networkDetails.UnclaimedELRewards = totalSdCollateral                // CHECK
+	networkDetails.UnclaimedSDRewards = totalSdCollateral                // CHECK
+	networkDetails.NextSDOrELAndSDRewardsCheckpoint = totalSdCollateral  // CHECK
+	networkDetails.TotalAttestations = totalSdCollateral                 // CHECK
+	networkDetails.AttestationPercent = totalSdCollateral                // CHECK
+	networkDetails.BlocksProduced = totalSdCollateral                    // CHECK
+	networkDetails.BlocksProducedPercent = totalSdCollateral             // CHECK
+	networkDetails.AttestationInclusionEffectiveness = totalSdCollateral // CHECK
+	networkDetails.UptimePercent = totalSdCollateral                     // CHECK
 
 	state.StaderNetworkDetails = networkDetails
 
