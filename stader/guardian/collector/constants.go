@@ -4,9 +4,10 @@ const namespace = "stader"
 
 // Validator rewards & performance => stader_validator_rewards_performance + key
 const ValidatorSub = "validator_rewards_performance"
-const ActiveValidators = "active_validators"
-const QueuedValidators = "queued_validators"
-const SlashedValidators = "slashed_validators"
+
+const ActiveValidators = "active_validators"   //GetAllActiveValidators _PermissionlessNodeRegistry
+const QueuedValidators = "queued_validators"   //QueuedValidators _PermissionlessNodeRegistry
+const SlashedValidators = "slashed_validators" //GetValidatorStatus
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"
 const SdCollateral = "sd_collateral"

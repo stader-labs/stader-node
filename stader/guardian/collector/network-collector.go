@@ -35,13 +35,6 @@ type NetworkCollector struct {
 	// Total EthX supply
 	TotalEthxSupply *prometheus.Desc
 
-	ValidatorSub      *prometheus.Desc
-	ActiveValidators  *prometheus.Desc
-	QueuedValidators  *prometheus.Desc
-	SlashedValidators *prometheus.Desc
-	TotalETHBonded    *prometheus.Desc
-	TotalSDBonded     *prometheus.Desc
-
 	// The beacon client
 	bc beacon.Client
 
@@ -90,16 +83,11 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The total amount of SD staked as collateral",
 			nil, nil,
 		),
-		ActiveValidators:  prometheus.NewDesc(prometheus.BuildFQName(namespace, ValidatorSub, ActiveValidators), "", nil, nil),
-		QueuedValidators:  prometheus.NewDesc(prometheus.BuildFQName(namespace, ValidatorSub, QueuedValidators), "", nil, nil),
-		SlashedValidators: prometheus.NewDesc(prometheus.BuildFQName(namespace, ValidatorSub, SlashedValidators), "", nil, nil),
-		TotalETHBonded:    prometheus.NewDesc(prometheus.BuildFQName(namespace, ValidatorSub, TotalETHBonded), "", nil, nil),
-		TotalSDBonded:     prometheus.NewDesc(prometheus.BuildFQName(namespace, ValidatorSub, TotalSDBonded), "", nil, nil),
-		bc:                bc,
-		ec:                ec,
-		nodeAddress:       nodeAddress,
-		stateLocker:       stateLocker,
-		logPrefix:         "Network Collector",
+		bc:          bc,
+		ec:          ec,
+		nodeAddress: nodeAddress,
+		stateLocker: stateLocker,
+		logPrefix:   "Network Collector",
 	}
 }
 
@@ -112,13 +100,6 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalStakedEthByUsers
 	channel <- collector.TotalStakedEthByNos
 	channel <- collector.TotalStakedSd
-
-	channel <- collector.ValidatorSub
-	channel <- collector.ActiveValidators
-	channel <- collector.QueuedValidators
-	channel <- collector.SlashedValidators
-	channel <- collector.TotalETHBonded
-	channel <- collector.TotalSDBonded
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -140,13 +121,6 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
-
-	channel <- prometheus.MustNewConstMetric(collector.ValidatorSub, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.TotalETHBonded, prometheus.GaugeValue, float64(9696969))
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDBonded, prometheus.GaugeValue, float64(9696969))
 }
 
 // Log error messages
