@@ -236,9 +236,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		permissionlessPoolAddress: map[config.Network]string{
-			config.Network_Devnet:   "0x931286f773593D1c07fBF8f9f9c3B4B8E93417c2",
-			config.Network_Prater:   "0x931286f773593D1c07fBF8f9f9c3B4B8E93417c2",
-			config.Network_Mainnet:  "0x931286f773593D1c07fBF8f9f9c3B4B8E93417c2",
+			config.Network_Devnet:   "0x9359f5D90F979eAa9C9b3d204c319AC1B18aEA31",
+			config.Network_Prater:   "0x9359f5D90F979eAa9C9b3d204c319AC1B18aEA31",
+			config.Network_Mainnet:  "0x9359f5D90F979eAa9C9b3d204c319AC1B18aEA31",
 			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
 		},
 

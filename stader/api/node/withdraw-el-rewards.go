@@ -43,7 +43,7 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Uint64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}

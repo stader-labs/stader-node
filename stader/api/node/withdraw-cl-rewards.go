@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanWithdrawClRewardsResponse, error) {
@@ -44,7 +45,7 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}

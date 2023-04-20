@@ -11,7 +11,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
 
-func registerNode(c *cli.Context) error {
+func registerNode(c *cli.Context, operatorName string, socializeEl bool) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -30,12 +30,10 @@ func registerNode(c *cli.Context) error {
 		return err
 	}
 
-	operatorName := c.String("operator-name")
 	operatorRewardAddressString := c.String("operator-reward-address")
 	if operatorRewardAddressString == "" {
 		operatorRewardAddressString = walletStatus.AccountAddress.String()
 	}
-	socializeEl := c.BoolT("socialize-el")
 
 	// Check node can be registered
 	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeEl)

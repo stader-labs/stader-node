@@ -110,7 +110,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-reward-address, ora",
 						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
-					cli.BoolTFlag{
+					cli.StringFlag{
 						Name:  "socialize-el, sel",
 						Usage: "Should EL rewards be socialized (will default to true)",
 					},
@@ -125,14 +125,21 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return fmt.Errorf("operator-name is required")
 					}
 
+					operatorName := c.String("operator-name")
+
 					if c.String("operator-reward-address") != "" {
 						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
 							return err
 						}
 					}
 
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
+					if err != nil {
+						return err
+					}
+
 					// Run
-					return registerNode(c)
+					return registerNode(c, operatorName, socializeEl)
 
 				},
 			},
