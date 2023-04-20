@@ -9,6 +9,7 @@ import (
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocializeElResponse, error) {
@@ -51,7 +52,7 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}

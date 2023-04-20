@@ -50,7 +50,7 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		canSendPresignedMsgResponse.OperatorNotRegistered = true
 		return &canSendPresignedMsgResponse, nil
 	}

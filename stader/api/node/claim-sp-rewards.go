@@ -175,7 +175,7 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Int64() == 0 {
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
 		response.OperatorNotRegistered = true
 		return &response, nil
 	}
