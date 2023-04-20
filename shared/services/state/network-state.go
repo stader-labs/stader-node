@@ -67,7 +67,15 @@ type NetworkStateCache struct {
 	log *log.ColorLogger
 }
 
-func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger, slotNumber uint64, beaconConfig beacon.Eth2Config, nodeAddress common.Address) (*NetworkStateCache, error) {
+func CreateNetworkStateCache(
+	cfg *config.StaderNodeConfig,
+	ec stader.ExecutionClient,
+	bc beacon.Client,
+	log *log.ColorLogger,
+	slotNumber uint64,
+	beaconConfig beacon.Eth2Config,
+	nodeAddress common.Address,
+) (*NetworkStateCache, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
 	sdcAddress := cfg.GetSdCollateralContractAddress()
 	ethxAddress := cfg.GetEthxTokenAddress()
@@ -81,6 +89,11 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 		return nil, err
 	}
 	ethx, err := stader.NewErc20TokenContract(ec, ethxAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	// bcm, err := getBea
 	if err != nil {
 		return nil, err
 	}
@@ -194,12 +207,6 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 		return nil, err
 	}
 
-	// TODO
-	slashedValidators, err := node.GetSlashedValidator(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	totalETHBonded, err := node.GetCollateralETH(prn, nil)
 	if err != nil {
 		return nil, err
@@ -221,9 +228,9 @@ func CreateNetworkStateCache(cfg *config.StaderNodeConfig, ec stader.ExecutionCl
 	networkDetails.ActiveValidators = activeValidators // OK
 	networkDetails.QueuedValidators = queuedValidators // OK
 
-	networkDetails.SlashedValidators = slashedValidators // CHECK
-	networkDetails.TotalETHBonded = totalETHBonded       // CHECK
-	networkDetails.TotalSDBonded = totalSDBonded         // CHECK
+	networkDetails.SlashedValidators = totalETHBonded // CHECK
+	networkDetails.TotalETHBonded = totalETHBonded    // CHECK
+	networkDetails.TotalSDBonded = totalSDBonded      // CHECK
 
 	networkDetails.SdCollateral = totalSdCollateral                      // OK
 	networkDetails.BeaconchainReward = totalSdCollateral                 // CHECK
