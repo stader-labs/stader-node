@@ -133,7 +133,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					}
 
-					socializeEl, err := cliutils.ValidateBool("socialize-el", c.BoolT("socialize-el"))
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
 					if err != nil {
 						return err
 					}
