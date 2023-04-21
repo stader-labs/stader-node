@@ -305,11 +305,11 @@ func spInfo(sp *stader.SocializingPoolContractManager) (struct {
 		return *outstruct, err
 	}
 	sink := make(chan *contracts.SocializingPoolOperatorRewardsClaimed)
-	var recipient []common.Address
-	_, err = sp.SocializingPool.WatchOperatorRewardsClaimed(nil, sink, recipient)
-	if err != nil {
-		return *outstruct, err
-	}
+	// var recipient []common.Address
+	// _, err = sp.SocializingPool.WatchOperatorRewardsClaimed(nil, sink, recipient)
+	// if err != nil {
+	// 	return *outstruct, err
+	// }
 
 	outstruct.ethRewardRemaining = ethRewardRemaining
 	outstruct.sdRewardRemaining = sdRewardRemaining
