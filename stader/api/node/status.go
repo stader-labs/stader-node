@@ -3,6 +3,7 @@ package node
 import (
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -191,7 +192,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				validatorWithdrawVaultWithdrawShares = withdrawVaultWithdrawShares.OperatorShare
 			}
 
-			validatorDisplayStatus, err := stdr.GetValidatorRunningStatus(bc, validatorContractInfo)
+			validatorBeaconStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			validatorDisplayStatus, err := stdr.GetValidatorRunningStatus(validatorBeaconStatus, validatorContractInfo)
 			if err != nil {
 				return nil, err
 			}

@@ -3,7 +3,6 @@ package stdr
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -75,16 +74,10 @@ func IsValidatorTerminal(validatorInfo ValidatorContractInfo) bool {
 	return validatorInfo.Status > 6 || validatorInfo.Status == 1 || validatorInfo.Status == 2
 }
 
-func GetValidatorRunningStatus(bc *services.BeaconClientManager, validatorContractInfo ValidatorContractInfo) (string, error) {
+func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo ValidatorContractInfo) (string, error) {
 	// if validator state in contract is less then Deposited, then display contract status
 	if validatorContractInfo.Status < 4 {
 		return ValidatorState[validatorContractInfo.Status], nil
-	}
-
-	// other wise query validator status from beacon chain
-	beaconValidatorStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
-	if err != nil {
-		return "", err
 	}
 
 	switch beaconValidatorStatus.Status {
