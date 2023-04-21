@@ -6,7 +6,6 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
-	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -151,7 +150,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("%d)\n", i+1)
 		validatorInfo := status.ValidatorInfos[i]
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
-		fmt.Printf("-Validator Status: %s\n\n", stdr.ValidatorState[validatorInfo.Status])
+		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
