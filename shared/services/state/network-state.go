@@ -10,6 +10,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
+
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -50,6 +52,8 @@ type NetworkDetails struct {
 	BlocksProducedPercent             *big.Int
 	AttestationInclusionEffectiveness *big.Int
 	UptimePercent                     *big.Int
+
+	rewardChan <-chan *contracts.SocializingPoolOperatorRewardsClaimed
 }
 
 type NetworkStateCache struct {
@@ -102,6 +106,7 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
 	if err != nil {
@@ -225,6 +230,16 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
+	sp, err := stader.NewSocializingPool(ec, cfg.GetSocializingPoolAddress())
+	if err != nil {
+		return nil, err
+	}
+
+	spInfo, err := spInfo(sp)
+	if err != nil {
+		return nil, err
+	}
+
 	networkDetails.ActiveValidators = activeValidators // OK
 	networkDetails.QueuedValidators = queuedValidators // OK
 
@@ -243,7 +258,7 @@ func CreateNetworkStateCache(
 	networkDetails.ClaimedELRewards = totalSdCollateral                  // CHECK
 	networkDetails.ClaimedSDrewards = totalSdCollateral                  // CHECK
 	networkDetails.UnclaimedELRewards = totalSdCollateral                // CHECK
-	networkDetails.UnclaimedSDRewards = totalSdCollateral                // CHECK
+	networkDetails.UnclaimedSDRewards = spInfo.sdRewardRemaining         // OK
 	networkDetails.NextSDOrELAndSDRewardsCheckpoint = totalSdCollateral  // CHECK
 	networkDetails.TotalAttestations = totalSdCollateral                 // CHECK
 	networkDetails.AttestationPercent = totalSdCollateral                // CHECK
@@ -251,6 +266,8 @@ func CreateNetworkStateCache(
 	networkDetails.BlocksProducedPercent = totalSdCollateral             // CHECK
 	networkDetails.AttestationInclusionEffectiveness = totalSdCollateral // CHECK
 	networkDetails.UptimePercent = totalSdCollateral                     // CHECK
+
+	networkDetails.rewardChan = spInfo.rewardChan // CHECK
 
 	state.StaderNetworkDetails = networkDetails
 
@@ -264,4 +281,38 @@ func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
 	if s.log != nil {
 		s.log.Printlnf(format, v...)
 	}
+}
+
+func spInfo(sp *stader.SocializingPoolContractManager) (struct {
+	ethRewardRemaining *big.Int
+	sdRewardRemaining  *big.Int
+	rewardChan         <-chan *contracts.SocializingPoolOperatorRewardsClaimed
+}, error) {
+
+	outstruct := new(struct {
+		ethRewardRemaining *big.Int
+		sdRewardRemaining  *big.Int
+		rewardChan         <-chan *contracts.SocializingPoolOperatorRewardsClaimed
+	})
+	ethRewardRemaining, err := sp.SocializingPool.TotalOperatorETHRewardsRemaining(nil)
+	if err != nil {
+		return *outstruct, err
+	}
+
+	sdRewardRemaining, err := sp.SocializingPool.TotalOperatorSDRewardsRemaining(nil)
+	if err != nil {
+		return *outstruct, err
+	}
+	sink := make(chan *contracts.SocializingPoolOperatorRewardsClaimed)
+	var recipient []common.Address
+	_, err = sp.SocializingPool.WatchOperatorRewardsClaimed(nil, sink, recipient)
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.ethRewardRemaining = ethRewardRemaining
+	outstruct.sdRewardRemaining = sdRewardRemaining
+	outstruct.rewardChan = sink
+
+	return *outstruct, nil
 }
