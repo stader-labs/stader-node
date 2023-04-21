@@ -276,11 +276,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
 
-	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	// Adjust the salt
 	if salt.Cmp(big.NewInt(0)) == 0 {
 		nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
@@ -288,6 +283,11 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 			return nil, err
 		}
 		salt.SetUint64(nonce)
+	}
+
+	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	newValidatorKey := validatorKeyCount
