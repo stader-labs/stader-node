@@ -202,7 +202,8 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 
-	activeValidators, err := node.GetActiveValidators(prn, nil)
+	/// TODO: FIX panic GetActiveValidators
+	activeValidators, err := node.GetQueuedValidators(prn, nil)
 	if err != nil {
 		return nil, err
 	}
