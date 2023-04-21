@@ -42,10 +42,6 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	// get current sd collateral
 	operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)

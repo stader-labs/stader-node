@@ -14,6 +14,9 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
 	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -42,10 +45,6 @@ func CanWithdrawElRewards(c *cli.Context) (*api.CanWithdrawElRewardsResponse, er
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
 	}
 
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)

@@ -8,7 +8,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	arr_utils "github.com/stader-labs/stader-node/shared/utils/arr-utils"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
-	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
 	"math/big"
@@ -19,12 +18,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
-	prn, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
+	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
 	sp, err := services.GetSocializingPoolContract(c)
@@ -36,20 +30,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 		return nil, err
 	}
 
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
-
 	response := api.CanDownloadSpMerkleProofsResponse{}
-	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Int64() == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	// check if all cycles are present
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)

@@ -9,11 +9,16 @@ import (
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocializeElResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeActive(c); err != nil {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
@@ -52,19 +57,12 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	if err != nil {
 		return nil, err
 	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	if !operatorInfo.Active {
-		response.OperatorNotActive = true
-		return &response, nil
-	}
+
 	if operatorInfo.OptedForSocializingPool && socializeEl {
 		response.AlreadyOptedIn = true
 		return &response, nil
