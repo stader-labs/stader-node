@@ -13,15 +13,14 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
-	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
@@ -31,15 +30,6 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	}
 
 	response := api.CanSettleExitFunds{}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	// make sure validator state is in withdrawn
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)

@@ -48,6 +48,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	pp, err := services.GetPermissionlessPoolContract(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -70,6 +74,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 	response.AccountBalances.ETH = accountEthBalance
 	response.AccountBalances.Sd = accountSdBalance
+
+	socializingPoolAddress, err := node.GetSocializingPoolContract(pp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.SocializingPoolAddress = socializingPoolAddress
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {

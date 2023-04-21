@@ -108,6 +108,20 @@ func RequireNodeRegistered(c *cli.Context) error {
 	return nil
 }
 
+func RequireNodeActive(c *cli.Context) error {
+	if err := RequireNodeWallet(c); err != nil {
+		return err
+	}
+	nodeActive, err := isNodeActive(c)
+	if err != nil {
+		return err
+	}
+	if !nodeActive {
+		return errors.New("The node has been deactivated with Stader. You might have front run one of your keys, Please reach out to the Stader team on discord for more information.")
+	}
+	return nil
+}
+
 //
 // Service synchronization
 //

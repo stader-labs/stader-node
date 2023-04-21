@@ -120,21 +120,18 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
-	fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-	if status.OperatorELRewardsAddressBalance.Int64() > 0 {
-		fmt.Printf("Operator El Reward Share from Personal Fee Recepient: %.6f\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 18))
-		fmt.Printf("To withdraw el rewards use the %sstader-cli node withdraw-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-	}
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
-	} else {
-		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
+		fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 		fmt.Printf(
 			"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
 			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
+	} else {
+		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
+		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 	}
 	fmt.Printf(
 		"The node reward address %s%s%s has accrued %.6f ETH as rewards.\n\n",

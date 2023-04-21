@@ -71,7 +71,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
-	pp, err := services.GetPermissionlessPoolFactory(c)
+	pp, err := services.GetPermissionlessPoolContract(c)
 	if err != nil {
 		return nil, err
 	}

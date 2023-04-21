@@ -9,11 +9,13 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanWithdrawClRewardsResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
 	// Get services
@@ -33,22 +35,9 @@ func CanWithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey)
 	if err != nil {
 		return nil, err
 	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
 
 	// Response
 	response := api.CanWithdrawClRewardsResponse{}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {

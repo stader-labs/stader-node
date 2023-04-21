@@ -33,10 +33,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil
 	}
-	if canClaimSpRewards.OperatorNotRegistered {
-		fmt.Println("Operator not registered!")
-		return nil
-	}
 	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
 		fmt.Println("No cycles to claim!")
 		return nil

@@ -28,16 +28,8 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	if err != nil {
 		return err
 	}
-	if res.OperatorNotRegistered {
-		fmt.Println("Operator not registered")
-		return nil
-	}
 	if res.SocializingPoolContractPaused {
 		fmt.Println("The socializing pool contract is paused!")
-		return nil
-	}
-	if res.OperatorNotActive {
-		fmt.Println("Operator not active")
 		return nil
 	}
 	if res.AlreadyOptedIn {

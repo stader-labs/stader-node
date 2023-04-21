@@ -92,14 +92,6 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("Max validator limit reached")
 		return nil
 	}
-	if canNodeDepositResponse.OperatorNotRegistered {
-		fmt.Printf("Operator not registered")
-		return nil
-	}
-	if canNodeDepositResponse.OperatorNotActive {
-		fmt.Printf("Operator not active")
-		return nil
-	}
 
 	//Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))

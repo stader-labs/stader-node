@@ -138,10 +138,10 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
-	prn, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
+	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
+
 	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
@@ -167,16 +167,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	}
 	if isPaused {
 		response.SocializingPoolContractPaused = true
-		return &response, nil
-	}
-
-	// check if operator is registered
-	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
 		return &response, nil
 	}
 

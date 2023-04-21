@@ -51,6 +51,7 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 		return &response, nil
 	}
 
+	// this checks across all pools
 	isExistingOperator, err := pool_utils.IsExistingOperator(putils, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err

@@ -5,11 +5,9 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
-	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
-	"math/big"
 )
 
 func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanExitValidatorResponse, error) {
@@ -18,8 +16,7 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
-	pnr, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
+	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
@@ -30,11 +27,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	if err != nil {
 		return nil, err
 	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
-
 	// Response
 	response := api.CanExitValidatorResponse{}
 
@@ -42,15 +34,6 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
 	if err != nil {
 		return nil, err
-	}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
 	}
 
 	res, err := bc.GetValidatorStatus(validatorPubKey, nil)

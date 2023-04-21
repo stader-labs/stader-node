@@ -133,9 +133,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					}
 
-					socializeEl, err := cliutils.ValidateBool("socialize-el", c.String("socialize-el"))
-					if err != nil {
-						return err
+					socializeElString := c.String("socialize-el")
+					socializeEl := true
+					if socializeElString != "" {
+						var err error
+						socializeEl, err = cliutils.ValidateBool("socialize-el", socializeElString)
+						if err != nil {
+							return err
+						}
 					}
 
 					// Run
