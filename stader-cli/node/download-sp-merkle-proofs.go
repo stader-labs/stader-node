@@ -25,10 +25,6 @@ func downloadSPMerkleProofs(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if canDownloadSpMerkleProofs.OperatorNotRegistered {
-		fmt.Println("Operator not registered!")
-		return nil
-	}
 	if canDownloadSpMerkleProofs.NoMissingCycles {
 		fmt.Println("There are no missing cycles to download! All proofs are up to date!")
 		return nil

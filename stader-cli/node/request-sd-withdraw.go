@@ -35,10 +35,6 @@ func WithdrawSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if canWithdrawSdResponse.OperatorNotRegistered {
-		fmt.Println("Operator not registered!")
-		return nil
-	}
 	if canWithdrawSdResponse.InsufficientWithdrawableSd {
 		fmt.Println("Insufficient withdrawable SD!")
 		return nil

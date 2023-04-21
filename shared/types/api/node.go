@@ -86,8 +86,6 @@ type CanNodeDepositResponse struct {
 	CanDeposit               bool           `json:"CanDeposit"`
 	InsufficientBalance      bool           `json:"insufficientBalance"`
 	InvalidAmount            bool           `json:"invalidAmount"`
-	OperatorNotRegistered    bool           `json:"operatorNotRegistered"`
-	OperatorNotActive        bool           `json:"operatorNotActive"`
 	DepositPaused            bool           `json:"depositPaused"`
 	NotEnoughSdCollateral    bool           `json:"notEnoughSdCollateral"`
 	MaxValidatorLimitReached bool           `json:"maxValidatorLimitReached"`
@@ -151,7 +149,6 @@ type DebugExitResponse struct {
 type CanSendPresignedMsgResponse struct {
 	Status                               string `json:"status"`
 	Error                                string `json:"error"`
-	OperatorNotRegistered                bool   `json:"operatorNotRegistered"`
 	ValidatorNotRegisteredWithStader     bool   `json:"validatorNotRegisteredWithStader"`
 	ValidatorNotRegisteredWithOperator   bool   `json:"validatorNotRegisteredWithOperator"`
 	ValidatorNotRegistered               bool   `json:"validatorNotRegistered"`
@@ -171,7 +168,6 @@ type SendPresignedMsgResponse struct {
 type CanExitValidatorResponse struct {
 	Status                 string `json:"status"`
 	Error                  string `json:"error"`
-	OperatorNotRegistered  bool   `json:"operatorNotRegistered"`
 	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
 	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
 	ValidatorExiting       bool   `json:"validatorExiting"`
@@ -185,8 +181,6 @@ type ExitValidatorResponse struct {
 type CanUpdateSocializeElResponse struct {
 	Status                        string         `json:"status"`
 	Error                         string         `json:"error"`
-	OperatorNotRegistered         bool           `json:"operatorNotRegistered"`
-	OperatorNotActive             bool           `json:"operatorNotActive"`
 	SocializingPoolContractPaused bool           `json:"socializingPoolContractPaused"`
 	AlreadyOptedIn                bool           `json:"alreadyOptedIn"`
 	AlreadyOptedOut               bool           `json:"alreadyOptedOut"`
@@ -201,15 +195,14 @@ type UpdateSocializeElResponse struct {
 }
 
 type CanWithdrawClRewardsResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	ValidatorWithdrawn    bool           `json:"validatorWithdrawn"`
-	VaultAlreadySettled   bool           `json:"vaultAlreadySettled"`
-	NoClRewards           bool           `json:"noClRewards"`
-	TooManyClRewards      bool           `json:"tooManyClRewards"`
-	ValidatorNotFound     bool           `json:"validatorNotFound"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status              string         `json:"status"`
+	Error               string         `json:"error"`
+	ValidatorWithdrawn  bool           `json:"validatorWithdrawn"`
+	VaultAlreadySettled bool           `json:"vaultAlreadySettled"`
+	NoClRewards         bool           `json:"noClRewards"`
+	TooManyClRewards    bool           `json:"tooManyClRewards"`
+	ValidatorNotFound   bool           `json:"validatorNotFound"`
+	GasInfo             stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawClRewardsResponse struct {
@@ -223,7 +216,6 @@ type WithdrawClRewardsResponse struct {
 type CanSettleExitFunds struct {
 	Status                 string         `json:"status"`
 	Error                  string         `json:"error"`
-	OperatorNotRegistered  bool           `json:"operatorNotRegistered"`
 	ValidatorNotWithdrawn  bool           `json:"validatorNotWithdrawn"`
 	ValidatorNotRegistered bool           `json:"validatorNotRegistered"`
 	NoEthToWithdraw        bool           `json:"notEthToWithdraw"`
@@ -240,11 +232,10 @@ type SettleExitFunds struct {
 }
 
 type CanWithdrawElRewardsResponse struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	NoElRewards           bool           `json:"noElRewards"`
-	OperatorNotRegistered bool           `json:"operatorNotRegistered"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status      string         `json:"status"`
+	Error       string         `json:"error"`
+	NoElRewards bool           `json:"noElRewards"`
+	GasInfo     stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawElRewardsResponse struct {
@@ -258,7 +249,6 @@ type WithdrawElRewardsResponse struct {
 type CanRequestWithdrawSdResponse struct {
 	Status                     string         `json:"status"`
 	Error                      string         `json:"error"`
-	OperatorNotRegistered      bool           `json:"operatorNotRegistered"`
 	InsufficientSdCollateral   bool           `json:"insufficientSdCollateral"`
 	InsufficientWithdrawableSd bool           `json:"insufficientWithdrawableSd"`
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
@@ -285,12 +275,11 @@ type ClaimSdResponse struct {
 }
 
 type CanDownloadSpMerkleProofsResponse struct {
-	Status                string  `json:"status"`
-	Error                 string  `json:"error"`
-	OperatorNotRegistered bool    `json:"operatorNotRegistered"`
-	NoMissingCycles       bool    `json:"noMissingCycles"`
-	MissingCycles         []int64 `json:"missingCycles"`
-	CurrentCycle          int64   `json:"currentCycle"`
+	Status          string  `json:"status"`
+	Error           string  `json:"error"`
+	NoMissingCycles bool    `json:"noMissingCycles"`
+	MissingCycles   []int64 `json:"missingCycles"`
+	CurrentCycle    int64   `json:"currentCycle"`
 }
 
 type DownloadSpMerkleProofsResponse struct {
@@ -302,7 +291,6 @@ type DownloadSpMerkleProofsResponse struct {
 type CanClaimSpRewardsResponse struct {
 	Status                        string     `json:"status"`
 	Error                         string     `json:"error"`
-	OperatorNotRegistered         bool       `json:"operatorNotRegistered"`
 	SocializingPoolContractPaused bool       `json:"socializingPoolContractPaused"`
 	IneligibleCycles              []*big.Int `json:"ineligibleCycles"`
 	ClaimedCycles                 []*big.Int `json:"claimedCycles"`
@@ -325,8 +313,6 @@ type ClaimSpRewardsResponse struct {
 type CanUpdateOperatorDetails struct {
 	Status                    string         `json:"status"`
 	Error                     string         `json:"error"`
-	OperatorNotRegistered     bool           `json:"operatorNotRegistered"`
-	OperatorNotActive         bool           `json:"operatorNotActive"`
 	OperatorNameTooLong       bool           `json:"operatorNameTooLong"`
 	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
 	NothingToUpdate           bool           `json:"nothingToUpdate"`
