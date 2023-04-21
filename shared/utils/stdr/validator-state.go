@@ -3,6 +3,8 @@ package stdr
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -20,6 +22,7 @@ var ValidatorState = map[uint8]string{
 
 type ValidatorInfo struct {
 	Status                           uint8
+	StatusToDisplay                  string
 	Pubkey                           []byte
 	PreDepositSignature              []byte
 	DepositSignature                 []byte
@@ -70,4 +73,42 @@ func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegist
 
 func IsValidatorTerminal(validatorInfo ValidatorContractInfo) bool {
 	return validatorInfo.Status > 6 || validatorInfo.Status == 1 || validatorInfo.Status == 2
+}
+
+func GetValidatorRunningStatus(bc *services.BeaconClientManager, validatorContractInfo ValidatorContractInfo) (string, error) {
+	// if validator state in contract is less then Deposited, then display contract status
+	if validatorContractInfo.Status < 4 {
+		return ValidatorState[validatorContractInfo.Status], nil
+	}
+
+	// other wise query validator status from beacon chain
+	beaconValidatorStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
+	if err != nil {
+		return "", err
+	}
+
+	switch beaconValidatorStatus.Status {
+	case beacon.ValidatorState_ActiveOngoing:
+		return "Active and ongoing", nil
+	case beacon.ValidatorState_ActiveSlashed:
+		return "Active and slashed", nil
+	case beacon.ValidatorState_ActiveExiting:
+		return "Active and exiting", nil
+	case beacon.ValidatorState_ExitedUnslashed:
+		return "Exited and unslashed", nil
+	case beacon.ValidatorState_ExitedSlashed:
+		return "Exited and slashed", nil
+	case beacon.ValidatorState_WithdrawalDone:
+		return "Withdrawal done", nil
+	case beacon.ValidatorState_WithdrawalPossible:
+		return "Withdrawal possible", nil
+	// we shouldn't be in pending initialized state, but just in case
+	case beacon.ValidatorState_PendingInitialized:
+		return "Pending initialized", nil
+	case beacon.ValidatorState_PendingQueued:
+		return "Pending queued", nil
+
+	}
+
+	return "", nil
 }

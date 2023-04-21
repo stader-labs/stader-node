@@ -52,6 +52,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -174,12 +178,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 			crossedRewardThreshold := false
-			if withdrawVaultBalance.Cmp(rewardsThreshold) == 1 {
+			if withdrawVaultBalance.Cmp(rewardsThreshold) > 0 {
 				crossedRewardThreshold = true
 			}
 
 			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
-			if validatorContractInfo.Status > 7 {
+			if validatorContractInfo.Status > 4 {
 				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 				if err != nil {
 					return nil, err
@@ -187,8 +191,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				validatorWithdrawVaultWithdrawShares = withdrawVaultWithdrawShares.OperatorShare
 			}
 
+			validatorDisplayStatus, err := stdr.GetValidatorRunningStatus(bc, validatorContractInfo)
+			if err != nil {
+				return nil, err
+			}
+
 			validatorInfo := stdr.ValidatorInfo{
 				Status:                           validatorContractInfo.Status,
+				StatusToDisplay:                  validatorDisplayStatus,
 				Pubkey:                           validatorContractInfo.Pubkey,
 				PreDepositSignature:              validatorContractInfo.PreDepositSignature,
 				DepositSignature:                 validatorContractInfo.DepositSignature,
