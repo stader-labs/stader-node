@@ -157,7 +157,7 @@ func getStatus(c *cli.Context) error {
 		return nil
 	}
 
-	for i := int64(0); i < totalRegisteredValidators.Int64(); i++ {
+	for i := 0; i < len(status.ValidatorInfos); i++ {
 		fmt.Printf("%d)\n", i+1)
 		validatorInfo := status.ValidatorInfos[i]
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
