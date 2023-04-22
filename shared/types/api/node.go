@@ -34,6 +34,7 @@ type NodeStatusResponse struct {
 	SdCollateralWorthValidators     *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                      bool                 `json:"registered"`
 	AccountBalances                 tokens.Balances      `json:"accountBalances"`
+	TotalNonTerminalValidators      *big.Int             `json:"nonTerminalValidators"`
 	ValidatorInfos                  []stdr.ValidatorInfo `json:"validatorInfos"`
 }
 

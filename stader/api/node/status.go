@@ -156,6 +156,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
+
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {

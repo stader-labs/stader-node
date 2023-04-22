@@ -39,12 +39,13 @@ func getStatus(c *cli.Context) error {
 		return err
 	}
 
-	totalRegisteredValidators := len(status.ValidatorInfos)
+	totalRegisteredValidators := status.TotalNonTerminalValidators
 	totalRegisterableValidators := status.SdCollateralWorthValidators
+	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
 
 	noOfValidatorsWhichWeCanRegister := int64(0)
-	if totalRegisterableValidators.Int64() > int64(totalRegisteredValidators) {
-		noOfValidatorsWhichWeCanRegister = totalRegisterableValidators.Int64() - int64(totalRegisteredValidators)
+	if totalRegisterableValidators.Int64() > totalRegisteredValidators.Int64() {
+		noOfValidatorsWhichWeCanRegister = totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
 	}
 
 	// Account address & balances
@@ -90,6 +91,13 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		totalRegisteredValidators)
+
+	fmt.Printf(
+		"The node %s%s%s has a deposited %.6f Eth as collateral.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		totalEthCollateral)
 
 	fmt.Printf(
 		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
@@ -144,12 +152,12 @@ func getStatus(c *cli.Context) error {
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
-	if totalRegisteredValidators <= 0 {
+	if totalRegisteredValidators.Int64() <= 0 {
 		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
 		return nil
 	}
 
-	for i := 0; i < totalRegisteredValidators; i++ {
+	for i := int64(0); i < totalRegisteredValidators.Int64(); i++ {
 		fmt.Printf("%d)\n", i+1)
 		validatorInfo := status.ValidatorInfos[i]
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
