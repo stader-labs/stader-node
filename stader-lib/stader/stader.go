@@ -287,7 +287,7 @@ func NewSocializingPool(client ExecutionClient, socializingPoolAddress common.Ad
 
 }
 
-// Write above bindings for PoolUtils
+// Write bindings similar to the above for PoolUtils
 
 type PoolUtilsContractManager struct {
 	Client            ExecutionClient

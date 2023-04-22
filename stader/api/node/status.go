@@ -100,6 +100,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorActive = operatorRegistry.Active
+		response.OperatorAddress = operatorRegistry.OperatorAddress
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
 

@@ -61,12 +61,6 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
-	fmt.Printf(
-		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 
 	if status.SdCollateralRequestedToWithdraw.Cmp(big.NewInt(0)) > 0 {
 		currentTime := time.Unix(time.Now().Unix(), 0)
@@ -96,6 +90,14 @@ func getStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		totalRegisteredValidators)
+
+	fmt.Printf(
+		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
+
 	fmt.Printf(
 		"The node %s%s%s can register %d more validators based on the amount of SD collateral it has provided.\n\n",
 		log.ColorBlue,
@@ -113,6 +115,7 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("The node is registered with Stader. Below are node details:\n")
 	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
+	fmt.Printf("Operator Address: %s\n\n", status.OperatorAddress.String())
 	fmt.Printf("Operator Reward Address: %s\n\n", status.OperatorRewardAddress.String())
 	if status.OperatorActive {
 		fmt.Printf("Operator Status: Active\n\n")
