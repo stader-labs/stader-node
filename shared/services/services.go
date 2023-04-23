@@ -126,7 +126,7 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
 }
 
-func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
+func GetPermissionlessPoolContract(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err

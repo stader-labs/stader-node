@@ -3,6 +3,7 @@ package node
 import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
@@ -13,6 +14,9 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -21,25 +25,16 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	if err != nil {
 		return nil, err
 	}
-	nodeAccount, err := w.GetNodeAccount()
+	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
-	opts, err := w.GetNodeAccountTransactor()
+	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
 	}
 
 	response := api.CanSettleExitFunds{}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		response.OperatorNotRegistered = true
-		return &response, nil
-	}
 
 	// make sure validator state is in withdrawn
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
@@ -50,15 +45,19 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
-	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
+	validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 	if err != nil {
 		return nil, err
 	}
-	if validatorInfo.Status < 8 {
+	if !eth2.IsValidatorWithdrawn(validatorStatus) {
 		response.ValidatorNotWithdrawn = true
 		return &response, nil
 	}
 
+	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
+	if err != nil {
+		return nil, err
+	}
 	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
 	if err != nil {
 		return nil, err

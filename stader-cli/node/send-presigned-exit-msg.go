@@ -37,10 +37,6 @@ func SendSignedPresignedMessage(c *cli.Context, validatorPubKey types.ValidatorP
 		fmt.Println("Validator is not active")
 		return nil
 	}
-	if canSendPresignedMsgRes.OperatorNotRegistered {
-		fmt.Println("Operator not registered!")
-		return nil
-	}
 	if canSendPresignedMsgRes.ValidatorNotRegisteredWithStader {
 		fmt.Println("Validator not registered with stader!")
 		return nil

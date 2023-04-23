@@ -21,6 +21,9 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -33,10 +36,6 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	if err != nil {
 		return nil, err
 	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
 
 	canSendPresignedMsgResponse := api.CanSendPresignedMsgResponse{}
 
@@ -44,15 +43,6 @@ func canSendPresignedMsg(c *cli.Context, validatorPubKey types.ValidatorPubkey) 
 	_, err = w.GetValidatorKeyByPubkey(validatorPubKey)
 	if err != nil {
 		return nil, err
-	}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		canSendPresignedMsgResponse.OperatorNotRegistered = true
-		return &canSendPresignedMsgResponse, nil
 	}
 
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)

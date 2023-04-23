@@ -30,9 +30,6 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	numValidators := c.Uint64("num-validators")
-	if numValidators > 15 {
-		return fmt.Errorf("Num of validator %d should less than 15", numValidators)
-	}
 
 	baseAmountInEth := 4
 	baseAmount := eth.EthToWei(4.0)
@@ -81,7 +78,7 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 	if canNodeDepositResponse.DepositPaused {
-		fmt.Printf("Deposits are currently paused!")
+		fmt.Printf("Deposit is paused")
 		return nil
 	}
 	if canNodeDepositResponse.NotEnoughSdCollateral {
@@ -90,14 +87,6 @@ func nodeDeposit(c *cli.Context) error {
 	}
 	if canNodeDepositResponse.MaxValidatorLimitReached {
 		fmt.Printf("Max validator limit reached")
-		return nil
-	}
-	if canNodeDepositResponse.OperatorNotRegistered {
-		fmt.Printf("Operator not registered")
-		return nil
-	}
-	if canNodeDepositResponse.OperatorNotActive {
-		fmt.Printf("Operator not active")
 		return nil
 	}
 

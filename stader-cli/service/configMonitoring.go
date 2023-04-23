@@ -51,6 +51,13 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 	newSettings[keys.Nm_exporter_container_tag] = cfg.Exporter.ContainerTag.Value
 	newSettings[keys.Nm_additional_exporter_flags] = cfg.Exporter.AdditionalFlags.Value
 
+	newSettings[keys.Nm_enable_beaconchain_node_metrics] = cfg.EnableBitflyNodeMetrics.Value.(bool)
+
+	newSettings[keys.Nm_beaconchain_api_key] =
+		cfg.BitflyNodeMetrics.Secret.Value
+	newSettings[keys.Nm_beaconchain_node_metrics_machine_name] =
+		cfg.BitflyNodeMetrics.MachineName.Value
+
 	return nil
 }
 
@@ -85,5 +92,13 @@ func updateMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{
 	// Exporter
 	cfg.Exporter.ContainerTag.Value = newSettings[keys.Nm_exporter_container_tag]
 	cfg.Exporter.AdditionalFlags.Value = newSettings[keys.Nm_additional_exporter_flags]
+
+	cfg.EnableBitflyNodeMetrics.Value =
+		newSettings[keys.Nm_enable_beaconchain_node_metrics]
+
+	cfg.BitflyNodeMetrics.Secret.Value =
+		newSettings[keys.Nm_beaconchain_api_key]
+	cfg.BitflyNodeMetrics.MachineName.Value =
+		newSettings[keys.Nm_beaconchain_node_metrics_machine_name]
 	return nil
 }

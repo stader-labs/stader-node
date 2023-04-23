@@ -28,6 +28,15 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 	return config.GenesisEpoch + (time-config.GenesisTime)/config.SecondsPerEpoch
 }
 
+func IsValidatorWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_WithdrawalDone:
+		return true
+	}
+
+	return false
+}
+
 func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
 	//fmt.Printf("Validator status: %v", validatorStatus)
 	switch validatorStatus.Status {
