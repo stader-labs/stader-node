@@ -132,9 +132,9 @@ func getStatus(c *cli.Context) error {
 	}
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
-		fmt.Printf("Operator Non Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
+		fmt.Printf("Operator Execution layer reward vault: %s\n\n", status.OperatorELRewardsAddress.String())
 		fmt.Printf(
-			"The node %s%s%s non socializing pool fee recepient has a balance %.6f ETH.\n\n",
+			"The node %s%s%s execution layer reward vault has a balance %.6f ETH.\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
