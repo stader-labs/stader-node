@@ -36,7 +36,7 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("5m")
+var tasksInterval, _ = time.ParseDuration("5s")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
