@@ -163,9 +163,11 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Pub Key: %s\n\n", types.BytesToValidatorPubkey(validatorInfo.Pubkey))
 		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
-		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 {
+		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 			fmt.Printf("To withdraw skimmed rewards use the %sstader-cli node withdraw-cl-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		} else if validatorInfo.CrossedRewardsThreshold {
+			fmt.Printf("Crossed rewards threshold.\n\n")
 		}
 
 		if validatorInfo.Status > 3 {
