@@ -143,12 +143,6 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 	}
-	fmt.Printf(
-		"The node reward address %s%s%s has accrued %.6f ETH as rewards.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.OperatorRewardInETH), 18))
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
@@ -174,12 +168,15 @@ func getStatus(c *cli.Context) error {
 			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositBlock)
 		}
 
-		// Validator has withdrawn
-		if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
-			fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-			fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
+		// TODO - check with sanjay when this gets updated
+		if validatorInfo.WithdrawnBlock.Int64() > 0 {
+			// Validator has withdrawn
+			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
+				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
+				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
+			}
+			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnBlock)
 		}
-		fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnBlock)
 
 		fmt.Printf("\n\n")
 	}

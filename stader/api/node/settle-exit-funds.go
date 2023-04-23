@@ -3,6 +3,7 @@ package node
 import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
@@ -28,6 +29,10 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	if err != nil {
 		return nil, err
 	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
 
 	response := api.CanSettleExitFunds{}
 
@@ -45,10 +50,14 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 	if err != nil {
 		return nil, err
 	}
-	//if validatorInfo.Status < 8 {
-	//	response.ValidatorNotWithdrawn = true
-	//	return &response, nil
-	//}
+	validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !eth2.IsValidatorWithdrawn(validatorStatus) {
+		response.ValidatorNotWithdrawn = true
+		return &response, nil
+	}
 
 	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
 	if err != nil {
