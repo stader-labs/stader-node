@@ -53,6 +53,7 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_prysm] = cfg.ExternalPrysm.AdditionalVcFlags.Value
 	newSettings[keys.E2cc_em_doppelganger_detection_prysm] = cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool)
+	newSettings[keys.E2cc_em_json_rpc_prysm] = cfg.ExternalPrysm.JsonRpcUrl.Value
 
 	// Local
 	newSettings[keys.E2cc_lc_common_graffiti] = cfg.ConsensusCommon.Graffiti.Value
@@ -131,6 +132,7 @@ func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalPrysm.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_prysm]
 	cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
 	cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_prysm]
+	cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings[keys.E2cc_em_json_rpc_prysm]
 
 	return nil
 }
