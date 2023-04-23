@@ -21,6 +21,7 @@ type NodeStatusResponse struct {
 	OperatorId                      *big.Int             `json:"operatorId"`
 	OperatorName                    string               `json:"operatorName"`
 	OperatorActive                  bool                 `json:"operatorActive"`
+	OperatorAddress                 common.Address       `json:"operatorAddress"`
 	OperatorRewardAddress           common.Address       `json:"operatorRewardAddress"`
 	OperatorRewardInETH             *big.Int             `json:"operatorRewardInETH"`
 	OptedInForSocializingPool       bool                 `json:"optedInForSocializingPool"`
@@ -33,6 +34,7 @@ type NodeStatusResponse struct {
 	SdCollateralWorthValidators     *big.Int             `json:"sdCollateralWorthValidators"`
 	Registered                      bool                 `json:"registered"`
 	AccountBalances                 tokens.Balances      `json:"accountBalances"`
+	TotalNonTerminalValidators      *big.Int             `json:"nonTerminalValidators"`
 	ValidatorInfos                  []stdr.ValidatorInfo `json:"validatorInfos"`
 }
 

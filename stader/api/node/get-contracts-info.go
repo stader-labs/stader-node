@@ -25,6 +25,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client: %w", err)
 	}
+
 	eth2DepositContract, err := bc.GetEth2DepositContract()
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client deposit contract: %w", err)

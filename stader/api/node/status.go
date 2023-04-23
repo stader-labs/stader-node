@@ -3,6 +3,7 @@ package node
 import (
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -52,6 +53,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -95,6 +100,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorId = operatorId
 		response.OperatorName = operatorRegistry.OperatorName
 		response.OperatorActive = operatorRegistry.Active
+		response.OperatorAddress = operatorRegistry.OperatorAddress
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
 
@@ -150,6 +156,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
+
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
@@ -174,21 +188,29 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 			crossedRewardThreshold := false
-			if withdrawVaultBalance.Cmp(rewardsThreshold) == 1 {
+			if withdrawVaultBalance.Cmp(rewardsThreshold) > 0 {
 				crossedRewardThreshold = true
 			}
 
-			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
-			if validatorContractInfo.Status > 7 {
-				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
-				if err != nil {
-					return nil, err
-				}
-				validatorWithdrawVaultWithdrawShares = withdrawVaultWithdrawShares.OperatorShare
+			withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
+			if err != nil {
+				return nil, err
+			}
+			validatorWithdrawVaultWithdrawShares := withdrawVaultWithdrawShares.OperatorShare
+
+			validatorBeaconStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			validatorDisplayStatus, err := stdr.GetValidatorRunningStatus(validatorBeaconStatus, validatorContractInfo)
+			if err != nil {
+				return nil, err
 			}
 
 			validatorInfo := stdr.ValidatorInfo{
 				Status:                           validatorContractInfo.Status,
+				StatusToDisplay:                  validatorDisplayStatus,
 				Pubkey:                           validatorContractInfo.Pubkey,
 				PreDepositSignature:              validatorContractInfo.PreDepositSignature,
 				DepositSignature:                 validatorContractInfo.DepositSignature,
