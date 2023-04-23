@@ -167,7 +167,7 @@ func getStatus(c *cli.Context) error {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 			fmt.Printf("To withdraw skimmed rewards use the %sstader-cli node withdraw-cl-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("Crossed rewards threshold.\n\n")
+			fmt.Printf("-Validator Skimmed Rewards: Crossed threshold\n")
 		}
 
 		if validatorInfo.Status > 3 {

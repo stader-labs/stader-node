@@ -40,14 +40,15 @@ func CanSettleExitFunds(c *cli.Context, validatorPubKey types.ValidatorPubkey) (
 		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
+	// TODO - query validator status from beacon chain
 	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	if validatorInfo.Status < 8 {
-		response.ValidatorNotWithdrawn = true
-		return &response, nil
-	}
+	//if validatorInfo.Status < 8 {
+	//	response.ValidatorNotWithdrawn = true
+	//	return &response, nil
+	//}
 
 	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorInfo.WithdrawVaultAddress, nil)
 	if err != nil {
