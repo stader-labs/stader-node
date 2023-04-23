@@ -59,6 +59,8 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *colle
 		return err
 	}
 
+	fmt.Printf("metrics are enabled: %v\n", cfg.EnableMetrics.Value)
+
 	// Return if metrics are disabled
 	if cfg.EnableMetrics.Value == false {
 		if strings.ToLower(os.Getenv("ENABLE_METRICS")) == "true" {
