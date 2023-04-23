@@ -188,17 +188,15 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 			crossedRewardThreshold := false
-			if withdrawVaultBalance.Cmp(rewardsThreshold) > 0 {
-				crossedRewardThreshold = true
-			}
 
 			validatorWithdrawVaultWithdrawShares := big.NewInt(0)
-			if validatorContractInfo.Status > 4 {
+			if withdrawVaultBalance.Cmp(rewardsThreshold) > 0 {
 				withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 				if err != nil {
 					return nil, err
 				}
 				validatorWithdrawVaultWithdrawShares = withdrawVaultWithdrawShares.OperatorShare
+				crossedRewardThreshold = true
 			}
 
 			validatorBeaconStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
