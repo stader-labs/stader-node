@@ -119,13 +119,15 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkStateCache(m, nodeAccount.Address)
+			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
 				errorLog.Println(err)
 				time.Sleep(taskCooldown)
 				continue
 			}
-			stateCache.UpdateState(state)
+			stateCache.UpdateState(networkStateCache)
+
+			time.Sleep(tasksInterval)
 		}
 		wg.Done()
 	}()
