@@ -2,14 +2,17 @@ package state
 
 import (
 	"fmt"
+	"math/big"
+	"os"
+	"time"
+
+	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	penalty_tracker "github.com/stader-labs/stader-node/stader-lib/penalty-tracker"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	stake_pool_manager "github.com/stader-labs/stader-node/stader-lib/stake-pool-manager"
-	"math/big"
-	"time"
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
@@ -17,7 +20,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 
-	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -284,12 +286,6 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	// TODO - compute these accuratley
-	unclaimedSocializingPoolElRewards := big.NewInt(10)
-	unclaimedSocializingPoolSdRewards := big.NewInt(20)
-	claimedSocializingPoolElRewards := big.NewInt(30)
-	claimedSocializingPoolSdRewards := big.NewInt(40)
-
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
@@ -331,6 +327,16 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
+	cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	rewardClaimData, err := getClaimData(cfg, cycles)
+	if err != nil {
+		return nil, err
+	}
+
 	networkDetails.SdPrice = sdPrice
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
@@ -350,12 +356,13 @@ func CreateNetworkStateCache(
 	networkDetails.UnclaimedClRewards = totalClRewards
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
-	networkDetails.UnclaimedSocializingPoolElRewards = unclaimedSocializingPoolElRewards
-	networkDetails.UnclaimedSocializingPoolSDRewards = unclaimedSocializingPoolSdRewards
-	networkDetails.ClaimedSocializingPoolElRewards = claimedSocializingPoolElRewards
-	networkDetails.ClaimedSocializingPoolSdRewards = claimedSocializingPoolSdRewards
 
 	state.StaderNetworkDetails = networkDetails
+
+	networkDetails.ClaimedSocializingPoolElRewards = rewardClaimData.unclaimedSocializingPoolElRewards
+	networkDetails.ClaimedSocializingPoolSdRewards = rewardClaimData.unclaimedSocializingPoolSdRewards
+	networkDetails.UnclaimedSocializingPoolElRewards = rewardClaimData.claimedSocializingPoolElRewards
+	networkDetails.UnclaimedSocializingPoolSDRewards = rewardClaimData.claimedSocializingPoolSdRewards
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 
@@ -369,36 +376,113 @@ func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
 	}
 }
 
-func spInfo(sp *stader.SocializingPoolContractManager) (struct {
-	ethRewardRemaining *big.Int
-	sdRewardRemaining  *big.Int
-	rewardChan         <-chan *contracts.SocializingPoolOperatorRewardsClaimed
+func getRewardData(
+	cfg *config.StaderNodeConfig,
+	sp *stader.SocializingPoolContractManager,
+	nodeAccount common.Address,
+) {
+
+}
+
+func getClaimData(
+	cfg *config.StaderNodeConfig,
+	cycles struct {
+		claimedCycles    []*big.Int
+		unclaimedCycles  []*big.Int
+		cyclesToDownload []*big.Int
+	},
+) (struct {
+	claimedSocializingPoolElRewards   *big.Int
+	claimedSocializingPoolSdRewards   *big.Int
+	unclaimedSocializingPoolSdRewards *big.Int
+	unclaimedSocializingPoolElRewards *big.Int
 }, error) {
-
 	outstruct := new(struct {
-		ethRewardRemaining *big.Int
-		sdRewardRemaining  *big.Int
-		rewardChan         <-chan *contracts.SocializingPoolOperatorRewardsClaimed
+		claimedSocializingPoolElRewards   *big.Int
+		claimedSocializingPoolSdRewards   *big.Int
+		unclaimedSocializingPoolSdRewards *big.Int
+		unclaimedSocializingPoolElRewards *big.Int
 	})
-	ethRewardRemaining, err := sp.SocializingPool.TotalOperatorETHRewardsRemaining(nil)
+
+	claimedSocializingPoolElRewards, claimedSocializingPoolSdRewards, _, err := cfg.GetClaimData(cycles.claimedCycles)
+	if err != nil {
+		return *outstruct, err
+	}
+	unclaimedSocializingPoolElRewards, unclaimedSocializingPoolSDRewards, _, err := cfg.GetClaimData(cycles.unclaimedCycles)
 	if err != nil {
 		return *outstruct, err
 	}
 
-	sdRewardRemaining, err := sp.SocializingPool.TotalOperatorSDRewardsRemaining(nil)
+	outstruct.claimedSocializingPoolElRewards = sum(claimedSocializingPoolElRewards)
+	outstruct.claimedSocializingPoolSdRewards = sum(claimedSocializingPoolSdRewards)
+	outstruct.unclaimedSocializingPoolElRewards = sum(unclaimedSocializingPoolElRewards)
+	outstruct.unclaimedSocializingPoolSdRewards = sum(unclaimedSocializingPoolSDRewards)
+
+	return *outstruct, nil
+}
+
+func sum(array []*big.Int) *big.Int {
+	result := big.NewInt(0)
+	for _, v := range array {
+		result = result.Add(result, v)
+	}
+	return result
+}
+
+func getClaimedCycles(
+	cfg *config.StaderNodeConfig,
+	sp *stader.SocializingPoolContractManager,
+	nodeAccount common.Address,
+) (struct {
+	claimedCycles    []*big.Int
+	unclaimedCycles  []*big.Int
+	cyclesToDownload []*big.Int
+}, error) {
+	outstruct := new(struct {
+		claimedCycles    []*big.Int
+		unclaimedCycles  []*big.Int
+		cyclesToDownload []*big.Int
+	})
+
+	claimedCycles := []*big.Int{}
+	unclaimedCycles := []*big.Int{}
+	cyclesToDownload := []*big.Int{}
+
+	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return *outstruct, err
 	}
-	sink := make(chan *contracts.SocializingPoolOperatorRewardsClaimed)
-	// var recipient []common.Address
-	// _, err = sp.SocializingPool.WatchOperatorRewardsClaimed(nil, sink, recipient)
-	// if err != nil {
-	// 	return *outstruct, err
-	// }
 
-	outstruct.ethRewardRemaining = ethRewardRemaining
-	outstruct.sdRewardRemaining = sdRewardRemaining
-	outstruct.rewardChan = sink
+	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
+		cycle := big.NewInt(i)
+		if err != nil {
+			return *outstruct, err
+		}
+		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, cycle, nil)
+		if err != nil {
+			return *outstruct, err
+		}
+		if isClaimed {
+			claimedCycles = append(claimedCycles, cycle)
+		} else {
+			unclaimedCycles = append(unclaimedCycles, cycle)
+		}
+
+		// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
+		// check if this cycle has been downloaded
+		cycleMerkleRewardFile := cfg.GetSpRewardCyclePath(i, true)
+		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+		if err != nil {
+			return *outstruct, err
+		}
+		_, err = os.Stat(expandedCycleMerkleRewardFile)
+		if !os.IsNotExist(err) && err != nil {
+			return *outstruct, err
+		}
+		if os.IsNotExist(err) {
+			cyclesToDownload = append(cyclesToDownload, cycle)
+		}
+	}
 
 	return *outstruct, nil
 }
