@@ -100,6 +100,14 @@ func run(c *cli.Context) error {
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 
+	go func() {
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+		if err != nil {
+			errorLog.Println(err)
+		}
+		wg.Done()
+	}()
+
 	// Run metrics loop
 	go func() {
 		for {
@@ -128,14 +136,6 @@ func run(c *cli.Context) error {
 			stateCache.UpdateState(networkStateCache)
 
 			time.Sleep(tasksInterval)
-		}
-		wg.Done()
-	}()
-
-	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
-		if err != nil {
-			errorLog.Println(err)
 		}
 		wg.Done()
 	}()

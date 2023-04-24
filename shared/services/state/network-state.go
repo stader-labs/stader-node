@@ -327,15 +327,15 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
-	if err != nil {
-		return nil, err
-	}
+	//cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	rewardClaimData, err := getClaimData(cfg, cycles)
-	if err != nil {
-		return nil, err
-	}
+	//rewardClaimData, err := getClaimData(cfg, cycles)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	networkDetails.SdPrice = sdPrice
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -356,13 +356,14 @@ func CreateNetworkStateCache(
 	networkDetails.UnclaimedClRewards = totalClRewards
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
+	networkDetails.ClaimedSocializingPoolElRewards = big.NewInt(10)
+	networkDetails.ClaimedSocializingPoolSdRewards = big.NewInt(20)
+	networkDetails.UnclaimedSocializingPoolElRewards = big.NewInt(30)
+	networkDetails.UnclaimedSocializingPoolSDRewards = big.NewInt(40)
+	networkDetails.EthApr = big.NewInt(1)
+	networkDetails.SdApr = big.NewInt(2)
 
 	state.StaderNetworkDetails = networkDetails
-
-	networkDetails.ClaimedSocializingPoolElRewards = rewardClaimData.unclaimedSocializingPoolElRewards
-	networkDetails.ClaimedSocializingPoolSdRewards = rewardClaimData.unclaimedSocializingPoolSdRewards
-	networkDetails.UnclaimedSocializingPoolElRewards = rewardClaimData.claimedSocializingPoolElRewards
-	networkDetails.UnclaimedSocializingPoolSDRewards = rewardClaimData.claimedSocializingPoolSdRewards
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 
@@ -387,10 +388,10 @@ func getRewardData(
 func getClaimData(
 	cfg *config.StaderNodeConfig,
 	cycles struct {
-		claimedCycles    []*big.Int
-		unclaimedCycles  []*big.Int
-		cyclesToDownload []*big.Int
-	},
+	claimedCycles    []*big.Int
+	unclaimedCycles  []*big.Int
+	cyclesToDownload []*big.Int
+},
 ) (struct {
 	claimedSocializingPoolElRewards   *big.Int
 	claimedSocializingPoolSdRewards   *big.Int
