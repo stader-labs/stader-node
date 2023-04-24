@@ -12,31 +12,24 @@ import (
 )
 
 // Represents the collector for the stader network metrics
-type RewardCollector struct {
-	ActiveValidators                  *prometheus.Desc
-	QueuedValidators                  *prometheus.Desc
-	SlashedValidators                 *prometheus.Desc
-	ExitingValidators                 *prometheus.Desc
-	WithdrawnValidators               *prometheus.Desc
-	TotalSDBonded                     *prometheus.Desc
-	UnclaimedClRewards                *prometheus.Desc
-	ElReward                          *prometheus.Desc
-	SDReward                          *prometheus.Desc
-	ETHAPR                            *prometheus.Desc
-	SDAPR                             *prometheus.Desc
-	CumulativePenalty                 *prometheus.Desc
-	ClaimedBeaconchainRewards         *prometheus.Desc
-	ClaimedELRewards                  *prometheus.Desc
-	ClaimedSDrewards                  *prometheus.Desc
-	UnclaimedELRewards                *prometheus.Desc
-	UnclaimedSDRewards                *prometheus.Desc
-	NextSDOrELAndSDRewardsCheckpoint  *prometheus.Desc
-	TotalAttestations                 *prometheus.Desc
-	AttestationPercent                *prometheus.Desc
-	BlocksProduced                    *prometheus.Desc
-	BlocksProducedPercent             *prometheus.Desc
-	AttestationInclusionEffectiveness *prometheus.Desc
-	UptimePercent                     *prometheus.Desc
+type OperatorCollector struct {
+	ActiveValidators                     *prometheus.Desc
+	QueuedValidators                     *prometheus.Desc
+	SlashedValidators                    *prometheus.Desc
+	ExitingValidators                    *prometheus.Desc
+	WithdrawnValidators                  *prometheus.Desc
+	TotalSDBonded                        *prometheus.Desc
+	UnclaimedClRewards                   *prometheus.Desc
+	UnclaimedNonSocializingPoolElRewards *prometheus.Desc
+	ETHAPR                               *prometheus.Desc
+	SDAPR                                *prometheus.Desc
+	CumulativePenalty                    *prometheus.Desc
+	ClaimedSDrewards                     *prometheus.Desc
+	UnclaimedSocializingPoolELRewards    *prometheus.Desc
+	UnclaimedSocializingPoolSdRewards    *prometheus.Desc
+	ClaimedSocializingPoolElRewards      *prometheus.Desc
+	ClaimedSocializingPoolSdRewards      *prometheus.Desc
+	NextRewardCycleTime                  *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -60,8 +53,8 @@ func NewRewardCollector(
 	ec stader.ExecutionClient,
 	nodeAddress common.Address,
 	stateLocker *StateCache,
-) *RewardCollector {
-	return &RewardCollector{
+) *OperatorCollector {
+	return &OperatorCollector{
 		ActiveValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, ActiveValidators), "", nil, nil,
 		),
@@ -71,50 +64,17 @@ func NewRewardCollector(
 		SlashedValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, SlashedValidators), "", nil, nil,
 		),
-		TotalETHBonded: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, TotalETHBonded), "", nil, nil,
-		),
 		TotalSDBonded: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, TotalSDBonded), "", nil, nil,
 		),
-		SdCollateral: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, SdCollateral), "", nil, nil),
-		BeaconchainReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, BeaconchainReward), "", nil, nil),
-		ElReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, ElReward), "", nil, nil),
-		SDReward: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, SDReward), "", nil, nil),
 		ETHAPR: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, ETHAPR), "", nil, nil),
 		SDAPR: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, SDAPR), "", nil, nil),
 		CumulativePenalty: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, CumulativePenalty), "", nil, nil),
-		ClaimedBeaconchainRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, ClaimedBeaconchainRewards), "", nil, nil),
-		ClaimedELRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, ClaimedELRewards), "", nil, nil),
 		ClaimedSDrewards: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, ClaimedSDrewards), "", nil, nil),
-		UnclaimedELRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, UnclaimedELRewards), "", nil, nil),
-		UnclaimedSDRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, UnclaimedSDRewards), "", nil, nil),
-		NextSDOrELAndSDRewardsCheckpoint: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, NextSDOrELAndSDRewardsCheckpoint), "", nil, nil),
-		TotalAttestations: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, TotalAttestations), "", nil, nil),
-		AttestationPercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, AttestationPercent), "", nil, nil),
-		BlocksProduced: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, BlocksProduced), "", nil, nil),
-		BlocksProducedPercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, BlocksProducedPercent), "", nil, nil),
-		AttestationInclusionEffectiveness: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, AttestationInclusionEffectiveness), "", nil, nil),
-		UptimePercent: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, UptimePercent), "", nil, nil),
 
 		bc:          bc,
 		ec:          ec,
@@ -125,36 +85,20 @@ func NewRewardCollector(
 }
 
 // Write metric descriptions to the Prometheus channel
-func (collector *RewardCollector) Describe(channel chan<- *prometheus.Desc) {
+func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.ActiveValidators
 	channel <- collector.QueuedValidators
 	channel <- collector.SlashedValidators
-	channel <- collector.TotalETHBonded
 	channel <- collector.TotalSDBonded
 
-	channel <- collector.SdCollateral
-	channel <- collector.BeaconchainReward
-	channel <- collector.ElReward
-	channel <- collector.SDReward
 	channel <- collector.ETHAPR
 	channel <- collector.SDAPR
 	channel <- collector.CumulativePenalty
-	channel <- collector.ClaimedBeaconchainRewards
-	channel <- collector.ClaimedELRewards
 	channel <- collector.ClaimedSDrewards
-	channel <- collector.UnclaimedELRewards
-	channel <- collector.UnclaimedSDRewards
-	channel <- collector.NextSDOrELAndSDRewardsCheckpoint
-	channel <- collector.TotalAttestations
-	channel <- collector.AttestationPercent
-	channel <- collector.BlocksProduced
-	channel <- collector.BlocksProducedPercent
-	channel <- collector.AttestationInclusionEffectiveness
-	channel <- collector.UptimePercent
 }
 
 // Collect the latest metric values and pass them to Prometheus
-func (collector *RewardCollector) Collect(channel chan<- prometheus.Metric) {
+func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
@@ -167,6 +111,6 @@ func (collector *RewardCollector) Collect(channel chan<- prometheus.Metric) {
 }
 
 // Log error messages
-func (collector *RewardCollector) logError(err error) {
+func (collector *OperatorCollector) logError(err error) {
 	fmt.Printf("[%s] %s\n", collector.logPrefix, err.Error())
 }

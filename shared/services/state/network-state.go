@@ -280,9 +280,27 @@ func CreateNetworkStateCache(
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
 
+	state.logLine("Retrieved Socializing Pool Reward Details")
+
+	start = time.Now()
+
+	unclaimedSocializingPoolElRewards := big.NewInt(0)
+	unclaimedSocializingPoolSdRewards := big.NewInt(0)
+	claimedSocializingPoolElRewards := big.NewInt(0)
+	claimedSocializingPoolSdRewards := big.NewInt(0)
+
+	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	if err != nil {
+		return nil, err
+	}
+	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
+
+	}
+
+	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
+
 	state.logLine("Getting Stader Network Details")
 
-	//// TODO - bchain - parallelize these calls
 	start = time.Now()
 
 	networkDetails := NetworkDetails{}
