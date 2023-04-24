@@ -94,18 +94,10 @@ func GetValidatorWithdrawalCredential(vfcm *stader.VaultFactoryContractManager, 
 	return *withdrawalCredentials, nil
 }
 
-func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (struct {
-	UserShare     *big.Int
-	OperatorShare *big.Int
-	ProtocolShare *big.Int
-}, error) {
+func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (types2.RewardShare, error) {
 	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
 	if err != nil {
-		return struct {
-			UserShare     *big.Int
-			OperatorShare *big.Int
-			ProtocolShare *big.Int
-		}{}, err
+		return types2.RewardShare{}, err
 	}
 
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
@@ -136,7 +128,6 @@ func GetQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractManager, 
 	return pnr.PermissionlessNodeRegistry.GetTotalQueuedValidatorCount(opts)
 }
 
-// TODO
 func GetSlashedValidator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	vals, err := pnr.PermissionlessNodeRegistry.GetAllActiveValidators(opts, nil, nil)
 	if err != nil {
