@@ -388,10 +388,10 @@ func getRewardData(
 func getClaimData(
 	cfg *config.StaderNodeConfig,
 	cycles struct {
-	claimedCycles    []*big.Int
-	unclaimedCycles  []*big.Int
-	cyclesToDownload []*big.Int
-},
+		claimedCycles    []*big.Int
+		unclaimedCycles  []*big.Int
+		cyclesToDownload []*big.Int
+	},
 ) (struct {
 	claimedSocializingPoolElRewards   *big.Int
 	claimedSocializingPoolSdRewards   *big.Int
