@@ -154,10 +154,10 @@ func configureHTTP() {
 }
 
 func updateNetworkStateCache(m *state.NetworkStateManager, nodeAddress common.Address) (*state.NetworkStateCache, error) {
-	// Get the state of the network
-	state, err := m.GetHeadStateForNode(nodeAddress)
+	// Get the networkStateCache of the network
+	networkStateCache, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
-		return nil, fmt.Errorf("error updating network state: %w", err)
+		return nil, fmt.Errorf("error updating network networkStateCache: %w", err)
 	}
-	return state, nil
+	return networkStateCache, nil
 }

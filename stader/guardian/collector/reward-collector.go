@@ -163,7 +163,6 @@ func (collector *RewardCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.TotalETHBonded, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalETHBonded.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDBonded, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalSDBonded.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.SdCollateral, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SdCollateral.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.BeaconchainReward, prometheus.GaugeValue, float64(state.StaderNetworkDetails.BeaconchainReward.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.ElReward, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ElReward.Int64()))
