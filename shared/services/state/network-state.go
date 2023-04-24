@@ -2,6 +2,7 @@ package state
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"math/big"
 	"time"
 
@@ -20,6 +21,7 @@ import (
 )
 
 type NetworkDetails struct {
+	// Network details
 	SdPrice               *big.Int
 	TotalValidators       *big.Int
 	TotalOperators        *big.Int
@@ -28,11 +30,15 @@ type NetworkDetails struct {
 	TotalEthxSupply       *big.Int
 	TotalStakedEthByUsers *big.Int
 
-	ActiveValidators                  *big.Int
-	QueuedValidators                  *big.Int
-	SlashedValidators                 *big.Int
+	// Validator specific info
+	ActiveValidators    *big.Int
+	QueuedValidators    *big.Int
+	SlashedValidators   *big.Int
+	ExitingValidators   *big.Int
+	WithdrawnValidators *big.Int
+	ValidatorStatusMap  map[types.ValidatorPubkey]beacon.ValidatorStatus
+
 	TotalETHBonded                    *big.Int
-	TotalSDBonded                     *big.Int
 	SdCollateral                      *big.Int
 	BeaconchainReward                 *big.Int
 	ElReward                          *big.Int
@@ -52,8 +58,6 @@ type NetworkDetails struct {
 	BlocksProducedPercent             *big.Int
 	AttestationInclusionEffectiveness *big.Int
 	UptimePercent                     *big.Int
-
-	rewardChan <-chan *contracts.SocializingPoolOperatorRewardsClaimed
 }
 
 type NetworkStateCache struct {
@@ -93,16 +97,6 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	ethx, err := stader.NewErc20TokenContract(ec, ethxAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	// bcm, err := getBea
-	if err != nil {
-		return nil, err
-	}
-
-	vf, err := stader.NewVaultFactory(ec, cfg.GetVaultFactoryAddress())
 	if err != nil {
 		return nil, err
 	}
@@ -164,6 +158,29 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	state.ValidatorDetails = statusMap
+	activeValidators := big.NewInt(0)
+	slashedValidators := big.NewInt(0)
+	queuedValidators := big.NewInt(0)
+	exitingValidators := big.NewInt(0)
+	withdrawnValidators := big.NewInt(0)
+	for _, status := range statusMap {
+		if eth2.IsValidatorQueued(status) {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorSlashed(status) {
+			slashedValidators.Add(slashedValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorExiting(status) {
+			exitingValidators.Add(exitingValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorWithdrawn(status) {
+			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorActive(status) {
+			activeValidators.Add(activeValidators, big.NewInt(1))
+		}
+	}
+
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
 
 	state.logLine("Getting Stader Network Details")
@@ -202,73 +219,12 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 
-	/// TODO: FIX panic GetActiveValidators
-	activeValidators, err := node.GetActiveValidators(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	queuedValidators, err := node.GetQueuedValidators(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	totalETHBonded, err := node.GetCollateralETH(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	totalSDBonded, err := node.GetCollateralETH(prn, nil)
-	if err != nil {
-		return nil, err
-	}
-	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	elRewardBalance, err := tokens.GetEthBalance(ec, operatorElRewardAddress, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	sp, err := stader.NewSocializingPool(ec, cfg.GetSocializingPoolAddress())
-	if err != nil {
-		return nil, err
-	}
-
-	spInfo, err := spInfo(sp)
-	if err != nil {
-		return nil, err
-	}
-
-	networkDetails.ActiveValidators = activeValidators // OK
-	networkDetails.QueuedValidators = queuedValidators // OK
-
-	networkDetails.SlashedValidators = totalETHBonded // CHECK
-	networkDetails.TotalETHBonded = totalETHBonded    // CHECK
-	networkDetails.TotalSDBonded = totalSDBonded      // CHECK
-
-	networkDetails.SdCollateral = totalSdCollateral                      // OK
-	networkDetails.BeaconchainReward = totalSdCollateral                 // CHECK
-	networkDetails.ElReward = elRewardBalance                            // OK
-	networkDetails.SDReward = totalSdCollateral                          // CHECK
-	networkDetails.ETHAPR = totalSdCollateral                            // CHECK
-	networkDetails.SDAPR = totalSdCollateral                             // CHECK
-	networkDetails.CumulativePenalty = totalSdCollateral                 // CHECK
-	networkDetails.ClaimedBeaconchainRewards = totalSdCollateral         // CHECK
-	networkDetails.ClaimedELRewards = totalSdCollateral                  // CHECK
-	networkDetails.ClaimedSDrewards = totalSdCollateral                  // CHECK
-	networkDetails.UnclaimedELRewards = totalSdCollateral                // CHECK
-	networkDetails.UnclaimedSDRewards = spInfo.sdRewardRemaining         // OK
-	networkDetails.NextSDOrELAndSDRewardsCheckpoint = totalSdCollateral  // CHECK
-	networkDetails.TotalAttestations = totalSdCollateral                 // CHECK
-	networkDetails.AttestationPercent = totalSdCollateral                // CHECK
-	networkDetails.BlocksProduced = totalSdCollateral                    // CHECK
-	networkDetails.BlocksProducedPercent = totalSdCollateral             // CHECK
-	networkDetails.AttestationInclusionEffectiveness = totalSdCollateral // CHECK
-	networkDetails.UptimePercent = totalSdCollateral                     // CHECK
-
-	networkDetails.rewardChan = spInfo.rewardChan // CHECK
+	networkDetails.ValidatorStatusMap = statusMap
+	networkDetails.ActiveValidators = activeValidators
+	networkDetails.QueuedValidators = queuedValidators
+	networkDetails.ExitingValidators = exitingValidators
+	networkDetails.SlashedValidators = slashedValidators
+	networkDetails.WithdrawnValidators = withdrawnValidators
 
 	state.StaderNetworkDetails = networkDetails
 
