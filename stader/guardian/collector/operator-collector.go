@@ -116,7 +116,6 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
-	fmt.Printf("%+v", state)
 	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ActiveValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
@@ -125,6 +124,10 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(state.StaderNetworkDetails.CumulativePenalty.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedClRewards.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolELRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSocializingPoolElRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSocializingPoolSDRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolElRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards.Int64()))
 }
 
 // Log error messages

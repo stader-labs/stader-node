@@ -284,10 +284,11 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	unclaimedSocializingPoolElRewards := big.NewInt(0)
-	unclaimedSocializingPoolSdRewards := big.NewInt(0)
-	claimedSocializingPoolElRewards := big.NewInt(0)
-	claimedSocializingPoolSdRewards := big.NewInt(0)
+	// TODO - compute these accuratley
+	unclaimedSocializingPoolElRewards := big.NewInt(10)
+	unclaimedSocializingPoolSdRewards := big.NewInt(20)
+	claimedSocializingPoolElRewards := big.NewInt(30)
+	claimedSocializingPoolSdRewards := big.NewInt(40)
 
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
@@ -349,6 +350,10 @@ func CreateNetworkStateCache(
 	networkDetails.UnclaimedClRewards = totalClRewards
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
+	networkDetails.UnclaimedSocializingPoolElRewards = unclaimedSocializingPoolElRewards
+	networkDetails.UnclaimedSocializingPoolSDRewards = unclaimedSocializingPoolSdRewards
+	networkDetails.ClaimedSocializingPoolElRewards = claimedSocializingPoolElRewards
+	networkDetails.ClaimedSocializingPoolSdRewards = claimedSocializingPoolSdRewards
 
 	state.StaderNetworkDetails = networkDetails
 
