@@ -1,19 +1,17 @@
 package node
 
 import (
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
+	"math/big"
+	"os"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
-	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
-	"math/big"
-	"os"
 )
 
 func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
@@ -66,72 +64,6 @@ func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
 		// will never happen
 		return false, fmt.Errorf("operator info opted for socializing pool is not a boolean")
 	}
-}
-
-func getClaimData(c *cli.Context, cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
-	cfg, err := services.GetConfig(c)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	// data to pass to socializing pool contract
-	amountSd := []*big.Int{}
-	amountEth := []*big.Int{}
-	merkleProofs := [][][32]byte{}
-
-	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
-	for _, cycle := range cycles {
-		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(cycle.Int64(), true)
-		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-		data, err := os.ReadFile(expandedCycleMerkleRewardFile)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-		// need to make sure we have downloaded the data
-		if os.IsNotExist(err) {
-			return nil, nil, nil, err
-		}
-		merkleData := stader_backend.CycleMerkleProofs{}
-		err = json.Unmarshal(data, &merkleData)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-
-		amountSdBigInt := big.NewInt(0)
-		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
-		if !ok {
-			return nil, nil, nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
-		}
-
-		// same thing above for eth
-		amountEthBigInt := big.NewInt(0)
-		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
-		if !ok {
-			return nil, nil, nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
-		}
-
-		amountSd = append(amountSd, amountSdBigInt)
-		amountEth = append(amountEth, amountEthBigInt)
-
-		// convert merkle proofs to [32]byte
-		cycleMerkleProofs := [][32]byte{}
-		for _, proof := range merkleData.Proof {
-			merkleProofBytes, err := hex.DecodeString(proof[2:])
-			if err != nil {
-				return nil, nil, nil, err
-			}
-			var proofBytes [32]byte
-			copy(proofBytes[:], merkleProofBytes[:32])
-			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
-		}
-
-		merkleProofs = append(merkleProofs, cycleMerkleProofs)
-	}
-
-	return amountSd, amountEth, merkleProofs, nil
 }
 
 func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
@@ -234,7 +166,10 @@ func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.Estima
 	if err != nil {
 		return nil, err
 	}
-
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
 	response := api.EstimateClaimSpRewardsGasResponse{}
 
 	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
@@ -242,7 +177,7 @@ func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.Estima
 		return nil, err
 	}
 
-	amountSd, amountEth, merkleProofs, err := getClaimData(c, cycles)
+	amountSd, amountEth, merkleProofs, err := cfg.StaderNode.GetClaimData(cycles)
 	if err != nil {
 		return nil, err
 	}
@@ -277,9 +212,13 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		return nil, err
 	}
 
-	response := api.ClaimSpRewardsResponse{}
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
 
-	amountSd, amountEth, merkleProofs, err := getClaimData(c, cycles)
+	response := api.ClaimSpRewardsResponse{}
+	amountSd, amountEth, merkleProofs, err := cfg.StaderNode.GetClaimData(cycles)
 	if err != nil {
 		return nil, err
 	}
