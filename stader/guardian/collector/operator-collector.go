@@ -106,6 +106,8 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.UnclaimedNonSocializingPoolElRewards
 	channel <- collector.ClaimedSocializingPoolSdRewards
 	channel <- collector.ClaimedSocializingPoolElRewards
+	channel <- collector.UnclaimedSocializingPoolELRewards
+	channel <- collector.UnclaimedSocializingPoolSdRewards
 
 	channel <- collector.CumulativePenalty
 	channel <- collector.UnclaimedClRewards
@@ -124,10 +126,10 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(state.StaderNetworkDetails.CumulativePenalty.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedClRewards.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolELRewards, prometheus.GaugeValue, float64(10))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(20))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, float64(30))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(40))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolELRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSocializingPoolElRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSocializingPoolSDRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolElRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards.Int64()))
 }
 
 // Log error messages
