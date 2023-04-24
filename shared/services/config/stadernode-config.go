@@ -263,9 +263,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:   "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
-			config.Network_Devnet:   "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
-			config.Network_Mainnet:  "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
+			config.Network_Prater:   "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
+			config.Network_Devnet:   "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
+			config.Network_Mainnet:  "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
 			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
 		},
 

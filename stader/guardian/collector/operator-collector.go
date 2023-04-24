@@ -16,10 +16,10 @@ type RewardCollector struct {
 	ActiveValidators                  *prometheus.Desc
 	QueuedValidators                  *prometheus.Desc
 	SlashedValidators                 *prometheus.Desc
-	TotalETHBonded                    *prometheus.Desc
+	ExitingValidators                 *prometheus.Desc
+	WithdrawnValidators               *prometheus.Desc
 	TotalSDBonded                     *prometheus.Desc
-	SdCollateral                      *prometheus.Desc
-	BeaconchainReward                 *prometheus.Desc
+	UnclaimedClRewards                *prometheus.Desc
 	ElReward                          *prometheus.Desc
 	SDReward                          *prometheus.Desc
 	ETHAPR                            *prometheus.Desc

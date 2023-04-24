@@ -62,6 +62,9 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 	if response.SdCollateralRequestedToWithdraw == nil {
 		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
 	}
+	if response.TotalNonTerminalValidators == nil {
+		response.TotalNonTerminalValidators = big.NewInt(0)
+	}
 
 	return response, nil
 }

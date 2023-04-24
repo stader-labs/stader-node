@@ -35,6 +35,10 @@ type NetworkCollector struct {
 	// Total EthX supply
 	TotalEthxSupply *prometheus.Desc
 
+	EthApr *prometheus.Desc
+
+	SdApr *prometheus.Desc
+
 	// The beacon client
 	bc beacon.Client
 
@@ -83,6 +87,14 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The total amount of SD staked as collateral",
 			nil, nil,
 		),
+		EthApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "eth_rewards_apr"),
+			"The APR of Eth Rewards",
+			nil, nil,
+		),
+		SdApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_rewards_apr"),
+			"The APR of SD rewards",
+			nil, nil,
+		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -100,6 +112,8 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalStakedEthByUsers
 	channel <- collector.TotalStakedEthByNos
 	channel <- collector.TotalStakedSd
+	channel <- collector.EthApr
+	channel <- collector.SdApr
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -121,6 +135,10 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.EthApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.EthApr.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.SdApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SdApr.Int64()))
 }
 
 // Log error messages
