@@ -45,7 +45,7 @@ type OperatorCollector struct {
 }
 
 // Create a new NetworkCollector instance
-func NewRewardCollector(
+func NewOperatorCollector(
 	bc beacon.Client,
 	ec stader.ExecutionClient,
 	nodeAddress common.Address,

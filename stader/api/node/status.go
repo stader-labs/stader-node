@@ -193,17 +193,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			if err != nil {
 				return nil, err
 			}
-			//fmt.Printf("Getting validator withdraw vault address")
 			withdrawVaultBalance, err := tokens.GetEthBalance(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 			if err != nil {
 				return nil, err
 			}
-			//fmt.Printf("Getting validator withdraw vault share")
 			withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
 			if err != nil {
 				return nil, err
 			}
-			//fmt.Printf("Getting validator withdraw vault reward threshold")
 			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
 			if err != nil {
 				return nil, err
@@ -213,20 +210,17 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				crossedRewardThreshold = true
 			}
 
-			//fmt.Printf("Getting validator withdraw vault withdraw share")
 			withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 			if err != nil {
 				return nil, err
 			}
 			validatorWithdrawVaultWithdrawShares := withdrawVaultWithdrawShares.OperatorShare
 
-			//fmt.Printf("Getting validator beacon status")
 			validatorBeaconStatus, err := bc.GetValidatorStatus(types.BytesToValidatorPubkey(validatorContractInfo.Pubkey), nil)
 			if err != nil {
 				return nil, err
 			}
 
-			//fmt.Printf("Getting validator display status")
 			validatorDisplayStatus, err := stdr.GetValidatorRunningStatus(validatorBeaconStatus, validatorContractInfo)
 			if err != nil {
 				return nil, err
