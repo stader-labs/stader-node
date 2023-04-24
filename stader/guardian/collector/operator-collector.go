@@ -21,10 +21,7 @@ type OperatorCollector struct {
 	TotalSDBonded                        *prometheus.Desc
 	UnclaimedClRewards                   *prometheus.Desc
 	UnclaimedNonSocializingPoolElRewards *prometheus.Desc
-	ETHAPR                               *prometheus.Desc
-	SDAPR                                *prometheus.Desc
 	CumulativePenalty                    *prometheus.Desc
-	ClaimedSDrewards                     *prometheus.Desc
 	UnclaimedSocializingPoolELRewards    *prometheus.Desc
 	UnclaimedSocializingPoolSdRewards    *prometheus.Desc
 	ClaimedSocializingPoolElRewards      *prometheus.Desc
@@ -64,17 +61,30 @@ func NewRewardCollector(
 		SlashedValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, SlashedValidators), "", nil, nil,
 		),
+		ExitingValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, ExitingValidators), "", nil, nil,
+		),
+		WithdrawnValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, WithdrawnValidators), "", nil, nil,
+		),
+		UnclaimedClRewards: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, UnclaimedCLRewards), "", nil, nil,
+		),
+		UnclaimedNonSocializingPoolElRewards: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, UnclaimedSocializingPoolELRewards), "", nil, nil,
+		),
+		UnclaimedSocializingPoolSdRewards: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, UnclaimedSocializingPoolSdRewards), "", nil, nil,
+		),
 		TotalSDBonded: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, TotalSDBonded), "", nil, nil,
 		),
-		ETHAPR: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, ETHAPR), "", nil, nil),
-		SDAPR: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, SDAPR), "", nil, nil),
 		CumulativePenalty: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, RewardSub, CumulativePenalty), "", nil, nil),
-		ClaimedSDrewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, RewardSub, ClaimedSDrewards), "", nil, nil),
+		ClaimedSocializingPoolSdRewards: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, ClaimedSocializingPoolSDrewards), "", nil, nil),
+		ClaimedSocializingPoolElRewards: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, RewardSub, ClaimedSocializingPoolELRewards), "", nil, nil),
 
 		bc:          bc,
 		ec:          ec,
@@ -89,12 +99,16 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.ActiveValidators
 	channel <- collector.QueuedValidators
 	channel <- collector.SlashedValidators
+	channel <- collector.ExitingValidators
+	channel <- collector.WithdrawnValidators
 	channel <- collector.TotalSDBonded
+	channel <- collector.UnclaimedSocializingPoolSdRewards
+	channel <- collector.UnclaimedNonSocializingPoolElRewards
+	channel <- collector.ClaimedSocializingPoolSdRewards
+	channel <- collector.ClaimedSocializingPoolElRewards
 
-	channel <- collector.ETHAPR
-	channel <- collector.SDAPR
 	channel <- collector.CumulativePenalty
-	channel <- collector.ClaimedSDrewards
+	channel <- collector.UnclaimedClRewards
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -106,8 +120,11 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ActiveValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.ExitingValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ExitingValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.WithdrawnValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.WithdrawnValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(state.StaderNetworkDetails.CumulativePenalty.Int64()))
-	//channel <- prometheus.MustNewConstMetric(collector.UnclaimedSDRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSDRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedClRewards.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards.Int64()))
 }
 
 // Log error messages
