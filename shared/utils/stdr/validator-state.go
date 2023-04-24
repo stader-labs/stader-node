@@ -34,24 +34,13 @@ type ValidatorInfo struct {
 	WithdrawnBlock                   *big.Int
 }
 
-type ValidatorContractInfo struct {
-	Status               uint8
-	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
-	WithdrawVaultAddress common.Address
-	OperatorId           *big.Int
-	DepositBlock         *big.Int
-	WithdrawnBlock       *big.Int
-}
-
-func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]ValidatorContractInfo, error) {
+func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]types.ValidatorContractInfo, error) {
 	totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	validators := make(map[types.ValidatorPubkey]ValidatorContractInfo)
+	validators := make(map[types.ValidatorPubkey]types.ValidatorContractInfo)
 	for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
 		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
 		if err != nil {
@@ -70,11 +59,11 @@ func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegist
 
 }
 
-func IsValidatorTerminal(validatorInfo ValidatorContractInfo) bool {
+func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
 	return validatorInfo.Status > 6 || validatorInfo.Status == 1 || validatorInfo.Status == 2
 }
 
-func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo ValidatorContractInfo) (string, error) {
+func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
 	// if validator state in contract is less then Deposited, then display contract status
 	if validatorContractInfo.Status < 4 {
 		return ValidatorState[validatorContractInfo.Status], nil
