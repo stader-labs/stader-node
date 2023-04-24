@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -76,17 +77,7 @@ func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractMa
 	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
 }
 
-// TODO - bchain - make these inline structs into types
-func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (struct {
-	Status               uint8
-	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
-	WithdrawVaultAddress common.Address
-	OperatorId           *big.Int
-	DepositBlock         *big.Int
-	WithdrawnBlock       *big.Int
-}, error) {
+func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (types2.ValidatorContractInfo, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorRegistry(opts, validatorId)
 }
 

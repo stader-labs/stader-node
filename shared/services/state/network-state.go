@@ -3,6 +3,11 @@ package state
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
+	penalty_tracker "github.com/stader-labs/stader-node/stader-lib/penalty-tracker"
+	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
+	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
+	stake_pool_manager "github.com/stader-labs/stader-node/stader-lib/stake-pool-manager"
 	"math/big"
 	"time"
 
@@ -22,42 +27,55 @@ import (
 
 type NetworkDetails struct {
 	// Network details
-	SdPrice               *big.Int
-	TotalValidators       *big.Int
-	TotalOperators        *big.Int
-	TotalStakedSd         *big.Int
-	TotalStakedEthByNos   *big.Int
-	TotalEthxSupply       *big.Int
+
+	// done
+	SdPrice *big.Int
+	// done
+	TotalValidators *big.Int
+	// done
+	TotalOperators *big.Int
+	// done
+	TotalStakedSd *big.Int
+	// done
+	TotalStakedEthByNos *big.Int
+	// done
+	TotalEthxSupply *big.Int
+	// done
 	TotalStakedEthByUsers *big.Int
 
 	// Validator specific info
-	ActiveValidators    *big.Int
-	QueuedValidators    *big.Int
-	SlashedValidators   *big.Int
-	ExitingValidators   *big.Int
-	WithdrawnValidators *big.Int
-	ValidatorStatusMap  map[types.ValidatorPubkey]beacon.ValidatorStatus
 
-	TotalETHBonded                    *big.Int
-	SdCollateral                      *big.Int
-	BeaconchainReward                 *big.Int
-	ElReward                          *big.Int
-	SDReward                          *big.Int
-	ETHAPR                            *big.Int
-	SDAPR                             *big.Int
-	CumulativePenalty                 *big.Int
-	ClaimedBeaconchainRewards         *big.Int
-	ClaimedELRewards                  *big.Int
-	ClaimedSDrewards                  *big.Int
-	UnclaimedELRewards                *big.Int
-	UnclaimedSDRewards                *big.Int
-	NextSDOrELAndSDRewardsCheckpoint  *big.Int
-	TotalAttestations                 *big.Int
-	AttestationPercent                *big.Int
-	BlocksProduced                    *big.Int
-	BlocksProducedPercent             *big.Int
-	AttestationInclusionEffectiveness *big.Int
-	UptimePercent                     *big.Int
+	// done
+	ActiveValidators *big.Int
+	// done
+	QueuedValidators *big.Int
+	// done
+	SlashedValidators *big.Int
+	// done
+	ExitingValidators *big.Int
+	// done
+	WithdrawnValidators *big.Int
+	// done
+	ValidatorStatusMap map[types.ValidatorPubkey]beacon.ValidatorStatus
+	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
+
+	// done
+	CumulativePenalty *big.Int
+	// done
+	UnclaimedClRewards *big.Int
+	// done
+	UnclaimedNonSocializingPoolElRewards *big.Int
+
+	ClaimedSocializingPoolElRewards   *big.Int
+	ClaimedSocializingPoolSdRewards   *big.Int
+	UnclaimedSocializingPoolElRewards *big.Int
+	UnclaimedSocializingPoolSDRewards *big.Int
+	// done
+	NextSocializingPoolRewardCycle types.RewardCycleDetails
+
+	// TODO - apr computation are yet to be decided
+	EthApr *big.Int
+	SdApr  *big.Int
 }
 
 type NetworkStateCache struct {
@@ -85,8 +103,14 @@ func CreateNetworkStateCache(
 	nodeAddress common.Address,
 ) (*NetworkStateCache, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
+	ptAddress := cfg.GetPenaltyTrackerAddress()
 	sdcAddress := cfg.GetSdCollateralContractAddress()
 	ethxAddress := cfg.GetEthxTokenAddress()
+	stakePoolManagerAddress := cfg.GetStakePoolManagerAddress()
+	poolUtilsAddress := cfg.GetPoolUtilsAddress()
+	staderConfigAddress := cfg.GetStaderConfigAddress()
+	socializingPoolAddress := cfg.GetSocializingPoolAddress()
+	vaultFactoryAddress := cfg.GetVaultFactoryAddress()
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
@@ -97,6 +121,30 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	ethx, err := stader.NewErc20TokenContract(ec, ethxAddress)
+	if err != nil {
+		return nil, err
+	}
+	pt, err := stader.NewPenaltyTracker(ec, ptAddress)
+	if err != nil {
+		return nil, err
+	}
+	spm, err := stader.NewStakePoolManager(ec, stakePoolManagerAddress)
+	if err != nil {
+		return nil, err
+	}
+	putils, err := stader.NewPoolUtils(ec, poolUtilsAddress)
+	if err != nil {
+		return nil, err
+	}
+	sdcfg, err := stader.NewStaderConfig(ec, staderConfigAddress)
+	if err != nil {
+		return nil, err
+	}
+	sp, err := stader.NewSocializingPool(ec, socializingPoolAddress)
+	if err != nil {
+		return nil, err
+	}
+	vf, err := stader.NewVaultFactory(ec, vaultFactoryAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -130,6 +178,23 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	elRewardAddressBalance, err := tokens.GetEthBalance(prn.Client, operatorElRewardAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
@@ -137,6 +202,7 @@ func CreateNetworkStateCache(
 	}
 
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
+	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
 		validatorId, err := node.GetValidatorIdByOperatorId(prn, operatorId, big.NewInt(int64(i)), nil)
 		if err != nil {
@@ -147,7 +213,10 @@ func CreateNetworkStateCache(
 			return nil, err
 		}
 
-		pubkeys = append(pubkeys, types.BytesToValidatorPubkey(validatorInfo.Pubkey))
+		pubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
+		validatorInfoMap[pubKey] = validatorInfo
+
+		pubkeys = append(pubkeys, pubKey)
 	}
 
 	// Get the validator stats from Beacon
@@ -163,7 +232,10 @@ func CreateNetworkStateCache(
 	queuedValidators := big.NewInt(0)
 	exitingValidators := big.NewInt(0)
 	withdrawnValidators := big.NewInt(0)
-	for _, status := range statusMap {
+	totalClRewards := big.NewInt(0)
+	cumulativePenalty := big.NewInt(0)
+	for pubKey, status := range statusMap {
+		log.Printlnf("pubkey: %s, status: %s", pubKey, status)
 		if eth2.IsValidatorQueued(status) {
 			queuedValidators.Add(queuedValidators, big.NewInt(1))
 		}
@@ -179,6 +251,31 @@ func CreateNetworkStateCache(
 		if eth2.IsValidatorActive(status) {
 			activeValidators.Add(activeValidators, big.NewInt(1))
 		}
+
+		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
+		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
+		if err != nil {
+			return nil, err
+		}
+		withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
+		if err != nil {
+			return nil, err
+		}
+		rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
+		if err != nil {
+			return nil, err
+		}
+		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
+			continue
+		} else {
+			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
+		}
+
+		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
+		if err != nil {
+			return nil, err
+		}
+		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 	}
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
@@ -210,21 +307,30 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	totalStakedAssets, err := stake_pool_manager.GetTotalAssets(spm, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	networkDetails.SdPrice = sdPrice
-	networkDetails.TotalOperators = totalOperators
-	networkDetails.TotalValidators = totalValidators
+	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
+	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
 	networkDetails.TotalStakedSd = totalSdCollateral
 	networkDetails.TotalEthxSupply = ethxSupply
-	networkDetails.TotalStakedEthByUsers = big.NewInt(0)
+	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 
 	networkDetails.ValidatorStatusMap = statusMap
+	networkDetails.ValidatorInfoMap = validatorInfoMap
 	networkDetails.ActiveValidators = activeValidators
 	networkDetails.QueuedValidators = queuedValidators
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
+	networkDetails.CumulativePenalty = cumulativePenalty
+	networkDetails.UnclaimedClRewards = totalClRewards
+	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
+	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
 
 	state.StaderNetworkDetails = networkDetails
 

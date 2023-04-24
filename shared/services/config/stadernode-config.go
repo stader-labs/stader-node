@@ -121,6 +121,12 @@ type StaderNodeConfig struct {
 
 	// The contract address of the pool utils contract
 	poolUtilsAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the penalty tracker to which data is pushed by rated network oracles
+	penaltyTrackerAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the stake pool manager contract
+	stakePoolManagerAddress map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -297,6 +303,20 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet:  "0x6094E9CB0745546e79a5c3B713Be46304C2Fda5F",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
+
+		penaltyTrackerAddress: map[config.Network]string{
+			config.Network_Prater:   "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Devnet:   "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Mainnet:  "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		stakePoolManagerAddress: map[config.Network]string{
+			config.Network_Prater:   "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
+			config.Network_Devnet:   "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
+			config.Network_Mainnet:  "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
 	}
 }
 
@@ -441,6 +461,14 @@ func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
 
 func (cfg *StaderNodeConfig) GetPoolUtilsAddress() common.Address {
 	return common.HexToAddress(cfg.poolUtilsAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetPenaltyTrackerAddress() common.Address {
+	return common.HexToAddress(cfg.penaltyTrackerAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetStakePoolManagerAddress() common.Address {
+	return common.HexToAddress(cfg.stakePoolManagerAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

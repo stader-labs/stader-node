@@ -319,3 +319,69 @@ func NewPoolUtils(client ExecutionClient, poolUtilsAddress common.Address) (*Poo
 	}, nil
 
 }
+
+// implement similar bindings as above for Penalty
+
+type PenaltyTrackerContractManager struct {
+	Client          ExecutionClient
+	Penalty         *contracts.PenaltyTracker
+	PenaltyContract *Contract
+}
+
+func NewPenaltyTracker(client ExecutionClient, penaltyAddress common.Address) (*PenaltyTrackerContractManager, error) {
+	penalty, err := contracts.NewPenaltyTracker(penaltyAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	penaltyContractAbi, err := abi.JSON(strings.NewReader(contracts.PenaltyTrackerMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	penaltyContract := &Contract{
+		Contract: bind.NewBoundContract(penaltyAddress, penaltyContractAbi, client, client, client),
+		Address:  &penaltyAddress,
+		ABI:      &penaltyContractAbi,
+		Client:   client,
+	}
+
+	return &PenaltyTrackerContractManager{
+		Client:          client,
+		Penalty:         penalty,
+		PenaltyContract: penaltyContract,
+	}, nil
+
+}
+
+// implement simliar bindings as above for stake pool manager
+
+type StakePoolManagerContractManager struct {
+	Client                   ExecutionClient
+	StakePoolManager         *contracts.StakePoolManager
+	StakePoolManagerContract *Contract
+}
+
+func NewStakePoolManager(client ExecutionClient, stakePoolManagerAddress common.Address) (*StakePoolManagerContractManager, error) {
+	stakePoolManager, err := contracts.NewStakePoolManager(stakePoolManagerAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	stakePoolManagerContractAbi, err := abi.JSON(strings.NewReader(contracts.StakePoolManagerMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	stakePoolManagerContract := &Contract{
+		Contract: bind.NewBoundContract(stakePoolManagerAddress, stakePoolManagerContractAbi, client, client, client),
+		Address:  &stakePoolManagerAddress,
+		ABI:      &stakePoolManagerContractAbi,
+		Client:   client,
+	}
+
+	return &StakePoolManagerContractManager{
+		Client:                   client,
+		StakePoolManager:         stakePoolManager,
+		StakePoolManagerContract: stakePoolManagerContract,
+	}, nil
+
+}
