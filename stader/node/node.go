@@ -50,14 +50,16 @@ import (
 var preSignedCooldown, _ = time.ParseDuration("12h")
 var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 10 // Go thru 100 keys in each pass
-var tasksInterval, _ = time.ParseDuration("10s")
+var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
+var merkleProofsDownloadInterval, _ = time.ParseDuration("24h")
 
 const (
-	MaxConcurrentEth1Requests = 200
-	ManageFeeRecipientColor   = color.FgHiCyan
-	ErrorColor                = color.FgRed
-	InfoColor                 = color.FgHiGreen
+	MaxConcurrentEth1Requests   = 200
+	ManageFeeRecipientColor     = color.FgHiCyan
+	MerkleProofsDownloaderColor = color.FgHiBlue
+	ErrorColor                  = color.FgRed
+	InfoColor                   = color.FgHiGreen
 )
 
 // Register node command
@@ -108,6 +110,10 @@ func run(c *cli.Context) error {
 
 	// Initialize tasks
 	manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
+	if err != nil {
+		return err
+	}
+	merkleProofsDownloader, err := NewMerkleProofsDownloader(c, log.NewColorLogger(MerkleProofsDownloaderColor))
 	if err != nil {
 		return err
 	}
@@ -293,7 +299,33 @@ func run(c *cli.Context) error {
 					time.Sleep(taskCooldown)
 				}
 			}
-			time.Sleep(tasksInterval)
+			time.Sleep(feeRecepientPollingInterval)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		for {
+			infoLog.Printlnf("Checking if there are any available merkle proofs to download")
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				} else {
+					// Manage the fee recipient for the node
+					if err := merkleProofsDownloader.run(); err != nil {
+						errorLog.Println(err)
+					}
+					time.Sleep(taskCooldown)
+				}
+			}
+			infoLog.Printlnf("Done checking for merkle proofs to download")
+			time.Sleep(merkleProofsDownloadInterval)
 		}
 		wg.Done()
 	}()
