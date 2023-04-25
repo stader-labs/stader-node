@@ -217,6 +217,31 @@ func GetPoolUtilsContract(c *cli.Context) (*stader.PoolUtilsContractManager, err
 	return stader.NewPoolUtils(ec, cfg.StaderNode.GetPoolUtilsAddress())
 }
 
+func GetPenaltyTrackerContract(c *cli.Context) (*stader.PenaltyTrackerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPenaltyTracker(ec, cfg.StaderNode.GetPenaltyTrackerAddress())
+}
+
+func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+	return stader.NewStakePoolManager(ec, cfg.StaderNode.GetStakePoolManagerAddress())
+}
+
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {

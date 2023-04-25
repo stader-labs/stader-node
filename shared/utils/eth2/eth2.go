@@ -37,6 +37,26 @@ func IsValidatorWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
 	return false
 }
 
+func IsValidatorQueued(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_PendingQueued:
+		return true
+	}
+
+	return false
+}
+
+func IsValidatorSlashed(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveSlashed:
+		return true
+	case beacon.ValidatorState_ExitedSlashed:
+		return true
+	}
+
+	return false
+}
+
 func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
 	//fmt.Printf("Validator status: %v", validatorStatus)
 	switch validatorStatus.Status {

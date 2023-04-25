@@ -20,12 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"math/big"
+	"os"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/types/config"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 )
 
 // Constants
@@ -121,6 +127,12 @@ type StaderNodeConfig struct {
 
 	// The contract address of the pool utils contract
 	poolUtilsAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the penalty tracker to which data is pushed by rated network oracles
+	penaltyTrackerAddress map[config.Network]string `yaml:"-"`
+
+	// The contract address of the stake pool manager contract
+	stakePoolManagerAddress map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -257,9 +269,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:   "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
-			config.Network_Devnet:   "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
-			config.Network_Mainnet:  "0xac7FfBf5FB59Dbf0F0d2Cc38710966F370a8e07B",
+			config.Network_Prater:   "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
+			config.Network_Devnet:   "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
+			config.Network_Mainnet:  "0x9279520A2EC321A3bDd20AFe18B6bF16cAadFe8d",
 			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
 		},
 
@@ -295,6 +307,20 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Prater:   "0x6094E9CB0745546e79a5c3B713Be46304C2Fda5F",
 			config.Network_Devnet:   "0x6094E9CB0745546e79a5c3B713Be46304C2Fda5F",
 			config.Network_Mainnet:  "0x6094E9CB0745546e79a5c3B713Be46304C2Fda5F",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		penaltyTrackerAddress: map[config.Network]string{
+			config.Network_Prater:   "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Devnet:   "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Mainnet:  "0x5bE1FA0bC5f74123f8bFF9e7a5Ec301f0f17C104",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		stakePoolManagerAddress: map[config.Network]string{
+			config.Network_Prater:   "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
+			config.Network_Devnet:   "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
+			config.Network_Mainnet:  "0x64608D348D0aB1914dc58B8bEBAEE42AAFB3204d",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
@@ -443,6 +469,14 @@ func (cfg *StaderNodeConfig) GetPoolUtilsAddress() common.Address {
 	return common.HexToAddress(cfg.poolUtilsAddress[cfg.Network.Value.(config.Network)])
 }
 
+func (cfg *StaderNodeConfig) GetPenaltyTrackerAddress() common.Address {
+	return common.HexToAddress(cfg.penaltyTrackerAddress[cfg.Network.Value.(config.Network)])
+}
+
+func (cfg *StaderNodeConfig) GetStakePoolManagerAddress() common.Address {
+	return common.HexToAddress(cfg.stakePoolManagerAddress[cfg.Network.Value.(config.Network)])
+}
+
 func getDefaultDataDir(config *StaderConfig) string {
 	return filepath.Join(config.StaderDirectory, "data")
 }
@@ -479,6 +513,66 @@ func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "validators", NativeFeeRecipientFilename)
 }
 
+func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
+	// data to pass to socializing pool contract
+	amountSd := []*big.Int{}
+	amountEth := []*big.Int{}
+	merkleProofs := [][][32]byte{}
+
+	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
+	for _, cycle := range cycles {
+		cycleMerkleRewardFile := cfg.GetSpRewardCyclePath(cycle.Int64(), true)
+		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		data, err := os.ReadFile(expandedCycleMerkleRewardFile)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		// need to make sure we have downloaded the data
+		if os.IsNotExist(err) {
+			return nil, nil, nil, err
+		}
+		merkleData := stader_backend.CycleMerkleProofs{}
+		err = json.Unmarshal(data, &merkleData)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		amountSdBigInt := big.NewInt(0)
+		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
+		if !ok {
+			return nil, nil, nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
+		}
+
+		// same thing above for eth
+		amountEthBigInt := big.NewInt(0)
+		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
+		if !ok {
+			return nil, nil, nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
+		}
+
+		amountSd = append(amountSd, amountSdBigInt)
+		amountEth = append(amountEth, amountEthBigInt)
+
+		// convert merkle proofs to [32]byte
+		cycleMerkleProofs := [][32]byte{}
+		for _, proof := range merkleData.Proof {
+			merkleProofBytes, err := hex.DecodeString(proof[2:])
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			var proofBytes [32]byte
+			copy(proofBytes[:], merkleProofBytes[:32])
+			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
+		}
+
+		merkleProofs = append(merkleProofs, cycleMerkleProofs)
+	}
+
+	return amountSd, amountEth, merkleProofs, nil
+}
 func getNetworkOptions() []config.ParameterOption {
 	options := []config.ParameterOption{
 		{

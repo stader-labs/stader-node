@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 )
 
@@ -111,33 +112,19 @@ func GetWithdrawDelay(sdc *stader.SdCollateralContractManager, opts *bind.CallOp
 	return withdrawDelay, nil
 }
 
-func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (struct {
-	LastWithdrawReqTimestamp *big.Int
-	TotalSDWithdrawReqAmount *big.Int
-}, error) {
+func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (types2.OperatorWithdrawInfo, error) {
 	withdrawInfo, err := sdc.SdCollateral.WithdrawReq(opts, operatorAddress)
 	if err != nil {
-		return struct {
-			LastWithdrawReqTimestamp *big.Int
-			TotalSDWithdrawReqAmount *big.Int
-		}{}, err
+		return types2.OperatorWithdrawInfo{}, err
 	}
 
 	return withdrawInfo, nil
 }
 
-func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (struct {
-	MinThreshold      *big.Int
-	WithdrawThreshold *big.Int
-	Units             string
-}, error) {
+func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (types2.PoolThresholdInfo, error) {
 	poolThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
 	if err != nil {
-		return struct {
-			MinThreshold      *big.Int
-			WithdrawThreshold *big.Int
-			Units             string
-		}{}, err
+		return types2.PoolThresholdInfo{}, err
 	}
 
 	return poolThreshold, nil
