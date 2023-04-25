@@ -120,18 +120,18 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
+	//w, err := services.GetWallet(c)
+	//if err != nil {
+	//	return nil, err
+	//}
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
 	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
+	//nodeAccount, err := w.GetNodeAccount()
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	response := api.CanClaimSpRewardsResponse{}
 
@@ -149,31 +149,70 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	ineligibleCycles := []*big.Int{}
 	cyclesToDownload := []*big.Int{}
 
-	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
-	if err != nil {
-		return nil, err
-	}
+	//rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
+	//for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
+	//	cycle := big.NewInt(i)
+	//	isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	if !isEligible {
+	//		ineligibleCycles = append(ineligibleCycles, cycle)
+	//		continue
+	//	}
+	//
+	//	isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	if isClaimed {
+	//		claimedCycles = append(claimedCycles, cycle)
+	//	} else {
+	//		unclaimedCycles = append(unclaimedCycles, cycle)
+	//	}
+	//
+	//	// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
+	//	// check if this cycle has been downloaded
+	//	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
+	//	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	_, err = os.Stat(expandedCycleMerkleRewardFile)
+	//	if !os.IsNotExist(err) && err != nil {
+	//		return nil, err
+	//	}
+	//	if os.IsNotExist(err) {
+	//		cyclesToDownload = append(cyclesToDownload, cycle)
+	//	}
+	//}
+
+	for i := int64(1); i <= 5; i++ {
 		cycle := big.NewInt(i)
-		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
-		if err != nil {
-			return nil, err
-		}
-		if !isEligible {
-			ineligibleCycles = append(ineligibleCycles, cycle)
-			continue
-		}
+		//isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+		//if err != nil {
+		//	return nil, err
+		//}
+		//if !isEligible {
+		//	ineligibleCycles = append(ineligibleCycles, cycle)
+		//	continue
+		//}
 
-		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
-		if err != nil {
-			return nil, err
-		}
-		if isClaimed {
-			claimedCycles = append(claimedCycles, cycle)
-		} else {
-			unclaimedCycles = append(unclaimedCycles, cycle)
-		}
+		//isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
+		//if err != nil {
+		//	return nil, err
+		//}
+		//if isClaimed {
+		//	claimedCycles = append(claimedCycles, cycle)
+		//} else {
+		//	unclaimedCycles = append(unclaimedCycles, cycle)
+		//}
+
+		unclaimedCycles = append(unclaimedCycles, cycle)
 
 		// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
 		// check if this cycle has been downloaded
