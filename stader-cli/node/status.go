@@ -45,10 +45,7 @@ func getStatus(c *cli.Context) error {
 
 	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
 	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
-	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := int64(0)
-	if totalRegisterableValidators.Int64() > totalRegisteredValidators.Int64() {
-		noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral = totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
-	}
+	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
 
 	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
 
@@ -98,11 +95,11 @@ func getStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The node %s%s%s has a deposited %.6f Eth as collateral.\n\n",
+		"The node %s%s%s has a deposited %d Eth as collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		totalEthCollateral)
+		totalEthCollateral.Int64())
 
 	fmt.Printf(
 		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
