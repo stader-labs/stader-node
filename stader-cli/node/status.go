@@ -134,13 +134,18 @@ func getStatus(c *cli.Context) error {
 	}
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
-		fmt.Printf("Operator Execution layer reward vault: %s\n\n", status.OperatorELRewardsAddress.String())
+		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 		fmt.Printf(
-			"The node %s%s%s execution layer reward vault has a balance %.6f ETH.\n\n",
+			"The Operator %s%s%s fee recepient %s%s%s has unclaimed erwards of %.6f ETH.\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
+			log.ColorBlue,
+			status.OperatorELRewardsAddressBalance,
+			log.ColorReset,
 			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
+		fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
@@ -162,7 +167,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
-			fmt.Printf("To withdraw skimmed rewards use the %sstader-cli node claim-cl-rewards --validator-pub-key %s%s command\n\n", validatorPubKey, log.ColorGreen, log.ColorReset)
+			fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards --validator-pub-key %s%s command\n\n", validatorPubKey, log.ColorGreen, log.ColorReset)
 		} else if validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Skimmed Rewards: Crossed threshold\n")
 		}

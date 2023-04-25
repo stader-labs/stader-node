@@ -451,9 +451,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-exit",
+				Name:      "can-exit-validator",
 				Usage:     "Can validator exit",
-				UsageText: "stader-cli api node can-exit validator-pub-key",
+				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -472,9 +472,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "exit",
+				Name:      "exit-validator",
 				Usage:     "Exit validator",
-				UsageText: "stader-cli api node exit validator-pub-key",
+				UsageText: "stader-cli api node exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

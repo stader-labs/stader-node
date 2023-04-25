@@ -228,31 +228,31 @@ func (c *Client) CanNodeDeposit(amountWei *big.Int, salt *big.Int, numValidators
 }
 
 func (c *Client) CanExitValidator(validatorPubKey types.ValidatorPubkey) (api.CanExitValidatorResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-exit %s", validatorPubKey))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-exit-validator %s", validatorPubKey))
 	if err != nil {
-		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %w", err)
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can-exit-validator status: %w", err)
 	}
 	var response api.CanExitValidatorResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanExitValidatorResponse{}, fmt.Errorf("could not decode can exit validator response: %w", err)
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not decode can-exit-validator response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can exit validator status: %s", response.Error)
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can-exit-validator status: %s", response.Error)
 	}
 	return response, nil
 }
 
 func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitValidatorResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node exit %s", validatorPubKey))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node exit-validator %s", validatorPubKey))
 	if err != nil {
-		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit-validator status: %w", err)
 	}
 	var response api.ExitValidatorResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.ExitValidatorResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not decode exit-validator response: %w", err)
 	}
 	if response.Error != "" {
-		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit-validator status: %s", response.Error)
 	}
 	return response, nil
 }
@@ -480,7 +480,6 @@ func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.Set
 }
 
 func (c *Client) CanRequestSdCollateralWithdraw(amount *big.Int) (api.CanRequestWithdrawSdResponse, error) {
-	// TODO - bchain - normalize these response messages
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
 		return api.CanRequestWithdrawSdResponse{}, fmt.Errorf("could not get node can-node-request-sd-withdraw response: %w", err)
