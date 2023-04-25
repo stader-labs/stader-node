@@ -499,10 +499,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
 					if err != nil {
 						return err
@@ -520,10 +516,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
 					if err != nil {
 						return err
@@ -778,6 +770,25 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 					// Run
 					api.PrintResponse(downloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "detailed-cycles-info",
+				Usage:     "Get detailed reward cycles info",
+				UsageText: "stader-cli api node detailed-cycles-info cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+
+					// Run
+					api.PrintResponse(GetCyclesDetailedInfo(c, cycles))
 					return nil
 
 				},

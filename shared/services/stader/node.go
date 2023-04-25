@@ -562,16 +562,33 @@ func (c *Client) CanDownloadSpMerkleProofs() (api.CanDownloadSpMerkleProofsRespo
 }
 
 func (c *Client) DownloadSpMerkleProofs() (api.DownloadSpMerkleProofsResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node download-sp-merkle-proofs"))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node detailed-cycles-info"))
 	if err != nil {
-		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %w", err)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node detailed-cycles-info response: %w", err)
 	}
 	var response api.DownloadSpMerkleProofsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node download-sp-merkle-proofs response: %w", err)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not decode node detailed-cycles-info response: %w", err)
 	}
 	if response.Error != "" {
-		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node download-sp-merkle-proofs response: %s", response.Error)
+		return api.DownloadSpMerkleProofsResponse{}, fmt.Errorf("could not get node detailed-cycles-info response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) GetDetailedCyclesInfo(cycles []*big.Int) (api.CyclesDetailedInfo, error) {
+	stringifiedCycleList := string_utils.StringifyArray(cycles)
+	responseBytes, err := c.callAPI(fmt.Sprintf("node detailed-cycles-info %s", stringifiedCycleList))
+	if err != nil {
+		return api.CyclesDetailedInfo{}, fmt.Errorf("could not get node detailed-cycles-info response: %w", err)
+	}
+	var response api.CyclesDetailedInfo
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CyclesDetailedInfo{}, fmt.Errorf("could not decode node detailed-cycles-info response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CyclesDetailedInfo{}, fmt.Errorf("could not get node detailed-cycles-info response: %s", response.Error)
 	}
 
 	return response, nil
@@ -595,7 +612,6 @@ func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
 
 func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	fmt.Printf("stringifiedCycleList: %s\n", stringifiedCycleList)
 	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
 	if err != nil {
 		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)

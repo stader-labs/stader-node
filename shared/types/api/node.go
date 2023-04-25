@@ -297,6 +297,17 @@ type DownloadSpMerkleProofsResponse struct {
 	DownloadedCycles []int64 `json:"downloadedCycles"`
 }
 
+type DetailedMerkleProofInfo struct {
+	MerkleProofInfo stader_backend.CycleMerkleProofs `json:"merkleProofInfo"`
+	CycleTime       time.Time                        `json:"cycleTime"`
+}
+
+type CyclesDetailedInfo struct {
+	Status             string                    `json:"status"`
+	Error              string                    `json:"error"`
+	DetailedCyclesInfo []DetailedMerkleProofInfo `json:"detailedCyclesInfo"`
+}
+
 type CanClaimSpRewardsResponse struct {
 	Status                        string     `json:"status"`
 	Error                         string     `json:"error"`
