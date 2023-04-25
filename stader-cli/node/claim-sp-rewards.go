@@ -68,11 +68,9 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("detailedCyclesInfo: %v\n", detailedCyclesInfo)
-
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
 
-	fmt.Println("Cycle Number, ETH Rewards, SD Rewards, Cycle Start Time")
+	fmt.Println("S.no) Cycle Number || ETH Rewards || SD Rewards || Cycle Start Time")
 	cyclesToClaim := map[int64]bool{}
 	for {
 		for i, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
@@ -87,7 +85,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
 
-			fmt.Printf("%d) %d %0.6fETH %0.6fSD %s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.String())
+			fmt.Printf("%d) %d || %0.6fETH || %0.6fSD || %s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.String())
 		}
 
 		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
