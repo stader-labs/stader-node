@@ -41,7 +41,7 @@ func getStatus(c *cli.Context) error {
 
 	totalRegisteredValidators := status.TotalNonTerminalValidators
 	totalRegisterableValidators := status.SdCollateralWorthValidators
-	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
+	totalEthCollateral := totalRegisterableValidators.Int64() * 4
 
 	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
 	fmt.Printf("claimed socializing pool merkle details are %v\n", status.ClaimedSocializingPoolMerkles)
@@ -120,7 +120,7 @@ func getStatus(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		totalEthCollateral.Int64())
+		totalEthCollateral)
 
 	fmt.Printf(
 		"The node %s%s%s has a deposited %.6f SD as collateral.\n\n",
