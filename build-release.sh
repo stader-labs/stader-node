@@ -131,10 +131,6 @@ build_docker_prune_provision_manifest() {
     echo "done!"
 }
 
-send_slack() {
-    # TODO: @prabhakar087 - add slack messaging
-}
-
 # Print usage
 usage() {
     echo "Usage: build-release.sh [options] -v <version number>"
