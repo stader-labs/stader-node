@@ -43,6 +43,8 @@ func getStatus(c *cli.Context) error {
 	totalRegisterableValidators := status.SdCollateralWorthValidators
 	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
 
+	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
+	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
 	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := int64(0)
 	if totalRegisterableValidators.Int64() > totalRegisteredValidators.Int64() {
 		noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral = totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
