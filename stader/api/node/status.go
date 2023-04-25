@@ -268,7 +268,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
 		claimedMerkles := []stader_backend.CycleMerkleProofs{}
-		for i := int64(1); i < rewardCycleDetails.CurrentIndex.Int64(); i++ {
+		for i := int64(1); i <= 5; i++ {
 			cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 			absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 			if err != nil {

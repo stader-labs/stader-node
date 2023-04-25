@@ -154,7 +154,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
 
-	fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed EL rewards through socializing pool till %d\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
+	fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed EL rewards through socializing pool till %d\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
 
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
@@ -173,7 +173,7 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %d\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
+		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %d\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
 	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
