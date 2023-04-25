@@ -266,6 +266,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		response.ValidatorInfos = validatorInfoArray
 
+		// TODO - abstract this logic
 		unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
 		claimedMerkles := []stader_backend.CycleMerkleProofs{}
 		for i := int64(1); i <= 5; i++ {
@@ -304,6 +305,9 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				unclaimedMerkles = append(unclaimedMerkles, cycleMerkleProof)
 			}
 		}
+
+		response.ClaimedSocializingPoolMerkles = claimedMerkles
+		response.UnclaimedSocializingPoolMerkles = unclaimedMerkles
 
 	} else {
 		response.DepositedSdCollateral = big.NewInt(0)

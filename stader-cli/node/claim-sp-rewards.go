@@ -55,6 +55,8 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			if err != nil {
 				return err
 			}
+		} else {
+			fmt.Println("You have already downloaded the merkle proofs for all the cycles you have unclaimed rewards for.")
 		}
 		fmt.Println("Merkle proofs downloaded!")
 	}

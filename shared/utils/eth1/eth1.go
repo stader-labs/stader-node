@@ -25,6 +25,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -96,4 +97,20 @@ func GetBlockHeader(c *cli.Context, blockNumber uint64) (*types.Header, error) {
 func IsZeroAddress(address common.Address) bool {
 	zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
 	return address == zeroAddress
+}
+
+func ConvertBlockToTimestamp(c *cli.Context, blockNumber uint64) (time.Time, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	blockHeader, err := ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	t := time.Unix(int64(blockHeader.Time), 0)
+	
+	return t, nil
 }
