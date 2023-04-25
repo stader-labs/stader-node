@@ -32,20 +32,14 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	response := api.CyclesDetailedInfo{}
 	merkleProofs := []api.DetailedMerkleProofInfo{}
 	for _, cycle := range cycles {
-		//fmt.Printf("Reading cycle cache for merkle proofs for cycle: %d\n", cycle.Int64())
 		merkleCycleProof, err := ReadCycleCache(cfg, cycle.Int64())
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Got merkle cycle proof: %v\n", merkleCycleProof)
 		cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
 		if err != nil {
 			return nil, err
 		}
-		//currentBlock, err := eth1.GetCurrentBlockNumber(c)
-		//if err != nil {
-		//	return nil, err
-		//}
 		cycleStartTime, err := eth1.ConvertBlockToTimestamp(c, cycleDetails.StartBlock.Int64())
 		if err != nil {
 			return nil, err
