@@ -43,9 +43,16 @@ func getStatus(c *cli.Context) error {
 	totalRegisterableValidators := status.SdCollateralWorthValidators
 	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
 
-	noOfValidatorsWhichWeCanRegister := int64(0)
+	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := int64(0)
 	if totalRegisterableValidators.Int64() > totalRegisteredValidators.Int64() {
-		noOfValidatorsWhichWeCanRegister = totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
+		noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral = totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
+	}
+
+	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
+
+	noOfValidatorsWeCanRegister := noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral
+	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral > noOfValidatorsWeCanRegisterBasedOnEthBalance {
+		noOfValidatorsWeCanRegister = noOfValidatorsWeCanRegisterBasedOnEthBalance
 	}
 
 	// Account address & balances
@@ -86,13 +93,6 @@ func getStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The node %s%s%s has registered %d validators.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		totalRegisteredValidators)
-
-	fmt.Printf(
 		"The node %s%s%s has a deposited %.6f Eth as collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
@@ -111,7 +111,7 @@ func getStatus(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		noOfValidatorsWhichWeCanRegister)
+		noOfValidatorsWeCanRegister)
 
 	fmt.Printf("%s=== Operator Registration Details ===%s\n", log.ColorGreen, log.ColorReset)
 
@@ -168,7 +168,6 @@ func getStatus(c *cli.Context) error {
 			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositBlock)
 		}
 
-		// TODO - check with sanjay when this gets updated
 		if validatorInfo.WithdrawnBlock.Int64() > 0 {
 			// Validator has withdrawn
 			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
