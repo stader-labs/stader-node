@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
+func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -28,56 +28,56 @@ func WithdrawClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) er
 	// Print what network we're on
 	err = cliutils.PrintNetwork(staderClient)
 
-	canWithdrawClRewardsResponse, err := staderClient.CanWithdrawClRewards(validatorPubKey)
+	canClaimClRewardsResponse, err := staderClient.CanClaimClRewards(validatorPubKey)
 	if err != nil {
 		return err
 	}
-	if canWithdrawClRewardsResponse.NoClRewards {
+	if canClaimClRewardsResponse.NoClRewards {
 		fmt.Printf("No CL rewards to withdraw for validator %s\n", validatorPubKey.String())
 		return nil
 	}
-	if canWithdrawClRewardsResponse.TooManyClRewards {
+	if canClaimClRewardsResponse.TooManyClRewards {
 		fmt.Printf("Too many CL rewards to withdraw for validator %s\n. Please use stader-cli node settle-funds command to withdraw remaining amount", validatorPubKey.String())
 		return nil
 	}
-	if canWithdrawClRewardsResponse.ValidatorNotFound {
+	if canClaimClRewardsResponse.ValidatorNotFound {
 		fmt.Printf("Validator %s not found\n", validatorPubKey.String())
 		return nil
 	}
-	if canWithdrawClRewardsResponse.ValidatorWithdrawn {
+	if canClaimClRewardsResponse.ValidatorWithdrawn {
 		fmt.Printf("Validator %s has withdrawn all the staked funds\n", validatorPubKey.String())
 		return nil
 	}
-	if canWithdrawClRewardsResponse.VaultAlreadySettled {
+	if canClaimClRewardsResponse.VaultAlreadySettled {
 		fmt.Printf("Vault for validator %s has already been settled\n", validatorPubKey.String())
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canWithdrawClRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canClaimClRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw CL rewards for validator %s?", validatorPubKey))) {
+		"Are you sure you want to claim CL rewards for validator %s?", validatorPubKey))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	res, err := staderClient.WithdrawClRewards(validatorPubKey)
+	res, err := staderClient.ClaimClRewards(validatorPubKey)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Withdrawing %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Claiming %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully Withdrawn %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Successfully Claimed %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
 
 	return nil
 }

@@ -52,6 +52,8 @@ func getStatus(c *cli.Context) error {
 	if status.WalletInitialized {
 		fmt.Println("The node wallet is initialized.")
 		fmt.Printf("Node account: %s\n", status.AccountAddress.Hex())
+		fmt.Printf("Current Nonce: %d\n", status.CurrentNonce)
+		fmt.Printf("Pending Nonce: %d\n", status.PendingNonce)
 	} else {
 		fmt.Println("The node wallet has not been initialized.")
 	}

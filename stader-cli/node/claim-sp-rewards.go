@@ -5,6 +5,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 	"math/big"
 	"strconv"
@@ -55,17 +57,35 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			if err != nil {
 				return err
 			}
+		} else {
+			fmt.Println("You have already downloaded the merkle proofs for all the cycles you have unclaimed rewards for.")
 		}
 		fmt.Println("Merkle proofs downloaded!")
 	}
 
-	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:")
+	fmt.Printf("Getting the detailed cycles info...")
+	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
 
+	fmt.Println("S.no) Cycle Number || ETH Rewards || SD Rewards || Cycle Start Time")
 	cyclesToClaim := map[int64]bool{}
 	for {
-		// TODO - add cycle info like amount of rewards. These are UX things and can be done later
-		for i, cycle := range canClaimSpRewards.UnclaimedCycles {
-			fmt.Printf("%d) %d\n", i, cycle.Int64())
+		for i, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
+			ethRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Eth, 10)
+			if !ok {
+				return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
+			}
+			ethRewardsConverted := math.RoundDown(eth.WeiToEth(ethRewards), 2)
+			sdRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
+			if !ok {
+				return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.MerkleProofInfo.Sd)
+			}
+			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
+
+			fmt.Printf("%d) %d || %0.6fETH || %0.6fSD || %s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.String())
 		}
 
 		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")

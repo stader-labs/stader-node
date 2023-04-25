@@ -451,9 +451,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-exit",
+				Name:      "can-exit-validator",
 				Usage:     "Can validator exit",
-				UsageText: "stader-cli api node can-exit validator-pub-key",
+				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -472,9 +472,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "exit",
+				Name:      "exit-validator",
 				Usage:     "Exit validator",
-				UsageText: "stader-cli api node exit validator-pub-key",
+				UsageText: "stader-cli api node exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -499,10 +499,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
 					if err != nil {
 						return err
@@ -520,10 +516,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
-					//	return err
-					//}
-
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
 					if err != nil {
 						return err
@@ -577,9 +569,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-withdraw-el-rewards",
-				Usage:     "Can withdraw el rewards",
-				UsageText: "stader-cli api node can-withdraw-el-rewards",
+				Name:      "can-claim-el-rewards",
+				Usage:     "Can claim el rewards",
+				UsageText: "stader-cli api node can-claim-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -587,15 +579,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanWithdrawElRewards(c))
+					api.PrintResponse(CanClaimElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "withdraw-el-rewards",
-				Usage:     "Withdraw el rewards",
-				UsageText: "stader-cli api node withdraw-el-rewards",
+				Name:      "claim-el-rewards",
+				Usage:     "Claim el rewards",
+				UsageText: "stader-cli api node claim-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -603,15 +595,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(WithdrawElRewards(c))
+					api.PrintResponse(ClaimElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "can-withdraw-cl-rewards",
-				Usage:     "Can withdraw cl rewards of a validator",
-				UsageText: "stader-cli api node can-withdraw-cl-rewards --validator-pub-key",
+				Name:      "can-claim-cl-rewards",
+				Usage:     "Can claim cl rewards of a validator",
+				UsageText: "stader-cli api node can-claim-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -619,15 +611,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanWithdrawClRewards(c, validatorPubKey))
+					api.PrintResponse(CanClaimClRewards(c, validatorPubKey))
 					return nil
 
 				},
 			},
 			{
-				Name:      "withdraw-cl-rewards",
-				Usage:     "Withdraw cl rewards of a validator",
-				UsageText: "stader-cli api node withdraw-cl-rewards --validator-pub-key",
+				Name:      "claim-cl-rewards",
+				Usage:     "Claim cl rewards of a validator",
+				UsageText: "stader-cli api node claim-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -635,7 +627,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(WithdrawClRewards(c, validatorPubKey))
+					api.PrintResponse(ClaimClRewards(c, validatorPubKey))
 					return nil
 
 				},
@@ -778,6 +770,25 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 					// Run
 					api.PrintResponse(downloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "detailed-cycles-info",
+				Usage:     "Get detailed reward cycles info",
+				UsageText: "stader-cli api node detailed-cycles-info cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+
+					// Run
+					api.PrintResponse(GetCyclesDetailedInfo(c, cycles))
 					return nil
 
 				},

@@ -50,14 +50,18 @@ import (
 var preSignedCooldown, _ = time.ParseDuration("12h")
 var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 10 // Go thru 100 keys in each pass
-var tasksInterval, _ = time.ParseDuration("10s")
+var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
 
+// TODO - update this to 24h
+var merkleProofsDownloadInterval, _ = time.ParseDuration("10s")
+
 const (
-	MaxConcurrentEth1Requests = 200
-	ManageFeeRecipientColor   = color.FgHiCyan
-	ErrorColor                = color.FgRed
-	InfoColor                 = color.FgHiGreen
+	MaxConcurrentEth1Requests   = 200
+	ManageFeeRecipientColor     = color.FgHiCyan
+	MerkleProofsDownloaderColor = color.FgHiBlue
+	ErrorColor                  = color.FgRed
+	InfoColor                   = color.FgHiGreen
 )
 
 // Register node command
@@ -111,6 +115,10 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	merkleProofsDownloader, err := NewMerkleProofsDownloader(c, log.NewColorLogger(MerkleProofsDownloaderColor))
+	if err != nil {
+		return err
+	}
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
@@ -125,7 +133,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
+	wg.Add(3)
 
 	// validator presigned loop
 	go func() {
@@ -293,7 +301,33 @@ func run(c *cli.Context) error {
 					time.Sleep(taskCooldown)
 				}
 			}
-			time.Sleep(tasksInterval)
+			time.Sleep(feeRecepientPollingInterval)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		for {
+			infoLog.Printlnf("Checking if there are any available merkle proofs to download")
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				} else {
+					// Manage the fee recipient for the node
+					if err := merkleProofsDownloader.run(); err != nil {
+						errorLog.Println(err)
+					}
+					time.Sleep(taskCooldown)
+				}
+			}
+			infoLog.Printlnf("Done checking for merkle proofs to download")
+			time.Sleep(merkleProofsDownloadInterval)
 		}
 		wg.Done()
 	}()
