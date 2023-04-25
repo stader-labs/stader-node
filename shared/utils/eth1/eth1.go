@@ -99,18 +99,18 @@ func IsZeroAddress(address common.Address) bool {
 	return address == zeroAddress
 }
 
-func ConvertBlockToTimestamp(c *cli.Context, blockNumber uint64) (time.Time, error) {
+func ConvertBlockToTimestamp(c *cli.Context, blockNumber int64) (time.Time, error) {
 	ec, err := services.GetEthClient(c)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	blockHeader, err := ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
+	blockHeader, err := ec.HeaderByNumber(context.Background(), big.NewInt(blockNumber))
 	if err != nil {
 		return time.Time{}, err
 	}
 
 	t := time.Unix(int64(blockHeader.Time), 0)
-	
+
 	return t, nil
 }
