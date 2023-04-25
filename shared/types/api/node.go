@@ -196,7 +196,7 @@ type UpdateSocializeElResponse struct {
 	TxHash common.Hash `json:"txHash"`
 }
 
-type CanWithdrawClRewardsResponse struct {
+type CanClaimClRewardsResponse struct {
 	Status              string         `json:"status"`
 	Error               string         `json:"error"`
 	ValidatorWithdrawn  bool           `json:"validatorWithdrawn"`
@@ -207,7 +207,7 @@ type CanWithdrawClRewardsResponse struct {
 	GasInfo             stader.GasInfo `json:"gasInfo"`
 }
 
-type WithdrawClRewardsResponse struct {
+type ClaimClRewardsResponse struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
 	ClRewardsAmount       *big.Int       `json:"clRewardsAmount"`
@@ -233,14 +233,14 @@ type SettleExitFunds struct {
 	TxHash                common.Hash    `json:"txHash"`
 }
 
-type CanWithdrawElRewardsResponse struct {
+type CanClaimElRewardsResponse struct {
 	Status      string         `json:"status"`
 	Error       string         `json:"error"`
 	NoElRewards bool           `json:"noElRewards"`
 	GasInfo     stader.GasInfo `json:"gasInfo"`
 }
 
-type WithdrawElRewardsResponse struct {
+type ClaimElRewardsResponse struct {
 	Status                string         `json:"status"`
 	Error                 string         `json:"error"`
 	ElRewardsAmount       *big.Int       `json:"elRewardsAmount"`

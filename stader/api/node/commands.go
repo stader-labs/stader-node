@@ -577,9 +577,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-withdraw-el-rewards",
-				Usage:     "Can withdraw el rewards",
-				UsageText: "stader-cli api node can-withdraw-el-rewards",
+				Name:      "can-claim-el-rewards",
+				Usage:     "Can claim el rewards",
+				UsageText: "stader-cli api node can-claim-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -587,15 +587,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanWithdrawElRewards(c))
+					api.PrintResponse(CanClaimElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "withdraw-el-rewards",
-				Usage:     "Withdraw el rewards",
-				UsageText: "stader-cli api node withdraw-el-rewards",
+				Name:      "claim-el-rewards",
+				Usage:     "Claim el rewards",
+				UsageText: "stader-cli api node claim-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -603,15 +603,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(WithdrawElRewards(c))
+					api.PrintResponse(ClaimElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "can-withdraw-cl-rewards",
-				Usage:     "Can withdraw cl rewards of a validator",
-				UsageText: "stader-cli api node can-withdraw-cl-rewards --validator-pub-key",
+				Name:      "can-claim-cl-rewards",
+				Usage:     "Can claim cl rewards of a validator",
+				UsageText: "stader-cli api node can-claim-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -619,15 +619,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanWithdrawClRewards(c, validatorPubKey))
+					api.PrintResponse(CanClaimClRewards(c, validatorPubKey))
 					return nil
 
 				},
 			},
 			{
-				Name:      "withdraw-cl-rewards",
-				Usage:     "Withdraw cl rewards of a validator",
-				UsageText: "stader-cli api node withdraw-cl-rewards --validator-pub-key",
+				Name:      "claim-cl-rewards",
+				Usage:     "Claim cl rewards of a validator",
+				UsageText: "stader-cli api node claim-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -635,7 +635,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(WithdrawClRewards(c, validatorPubKey))
+					api.PrintResponse(ClaimClRewards(c, validatorPubKey))
 					return nil
 
 				},

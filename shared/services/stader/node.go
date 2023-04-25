@@ -383,65 +383,65 @@ func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	return response, nil
 }
 
-func (c *Client) CanWithdrawElRewards() (api.CanWithdrawElRewardsResponse, error) {
-	responseBytes, err := c.callAPI("node can-withdraw-el-rewards")
+func (c *Client) CanClaimElRewards() (api.CanClaimElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node can-claim-el-rewards")
 	if err != nil {
-		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %w", err)
+		return api.CanClaimElRewardsResponse{}, fmt.Errorf("could not get node can-claim-el-rewards response: %w", err)
 	}
-	var response api.CanWithdrawElRewardsResponse
+	var response api.CanClaimElRewardsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-el-rewards response: %w", err)
+		return api.CanClaimElRewardsResponse{}, fmt.Errorf("could not decode node can-claim-el-rewards response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanWithdrawElRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-el-rewards response: %s", response.Error)
+		return api.CanClaimElRewardsResponse{}, fmt.Errorf("could not get node can-claim-el-rewards response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) WithdrawElRewards() (api.WithdrawElRewardsResponse, error) {
-	responseBytes, err := c.callAPI("node withdraw-el-rewards")
+func (c *Client) ClaimElRewards() (api.ClaimElRewardsResponse, error) {
+	responseBytes, err := c.callAPI("node claim-el-rewards")
 	if err != nil {
-		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %w", err)
+		return api.ClaimElRewardsResponse{}, fmt.Errorf("could not get node claim-el-rewards response: %w", err)
 	}
-	var response api.WithdrawElRewardsResponse
+	var response api.ClaimElRewardsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not decode node withdraw-el-rewards response: %w", err)
+		return api.ClaimElRewardsResponse{}, fmt.Errorf("could not decode node claim-el-rewards response: %w", err)
 	}
 	if response.Error != "" {
-		return api.WithdrawElRewardsResponse{}, fmt.Errorf("could not get node withdraw-el-rewards response: %s", response.Error)
+		return api.ClaimElRewardsResponse{}, fmt.Errorf("could not get node claim-el-rewards response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) CanWithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.CanWithdrawClRewardsResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-withdraw-cl-rewards %s", validatorPubKey))
+func (c *Client) CanClaimClRewards(validatorPubKey types.ValidatorPubkey) (api.CanClaimClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-claim-cl-rewards %s", validatorPubKey))
 	if err != nil {
-		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %w", err)
+		return api.CanClaimClRewardsResponse{}, fmt.Errorf("could not get node can-claim-cl-rewards response: %w", err)
 	}
-	var response api.CanWithdrawClRewardsResponse
+	var response api.CanClaimClRewardsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not decode node can-withdraw-cl-rewards response: %w", err)
+		return api.CanClaimClRewardsResponse{}, fmt.Errorf("could not decode node can-claim-cl-rewards response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanWithdrawClRewardsResponse{}, fmt.Errorf("could not get node can-withdraw-cl-rewards response: %s", response.Error)
+		return api.CanClaimClRewardsResponse{}, fmt.Errorf("could not get node can-claim-cl-rewards response: %s", response.Error)
 	}
 
 	return response, nil
 }
 
-func (c *Client) WithdrawClRewards(validatorPubKey types.ValidatorPubkey) (api.WithdrawClRewardsResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node withdraw-cl-rewards %s", validatorPubKey))
+func (c *Client) ClaimClRewards(validatorPubKey types.ValidatorPubkey) (api.ClaimClRewardsResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-cl-rewards %s", validatorPubKey))
 	if err != nil {
-		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %w", err)
+		return api.ClaimClRewardsResponse{}, fmt.Errorf("could not get node claim-cl-rewards response: %w", err)
 	}
-	var response api.WithdrawClRewardsResponse
+	var response api.ClaimClRewardsResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not decode node withdraw-cl-rewards response: %w", err)
+		return api.ClaimClRewardsResponse{}, fmt.Errorf("could not decode node claim-cl-rewards response: %w", err)
 	}
 	if response.Error != "" {
-		return api.WithdrawClRewardsResponse{}, fmt.Errorf("could not get node withdraw-cl-rewards response: %s", response.Error)
+		return api.ClaimClRewardsResponse{}, fmt.Errorf("could not get node claim-cl-rewards response: %s", response.Error)
 	}
 
 	return response, nil
