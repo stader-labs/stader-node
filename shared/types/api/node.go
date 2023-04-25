@@ -3,6 +3,7 @@ package api
 import (
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"math/big"
+	"time"
 
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -28,6 +29,7 @@ type NodeStatusResponse struct {
 	AccumulatedClRewards              *big.Int                           `json:"accumulatedClRewards"`
 	OptedInForSocializingPool         bool                               `json:"optedInForSocializingPool"`
 	SocializingPoolRewardCycleDetails types.RewardCycleDetails           `json:"socializingPoolRewardCycleDetails"`
+	SocializingPoolEndTime            time.Time                          `json:"socializingPoolEndTime"`
 	SocializingPoolAddress            common.Address                     `json:"socializingPoolAddress"`
 	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`

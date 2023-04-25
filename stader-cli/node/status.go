@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -47,11 +46,6 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
 	fmt.Printf("claimed socializing pool merkle details are %v\n", status.ClaimedSocializingPoolMerkles)
 	fmt.Printf("unclaimed socializing pool merkle details are %v\n", status.UnclaimedSocializingPoolMerkles)
-
-	socializingPoolEndTime, err := eth1.ConvertBlockToTimestamp(c, status.SocializingPoolRewardCycleDetails.CurrentEndBlock.Int64())
-	if err != nil {
-		return err
-	}
 
 	totalUnclaimedSocializingPoolEth := big.NewInt(0)
 	totalUnclaimedSocializingPoolSd := big.NewInt(0)
@@ -160,7 +154,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
 
-	fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed EL rewards through socializing pool till %d\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), socializingPoolEndTime.String())
+	fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolEndTime.String())
 
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
@@ -179,7 +173,7 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %d\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), socializingPoolEndTime.String())
+		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolEndTime.String())
 	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
