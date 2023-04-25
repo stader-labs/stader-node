@@ -29,7 +29,7 @@ type NodeStatusResponse struct {
 	AccumulatedClRewards              *big.Int                           `json:"accumulatedClRewards"`
 	OptedInForSocializingPool         bool                               `json:"optedInForSocializingPool"`
 	SocializingPoolRewardCycleDetails types.RewardCycleDetails           `json:"socializingPoolRewardCycleDetails"`
-	SocializingPoolEndTime            time.Time                          `json:"socializingPoolEndTime"`
+	SocializingPoolStartTime          time.Time                          `json:"socializingPoolStartTime"`
 	SocializingPoolAddress            common.Address                     `json:"socializingPoolAddress"`
 	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`

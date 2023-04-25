@@ -250,11 +250,11 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			return nil, err
 		}
 		response.SocializingPoolRewardCycleDetails = rewardCycleDetails
-		socializingPoolEndTimestamp, err := eth1.ConvertBlockToTimestamp(c, rewardCycleDetails.CurrentEndBlock.Int64())
+		socializingPoolStartTimestamp, err := eth1.ConvertBlockToTimestamp(c, rewardCycleDetails.CurrentStartBlock.Int64())
 		if err != nil {
 			return nil, err
 		}
-		response.SocializingPoolEndTime = socializingPoolEndTimestamp
+		response.SocializingPoolStartTime = socializingPoolStartTimestamp
 
 		//fmt.Printf("Get total validator keys\n")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
