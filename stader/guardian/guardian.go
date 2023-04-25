@@ -21,13 +21,14 @@ package guardian
 
 import (
 	"fmt"
+	"net/http"
+	"sync"
+	"time"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/state"
 	"github.com/stader-labs/stader-node/stader/guardian/collector"
-	"net/http"
-	"sync"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -36,8 +37,8 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("5s")
-var taskCooldown, _ = time.ParseDuration("10s")
+var tasksInterval, _ = time.ParseDuration("60s")
+var taskCooldown, _ = time.ParseDuration("60s")
 
 const (
 	MaxConcurrentEth1Requests = 200
@@ -100,21 +101,13 @@ func run(c *cli.Context) error {
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 
-	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
-		if err != nil {
-			errorLog.Println(err)
-		}
-		wg.Done()
-	}()
-
 	// Run metrics loop
 	go func() {
 		for {
 			// Check the EC status
 			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
 			if err != nil {
-				errorLog.Println(err)
+				errorLog.Println("WaitEthClientSynced ", err)
 				time.Sleep(taskCooldown)
 				continue
 			}
@@ -122,25 +115,27 @@ func run(c *cli.Context) error {
 			// Check the BC status
 			err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
 			if err != nil {
-				errorLog.Println(err)
+				errorLog.Println("WaitBeaconClientSynced ", err)
 				time.Sleep(taskCooldown)
 				continue
 			}
 
 			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
-				errorLog.Println(err)
+				errorLog.Println("updateNetworkStateCache ", err)
 				time.Sleep(taskCooldown)
 				continue
 			}
 			stateCache.UpdateState(networkStateCache)
-
+			updateLog.Println("UpdateState success")
 			time.Sleep(tasksInterval)
 		}
-		wg.Done()
 	}()
 
-	wg.Wait()
+	err = runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+	if err != nil {
+		errorLog.Println(err)
+	}
 	return nil
 }
 
