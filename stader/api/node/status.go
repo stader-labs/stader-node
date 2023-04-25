@@ -1,8 +1,8 @@
 package node
 
 import (
-	"fmt"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
+	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
@@ -55,6 +55,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
+	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -167,6 +171,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
 		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
 
+		rewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SocializingPoolRewardCycleDetails = rewardCycleDetails
+
 		//fmt.Printf("Get total validator keys\n")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
 		if err != nil {
@@ -178,7 +188,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
+		//fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
 
 		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
 
