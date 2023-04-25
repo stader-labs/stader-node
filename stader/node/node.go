@@ -52,7 +52,7 @@ var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 10 // Go thru 100 keys in each pass
 var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
-var merkleProofsDownloadInterval, _ = time.ParseDuration("24h")
+var merkleProofsDownloadInterval, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests   = 200
@@ -131,7 +131,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
+	wg.Add(3)
 
 	// validator presigned loop
 	go func() {
