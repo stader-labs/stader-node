@@ -266,7 +266,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		response.ValidatorInfos = validatorInfoArray
 
-		rewardDetails := []stader_backend.CycleMerkleProofs{}
+		unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
+		claimedMerkles := []stader_backend.CycleMerkleProofs{}
 		for i := int64(1); i < rewardCycleDetails.CurrentIndex.Int64(); i++ {
 			cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 			absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
@@ -292,10 +293,17 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 
-			rewardDetails = append(rewardDetails, cycleMerkleProof)
-		}
+			claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, big.NewInt(i), nil)
+			if err != nil {
+				return nil, err
+			}
 
-		response.SocializingPoolMerkles = rewardDetails
+			if claimed {
+				claimedMerkles = append(claimedMerkles, cycleMerkleProof)
+			} else {
+				unclaimedMerkles = append(unclaimedMerkles, cycleMerkleProof)
+			}
+		}
 
 	} else {
 		response.DepositedSdCollateral = big.NewInt(0)

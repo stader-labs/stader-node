@@ -44,7 +44,25 @@ func getStatus(c *cli.Context) error {
 	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
 
 	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
-	fmt.Printf("socializing pool merkle details are %v\n", status.SocializingPoolMerkles)
+	fmt.Printf("claimed socializing pool merkle details are %v\n", status.ClaimedSocializingPoolMerkles)
+	fmt.Printf("unclaimed socializing pool merkle details are %v\n", status.UnclaimedSocializingPoolMerkles)
+
+	totalUnclaimedSocializingPoolEth := big.NewInt(0)
+	totalUnclaimedSocializingPoolSd := big.NewInt(0)
+	for _, merkle := range status.UnclaimedSocializingPoolMerkles {
+		ethRewards, ok := big.NewInt(0).SetString(merkle.Eth, 10)
+		if !ok {
+			return fmt.Errorf("error while converting eth rewards: %s to big int", merkle.Eth)
+		}
+
+		sdRewards, ok := big.NewInt(0).SetString(merkle.Sd, 10)
+		if !ok {
+			return fmt.Errorf("error while converting sd rewards: %s to big int", merkle.Sd)
+		}
+
+		totalUnclaimedSocializingPoolEth.Add(totalUnclaimedSocializingPoolEth, ethRewards)
+		totalUnclaimedSocializingPoolSd.Add(totalUnclaimedSocializingPoolSd, sdRewards)
+	}
 
 	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
 	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
@@ -135,6 +153,9 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
+
+	fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed EL rewards through socializing pool till %d\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
+
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
 		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
@@ -152,6 +173,7 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
+		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %d\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolRewardCycleDetails.CurrentEndBlock)
 	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
