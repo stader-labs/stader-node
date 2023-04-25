@@ -50,13 +50,13 @@ func getStatus(c *cli.Context) error {
 
 	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
 
-	fmt.Printf("noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral: %d", noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral)
-	fmt.Printf("noOfValidatorsWeCanRegisterBasedOnEthBalance: %d", noOfValidatorsWeCanRegisterBasedOnEthBalance)
+	fmt.Printf("noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral: %d\n", noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral)
+	fmt.Printf("noOfValidatorsWeCanRegisterBasedOnEthBalance: %d\n", noOfValidatorsWeCanRegisterBasedOnEthBalance)
 	noOfValidatorsWeCanRegister := noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral
 	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral > noOfValidatorsWeCanRegisterBasedOnEthBalance {
 		noOfValidatorsWeCanRegister = noOfValidatorsWeCanRegisterBasedOnEthBalance
 	}
-	fmt.Printf("noOfValidatorsWeCanRegister: %d", noOfValidatorsWeCanRegister)
+	fmt.Printf("noOfValidatorsWeCanRegister: %d\n", noOfValidatorsWeCanRegister)
 
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", log.ColorGreen, log.ColorReset)
