@@ -82,14 +82,14 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 	if err != nil {
 		return nil, err
 	}
-	sp, err := services.GetSocializingPoolContract(c)
-	if err != nil {
-		return nil, err
-	}
-	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
-	if err != nil {
-		return nil, err
-	}
+	//sp, err := services.GetSocializingPoolContract(c)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
@@ -97,28 +97,28 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 	response := api.DownloadSpMerkleProofsResponse{}
 
-	currentIndex := rewardDetails.CurrentIndex.Int64()
-	missingCycles := []int64{}
-	// iterate thru all cycles starting from 1
-	for i := int64(1); i < currentIndex; i++ {
-		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
-		if err != nil {
-			return nil, err
-		}
-		if !isEligible {
-			continue
-		}
-
-		cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
-		// check if file exists or not
-		_, err = os.Stat(cycleRewardFile)
-		if !os.IsNotExist(err) && err != nil {
-			return nil, err
-		}
-		if os.IsNotExist(err) {
-			missingCycles = append(missingCycles, i)
-		}
-	}
+	//currentIndex := rewardDetails.CurrentIndex.Int64()
+	missingCycles := []int64{1, 2, 3, 4, 5}
+	//// iterate thru all cycles starting from 1
+	//for i := int64(1); i < currentIndex; i++ {
+	//	isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	if !isEligible {
+	//		continue
+	//	}
+	//
+	//	cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
+	//	// check if file exists or not
+	//	_, err = os.Stat(cycleRewardFile)
+	//	if !os.IsNotExist(err) && err != nil {
+	//		return nil, err
+	//	}
+	//	if os.IsNotExist(err) {
+	//		missingCycles = append(missingCycles, i)
+	//	}
+	//}
 
 	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(nodeAccount.Address)
 	if err != nil {
