@@ -234,6 +234,34 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return getContractsInfo(c)
 				},
 			},
+
+			{
+				Name:      "exit-validator",
+				Aliases:   []string{"e"},
+				Usage:     "Exit validator",
+				UsageText: "stader-cli node exit --validator-pub-key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "validator-pub-key, vpk",
+						Usage: "Public key of validator we want to exit",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm validator exit",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					//// Validate args
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					return ExitValidator(c, validatorPubKey)
+				},
+			},
 		},
 	})
 }

@@ -22,6 +22,7 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 	"strconv"
 
@@ -196,22 +197,6 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	return response, nil
 }
 
-func (c *Client) DebugExit(validatorIndex *big.Int) (api.DebugExitResponse, error) {
-	fmt.Printf("cli: validatorIndex is %d\n", validatorIndex)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node debug-exit %d", validatorIndex))
-	if err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %w", err)
-	}
-	var response api.DebugExitResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.DebugExitResponse{}, fmt.Errorf("could not decode debug exit info: %w", err)
-	}
-	if response.Error != "" {
-		return api.DebugExitResponse{}, fmt.Errorf("could not get debug exit info: %s", response.Error)
-	}
-	return response, nil
-}
-
 // Make a node deposit
 func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.NodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))
@@ -289,6 +274,36 @@ func (c *Client) SignMessage(message string) (api.NodeSignResponse, error) {
 	}
 	if response.Error != "" {
 		return api.NodeSignResponse{}, fmt.Errorf("could not sign message: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanExitValidator(validatorPubKey types.ValidatorPubkey) (api.CanExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-exit-validator %s", validatorPubKey))
+	if err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can-exit-validator status: %w", err)
+	}
+	var response api.CanExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not decode can-exit-validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanExitValidatorResponse{}, fmt.Errorf("could not get can-exit-validator status: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitValidatorResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node exit-validator %s", validatorPubKey))
+	if err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit-validator status: %w", err)
+	}
+	var response api.ExitValidatorResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not decode exit-validator response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ExitValidatorResponse{}, fmt.Errorf("could not get exit-validator status: %s", response.Error)
 	}
 	return response, nil
 }

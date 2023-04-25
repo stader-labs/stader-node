@@ -392,7 +392,48 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+			{
+				Name:      "can-exit-validator",
+				Usage:     "Can validator exit",
+				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
+				Action: func(c *cli.Context) error {
 
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canExitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "exit-validator",
+				Usage:     "Exit validator",
+				UsageText: "stader-cli api node exit-validator validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(exitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
 			{
 				Name:      "get-contracts-info",
 				Usage:     "Get information about the deposit contract and stader contract on the current network",

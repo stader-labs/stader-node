@@ -11,6 +11,19 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 )
 
+type CanExitValidatorResponse struct {
+	Status                 string `json:"status"`
+	Error                  string `json:"error"`
+	ValidatorNotRegistered bool   `json:"validatorNotRegistered"`
+	ValidatorTooYoung      bool   `json:"validatorTooYoung"`
+	ValidatorExiting       bool   `json:"validatorExiting"`
+}
+
+type ExitValidatorResponse struct {
+	Status string `json:"status"`
+	Error  string `json:"error"`
+}
+
 type NodeStatusResponse struct {
 	Status                       string               `json:"status"`
 	Error                        string               `json:"error"`
