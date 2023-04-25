@@ -4,14 +4,11 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 )
 
-func CalculateRewardShare(pool_utils *stader.PoolUtilsContractManager, poolId uint8, totalRewards *big.Int, opts *bind.CallOpts) (struct {
-	UserShare     *big.Int
-	OperatorShare *big.Int
-	ProtocolShare *big.Int
-}, error) {
+func CalculateRewardShare(pool_utils *stader.PoolUtilsContractManager, poolId uint8, totalRewards *big.Int, opts *bind.CallOpts) (types.RewardShare, error) {
 	return pool_utils.PoolUtils.CalculateRewardShare(opts, poolId, totalRewards)
 }
 

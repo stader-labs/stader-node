@@ -21,10 +21,11 @@ package guardian
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/stader/guardian/collector"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/stader-labs/stader-node/stader/guardian/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -69,11 +70,13 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *colle
 
 	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccount.Address, stateLocker)
 	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccount.Address, stateLocker)
-
+	operatorCollector := collector.NewOperatorCollector(bc, ec, nodeAccount.Address, stateLocker)
+	logger.Println("Operator collector: %v\n", operatorCollector)
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(beaconCollector)
 	registry.MustRegister(networkCollector)
+	registry.MustRegister(operatorCollector)
 
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 

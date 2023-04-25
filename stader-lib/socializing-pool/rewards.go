@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 )
 
@@ -21,21 +22,11 @@ func ClaimRewards(sp *stader.SocializingPoolContractManager, index []*big.Int, a
 	return tx, nil
 }
 
-func GetRewardDetails(sp *stader.SocializingPoolContractManager, opts *bind.CallOpts) (struct {
-	CurrentIndex      *big.Int
-	CurrentStartBlock *big.Int
-	CurrentEndBlock   *big.Int
-	NextIndex         *big.Int
-	NextStartBlock    *big.Int
-	NextEndBlock      *big.Int
-}, error) {
+func GetRewardDetails(sp *stader.SocializingPoolContractManager, opts *bind.CallOpts) (types2.RewardCycleDetails, error) {
 	return sp.SocializingPool.GetRewardDetails(opts)
 }
 
-func GetRewardCycleDetails(sp *stader.SocializingPoolContractManager, cycle *big.Int, opts *bind.CallOpts) (struct {
-	StartBlock *big.Int
-	EndBlock   *big.Int
-}, error) {
+func GetRewardCycleDetails(sp *stader.SocializingPoolContractManager, cycle *big.Int, opts *bind.CallOpts) (types2.CurrentRewardCycleDetails, error) {
 	return sp.SocializingPool.GetRewardCycleDetails(opts, cycle)
 }
 

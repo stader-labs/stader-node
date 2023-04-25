@@ -10,13 +10,13 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
+/build
 # Dependency directories (remove the comment below to include it)
 # vendor/
 #stader
 #stader-cli
 #.vscode
-#.DS_Store
+.DS_Store
 #stader-cli/stader-cli
 
 *.log

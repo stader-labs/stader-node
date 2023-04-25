@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 )
 
@@ -73,22 +74,10 @@ func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAd
 	return operatorId, nil
 }
 
-func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (struct {
-	Active                  bool
-	OptedForSocializingPool bool
-	OperatorName            string
-	OperatorRewardAddress   common.Address
-	OperatorAddress         common.Address
-}, error) {
+func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (types2.OperatorInfo, error) {
 	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(opts, operatorId)
 	if err != nil {
-		return struct {
-			Active                  bool
-			OptedForSocializingPool bool
-			OperatorName            string
-			OperatorRewardAddress   common.Address
-			OperatorAddress         common.Address
-		}{}, err
+		return types2.OperatorInfo{}, err
 	}
 
 	return operatorInfo, nil

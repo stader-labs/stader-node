@@ -36,7 +36,7 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("5m")
+var tasksInterval, _ = time.ParseDuration("5s")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
@@ -100,6 +100,14 @@ func run(c *cli.Context) error {
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 
+	go func() {
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+		if err != nil {
+			errorLog.Println(err)
+		}
+		wg.Done()
+	}()
+
 	// Run metrics loop
 	go func() {
 		for {
@@ -119,21 +127,15 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkStateCache(m, nodeAccount.Address)
+			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
 				errorLog.Println(err)
 				time.Sleep(taskCooldown)
 				continue
 			}
-			stateCache.UpdateState(state)
-		}
-		wg.Done()
-	}()
+			stateCache.UpdateState(networkStateCache)
 
-	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
-		if err != nil {
-			errorLog.Println(err)
+			time.Sleep(tasksInterval)
 		}
 		wg.Done()
 	}()
@@ -152,10 +154,10 @@ func configureHTTP() {
 }
 
 func updateNetworkStateCache(m *state.NetworkStateManager, nodeAddress common.Address) (*state.NetworkStateCache, error) {
-	// Get the state of the network
-	state, err := m.GetHeadStateForNode(nodeAddress)
+	// Get the networkStateCache of the network
+	networkStateCache, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
-		return nil, fmt.Errorf("error updating network state: %w", err)
+		return nil, fmt.Errorf("error updating network networkStateCache: %w", err)
 	}
-	return state, nil
+	return networkStateCache, nil
 }

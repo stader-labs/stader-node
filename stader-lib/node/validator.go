@@ -2,11 +2,13 @@ package node
 
 import (
 	"fmt"
+	types2 "github.com/stader-labs/stader-node/stader-lib/types"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"math/big"
 )
 
 func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
@@ -75,17 +77,7 @@ func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractMa
 	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
 }
 
-// TODO - bchain - make these inline structs into types
-func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (struct {
-	Status               uint8
-	Pubkey               []byte
-	PreDepositSignature  []byte
-	DepositSignature     []byte
-	WithdrawVaultAddress common.Address
-	OperatorId           *big.Int
-	DepositBlock         *big.Int
-	WithdrawnBlock       *big.Int
-}, error) {
+func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (types2.ValidatorContractInfo, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorRegistry(opts, validatorId)
 }
 
@@ -102,18 +94,10 @@ func GetValidatorWithdrawalCredential(vfcm *stader.VaultFactoryContractManager, 
 	return *withdrawalCredentials, nil
 }
 
-func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (struct {
-	UserShare     *big.Int
-	OperatorShare *big.Int
-	ProtocolShare *big.Int
-}, error) {
+func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (types2.RewardShare, error) {
 	vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
 	if err != nil {
-		return struct {
-			UserShare     *big.Int
-			OperatorShare *big.Int
-			ProtocolShare *big.Int
-		}{}, err
+		return types2.RewardShare{}, err
 	}
 
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
@@ -134,4 +118,25 @@ func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManage
 
 func GetNextValidatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.NextValidatorId(opts)
+}
+
+func GetActiveValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetTotalActiveValidatorCount(opts)
+}
+
+func GetQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetTotalQueuedValidatorCount(opts)
+}
+
+func GetSlashedValidator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	vals, err := pnr.PermissionlessNodeRegistry.GetAllActiveValidators(opts, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return big.NewInt(int64(len(vals))), nil
+}
+
+func GetCollateralETH(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return pnr.PermissionlessNodeRegistry.GetCollateralETH(opts)
 }
