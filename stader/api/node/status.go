@@ -1,11 +1,15 @@
 package node
 
 import (
+	"encoding/json"
+	"github.com/mitchellh/go-homedir"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
+	"os"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -59,6 +63,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 	sp, err := services.GetSocializingPoolContract(c)
+	if err != nil {
+		return nil, err
+	}
+	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
 	}
@@ -257,6 +265,37 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 
 		response.ValidatorInfos = validatorInfoArray
+
+		rewardDetails := []stader_backend.CycleMerkleProofs{}
+		for i := int64(1); i < rewardCycleDetails.CurrentIndex.Int64(); i++ {
+			cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
+			absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
+			if err != nil {
+				return nil, err
+			}
+
+			_, err = os.Stat(cycleMerkleProofFile)
+			if !os.IsNotExist(err) && err != nil {
+				return nil, err
+			}
+
+			// Open the JSON file
+			file, err := os.Open(absolutePathOfProofFile)
+			if err != nil {
+				return nil, err
+			}
+
+			var cycleMerkleProof stader_backend.CycleMerkleProofs
+			decoder := json.NewDecoder(file)
+			err = decoder.Decode(&cycleMerkleProof)
+			if err != nil {
+				return nil, err
+			}
+
+			rewardDetails = append(rewardDetails, cycleMerkleProof)
+		}
+
+		response.SocializingPoolMerkles = rewardDetails
 
 	} else {
 		response.DepositedSdCollateral = big.NewInt(0)

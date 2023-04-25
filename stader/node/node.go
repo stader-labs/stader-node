@@ -52,6 +52,8 @@ var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 10 // Go thru 100 keys in each pass
 var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
+
+// TODO - update this to 24h
 var merkleProofsDownloadInterval, _ = time.ParseDuration("10s")
 
 const (

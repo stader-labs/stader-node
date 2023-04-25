@@ -43,6 +43,9 @@ func getStatus(c *cli.Context) error {
 	totalRegisterableValidators := status.SdCollateralWorthValidators
 	totalEthCollateral := status.TotalNonTerminalValidators.Mul(status.TotalNonTerminalValidators, big.NewInt(4))
 
+	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
+	fmt.Printf("socializing pool merkle details are %v\n", status.SocializingPoolMerkles)
+
 	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
 	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
 	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()

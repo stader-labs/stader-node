@@ -1,6 +1,7 @@
 package api
 
 import (
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
@@ -13,30 +14,32 @@ import (
 )
 
 type NodeStatusResponse struct {
-	Status                            string                   `json:"status"`
-	Error                             string                   `json:"error"`
-	NumberOfValidatorsRegistered      string                   `json:"numberOfValidatorsRegistered"`
-	AccountAddress                    common.Address           `json:"accountAddress"`
-	AccountAddressFormatted           string                   `json:"accountAddressFormatted"`
-	OperatorId                        *big.Int                 `json:"operatorId"`
-	OperatorName                      string                   `json:"operatorName"`
-	OperatorActive                    bool                     `json:"operatorActive"`
-	OperatorAddress                   common.Address           `json:"operatorAddress"`
-	OperatorRewardAddress             common.Address           `json:"operatorRewardAddress"`
-	OperatorRewardInETH               *big.Int                 `json:"operatorRewardInETH"`
-	OptedInForSocializingPool         bool                     `json:"optedInForSocializingPool"`
-	SocializingPoolRewardCycleDetails types.RewardCycleDetails `json:"socializingPoolRewardCycleDetails"`
-	SocializingPoolAddress            common.Address           `json:"socializingPoolAddress"`
-	OperatorELRewardsAddress          common.Address           `json:"operatorELRewardsAddress"`
-	OperatorELRewardsAddressBalance   *big.Int                 `json:"operatorELRewardsAddressBalance"`
-	DepositedSdCollateral             *big.Int                 `json:"depositedSdCollateral"`
-	SdCollateralRequestedToWithdraw   *big.Int                 `json:"sdCollateralRequestedToWithdraw"`
-	SdCollateralWithdrawTime          *big.Int                 `json:"withdrawTime"`
-	SdCollateralWorthValidators       *big.Int                 `json:"sdCollateralWorthValidators"`
-	Registered                        bool                     `json:"registered"`
-	AccountBalances                   tokens.Balances          `json:"accountBalances"`
-	TotalNonTerminalValidators        *big.Int                 `json:"nonTerminalValidators"`
-	ValidatorInfos                    []stdr.ValidatorInfo     `json:"validatorInfos"`
+	Status                            string                             `json:"status"`
+	Error                             string                             `json:"error"`
+	NumberOfValidatorsRegistered      string                             `json:"numberOfValidatorsRegistered"`
+	AccountAddress                    common.Address                     `json:"accountAddress"`
+	AccountAddressFormatted           string                             `json:"accountAddressFormatted"`
+	OperatorId                        *big.Int                           `json:"operatorId"`
+	OperatorName                      string                             `json:"operatorName"`
+	OperatorActive                    bool                               `json:"operatorActive"`
+	OperatorAddress                   common.Address                     `json:"operatorAddress"`
+	OperatorRewardAddress             common.Address                     `json:"operatorRewardAddress"`
+	OperatorRewardInETH               *big.Int                           `json:"operatorRewardInETH"`
+	AccumulatedClRewards              *big.Int                           `json:"accumulatedClRewards"`
+	OptedInForSocializingPool         bool                               `json:"optedInForSocializingPool"`
+	SocializingPoolRewardCycleDetails types.RewardCycleDetails           `json:"socializingPoolRewardCycleDetails"`
+	SocializingPoolAddress            common.Address                     `json:"socializingPoolAddress"`
+	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
+	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`
+	DepositedSdCollateral             *big.Int                           `json:"depositedSdCollateral"`
+	SdCollateralRequestedToWithdraw   *big.Int                           `json:"sdCollateralRequestedToWithdraw"`
+	SdCollateralWithdrawTime          *big.Int                           `json:"withdrawTime"`
+	SdCollateralWorthValidators       *big.Int                           `json:"sdCollateralWorthValidators"`
+	Registered                        bool                               `json:"registered"`
+	AccountBalances                   tokens.Balances                    `json:"accountBalances"`
+	TotalNonTerminalValidators        *big.Int                           `json:"nonTerminalValidators"`
+	ValidatorInfos                    []stdr.ValidatorInfo               `json:"validatorInfos"`
+	SocializingPoolMerkles            []stader_backend.CycleMerkleProofs `json:"socializingPoolMerkles"`
 }
 
 type CanRegisterNodeResponse struct {
