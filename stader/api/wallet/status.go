@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package wallet
 
 import (
+	"context"
 	"github.com/urfave/cli"
+	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -34,6 +36,10 @@ func getStatus(c *cli.Context) (*api.WalletStatusResponse, error) {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := services.GetEthClient(c)
 	if err != nil {
 		return nil, err
 	}
@@ -55,6 +61,22 @@ func getStatus(c *cli.Context) (*api.WalletStatusResponse, error) {
 		}
 		response.AccountAddress = nodeAccount.Address
 
+		currentBlockNumber, err := ec.BlockNumber(context.Background())
+		if err != nil {
+			return nil, err
+		}
+
+		currentNonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, big.NewInt(int64(currentBlockNumber)))
+		if err != nil {
+			return nil, err
+		}
+		pendingNonce, err := ec.PendingNonceAt(context.Background(), nodeAccount.Address)
+		if err != nil {
+			return nil, err
+		}
+
+		response.PendingNonce = big.NewInt(int64(pendingNonce))
+		response.CurrentNonce = big.NewInt(int64(currentNonce))
 	}
 
 	// Return response

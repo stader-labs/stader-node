@@ -24,6 +24,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
+	"math/big"
 )
 
 // Encrypted validator keystore following the EIP-2335 standard
@@ -42,6 +43,8 @@ type WalletStatusResponse struct {
 	PasswordSet       bool           `json:"passwordSet"`
 	WalletInitialized bool           `json:"walletInitialized"`
 	AccountAddress    common.Address `json:"accountAddress"`
+	CurrentNonce      *big.Int       `json:"currentNonce"`
+	PendingNonce      *big.Int       `json:"pendingNonce"`
 }
 
 type SetPasswordResponse struct {
