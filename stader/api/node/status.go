@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -177,6 +178,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
+		fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
 
 		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
 
