@@ -19,10 +19,10 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	if err != nil {
 		return nil, err
 	}
-	sp, err := services.GetSocializingPoolContract(c)
-	if err != nil {
-		return nil, err
-	}
+	//sp, err := services.GetSocializingPoolContract(c)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
 	if err != nil {
