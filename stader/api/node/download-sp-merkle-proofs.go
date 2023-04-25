@@ -6,7 +6,6 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
-	arr_utils "github.com/stader-labs/stader-node/shared/utils/arr-utils"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/urfave/cli"
 	"os"
@@ -97,29 +96,6 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 	response := api.DownloadSpMerkleProofsResponse{}
 
-	//currentIndex := rewardDetails.CurrentIndex.Int64()
-	missingCycles := []int64{1, 2, 3, 4, 5}
-	//// iterate thru all cycles starting from 1
-	//for i := int64(1); i < currentIndex; i++ {
-	//	isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	if !isEligible {
-	//		continue
-	//	}
-	//
-	//	cycleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
-	//	// check if file exists or not
-	//	_, err = os.Stat(cycleRewardFile)
-	//	if !os.IsNotExist(err) && err != nil {
-	//		return nil, err
-	//	}
-	//	if os.IsNotExist(err) {
-	//		missingCycles = append(missingCycles, i)
-	//	}
-	//}
-
 	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(nodeAccount.Address)
 	if err != nil {
 		return nil, err
@@ -128,14 +104,20 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 	downloadedCycles := []int64{}
 
 	for _, cycleMerkleProof := range allMerkleProofs {
-		if !arr_utils.ElementExistsInNumArray(missingCycles, cycleMerkleProof.Cycle) {
-			continue
-		}
 
 		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 		if err != nil {
 			return nil, err
+		}
+
+		// proof has already been downloaded
+		_, err = os.Stat(cycleMerkleProofFile)
+		if !os.IsNotExist(err) && err != nil {
+			return nil, err
+		}
+		if !os.IsNotExist(err) {
+			continue
 		}
 
 		file, err := os.Create(absolutePathOfProofFile)
@@ -146,7 +128,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 		encoder := json.NewEncoder(file)
 		err = encoder.Encode(cycleMerkleProof)
 		if err != nil {
-			return nil, fmt.Errorf("Error encoding JSON: %v", err)
+			return nil, fmt.Errorf("error encoding JSON: %v", err)
 		}
 
 		downloadedCycles = append(downloadedCycles, cycleMerkleProof.Cycle)
