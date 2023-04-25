@@ -32,12 +32,12 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	response := api.CyclesDetailedInfo{}
 	merkleProofs := []api.DetailedMerkleProofInfo{}
 	for _, cycle := range cycles {
-		fmt.Printf("Reading cycle cache for merkle proofs for cycle: %d\n", cycle.Int64())
+		//fmt.Printf("Reading cycle cache for merkle proofs for cycle: %d\n", cycle.Int64())
 		merkleCycleProof, err := ReadCycleCache(cfg, cycle.Int64())
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("Got merkle cycle proof: %v\n", merkleCycleProof)
+		//fmt.Printf("Got merkle cycle proof: %v\n", merkleCycleProof)
 		//cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
 		//if err != nil {
 		//	return nil, err
