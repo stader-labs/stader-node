@@ -43,10 +43,6 @@ func getStatus(c *cli.Context) error {
 	totalRegisterableValidators := status.SdCollateralWorthValidators
 	totalEthCollateral := totalRegisterableValidators.Int64() * 4
 
-	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
-	fmt.Printf("claimed socializing pool merkle details are %v\n", status.ClaimedSocializingPoolMerkles)
-	fmt.Printf("unclaimed socializing pool merkle details are %v\n", status.UnclaimedSocializingPoolMerkles)
-
 	totalUnclaimedSocializingPoolEth := big.NewInt(0)
 	totalUnclaimedSocializingPoolSd := big.NewInt(0)
 	for _, merkle := range status.UnclaimedSocializingPoolMerkles {
@@ -64,14 +60,10 @@ func getStatus(c *cli.Context) error {
 		totalUnclaimedSocializingPoolSd.Add(totalUnclaimedSocializingPoolSd, sdRewards)
 	}
 
-	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
-	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
 	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
 
 	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
 
-	fmt.Printf("noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral: %d\n", noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral)
-	fmt.Printf("noOfValidatorsWeCanRegisterBasedOnEthBalance: %d\n", noOfValidatorsWeCanRegisterBasedOnEthBalance)
 	noOfValidatorsWeCanRegister := noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral
 	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral > noOfValidatorsWeCanRegisterBasedOnEthBalance {
 		noOfValidatorsWeCanRegister = noOfValidatorsWeCanRegisterBasedOnEthBalance
@@ -164,7 +156,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 		if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
 			fmt.Printf(
-				"The Operator %s%s%s fee recepient %s%s%s has unclaimed erwards of %.6f ETH.\n\n",
+				"The Operator %s%s%s fee recepient %s%s%s has unclaimed rewards of %.6f ETH.\n\n",
 				log.ColorBlue,
 				status.AccountAddress,
 				log.ColorReset,
