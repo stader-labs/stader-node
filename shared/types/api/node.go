@@ -312,7 +312,6 @@ type CanClaimSpRewardsResponse struct {
 	Status                        string     `json:"status"`
 	Error                         string     `json:"error"`
 	SocializingPoolContractPaused bool       `json:"socializingPoolContractPaused"`
-	IneligibleCycles              []*big.Int `json:"ineligibleCycles"`
 	ClaimedCycles                 []*big.Int `json:"claimedCycles"`
 	UnclaimedCycles               []*big.Int `json:"unclaimedCycles"`
 	CyclesToDownload              []*big.Int `json:"cyclesToDownload"`

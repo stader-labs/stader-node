@@ -9,7 +9,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
-	"math/big"
 	"os"
 )
 
@@ -40,14 +39,6 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
 	for i := int64(1); i <= currentIndex; i++ {
-		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
-		if err != nil {
-			return nil, err
-		}
-		if !isEligible {
-			continue
-		}
-
 		// download all cycles irrespective if the NO claim or not claimed.
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
