@@ -60,7 +60,7 @@ func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegist
 }
 
 func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
-	return validatorInfo.Status > 6 || validatorInfo.Status == 1 || validatorInfo.Status == 2
+	return validatorInfo.Status == 1 || validatorInfo.Status == 2
 }
 
 func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
