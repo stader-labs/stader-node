@@ -51,7 +51,7 @@ func ReadCycleCache(cfg *config.StaderConfig, cycle int64) (stader_backend.Cycle
 		return stader_backend.CycleMerkleProofs{}, false, err
 	}
 
-	return cycleMerkleProof, false, nil
+	return cycleMerkleProof, true, nil
 }
 
 func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_backend.CycleMerkleProofs, []stader_backend.CycleMerkleProofs, error) {
