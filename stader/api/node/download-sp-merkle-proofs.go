@@ -38,7 +38,7 @@ func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsRe
 	currentIndex := rewardDetails.CurrentIndex.Int64()
 	missingCycles := []int64{}
 	// iterate thru all cycles starting from 1
-	for i := int64(1); i <= currentIndex; i++ {
+	for i := int64(1); i < currentIndex; i++ {
 		// download all cycles irrespective if the NO claim or not claimed.
 		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
 		// check if file exists or not
