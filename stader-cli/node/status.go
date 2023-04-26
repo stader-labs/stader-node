@@ -162,17 +162,18 @@ func getStatus(c *cli.Context) error {
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
 		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-		fmt.Printf(
-			"The Operator %s%s%s fee recepient %s%s%s has unclaimed erwards of %.6f ETH.\n\n",
-			log.ColorBlue,
-			status.AccountAddress,
-			log.ColorReset,
-			log.ColorBlue,
-			status.OperatorELRewardsAddress,
-			log.ColorReset,
-			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
-		fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-
+		if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
+			fmt.Printf(
+				"The Operator %s%s%s fee recepient %s%s%s has unclaimed erwards of %.6f ETH.\n\n",
+				log.ColorBlue,
+				status.AccountAddress,
+				log.ColorReset,
+				log.ColorBlue,
+				status.OperatorELRewardsAddress,
+				log.ColorReset,
+				math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
+			fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		}
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
