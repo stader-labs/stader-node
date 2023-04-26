@@ -49,13 +49,7 @@ build_cli() {
 # Builds the .tar.xz file packages with the Stader configuration files
 build_install_packages() {
     rm -f stader-node-install.tar.xz
-    echo -n "Building Stader node installer packages... "
-    tar cfJ stader-node-install.tar.xz install || fail "Error building installer package."
-    mv stader-node-install.tar.xz build/$VERSION
-    cp install.sh build/$VERSION
-    aws s3 cp build/$VERSION s3://stader-cli-beta/$VERSION --recursive
     echo "done!"
-
 }
 
 
@@ -65,10 +59,7 @@ build_daemon() {
     ./daemon-build.sh || fail "Error building daemon binary."
     cp stader/stader-daemon-* build/$VERSION
     echo "done!"
-        # ensure support for arm64 is installed by  sudo apt install -y qemu-user-static binfmt-support
-    echo "Building Docker Stader Daemon image..."
-    docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
-    docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
+    docker build -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
     echo "done!"
 
 }
@@ -99,10 +90,6 @@ build_latest_docker_manifest() {
     rm -f ~/.docker/manifests/docker.io_staderdev_stader-node-latest
     docker manifest create staderdev/stader-node:latest --amend staderdev/stader-node:$VERSION-amd64 --amend staderdev/stader-node:$VERSION-arm64
     echo "done!"
-
-    echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge staderdev/stader-node:latest
-    echo "done!"
 }
 
 
@@ -111,10 +98,6 @@ build_docker_prune_provision_manifest() {
     echo -n "Building Docker Prune Provision manifest... "
     rm -f ~/.docker/manifests/docker.io_staderdev_eth1-prune-provision-$VERSION
     docker manifest create staderdev/eth1-prune-provision:$VERSION --amend staderdev/eth1-prune-provision:$VERSION-amd64 --amend staderdev/eth1-prune-provision:$VERSION-arm64
-    echo "done!"
-
-    echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge staderdev/eth1-prune-provision:$VERSION
     echo "done!"
 }
 
