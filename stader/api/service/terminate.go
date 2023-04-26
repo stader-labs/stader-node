@@ -30,7 +30,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
-const dataFolder string = "/Users/batphonghan/.stader/data"
+const dataFolder string = "/.stader/data"
 
 // Deletes the contents of the data folder including the wallet file, password file, and all validator keys.
 // Don't use this unless you have a very good reason to do it (such as switching from Prater to Mainnet).

@@ -41,7 +41,7 @@ const (
 	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                   string = "network"
 	ProjectNameID               string = "projectName"
-	DaemonDataPath              string = "/Users/batphonghan/.stader/data"
+	DaemonDataPath              string = "/.stader/data"
 	GuardianFolder              string = "guardian"
 	SpRewardsMerkleProofsFolder string = "sp-rewards-merkle-proofs"
 	MerkleProofsFormat          string = "cycle-%s-%d.json"
