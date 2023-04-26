@@ -2,6 +2,10 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+	"os"
+	"time"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -9,9 +13,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
-	"math/big"
-	"os"
-	"time"
 )
 
 func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.CyclesDetailedInfo, error) {
