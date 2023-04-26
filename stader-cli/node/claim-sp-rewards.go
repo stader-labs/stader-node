@@ -114,7 +114,8 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 					}
 				}
 				if !found {
-					fmt.Printf("Cycle %d is not in the list of unclaimed cycles. Please enter a valid cycle number", cycle)
+					fmt.Printf("Cycle %d is not in the list of unclaimed cycles. Please enter a valid cycle number\n", cycle)
+					allValid = false
 				} else {
 					cyclesToClaim[int64(cycle)] = true
 				}
