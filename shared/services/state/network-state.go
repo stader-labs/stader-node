@@ -327,15 +327,15 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	//cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
-	//if err != nil {
-	//	return nil, err
-	//}
+	cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
+	if err != nil {
+		return nil, err
+	}
 
-	//rewardClaimData, err := getClaimData(cfg, cycles)
-	//if err != nil {
-	//	return nil, err
-	//}
+	rewardClaimData, err := getClaimData(cfg, cycles)
+	if err != nil {
+		return nil, err
+	}
 
 	networkDetails.SdPrice = sdPrice
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -356,10 +356,11 @@ func CreateNetworkStateCache(
 	networkDetails.UnclaimedClRewards = totalClRewards
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
-	networkDetails.ClaimedSocializingPoolElRewards = big.NewInt(10)
-	networkDetails.ClaimedSocializingPoolSdRewards = big.NewInt(20)
-	networkDetails.UnclaimedSocializingPoolElRewards = big.NewInt(30)
-	networkDetails.UnclaimedSocializingPoolSDRewards = big.NewInt(40)
+	networkDetails.ClaimedSocializingPoolElRewards = rewardClaimData.claimedSocializingPoolElRewards
+	networkDetails.ClaimedSocializingPoolSdRewards = rewardClaimData.claimedSocializingPoolSdRewards
+	networkDetails.UnclaimedSocializingPoolElRewards = rewardClaimData.unclaimedSocializingPoolElRewards
+	networkDetails.UnclaimedSocializingPoolSDRewards = rewardClaimData.unclaimedSocializingPoolSdRewards
+
 	networkDetails.EthApr = big.NewInt(1)
 	networkDetails.SdApr = big.NewInt(2)
 

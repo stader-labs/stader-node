@@ -127,6 +127,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 			stateCache.UpdateState(state)
+			time.Sleep(tasksInterval)
 		}
 		wg.Done()
 	}()
