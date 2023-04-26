@@ -37,7 +37,7 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("5m")
+var tasksInterval, _ = time.ParseDuration("10s")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
@@ -82,19 +82,7 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return err
-	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return err
-	}
 
-	m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
-	if err != nil {
-		return err
-	}
 	stateCache := collector.NewStateCache()
 
 	// Wait group to handle the various threads
@@ -103,6 +91,10 @@ func run(c *cli.Context) error {
 
 	// Run metrics loop
 	go func() {
+		m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
+		if err != nil {
+			panic(err)
+		}
 		for {
 			// Check the EC status
 			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
@@ -120,7 +112,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkStateCache(m, nodeAccount.Address)
+			state, err := updateNetworkStateCache(m, common.HexToAddress("0x55300CbF5F216fdcCb6a3530B369234146Ee7898"))
 			if err != nil {
 				errorLog.Println("updateNetworkStateCache ", err)
 				time.Sleep(taskCooldown)

@@ -34,6 +34,11 @@ import (
 
 // Run
 func main() {
+	Run()
+}
+
+// Run
+func Run() {
 
 	// Initialise application
 	app := cli.NewApp()
@@ -748,7 +753,7 @@ Public License instead of this License. But first, please read
 		cli.StringFlag{
 			Name:  "settings, s",
 			Usage: "Stader service user config absolute `path`",
-			Value: "/.stader/user-settings.yml",
+			Value: "/Users/batphonghan/.stader/user-settings.yml",
 		},
 		cli.StringFlag{
 			Name:  "password, p",

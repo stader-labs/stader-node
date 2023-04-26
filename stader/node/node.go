@@ -21,6 +21,15 @@ package node
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
+	"sync"
+	"time"
+
+	"github.com/ethereum/go-ethereum/common"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
@@ -30,13 +39,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strconv"
-	"sync"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -67,13 +69,13 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 		Aliases: aliases,
 		Usage:   "Run Stader node activity daemon",
 		Action: func(c *cli.Context) error {
-			return run(c)
+			return Run(c)
 		},
 	})
 }
 
 // Run daemon
-func run(c *cli.Context) error {
+func Run(c *cli.Context) error {
 
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
@@ -93,7 +95,7 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	nodeAccount, err := w.GetNodeAccount()
+	nodeAccount := common.HexToAddress("0x55300CbF5F216fdcCb6a3530B369234146Ee7898")
 	if err != nil {
 		return err
 	}
@@ -116,7 +118,7 @@ func run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount, nil)
 	if err != nil {
 		return err
 	}
@@ -148,7 +150,7 @@ func run(c *cli.Context) error {
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
 
 			infoLog.Println("Building a map of user validators registered with stader")
-			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount, nil)
 			if err != nil {
 				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
 				continue
