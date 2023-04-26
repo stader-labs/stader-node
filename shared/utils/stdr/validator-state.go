@@ -17,7 +17,7 @@ var ValidatorState = map[uint8]string{
 	2: "Front Run",
 	3: "Pre Deposit",
 	4: "Deposited",
-	5: "Withdrawn",
+	5: "Funds Settled",
 }
 
 type ValidatorInfo struct {
@@ -68,7 +68,7 @@ func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
 
 func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
 	// if validator state in contract is less then Deposited, then display contract status
-	if validatorContractInfo.Status < 4 {
+	if validatorContractInfo.Status != 4 {
 		return ValidatorState[validatorContractInfo.Status], nil
 	}
 
