@@ -1,10 +1,17 @@
 package node
 
 import (
+	"encoding/json"
+	"github.com/mitchellh/go-homedir"
+	"github.com/stader-labs/stader-node/shared/services/config"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
+	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
+	"os"
+	"time"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -14,6 +21,86 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 )
+
+func ReadCycleCache(cfg *config.StaderConfig, cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
+	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
+	cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycle, true)
+	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	_, err = os.Stat(cycleMerkleProofFile)
+	if !os.IsNotExist(err) && err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+	if os.IsNotExist(err) {
+		return stader_backend.CycleMerkleProofs{}, false, nil
+	}
+
+	// Open the JSON file
+	file, err := os.Open(absolutePathOfProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	var cycleMerkleProof stader_backend.CycleMerkleProofs
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&cycleMerkleProof)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	return cycleMerkleProof, true, nil
+}
+
+func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_backend.CycleMerkleProofs, []stader_backend.CycleMerkleProofs, error) {
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, nil, err
+	}
+	sp, err := services.GetSocializingPoolContract(c)
+	if err != nil {
+		return nil, nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
+	claimedMerkles := []stader_backend.CycleMerkleProofs{}
+	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
+		cycleMerkleProof, exists, err := ReadCycleCache(cfg, i)
+		if err != nil {
+			return nil, nil, err
+		}
+		if !exists {
+			continue
+		}
+		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, big.NewInt(i), nil)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		if claimed {
+			claimedMerkles = append(claimedMerkles, cycleMerkleProof)
+		} else {
+			unclaimedMerkles = append(unclaimedMerkles, cycleMerkleProof)
+		}
+	}
+
+	return claimedMerkles, unclaimedMerkles, nil
+}
 
 func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
@@ -54,6 +141,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
+	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -166,6 +257,15 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
 		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
 
+		//fmt.Printf("Getting reward details\n")
+		rewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.SocializingPoolRewardCycleDetails = rewardCycleDetails
+		socializingPoolStartTimestamp := time.Now()
+		response.SocializingPoolStartTime = socializingPoolStartTimestamp
+
 		//fmt.Printf("Get total validator keys\n")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
 		if err != nil {
@@ -177,6 +277,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		if err != nil {
 			return nil, err
 		}
+		//fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
 
 		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
 
@@ -245,6 +346,15 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 
 		response.ValidatorInfos = validatorInfoArray
+
+		//fmt.Printf("Getting operator claimed and unclaimed socializing pool merkles\n")
+		claimedMerkles, unclaimedMerkles, err := GetClaimedAndUnclaimedSocializingPoolMerkles(c)
+		if err != nil {
+			return nil, err
+		}
+
+		response.ClaimedSocializingPoolMerkles = claimedMerkles
+		response.UnclaimedSocializingPoolMerkles = unclaimedMerkles
 
 	} else {
 		response.DepositedSdCollateral = big.NewInt(0)

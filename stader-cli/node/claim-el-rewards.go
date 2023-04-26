@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func WithdrawElRewards(c *cli.Context) error {
+func ClaimElRewards(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -27,39 +27,39 @@ func WithdrawElRewards(c *cli.Context) error {
 	err = cliutils.PrintNetwork(staderClient)
 
 	// Check if we can Withdraw El Rewards
-	canWithdrawElRewardsResponse, err := staderClient.CanWithdrawElRewards()
+	canClaimElRewardsResponse, err := staderClient.CanClaimElRewards()
 	if err != nil {
 		return err
 	}
-	if canWithdrawElRewardsResponse.NoElRewards {
+	if canClaimElRewardsResponse.NoElRewards {
 		fmt.Printf("No El Rewards to withdraw\n")
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canWithdrawElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canClaimElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw El Rewards?"))) {
+		"Are you sure you want to claim El Rewards?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
 	// Withdraw El Rewards
-	res, err := staderClient.WithdrawElRewards()
+	res, err := staderClient.ClaimElRewards()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Withdrawing %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Claiming %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully Withdrawn %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Successfully Claimed %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
 	return nil
 }

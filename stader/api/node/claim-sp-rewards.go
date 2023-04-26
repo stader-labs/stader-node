@@ -2,9 +2,6 @@ package node
 
 import (
 	"fmt"
-	"math/big"
-	"os"
-
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -12,7 +9,56 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
+	"math/big"
+	"os"
+	"time"
 )
+
+func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.CyclesDetailedInfo, error) {
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	//sp, err := services.GetSocializingPoolContract(c)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
+	if err != nil {
+		return nil, err
+	}
+
+	response := api.CyclesDetailedInfo{}
+	merkleProofs := []api.DetailedMerkleProofInfo{}
+	for _, cycle := range cycles {
+		merkleCycleProof, exists, err := ReadCycleCache(cfg, cycle.Int64())
+		if err != nil {
+			return nil, err
+		}
+		if !exists {
+			continue
+		}
+		//cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
+		//if err != nil {
+		//	return nil, err
+		//}
+		//cycleStartTime, err := eth1.ConvertBlockToTimestamp(c, cycleDetails.StartBlock.Int64())
+		//if err != nil {
+		//	return nil, err
+		//}
+		cycleStartTime := time.Now()
+
+		merkleProofs = append(merkleProofs, api.DetailedMerkleProofInfo{
+			MerkleProofInfo: merkleCycleProof,
+			CycleTime:       cycleStartTime,
+		})
+	}
+
+	response.DetailedCyclesInfo = merkleProofs
+
+	return &response, nil
+}
 
 func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
 	sp, err := services.GetSocializingPoolContract(c)

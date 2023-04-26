@@ -316,24 +316,24 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "withdraw-el-rewards",
+				Name:      "claim-el-rewards",
 				Aliases:   []string{"wer"},
-				Usage:     "Withdraw all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
-				UsageText: "stader-cli node withdraw-el-rewards",
+				Usage:     "Claim all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
+				UsageText: "stader-cli node claim-el-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
 					Name:  "yes, y",
 					Usage: "Automatically confirm EL rewards withdrawal",
 				}},
 				Action: func(c *cli.Context) error {
 					// Run
-					return WithdrawElRewards(c)
+					return ClaimElRewards(c)
 				},
 			},
 			{
-				Name:      "withdraw-cl-rewards",
+				Name:      "claim-cl-rewards",
 				Aliases:   []string{"wcr"},
-				Usage:     "Withdraw all Consensus Layer rewards to the node reward address.",
-				UsageText: "stader-cli node withdraw-cl-rewards --validator-pub-key",
+				Usage:     "Claim all Consensus Layer rewards to the node reward address.",
+				UsageText: "stader-cli node claim-cl-rewards --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
@@ -351,7 +351,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 					// Run
-					return WithdrawClRewards(c, validatorPubKey)
+					return ClaimClRewards(c, validatorPubKey)
 				},
 			},
 			{

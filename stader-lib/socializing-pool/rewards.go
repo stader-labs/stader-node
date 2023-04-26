@@ -37,3 +37,7 @@ func HasClaimedRewards(sp *stader.SocializingPoolContractManager, address common
 func IsSocializingPoolPaused(sp *stader.SocializingPoolContractManager, opts *bind.CallOpts) (bool, error) {
 	return sp.SocializingPool.Paused(opts)
 }
+
+func VerifyProof(sp *stader.SocializingPoolContractManager, operatorAddress common.Address, index *big.Int, amountSd *big.Int, amountEth *big.Int, merkleProof [][32]byte, opts *bind.CallOpts) (bool, error) {
+	return sp.SocializingPool.VerifyProof(opts, index, operatorAddress, amountSd, amountEth, merkleProof)
+}
