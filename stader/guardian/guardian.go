@@ -59,7 +59,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	})
 }
 
-// Run daemon
+// run daemon
 func run(c *cli.Context) error {
 
 	// Initialize error logger
