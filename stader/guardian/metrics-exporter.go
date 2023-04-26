@@ -25,7 +25,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader/guardian/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -61,7 +60,16 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *colle
 		}
 	}
 
-	nodeAccountAddr := common.HexToAddress("0x55300CbF5F216fdcCb6a3530B369234146Ee7898")
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
+	nodeAccountAddr := nodeAccount.Address
 	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccountAddr, stateLocker)
 	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccountAddr, stateLocker)
 	operatorCollector := collector.NewOperatorCollector(bc, ec, nodeAccountAddr, stateLocker)
