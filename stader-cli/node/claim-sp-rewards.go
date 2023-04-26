@@ -89,7 +89,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			fmt.Printf("%-6d%-18d%-14.2f%-14.2f%-30s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.Format("2006-01-02"))
 		}
 
-		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
+		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
 			for _, cycle := range canClaimSpRewards.UnclaimedCycles {
 				cyclesToClaim[cycle.Int64()] = true
