@@ -22,7 +22,6 @@ package guardian
 import (
 	"fmt"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -37,7 +36,7 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("10s")
+var tasksInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
@@ -84,17 +83,22 @@ func run(c *cli.Context) error {
 	}
 
 	stateCache := collector.NewStateCache()
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
 
-	// Wait group to handle the various threads
-	wg := new(sync.WaitGroup)
-	wg.Add(2)
-
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
 	// Run metrics loop
 	go func() {
 		m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
 		if err != nil {
 			panic(err)
 		}
+
 		for {
 			// Check the EC status
 			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
@@ -112,7 +116,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkStateCache(m, common.HexToAddress("0x55300CbF5F216fdcCb6a3530B369234146Ee7898"))
+			state, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
 				errorLog.Println("updateNetworkStateCache ", err)
 				time.Sleep(taskCooldown)
@@ -121,18 +125,12 @@ func run(c *cli.Context) error {
 			stateCache.UpdateState(state)
 			time.Sleep(tasksInterval)
 		}
-		wg.Done()
 	}()
 
-	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
-		if err != nil {
-			errorLog.Println(err)
-		}
-		wg.Done()
-	}()
-
-	wg.Wait()
+	err = runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+	if err != nil {
+		errorLog.Println(err)
+	}
 	return nil
 }
 

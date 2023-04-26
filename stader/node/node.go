@@ -29,7 +29,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
@@ -99,7 +98,7 @@ func Run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	nodeAccount := common.HexToAddress("0x55300CbF5F216fdcCb6a3530B369234146Ee7898")
+	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return err
 	}
@@ -126,7 +125,7 @@ func Run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return err
 	}
@@ -158,7 +157,7 @@ func Run(c *cli.Context) error {
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
 
 			infoLog.Println("Building a map of user validators registered with stader")
-			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount, nil)
+			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
 				continue

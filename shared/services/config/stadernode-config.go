@@ -20,10 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"math/big"
 	"os"
 	"path/filepath"
 
@@ -513,66 +511,38 @@ func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
 	return filepath.Join(cfg.DataPath.Value.(string), "validators", NativeFeeRecipientFilename)
 }
 
-func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
-	// data to pass to socializing pool contract
-	amountSd := []*big.Int{}
-	amountEth := []*big.Int{}
-	merkleProofs := [][][32]byte{}
-
-	// get the proofs for each cycle and claim them. throw error if cycle proofs is not downloaded
-	for _, cycle := range cycles {
-		cycleMerkleRewardFile := cfg.GetSpRewardCyclePath(cycle.Int64(), true)
-		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-		data, err := os.ReadFile(expandedCycleMerkleRewardFile)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-		// need to make sure we have downloaded the data
-		if os.IsNotExist(err) {
-			return nil, nil, nil, err
-		}
-		merkleData := stader_backend.CycleMerkleProofs{}
-		err = json.Unmarshal(data, &merkleData)
-		if err != nil {
-			return nil, nil, nil, err
-		}
-
-		amountSdBigInt := big.NewInt(0)
-		amountSdBigInt, ok := amountSdBigInt.SetString(merkleData.Sd, 10)
-		if !ok {
-			return nil, nil, nil, fmt.Errorf("could not parse sd amount %s", merkleData.Sd)
-		}
-
-		// same thing above for eth
-		amountEthBigInt := big.NewInt(0)
-		amountEthBigInt, ok = amountEthBigInt.SetString(merkleData.Eth, 10)
-		if !ok {
-			return nil, nil, nil, fmt.Errorf("could not parse eth amount %s", merkleData.Eth)
-		}
-
-		amountSd = append(amountSd, amountSdBigInt)
-		amountEth = append(amountEth, amountEthBigInt)
-
-		// convert merkle proofs to [32]byte
-		cycleMerkleProofs := [][32]byte{}
-		for _, proof := range merkleData.Proof {
-			merkleProofBytes, err := hex.DecodeString(proof[2:])
-			if err != nil {
-				return nil, nil, nil, err
-			}
-			var proofBytes [32]byte
-			copy(proofBytes[:], merkleProofBytes[:32])
-			cycleMerkleProofs = append(cycleMerkleProofs, proofBytes)
-		}
-
-		merkleProofs = append(merkleProofs, cycleMerkleProofs)
+func (cfg *StaderNodeConfig) ReadCycleCache(cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
+	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
+	cycleMerkleProofFile := cfg.GetSpRewardCyclePath(cycle, true)
+	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
 	}
 
-	return amountSd, amountEth, merkleProofs, nil
+	_, err = os.Stat(cycleMerkleProofFile)
+	if !os.IsNotExist(err) && err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+	if os.IsNotExist(err) {
+		return stader_backend.CycleMerkleProofs{}, false, nil
+	}
+
+	// Open the JSON file
+	file, err := os.Open(absolutePathOfProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	var cycleMerkleProof stader_backend.CycleMerkleProofs
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&cycleMerkleProof)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	return cycleMerkleProof, true, nil
 }
+
 func getNetworkOptions() []config.ParameterOption {
 	options := []config.ParameterOption{
 		{

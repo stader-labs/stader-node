@@ -402,7 +402,7 @@ func getClaimedAndUnclaimedSocializingPoolMerkles(
 	var claimedEth int
 	var claimedSd int
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
-		cycleMerkleProof, exists, err := ReadCycleCache(cfg, i)
+		cycleMerkleProof, exists, err := cfg.ReadCycleCache(i)
 		if err != nil {
 			return *outstruct, err
 		}
