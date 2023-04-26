@@ -72,9 +72,14 @@ func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_back
 		return nil, nil, err
 	}
 
+	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
 	claimedMerkles := []stader_backend.CycleMerkleProofs{}
-	for i := int64(1); i <= 5; i++ {
+	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycleMerkleProof, exists, err := ReadCycleCache(cfg, i)
 		if err != nil {
 			return nil, nil, err
