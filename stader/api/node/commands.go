@@ -493,40 +493,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-send-presigned-msg",
-				Usage:     "Can we send presigned msg",
-				UsageText: "stader-cli api node can-send-presigned-msg --validator-pub-key",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					api.PrintResponse(canSendPresignedMsg(c, validatorPubKey))
-					return nil
-
-				},
-			},
-			{
-				Name:      "send-presigned-msg",
-				Usage:     "Send Presigned Message",
-				UsageText: "stader-cli api node send-presigned-msg --validator-pub-key",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					api.PrintResponse(sendPresignedMsg(c, validatorPubKey))
-					return nil
-
-				},
-			},
-			{
 				Name:      "can-update-socialize-el",
 				Usage:     "Can opt in or opt out of socializing pool",
 				UsageText: "stader-cli api node can-update-socialize-el --socialize-el",

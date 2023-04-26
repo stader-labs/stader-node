@@ -290,32 +290,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "send-presigned-exit-msg",
-				Aliases:   []string{"spem"},
-				Usage:     "Send the presigned exit msg to stader",
-				UsageText: "stader-cli node send-presigned-exit-msg --validator-pub-key",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "validator-pub-key, vpk",
-						Usage: "Validator index for whom we want to generate the debug exit",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm pre-signed message sending",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					//// Validate args
-					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					return SendSignedPresignedMessage(c, validatorPubKey)
-				},
-			},
-			{
 				Name:      "claim-el-rewards",
 				Aliases:   []string{"wer"},
 				Usage:     "Claim all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
