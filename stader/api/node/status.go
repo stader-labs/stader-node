@@ -2,6 +2,7 @@ package node
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -22,32 +23,36 @@ import (
 	"github.com/urfave/cli"
 )
 
-func ReadCycleCache(cfg *config.StaderConfig, cycle int64) (stader_backend.CycleMerkleProofs, error) {
+func ReadCycleCache(cfg *config.StaderConfig, cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
+	fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
 	cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycle, true)
 	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, err
+		return stader_backend.CycleMerkleProofs{}, false, err
 	}
 
 	_, err = os.Stat(cycleMerkleProofFile)
 	if !os.IsNotExist(err) && err != nil {
-		return stader_backend.CycleMerkleProofs{}, err
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+	if os.IsNotExist(err) {
+		return stader_backend.CycleMerkleProofs{}, false, nil
 	}
 
 	// Open the JSON file
 	file, err := os.Open(absolutePathOfProofFile)
 	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, err
+		return stader_backend.CycleMerkleProofs{}, false, err
 	}
 
 	var cycleMerkleProof stader_backend.CycleMerkleProofs
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&cycleMerkleProof)
 	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, err
+		return stader_backend.CycleMerkleProofs{}, false, err
 	}
 
-	return cycleMerkleProof, nil
+	return cycleMerkleProof, false, nil
 }
 
 func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_backend.CycleMerkleProofs, []stader_backend.CycleMerkleProofs, error) {
@@ -71,9 +76,12 @@ func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_back
 	unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
 	claimedMerkles := []stader_backend.CycleMerkleProofs{}
 	for i := int64(1); i <= 5; i++ {
-		cycleMerkleProof, err := ReadCycleCache(cfg, i)
+		cycleMerkleProof, exists, err := ReadCycleCache(cfg, i)
 		if err != nil {
 			return nil, nil, err
+		}
+		if !exists {
+			continue
 		}
 		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, big.NewInt(i), nil)
 		if err != nil {
@@ -337,6 +345,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		response.ValidatorInfos = validatorInfoArray
 
+		fmt.Printf("Getting operator claimed and unclaimed socializing pool merkles\n")
 		claimedMerkles, unclaimedMerkles, err := GetClaimedAndUnclaimedSocializingPoolMerkles(c)
 		if err != nil {
 			return nil, err
