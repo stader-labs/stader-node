@@ -168,7 +168,7 @@ func getStatus(c *cli.Context) error {
 			status.AccountAddress,
 			log.ColorReset,
 			log.ColorBlue,
-			status.OperatorELRewardsAddressBalance,
+			status.OperatorELRewardsAddress,
 			log.ColorReset,
 			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
 		fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
