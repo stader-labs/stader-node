@@ -200,18 +200,12 @@ func getStatus(c *cli.Context) error {
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 			fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards %s command\n\n", log.ColorGreen, log.ColorReset)
-		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("-Validator Skimmed Rewards: Crossed threshold\n")
 		}
 
 		if validatorInfo.Status > 3 {
 			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.String())
 		}
 
-		// Validator has withdrawn
-		if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
-			fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-		}
 		if validatorInfo.WithdrawnBlock.Int64() > 0 {
 			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.String())
 		}
