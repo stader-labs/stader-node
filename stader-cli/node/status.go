@@ -205,16 +205,15 @@ func getStatus(c *cli.Context) error {
 		}
 
 		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositBlock)
+			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.String())
 		}
 
+		// Validator has withdrawn
+		if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
+			fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
+		}
 		if validatorInfo.WithdrawnBlock.Int64() > 0 {
-			// Validator has withdrawn
-			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
-				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
-			}
-			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnBlock)
+			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.String())
 		}
 
 		fmt.Printf("\n\n")

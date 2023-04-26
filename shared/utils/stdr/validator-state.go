@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
+	"time"
 )
 
 var ValidatorState = map[uint8]string{
@@ -31,7 +32,9 @@ type ValidatorInfo struct {
 	CrossedRewardsThreshold          bool
 	OperatorId                       *big.Int
 	DepositBlock                     *big.Int
+	DepositTime                      time.Time
 	WithdrawnBlock                   *big.Int
+	WithdrawnTime                    time.Time
 }
 
 func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]types.ValidatorContractInfo, error) {
@@ -84,7 +87,6 @@ func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, val
 		return "Withdrawal done", nil
 	case beacon.ValidatorState_WithdrawalPossible:
 		return "Withdrawal possible", nil
-	// we shouldn't be in pending initialized state, but just in case
 	case beacon.ValidatorState_PendingInitialized:
 		return "Pending initialized", nil
 	case beacon.ValidatorState_PendingQueued:

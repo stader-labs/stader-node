@@ -5,6 +5,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
+	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
@@ -327,6 +328,15 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				return nil, err
 			}
 
+			depositTime, err := eth1.ConvertBlockToTimestamp(c, validatorContractInfo.DepositBlock.Int64())
+			if err != nil {
+				return nil, err
+			}
+			withdrawTime, err := eth1.ConvertBlockToTimestamp(c, validatorContractInfo.WithdrawnBlock.Int64())
+			if err != nil {
+				return nil, err
+			}
+
 			validatorInfo := stdr.ValidatorInfo{
 				Status:                           validatorContractInfo.Status,
 				StatusToDisplay:                  validatorDisplayStatus,
@@ -339,7 +349,9 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 				WithdrawVaultWithdrawableBalance: validatorWithdrawVaultWithdrawShares,
 				OperatorId:                       validatorContractInfo.OperatorId,
 				DepositBlock:                     validatorContractInfo.DepositBlock,
+				DepositTime:                      depositTime,
 				WithdrawnBlock:                   validatorContractInfo.WithdrawnBlock,
+				WithdrawnTime:                    withdrawTime,
 			}
 
 			validatorInfoArray[i] = validatorInfo
