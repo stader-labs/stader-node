@@ -72,13 +72,13 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 		Aliases: aliases,
 		Usage:   "Run Stader node activity daemon",
 		Action: func(c *cli.Context) error {
-			return Run(c)
+			return run(c)
 		},
 	})
 }
 
-// Run daemon
-func Run(c *cli.Context) error {
+// run daemon
+func run(c *cli.Context) error {
 
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)

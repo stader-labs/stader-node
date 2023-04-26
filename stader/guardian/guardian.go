@@ -36,7 +36,7 @@ import (
 )
 
 // Config
-var tasksInterval, _ = time.ParseDuration("5m")
+var tasksInterval, _ = time.ParseDuration("5s")
 var taskCooldown, _ = time.ParseDuration("10s")
 
 const (
@@ -116,13 +116,13 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			state, err := updateNetworkStateCache(m, nodeAccount.Address)
+			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
 			if err != nil {
 				errorLog.Println("updateNetworkStateCache ", err)
 				time.Sleep(taskCooldown)
 				continue
 			}
-			stateCache.UpdateState(state)
+			stateCache.UpdateState(networkStateCache)
 			time.Sleep(tasksInterval)
 		}
 	}()
@@ -144,10 +144,10 @@ func configureHTTP() {
 }
 
 func updateNetworkStateCache(m *state.NetworkStateManager, nodeAddress common.Address) (*state.NetworkStateCache, error) {
-	// Get the state of the network
-	state, err := m.GetHeadStateForNode(nodeAddress)
+	// Get the networkStateCache of the network
+	networkStateCache, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
 		return nil, fmt.Errorf("error updating network state: %w", err)
 	}
-	return state, nil
+	return networkStateCache, nil
 }
