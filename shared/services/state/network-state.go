@@ -476,5 +476,10 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		}
 	}
 
+	outstruct.unclaimedEth = unclaimedEth
+	outstruct.unclaimedSd = unclaimedSd
+	outstruct.claimedEth = claimedEth
+	outstruct.claimedSd = claimedSd
+
 	return outstruct, nil
 }
