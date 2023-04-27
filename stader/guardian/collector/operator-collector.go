@@ -69,7 +69,7 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, UnclaimedCLRewards), "", nil, nil,
 		),
 		UnclaimedNonSocializingPoolElRewards: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, OperatorSub, UnclaimedSocializingPoolELRewards), "", nil, nil,
+			prometheus.BuildFQName(namespace, OperatorSub, UnclaimedNonSocializingPoolELRewards), "", nil, nil,
 		),
 		CumulativePenalty: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, CumulativePenalty), "", nil, nil),
