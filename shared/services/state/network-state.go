@@ -246,6 +246,13 @@ func CreateNetworkStateCache(
 	cumulativePenalty := big.NewInt(0)
 	for pubKey, status := range statusMap {
 		log.Printlnf("pubkey: %s, status: %s", pubKey, status)
+
+		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
+		if err != nil {
+			return nil, err
+		}
+		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
+
 		if eth2.IsValidatorQueued(status) {
 			queuedValidators.Add(queuedValidators, big.NewInt(1))
 		}
@@ -254,9 +261,11 @@ func CreateNetworkStateCache(
 		}
 		if eth2.IsValidatorExitingButNotWithdrawn(status) {
 			exitingValidators.Add(exitingValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorWithdrawn(status) {
 			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorActive(status) {
 			activeValidators.Add(activeValidators, big.NewInt(1))
@@ -283,12 +292,6 @@ func CreateNetworkStateCache(
 			fmt.Printf("withdrawVaultRewardShares: %v\n", withdrawVaultRewardShares.OperatorShare)
 			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
-
-		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
-		if err != nil {
-			return nil, err
-		}
-		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 	}
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
@@ -355,8 +358,6 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
-	fmt.Printf("totalClRewards is %v\n", totalClRewards)
-	fmt.Printf("formatted cl rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 2))
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 2)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
