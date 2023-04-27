@@ -70,11 +70,10 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	}
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
 
-	//fmt.Printf("S.no) Cycle Number || ETH Rewards || SD Rewards || Cycle Start Time\n")
-	fmt.Printf("%-6s%-18s%-14.11s%-14.10s%-30s\n", "S.no", "Cycle Number", "ETH Rewards", "SD Rewards", "Cycle Start Time")
+	fmt.Printf("%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
 	cyclesToClaim := map[int64]bool{}
 	for {
-		for i, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
+		for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
 			ethRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Eth, 10)
 			if !ok {
 				return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
@@ -86,10 +85,10 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
 
-			fmt.Printf("%-6d%-18d%-14.2f%-14.2f%-30s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.Format("2006-01-02"))
+			fmt.Printf("%-18d%-14.30s%-14.4f%-.4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
 
-		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
+		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 2,3,8,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
 			for _, cycle := range canClaimSpRewards.UnclaimedCycles {
 				cyclesToClaim[cycle.Int64()] = true
@@ -147,7 +146,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	}
 
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim the rewards for cycles %v? (y/n)", cyclesToClaimArray))) {
+		"Are you sure you want to claim the rewards for cycles %v?", cyclesToClaimArray))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -163,7 +162,9 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Rewards claimed! You can check your balance with the node status command.")
+
+	fmt.Printf("Rewards Claim successful for cycles: %v\n", cyclesToClaimArray)
+	fmt.Printf("Please check your Operator Reward Address for the claimed rewards\n")
 
 	return nil
 }
