@@ -307,7 +307,7 @@ func CreateNetworkStateCache(
 
 	networkDetails := NetworkDetails{}
 
-	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1), nil)
+	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1000000000000000000), nil)
 	if err != nil {
 		return nil, err
 	}
