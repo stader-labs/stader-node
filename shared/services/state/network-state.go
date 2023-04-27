@@ -305,6 +305,10 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	fmt.Printf("Reward claim data is %v\n", rewardClaimData)
+	fmt.Printf("Unclaimed SD is %v\n", rewardClaimData.unclaimedSd)
+	fmt.Printf("Unclaimed ETH is %v\n", rewardClaimData.unclaimedEth)
+	fmt.Printf("Claimed SD is %v\n", rewardClaimData.claimedSd)
+	fmt.Printf("Claimed ETH is %v\n", rewardClaimData.claimedEth)
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
 
