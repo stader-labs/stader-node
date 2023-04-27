@@ -68,7 +68,6 @@ func getStatus(c *cli.Context) error {
 	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral > noOfValidatorsWeCanRegisterBasedOnEthBalance {
 		noOfValidatorsWeCanRegister = noOfValidatorsWeCanRegisterBasedOnEthBalance
 	}
-	fmt.Printf("noOfValidatorsWeCanRegister: %d\n", noOfValidatorsWeCanRegister)
 
 	// Account address & balances
 	fmt.Printf("%s=== Account and Balances ===%s\n", log.ColorGreen, log.ColorReset)
@@ -122,7 +121,7 @@ func getStatus(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18))
 
 	fmt.Printf(
-		"The node %s%s%s can register %d more validators based on the amount of SD collateral it has provided.\n\n",
+		"The node %s%s%s can register %d more validators based on the ETH balance and the SD collateral provided.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
@@ -145,6 +144,7 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
+	fmt.Printf("Node has registered a total of %d validators\n\n", len(status.ValidatorInfos))
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
@@ -168,7 +168,6 @@ func getStatus(c *cli.Context) error {
 		}
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
-		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 
 		if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
 			fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
@@ -196,11 +195,11 @@ func getStatus(c *cli.Context) error {
 		}
 
 		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.String())
+			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))
 		}
 
 		if validatorInfo.WithdrawnBlock.Int64() > 0 {
-			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.String())
+			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.Format("2006-01-02 15:04:05"))
 		}
 
 		fmt.Printf("\n\n")

@@ -263,10 +263,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "exit",
+				Name:      "exit-validator",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
-				UsageText: "stader-cli node exit --validator-pub-key",
+				UsageText: "stader-cli node exit-validator --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",

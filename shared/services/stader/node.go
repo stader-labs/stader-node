@@ -417,38 +417,6 @@ func (c *Client) ClaimClRewards(validatorPubKey types.ValidatorPubkey) (api.Clai
 	return response, nil
 }
 
-func (c *Client) CanSettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.CanSettleExitFunds, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-settle-exit-funds %s", validatorPubKey))
-	if err != nil {
-		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %w", err)
-	}
-	var response api.CanSettleExitFunds
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanSettleExitFunds{}, fmt.Errorf("could not decode node can-settle-exit-funds response: %w", err)
-	}
-	if response.Error != "" {
-		return api.CanSettleExitFunds{}, fmt.Errorf("could not get node can-settle-exit-funds response: %s", response.Error)
-	}
-
-	return response, nil
-}
-
-func (c *Client) SettleExitFunds(validatorPubKey types.ValidatorPubkey) (api.SettleExitFunds, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node settle-exit-funds %s", validatorPubKey))
-	if err != nil {
-		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %w", err)
-	}
-	var response api.SettleExitFunds
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.SettleExitFunds{}, fmt.Errorf("could not decode node settle-exit-funds response: %w", err)
-	}
-	if response.Error != "" {
-		return api.SettleExitFunds{}, fmt.Errorf("could not get node settle-exit-funds response: %s", response.Error)
-	}
-
-	return response, nil
-}
-
 func (c *Client) CanRequestSdCollateralWithdraw(amount *big.Int) (api.CanRequestWithdrawSdResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-node-request-sd-withdraw %s", amount.String()))
 	if err != nil {
