@@ -85,7 +85,7 @@ func NewOperatorCollector(
 		ClaimedSocializingPoolElRewards: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimedSocializingPoolELRewards), "", nil, nil),
 		TotalSdCollateral: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, OperatorSub, TotalSDBonded), "", nil, nil),
+			prometheus.BuildFQName(namespace, OperatorSub, SdCollateral), "", nil, nil),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
