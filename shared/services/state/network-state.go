@@ -423,6 +423,7 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		return outstruct, err
 	}
 
+	fmt.Printf("reward details current index is %v\n", rewardDetails.CurrentIndex)
 	unclaimedEth := big.NewInt(0)
 	unclaimedSd := big.NewInt(0)
 	claimedEth := big.NewInt(0)
@@ -435,6 +436,7 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		if !exists {
 			continue
 		}
+		fmt.Printf("cycle merkle proof is %v\n", cycleMerkleProof)
 		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, big.NewInt(i), nil)
 		if err != nil {
 			return outstruct, err
