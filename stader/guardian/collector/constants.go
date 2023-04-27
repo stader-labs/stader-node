@@ -3,7 +3,7 @@ package collector
 const namespace = "stader"
 
 // Validator rewards & performance => stader_validator_rewards_performance + key
-const RewardSub = "rewards"
+const OperatorSub = "operator"
 
 const ActiveValidators = "active_validators"       //GetAllActiveValidators _PermissionlessNodeRegistry
 const QueuedValidators = "queued_validators"       //QueuedValidators _PermissionlessNodeRegistry
@@ -14,17 +14,13 @@ const WithdrawnValidators = "withdrawn_validators" //GetValidatorStatus
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"
 const SdCollateral = "sd_collateral"
-const BeaconchainReward = "beaconchain_reward"
-const ElReward = "el_reward"
-const SDReward = "sd_reward"
-const ETHAPR = "eth_apr"
-const SDAPR = "sd_apr"
+const EthCollateral = "eth_collateral"
 const CumulativePenalty = "cumulative_penalty"
-const ClaimedBeaconchainRewards = "claimed_beaconchain_rewards"
 const ClaimedSocializingPoolELRewards = "claimed_socializing_pool_el_rewards"
 const ClaimedSocializingPoolSDrewards = "claimed_socializing_pool_sd_rewards"
-const UnclaimedSocializingPoolELRewards = "unclaimed_non_socializing_pool_el_rewards"
-const UnclaimedSocializingPoolSdRewards = "unclaimed_non_socializing_pool_sd_rewards"
+const UnclaimedNonSocializingPoolELRewards = "unclaimed_non_socializing_pool_el_rewards"
+const UnclaimedSocializingPoolELRewards = "unclaimed_socializing_pool_el_rewards"
+const UnclaimedSocializingPoolSdRewards = "unclaimed_socializing_pool_sd_rewards"
 const UnclaimedCLRewards = "unclaimed_cl_rewards"
 const NextRewardCycleTime = "next_reward_cycle_time"
 

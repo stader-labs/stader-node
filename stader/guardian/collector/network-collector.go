@@ -2,6 +2,7 @@ package collector
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -20,6 +21,12 @@ type NetworkCollector struct {
 	// The total number of validators created
 	TotalValidatorsCreated *prometheus.Desc
 
+	// The total number of validators active on beacon chain
+	TotalActiveValidators *prometheus.Desc
+
+	// The total number of validators waiting to receive the 28eth
+	TotalQueuedValidators *prometheus.Desc
+
 	// The total number of registered operators
 	TotalOperators *prometheus.Desc
 
@@ -35,9 +42,11 @@ type NetworkCollector struct {
 	// Total EthX supply
 	TotalEthxSupply *prometheus.Desc
 
-	EthApr *prometheus.Desc
+	// The next block at which Sd and socializing el rewards wil be given
+	NextRewardBlock *prometheus.Desc
 
-	SdApr *prometheus.Desc
+	// The operator collateral ratio
+	CollateralRatio *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -67,6 +76,14 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The total number of validators created in the Stader network",
 			nil, nil,
 		),
+		TotalQueuedValidators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_queued"),
+			"The total number of validators waiting to receive the 28eth",
+			nil, nil,
+		),
+		TotalActiveValidators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_active"),
+			"The total number of validators active on beacon chain",
+			nil, nil,
+		),
 		TotalOperators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_operator_registered"),
 			"The total number of operator registered in the Stader network",
 			nil, nil,
@@ -76,23 +93,23 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			nil, nil,
 		),
 		TotalStakedEthByUsers: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_user_eth"),
-			"The total amount of SD staked as collateral",
+			"The total amount of Eth staked by users",
 			nil, nil,
 		),
 		TotalStakedEthByNos: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_nos_eth"),
-			"The total amount of SD staked as collateral",
+			"The total amount of Eth staked by NOs",
 			nil, nil,
 		),
 		TotalEthxSupply: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_ethx_supply"),
-			"The total amount of SD staked as collateral",
+			"The total Ethx Supply",
 			nil, nil,
 		),
-		EthApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "eth_rewards_apr"),
-			"The APR of Eth Rewards",
+		NextRewardBlock: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "next_reward_block"),
+			"The next block at which SD and socializing el rewards wil be given",
 			nil, nil,
 		),
-		SdApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_rewards_apr"),
-			"The APR of SD rewards",
+		CollateralRatio: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "collateral_ratio"),
+			"The collateral ratio for adding a new validator in Eth",
 			nil, nil,
 		),
 		bc:          bc,
@@ -107,13 +124,15 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.SdPrice
 	channel <- collector.TotalValidatorsCreated
+	channel <- collector.TotalQueuedValidators
+	channel <- collector.TotalActiveValidators
 	channel <- collector.TotalOperators
 	channel <- collector.TotalEthxSupply
 	channel <- collector.TotalStakedEthByUsers
 	channel <- collector.TotalStakedEthByNos
 	channel <- collector.TotalStakedSd
-	channel <- collector.EthApr
-	channel <- collector.SdApr
+	channel <- collector.NextRewardBlock
+	channel <- collector.CollateralRatio
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -121,24 +140,30 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
+	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
+
 	channel <- prometheus.MustNewConstMetric(
 		collector.SdPrice, prometheus.GaugeValue, eth.WeiToEth(state.StaderNetworkDetails.SdPrice))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalValidatorsCreated, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
+		collector.TotalActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalActiveValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalQueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalQueuedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(
 		collector.TotalOperators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalOperators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.TotalEthxSupply, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalEthxSupply.Int64()))
+		collector.TotalEthxSupply, prometheus.GaugeValue, state.StaderNetworkDetails.TotalEthxSupply)
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedEthByUsers, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByUsers.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
+		collector.TotalStakedSd, prometheus.GaugeValue, state.StaderNetworkDetails.TotalStakedSd)
 	channel <- prometheus.MustNewConstMetric(
-		collector.EthApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.EthApr.Int64()))
+		collector.NextRewardBlock, prometheus.GaugeValue, currentStartBlock)
 	channel <- prometheus.MustNewConstMetric(
-		collector.SdApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SdApr.Int64()))
+		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
 }
 
 // Log error messages

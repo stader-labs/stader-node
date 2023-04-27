@@ -3,10 +3,11 @@ package state
 import (
 	"fmt"
 	"math/big"
-	"os"
 	"time"
 
-	"github.com/mitchellh/go-homedir"
+	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	penalty_tracker "github.com/stader-labs/stader-node/stader-lib/penalty-tracker"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
@@ -19,7 +20,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
-
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -35,13 +35,17 @@ type NetworkDetails struct {
 	// done
 	TotalValidators *big.Int
 	// done
+	TotalActiveValidators *big.Int
+	// done
+	TotalQueuedValidators *big.Int
+	// done
 	TotalOperators *big.Int
 	// done
-	TotalStakedSd *big.Int
+	TotalStakedSd float64
 	// done
 	TotalStakedEthByNos *big.Int
 	// done
-	TotalEthxSupply *big.Int
+	TotalEthxSupply float64
 	// done
 	TotalStakedEthByUsers *big.Int
 
@@ -62,22 +66,28 @@ type NetworkDetails struct {
 	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
 
 	// done
-	CumulativePenalty *big.Int
+	CumulativePenalty float64
 	// done
-	UnclaimedClRewards *big.Int
+	UnclaimedClRewards float64
 	// done
-	UnclaimedNonSocializingPoolElRewards *big.Int
+	UnclaimedNonSocializingPoolElRewards float64
+	// done
+	CollateralRatio float64
 
-	ClaimedSocializingPoolElRewards   *big.Int
-	ClaimedSocializingPoolSdRewards   *big.Int
-	UnclaimedSocializingPoolElRewards *big.Int
-	UnclaimedSocializingPoolSDRewards *big.Int
+	// done
+	ClaimedSocializingPoolElRewards float64
+	// done
+	ClaimedSocializingPoolSdRewards float64
+	// done
+	UnclaimedSocializingPoolElRewards float64
+	// done
+	UnclaimedSocializingPoolSDRewards float64
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
-
-	// TODO - apr computation are yet to be decided
-	EthApr *big.Int
-	SdApr  *big.Int
+	// done
+	OperatorStakedSd float64
+	//
+	OperatorEthCollateral float64
 }
 
 type NetworkStateCache struct {
@@ -192,16 +202,27 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
+	fmt.Printf("nextRewardCycleDetails: %+v\n", nextRewardCycleDetails)
 
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
@@ -238,21 +259,32 @@ func CreateNetworkStateCache(
 	cumulativePenalty := big.NewInt(0)
 	for pubKey, status := range statusMap {
 		log.Printlnf("pubkey: %s, status: %s", pubKey, status)
+
+		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
+		if err != nil {
+			return nil, err
+		}
+		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
+
 		if eth2.IsValidatorQueued(status) {
 			queuedValidators.Add(queuedValidators, big.NewInt(1))
 		}
 		if eth2.IsValidatorSlashed(status) {
 			slashedValidators.Add(slashedValidators, big.NewInt(1))
 		}
-		if eth2.IsValidatorExiting(status) {
+		if eth2.IsValidatorExitingButNotWithdrawn(status) {
 			exitingValidators.Add(exitingValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorWithdrawn(status) {
 			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorActive(status) {
 			activeValidators.Add(activeValidators, big.NewInt(1))
 		}
+
+		fmt.Printf("validatorInfoMap[pubKey]: %+v\n", validatorInfoMap[pubKey])
 
 		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
 		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
@@ -270,14 +302,9 @@ func CreateNetworkStateCache(
 		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
 			continue
 		} else {
+			fmt.Printf("withdrawVaultRewardShares: %v\n", withdrawVaultRewardShares.OperatorShare)
 			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
-
-		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
-		if err != nil {
-			return nil, err
-		}
-		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 	}
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
@@ -286,13 +313,15 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	rewardClaimData, err := getClaimedAndUnclaimedSocializingSdAndEth(cfg, sp, nodeAddress)
 	if err != nil {
 		return nil, err
 	}
-	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
-
-	}
+	fmt.Printf("Reward claim data is %v\n", rewardClaimData)
+	fmt.Printf("Unclaimed SD is %v\n", rewardClaimData.unclaimedSd)
+	fmt.Printf("Unclaimed ETH is %v\n", rewardClaimData.unclaimedEth)
+	fmt.Printf("Claimed SD is %v\n", rewardClaimData.claimedSd)
+	fmt.Printf("Claimed ETH is %v\n", rewardClaimData.claimedEth)
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
 
@@ -302,7 +331,7 @@ func CreateNetworkStateCache(
 
 	networkDetails := NetworkDetails{}
 
-	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1), nil)
+	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1000000000000000000), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -314,7 +343,19 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	totalActiveValidators, err := node.GetTotalActiveValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalQueuedValidators, err := node.GetTotalQueuedValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
 	totalSdCollateral, err := sd_collateral.GetTotalSdCollateral(sdc, nil)
+	if err != nil {
+		return nil, err
+	}
+	permissionlessPoolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -327,23 +368,18 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	//cycles, err := getClaimedCycles(cfg, sp, nodeAddress)
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	//rewardClaimData, err := getClaimData(cfg, cycles)
-	//if err != nil {
-	//	return nil, err
-	//}
-
 	networkDetails.SdPrice = sdPrice
+	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
-	networkDetails.TotalStakedSd = totalSdCollateral
-	networkDetails.TotalEthxSupply = ethxSupply
+	networkDetails.TotalActiveValidators = totalActiveValidators
+	networkDetails.TotalQueuedValidators = totalQueuedValidators
+	networkDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
+	networkDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
@@ -352,16 +388,16 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
-	networkDetails.CumulativePenalty = cumulativePenalty
-	networkDetails.UnclaimedClRewards = totalClRewards
+	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	fmt.Printf("unclaimed CL rewards is %v\n", totalClRewards)
+	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 18))
+	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
-	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
-	networkDetails.ClaimedSocializingPoolElRewards = big.NewInt(10)
-	networkDetails.ClaimedSocializingPoolSdRewards = big.NewInt(20)
-	networkDetails.UnclaimedSocializingPoolElRewards = big.NewInt(30)
-	networkDetails.UnclaimedSocializingPoolSDRewards = big.NewInt(40)
-	networkDetails.EthApr = big.NewInt(1)
-	networkDetails.SdApr = big.NewInt(2)
+	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
+	networkDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
+	networkDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
+	networkDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
+	networkDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
 
 	state.StaderNetworkDetails = networkDetails
 
@@ -377,113 +413,95 @@ func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
 	}
 }
 
-func getRewardData(
-	cfg *config.StaderNodeConfig,
-	sp *stader.SocializingPoolContractManager,
-	nodeAccount common.Address,
-) {
-
-}
-
-func getClaimData(
-	cfg *config.StaderNodeConfig,
-	cycles struct {
-		claimedCycles    []*big.Int
-		unclaimedCycles  []*big.Int
-		cyclesToDownload []*big.Int
-	},
-) (struct {
-	claimedSocializingPoolElRewards   *big.Int
-	claimedSocializingPoolSdRewards   *big.Int
-	unclaimedSocializingPoolSdRewards *big.Int
-	unclaimedSocializingPoolElRewards *big.Int
-}, error) {
-	outstruct := new(struct {
-		claimedSocializingPoolElRewards   *big.Int
-		claimedSocializingPoolSdRewards   *big.Int
-		unclaimedSocializingPoolSdRewards *big.Int
-		unclaimedSocializingPoolElRewards *big.Int
-	})
-
-	claimedSocializingPoolElRewards, claimedSocializingPoolSdRewards, _, err := cfg.GetClaimData(cycles.claimedCycles)
-	if err != nil {
-		return *outstruct, err
-	}
-	unclaimedSocializingPoolElRewards, unclaimedSocializingPoolSDRewards, _, err := cfg.GetClaimData(cycles.unclaimedCycles)
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.claimedSocializingPoolElRewards = sum(claimedSocializingPoolElRewards)
-	outstruct.claimedSocializingPoolSdRewards = sum(claimedSocializingPoolSdRewards)
-	outstruct.unclaimedSocializingPoolElRewards = sum(unclaimedSocializingPoolElRewards)
-	outstruct.unclaimedSocializingPoolSdRewards = sum(unclaimedSocializingPoolSDRewards)
-
-	return *outstruct, nil
-}
-
-func sum(array []*big.Int) *big.Int {
-	result := big.NewInt(0)
-	for _, v := range array {
-		result = result.Add(result, v)
-	}
-	return result
-}
-
-func getClaimedCycles(
+func getClaimedAndUnclaimedSocializingSdAndEth(
 	cfg *config.StaderNodeConfig,
 	sp *stader.SocializingPoolContractManager,
 	nodeAccount common.Address,
 ) (struct {
-	claimedCycles    []*big.Int
-	unclaimedCycles  []*big.Int
-	cyclesToDownload []*big.Int
+	unclaimedEth *big.Int
+	unclaimedSd  *big.Int
+	claimedEth   *big.Int
+	claimedSd    *big.Int
 }, error) {
-	outstruct := new(struct {
-		claimedCycles    []*big.Int
-		unclaimedCycles  []*big.Int
-		cyclesToDownload []*big.Int
-	})
+	outstruct := struct {
+		unclaimedEth *big.Int
+		unclaimedSd  *big.Int
+		claimedEth   *big.Int
+		claimedSd    *big.Int
+	}{
+		unclaimedEth: big.NewInt(0),
+		unclaimedSd:  big.NewInt(0),
+		claimedEth:   big.NewInt(0),
+		claimedSd:    big.NewInt(0),
+	}
 
-	claimedCycles := []*big.Int{}
-	unclaimedCycles := []*big.Int{}
-	cyclesToDownload := []*big.Int{}
+	outstruct.unclaimedEth = big.NewInt(0)
+	outstruct.unclaimedSd = big.NewInt(0)
+	outstruct.claimedEth = big.NewInt(0)
+	outstruct.claimedSd = big.NewInt(0)
 
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
-		return *outstruct, err
+		return outstruct, err
 	}
 
+	fmt.Printf("reward details current index is %v\n", rewardDetails.CurrentIndex)
+	unclaimedEth := big.NewInt(0)
+	unclaimedSd := big.NewInt(0)
+	claimedEth := big.NewInt(0)
+	claimedSd := big.NewInt(0)
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
-		cycle := big.NewInt(i)
+		cycleMerkleProof, exists, err := cfg.ReadCycleCache(i)
 		if err != nil {
-			return *outstruct, err
+			return outstruct, err
 		}
-		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, cycle, nil)
+		fmt.Printf("cache exists is %v\n", exists)
+		if !exists {
+			continue
+		}
+		fmt.Printf("cycle merkle proof is %v\n", cycleMerkleProof)
+		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, big.NewInt(i), nil)
 		if err != nil {
-			return *outstruct, err
-		}
-		if isClaimed {
-			claimedCycles = append(claimedCycles, cycle)
-		} else {
-			unclaimedCycles = append(unclaimedCycles, cycle)
+			return outstruct, err
 		}
 
-		// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
-		// check if this cycle has been downloaded
-		cycleMerkleRewardFile := cfg.GetSpRewardCyclePath(i, true)
-		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-		if err != nil {
-			return *outstruct, err
-		}
-		_, err = os.Stat(expandedCycleMerkleRewardFile)
-		if !os.IsNotExist(err) && err != nil {
-			return *outstruct, err
-		}
-		if os.IsNotExist(err) {
-			cyclesToDownload = append(cyclesToDownload, cycle)
+		if claimed {
+			ethClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
+			if !ok {
+				return outstruct, fmt.Errorf("failed to parse eth claimed: %s", cycleMerkleProof.Eth)
+			}
+			sdClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
+			if !ok {
+				return outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
+			}
+			fmt.Printf("eth claimed is %v\n", ethClaimed)
+			fmt.Printf("sd claimed is %v\n", sdClaimed)
+			fmt.Printf("claimed eth is %v\n", claimedEth)
+			fmt.Printf("claimed sd is %v\n", claimedSd)
+			claimedEth.Add(claimedEth, ethClaimed)
+			claimedSd.Add(claimedSd, sdClaimed)
+		} else {
+			ethUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
+			if !ok {
+				return outstruct, fmt.Errorf("failed to parse eth unclaimed: %s", cycleMerkleProof.Eth)
+			}
+			sdUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
+			if !ok {
+				return outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
+			}
+			fmt.Printf("eth unclaimed is %v\n", ethUnclaimed)
+			fmt.Printf("sd unclaimed is %v\n", sdUnclaimed)
+			fmt.Printf("unclaimed eth is %v\n", unclaimedEth)
+			fmt.Printf("unclaimed sd is %v\n", unclaimedSd)
+			unclaimedEth.Add(unclaimedEth, ethUnclaimed)
+			unclaimedSd.Add(unclaimedSd, sdUnclaimed)
 		}
 	}
 
-	return *outstruct, nil
+	outstruct.unclaimedEth = unclaimedEth
+	outstruct.unclaimedSd = unclaimedSd
+	outstruct.claimedEth = claimedEth
+	outstruct.claimedSd = claimedSd
+
+	return outstruct, nil
 }

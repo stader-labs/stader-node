@@ -1,9 +1,6 @@
 package node
 
 import (
-	"encoding/json"
-	"github.com/mitchellh/go-homedir"
-	"github.com/stader-labs/stader-node/shared/services/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
@@ -11,7 +8,6 @@ import (
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
-	"os"
 	"time"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -22,38 +18,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
 )
-
-func ReadCycleCache(cfg *config.StaderConfig, cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
-	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
-	cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycle, true)
-	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	_, err = os.Stat(cycleMerkleProofFile)
-	if !os.IsNotExist(err) && err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-	if os.IsNotExist(err) {
-		return stader_backend.CycleMerkleProofs{}, false, nil
-	}
-
-	// Open the JSON file
-	file, err := os.Open(absolutePathOfProofFile)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	var cycleMerkleProof stader_backend.CycleMerkleProofs
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&cycleMerkleProof)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	return cycleMerkleProof, true, nil
-}
 
 func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_backend.CycleMerkleProofs, []stader_backend.CycleMerkleProofs, error) {
 	cfg, err := services.GetConfig(c)
@@ -81,7 +45,7 @@ func GetClaimedAndUnclaimedSocializingPoolMerkles(c *cli.Context) ([]stader_back
 	unclaimedMerkles := []stader_backend.CycleMerkleProofs{}
 	claimedMerkles := []stader_backend.CycleMerkleProofs{}
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
-		cycleMerkleProof, exists, err := ReadCycleCache(cfg, i)
+		cycleMerkleProof, exists, err := cfg.StaderNode.ReadCycleCache(i)
 		if err != nil {
 			return nil, nil, err
 		}

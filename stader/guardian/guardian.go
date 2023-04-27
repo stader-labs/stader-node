@@ -21,13 +21,14 @@ package guardian
 
 import (
 	"fmt"
+	"net/http"
+	"sync"
+	"time"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/state"
 	"github.com/stader-labs/stader-node/stader/guardian/collector"
-	"net/http"
-	"sync"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -59,7 +60,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	})
 }
 
-// Run daemon
+// run daemon
 func run(c *cli.Context) error {
 
 	// Initialize error logger
@@ -81,24 +82,57 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	stateCache := collector.NewStateCache()
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return err
 	}
+
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return err
 	}
 
-	m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
-	if err != nil {
-		return err
-	}
-	stateCache := collector.NewStateCache()
-
-	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
+
+	// Run metrics loop
+	go func() {
+		m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
+		if err != nil {
+			panic(err)
+		}
+
+		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println("WaitEthClientSynced ", err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+
+			// Check the BC status
+			err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+			if err != nil {
+				errorLog.Println("WaitBeaconClientSynced ", err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+
+			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
+			if err != nil {
+				errorLog.Println("updateNetworkStateCache ", err)
+				time.Sleep(taskCooldown)
+				continue
+			}
+			stateCache.UpdateState(networkStateCache)
+			time.Sleep(tasksInterval)
+		}
+
+		wg.Done()
+	}()
 
 	go func() {
 		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
@@ -108,39 +142,8 @@ func run(c *cli.Context) error {
 		wg.Done()
 	}()
 
-	// Run metrics loop
-	go func() {
-		for {
-			// Check the EC status
-			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-			if err != nil {
-				errorLog.Println(err)
-				time.Sleep(taskCooldown)
-				continue
-			}
-
-			// Check the BC status
-			err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-			if err != nil {
-				errorLog.Println(err)
-				time.Sleep(taskCooldown)
-				continue
-			}
-
-			networkStateCache, err := updateNetworkStateCache(m, nodeAccount.Address)
-			if err != nil {
-				errorLog.Println(err)
-				time.Sleep(taskCooldown)
-				continue
-			}
-			stateCache.UpdateState(networkStateCache)
-
-			time.Sleep(tasksInterval)
-		}
-		wg.Done()
-	}()
-
 	wg.Wait()
+
 	return nil
 }
 
@@ -157,7 +160,7 @@ func updateNetworkStateCache(m *state.NetworkStateManager, nodeAddress common.Ad
 	// Get the networkStateCache of the network
 	networkStateCache, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
-		return nil, fmt.Errorf("error updating network networkStateCache: %w", err)
+		return nil, fmt.Errorf("error updating network state: %w", err)
 	}
 	return networkStateCache, nil
 }

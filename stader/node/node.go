@@ -21,6 +21,14 @@ package node
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
+	"sync"
+	"time"
+
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
@@ -30,13 +38,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strconv"
-	"sync"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -76,7 +77,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	})
 }
 
-// Run daemon
+// run daemon
 func run(c *cli.Context) error {
 
 	// Handle the initial fee recipient file deployment

@@ -573,6 +573,39 @@ func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big
 
 	return amountSd, amountEth, merkleProofs, nil
 }
+
+func (cfg *StaderNodeConfig) ReadCycleCache(cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
+	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
+	cycleMerkleProofFile := cfg.GetSpRewardCyclePath(cycle, true)
+	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	_, err = os.Stat(cycleMerkleProofFile)
+	if !os.IsNotExist(err) && err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+	if os.IsNotExist(err) {
+		return stader_backend.CycleMerkleProofs{}, false, nil
+	}
+
+	// Open the JSON file
+	file, err := os.Open(absolutePathOfProofFile)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	var cycleMerkleProof stader_backend.CycleMerkleProofs
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&cycleMerkleProof)
+	if err != nil {
+		return stader_backend.CycleMerkleProofs{}, false, err
+	}
+
+	return cycleMerkleProof, true, nil
+}
+
 func getNetworkOptions() []config.ParameterOption {
 	options := []config.ParameterOption{
 		{

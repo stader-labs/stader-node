@@ -120,11 +120,11 @@ func GetNextValidatorId(pnr *stader.PermissionlessNodeRegistryContractManager, o
 	return pnr.PermissionlessNodeRegistry.NextValidatorId(opts)
 }
 
-func GetActiveValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+func GetTotalActiveValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetTotalActiveValidatorCount(opts)
 }
 
-func GetQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
+func GetTotalQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetTotalQueuedValidatorCount(opts)
 }
 
