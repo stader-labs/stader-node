@@ -84,10 +84,8 @@ type NetworkDetails struct {
 	UnclaimedSocializingPoolSDRewards float64
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
-
-	// TODO - apr computation are yet to be decided
-	EthApr *big.Int
-	SdApr  *big.Int
+	// done
+	OperatorStakedSd float64
 }
 
 type NetworkStateCache struct {
@@ -199,6 +197,10 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -360,6 +362,7 @@ func CreateNetworkStateCache(
 	}
 
 	networkDetails.SdPrice = sdPrice
+	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
 	networkDetails.TotalActiveValidators = totalActiveValidators
@@ -387,9 +390,6 @@ func CreateNetworkStateCache(
 	networkDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
 	networkDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
 	networkDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
-
-	networkDetails.EthApr = big.NewInt(1)
-	networkDetails.SdApr = big.NewInt(2)
 
 	state.StaderNetworkDetails = networkDetails
 

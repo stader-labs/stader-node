@@ -48,10 +48,6 @@ type NetworkCollector struct {
 	// The operator collateral ratio
 	CollateralRatio *prometheus.Desc
 
-	EthApr *prometheus.Desc
-
-	SdApr *prometheus.Desc
-
 	// The beacon client
 	bc beacon.Client
 
@@ -116,14 +112,6 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The collateral ratio for adding a new validator in Eth",
 			nil, nil,
 		),
-		EthApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "eth_rewards_apr"),
-			"The APR of Eth Rewards",
-			nil, nil,
-		),
-		SdApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_rewards_apr"),
-			"The APR of SD rewards",
-			nil, nil,
-		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -143,8 +131,6 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalStakedEthByUsers
 	channel <- collector.TotalStakedEthByNos
 	channel <- collector.TotalStakedSd
-	channel <- collector.EthApr
-	channel <- collector.SdApr
 	channel <- collector.NextRewardBlock
 	channel <- collector.CollateralRatio
 }
@@ -178,10 +164,6 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.NextRewardBlock, prometheus.GaugeValue, currentStartBlock)
 	channel <- prometheus.MustNewConstMetric(
 		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
-	channel <- prometheus.MustNewConstMetric(
-		collector.EthApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.EthApr.Int64()))
-	channel <- prometheus.MustNewConstMetric(
-		collector.SdApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SdApr.Int64()))
 }
 
 // Log error messages
