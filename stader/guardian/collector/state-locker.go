@@ -4,7 +4,9 @@ import (
 	"math/big"
 	"sync"
 
+	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/state"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
 type StateCache struct {
@@ -39,6 +41,17 @@ func NewStateCache() *StateCache {
 				UnclaimedSocializingPoolSDRewards:    big.NewInt(0),
 				EthApr:                               big.NewInt(0),
 				SdApr:                                big.NewInt(0),
+				NextSocializingPoolRewardCycle: types.RewardCycleDetails{
+					CurrentIndex:      big.NewInt(0),
+					CurrentStartBlock: big.NewInt(0),
+					CurrentEndBlock:   big.NewInt(0),
+					NextIndex:         big.NewInt(0),
+					NextStartBlock:    big.NewInt(0),
+					NextEndBlock:      big.NewInt(0),
+				},
+				ValidatorStatusMap: make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
+				ValidatorInfoMap:   make(map[types.ValidatorPubkey]types.ValidatorContractInfo),
+				CollateralRatio:    0,
 			},
 		},
 	}
