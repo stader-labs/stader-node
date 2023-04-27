@@ -252,7 +252,7 @@ func CreateNetworkStateCache(
 		if eth2.IsValidatorSlashed(status) {
 			slashedValidators.Add(slashedValidators, big.NewInt(1))
 		}
-		if eth2.IsValidatorExiting(status) {
+		if eth2.IsValidatorExitingButNotWithdrawn(status) {
 			exitingValidators.Add(exitingValidators, big.NewInt(1))
 		}
 		if eth2.IsValidatorWithdrawn(status) {
