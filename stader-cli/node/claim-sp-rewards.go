@@ -85,7 +85,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
 
-			fmt.Printf("%-18d%-14.30s%-14.10f%-10f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
+			fmt.Printf("%-18d%-14.30s%-14.4f%-4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
 
 		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 2,3,8,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
