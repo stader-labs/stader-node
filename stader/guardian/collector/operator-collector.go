@@ -25,7 +25,6 @@ type OperatorCollector struct {
 	UnclaimedSocializingPoolSdRewards    *prometheus.Desc
 	ClaimedSocializingPoolSdRewards      *prometheus.Desc
 	ClaimedSocializingPoolElRewards      *prometheus.Desc
-	NextRewardCycleTime                  *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -84,8 +83,6 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimedSocializingPoolSDrewards), "", nil, nil),
 		ClaimedSocializingPoolElRewards: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimedSocializingPoolELRewards), "", nil, nil),
-		NextRewardCycleTime: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, OperatorSub, NextRewardCycleTime), "", nil, nil),
 
 		bc:          bc,
 		ec:          ec,
@@ -109,7 +106,6 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.UnclaimedSocializingPoolSdRewards
 	channel <- collector.ClaimedSocializingPoolSdRewards
 	channel <- collector.ClaimedSocializingPoolElRewards
-	channel <- collector.NextRewardCycleTime
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -122,13 +118,12 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.ExitingValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ExitingValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.WithdrawnValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.WithdrawnValidators.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedClRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, float64(state.StaderNetworkDetails.CumulativePenalty.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.UnclaimedSocializingPoolSDRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ClaimedSocializingPoolElRewards.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.NextRewardCycleTime, prometheus.GaugeValue, float64(10))
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedClRewards)
+	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, state.StaderNetworkDetails.CumulativePenalty)
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards)
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedSocializingPoolSDRewards)
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards)
+	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolElRewards)
 
 }
 

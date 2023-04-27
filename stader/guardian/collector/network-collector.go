@@ -2,6 +2,7 @@ package collector
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -137,7 +138,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetState()
 
-	//currentStartBlock := state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()
+	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
 
 	channel <- prometheus.MustNewConstMetric(
 		collector.SdPrice, prometheus.GaugeValue, eth.WeiToEth(state.StaderNetworkDetails.SdPrice))
@@ -154,7 +155,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, state.StaderNetworkDetails.TotalStakedSd)
 	channel <- prometheus.MustNewConstMetric(
-		collector.NextRewardBlock, prometheus.GaugeValue, float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()))
+		collector.NextRewardBlock, prometheus.GaugeValue, currentStartBlock)
 	channel <- prometheus.MustNewConstMetric(
 		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
 	channel <- prometheus.MustNewConstMetric(

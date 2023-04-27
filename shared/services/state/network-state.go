@@ -62,22 +62,22 @@ type NetworkDetails struct {
 	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
 
 	// done
-	CumulativePenalty *big.Int
+	CumulativePenalty float64
 	// done
-	UnclaimedClRewards *big.Int
+	UnclaimedClRewards float64
 	// done
-	UnclaimedNonSocializingPoolElRewards *big.Int
+	UnclaimedNonSocializingPoolElRewards float64
 
 	CollateralRatio float64
 
 	// done
-	ClaimedSocializingPoolElRewards *big.Int
+	ClaimedSocializingPoolElRewards float64
 	// done
-	ClaimedSocializingPoolSdRewards *big.Int
+	ClaimedSocializingPoolSdRewards float64
 	// done
-	UnclaimedSocializingPoolElRewards *big.Int
+	UnclaimedSocializingPoolElRewards float64
 	// done
-	UnclaimedSocializingPoolSDRewards *big.Int
+	UnclaimedSocializingPoolSDRewards float64
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 
@@ -352,14 +352,14 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
-	networkDetails.CumulativePenalty = cumulativePenalty
-	networkDetails.UnclaimedClRewards = totalClRewards
+	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 2)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
-	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
-	networkDetails.ClaimedSocializingPoolElRewards = rewardClaimData.claimedEth
-	networkDetails.ClaimedSocializingPoolSdRewards = rewardClaimData.claimedSd
-	networkDetails.UnclaimedSocializingPoolElRewards = rewardClaimData.unclaimedEth
-	networkDetails.UnclaimedSocializingPoolSDRewards = rewardClaimData.unclaimedSd
+	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
+	networkDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
+	networkDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
+	networkDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
+	networkDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
 
 	networkDetails.EthApr = big.NewInt(1)
 	networkDetails.SdApr = big.NewInt(2)
