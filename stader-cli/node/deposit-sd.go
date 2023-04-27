@@ -72,7 +72,7 @@ func nodeDepositSd(c *cli.Context) error {
 		}
 
 		// Prompt for confirmation
-		if !(c.Bool("yes") || cliutils.Confirm("Do you want to deposit your SD into the Collateral contract")) {
+		if !(c.Bool("yes") || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
 			fmt.Println("Cancelled.")
 			return nil
 		}

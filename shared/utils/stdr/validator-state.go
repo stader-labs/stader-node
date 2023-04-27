@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
+	"time"
 )
 
 var ValidatorState = map[uint8]string{
@@ -16,7 +17,7 @@ var ValidatorState = map[uint8]string{
 	2: "Front Run",
 	3: "Pre Deposit",
 	4: "Deposited",
-	5: "Withdrawn",
+	5: "Funds Settled",
 }
 
 type ValidatorInfo struct {
@@ -31,7 +32,9 @@ type ValidatorInfo struct {
 	CrossedRewardsThreshold          bool
 	OperatorId                       *big.Int
 	DepositBlock                     *big.Int
+	DepositTime                      time.Time
 	WithdrawnBlock                   *big.Int
+	WithdrawnTime                    time.Time
 }
 
 func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]types.ValidatorContractInfo, error) {
@@ -65,7 +68,7 @@ func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
 
 func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
 	// if validator state in contract is less then Deposited, then display contract status
-	if validatorContractInfo.Status < 4 {
+	if validatorContractInfo.Status != 4 {
 		return ValidatorState[validatorContractInfo.Status], nil
 	}
 
@@ -84,7 +87,6 @@ func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, val
 		return "Withdrawal done", nil
 	case beacon.ValidatorState_WithdrawalPossible:
 		return "Withdrawal possible", nil
-	// we shouldn't be in pending initialized state, but just in case
 	case beacon.ValidatorState_PendingInitialized:
 		return "Pending initialized", nil
 	case beacon.ValidatorState_PendingQueued:

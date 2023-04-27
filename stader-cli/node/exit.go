@@ -52,7 +52,8 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return err
 	}
 
-	fmt.Printf("Exiting validator %s, you check check the validator status on the explorer", validatorPubKey)
+	// TODO - bchain - pick up the link from the config depending on the n/w
+	fmt.Printf("Exiting validator %s, you check check the validator status at %s\n", validatorPubKey, fmt.Sprintf("https://prater.beaconcha.in/validator/%s#withdrawals", validatorPubKey))
 
 	return nil
 }

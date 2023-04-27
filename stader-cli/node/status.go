@@ -43,10 +43,6 @@ func getStatus(c *cli.Context) error {
 	totalRegisterableValidators := status.SdCollateralWorthValidators
 	totalEthCollateral := totalRegisterableValidators.Int64() * 4
 
-	fmt.Printf("socializing pool reward details are %v\n", status.SocializingPoolRewardCycleDetails)
-	fmt.Printf("claimed socializing pool merkle details are %v\n", status.ClaimedSocializingPoolMerkles)
-	fmt.Printf("unclaimed socializing pool merkle details are %v\n", status.UnclaimedSocializingPoolMerkles)
-
 	totalUnclaimedSocializingPoolEth := big.NewInt(0)
 	totalUnclaimedSocializingPoolSd := big.NewInt(0)
 	for _, merkle := range status.UnclaimedSocializingPoolMerkles {
@@ -64,14 +60,10 @@ func getStatus(c *cli.Context) error {
 		totalUnclaimedSocializingPoolSd.Add(totalUnclaimedSocializingPoolSd, sdRewards)
 	}
 
-	fmt.Printf("totalRegisteredValidators: %d\n", totalRegisteredValidators.Int64())
-	fmt.Printf("totalRegisterableValidators: %d\n", totalRegisterableValidators.Int64())
 	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
 
 	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
 
-	fmt.Printf("noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral: %d\n", noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral)
-	fmt.Printf("noOfValidatorsWeCanRegisterBasedOnEthBalance: %d\n", noOfValidatorsWeCanRegisterBasedOnEthBalance)
 	noOfValidatorsWeCanRegister := noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral
 	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral > noOfValidatorsWeCanRegisterBasedOnEthBalance {
 		noOfValidatorsWeCanRegister = noOfValidatorsWeCanRegisterBasedOnEthBalance
@@ -155,30 +147,31 @@ func getStatus(c *cli.Context) error {
 	}
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolStartTime.String())
+		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
 		fmt.Printf("To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
 		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
-		fmt.Printf(
-			"The Operator %s%s%s fee recepient %s%s%s has unclaimed erwards of %.6f ETH.\n\n",
-			log.ColorBlue,
-			status.AccountAddress,
-			log.ColorReset,
-			log.ColorBlue,
-			status.OperatorELRewardsAddressBalance,
-			log.ColorReset,
-			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
-		fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-
+		if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
+			fmt.Printf(
+				"The Operator %s%s%s fee recepient %s%s%s has unclaimed rewards of %.6f ETH.\n\n",
+				log.ColorBlue,
+				status.AccountAddress,
+				log.ColorReset,
+				log.ColorBlue,
+				status.OperatorELRewardsAddress,
+				log.ColorReset,
+				math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
+			fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		}
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 		fmt.Printf("Operator Socializing Pool Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 
 		if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-			fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolStartTime.String())
+			fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
 			fmt.Printf("To claim Socializing pool EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 		}
 	}
@@ -200,21 +193,14 @@ func getStatus(c *cli.Context) error {
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 			fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards %s command\n\n", log.ColorGreen, log.ColorReset)
-		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("-Validator Skimmed Rewards: Crossed threshold\n")
 		}
 
 		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit block: %s\n\n", validatorInfo.DepositBlock)
+			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.String())
 		}
 
 		if validatorInfo.WithdrawnBlock.Int64() > 0 {
-			// Validator has withdrawn
-			if validatorInfo.WithdrawVaultWithdrawableBalance.Int64() > 0 {
-				fmt.Printf("-Withdrawable Amount: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultWithdrawableBalance), 18))
-				fmt.Printf("To withdraw exit amount use the %sstader-cli node settle-exit-funds%s command\n\n", log.ColorGreen, log.ColorReset)
-			}
-			fmt.Printf("-Withdraw block: %s\n\n", validatorInfo.WithdrawnBlock)
+			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.String())
 		}
 
 		fmt.Printf("\n\n")

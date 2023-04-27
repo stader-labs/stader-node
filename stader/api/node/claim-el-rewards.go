@@ -70,7 +70,7 @@ func CanClaimElRewards(c *cli.Context) (*api.CanClaimElRewardsResponse, error) {
 		return nil, err
 	}
 
-	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
+	gasInfo, err := node.EstimateWithdrawFromNodeElVault(pnr.Client, operatorElRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +131,7 @@ func ClaimElRewards(c *cli.Context) (*api.ClaimElRewardsResponse, error) {
 	response.ElRewardsAmount = operatorElRewards.OperatorShare
 	response.OperatorRewardAddress = operatorInfo.OperatorRewardAddress
 
-	tx, err := node.WithdrawFromNodeElVault(pnr.Client, nodeAccount.Address, opts)
+	tx, err := node.WithdrawFromNodeElVault(pnr.Client, operatorElRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

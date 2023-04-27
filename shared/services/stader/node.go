@@ -257,36 +257,6 @@ func (c *Client) ExitValidator(validatorPubKey types.ValidatorPubkey) (api.ExitV
 	return response, nil
 }
 
-func (c *Client) CanSendPresignedMessage(validatorPubKey types.ValidatorPubkey) (api.CanSendPresignedMsgResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node can-send-presigned-msg %s", validatorPubKey))
-	if err != nil {
-		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
-	}
-	var response api.CanSendPresignedMsgResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
-	}
-	if response.Error != "" {
-		return api.CanSendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
-	}
-	return response, nil
-}
-
-func (c *Client) SendPresignedMessage(validatorPubKey types.ValidatorPubkey) (api.SendPresignedMsgResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node send-presigned-msg %s", validatorPubKey))
-	if err != nil {
-		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %w", err)
-	}
-	var response api.SendPresignedMsgResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not decode exit validator response: %w", err)
-	}
-	if response.Error != "" {
-		return api.SendPresignedMsgResponse{}, fmt.Errorf("could not get exit validator status: %s", response.Error)
-	}
-	return response, nil
-}
-
 func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 	responseBytes, err := c.callAPI("node get-contracts-info")
 	if err != nil {
@@ -629,7 +599,6 @@ func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaim
 
 func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	fmt.Printf("stringifiedCycleList: %s", stringifiedCycleList)
 	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
 	if err != nil {
 		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
