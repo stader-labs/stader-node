@@ -304,6 +304,7 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("Reward claim data is %v\n", rewardClaimData)
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
 
@@ -359,6 +360,8 @@ func CreateNetworkStateCache(
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	fmt.Printf("unclaimed CL rewards is %v\n", totalClRewards)
+	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 2))
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 2)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
