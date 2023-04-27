@@ -206,11 +206,12 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorTotalKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, operatorTotalKeys, nil)
+
+	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -222,11 +223,6 @@ func CreateNetworkStateCache(
 	}
 
 	fmt.Printf("nextRewardCycleDetails: %+v\n", nextRewardCycleDetails)
-
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
 
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
