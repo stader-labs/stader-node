@@ -361,8 +361,8 @@ func CreateNetworkStateCache(
 	networkDetails.WithdrawnValidators = withdrawnValidators
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
 	fmt.Printf("unclaimed CL rewards is %v\n", totalClRewards)
-	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 2))
-	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 2)
+	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 10))
+	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 10)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
 	networkDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
