@@ -22,6 +22,7 @@ package guardian
 import (
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -92,6 +93,10 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	wg := new(sync.WaitGroup)
+	wg.Add(2)
+
 	// Run metrics loop
 	go func() {
 		m, err := state.NewNetworkStateManager(cfg, ec, bc, &updateLog)
@@ -125,12 +130,20 @@ func run(c *cli.Context) error {
 			stateCache.UpdateState(networkStateCache)
 			time.Sleep(tasksInterval)
 		}
+
+		wg.Done()
 	}()
 
-	err = runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
-	if err != nil {
-		errorLog.Println(err)
-	}
+	go func() {
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+		if err != nil {
+			errorLog.Println(err)
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+
 	return nil
 }
 
