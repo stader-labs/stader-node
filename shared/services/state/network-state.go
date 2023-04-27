@@ -433,6 +433,7 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		if err != nil {
 			return outstruct, err
 		}
+		fmt.Printf("cache exists is %v\n", exists)
 		if !exists {
 			continue
 		}
