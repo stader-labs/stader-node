@@ -70,7 +70,8 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	}
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
 
-	fmt.Println("S.no) Cycle Number || ETH Rewards || SD Rewards || Cycle Start Time")
+	//fmt.Printf("S.no) Cycle Number || ETH Rewards || SD Rewards || Cycle Start Time\n")
+	fmt.Printf("%-6s%-18s%-14.11s%-14.10s%-30s\n", "S.no", "Cycle Number", "ETH Rewards", "SD Rewards", "Cycle Start Time")
 	cyclesToClaim := map[int64]bool{}
 	for {
 		for i, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
@@ -85,10 +86,10 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
 
-			fmt.Printf("%d) %d || %0.6fETH || %0.6fSD || %s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.String())
+			fmt.Printf("%-6d%-18d%-14.2f%-14.2f%-30s\n", i, cycleInfo.MerkleProofInfo.Cycle, ethRewardsConverted, sdRewardsConverted, cycleInfo.CycleTime.Format("2006-01-02"))
 		}
 
-		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Invalid cycle selection")
+		cycleSelection := cliutils.Prompt("Which cycles would you like to claim? Use a comma separated list (such as '1,2,3') or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
 			for _, cycle := range canClaimSpRewards.UnclaimedCycles {
 				cyclesToClaim[cycle.Int64()] = true
@@ -113,7 +114,8 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 					}
 				}
 				if !found {
-					fmt.Printf("Cycle %d is not in the list of unclaimed cycles. Please enter a valid cycle number", cycle)
+					fmt.Printf("Cycle %d is not in the list of unclaimed cycles. Please enter a valid cycle number\n", cycle)
+					allValid = false
 				} else {
 					cyclesToClaim[int64(cycle)] = true
 				}

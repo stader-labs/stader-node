@@ -1,17 +1,15 @@
 package node
 
 import (
-	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
-	"github.com/stader-labs/stader-node/stader-lib/node"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
 	"math/big"
 	"os"
-	"time"
 )
 
 func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.CyclesDetailedInfo, error) {
@@ -19,10 +17,10 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	if err != nil {
 		return nil, err
 	}
-	//sp, err := services.GetSocializingPoolContract(c)
-	//if err != nil {
-	//	return nil, err
-	//}
+	sp, err := services.GetSocializingPoolContract(c)
+	if err != nil {
+		return nil, err
+	}
 
 	cycles, err := string_utils.DestringifyArray(stringifiedCycles)
 	if err != nil {
@@ -39,15 +37,24 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 		if !exists {
 			continue
 		}
-		//cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//cycleStartTime, err := eth1.ConvertBlockToTimestamp(c, cycleDetails.StartBlock.Int64())
-		//if err != nil {
-		//	return nil, err
-		//}
-		cycleStartTime := time.Now()
+
+		currentBlock, err := eth1.GetCurrentBlockNumber(c)
+		if err != nil {
+			return nil, err
+		}
+		cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		cycleStartBlock := currentBlock
+		if cycleDetails.StartBlock.Cmp(big.NewInt(int64(currentBlock))) < 0 {
+			cycleStartBlock = cycleDetails.StartBlock.Uint64()
+		}
+		cycleStartTime, err := eth1.ConvertBlockToTimestamp(c, int64(cycleStartBlock))
+		if err != nil {
+			return nil, err
+		}
 
 		merkleProofs = append(merkleProofs, api.DetailedMerkleProofInfo{
 			MerkleProofInfo: merkleCycleProof,
@@ -58,58 +65,6 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	response.DetailedCyclesInfo = merkleProofs
 
 	return &response, nil
-}
-
-func IsEligibleForCycle(c *cli.Context, cycle *big.Int) (bool, error) {
-	sp, err := services.GetSocializingPoolContract(c)
-	if err != nil {
-		return false, err
-	}
-	pnr, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return false, err
-	}
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return false, err
-	}
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return false, err
-	}
-
-	cycleDetails, err := socializing_pool.GetRewardCycleDetails(sp, cycle, nil)
-	if err != nil {
-		return false, err
-	}
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return false, err
-	}
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return false, err
-	}
-
-	lastSocializingPoolChangeBlock, err := node.GetSocializingPoolStateChangeBlock(pnr, operatorId, nil)
-	if err != nil {
-		return false, err
-	}
-	lastSocializingPoolChangeBlockUint := lastSocializingPoolChangeBlock.Uint64()
-	cycleStartBlock := cycleDetails.StartBlock.Uint64()
-	cycleEndBlock := cycleDetails.EndBlock.Uint64()
-
-	// TODO - bchain - simplify this logic using boolean algebra and make it succint
-	switch operatorInfo.OptedForSocializingPool {
-	case true:
-		return lastSocializingPoolChangeBlockUint < cycleStartBlock || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || !(lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
-	case false:
-		return !(lastSocializingPoolChangeBlockUint < cycleStartBlock) || (lastSocializingPoolChangeBlockUint > cycleStartBlock && lastSocializingPoolChangeBlockUint < cycleEndBlock) || (lastSocializingPoolChangeBlockUint > cycleEndBlock), nil
-	default:
-		// will never happen
-		return false, fmt.Errorf("operator info opted for socializing pool is not a boolean")
-	}
 }
 
 func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
@@ -150,7 +105,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	claimedCycles := []*big.Int{}
 	unclaimedCycles := []*big.Int{}
-	ineligibleCycles := []*big.Int{}
 	cyclesToDownload := []*big.Int{}
 
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
@@ -160,15 +114,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycle := big.NewInt(i)
-		isEligible, err := IsEligibleForCycle(c, big.NewInt(i))
-		if err != nil {
-			return nil, err
-		}
-		if !isEligible {
-			ineligibleCycles = append(ineligibleCycles, cycle)
-			continue
-		}
-
 		isClaimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount.Address, cycle, nil)
 		if err != nil {
 			return nil, err
@@ -196,7 +141,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	}
 
 	response.ClaimedCycles = claimedCycles
-	response.IneligibleCycles = ineligibleCycles
 	response.UnclaimedCycles = unclaimedCycles
 	response.CyclesToDownload = cyclesToDownload
 
