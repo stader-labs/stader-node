@@ -38,6 +38,8 @@ func NewStateCache() *StateCache {
 				ClaimedSocializingPoolElRewards:      0,
 				ClaimedSocializingPoolSdRewards:      0,
 				UnclaimedSocializingPoolElRewards:    0,
+				TotalActiveValidators:                big.NewInt(0),
+				TotalQueuedValidators:                big.NewInt(0),
 				UnclaimedSocializingPoolSDRewards:    0,
 				EthApr:                               big.NewInt(0),
 				SdApr:                                big.NewInt(0),
