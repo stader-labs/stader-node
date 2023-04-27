@@ -14,6 +14,7 @@ const WithdrawnValidators = "withdrawn_validators" //GetValidatorStatus
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"
 const SdCollateral = "sd_collateral"
+const EthCollateral = "eth_collateral"
 const BeaconchainReward = "beaconchain_reward"
 const ElReward = "el_reward"
 const SDReward = "sd_reward"

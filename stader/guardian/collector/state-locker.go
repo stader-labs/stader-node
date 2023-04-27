@@ -42,6 +42,7 @@ func NewStateCache() *StateCache {
 				TotalQueuedValidators:                big.NewInt(0),
 				UnclaimedSocializingPoolSDRewards:    0,
 				OperatorStakedSd:                     0,
+				OperatorEthCollateral:                0,
 				NextSocializingPoolRewardCycle: types.RewardCycleDetails{
 					CurrentIndex:      big.NewInt(0),
 					CurrentStartBlock: big.NewInt(0),

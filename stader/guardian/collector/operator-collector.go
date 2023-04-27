@@ -26,6 +26,7 @@ type OperatorCollector struct {
 	ClaimedSocializingPoolSdRewards      *prometheus.Desc
 	ClaimedSocializingPoolElRewards      *prometheus.Desc
 	TotalSdCollateral                    *prometheus.Desc
+	TotalEthColateral                    *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -86,6 +87,8 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimedSocializingPoolELRewards), "", nil, nil),
 		TotalSdCollateral: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, SdCollateral), "", nil, nil),
+		TotalEthColateral: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, EthCollateral), "", nil, nil),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -109,6 +112,7 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.ClaimedSocializingPoolSdRewards
 	channel <- collector.ClaimedSocializingPoolElRewards
 	channel <- collector.TotalSdCollateral
+	channel <- collector.TotalEthColateral
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -129,6 +133,7 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolElRewards)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSd)
+	channel <- prometheus.MustNewConstMetric(collector.TotalEthColateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorEthCollateral)
 
 }
 

@@ -71,7 +71,7 @@ type NetworkDetails struct {
 	UnclaimedClRewards float64
 	// done
 	UnclaimedNonSocializingPoolElRewards float64
-
+	// done
 	CollateralRatio float64
 
 	// done
@@ -86,6 +86,8 @@ type NetworkDetails struct {
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 	// done
 	OperatorStakedSd float64
+	//
+	OperatorEthCollateral float64
 }
 
 type NetworkStateCache struct {
@@ -204,6 +206,15 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	operatorTotalKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, operatorTotalKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
@@ -363,6 +374,7 @@ func CreateNetworkStateCache(
 
 	networkDetails.SdPrice = sdPrice
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
 	networkDetails.TotalActiveValidators = totalActiveValidators
