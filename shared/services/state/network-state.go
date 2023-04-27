@@ -262,6 +262,8 @@ func CreateNetworkStateCache(
 			activeValidators.Add(activeValidators, big.NewInt(1))
 		}
 
+		fmt.Printf("validatorInfoMap[pubKey]: %+v\n", validatorInfoMap[pubKey])
+
 		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
 		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
 		if err != nil {
@@ -278,6 +280,7 @@ func CreateNetworkStateCache(
 		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
 			continue
 		} else {
+			fmt.Printf("withdrawVaultRewardShares: %v\n", withdrawVaultRewardShares.OperatorShare)
 			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
 
