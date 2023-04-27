@@ -355,6 +355,8 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
+	fmt.Printf("totalClRewards is %v\n", totalClRewards)
+	fmt.Printf("formatted cl rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 2))
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 2)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
