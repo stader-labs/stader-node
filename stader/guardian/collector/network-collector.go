@@ -79,15 +79,15 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			nil, nil,
 		),
 		TotalStakedEthByUsers: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_user_eth"),
-			"The total amount of SD staked as collateral",
+			"The total amount of Eth staked by users",
 			nil, nil,
 		),
 		TotalStakedEthByNos: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_staked_nos_eth"),
-			"The total amount of SD staked as collateral",
+			"The total amount of Eth staked by NOs",
 			nil, nil,
 		),
 		TotalEthxSupply: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_ethx_supply"),
-			"The total amount of SD staked as collateral",
+			"The total Ethx Supply",
 			nil, nil,
 		),
 		NextRewardBlock: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "next_reward_block"),
@@ -136,13 +136,13 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalOperators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalOperators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.TotalEthxSupply, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalEthxSupply.Int64()))
+		collector.TotalEthxSupply, prometheus.GaugeValue, state.StaderNetworkDetails.TotalEthxSupply)
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedEthByUsers, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByUsers.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
+		collector.TotalStakedSd, prometheus.GaugeValue, state.StaderNetworkDetails.TotalStakedSd)
 	channel <- prometheus.MustNewConstMetric(
 		collector.NextRewardBlock, prometheus.GaugeValue, float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()))
 	channel <- prometheus.MustNewConstMetric(

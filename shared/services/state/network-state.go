@@ -36,11 +36,11 @@ type NetworkDetails struct {
 	// done
 	TotalOperators *big.Int
 	// done
-	TotalStakedSd *big.Int
+	TotalStakedSd float64
 	// done
 	TotalStakedEthByNos *big.Int
 	// done
-	TotalEthxSupply *big.Int
+	TotalEthxSupply float64
 	// done
 	TotalStakedEthByUsers *big.Int
 
@@ -203,6 +203,8 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
+	fmt.Printf("nextRewardCycleDetails: %+v\n", nextRewardCycleDetails)
+
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -336,8 +338,8 @@ func CreateNetworkStateCache(
 	networkDetails.SdPrice = sdPrice
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
-	networkDetails.TotalStakedSd = totalSdCollateral
-	networkDetails.TotalEthxSupply = ethxSupply
+	networkDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
+	networkDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
