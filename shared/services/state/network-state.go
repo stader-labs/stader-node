@@ -2,10 +2,11 @@ package state
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/shared/utils/math"
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"math/big"
 	"time"
+
+	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	penalty_tracker "github.com/stader-labs/stader-node/stader-lib/penalty-tracker"
@@ -385,16 +386,26 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 	claimedEth   *big.Int
 	claimedSd    *big.Int
 }, error) {
-	outstruct := new(struct {
+	outstruct := struct {
 		unclaimedEth *big.Int
 		unclaimedSd  *big.Int
 		claimedEth   *big.Int
 		claimedSd    *big.Int
-	})
+	}{
+		unclaimedEth: big.NewInt(0),
+		unclaimedSd:  big.NewInt(0),
+		claimedEth:   big.NewInt(0),
+		claimedSd:    big.NewInt(0),
+	}
+
+	outstruct.unclaimedEth = big.NewInt(0)
+	outstruct.unclaimedSd = big.NewInt(0)
+	outstruct.claimedEth = big.NewInt(0)
+	outstruct.claimedSd = big.NewInt(0)
 
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
-		return *outstruct, err
+		return outstruct, err
 	}
 
 	unclaimedEth := big.NewInt(0)
@@ -404,40 +415,40 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycleMerkleProof, exists, err := cfg.ReadCycleCache(i)
 		if err != nil {
-			return *outstruct, err
+			return outstruct, err
 		}
 		if !exists {
 			continue
 		}
 		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, big.NewInt(i), nil)
 		if err != nil {
-			return *outstruct, err
+			return outstruct, err
 		}
 
 		if claimed {
 			ethClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
 			if !ok {
-				return *outstruct, fmt.Errorf("failed to parse eth claimed: %s", cycleMerkleProof.Eth)
+				return outstruct, fmt.Errorf("failed to parse eth claimed: %s", cycleMerkleProof.Eth)
 			}
 			sdClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
 			if !ok {
-				return *outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
+				return outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
 			}
 			claimedEth.Add(claimedEth, ethClaimed)
 			claimedSd.Add(claimedSd, sdClaimed)
 		} else {
 			ethUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
 			if !ok {
-				return *outstruct, fmt.Errorf("failed to parse eth unclaimed: %s", cycleMerkleProof.Eth)
+				return outstruct, fmt.Errorf("failed to parse eth unclaimed: %s", cycleMerkleProof.Eth)
 			}
 			sdUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
 			if !ok {
-				return *outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
+				return outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
 			}
 			unclaimedEth.Add(unclaimedEth, ethUnclaimed)
 			unclaimedSd.Add(unclaimedSd, sdUnclaimed)
 		}
 	}
 
-	return *outstruct, nil
+	return outstruct, nil
 }
