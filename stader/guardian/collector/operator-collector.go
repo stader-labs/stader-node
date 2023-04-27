@@ -121,6 +121,7 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedClRewards)
 	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, state.StaderNetworkDetails.CumulativePenalty)
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards)
+	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolELRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedSocializingPoolElRewards)
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedSocializingPoolSDRewards)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolElRewards)
