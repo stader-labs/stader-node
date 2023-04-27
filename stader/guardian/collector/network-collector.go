@@ -21,6 +21,12 @@ type NetworkCollector struct {
 	// The total number of validators created
 	TotalValidatorsCreated *prometheus.Desc
 
+	// The total number of validators active on beacon chain
+	TotalActiveValidators *prometheus.Desc
+
+	// The total number of validators waiting to receive the 28eth
+	TotalQueuedValidators *prometheus.Desc
+
 	// The total number of registered operators
 	TotalOperators *prometheus.Desc
 
@@ -74,6 +80,14 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The total number of validators created in the Stader network",
 			nil, nil,
 		),
+		TotalQueuedValidators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_queued"),
+			"The total number of validators waiting to receive the 28eth",
+			nil, nil,
+		),
+		TotalActiveValidators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_active"),
+			"The total number of validators active on beacon chain",
+			nil, nil,
+		),
 		TotalOperators: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_operator_registered"),
 			"The total number of operator registered in the Stader network",
 			nil, nil,
@@ -122,6 +136,8 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.SdPrice
 	channel <- collector.TotalValidatorsCreated
+	channel <- collector.TotalQueuedValidators
+	channel <- collector.TotalActiveValidators
 	channel <- collector.TotalOperators
 	channel <- collector.TotalEthxSupply
 	channel <- collector.TotalStakedEthByUsers
@@ -144,6 +160,10 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.SdPrice, prometheus.GaugeValue, eth.WeiToEth(state.StaderNetworkDetails.SdPrice))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalValidatorsCreated, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalActiveValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.TotalQueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalQueuedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalOperators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalOperators.Int64()))
 	channel <- prometheus.MustNewConstMetric(

@@ -35,6 +35,10 @@ type NetworkDetails struct {
 	// done
 	TotalValidators *big.Int
 	// done
+	TotalActiveValidators *big.Int
+	// done
+	TotalQueuedValidators *big.Int
+	// done
 	TotalOperators *big.Int
 	// done
 	TotalStakedSd float64
@@ -330,6 +334,14 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	totalActiveValidators, err := node.GetTotalActiveValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalQueuedValidators, err := node.GetTotalQueuedValidators(prn, nil)
+	if err != nil {
+		return nil, err
+	}
 	totalSdCollateral, err := sd_collateral.GetTotalSdCollateral(sdc, nil)
 	if err != nil {
 		return nil, err
@@ -350,6 +362,8 @@ func CreateNetworkStateCache(
 	networkDetails.SdPrice = sdPrice
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
+	networkDetails.TotalActiveValidators = totalActiveValidators
+	networkDetails.TotalQueuedValidators = totalQueuedValidators
 	networkDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
 	networkDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
