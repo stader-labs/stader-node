@@ -35,6 +35,9 @@ type NetworkCollector struct {
 	// Total EthX supply
 	TotalEthxSupply *prometheus.Desc
 
+	// The next block at which Sd and socializing el rewards wil be given
+	NextRewardBlock *prometheus.Desc
+
 	EthApr *prometheus.Desc
 
 	SdApr *prometheus.Desc
@@ -87,6 +90,10 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The total amount of SD staked as collateral",
 			nil, nil,
 		),
+		NextRewardBlock: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "next_reward_block"),
+			"The next block at which SD and socializing el rewards wil be given",
+			nil, nil,
+		),
 		EthApr: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "eth_rewards_apr"),
 			"The APR of Eth Rewards",
 			nil, nil,
@@ -114,6 +121,7 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalStakedSd
 	channel <- collector.EthApr
 	channel <- collector.SdApr
+	channel <- collector.NextRewardBlock
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -135,6 +143,8 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.TotalStakedEthByNos, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedEthByNos.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalStakedSd.Int64()))
+	channel <- prometheus.MustNewConstMetric(
+		collector.NextRewardBlock, prometheus.GaugeValue, float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()))
 	channel <- prometheus.MustNewConstMetric(
 		collector.EthApr, prometheus.GaugeValue, float64(state.StaderNetworkDetails.EthApr.Int64()))
 	channel <- prometheus.MustNewConstMetric(

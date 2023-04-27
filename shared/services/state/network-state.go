@@ -1,14 +1,12 @@
 package state
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"math/big"
-	"os"
-	"strconv"
 	"time"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	penalty_tracker "github.com/stader-labs/stader-node/stader-lib/penalty-tracker"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
@@ -18,7 +16,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
-	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
@@ -70,9 +67,15 @@ type NetworkDetails struct {
 	// done
 	UnclaimedNonSocializingPoolElRewards *big.Int
 
-	ClaimedSocializingPoolElRewards   *big.Int
-	ClaimedSocializingPoolSdRewards   *big.Int
+	CollateralRatio float64
+
+	// done
+	ClaimedSocializingPoolElRewards *big.Int
+	// done
+	ClaimedSocializingPoolSdRewards *big.Int
+	// done
 	UnclaimedSocializingPoolElRewards *big.Int
+	// done
 	UnclaimedSocializingPoolSDRewards *big.Int
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
@@ -288,12 +291,9 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
+	rewardClaimData, err := getClaimedAndUnclaimedSocializingSdAndEth(cfg, sp, nodeAddress)
 	if err != nil {
 		return nil, err
-	}
-	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
-
 	}
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
@@ -320,16 +320,15 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	permissionlessPoolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+	if err != nil {
+		return nil, err
+	}
 	ethxSupply, err := tokens.TotalSupply(ethx, nil)
 	if err != nil {
 		return nil, err
 	}
 	totalStakedAssets, err := stake_pool_manager.GetTotalAssets(spm, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	rewardClaimData, err := getClaimedAndUnclaimedSocializingPoolMerkles(cfg, sp, nodeAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -341,6 +340,7 @@ func CreateNetworkStateCache(
 	networkDetails.TotalEthxSupply = ethxSupply
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
@@ -353,10 +353,10 @@ func CreateNetworkStateCache(
 	networkDetails.UnclaimedClRewards = totalClRewards
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = operatorElRewards.OperatorShare
-	networkDetails.ClaimedSocializingPoolElRewards = big.NewInt(int64((rewardClaimData.claimedEth)))
-	networkDetails.ClaimedSocializingPoolSdRewards = big.NewInt(int64((rewardClaimData.claimedSd)))
-	networkDetails.UnclaimedSocializingPoolElRewards = big.NewInt(int64((rewardClaimData.unclaimedEth)))
-	networkDetails.UnclaimedSocializingPoolSDRewards = big.NewInt(int64((rewardClaimData.unclaimedSd)))
+	networkDetails.ClaimedSocializingPoolElRewards = rewardClaimData.claimedEth
+	networkDetails.ClaimedSocializingPoolSdRewards = rewardClaimData.claimedSd
+	networkDetails.UnclaimedSocializingPoolElRewards = rewardClaimData.unclaimedEth
+	networkDetails.UnclaimedSocializingPoolSDRewards = rewardClaimData.unclaimedSd
 
 	networkDetails.EthApr = big.NewInt(1)
 	networkDetails.SdApr = big.NewInt(2)
@@ -375,21 +375,21 @@ func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
 	}
 }
 
-func getClaimedAndUnclaimedSocializingPoolMerkles(
+func getClaimedAndUnclaimedSocializingSdAndEth(
 	cfg *config.StaderNodeConfig,
 	sp *stader.SocializingPoolContractManager,
 	nodeAccount common.Address,
 ) (struct {
-	unclaimedEth int
-	unclaimedSd  int
-	claimedEth   int
-	claimedSd    int
+	unclaimedEth *big.Int
+	unclaimedSd  *big.Int
+	claimedEth   *big.Int
+	claimedSd    *big.Int
 }, error) {
 	outstruct := new(struct {
-		unclaimedEth int
-		unclaimedSd  int
-		claimedEth   int
-		claimedSd    int
+		unclaimedEth *big.Int
+		unclaimedSd  *big.Int
+		claimedEth   *big.Int
+		claimedSd    *big.Int
 	})
 
 	rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
@@ -397,10 +397,10 @@ func getClaimedAndUnclaimedSocializingPoolMerkles(
 		return *outstruct, err
 	}
 
-	var unclaimedEth int
-	var unclaimedSd int
-	var claimedEth int
-	var claimedSd int
+	unclaimedEth := big.NewInt(0)
+	unclaimedSd := big.NewInt(0)
+	claimedEth := big.NewInt(0)
+	claimedSd := big.NewInt(0)
 	for i := int64(1); i < rewardDetails.CurrentIndex.Int64(); i++ {
 		cycleMerkleProof, exists, err := cfg.ReadCycleCache(i)
 		if err != nil {
@@ -415,53 +415,29 @@ func getClaimedAndUnclaimedSocializingPoolMerkles(
 		}
 
 		if claimed {
-			if v, err := strconv.Atoi(cycleMerkleProof.Eth); err == nil {
-				claimedEth += v
+			ethClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
+			if !ok {
+				return *outstruct, fmt.Errorf("failed to parse eth claimed: %s", cycleMerkleProof.Eth)
 			}
-			if v, err := strconv.Atoi(cycleMerkleProof.Sd); err == nil {
-				claimedSd += v
+			sdClaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
+			if !ok {
+				return *outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
 			}
+			claimedEth.Add(claimedEth, ethClaimed)
+			claimedSd.Add(claimedSd, sdClaimed)
 		} else {
-			if v, err := strconv.Atoi(cycleMerkleProof.Eth); err == nil {
-				unclaimedEth += v
+			ethUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Eth, 10)
+			if !ok {
+				return *outstruct, fmt.Errorf("failed to parse eth unclaimed: %s", cycleMerkleProof.Eth)
 			}
-			if v, err := strconv.Atoi(cycleMerkleProof.Sd); err == nil {
-				unclaimedSd += v
+			sdUnclaimed, ok := big.NewInt(0).SetString(cycleMerkleProof.Sd, 10)
+			if !ok {
+				return *outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
 			}
+			unclaimedEth.Add(unclaimedEth, ethUnclaimed)
+			unclaimedSd.Add(unclaimedSd, sdUnclaimed)
 		}
 	}
 
 	return *outstruct, nil
-}
-
-func ReadCycleCache(cfg *config.StaderNodeConfig, cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
-	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
-	cycleMerkleProofFile := cfg.GetSpRewardCyclePath(cycle, true)
-	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	_, err = os.Stat(cycleMerkleProofFile)
-	if !os.IsNotExist(err) && err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-	if os.IsNotExist(err) {
-		return stader_backend.CycleMerkleProofs{}, false, nil
-	}
-
-	// Open the JSON file
-	file, err := os.Open(absolutePathOfProofFile)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	var cycleMerkleProof stader_backend.CycleMerkleProofs
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&cycleMerkleProof)
-	if err != nil {
-		return stader_backend.CycleMerkleProofs{}, false, err
-	}
-
-	return cycleMerkleProof, true, nil
 }
