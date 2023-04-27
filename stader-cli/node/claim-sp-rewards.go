@@ -163,10 +163,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 
-	fmt.Printf("Rewards Claim successful for cycles:\n")
-	for _, b := range cyclesToClaimArray {
-		fmt.Printf("%d,", b.Int64())
-	}
+	fmt.Printf("Rewards Claim successful for cycles: %v\n", cyclesToClaimArray)
 	fmt.Printf("Please check your Operator Reward Address for the claimed rewards\n")
 
 	return nil
