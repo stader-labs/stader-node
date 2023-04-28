@@ -284,7 +284,7 @@ func CreateNetworkStateCache(
 		if err != nil {
 			return nil, err
 		}
-		for pubKey, status := range statusMap {
+		for _, pubKey := range pubkeys {
 			totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
 			if err != nil {
 				return nil, err
@@ -294,6 +294,12 @@ func CreateNetworkStateCache(
 			validatorContractInfo, ok := validatorInfoMap[pubKey]
 			if !ok {
 				state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
+				continue
+			}
+
+			status, ok := statusMap[pubKey]
+			if !ok {
+				state.logLine("pub key is not found in statusMap: %s\n", pubKey)
 				continue
 			}
 
