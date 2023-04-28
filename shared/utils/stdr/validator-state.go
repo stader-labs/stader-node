@@ -15,7 +15,7 @@ var ValidatorState = map[uint8]string{
 	0: "Initialized",
 	1: "Invalid Signature Submitted",
 	2: "Validator Deposit Front Runned",
-	3: "Pre Deposit",
+	3: "Validator Queued for 28Eth deposit",
 	4: "Deposited",
 	5: "Funds Settled",
 }
@@ -67,7 +67,7 @@ func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
 }
 
 func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
-	if validatorContractInfo.Status != 4 {
+	if validatorContractInfo.Status != 4 || !beaconValidatorStatus.Exists {
 		return ValidatorState[validatorContractInfo.Status], nil
 	}
 
