@@ -224,8 +224,6 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	fmt.Printf("nextRewardCycleDetails: %+v\n", nextRewardCycleDetails)
-
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -286,8 +284,6 @@ func CreateNetworkStateCache(
 			activeValidators.Add(activeValidators, big.NewInt(1))
 		}
 
-		fmt.Printf("validatorInfoMap[pubKey]: %+v\n", validatorInfoMap[pubKey])
-
 		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
 		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
 		if err != nil {
@@ -304,7 +300,6 @@ func CreateNetworkStateCache(
 		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
 			continue
 		} else {
-			fmt.Printf("withdrawVaultRewardShares: %v\n", withdrawVaultRewardShares.OperatorShare)
 			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
 	}
@@ -371,6 +366,7 @@ func CreateNetworkStateCache(
 	}
 
 	collateralRatioInSd := big.NewInt(0).Div(permissionlessPoolThreshold.MinThreshold, sdPrice)
+	state.logLine("collateralRatioInSd: %v\n", collateralRatioInSd)
 
 	networkDetails.SdPrice = sdPrice
 	networkDetails.CollateralRatioInSd = math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10)
