@@ -274,88 +274,104 @@ func CreateNetworkStateCache(
 	cumulativePenalty := big.NewInt(0)
 
 	// Get the validator stats from Beacon
-	statusMap := map[types.ValidatorPubkey]beacon.ValidatorStatus{}
-
-	if len(pubkeys) > 0 {
-		statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
-			Slot: &slotNumber,
-		})
-		state.logLine("statusMap: %s\n", statusMap)
+	statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
+		Slot: &slotNumber,
+	})
+	state.logLine("statusMap: %s\n", statusMap)
+	if err != nil {
+		return nil, err
+	}
+	for _, pubKey := range pubkeys {
+		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
 		if err != nil {
 			return nil, err
 		}
-		for _, pubKey := range pubkeys {
-			totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
-			if err != nil {
-				return nil, err
-			}
-			cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
+		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-			validatorContractInfo, ok := validatorInfoMap[pubKey]
-			if !ok {
-				state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
-				continue
-			}
+		state.logLine("Checkign validator: %s\n", pubKey)
+		validatorContractInfo, ok := validatorInfoMap[pubKey]
+		if !ok {
+			state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
+		}
 
-			if validatorContractInfo.Status == 0 {
-				initializedValidators.Add(initializedValidators, big.NewInt(1))
-				continue
-			}
-			if validatorContractInfo.Status == 1 {
-				invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
-				continue
-			}
-			if validatorContractInfo.Status == 2 {
-				frontRunValidators.Add(frontRunValidators, big.NewInt(1))
-				continue
-			}
-			if validatorContractInfo.Status == 5 {
-				fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
-				continue
-			}
-			status, ok := statusMap[pubKey]
-			if !ok {
-				state.logLine("pub key is not found in statusMap: %s\n", pubKey)
-				continue
-			}
-			if eth2.IsValidatorExitingButNotWithdrawn(status) {
-				exitingValidators.Add(exitingValidators, big.NewInt(1))
-				continue
-			}
-			if eth2.IsValidatorWithdrawn(status) {
-				withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
-				continue
-			}
-			if eth2.IsValidatorQueued(status) {
-				queuedValidators.Add(queuedValidators, big.NewInt(1))
-			}
-			if eth2.IsValidatorSlashed(status) {
-				slashedValidators.Add(slashedValidators, big.NewInt(1))
-			}
-			if eth2.IsValidatorActive(status) {
-				activeValidators.Add(activeValidators, big.NewInt(1))
-			}
+		state.logLine("validator status is %d\n", validatorContractInfo.Status)
 
-			validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
-			withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
-			if err != nil {
-				return nil, err
-			}
-			withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
-			if err != nil {
-				return nil, err
-			}
-			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
-			if err != nil {
-				return nil, err
-			}
-			if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
-				continue
-			} else {
-				totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
-			}
+		status, inBeaconChain := statusMap[pubKey]
+		if !inBeaconChain {
+			state.logLine("pub key is not found in statusMap: %s\n", pubKey)
+		}
+
+		if validatorContractInfo.Status == 0 {
+			initializedValidators.Add(initializedValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 1 {
+			invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 2 {
+			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
+			continue
+		}
+		if !inBeaconChain && validatorContractInfo.Status == 3 {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+			continue
+		}
+		if !inBeaconChain && validatorContractInfo.Status == 4 {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 5 {
+			fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
+			continue
+		}
+		if inBeaconChain && eth2.IsValidatorExitingButNotWithdrawn(status) {
+			exitingValidators.Add(exitingValidators, big.NewInt(1))
+			continue
+		}
+		if inBeaconChain && eth2.IsValidatorWithdrawn(status) {
+			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
+			continue
+		}
+		if inBeaconChain && eth2.IsValidatorQueued(status) {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		}
+		if inBeaconChain && eth2.IsValidatorSlashed(status) {
+			slashedValidators.Add(slashedValidators, big.NewInt(1))
+		}
+		if inBeaconChain && eth2.IsValidatorActive(status) {
+			activeValidators.Add(activeValidators, big.NewInt(1))
+		}
+
+		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
+		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
+		if err != nil {
+			return nil, err
+		}
+		withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
+		if err != nil {
+			return nil, err
+		}
+		rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
+		if err != nil {
+			return nil, err
+		}
+		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
+			continue
+		} else {
+			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
 	}
+
+	state.logLine("initializedValidators: %s\n", initializedValidators)
+	state.logLine("invalidSignatureValidators: %s\n", invalidSignatureValidators)
+	state.logLine("frontRunValidators: %s\n", frontRunValidators)
+	state.logLine("queuedValidators: %s\n", queuedValidators)
+	state.logLine("fundsSettledValidators: %s\n", fundsSettledValidators)
+	state.logLine("exitingValidators: %s\n", exitingValidators)
+	state.logLine("withdrawnValidators: %s\n", withdrawnValidators)
+	state.logLine("slashedValidators: %s\n", slashedValidators)
+	state.logLine("activeValidators: %s\n", activeValidators)
 
 	state.ValidatorDetails = statusMap
 
