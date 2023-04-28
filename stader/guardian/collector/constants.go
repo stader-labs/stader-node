@@ -5,11 +5,14 @@ const namespace = "stader"
 // Validator rewards & performance => stader_validator_rewards_performance + key
 const OperatorSub = "operator"
 
-const ActiveValidators = "active_validators"       //GetAllActiveValidators _PermissionlessNodeRegistry
-const QueuedValidators = "queued_validators"       //QueuedValidators _PermissionlessNodeRegistry
-const SlashedValidators = "slashed_validators"     //GetValidatorStatus
-const ExitingValidators = "exiting_validators"     //GetValidatorStatus
-const WithdrawnValidators = "withdrawn_validators" //GetValidatorStatus
+const ActiveValidators = "active_validators"                      //GetAllActiveValidators _PermissionlessNodeRegistry
+const QueuedValidators = "queued_validators"                      //QueuedValidators _PermissionlessNodeRegistry
+const SlashedValidators = "slashed_validators"                    //GetValidatorStatus
+const ExitingValidators = "exiting_validators"                    //GetValidatorStatus
+const WithdrawnValidators = "withdrawn_validators"                //GetValidatorStatus
+const InitializedValidators = "initialized_validators"            //GetValidatorStatus
+const InvalidSignatureValidators = "invalid_signature_validators" //GetValidatorStatus
+const FrontRunValidators = "front_run_validators"                 //GetValidatorStatus
 
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"

@@ -31,7 +31,7 @@ type NetworkDetails struct {
 	// Network details
 
 	// done
-	SdPrice *big.Int
+	SdPrice float64
 	// done
 	TotalValidators *big.Int
 	// done
@@ -62,6 +62,14 @@ type NetworkDetails struct {
 	// done
 	WithdrawnValidators *big.Int
 	// done
+	InitializedValidators *big.Int
+	// done
+	InvalidSignatureValidators *big.Int
+	// done
+	FrontRunValidators *big.Int
+	// done
+	FundsSettledValidators *big.Int
+	// done
 	ValidatorStatusMap map[types.ValidatorPubkey]beacon.ValidatorStatus
 	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
 
@@ -73,6 +81,8 @@ type NetworkDetails struct {
 	UnclaimedNonSocializingPoolElRewards float64
 	// done
 	CollateralRatio float64
+	//
+	CollateralRatioInSd float64
 
 	// done
 	ClaimedSocializingPoolElRewards float64
@@ -86,7 +96,7 @@ type NetworkDetails struct {
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 	// done
 	OperatorStakedSd float64
-	//
+	// done
 	OperatorEthCollateral float64
 }
 
@@ -222,8 +232,6 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	fmt.Printf("nextRewardCycleDetails: %+v\n", nextRewardCycleDetails)
-
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -255,22 +263,39 @@ func CreateNetworkStateCache(
 	queuedValidators := big.NewInt(0)
 	exitingValidators := big.NewInt(0)
 	withdrawnValidators := big.NewInt(0)
+	initializedValidators := big.NewInt(0)
+	fundsSettledValidators := big.NewInt(0)
+	invalidSignatureValidators := big.NewInt(0)
+	frontRunValidators := big.NewInt(0)
 	totalClRewards := big.NewInt(0)
 	cumulativePenalty := big.NewInt(0)
 	for pubKey, status := range statusMap {
-		log.Printlnf("pubkey: %s, status: %s", pubKey, status)
-
 		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
 		if err != nil {
 			return nil, err
 		}
 		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		if eth2.IsValidatorQueued(status) {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		validatorContractInfo, ok := validatorInfoMap[pubKey]
+		if !ok {
+			return nil, fmt.Errorf("validator info not found for %s", pubKey.String())
 		}
-		if eth2.IsValidatorSlashed(status) {
-			slashedValidators.Add(slashedValidators, big.NewInt(1))
+
+		if validatorContractInfo.Status == 0 {
+			initializedValidators.Add(initializedValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 1 {
+			invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 2 {
+			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 5 {
+			fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorExitingButNotWithdrawn(status) {
 			exitingValidators.Add(exitingValidators, big.NewInt(1))
@@ -280,11 +305,15 @@ func CreateNetworkStateCache(
 			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
 			continue
 		}
+		if eth2.IsValidatorQueued(status) {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorSlashed(status) {
+			slashedValidators.Add(slashedValidators, big.NewInt(1))
+		}
 		if eth2.IsValidatorActive(status) {
 			activeValidators.Add(activeValidators, big.NewInt(1))
 		}
-
-		fmt.Printf("validatorInfoMap[pubKey]: %+v\n", validatorInfoMap[pubKey])
 
 		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
 		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
@@ -302,7 +331,6 @@ func CreateNetworkStateCache(
 		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
 			continue
 		} else {
-			fmt.Printf("withdrawVaultRewardShares: %v\n", withdrawVaultRewardShares.OperatorShare)
 			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
 		}
 	}
@@ -317,11 +345,6 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Reward claim data is %v\n", rewardClaimData)
-	fmt.Printf("Unclaimed SD is %v\n", rewardClaimData.unclaimedSd)
-	fmt.Printf("Unclaimed ETH is %v\n", rewardClaimData.unclaimedEth)
-	fmt.Printf("Claimed SD is %v\n", rewardClaimData.claimedSd)
-	fmt.Printf("Claimed ETH is %v\n", rewardClaimData.claimedEth)
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
 
@@ -368,7 +391,14 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	networkDetails.SdPrice = sdPrice
+	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
+	collateralRatioInSd := minThreshold * sdPriceFormatted
+	fmt.Printf("sdPrice: %v\n", sdPriceFormatted)
+	fmt.Printf("permissionlessPoolThreshold.MinThreshold: %v\n", math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2))
+	fmt.Printf("formatted collateralRatioInSd: %v\n", collateralRatioInSd)
+
+	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -380,6 +410,7 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	networkDetails.CollateralRatioInSd = collateralRatioInSd
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
@@ -388,9 +419,11 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
+	networkDetails.InitializedValidators = initializedValidators
+	networkDetails.FrontRunValidators = frontRunValidators
+	networkDetails.InvalidSignatureValidators = invalidSignatureValidators
+	networkDetails.FundsSettledValidators = fundsSettledValidators
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
-	fmt.Printf("unclaimed CL rewards is %v\n", totalClRewards)
-	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 18))
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
@@ -445,7 +478,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		return outstruct, err
 	}
 
-	fmt.Printf("reward details current index is %v\n", rewardDetails.CurrentIndex)
 	unclaimedEth := big.NewInt(0)
 	unclaimedSd := big.NewInt(0)
 	claimedEth := big.NewInt(0)
@@ -455,11 +487,9 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		if err != nil {
 			return outstruct, err
 		}
-		fmt.Printf("cache exists is %v\n", exists)
 		if !exists {
 			continue
 		}
-		fmt.Printf("cycle merkle proof is %v\n", cycleMerkleProof)
 		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, big.NewInt(i), nil)
 		if err != nil {
 			return outstruct, err
@@ -474,10 +504,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 			if !ok {
 				return outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
 			}
-			fmt.Printf("eth claimed is %v\n", ethClaimed)
-			fmt.Printf("sd claimed is %v\n", sdClaimed)
-			fmt.Printf("claimed eth is %v\n", claimedEth)
-			fmt.Printf("claimed sd is %v\n", claimedSd)
 			claimedEth.Add(claimedEth, ethClaimed)
 			claimedSd.Add(claimedSd, sdClaimed)
 		} else {
@@ -489,10 +515,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 			if !ok {
 				return outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
 			}
-			fmt.Printf("eth unclaimed is %v\n", ethUnclaimed)
-			fmt.Printf("sd unclaimed is %v\n", sdUnclaimed)
-			fmt.Printf("unclaimed eth is %v\n", unclaimedEth)
-			fmt.Printf("unclaimed sd is %v\n", unclaimedSd)
 			unclaimedEth.Add(unclaimedEth, ethUnclaimed)
 			unclaimedSd.Add(unclaimedSd, sdUnclaimed)
 		}

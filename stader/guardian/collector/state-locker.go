@@ -20,7 +20,7 @@ func NewStateCache() *StateCache {
 		lock: &sync.Mutex{},
 		state: &state.NetworkStateCache{
 			StaderNetworkDetails: state.NetworkDetails{
-				SdPrice:                              big.NewInt(0),
+				SdPrice:                              0,
 				TotalValidators:                      big.NewInt(0),
 				TotalOperators:                       big.NewInt(0),
 				TotalStakedSd:                        0,
@@ -51,9 +51,10 @@ func NewStateCache() *StateCache {
 					NextStartBlock:    big.NewInt(0),
 					NextEndBlock:      big.NewInt(0),
 				},
-				ValidatorStatusMap: make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
-				ValidatorInfoMap:   make(map[types.ValidatorPubkey]types.ValidatorContractInfo),
-				CollateralRatio:    0,
+				ValidatorStatusMap:  make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
+				ValidatorInfoMap:    make(map[types.ValidatorPubkey]types.ValidatorContractInfo),
+				CollateralRatio:     0,
+				CollateralRatioInSd: 0,
 			},
 		},
 	}

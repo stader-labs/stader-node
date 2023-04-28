@@ -29,10 +29,10 @@ import (
 const (
 	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:v4.0.2"
 	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:v4.0.2"
-	prysmTagArm64Test       string = "staderdev/prysm:v3.2.2-rc.3"
+	prysmTagArm64Test       string = "prysmaticlabs/prysm:v4.0.2"
 	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:v4.0.2"
 	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:v4.0.2"
-	prysmTagArm64Prod       string = "staderdev/prysm:v3.2.2-rc.3"
+	prysmTagArm64Prod       string = "prysmaticlabs/prysm:v4.0.2"
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45
