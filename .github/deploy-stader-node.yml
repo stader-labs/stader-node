@@ -1,0 +1,50 @@
+name: Deploy Stader Node
+on:
+  push:
+    paths:
+      - "./**"
+      - ".github/workflows/deploy-stader-node.yml"
+    branches:
+      - feat/cicd
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  BUILD_AND_DEPLOY_STADER_NODE:
+
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION : "us-east-1"
+      VERSION: "v0.0.1-prabh-CICD"
+
+    defaults:
+      run:
+        working-directory: ./stader/stader-node
+
+    steps:
+
+      - name: Install binaries to build stader node
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: qemu-user-static binfmt-support
+
+
+      - uses: actions/checkout@v3
+
+      - name: configure aws credentials for stage environment
+        if: github.ref != 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ETHX_STADER_NODE_STAGE_DEPLOY_ROLE_ARN }}
+          role-duration-seconds: 1200
+          role-session-name: githubActionsSession
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build & Release Stader Node CLI
+        run: |
+          ls -al
+          ./build-release.sh -a -v ${{ env.VERSION }}
+          ls -al
