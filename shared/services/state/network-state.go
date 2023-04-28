@@ -195,53 +195,53 @@ func CreateNetworkStateCache(
 
 	start := time.Now()
 
-	fmt.Printf("nodeAddress: %s\n", nodeAddress.Hex())
+	state.logLine("nodeAddress: %s\n", nodeAddress.Hex())
 	// fetch all validator pub keys
 	operatorId, err := node.GetOperatorId(prn, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("operatorId: %s\n", operatorId)
+	state.logLine("operatorId: %s\n", operatorId)
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("operatorElRewardAddress: %s\n", operatorElRewardAddress)
+	state.logLine("operatorElRewardAddress: %s\n", operatorElRewardAddress)
 	elRewardAddressBalance, err := tokens.GetEthBalance(prn.Client, operatorElRewardAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("elRewardAddressBalance: %s\n", elRewardAddressBalance)
+	state.logLine("elRewardAddressBalance: %s\n", elRewardAddressBalance)
 	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("operatorElRewards: %s\n", operatorElRewards)
+	state.logLine("operatorElRewards: %s\n", operatorElRewards)
 	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("operatorSdColletaral: %s\n", operatorSdColletaral)
+	state.logLine("operatorSdColletaral: %s\n", operatorSdColletaral)
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("totalValidatorKeys: %s\n", totalValidatorKeys)
+	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
 
 	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("operatorNonTerminalKeys: %s\n", operatorNonTerminalKeys)
+	state.logLine("operatorNonTerminalKeys: %s\n", operatorNonTerminalKeys)
 	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
-	fmt.Printf("operatorEthCollateral: %s\n", operatorEthCollateral)
+	state.logLine("operatorEthCollateral: %s\n", operatorEthCollateral)
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Printf("nextRewardCycleDetails: %s\n", nextRewardCycleDetails)
+	state.logLine("nextRewardCycleDetails: %s\n", nextRewardCycleDetails)
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -259,8 +259,8 @@ func CreateNetworkStateCache(
 
 		pubkeys = append(pubkeys, pubKey)
 	}
-	fmt.Printf("pubkeys: %s\n", pubkeys)
-	fmt.Printf("validatorInfoMap: %s\n", validatorInfoMap)
+	state.logLine("pubkeys: %s\n", pubkeys)
+	state.logLine("validatorInfoMap: %s\n", validatorInfoMap)
 	activeValidators := big.NewInt(0)
 	slashedValidators := big.NewInt(0)
 	queuedValidators := big.NewInt(0)
@@ -293,7 +293,8 @@ func CreateNetworkStateCache(
 
 			validatorContractInfo, ok := validatorInfoMap[pubKey]
 			if !ok {
-				return nil, fmt.Errorf("validator info not found for %s", pubKey.String())
+				state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
+				continue
 			}
 
 			if validatorContractInfo.Status == 0 {
