@@ -20,10 +20,6 @@ jobs:
       AWS_REGION : "us-east-1"
       VERSION: "v0.0.1-prabh-CICD"
 
-    defaults:
-      run:
-        working-directory: ./stader/stader-node
-
     steps:
 
       - name: Install binaries to build stader node
