@@ -297,12 +297,6 @@ func CreateNetworkStateCache(
 				continue
 			}
 
-			status, ok := statusMap[pubKey]
-			if !ok {
-				state.logLine("pub key is not found in statusMap: %s\n", pubKey)
-				continue
-			}
-
 			if validatorContractInfo.Status == 0 {
 				initializedValidators.Add(initializedValidators, big.NewInt(1))
 				continue
@@ -317,6 +311,11 @@ func CreateNetworkStateCache(
 			}
 			if validatorContractInfo.Status == 5 {
 				fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
+				continue
+			}
+			status, ok := statusMap[pubKey]
+			if !ok {
+				state.logLine("pub key is not found in statusMap: %s\n", pubKey)
 				continue
 			}
 			if eth2.IsValidatorExitingButNotWithdrawn(status) {
