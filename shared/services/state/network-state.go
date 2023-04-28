@@ -369,6 +369,7 @@ func CreateNetworkStateCache(
 	fmt.Printf("sdPrice: %v\n", sdPrice)
 	fmt.Printf("permissionlessPoolThreshold.MinThreshold: %v\n", permissionlessPoolThreshold.MinThreshold)
 	fmt.Printf("collateralRatioInSd: %v\n", collateralRatioInSd)
+	fmt.Printf("formatted collateralRatioInSd: %v\n", math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10))
 
 	networkDetails.SdPrice = sdPrice
 	networkDetails.CollateralRatioInSd = math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10)
