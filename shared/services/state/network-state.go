@@ -365,7 +365,7 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	collateralRatioInSd := big.NewInt(0).Div(permissionlessPoolThreshold.MinThreshold, sdPrice)
+	collateralRatioInSd := big.NewInt(0).Mul(permissionlessPoolThreshold.MinThreshold, sdPrice)
 	state.logLine("sdPrice: %v\n", sdPrice)
 	state.logLine("permissionlessPoolThreshold.MinThreshold: %v\n", permissionlessPoolThreshold.MinThreshold)
 	state.logLine("collateralRatioInSd: %v\n", collateralRatioInSd)
