@@ -73,6 +73,8 @@ type NetworkDetails struct {
 	UnclaimedNonSocializingPoolElRewards float64
 	// done
 	CollateralRatio float64
+	//
+	CollateralRatioInSd float64
 
 	// done
 	ClaimedSocializingPoolElRewards float64
@@ -86,7 +88,7 @@ type NetworkDetails struct {
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 	// done
 	OperatorStakedSd float64
-	//
+	// done
 	OperatorEthCollateral float64
 }
 
@@ -368,7 +370,10 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
+	collateralRatioInSd := big.NewInt(0).Div(permissionlessPoolThreshold.MinThreshold, sdPrice)
+
 	networkDetails.SdPrice = sdPrice
+	networkDetails.CollateralRatioInSd = math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10)
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))

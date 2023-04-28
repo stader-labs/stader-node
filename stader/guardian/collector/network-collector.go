@@ -45,8 +45,11 @@ type NetworkCollector struct {
 	// The next block at which Sd and socializing el rewards wil be given
 	NextRewardBlock *prometheus.Desc
 
-	// The operator collateral ratio
+	// The operator collateral ratio in ETH
 	CollateralRatio *prometheus.Desc
+
+	// The operator collateral ratio in SD
+	CollateralRatioInSd *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -112,6 +115,10 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The collateral ratio for adding a new validator in Eth",
 			nil, nil,
 		),
+		CollateralRatioInSd: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "collateral_ratio_sd"),
+			"The collateral ratio for adding a new validator in SD",
+			nil, nil,
+		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -133,6 +140,7 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalStakedSd
 	channel <- collector.NextRewardBlock
 	channel <- collector.CollateralRatio
+	channel <- collector.CollateralRatioInSd
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -164,6 +172,8 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.NextRewardBlock, prometheus.GaugeValue, currentStartBlock)
 	channel <- prometheus.MustNewConstMetric(
 		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
+	channel <- prometheus.MustNewConstMetric(
+		collector.CollateralRatioInSd, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatioInSd)
 }
 
 // Log error messages
