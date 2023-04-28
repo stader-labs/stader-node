@@ -1,7 +1,6 @@
 package node
 
 import (
-	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
@@ -9,7 +8,6 @@ import (
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
 	"math/big"
-	"os"
 )
 
 func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.CyclesDetailedInfo, error) {
@@ -83,10 +81,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	cfg, err := services.GetConfig(c)
-	if err != nil {
-		return nil, err
-	}
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
@@ -122,21 +116,6 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 			claimedCycles = append(claimedCycles, cycle)
 		} else {
 			unclaimedCycles = append(unclaimedCycles, cycle)
-		}
-
-		// download merkle proofs if they don't exist even for claimed. it is useful for status displaying
-		// check if this cycle has been downloaded
-		cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(i, true)
-		expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-		if err != nil {
-			return nil, err
-		}
-		_, err = os.Stat(expandedCycleMerkleRewardFile)
-		if !os.IsNotExist(err) && err != nil {
-			return nil, err
-		}
-		if os.IsNotExist(err) {
-			cyclesToDownload = append(cyclesToDownload, cycle)
 		}
 	}
 
