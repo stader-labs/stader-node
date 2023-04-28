@@ -35,13 +35,25 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil
 	}
-	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
-		fmt.Println("No cycles to claim!")
+
+	fmt.Printf("Getting the detailed cycles info...")
+	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
+	if err != nil {
+		return err
+	}
+
+	if len(detailedCyclesInfo.DetailedCyclesInfo) == 0 {
+		fmt.Println("You have no unclaimed cycles!")
 		return nil
 	}
 
+	cycleIndexes := []*big.Int{}
+	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
+		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
+	}
+
 	if downloadMerkleProofs {
-		fmt.Println("Downloading the merkle proofs for the cycles you have unclaimed rewards for...")
+		fmt.Println("Downloading the merkle proofs for the cycles you have not downloaded yet...")
 		downloadRes, err := staderClient.DownloadSpMerkleProofs()
 		if err != nil {
 			return err
@@ -49,11 +61,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
 	}
 
-	fmt.Printf("Getting the detailed cycles info...")
-	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
-	if err != nil {
-		return err
-	}
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
 
 	fmt.Printf("%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
@@ -80,7 +87,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 
 		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 2,3,8,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
-			for _, cycle := range canClaimSpRewards.UnclaimedCycles {
+			for _, cycle := range cycleIndexes {
 				cyclesToClaim[cycle.Int64()] = true
 			}
 			break
@@ -96,7 +103,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 
 				// check if unclaimedCycles contains the cycle
 				found := false
-				for _, unclaimedCycle := range canClaimSpRewards.UnclaimedCycles {
+				for _, unclaimedCycle := range cycleIndexes {
 					if unclaimedCycle.Int64() == int64(cycle) {
 						found = true
 						break
