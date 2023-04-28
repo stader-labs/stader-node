@@ -30,6 +30,8 @@ func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 
 func IsValidatorWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
 	switch validatorStatus.Status {
+	case beacon.ValidatorState_WithdrawalPossible:
+		return true
 	case beacon.ValidatorState_WithdrawalDone:
 		return true
 	}

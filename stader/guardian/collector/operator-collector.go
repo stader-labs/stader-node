@@ -21,6 +21,7 @@ type OperatorCollector struct {
 	FrontRunValidators                   *prometheus.Desc
 	InvalidSignatureValidators           *prometheus.Desc
 	IntializedValidators                 *prometheus.Desc
+	FundsSettledValidators               *prometheus.Desc
 	UnclaimedClRewards                   *prometheus.Desc
 	UnclaimedNonSocializingPoolElRewards *prometheus.Desc
 	CumulativePenalty                    *prometheus.Desc
@@ -79,6 +80,9 @@ func NewOperatorCollector(
 		IntializedValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, InitializedValidators), "", nil, nil,
 		),
+		FundsSettledValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, FundsSettledValidators), "", nil, nil,
+		),
 		UnclaimedClRewards: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, UnclaimedCLRewards), "", nil, nil,
 		),
@@ -115,7 +119,11 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.QueuedValidators
 	channel <- collector.SlashedValidators
 	channel <- collector.ExitingValidators
+	channel <- collector.FrontRunValidators
+	channel <- collector.IntializedValidators
+	channel <- collector.InvalidSignatureValidators
 	channel <- collector.WithdrawnValidators
+	channel <- collector.FundsSettledValidators
 	channel <- collector.UnclaimedClRewards
 	channel <- collector.UnclaimedNonSocializingPoolElRewards
 	channel <- collector.CumulativePenalty
@@ -137,6 +145,10 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.ExitingValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ExitingValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.WithdrawnValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.WithdrawnValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.InvalidSignatureValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.InvalidSignatureValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.IntializedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.InitializedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.FrontRunValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.FrontRunValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.FundsSettledValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.FundsSettledValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedClRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedClRewards)
 	channel <- prometheus.MustNewConstMetric(collector.CumulativePenalty, prometheus.GaugeValue, state.StaderNetworkDetails.CumulativePenalty)
 	channel <- prometheus.MustNewConstMetric(collector.UnclaimedNonSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.UnclaimedNonSocializingPoolElRewards)
