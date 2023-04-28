@@ -14,7 +14,7 @@ import (
 var ValidatorState = map[uint8]string{
 	0: "Initialized",
 	1: "Invalid Signature Submitted",
-	2: "Validator Deposit Front Runned",
+	2: "Validator Deposit Front Run",
 	3: "Validator Queued for 28Eth deposit",
 	4: "Validator has been matched with 28Eth deposit",
 	5: "Funds Settled",
