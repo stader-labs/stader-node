@@ -39,8 +39,6 @@ func IsValidatorWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
 
 func IsValidatorQueued(validatorStatus beacon.ValidatorStatus) bool {
 	switch validatorStatus.Status {
-	case beacon.ValidatorState_PendingInitialized:
-		return true
 	case beacon.ValidatorState_PendingQueued:
 		return true
 	}

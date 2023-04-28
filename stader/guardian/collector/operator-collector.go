@@ -18,6 +18,9 @@ type OperatorCollector struct {
 	SlashedValidators                    *prometheus.Desc
 	ExitingValidators                    *prometheus.Desc
 	WithdrawnValidators                  *prometheus.Desc
+	FrontRunValidators                   *prometheus.Desc
+	InvalidSignatureValidators           *prometheus.Desc
+	IntializedValidators                 *prometheus.Desc
 	UnclaimedClRewards                   *prometheus.Desc
 	UnclaimedNonSocializingPoolElRewards *prometheus.Desc
 	CumulativePenalty                    *prometheus.Desc
@@ -66,6 +69,15 @@ func NewOperatorCollector(
 		),
 		WithdrawnValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, WithdrawnValidators), "", nil, nil,
+		),
+		InvalidSignatureValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, InvalidSignatureValidators), "", nil, nil,
+		),
+		FrontRunValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, FrontRunValidators), "", nil, nil,
+		),
+		IntializedValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, InitializedValidators), "", nil, nil,
 		),
 		UnclaimedClRewards: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, UnclaimedCLRewards), "", nil, nil,

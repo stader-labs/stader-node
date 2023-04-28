@@ -62,6 +62,14 @@ type NetworkDetails struct {
 	// done
 	WithdrawnValidators *big.Int
 	// done
+	InitializedValidators *big.Int
+	// done
+	InvalidSignatureValidators *big.Int
+	// done
+	FrontRunValidators *big.Int
+	// done
+	FundsSettledValidators *big.Int
+	// done
 	ValidatorStatusMap map[types.ValidatorPubkey]beacon.ValidatorStatus
 	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
 
@@ -255,6 +263,10 @@ func CreateNetworkStateCache(
 	queuedValidators := big.NewInt(0)
 	exitingValidators := big.NewInt(0)
 	withdrawnValidators := big.NewInt(0)
+	initializedValidators := big.NewInt(0)
+	fundsSettledValidators := big.NewInt(0)
+	invalidSignatureValidators := big.NewInt(0)
+	frontRunValidators := big.NewInt(0)
 	totalClRewards := big.NewInt(0)
 	cumulativePenalty := big.NewInt(0)
 	for pubKey, status := range statusMap {
@@ -264,11 +276,26 @@ func CreateNetworkStateCache(
 		}
 		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		if eth2.IsValidatorQueued(status) {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		validatorContractInfo, ok := validatorInfoMap[pubKey]
+		if !ok {
+			return nil, fmt.Errorf("validator info not found for %s", pubKey.String())
 		}
-		if eth2.IsValidatorSlashed(status) {
-			slashedValidators.Add(slashedValidators, big.NewInt(1))
+
+		if validatorContractInfo.Status == 0 {
+			initializedValidators.Add(initializedValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 1 {
+			invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 2 {
+			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
+			continue
+		}
+		if validatorContractInfo.Status == 5 {
+			fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
+			continue
 		}
 		if eth2.IsValidatorExitingButNotWithdrawn(status) {
 			exitingValidators.Add(exitingValidators, big.NewInt(1))
@@ -277,6 +304,12 @@ func CreateNetworkStateCache(
 		if eth2.IsValidatorWithdrawn(status) {
 			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
 			continue
+		}
+		if eth2.IsValidatorQueued(status) {
+			queuedValidators.Add(queuedValidators, big.NewInt(1))
+		}
+		if eth2.IsValidatorSlashed(status) {
+			slashedValidators.Add(slashedValidators, big.NewInt(1))
 		}
 		if eth2.IsValidatorActive(status) {
 			activeValidators.Add(activeValidators, big.NewInt(1))
@@ -386,6 +419,10 @@ func CreateNetworkStateCache(
 	networkDetails.ExitingValidators = exitingValidators
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
+	networkDetails.InitializedValidators = initializedValidators
+	networkDetails.FrontRunValidators = frontRunValidators
+	networkDetails.InvalidSignatureValidators = invalidSignatureValidators
+	networkDetails.FundsSettledValidators = fundsSettledValidators
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
