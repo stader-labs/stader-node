@@ -13,6 +13,7 @@ const WithdrawnValidators = "withdrawn_validators"                //GetValidator
 const InitializedValidators = "initialized_validators"            //GetValidatorStatus
 const InvalidSignatureValidators = "invalid_signature_validators" //GetValidatorStatus
 const FrontRunValidators = "front_run_validators"                 //GetValidatorStatus
+const FundsSettledValidators = "funds_settled_validators"         //GetValidatorStatus
 
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"

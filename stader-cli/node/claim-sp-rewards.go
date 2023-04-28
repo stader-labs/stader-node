@@ -85,6 +85,10 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
 
+			if ethRewardsConverted == 0 && sdRewardsConverted == 0 {
+				continue
+			}
+
 			fmt.Printf("%-18d%-14.30s%-14.4f%-.4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
 
