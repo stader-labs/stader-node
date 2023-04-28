@@ -448,7 +448,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		return outstruct, err
 	}
 
-	fmt.Printf("reward details current index is %v\n", rewardDetails.CurrentIndex)
 	unclaimedEth := big.NewInt(0)
 	unclaimedSd := big.NewInt(0)
 	claimedEth := big.NewInt(0)
@@ -458,11 +457,9 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 		if err != nil {
 			return outstruct, err
 		}
-		fmt.Printf("cache exists is %v\n", exists)
 		if !exists {
 			continue
 		}
-		fmt.Printf("cycle merkle proof is %v\n", cycleMerkleProof)
 		claimed, err := socializing_pool.HasClaimedRewards(sp, nodeAccount, big.NewInt(i), nil)
 		if err != nil {
 			return outstruct, err
@@ -477,10 +474,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 			if !ok {
 				return outstruct, fmt.Errorf("failed to parse sd claimed: %s", cycleMerkleProof.Sd)
 			}
-			fmt.Printf("eth claimed is %v\n", ethClaimed)
-			fmt.Printf("sd claimed is %v\n", sdClaimed)
-			fmt.Printf("claimed eth is %v\n", claimedEth)
-			fmt.Printf("claimed sd is %v\n", claimedSd)
 			claimedEth.Add(claimedEth, ethClaimed)
 			claimedSd.Add(claimedSd, sdClaimed)
 		} else {
@@ -492,10 +485,6 @@ func getClaimedAndUnclaimedSocializingSdAndEth(
 			if !ok {
 				return outstruct, fmt.Errorf("failed to parse sd unclaimed: %s", cycleMerkleProof.Sd)
 			}
-			fmt.Printf("eth unclaimed is %v\n", ethUnclaimed)
-			fmt.Printf("sd unclaimed is %v\n", sdUnclaimed)
-			fmt.Printf("unclaimed eth is %v\n", unclaimedEth)
-			fmt.Printf("unclaimed sd is %v\n", unclaimedSd)
 			unclaimedEth.Add(unclaimedEth, ethUnclaimed)
 			unclaimedSd.Add(unclaimedSd, sdUnclaimed)
 		}
