@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 
-	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -151,7 +149,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
 
 	channel <- prometheus.MustNewConstMetric(
-		collector.SdPrice, prometheus.GaugeValue, eth.WeiToEth(state.StaderNetworkDetails.SdPrice))
+		collector.SdPrice, prometheus.GaugeValue, state.StaderNetworkDetails.SdPrice)
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalValidatorsCreated, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(

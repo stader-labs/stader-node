@@ -31,7 +31,7 @@ type NetworkDetails struct {
 	// Network details
 
 	// done
-	SdPrice *big.Int
+	SdPrice float64
 	// done
 	TotalValidators *big.Int
 	// done
@@ -258,8 +258,6 @@ func CreateNetworkStateCache(
 	totalClRewards := big.NewInt(0)
 	cumulativePenalty := big.NewInt(0)
 	for pubKey, status := range statusMap {
-		log.Printlnf("pubkey: %s, status: %s", pubKey, status)
-
 		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
 		if err != nil {
 			return nil, err
@@ -314,11 +312,6 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Reward claim data is %v\n", rewardClaimData)
-	fmt.Printf("Unclaimed SD is %v\n", rewardClaimData.unclaimedSd)
-	fmt.Printf("Unclaimed ETH is %v\n", rewardClaimData.unclaimedEth)
-	fmt.Printf("Claimed SD is %v\n", rewardClaimData.claimedSd)
-	fmt.Printf("Claimed ETH is %v\n", rewardClaimData.claimedEth)
 
 	state.logLine("Retrieved Socializing Pool Reward Details (total time: %s)", time.Since(start))
 
@@ -365,14 +358,14 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 
-	collateralRatioInSd := big.NewInt(0).Mul(permissionlessPoolThreshold.MinThreshold, sdPrice)
-	fmt.Printf("sdPrice: %v\n", sdPrice)
-	fmt.Printf("permissionlessPoolThreshold.MinThreshold: %v\n", permissionlessPoolThreshold.MinThreshold)
-	fmt.Printf("collateralRatioInSd: %v\n", collateralRatioInSd)
-	fmt.Printf("formatted collateralRatioInSd: %v\n", math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10))
+	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
+	collateralRatioInSd := minThreshold * sdPriceFormatted
+	fmt.Printf("sdPrice: %v\n", sdPriceFormatted)
+	fmt.Printf("permissionlessPoolThreshold.MinThreshold: %v\n", math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2))
+	fmt.Printf("formatted collateralRatioInSd: %v\n", collateralRatioInSd)
 
-	networkDetails.SdPrice = sdPrice
-	networkDetails.CollateralRatioInSd = math.RoundDown(eth.WeiToEth(collateralRatioInSd), 10)
+	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -384,6 +377,7 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByUsers = totalStakedAssets
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	networkDetails.CollateralRatioInSd = collateralRatioInSd
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
@@ -393,8 +387,6 @@ func CreateNetworkStateCache(
 	networkDetails.SlashedValidators = slashedValidators
 	networkDetails.WithdrawnValidators = withdrawnValidators
 	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
-	fmt.Printf("unclaimed CL rewards is %v\n", totalClRewards)
-	fmt.Printf("formatted unclaimed CL rewards is %v\n", math.RoundDown(eth.WeiToEth(totalClRewards), 18))
 	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
 	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
 	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
