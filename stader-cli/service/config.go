@@ -171,7 +171,8 @@ func configureService(c *cli.Context) error {
 		return fmt.Errorf("error startService: %w", err)
 	}
 
-	return nil
+	// Remove the upgrade flag if it's there
+	return staderClient.RemoveUpgradeFlagFile()
 }
 
 func handleUI(
