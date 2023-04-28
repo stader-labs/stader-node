@@ -249,15 +249,6 @@ func CreateNetworkStateCache(
 
 		pubkeys = append(pubkeys, pubKey)
 	}
-
-	// Get the validator stats from Beacon
-	statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
-		Slot: &slotNumber,
-	})
-	if err != nil {
-		return nil, err
-	}
-	state.ValidatorDetails = statusMap
 	activeValidators := big.NewInt(0)
 	slashedValidators := big.NewInt(0)
 	queuedValidators := big.NewInt(0)
@@ -269,71 +260,85 @@ func CreateNetworkStateCache(
 	frontRunValidators := big.NewInt(0)
 	totalClRewards := big.NewInt(0)
 	cumulativePenalty := big.NewInt(0)
-	for pubKey, status := range statusMap {
-		totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
-		if err != nil {
-			return nil, err
-		}
-		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		validatorContractInfo, ok := validatorInfoMap[pubKey]
-		if !ok {
-			return nil, fmt.Errorf("validator info not found for %s", pubKey.String())
-		}
+	// Get the validator stats from Beacon
+	statusMap := map[types.ValidatorPubkey]beacon.ValidatorStatus{}
 
-		if validatorContractInfo.Status == 0 {
-			initializedValidators.Add(initializedValidators, big.NewInt(1))
-			continue
+	if len(pubkeys) > 0 {
+		statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
+			Slot: &slotNumber,
+		})
+		if err != nil {
+			return nil, err
 		}
-		if validatorContractInfo.Status == 1 {
-			invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
-			continue
-		}
-		if validatorContractInfo.Status == 2 {
-			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
-			continue
-		}
-		if validatorContractInfo.Status == 5 {
-			fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
-			continue
-		}
-		if eth2.IsValidatorExitingButNotWithdrawn(status) {
-			exitingValidators.Add(exitingValidators, big.NewInt(1))
-			continue
-		}
-		if eth2.IsValidatorWithdrawn(status) {
-			withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
-			continue
-		}
-		if eth2.IsValidatorQueued(status) {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
-		}
-		if eth2.IsValidatorSlashed(status) {
-			slashedValidators.Add(slashedValidators, big.NewInt(1))
-		}
-		if eth2.IsValidatorActive(status) {
-			activeValidators.Add(activeValidators, big.NewInt(1))
-		}
+		for pubKey, status := range statusMap {
+			totalValidatorPenalty, err := penalty_tracker.GetCumulativeValidatorPenalty(pt, pubKey, nil)
+			if err != nil {
+				return nil, err
+			}
+			cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
-		withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
-		if err != nil {
-			return nil, err
-		}
-		withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
-		if err != nil {
-			return nil, err
-		}
-		rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
-		if err != nil {
-			return nil, err
-		}
-		if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
-			continue
-		} else {
-			totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
+			validatorContractInfo, ok := validatorInfoMap[pubKey]
+			if !ok {
+				return nil, fmt.Errorf("validator info not found for %s", pubKey.String())
+			}
+
+			if validatorContractInfo.Status == 0 {
+				initializedValidators.Add(initializedValidators, big.NewInt(1))
+				continue
+			}
+			if validatorContractInfo.Status == 1 {
+				invalidSignatureValidators.Add(invalidSignatureValidators, big.NewInt(1))
+				continue
+			}
+			if validatorContractInfo.Status == 2 {
+				frontRunValidators.Add(frontRunValidators, big.NewInt(1))
+				continue
+			}
+			if validatorContractInfo.Status == 5 {
+				fundsSettledValidators.Add(fundsSettledValidators, big.NewInt(1))
+				continue
+			}
+			if eth2.IsValidatorExitingButNotWithdrawn(status) {
+				exitingValidators.Add(exitingValidators, big.NewInt(1))
+				continue
+			}
+			if eth2.IsValidatorWithdrawn(status) {
+				withdrawnValidators.Add(withdrawnValidators, big.NewInt(1))
+				continue
+			}
+			if eth2.IsValidatorQueued(status) {
+				queuedValidators.Add(queuedValidators, big.NewInt(1))
+			}
+			if eth2.IsValidatorSlashed(status) {
+				slashedValidators.Add(slashedValidators, big.NewInt(1))
+			}
+			if eth2.IsValidatorActive(status) {
+				activeValidators.Add(activeValidators, big.NewInt(1))
+			}
+
+			validatorWithdrawVault := validatorInfoMap[pubKey].WithdrawVaultAddress
+			withdrawVaultBalance, err := tokens.GetEthBalance(prn.Client, validatorWithdrawVault, nil)
+			if err != nil {
+				return nil, err
+			}
+			withdrawVaultRewardShares, err := pool_utils.CalculateRewardShare(putils, 1, withdrawVaultBalance, nil)
+			if err != nil {
+				return nil, err
+			}
+			rewardsThreshold, err := stader_config.GetRewardsThreshold(sdcfg, nil)
+			if err != nil {
+				return nil, err
+			}
+			if withdrawVaultRewardShares.OperatorShare.Cmp(rewardsThreshold) > 0 {
+				continue
+			} else {
+				totalClRewards.Add(totalClRewards, withdrawVaultRewardShares.OperatorShare)
+			}
 		}
 	}
+
+	state.ValidatorDetails = statusMap
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
 
@@ -394,9 +399,6 @@ func CreateNetworkStateCache(
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
-	fmt.Printf("sdPrice: %v\n", sdPriceFormatted)
-	fmt.Printf("permissionlessPoolThreshold.MinThreshold: %v\n", math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2))
-	fmt.Printf("formatted collateralRatioInSd: %v\n", collateralRatioInSd)
 
 	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
