@@ -200,38 +200,47 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("operatorId: %s\n", operatorId)
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("operatorElRewardAddress: %s\n", operatorElRewardAddress)
 	elRewardAddressBalance, err := tokens.GetEthBalance(prn.Client, operatorElRewardAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("elRewardAddressBalance: %s\n", elRewardAddressBalance)
 	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("operatorElRewards: %s\n", operatorElRewards)
 	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("operatorSdColletaral: %s\n", operatorSdColletaral)
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
 
 	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err
 	}
+	state.logLine("operatorNonTerminalKeys: %s\n", operatorNonTerminalKeys)
 	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
+	state.logLine("operatorEthCollateral: %s\n", operatorEthCollateral)
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
 
+	state.logLine("nextRewardCycleDetails: %s\n", nextRewardCycleDetails)
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -249,6 +258,8 @@ func CreateNetworkStateCache(
 
 		pubkeys = append(pubkeys, pubKey)
 	}
+	state.logLine("pubkeys: %s\n", pubkeys)
+	state.logLine("validatorInfoMap: %s\n", validatorInfoMap)
 	activeValidators := big.NewInt(0)
 	slashedValidators := big.NewInt(0)
 	queuedValidators := big.NewInt(0)
@@ -268,6 +279,7 @@ func CreateNetworkStateCache(
 		statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
 			Slot: &slotNumber,
 		})
+		state.logLine("statusMap: %s\n", statusMap)
 		if err != nil {
 			return nil, err
 		}
