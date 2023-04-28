@@ -5,7 +5,7 @@ on:
       - "./**"
       - ".github/workflows/deploy-stader-node.yml"
     branches:
-      - feat/cicd
+      - feat/action-deploy
 
 permissions:
   id-token: write
