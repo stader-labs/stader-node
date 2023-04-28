@@ -1,7 +1,6 @@
 package stdr
 
 import (
-	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -17,7 +16,7 @@ var ValidatorState = map[uint8]string{
 	1: "Invalid Signature Submitted",
 	2: "Validator Deposit Front Runned",
 	3: "Validator Queued for 28Eth deposit",
-	4: "Deposited",
+	4: "Validator has been matched with 28Eth deposit",
 	5: "Funds Settled",
 }
 
@@ -68,7 +67,6 @@ func IsValidatorTerminal(validatorInfo types.ValidatorContractInfo) bool {
 }
 
 func GetValidatorRunningStatus(beaconValidatorStatus beacon.ValidatorStatus, validatorContractInfo types.ValidatorContractInfo) (string, error) {
-	fmt.Printf("validator status is %v\n", beaconValidatorStatus)
 	if validatorContractInfo.Status != 4 || !beaconValidatorStatus.Exists {
 		return ValidatorState[validatorContractInfo.Status], nil
 	}
