@@ -73,7 +73,6 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *colle
 	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccountAddr, stateLocker)
 	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccountAddr, stateLocker)
 	operatorCollector := collector.NewOperatorCollector(bc, ec, nodeAccountAddr, stateLocker)
-	logger.Printf("Operator collector: %+v \n %+v \n %+v \n", beaconCollector, networkCollector, operatorCollector)
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(beaconCollector)

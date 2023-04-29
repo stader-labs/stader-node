@@ -68,23 +68,9 @@ func (m *MerkleProofsDownloader) run() error {
 		return err
 	}
 
-	//sp, err := services.GetSocializingPoolContract(m.c)
-	//if err != nil {
-	//	return err
-	//}
-	//rewardDetails, err := socializing_pool.GetRewardDetails(sp, nil)
-	//if err != nil {
-	//	return err
-	//}
-
 	downloadedCycles := []int64{}
 
 	for _, cycleMerkleProof := range allMerkleProofs {
-		//if cycleMerkleProof.Cycle > rewardDetails.CurrentIndex.Int64() {
-		//	// don't download merkle proofs for future cycles
-		//	continue
-		//}
-
 		cycleMerkleProofFile := m.cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 		if err != nil {
