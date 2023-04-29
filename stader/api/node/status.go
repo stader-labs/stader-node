@@ -101,10 +101,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	pp, err := services.GetPermissionlessPoolContract(c)
-	if err != nil {
-		return nil, err
-	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -140,7 +136,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	response.AccountBalances.Sd = accountSdBalance
 
 	//fmt.Printf("Getting socializing pool address...\n")
-	socializingPoolAddress, err := node.GetSocializingPoolContract(pp, nil)
+	socializingPoolAddress, err := stader_config.GetSocializingPoolContractAddress(sdcfg, nil)
 	if err != nil {
 		return nil, err
 	}
