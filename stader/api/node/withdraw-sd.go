@@ -59,7 +59,7 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 
 	effectiveOperatorSdCollateralBalance := operatorSdCollateral
 	if operatorSdCollateral.Cmp(withdrawReq.TotalSDWithdrawReqAmount) > 0 {
-		effectiveOperatorSdCollateralBalance = operatorSdCollateral.Sub(operatorSdCollateral, withdrawReq.TotalSDWithdrawReqAmount)
+		effectiveOperatorSdCollateralBalance = big.NewInt(0).Sub(operatorSdCollateral, withdrawReq.TotalSDWithdrawReqAmount)
 	}
 
 	totalKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
@@ -74,7 +74,7 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 	if err != nil {
 		return nil, err
 	}
-	withdrawThreshold := poolThreshold.WithdrawThreshold.Mul(poolThreshold.WithdrawThreshold, big.NewInt(int64(nonTerminalKeys)))
+	withdrawThreshold := big.NewInt(0).Mul(poolThreshold.WithdrawThreshold, big.NewInt(int64(nonTerminalKeys)))
 	withdrawThresholdInSd, err := sd_collateral.ConvertEthToSd(sdc, withdrawThreshold, nil)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 		return &response, nil
 	}
 
-	sdCollateralAmountPostWithdrawal := operatorSdCollateral.Sub(operatorSdCollateral, amountWei)
+	sdCollateralAmountPostWithdrawal := big.NewInt(0).Sub(operatorSdCollateral, amountWei)
 
 	// get number of registered validators
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
