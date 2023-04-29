@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
@@ -113,7 +114,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	// Response
 	response := api.NodeStatusResponse{}
 
-	//fmt.Printf("Getting node account...\n")
+	fmt.Printf("Getting node account...\n")
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
@@ -121,12 +122,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 	response.AccountAddress = nodeAccount.Address
 
-	//fmt.Printf("Getting node account balances...\n")
+	fmt.Printf("Getting node account balances...\n")
 	accountEthBalance, err := tokens.GetEthBalance(pnr.Client, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Getting node account SD balance...\n")
+	fmt.Printf("Getting node account SD balance...\n")
 	accountSdBalance, err := tokens.BalanceOf(sdt, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -135,19 +136,19 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	response.AccountBalances.ETH = accountEthBalance
 	response.AccountBalances.Sd = accountSdBalance
 
-	//fmt.Printf("Getting socializing pool address...\n")
+	fmt.Printf("Getting socializing pool address...\n")
 	socializingPoolAddress, err := stader_config.GetSocializingPoolContractAddress(sdcfg, nil)
 	if err != nil {
 		return nil, err
 	}
 	response.SocializingPoolAddress = socializingPoolAddress
 
-	//fmt.Printf("Getting operator id...\n")
+	fmt.Printf("Getting operator id...\n")
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Getting operator info...\n")
+	fmt.Printf("Getting operator info...\n")
 	operatorRegistry, err := node.GetOperatorInfo(pnr, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -162,18 +163,18 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
 
-		//fmt.Printf("Getting operator node el reward balance\n")
+		fmt.Printf("Getting operator node el reward balance\n")
 		// non socializing pool fee recepient
 		operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Getting operator node el reward balance\n")
+		fmt.Printf("Getting operator node el reward balance\n")
 		elRewardAddressBalance, err := tokens.GetEthBalance(pnr.Client, operatorElRewardAddress, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Getting operator node el reward share\n")
+		fmt.Printf("Getting operator node el reward share\n")
 		operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 		if err != nil {
 			return nil, err
@@ -181,14 +182,14 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorELRewardsAddress = operatorElRewardAddress
 		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
 
-		//fmt.Printf("Getting operator reward address balance\n")
+		fmt.Printf("Getting operator reward address balance\n")
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
 		if err != nil {
 			return nil, err
 		}
 		response.OperatorRewardInETH = operatorReward
 
-		//fmt.Printf("getting operator sd collateral balance\n")
+		fmt.Printf("getting operator sd collateral balance\n")
 		// get operator deposited sd collateral
 		operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
 		if err != nil {
@@ -196,7 +197,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.DepositedSdCollateral = operatorSdCollateral
 
-		//fmt.Printf("getting operator sd collateral worth validators\n")
+		fmt.Printf("getting operator sd collateral worth validators\n")
 		// total registerable validators
 		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
 		if err != nil {
@@ -204,13 +205,13 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.SdCollateralWorthValidators = totalSdWorthValidators
 
-		//fmt.Printf("Getting operator sd withdraw request\n")
+		fmt.Printf("Getting operator sd withdraw request\n")
 		// get sd collateral in unbonding phase
 		withdrawReqSd, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Getting operator sd withdraw delay\n")
+		fmt.Printf("Getting operator sd withdraw delay\n")
 		withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
 		if err != nil {
 			return nil, err
@@ -218,7 +219,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
 		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
 
-		//fmt.Printf("Getting reward details\n")
+		fmt.Printf("Getting reward details\n")
 		rewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 		if err != nil {
 			return nil, err
@@ -227,30 +228,30 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		socializingPoolStartTimestamp := time.Now()
 		response.SocializingPoolStartTime = socializingPoolStartTimestamp
 
-		//fmt.Printf("Get total validator keys\n")
+		fmt.Printf("Get total validator keys\n")
 		totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
 		if err != nil {
 			return nil, err
 		}
 
-		//fmt.Printf("Get total non terminal validator keys\n")
+		fmt.Printf("Get total non terminal validator keys\n")
 		totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
 		if err != nil {
 			return nil, err
 		}
-		//fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
+		fmt.Printf("Total non terminal validators %d\n", totalNonTerminalValidatorKeys)
 
 		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
 
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
-			//fmt.Printf("Getting validator id by operator id and index %d\n", i)
+			fmt.Printf("Getting validator id by operator id and index %d\n", i)
 			validatorIndex, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
 			if err != nil {
 				return nil, err
 			}
-			//fmt.Printf("Getting validator info by operator id and index %d\n", i)
+			fmt.Printf("Getting validator info by operator id and index %d\n", i)
 			validatorContractInfo, err := node.GetValidatorInfo(pnr, validatorIndex, nil)
 			if err != nil {
 				return nil, err
@@ -319,7 +320,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		response.ValidatorInfos = validatorInfoArray
 
-		//fmt.Printf("Getting operator claimed and unclaimed socializing pool merkles\n")
+		fmt.Printf("Getting operator claimed and unclaimed socializing pool merkles\n")
 		claimedMerkles, unclaimedMerkles, err := GetClaimedAndUnclaimedSocializingPoolMerkles(c)
 		if err != nil {
 			return nil, err

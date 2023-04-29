@@ -147,7 +147,7 @@ func getStatus(c *cli.Context) error {
 	fmt.Printf("Node has registered a total of %d validators\n\n", len(status.ValidatorInfos))
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
+		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18))
 		fmt.Printf("To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
@@ -170,7 +170,7 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 
 		if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-			fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till %s\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), status.SocializingPoolStartTime.Format("2006-01-02"))
+			fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18))
 			fmt.Printf("To claim Socializing pool EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 		}
 	}
