@@ -41,7 +41,7 @@ func getStatus(c *cli.Context) error {
 
 	totalRegisteredValidators := status.TotalNonTerminalValidators
 	totalRegisterableValidators := status.SdCollateralWorthValidators
-	totalEthCollateral := totalRegisterableValidators.Int64() * 4
+	totalEthCollateral := totalRegisteredValidators.Int64() * 4
 
 	totalUnclaimedSocializingPoolEth := big.NewInt(0)
 	totalUnclaimedSocializingPoolSd := big.NewInt(0)
