@@ -62,14 +62,14 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Withdrawing %s SD from the collateral contract.\n", amountInString)
+	fmt.Printf("Requesting withdrawal of %s SD from the collateral contract.\n", amountInString)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully withdrawn %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully requested to withdraw %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
 
 	return nil
 }
