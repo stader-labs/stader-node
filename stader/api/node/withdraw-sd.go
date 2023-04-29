@@ -92,22 +92,6 @@ func canRequestSdWithdraw(c *cli.Context, amountWei *big.Int) (*api.CanRequestWi
 		return &response, nil
 	}
 
-	sdCollateralAmountPostWithdrawal := big.NewInt(0).Sub(operatorSdCollateral, amountWei)
-
-	// get number of registered validators
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, sdCollateralAmountPostWithdrawal, 1, nil)
-	if err != nil {
-		return nil, err
-	}
-	if totalValidatorKeys.Cmp(totalSdWorthValidators) > 0 {
-		response.InsufficientSdCollateral = true
-		return &response, nil
-	}
-
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
