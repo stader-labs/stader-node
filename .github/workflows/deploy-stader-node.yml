@@ -1,5 +1,6 @@
 name: Deploy Stader Node
 on:
+  workflow_dispatch:
   push:
     branches:
       - feat/action-deploy
@@ -36,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            v
+            name=,enable=false
 
       - name: configure aws credentials for stage environment
         if: github.ref != 'refs/heads/main'
