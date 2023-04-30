@@ -62,5 +62,5 @@ jobs:
       - name: Build & Release Stader Node CLI
         run: |
           ls -al
-          ./build-release.sh -a -v ${{ steps.meta.outputs.args.DOCKER_META_VERSION }}
+          ./build-release.sh -a -v ${{ steps.meta.outputs.labels.org.opencontainers.image.version }}
           ls -al
