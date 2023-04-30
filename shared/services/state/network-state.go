@@ -97,7 +97,8 @@ type NetworkDetails struct {
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 	// done
-	OperatorStakedSd float64
+	OperatorStakedSd      float64
+	OperatorStakedSdInEth float64
 	// done
 	OperatorEthCollateral float64
 }
@@ -230,6 +231,10 @@ func CreateNetworkStateCache(
 	}
 	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
 	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdColletaral, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -443,6 +448,7 @@ func CreateNetworkStateCache(
 
 	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))

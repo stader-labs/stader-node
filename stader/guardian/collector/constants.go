@@ -18,6 +18,7 @@ const FundsSettledValidators = "funds_settled_validators"         //GetValidator
 const TotalETHBonded = "total_eth_bonded"
 const TotalSDBonded = "total_sd_bonded"
 const SdCollateral = "sd_collateral"
+const SdCollateralInEth = "sd_collateral_in_eth"
 const EthCollateral = "eth_collateral"
 const CumulativePenalty = "cumulative_penalty"
 const ClaimedSocializingPoolELRewards = "claimed_socializing_pool_el_rewards"
