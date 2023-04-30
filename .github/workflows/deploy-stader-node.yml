@@ -37,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            name=v,enable=true
+            name=v,enable=false
           tags: |
             type=ref,event=branch
             type=ref,event=tag
