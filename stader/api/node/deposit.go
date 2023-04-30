@@ -97,15 +97,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 
-	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
-	if err != nil {
-		return nil, err
-	}
-	if !hasEnoughSdCollateral {
-		canNodeDepositResponse.NotEnoughSdCollateral = true
-		return &canNodeDepositResponse, nil
-	}
-
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -117,6 +108,15 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !hasEnoughSdCollateral {
+		canNodeDepositResponse.NotEnoughSdCollateral = true
+		return &canNodeDepositResponse, nil
 	}
 
 	if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
@@ -182,6 +182,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
+
+		fmt.Printf("pub key %s\n", pubKey.String())
+		fmt.Printf("pre deposit sig %s\n", preDepositSignature.String())
+		fmt.Printf("deposit sig %s\n", depositSignature.String())
 
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
