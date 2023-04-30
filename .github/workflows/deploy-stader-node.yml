@@ -38,7 +38,14 @@ jobs:
         with:
           images: |
             name=v
-            enable=false
+            enable=true
+          tags: |
+            # branch event
+            type=ref,event=branch
+            # tag event
+            type=ref,event=tag
+            # pull request event
+            type=ref,event=pr
 
       - name: configure aws credentials for stage environment
         if: github.ref != 'refs/heads/main'
