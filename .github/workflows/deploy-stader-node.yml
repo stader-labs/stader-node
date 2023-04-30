@@ -34,6 +34,8 @@ jobs:
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
+        with:
+          images: name/stader-node
 
       - name: configure aws credentials for stage environment
         if: github.ref != 'refs/heads/main'
