@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
@@ -42,10 +43,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, err
 	}
-	//sdc, err := services.GetSdCollateralContract(c)
-	//if err != nil {
-	//	return nil, err
-	//}
+	sdc, err := services.GetSdCollateralContract(c)
+	if err != nil {
+		return nil, err
+	}
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -109,16 +110,18 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 
-	//hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if !hasEnoughSdCollateral {
-	//	canNodeDepositResponse.NotEnoughSdCollateral = true
-	//	return &canNodeDepositResponse, nil
-	//}
+	totalValidatorsPostAddition := totalValidatorNonTerminalKeys + numValidators.Uint64()
 
-	if totalValidatorNonTerminalKeys+numValidators.Uint64() > maxKeysPerOperator {
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, big.NewInt(int64(totalValidatorsPostAddition)), nil)
+	if err != nil {
+		return nil, err
+	}
+	if !hasEnoughSdCollateral {
+		canNodeDepositResponse.NotEnoughSdCollateral = true
+		return &canNodeDepositResponse, nil
+	}
+
+	if totalValidatorsPostAddition > maxKeysPerOperator {
 		canNodeDepositResponse.MaxValidatorLimitReached = true
 		return &canNodeDepositResponse, nil
 	}
@@ -181,10 +184,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		pubKeys[i] = pubKey[:]
 		preDepositSignatures[i] = preDepositSignature[:]
 		depositSignatures[i] = depositSignature[:]
-
-		fmt.Printf("pub key %s\n", pubKey.String())
-		fmt.Printf("pre deposit sig %s\n", preDepositSignature.String())
-		fmt.Printf("deposit sig %s\n", depositSignature.String())
 
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
