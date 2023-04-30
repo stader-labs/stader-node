@@ -37,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            name=v,enable=false
+            name=,enable=true
 
       - name: configure aws credentials for stage environment
         if: github.ref != 'refs/heads/main'
