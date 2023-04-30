@@ -48,6 +48,8 @@ type NetworkDetails struct {
 	TotalEthxSupply float64
 	// done
 	TotalStakedEthByUsers *big.Int
+	MinEthThreshold       float64
+	MaxEthThreshold       float64
 
 	// Validator specific info
 
@@ -227,6 +229,10 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
+	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
 	if err != nil {
@@ -448,6 +454,10 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	networkDetails.CollateralRatioInSd = collateralRatioInSd
+	networkDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
+	networkDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
+	fmt.Printf("min threshold: %f\n", networkDetails.MinEthThreshold)
+	fmt.Printf("max threshold: %f\n", networkDetails.MaxEthThreshold)
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
