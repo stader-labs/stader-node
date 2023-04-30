@@ -34,15 +34,8 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            name=v,enable=true
-          tags: |
-            type=ref,event=tag
-            type=ref,event=pr
-            type=ref,event=branch
-            type=semver,pattern={{version}}
+        uses: yuya-takeyama/docker-tag-from-github-ref-action@v1
+
 
       - name: configure aws credentials for stage environment
         if: github.ref != 'refs/heads/main'
@@ -62,5 +55,5 @@ jobs:
       - name: Build & Release Stader Node CLI
         run: |
           ls -al
-          ./build-release.sh -a -v ${{ steps.meta.outputs.tags }}
+          ./build-release.sh -a -v ${{ steps.meta.outputs.tag }}
           ls -al
