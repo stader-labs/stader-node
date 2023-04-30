@@ -449,6 +449,7 @@ func CreateNetworkStateCache(
 	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
+	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
