@@ -36,6 +36,15 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return nil
 	}
 
+	if downloadMerkleProofs {
+		fmt.Println("Downloading the merkle proofs for the cycles you have not downloaded yet...")
+		downloadRes, err := staderClient.DownloadSpMerkleProofs()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
+	}
+
 	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
 		fmt.Println("You have no unclaimed cycles!")
 		return nil
@@ -47,6 +56,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 
+	// this is post checking the cache. This could also mean that the cycles have not been cached by the daemon yet
 	if len(detailedCyclesInfo.DetailedCyclesInfo) == 0 {
 		fmt.Println("You have no unclaimed cycles!")
 		return nil
@@ -55,15 +65,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	cycleIndexes := []*big.Int{}
 	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
 		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
-	}
-
-	if downloadMerkleProofs {
-		fmt.Println("Downloading the merkle proofs for the cycles you have not downloaded yet...")
-		downloadRes, err := staderClient.DownloadSpMerkleProofs()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
 	}
 
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
