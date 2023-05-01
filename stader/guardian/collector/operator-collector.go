@@ -30,6 +30,7 @@ type OperatorCollector struct {
 	ClaimedSocializingPoolSdRewards      *prometheus.Desc
 	ClaimedSocializingPoolElRewards      *prometheus.Desc
 	TotalSdCollateral                    *prometheus.Desc
+	TotalSdCollateralInEth               *prometheus.Desc
 	TotalEthColateral                    *prometheus.Desc
 
 	// The beacon client
@@ -103,6 +104,8 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimedSocializingPoolELRewards), "", nil, nil),
 		TotalSdCollateral: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, SdCollateral), "", nil, nil),
+		TotalSdCollateralInEth: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, SdCollateralInEth), "", nil, nil),
 		TotalEthColateral: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, EthCollateral), "", nil, nil),
 		bc:          bc,
@@ -132,6 +135,7 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.ClaimedSocializingPoolSdRewards
 	channel <- collector.ClaimedSocializingPoolElRewards
 	channel <- collector.TotalSdCollateral
+	channel <- collector.TotalSdCollateralInEth
 	channel <- collector.TotalEthColateral
 }
 
@@ -157,6 +161,7 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolSdRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolSdRewards)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimedSocializingPoolElRewards, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimedSocializingPoolElRewards)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSd)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateralInEth, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSdInEth)
 	channel <- prometheus.MustNewConstMetric(collector.TotalEthColateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorEthCollateral)
 
 }

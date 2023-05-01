@@ -94,6 +94,15 @@ func ConvertEthToSd(sdc *stader.SdCollateralContractManager, ethAmount *big.Int,
 	return sdAmount, nil
 }
 
+func ConvertSdToEth(sdc *stader.SdCollateralContractManager, sdAmount *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	ethAmount, err := sdc.SdCollateral.ConvertSDToETH(opts, sdAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return ethAmount, nil
+}
+
 func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	totalSdCollateral, err := sdc.SdCollateral.TotalSDCollateral(opts)
 	if err != nil {

@@ -48,6 +48,8 @@ type NetworkDetails struct {
 	TotalEthxSupply float64
 	// done
 	TotalStakedEthByUsers *big.Int
+	MinEthThreshold       float64
+	MaxEthThreshold       float64
 
 	// Validator specific info
 
@@ -95,7 +97,8 @@ type NetworkDetails struct {
 	// done
 	NextSocializingPoolRewardCycle types.RewardCycleDetails
 	// done
-	OperatorStakedSd float64
+	OperatorStakedSd      float64
+	OperatorStakedSdInEth float64
 	// done
 	OperatorEthCollateral float64
 }
@@ -227,6 +230,14 @@ func CreateNetworkStateCache(
 		return nil, err
 	}
 	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
+	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+	if err != nil {
+		return nil, err
+	}
+	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdColletaral, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	operatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAddress, totalValidatorKeys, nil)
 	if err != nil {
@@ -437,6 +448,8 @@ func CreateNetworkStateCache(
 
 	networkDetails.SdPrice = sdPriceFormatted
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
+	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
@@ -448,6 +461,10 @@ func CreateNetworkStateCache(
 	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	networkDetails.CollateralRatioInSd = collateralRatioInSd
+	networkDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
+	networkDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
+	fmt.Printf("min threshold: %f\n", networkDetails.MinEthThreshold)
+	fmt.Printf("max threshold: %f\n", networkDetails.MaxEthThreshold)
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
