@@ -13,8 +13,11 @@ import (
 
 // Represents the collector for the stader network metrics
 type NetworkCollector struct {
-	// The current SD price
+	// The current SD price in Eth
 	SdPrice *prometheus.Desc
+
+	// The current Eth price in SD
+	EthPrice *prometheus.Desc
 
 	// The total number of validators created
 	TotalValidatorsCreated *prometheus.Desc
@@ -77,6 +80,10 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 	return &NetworkCollector{
 		SdPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_price"),
 			"The current SD price",
+			nil, nil,
+		),
+		EthPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "eth_price"),
+			"The current Eth price",
 			nil, nil,
 		),
 		TotalValidatorsCreated: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_validators_created"),
@@ -142,6 +149,7 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 // Write metric descriptions to the Prometheus channel
 func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.SdPrice
+	channel <- collector.EthPrice
 	channel <- collector.TotalValidatorsCreated
 	channel <- collector.TotalQueuedValidators
 	channel <- collector.TotalActiveValidators
@@ -166,6 +174,8 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 
 	channel <- prometheus.MustNewConstMetric(
 		collector.SdPrice, prometheus.GaugeValue, state.StaderNetworkDetails.SdPrice)
+	channel <- prometheus.MustNewConstMetric(
+		collector.EthPrice, prometheus.GaugeValue, state.StaderNetworkDetails.EthPrice)
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalValidatorsCreated, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
