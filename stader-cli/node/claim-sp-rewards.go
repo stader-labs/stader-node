@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
+func ClaimSpRewards(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -26,6 +26,17 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 
+	fmt.Println("Downloading the merkle proofs for the cycles you may have not downloaded yet...")
+	downloadRes, err := staderClient.DownloadSpMerkleProofs()
+	if err != nil {
+		return err
+	}
+	if len(downloadRes.DownloadedCycles) != 0 {
+		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
+	} else {
+		fmt.Println("No new merkle proofs downloaded!")
+	}
+
 	// prompt user to select the cycles to claim from
 	canClaimSpRewards, err := staderClient.CanClaimSpRewards()
 	if err != nil {
@@ -35,19 +46,9 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil
 	}
-
 	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
 		fmt.Println("You have no unclaimed cycles!")
 		return nil
-	}
-
-	if downloadMerkleProofs {
-		fmt.Println("Downloading the merkle proofs for the cycles you have not downloaded yet...")
-		downloadRes, err := staderClient.DownloadSpMerkleProofs()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
 	}
 
 	fmt.Printf("Getting the detailed cycles info...")
@@ -58,7 +59,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 
 	// this is post checking the cache.
 	if len(detailedCyclesInfo.DetailedCyclesInfo) == 0 {
-		fmt.Println("You have no unclaimed cycles! You may not have downloaded the merkle proofs for the cycles you want to claim rewards for. Please run the command again with the --download-merkle-proofs flag")
+		fmt.Println("You have no unclaimed cycles!")
 		return nil
 	}
 
