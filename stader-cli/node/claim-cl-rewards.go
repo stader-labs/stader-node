@@ -37,7 +37,7 @@ func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error
 		return nil
 	}
 	if canClaimClRewardsResponse.TooManyClRewards {
-		fmt.Printf("Too many CL rewards to withdraw for validator %s\n. Please use stader-cli node settle-funds command to withdraw remaining amount", validatorPubKey.String())
+		fmt.Printf("Too many CL rewards to withdraw for validator %s\n. If you have not exited your validator, Please contact the Stader Team to retrive your rewards", validatorPubKey.String())
 		return nil
 	}
 	if canClaimClRewardsResponse.ValidatorNotFound {

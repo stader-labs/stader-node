@@ -58,7 +58,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 
 	// this is post checking the cache.
 	if len(detailedCyclesInfo.DetailedCyclesInfo) == 0 {
-		fmt.Println("You have no unclaimed cycles!")
+		fmt.Println("You have no unclaimed cycles! You may not have downloaded the merkle proofs for the cycles you want to claim rewards for. Please run the command again with the --download-merkle-proofs flag")
 		return nil
 	}
 

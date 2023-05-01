@@ -648,6 +648,10 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		return nil
 	}
 
+	// Create the sp merkle rewards folder if not exists
+
+	//cfg.StaderNode.GetSpRewardsMerkleProofFolder(true)
+
 	if !c.Bool("ignore-slash-timer") {
 		// Do the client swap check
 		err := checkForValidatorChange(staderClient, cfg)
