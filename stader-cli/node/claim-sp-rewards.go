@@ -36,6 +36,11 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return nil
 	}
 
+	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
+		fmt.Println("You have no unclaimed cycles!")
+		return nil
+	}
+
 	fmt.Printf("Getting the detailed cycles info...")
 	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
 	if err != nil {
