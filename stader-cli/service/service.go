@@ -650,7 +650,15 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 
 	// Create the sp merkle rewards folder if not exists
 
-	//cfg.StaderNode.GetSpRewardsMerkleProofFolder(true)
+	merkleProofsFolder := cfg.StaderNode.GetSpRewardsMerkleProofFolder(true)
+	if _, err := os.Stat(merkleProofsFolder); os.IsNotExist(err) {
+		// create directory with 0755 permissions
+		err := os.MkdirAll(merkleProofsFolder, 0775)
+		if err != nil {
+			// handle error
+			panic(err)
+		}
+	}
 
 	if !c.Bool("ignore-slash-timer") {
 		// Do the client swap check
