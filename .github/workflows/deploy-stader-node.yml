@@ -2,8 +2,6 @@ name: Deploy Stader Node
 on:
   workflow_dispatch:
   push:
-    branches:
-      - feat/action-deploy
     tags:
       - 'v*'
 
@@ -36,8 +34,7 @@ jobs:
         id: meta
         uses: yuya-takeyama/docker-tag-from-github-ref-action@v1
 
-      - name: configure aws credentials for stage environment
-        if: github.ref != 'refs/heads/main'
+      - name: Prepare to upload binaries to s3
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.ETHX_STADER_NODE_STAGE_DEPLOY_ROLE_ARN }}
@@ -53,6 +50,4 @@ jobs:
 
       - name: Build & Release Stader Node CLI
         run: |
-          ls -al
           ./build-release.sh -a -v ${{ steps.meta.outputs.tag }}
-          ls -al
