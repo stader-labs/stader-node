@@ -134,7 +134,7 @@ func getStatus(c *cli.Context) error {
 		return nil
 	}
 
-	fmt.Printf("The node is registered with Stader. Below are node details:\n")
+	fmt.Printf("The operator is registered with Stader. Below are operator details:\n")
 	fmt.Printf("Operator Id: %d\n\n", status.OperatorId)
 	fmt.Printf("Operator Name: %s\n\n", status.OperatorName)
 	fmt.Printf("Operator Address: %s\n\n", status.OperatorAddress.String())
@@ -144,7 +144,7 @@ func getStatus(c *cli.Context) error {
 	} else {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
-	fmt.Printf("Node has registered a total of %d validators\n\n", len(status.ValidatorInfos))
+	fmt.Printf("The Operator has registered a total of %d validators\n\n", len(status.ValidatorInfos))
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18))
