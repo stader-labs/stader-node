@@ -27,11 +27,6 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 
 	response := api.CyclesDetailedInfo{}
 	merkleProofs := []api.DetailedMerkleProofInfo{}
-	if len(stringifiedCycles) == 0 {
-		response.DetailedCyclesInfo = merkleProofs
-		return &response, nil
-	}
-
 	for _, cycle := range cycles {
 		merkleCycleProof, exists, err := cfg.StaderNode.ReadCycleCache(cycle.Int64())
 		if err != nil {
