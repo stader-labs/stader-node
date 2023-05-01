@@ -455,7 +455,7 @@ func CreateNetworkStateCache(
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
 	networkDetails.SdPrice = sdPriceFormatted
-	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 2)
+	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
 	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
