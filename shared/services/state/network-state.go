@@ -32,6 +32,8 @@ type NetworkDetails struct {
 
 	// done
 	SdPrice float64
+
+	EthPrice float64
 	// done
 	TotalValidators *big.Int
 	// done
@@ -48,8 +50,10 @@ type NetworkDetails struct {
 	TotalEthxSupply float64
 	// done
 	TotalStakedEthByUsers *big.Int
-	MinEthThreshold       float64
-	MaxEthThreshold       float64
+	// done
+	MinEthThreshold float64
+	// done
+	MaxEthThreshold float64
 
 	// Validator specific info
 
@@ -409,6 +413,10 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
+	ethPrice, err := sd_collateral.ConvertSdToEth(sdc, big.NewInt(1000000000000000000), nil)
+	if err != nil {
+		return nil, err
+	}
 	totalOperators, err := node.GetNextOperatorId(prn, nil)
 	if err != nil {
 		return nil, err
@@ -447,6 +455,7 @@ func CreateNetworkStateCache(
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
 	networkDetails.SdPrice = sdPriceFormatted
+	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 2)
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
 	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
