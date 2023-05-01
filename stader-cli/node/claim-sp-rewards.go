@@ -32,7 +32,7 @@ func ClaimSpRewards(c *cli.Context) error {
 		return err
 	}
 	if len(downloadRes.DownloadedCycles) != 0 {
-		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
+		fmt.Printf("Merkle proofs downloaded for cycles %v!\n", downloadRes.DownloadedCycles)
 	} else {
 		fmt.Println("No new merkle proofs downloaded!")
 	}
@@ -51,7 +51,7 @@ func ClaimSpRewards(c *cli.Context) error {
 		return nil
 	}
 
-	fmt.Printf("Getting the detailed cycles info...")
+	fmt.Printf("Getting the detailed cycles info...\n")
 	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func ClaimSpRewards(c *cli.Context) error {
 			fmt.Printf("%-18d%-14.30s%-14.4f%-.4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
 
-		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 2,3,8,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
+		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 1,2,3,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
 			for _, cycle := range cycleIndexes {
 				cyclesToClaim[cycle.Int64()] = true
