@@ -202,38 +202,31 @@ func CreateNetworkStateCache(
 
 	start := time.Now()
 
-	state.logLine("nodeAddress: %s\n", nodeAddress.Hex())
 	// fetch all validator pub keys
 	operatorId, err := node.GetOperatorId(prn, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorId: %s\n", operatorId)
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorElRewardAddress: %s\n", operatorElRewardAddress)
 	elRewardAddressBalance, err := tokens.GetEthBalance(prn.Client, operatorElRewardAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("elRewardAddressBalance: %s\n", elRewardAddressBalance)
 	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorElRewards: %s\n", operatorElRewards)
 	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorSdColletaral: %s\n", operatorSdColletaral)
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
 	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
 	if err != nil {
 		return nil, err
@@ -247,16 +240,13 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorNonTerminalKeys: %s\n", operatorNonTerminalKeys)
 	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
-	state.logLine("operatorEthCollateral: %s\n", operatorEthCollateral)
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	state.logLine("nextRewardCycleDetails: %s\n", nextRewardCycleDetails)
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -292,7 +282,6 @@ func CreateNetworkStateCache(
 	statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
 		Slot: &slotNumber,
 	})
-	state.logLine("statusMap: %s\n", statusMap)
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +292,6 @@ func CreateNetworkStateCache(
 		}
 		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		state.logLine("Checkign validator: %s\n", pubKey)
 		validatorContractInfo, ok := validatorInfoMap[pubKey]
 		if !ok {
 			state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
@@ -378,16 +366,6 @@ func CreateNetworkStateCache(
 		}
 	}
 
-	state.logLine("initializedValidators: %s\n", initializedValidators)
-	state.logLine("invalidSignatureValidators: %s\n", invalidSignatureValidators)
-	state.logLine("frontRunValidators: %s\n", frontRunValidators)
-	state.logLine("queuedValidators: %s\n", queuedValidators)
-	state.logLine("fundsSettledValidators: %s\n", fundsSettledValidators)
-	state.logLine("exitingValidators: %s\n", exitingValidators)
-	state.logLine("withdrawnValidators: %s\n", withdrawnValidators)
-	state.logLine("slashedValidators: %s\n", slashedValidators)
-	state.logLine("activeValidators: %s\n", activeValidators)
-
 	state.ValidatorDetails = statusMap
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
@@ -458,7 +436,6 @@ func CreateNetworkStateCache(
 	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
 	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
 	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
-	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
 	networkDetails.OperatorEthCollateral = operatorEthCollateral
 	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
 	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
@@ -472,8 +449,6 @@ func CreateNetworkStateCache(
 	networkDetails.CollateralRatioInSd = collateralRatioInSd
 	networkDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
 	networkDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
-	fmt.Printf("min threshold: %f\n", networkDetails.MinEthThreshold)
-	fmt.Printf("max threshold: %f\n", networkDetails.MaxEthThreshold)
 
 	networkDetails.ValidatorStatusMap = statusMap
 	networkDetails.ValidatorInfoMap = validatorInfoMap
