@@ -279,7 +279,6 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
 	} else if newSettings.MEVBoost == "local" {
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
-		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
 		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
 		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
 		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
