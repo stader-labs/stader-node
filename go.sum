@@ -1246,7 +1246,6 @@ github.com/spf13/viper v1.0.0/go.mod h1:A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7Sr
 github.com/spf13/viper v1.3.2/go.mod h1:ZiWeW+zYFKm7srdB9IoDzzZXaJaI5eL9QjNiN/DMA2s=
 github.com/spf13/viper v1.7.0/go.mod h1:8WkrPz2fc9jxqZNCJI/76HCieCp4Q8HaLFoCha5qpdg=
 github.com/src-d/envconfig v1.0.0/go.mod h1:Q9YQZ7BKITldTBnoxsE5gOeB5y66RyPXeue/R4aaNBc=
-github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230427123109-9844372294b5/go.mod h1:gZcnx3O0sm+mEO2INhKDHw+iUzJH5tPaX4cv5SN5tsQ=
 github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230502050534-f4d6f8adb9ce h1:OG11u6dZxOFwnEtFXTGPnuuv4f1ZYvlSy75cw/pG2q0=
 github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230502050534-f4d6f8adb9ce/go.mod h1:gZcnx3O0sm+mEO2INhKDHw+iUzJH5tPaX4cv5SN5tsQ=
 github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230502050534-f4d6f8adb9ce h1:2isS1dG+9ta51qMgR/G9qh9AS6i9+2I5lK8foe6QqDQ=
