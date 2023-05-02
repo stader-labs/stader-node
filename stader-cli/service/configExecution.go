@@ -77,7 +77,7 @@ func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]
 	cfg.Besu.MaxPeers.Value = newSettings[keys.E1ec_lm_besu_max_peers]
 	cfg.Besu.ContainerTag.Value = newSettings[keys.E1ec_lm_besu_container_tag]
 	cfg.Besu.AdditionalFlags.Value = newSettings[keys.E1ec_lm_besu_additional_flags]
-	//E1ec_lm_besu_in_memory_pruning_cache_size TODO? MaxBackLayers
+	cfg.Besu.MaxBackLayers.Value = newSettings[keys.E1ec_lm_besu_historical_block_replay_limit]
 
 	return nil
 }
@@ -119,6 +119,7 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_besu_max_peers] = format(cfg.Besu.MaxPeers.Value)
 	newSettings[keys.E1ec_lm_besu_container_tag] = cfg.Besu.ContainerTag.Value
 	newSettings[keys.E1ec_lm_besu_additional_flags] = cfg.Besu.AdditionalFlags.Value
+	newSettings[keys.E1ec_lm_besu_historical_block_replay_limit] = cfg.Besu.MaxBackLayers.Value
 
 	return nil
 }
