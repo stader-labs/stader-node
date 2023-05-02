@@ -46,18 +46,20 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 	newSettings[keys.Mev_boost_rm_enable_eden_network] = cfg.MevBoost.EdenRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_ultra_sound] = cfg.MevBoost.UltrasoundRelay.Value.(bool)
 
-	switch mevSelection {
-	case cfgtypes.MevSelectionMode_Profile:
-		newSettings[keys.Mev_boost_pm_port] = format(cfg.MevBoost.Port.Value)
-		newSettings[keys.Mev_boost_pm_expose_api_port] = cfg.MevBoost.OpenRpcPort.Value
-		newSettings[keys.Mev_boost_pm_container_tag] = cfg.MevBoost.ContainerTag.Value
-		newSettings[keys.Mev_boost_pm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
-	case cfgtypes.MevSelectionMode_Relay:
-		newSettings[keys.Mev_boost_rm_port] = format(cfg.MevBoost.Port.Value)
-		newSettings[keys.Mev_boost_rm_expose_api_port] = cfg.MevBoost.OpenRpcPort.Value
-		newSettings[keys.Mev_boost_rm_container_tag] = cfg.MevBoost.ContainerTag.Value
-		newSettings[keys.Mev_boost_rm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
-	}
+	// case cfgtypes.MevSelectionMode_Profile:
+	newSettings[keys.Mev_boost_pm_port] = format(cfg.MevBoost.Port.Value)
+	newSettings[keys.Mev_boost_pm_expose_api_port] = cfg.MevBoost.OpenRpcPort.Value.(bool)
+	newSettings[keys.Mev_boost_pm_container_tag] = cfg.MevBoost.ContainerTag.Value
+	newSettings[keys.Mev_boost_pm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
+	// case cfgtypes.MevSelectionMode_Relay:
+	newSettings[keys.Mev_boost_rm_port] = format(cfg.MevBoost.Port.Value)
+	newSettings[keys.Mev_boost_rm_expose_api_port] = cfg.MevBoost.OpenRpcPort.Value.(bool)
+	newSettings[keys.Mev_boost_rm_container_tag] = cfg.MevBoost.ContainerTag.Value
+	newSettings[keys.Mev_boost_rm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
+
+	newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical] = cfg.MevBoost.BloxRouteEthicalRelay.Value.(bool)
+
+	newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated] = cfg.MevBoost.BloxRouteRegulatedRelay.Value.(bool)
 
 	return nil
 }
@@ -84,6 +86,9 @@ func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{})
 	cfg.MevBoost.BlocknativeRelay.Value = newSettings[keys.Mev_boost_rm_enable_blocknative]
 	cfg.MevBoost.EdenRelay.Value = newSettings[keys.Mev_boost_rm_enable_eden_network]
 	cfg.MevBoost.UltrasoundRelay.Value = newSettings[keys.Mev_boost_rm_enable_ultra_sound]
+
+	cfg.MevBoost.BloxRouteEthicalRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical]
+	cfg.MevBoost.BloxRouteRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated]
 
 	switch mevSelection {
 	case cfgtypes.MevSelectionMode_Profile:
@@ -125,18 +130,18 @@ func makeMEVModeFromUi(mode string) cfgtypes.Mode {
 func makeUISelectionMode(mode cfgtypes.MevSelectionMode) string {
 	switch mode {
 	case cfgtypes.MevSelectionMode_Profile:
-		return "Profile mode"
+		return "Standard Mode"
 	case cfgtypes.MevSelectionMode_Relay:
-		return "Relay mode"
+		return "Custom Mode"
 	}
 
 	return ""
 }
 func makeMEVSelectionModeFromUI(mode string) cfgtypes.MevSelectionMode {
 	switch mode {
-	case "Profile mode":
+	case "Standard Mode":
 		return cfgtypes.MevSelectionMode_Profile
-	case "Relay mode":
+	case "Custom Mode":
 		return cfgtypes.MevSelectionMode_Relay
 	}
 
