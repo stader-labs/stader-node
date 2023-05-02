@@ -49,7 +49,6 @@ func NewMetricsCache(cfg *config.StaderConfig, ec stader.ExecutionClient, bc bea
 
 }
 
-// Get the state of the network using the latest Execution layer block
 func (m *MetricsCacheManager) GetHeadState(nodeAddress common.Address) (*MetricsCache, error) {
 	targetSlot, err := m.GetHeadSlot()
 	if err != nil {
@@ -58,7 +57,6 @@ func (m *MetricsCacheManager) GetHeadState(nodeAddress common.Address) (*Metrics
 	return m.getNodeMetrics(nodeAddress, targetSlot)
 }
 
-// Get the state of the network for a single node using the latest Execution layer block, along with the total effective RPL stake for the network
 func (m *MetricsCacheManager) GetHeadStateForNode(nodeAddress common.Address) (*MetricsCache, error) {
 	targetSlot, err := m.GetHeadSlot()
 	if err != nil {
@@ -82,7 +80,6 @@ func (m *MetricsCacheManager) GetHeadSlot() (uint64, error) {
 	return targetSlot, nil
 }
 
-// Get the state of the network for a specific node only at the provided Beacon slot
 func (m *MetricsCacheManager) getNodeMetrics(nodeAddress common.Address, slotNumber uint64) (*MetricsCache, error) {
 	state, err := CreateMetricsCache(m.cfg.StaderNode, m.ec, m.bc, m.log, slotNumber, m.BeaconConfig, nodeAddress)
 	if err != nil {
