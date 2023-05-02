@@ -42,7 +42,7 @@ type RewardsData struct {
 
 // SocializingPoolMetaData contains all meta data concerning the SocializingPool contract.
 var SocializingPoolMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ETHTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientETHRewards\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientSDRewards\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAmount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCycleIndex\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cycle\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"InvalidProof\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"cycle\",\"type\":\"uint256\"}],\"name\":\"RewardAlreadyClaimed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RewardAlreadyHandled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ETHReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdRewards\",\"type\":\"uint256\"}],\"name\":\"OperatorRewardsClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalETHRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalSDRewards\",\"type\":\"uint256\"}],\"name\":\"OperatorRewardsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"}],\"name\":\"ProtocolETHRewardsTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderOperatorRegistry\",\"type\":\"address\"}],\"name\":\"UpdatedStaderOperatorRegistry\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderValidatorRegistry\",\"type\":\"address\"}],\"name\":\"UpdatedStaderValidatorRegistry\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"}],\"name\":\"UserETHRewardsTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"_index\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_amountSD\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_amountETH\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_merkleProof\",\"type\":\"bytes32[][]\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"claimedRewards\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getRewardCycleDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentStartBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentEndBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nextIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nextStartBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nextEndBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"reportingBlockNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"operatorETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"userETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorSDRewards\",\"type\":\"uint256\"}],\"internalType\":\"structRewardsData\",\"name\":\"_rewardsData\",\"type\":\"tuple\"}],\"name\":\"handleRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"handledRewards\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalOperatorETHRewardsRemaining\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalOperatorSDRewardsRemaining\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amountETH\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_merkleProof\",\"type\":\"bytes32[]\"}],\"name\":\"verifyProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ETHTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"FutureCycleIndex\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientETHRewards\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientSDRewards\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAmount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidCycleIndex\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cycle\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"InvalidProof\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"cycle\",\"type\":\"uint256\"}],\"name\":\"RewardAlreadyClaimed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"RewardAlreadyHandled\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ETHReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdRewards\",\"type\":\"uint256\"}],\"name\":\"OperatorRewardsClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalETHRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdRewards\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalSDRewards\",\"type\":\"uint256\"}],\"name\":\"OperatorRewardsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"}],\"name\":\"ProtocolETHRewardsTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderOperatorRegistry\",\"type\":\"address\"}],\"name\":\"UpdatedStaderOperatorRegistry\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderValidatorRegistry\",\"type\":\"address\"}],\"name\":\"UpdatedStaderValidatorRegistry\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ethRewards\",\"type\":\"uint256\"}],\"name\":\"UserETHRewardsTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"_index\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_amountSD\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_amountETH\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes32[][]\",\"name\":\"_merkleProof\",\"type\":\"bytes32[][]\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"claimedRewards\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getCurrentRewardsIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getRewardCycleDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_endBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardDetails\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentIndex\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentStartBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"currentEndBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"reportingBlockNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"operatorETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"userETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorSDRewards\",\"type\":\"uint256\"}],\"internalType\":\"structRewardsData\",\"name\":\"_rewardsData\",\"type\":\"tuple\"}],\"name\":\"handleRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"handledRewards\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastReportedRewardsData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"reportingBlockNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"operatorETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"userETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorSDRewards\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"rewardsDataMap\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"reportingBlockNumber\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"operatorETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"userETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"protocolETHRewards\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"operatorSDRewards\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalOperatorETHRewardsRemaining\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalOperatorSDRewardsRemaining\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amountSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amountETH\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_merkleProof\",\"type\":\"bytes32[]\"}],\"name\":\"verifyProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // SocializingPoolABI is the input ABI used to generate the binding from.
@@ -253,6 +253,37 @@ func (_SocializingPool *SocializingPoolCallerSession) ClaimedRewards(arg0 common
 	return _SocializingPool.Contract.ClaimedRewards(&_SocializingPool.CallOpts, arg0, arg1)
 }
 
+// GetCurrentRewardsIndex is a free data retrieval call binding the contract method 0x189956a2.
+//
+// Solidity: function getCurrentRewardsIndex() view returns(uint256 index)
+func (_SocializingPool *SocializingPoolCaller) GetCurrentRewardsIndex(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SocializingPool.contract.Call(opts, &out, "getCurrentRewardsIndex")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetCurrentRewardsIndex is a free data retrieval call binding the contract method 0x189956a2.
+//
+// Solidity: function getCurrentRewardsIndex() view returns(uint256 index)
+func (_SocializingPool *SocializingPoolSession) GetCurrentRewardsIndex() (*big.Int, error) {
+	return _SocializingPool.Contract.GetCurrentRewardsIndex(&_SocializingPool.CallOpts)
+}
+
+// GetCurrentRewardsIndex is a free data retrieval call binding the contract method 0x189956a2.
+//
+// Solidity: function getCurrentRewardsIndex() view returns(uint256 index)
+func (_SocializingPool *SocializingPoolCallerSession) GetCurrentRewardsIndex() (*big.Int, error) {
+	return _SocializingPool.Contract.GetCurrentRewardsIndex(&_SocializingPool.CallOpts)
+}
+
 // GetRewardCycleDetails is a free data retrieval call binding the contract method 0xd2bff5ed.
 //
 // Solidity: function getRewardCycleDetails(uint256 _index) view returns(uint256 _startBlock, uint256 _endBlock)
@@ -300,14 +331,11 @@ func (_SocializingPool *SocializingPoolCallerSession) GetRewardCycleDetails(_ind
 
 // GetRewardDetails is a free data retrieval call binding the contract method 0xd0c40276.
 //
-// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock, uint256 nextIndex, uint256 nextStartBlock, uint256 nextEndBlock)
+// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock)
 func (_SocializingPool *SocializingPoolCaller) GetRewardDetails(opts *bind.CallOpts) (struct {
 	CurrentIndex      *big.Int
 	CurrentStartBlock *big.Int
 	CurrentEndBlock   *big.Int
-	NextIndex         *big.Int
-	NextStartBlock    *big.Int
-	NextEndBlock      *big.Int
 }, error) {
 	var out []interface{}
 	err := _SocializingPool.contract.Call(opts, &out, "getRewardDetails")
@@ -316,9 +344,6 @@ func (_SocializingPool *SocializingPoolCaller) GetRewardDetails(opts *bind.CallO
 		CurrentIndex      *big.Int
 		CurrentStartBlock *big.Int
 		CurrentEndBlock   *big.Int
-		NextIndex         *big.Int
-		NextStartBlock    *big.Int
-		NextEndBlock      *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
@@ -327,9 +352,6 @@ func (_SocializingPool *SocializingPoolCaller) GetRewardDetails(opts *bind.CallO
 	outstruct.CurrentIndex = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
 	outstruct.CurrentStartBlock = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
 	outstruct.CurrentEndBlock = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
-	outstruct.NextIndex = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
-	outstruct.NextStartBlock = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
-	outstruct.NextEndBlock = *abi.ConvertType(out[5], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
@@ -337,28 +359,22 @@ func (_SocializingPool *SocializingPoolCaller) GetRewardDetails(opts *bind.CallO
 
 // GetRewardDetails is a free data retrieval call binding the contract method 0xd0c40276.
 //
-// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock, uint256 nextIndex, uint256 nextStartBlock, uint256 nextEndBlock)
+// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock)
 func (_SocializingPool *SocializingPoolSession) GetRewardDetails() (struct {
 	CurrentIndex      *big.Int
 	CurrentStartBlock *big.Int
 	CurrentEndBlock   *big.Int
-	NextIndex         *big.Int
-	NextStartBlock    *big.Int
-	NextEndBlock      *big.Int
 }, error) {
 	return _SocializingPool.Contract.GetRewardDetails(&_SocializingPool.CallOpts)
 }
 
 // GetRewardDetails is a free data retrieval call binding the contract method 0xd0c40276.
 //
-// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock, uint256 nextIndex, uint256 nextStartBlock, uint256 nextEndBlock)
+// Solidity: function getRewardDetails() view returns(uint256 currentIndex, uint256 currentStartBlock, uint256 currentEndBlock)
 func (_SocializingPool *SocializingPoolCallerSession) GetRewardDetails() (struct {
 	CurrentIndex      *big.Int
 	CurrentStartBlock *big.Int
 	CurrentEndBlock   *big.Int
-	NextIndex         *big.Int
-	NextStartBlock    *big.Int
-	NextEndBlock      *big.Int
 }, error) {
 	return _SocializingPool.Contract.GetRewardDetails(&_SocializingPool.CallOpts)
 }
@@ -487,6 +503,76 @@ func (_SocializingPool *SocializingPoolCallerSession) InitialBlock() (*big.Int, 
 	return _SocializingPool.Contract.InitialBlock(&_SocializingPool.CallOpts)
 }
 
+// LastReportedRewardsData is a free data retrieval call binding the contract method 0x251272e0.
+//
+// Solidity: function lastReportedRewardsData() view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolCaller) LastReportedRewardsData(opts *bind.CallOpts) (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	var out []interface{}
+	err := _SocializingPool.contract.Call(opts, &out, "lastReportedRewardsData")
+
+	outstruct := new(struct {
+		ReportingBlockNumber *big.Int
+		Index                *big.Int
+		MerkleRoot           [32]byte
+		OperatorETHRewards   *big.Int
+		UserETHRewards       *big.Int
+		ProtocolETHRewards   *big.Int
+		OperatorSDRewards    *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.ReportingBlockNumber = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.Index = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.MerkleRoot = *abi.ConvertType(out[2], new([32]byte)).(*[32]byte)
+	outstruct.OperatorETHRewards = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
+	outstruct.UserETHRewards = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
+	outstruct.ProtocolETHRewards = *abi.ConvertType(out[5], new(*big.Int)).(**big.Int)
+	outstruct.OperatorSDRewards = *abi.ConvertType(out[6], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// LastReportedRewardsData is a free data retrieval call binding the contract method 0x251272e0.
+//
+// Solidity: function lastReportedRewardsData() view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolSession) LastReportedRewardsData() (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	return _SocializingPool.Contract.LastReportedRewardsData(&_SocializingPool.CallOpts)
+}
+
+// LastReportedRewardsData is a free data retrieval call binding the contract method 0x251272e0.
+//
+// Solidity: function lastReportedRewardsData() view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolCallerSession) LastReportedRewardsData() (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	return _SocializingPool.Contract.LastReportedRewardsData(&_SocializingPool.CallOpts)
+}
+
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
 // Solidity: function paused() view returns(bool)
@@ -516,6 +602,76 @@ func (_SocializingPool *SocializingPoolSession) Paused() (bool, error) {
 // Solidity: function paused() view returns(bool)
 func (_SocializingPool *SocializingPoolCallerSession) Paused() (bool, error) {
 	return _SocializingPool.Contract.Paused(&_SocializingPool.CallOpts)
+}
+
+// RewardsDataMap is a free data retrieval call binding the contract method 0x4a321b79.
+//
+// Solidity: function rewardsDataMap(uint256 ) view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolCaller) RewardsDataMap(opts *bind.CallOpts, arg0 *big.Int) (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	var out []interface{}
+	err := _SocializingPool.contract.Call(opts, &out, "rewardsDataMap", arg0)
+
+	outstruct := new(struct {
+		ReportingBlockNumber *big.Int
+		Index                *big.Int
+		MerkleRoot           [32]byte
+		OperatorETHRewards   *big.Int
+		UserETHRewards       *big.Int
+		ProtocolETHRewards   *big.Int
+		OperatorSDRewards    *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.ReportingBlockNumber = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.Index = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.MerkleRoot = *abi.ConvertType(out[2], new([32]byte)).(*[32]byte)
+	outstruct.OperatorETHRewards = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
+	outstruct.UserETHRewards = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
+	outstruct.ProtocolETHRewards = *abi.ConvertType(out[5], new(*big.Int)).(**big.Int)
+	outstruct.OperatorSDRewards = *abi.ConvertType(out[6], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// RewardsDataMap is a free data retrieval call binding the contract method 0x4a321b79.
+//
+// Solidity: function rewardsDataMap(uint256 ) view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolSession) RewardsDataMap(arg0 *big.Int) (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	return _SocializingPool.Contract.RewardsDataMap(&_SocializingPool.CallOpts, arg0)
+}
+
+// RewardsDataMap is a free data retrieval call binding the contract method 0x4a321b79.
+//
+// Solidity: function rewardsDataMap(uint256 ) view returns(uint256 reportingBlockNumber, uint256 index, bytes32 merkleRoot, uint256 operatorETHRewards, uint256 userETHRewards, uint256 protocolETHRewards, uint256 operatorSDRewards)
+func (_SocializingPool *SocializingPoolCallerSession) RewardsDataMap(arg0 *big.Int) (struct {
+	ReportingBlockNumber *big.Int
+	Index                *big.Int
+	MerkleRoot           [32]byte
+	OperatorETHRewards   *big.Int
+	UserETHRewards       *big.Int
+	ProtocolETHRewards   *big.Int
+	OperatorSDRewards    *big.Int
+}, error) {
+	return _SocializingPool.Contract.RewardsDataMap(&_SocializingPool.CallOpts, arg0)
 }
 
 // StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.

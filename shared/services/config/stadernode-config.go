@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -290,16 +290,16 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		socializingPoolAddress: map[config.Network]string{
-			config.Network_Prater:   "0x816Bc7ea864D9615A31f0FA58567a82B7825843d",
-			config.Network_Devnet:   "0x816Bc7ea864D9615A31f0FA58567a82B7825843d",
-			config.Network_Mainnet:  "0x816Bc7ea864D9615A31f0FA58567a82B7825843d",
+			config.Network_Prater:   "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
+			config.Network_Devnet:   "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
+			config.Network_Mainnet:  "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		staderOracleAddress: map[config.Network]string{
-			config.Network_Prater:   "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
-			config.Network_Devnet:   "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
-			config.Network_Mainnet:  "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
+			config.Network_Prater:   "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
+			config.Network_Devnet:   "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
+			config.Network_Mainnet:  "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
