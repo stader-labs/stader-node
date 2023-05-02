@@ -297,9 +297,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		staderOracleAddress: map[config.Network]string{
-			config.Network_Prater:   "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
-			config.Network_Devnet:   "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
-			config.Network_Mainnet:  "0xeB9F9DC86673024D03492EeE8D6Ea394E3e31387",
+			config.Network_Prater:   "0x712ba599cd0B360f4fb5e731C7Ef67446ad83197",
+			config.Network_Devnet:   "0x712ba599cd0B360f4fb5e731C7Ef67446ad83197",
+			config.Network_Mainnet:  "0x712ba599cd0B360f4fb5e731C7Ef67446ad83197",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
