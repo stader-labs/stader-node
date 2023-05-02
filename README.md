@@ -6,6 +6,8 @@ This version of the release is a pre production version and may contain bugs/ vu
 
 For clarity, this version of the software is not meant for public consumption and may lead to technological and/ or financial losses. This version of the software is provided as is and only for testing purposes and should not be redistributed without the express consent of Stakeinfra Technologies Inc.
 
-### Changelog
+## Changelog
 
-https://github.com/stader-labs/stader-node/commits/beta
+### What Changed
+
+- Add validator exit support
