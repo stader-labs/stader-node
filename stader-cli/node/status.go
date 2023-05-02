@@ -61,6 +61,9 @@ func getStatus(c *cli.Context) error {
 	}
 
 	noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral := totalRegisterableValidators.Int64() - totalRegisteredValidators.Int64()
+	if noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral < 0 {
+		noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral = 0
+	}
 
 	noOfValidatorsWeCanRegisterBasedOnEthBalance := int64(eth.WeiToEth(status.AccountBalances.ETH) / 4)
 
