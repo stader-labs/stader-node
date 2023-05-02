@@ -34,7 +34,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *collector.StateCache) error {
+func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *collector.MetricsCacheContainer) error {
 
 	// Get services
 	cfg, err := services.GetConfig(c)

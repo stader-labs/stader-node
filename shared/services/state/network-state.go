@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-type NetworkDetails struct {
+type MetricDetails struct {
 	// Network details
 
 	// done
@@ -107,13 +107,13 @@ type NetworkDetails struct {
 	OperatorEthCollateral float64
 }
 
-type NetworkStateCache struct {
+type MetricsCache struct {
 	// Block / slot for this state
 	ElBlockNumber    uint64
 	BeaconSlotNumber uint64
 	BeaconConfig     beacon.Eth2Config
 
-	StaderNetworkDetails NetworkDetails
+	StaderNetworkDetails MetricDetails
 
 	// Validator details
 	ValidatorDetails map[types.ValidatorPubkey]beacon.ValidatorStatus
@@ -122,7 +122,7 @@ type NetworkStateCache struct {
 	log *log.ColorLogger
 }
 
-func CreateNetworkStateCache(
+func CreateMetricsCache(
 	cfg *config.StaderNodeConfig,
 	ec stader.ExecutionClient,
 	bc beacon.Client,
@@ -130,7 +130,7 @@ func CreateNetworkStateCache(
 	slotNumber uint64,
 	beaconConfig beacon.Eth2Config,
 	nodeAddress common.Address,
-) (*NetworkStateCache, error) {
+) (*MetricsCache, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
 	ptAddress := cfg.GetPenaltyTrackerAddress()
 	sdcAddress := cfg.GetSdCollateralContractAddress()
@@ -191,7 +191,7 @@ func CreateNetworkStateCache(
 	elBlockNumber := beaconBlock.ExecutionBlockNumber
 
 	// Create the state wrapper
-	state := &NetworkStateCache{
+	state := &MetricsCache{
 		BeaconSlotNumber: slotNumber,
 		ElBlockNumber:    elBlockNumber,
 		BeaconConfig:     beaconConfig,
@@ -385,7 +385,7 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	networkDetails := NetworkDetails{}
+	networkDetails := MetricDetails{}
 
 	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1000000000000000000), nil)
 	if err != nil {
@@ -478,7 +478,7 @@ func CreateNetworkStateCache(
 }
 
 // Logs a line if the logger is specified
-func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
+func (s *MetricsCache) logLine(format string, v ...interface{}) {
 	if s.log != nil {
 		s.log.Printlnf(format, v...)
 	}

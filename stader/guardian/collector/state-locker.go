@@ -9,17 +9,17 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
-type StateCache struct {
-	state *state.NetworkStateCache
+type MetricsCacheContainer struct {
+	state *state.MetricsCache
 
 	lock *sync.Mutex
 }
 
-func NewStateCache() *StateCache {
-	return &StateCache{
+func NewMetricsCacheContainer() *MetricsCacheContainer {
+	return &MetricsCacheContainer{
 		lock: &sync.Mutex{},
-		state: &state.NetworkStateCache{
-			StaderNetworkDetails: state.NetworkDetails{
+		state: &state.MetricsCache{
+			StaderNetworkDetails: state.MetricDetails{
 				SdPrice:                              0,
 				TotalValidators:                      big.NewInt(0),
 				TotalOperators:                       big.NewInt(0),
@@ -64,13 +64,13 @@ func NewStateCache() *StateCache {
 	}
 }
 
-func (l *StateCache) UpdateState(state *state.NetworkStateCache) {
+func (l *MetricsCacheContainer) UpdateMetricsContainer(state *state.MetricsCache) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	l.state = state
 }
 
-func (l *StateCache) GetState() *state.NetworkStateCache {
+func (l *MetricsCacheContainer) GetMetricsContainer() *state.MetricsCache {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	return l.state

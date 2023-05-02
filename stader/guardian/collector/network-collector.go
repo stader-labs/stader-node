@@ -68,14 +68,14 @@ type NetworkCollector struct {
 	nodeAddress common.Address
 
 	// The thread-safe locker for the network state
-	stateLocker *StateCache
+	stateLocker *MetricsCacheContainer
 
 	// Prefix for logging
 	logPrefix string
 }
 
 // Create a new NetworkCollector instance
-func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *StateCache) *NetworkCollector {
+func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddress common.Address, stateLocker *MetricsCacheContainer) *NetworkCollector {
 	subsystem := "network"
 	return &NetworkCollector{
 		SdPrice: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_price"),
@@ -168,7 +168,7 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 // Collect the latest metric values and pass them to Prometheus
 func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
-	state := collector.stateLocker.GetState()
+	state := collector.stateLocker.GetMetricsContainer()
 
 	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
 
