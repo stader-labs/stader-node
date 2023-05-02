@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-type NetworkDetails struct {
+type MetricDetails struct {
 	// Network details
 
 	// done
@@ -107,13 +107,13 @@ type NetworkDetails struct {
 	OperatorEthCollateral float64
 }
 
-type NetworkStateCache struct {
+type MetricsCache struct {
 	// Block / slot for this state
 	ElBlockNumber    uint64
 	BeaconSlotNumber uint64
 	BeaconConfig     beacon.Eth2Config
 
-	StaderNetworkDetails NetworkDetails
+	StaderNetworkDetails MetricDetails
 
 	// Validator details
 	ValidatorDetails map[types.ValidatorPubkey]beacon.ValidatorStatus
@@ -122,7 +122,7 @@ type NetworkStateCache struct {
 	log *log.ColorLogger
 }
 
-func CreateNetworkStateCache(
+func CreateMetricsCache(
 	cfg *config.StaderNodeConfig,
 	ec stader.ExecutionClient,
 	bc beacon.Client,
@@ -130,7 +130,7 @@ func CreateNetworkStateCache(
 	slotNumber uint64,
 	beaconConfig beacon.Eth2Config,
 	nodeAddress common.Address,
-) (*NetworkStateCache, error) {
+) (*MetricsCache, error) {
 	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
 	ptAddress := cfg.GetPenaltyTrackerAddress()
 	sdcAddress := cfg.GetSdCollateralContractAddress()
@@ -191,7 +191,7 @@ func CreateNetworkStateCache(
 	elBlockNumber := beaconBlock.ExecutionBlockNumber
 
 	// Create the state wrapper
-	state := &NetworkStateCache{
+	state := &MetricsCache{
 		BeaconSlotNumber: slotNumber,
 		ElBlockNumber:    elBlockNumber,
 		BeaconConfig:     beaconConfig,
@@ -202,38 +202,31 @@ func CreateNetworkStateCache(
 
 	start := time.Now()
 
-	state.logLine("nodeAddress: %s\n", nodeAddress.Hex())
 	// fetch all validator pub keys
 	operatorId, err := node.GetOperatorId(prn, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorId: %s\n", operatorId)
 	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorElRewardAddress: %s\n", operatorElRewardAddress)
 	elRewardAddressBalance, err := tokens.GetEthBalance(prn.Client, operatorElRewardAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("elRewardAddressBalance: %s\n", elRewardAddressBalance)
 	operatorElRewards, err := pool_utils.CalculateRewardShare(putils, 1, elRewardAddressBalance, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorElRewards: %s\n", operatorElRewards)
 	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorSdColletaral: %s\n", operatorSdColletaral)
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("totalValidatorKeys: %s\n", totalValidatorKeys)
 	poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
 	if err != nil {
 		return nil, err
@@ -247,16 +240,13 @@ func CreateNetworkStateCache(
 	if err != nil {
 		return nil, err
 	}
-	state.logLine("operatorNonTerminalKeys: %s\n", operatorNonTerminalKeys)
 	operatorEthCollateral := float64(4 * operatorNonTerminalKeys)
 
-	state.logLine("operatorEthCollateral: %s\n", operatorEthCollateral)
 	nextRewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	state.logLine("nextRewardCycleDetails: %s\n", nextRewardCycleDetails)
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
 	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
@@ -292,7 +282,6 @@ func CreateNetworkStateCache(
 	statusMap, err := bc.GetValidatorStatuses(pubkeys, &beacon.ValidatorStatusOptions{
 		Slot: &slotNumber,
 	})
-	state.logLine("statusMap: %s\n", statusMap)
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +292,6 @@ func CreateNetworkStateCache(
 		}
 		cumulativePenalty.Add(cumulativePenalty, totalValidatorPenalty)
 
-		state.logLine("Checkign validator: %s\n", pubKey)
 		validatorContractInfo, ok := validatorInfoMap[pubKey]
 		if !ok {
 			state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
@@ -378,16 +366,6 @@ func CreateNetworkStateCache(
 		}
 	}
 
-	state.logLine("initializedValidators: %s\n", initializedValidators)
-	state.logLine("invalidSignatureValidators: %s\n", invalidSignatureValidators)
-	state.logLine("frontRunValidators: %s\n", frontRunValidators)
-	state.logLine("queuedValidators: %s\n", queuedValidators)
-	state.logLine("fundsSettledValidators: %s\n", fundsSettledValidators)
-	state.logLine("exitingValidators: %s\n", exitingValidators)
-	state.logLine("withdrawnValidators: %s\n", withdrawnValidators)
-	state.logLine("slashedValidators: %s\n", slashedValidators)
-	state.logLine("activeValidators: %s\n", activeValidators)
-
 	state.ValidatorDetails = statusMap
 
 	state.logLine("Retrieved validator details (total time: %s)", time.Since(start))
@@ -407,7 +385,7 @@ func CreateNetworkStateCache(
 
 	start = time.Now()
 
-	networkDetails := NetworkDetails{}
+	metricsDetails := MetricDetails{}
 
 	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1000000000000000000), nil)
 	if err != nil {
@@ -454,48 +432,45 @@ func CreateNetworkStateCache(
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
-	networkDetails.SdPrice = sdPriceFormatted
-	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
-	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
-	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
-	fmt.Printf("operatorSdCollateralInEth: %f\n", eth.WeiToEth(operatorSdCollateralInEth))
-	networkDetails.OperatorEthCollateral = operatorEthCollateral
-	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
-	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
-	networkDetails.TotalActiveValidators = totalActiveValidators
-	networkDetails.TotalQueuedValidators = totalQueuedValidators
-	networkDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
-	networkDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
-	networkDetails.TotalStakedEthByUsers = totalStakedAssets
-	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
-	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
-	networkDetails.CollateralRatioInSd = collateralRatioInSd
-	networkDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
-	networkDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
-	fmt.Printf("min threshold: %f\n", networkDetails.MinEthThreshold)
-	fmt.Printf("max threshold: %f\n", networkDetails.MaxEthThreshold)
+	metricsDetails.SdPrice = sdPriceFormatted
+	metricsDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
+	metricsDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	metricsDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
+	metricsDetails.OperatorEthCollateral = operatorEthCollateral
+	metricsDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
+	metricsDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
+	metricsDetails.TotalActiveValidators = totalActiveValidators
+	metricsDetails.TotalQueuedValidators = totalQueuedValidators
+	metricsDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
+	metricsDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
+	metricsDetails.TotalStakedEthByUsers = totalStakedAssets
+	metricsDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+	metricsDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	metricsDetails.CollateralRatioInSd = collateralRatioInSd
+	metricsDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
+	metricsDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
 
-	networkDetails.ValidatorStatusMap = statusMap
-	networkDetails.ValidatorInfoMap = validatorInfoMap
-	networkDetails.ActiveValidators = activeValidators
-	networkDetails.QueuedValidators = queuedValidators
-	networkDetails.ExitingValidators = exitingValidators
-	networkDetails.SlashedValidators = slashedValidators
-	networkDetails.WithdrawnValidators = withdrawnValidators
-	networkDetails.InitializedValidators = initializedValidators
-	networkDetails.FrontRunValidators = frontRunValidators
-	networkDetails.InvalidSignatureValidators = invalidSignatureValidators
-	networkDetails.FundsSettledValidators = fundsSettledValidators
-	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
-	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
-	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
-	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
-	networkDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
-	networkDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
-	networkDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
-	networkDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
+	metricsDetails.ValidatorStatusMap = statusMap
+	metricsDetails.ValidatorInfoMap = validatorInfoMap
+	metricsDetails.ActiveValidators = activeValidators
+	metricsDetails.QueuedValidators = queuedValidators
+	metricsDetails.ExitingValidators = exitingValidators
+	metricsDetails.SlashedValidators = slashedValidators
+	metricsDetails.WithdrawnValidators = withdrawnValidators
+	metricsDetails.InitializedValidators = initializedValidators
+	metricsDetails.FrontRunValidators = frontRunValidators
+	metricsDetails.InvalidSignatureValidators = invalidSignatureValidators
+	metricsDetails.FundsSettledValidators = fundsSettledValidators
+	metricsDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	metricsDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
+	metricsDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
+	metricsDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
+	metricsDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
+	metricsDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
+	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
+	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
 
-	state.StaderNetworkDetails = networkDetails
+	state.StaderNetworkDetails = metricsDetails
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 
@@ -503,7 +478,7 @@ func CreateNetworkStateCache(
 }
 
 // Logs a line if the logger is specified
-func (s *NetworkStateCache) logLine(format string, v ...interface{}) {
+func (s *MetricsCache) logLine(format string, v ...interface{}) {
 	if s.log != nil {
 		s.log.Printlnf(format, v...)
 	}

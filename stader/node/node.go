@@ -48,14 +48,12 @@ import (
 )
 
 // Config
-var preSignedCooldown, _ = time.ParseDuration("12h")
+var preSignedCooldown, _ = time.ParseDuration("1h")
 var preSignedBatchCooldown, _ = time.ParseDuration("5s")
-var preSignBatchSize = 10 // Go thru 100 keys in each pass
+var preSignBatchSize = 100 // Go thru 100 keys in each pass
 var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
-
-// TODO - update this to 24h
-var merkleProofsDownloadInterval, _ = time.ParseDuration("10s")
+var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
 
 const (
 	MaxConcurrentEth1Requests   = 200

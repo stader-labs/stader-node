@@ -63,6 +63,8 @@ func IsValidatorSlashed(validatorStatus beacon.ValidatorStatus) bool {
 
 func IsValidatorExitingButNotWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
 	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveExiting:
+		return true
 	case beacon.ValidatorState_ExitedSlashed:
 		return true
 	case beacon.ValidatorState_ExitedUnslashed:

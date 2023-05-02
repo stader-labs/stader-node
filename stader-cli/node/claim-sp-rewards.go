@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
+func ClaimSpRewards(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -26,6 +26,17 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		return err
 	}
 
+	fmt.Println("Downloading the merkle proofs for the cycles you may have not downloaded yet...")
+	downloadRes, err := staderClient.DownloadSpMerkleProofs()
+	if err != nil {
+		return err
+	}
+	if len(downloadRes.DownloadedCycles) != 0 {
+		fmt.Printf("Merkle proofs downloaded for cycles %v!\n", downloadRes.DownloadedCycles)
+	} else {
+		fmt.Println("No new merkle proofs downloaded!")
+	}
+
 	// prompt user to select the cycles to claim from
 	canClaimSpRewards, err := staderClient.CanClaimSpRewards()
 	if err != nil {
@@ -35,13 +46,18 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 		fmt.Println("The socializing pool contract is paused!")
 		return nil
 	}
+	if len(canClaimSpRewards.UnclaimedCycles) == 0 {
+		fmt.Println("You have no unclaimed cycles!")
+		return nil
+	}
 
-	fmt.Printf("Getting the detailed cycles info...")
+	fmt.Printf("Getting the detailed cycles info...\n")
 	detailedCyclesInfo, err := staderClient.GetDetailedCyclesInfo(canClaimSpRewards.UnclaimedCycles)
 	if err != nil {
 		return err
 	}
 
+	// this is post checking the cache.
 	if len(detailedCyclesInfo.DetailedCyclesInfo) == 0 {
 		fmt.Println("You have no unclaimed cycles!")
 		return nil
@@ -50,15 +66,6 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 	cycleIndexes := []*big.Int{}
 	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
 		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
-	}
-
-	if downloadMerkleProofs {
-		fmt.Println("Downloading the merkle proofs for the cycles you have not downloaded yet...")
-		downloadRes, err := staderClient.DownloadSpMerkleProofs()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Merkle proofs downloaded for cycles %v\n!", downloadRes.DownloadedCycles)
 	}
 
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
@@ -85,7 +92,7 @@ func ClaimSpRewards(c *cli.Context, downloadMerkleProofs bool) error {
 			fmt.Printf("%-18d%-14.30s%-14.4f%-.4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
 
-		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 2,3,8,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
+		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 1,2,3,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
 		if cycleSelection == "" {
 			for _, cycle := range cycleIndexes {
 				cyclesToClaim[cycle.Int64()] = true

@@ -43,7 +43,7 @@ type OperatorCollector struct {
 	nodeAddress common.Address
 
 	// The thread-safe locker for the network state
-	stateLocker *StateCache
+	stateLocker *MetricsCacheContainer
 
 	// Prefix for logging
 	logPrefix string
@@ -54,7 +54,7 @@ func NewOperatorCollector(
 	bc beacon.Client,
 	ec stader.ExecutionClient,
 	nodeAddress common.Address,
-	stateLocker *StateCache,
+	stateLocker *MetricsCacheContainer,
 ) *OperatorCollector {
 	return &OperatorCollector{
 		ActiveValidators: prometheus.NewDesc(
@@ -142,7 +142,7 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 // Collect the latest metric values and pass them to Prometheus
 func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
-	state := collector.stateLocker.GetState()
+	state := collector.stateLocker.GetMetricsContainer()
 
 	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ActiveValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
