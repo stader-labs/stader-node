@@ -119,7 +119,6 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_besu_max_peers] = format(cfg.Besu.MaxPeers.Value)
 	newSettings[keys.E1ec_lm_besu_container_tag] = cfg.Besu.ContainerTag.Value
 	newSettings[keys.E1ec_lm_besu_additional_flags] = cfg.Besu.AdditionalFlags.Value
-	newSettings[keys.E1ec_lm_besu_in_memory_pruning_cache_size] = cfg.Nethermind.AdditionalFlags.Value
 
 	return nil
 }
