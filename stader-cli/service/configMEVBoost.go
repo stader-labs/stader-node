@@ -65,11 +65,9 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 }
 
 func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
-	cfg.EnableMevBoost.Value = newSettings[keys.Mev_boost_enabled]
+	// Make MEV boot default is true since we remove key from UI
+	cfg.EnableMevBoost.Value = true
 
-	if cfg.EnableMevBoost.Value.(bool) == false {
-		return nil
-	}
 	cfg.MevBoost.Mode.Value = makeMEVModeFromUi(newSettings[keys.Mev_boost_mode].(string))
 	cfg.MevBoost.ExternalUrl.Value = newSettings[keys.Mev_boost_em_external_url]
 
