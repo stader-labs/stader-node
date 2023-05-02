@@ -385,7 +385,7 @@ func CreateMetricsCache(
 
 	start = time.Now()
 
-	networkDetails := MetricDetails{}
+	metricsDetails := MetricDetails{}
 
 	sdPrice, err := sd_collateral.ConvertEthToSd(sdc, big.NewInt(1000000000000000000), nil)
 	if err != nil {
@@ -432,45 +432,45 @@ func CreateMetricsCache(
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
-	networkDetails.SdPrice = sdPriceFormatted
-	networkDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
-	networkDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
-	networkDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
-	networkDetails.OperatorEthCollateral = operatorEthCollateral
-	networkDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
-	networkDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
-	networkDetails.TotalActiveValidators = totalActiveValidators
-	networkDetails.TotalQueuedValidators = totalQueuedValidators
-	networkDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
-	networkDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
-	networkDetails.TotalStakedEthByUsers = totalStakedAssets
-	networkDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
-	networkDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
-	networkDetails.CollateralRatioInSd = collateralRatioInSd
-	networkDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
-	networkDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
+	metricsDetails.SdPrice = sdPriceFormatted
+	metricsDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
+	metricsDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+	metricsDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
+	metricsDetails.OperatorEthCollateral = operatorEthCollateral
+	metricsDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
+	metricsDetails.TotalValidators = totalValidators.Sub(totalValidators, big.NewInt(1))
+	metricsDetails.TotalActiveValidators = totalActiveValidators
+	metricsDetails.TotalQueuedValidators = totalQueuedValidators
+	metricsDetails.TotalStakedSd = math.RoundDown(eth.WeiToEth(totalSdCollateral), 10)
+	metricsDetails.TotalEthxSupply = math.RoundDown(eth.WeiToEth(ethxSupply), 10)
+	metricsDetails.TotalStakedEthByUsers = totalStakedAssets
+	metricsDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
+	metricsDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
+	metricsDetails.CollateralRatioInSd = collateralRatioInSd
+	metricsDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
+	metricsDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
 
-	networkDetails.ValidatorStatusMap = statusMap
-	networkDetails.ValidatorInfoMap = validatorInfoMap
-	networkDetails.ActiveValidators = activeValidators
-	networkDetails.QueuedValidators = queuedValidators
-	networkDetails.ExitingValidators = exitingValidators
-	networkDetails.SlashedValidators = slashedValidators
-	networkDetails.WithdrawnValidators = withdrawnValidators
-	networkDetails.InitializedValidators = initializedValidators
-	networkDetails.FrontRunValidators = frontRunValidators
-	networkDetails.InvalidSignatureValidators = invalidSignatureValidators
-	networkDetails.FundsSettledValidators = fundsSettledValidators
-	networkDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
-	networkDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
-	networkDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
-	networkDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
-	networkDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
-	networkDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
-	networkDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
-	networkDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
+	metricsDetails.ValidatorStatusMap = statusMap
+	metricsDetails.ValidatorInfoMap = validatorInfoMap
+	metricsDetails.ActiveValidators = activeValidators
+	metricsDetails.QueuedValidators = queuedValidators
+	metricsDetails.ExitingValidators = exitingValidators
+	metricsDetails.SlashedValidators = slashedValidators
+	metricsDetails.WithdrawnValidators = withdrawnValidators
+	metricsDetails.InitializedValidators = initializedValidators
+	metricsDetails.FrontRunValidators = frontRunValidators
+	metricsDetails.InvalidSignatureValidators = invalidSignatureValidators
+	metricsDetails.FundsSettledValidators = fundsSettledValidators
+	metricsDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	metricsDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
+	metricsDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
+	metricsDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
+	metricsDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
+	metricsDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
+	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
+	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
 
-	state.StaderNetworkDetails = networkDetails
+	state.StaderNetworkDetails = metricsDetails
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
 
