@@ -19,6 +19,9 @@ func GetAllMerkleProofsForOperator(operator common.Address) ([]*stader_backend.C
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("error while getting all merkle proofs for operator %s", operator.Hex())
 	}
+	if res.StatusCode == http.StatusBadRequest {
+		return []*stader_backend.CycleMerkleProofs{}, nil
+	}
 
 	var allMerkleProofs []*stader_backend.CycleMerkleProofs
 	err = json.NewDecoder(res.Body).Decode(&allMerkleProofs)
