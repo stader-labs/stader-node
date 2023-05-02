@@ -119,7 +119,7 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_besu_max_peers] = format(cfg.Besu.MaxPeers.Value)
 	newSettings[keys.E1ec_lm_besu_container_tag] = cfg.Besu.ContainerTag.Value
 	newSettings[keys.E1ec_lm_besu_additional_flags] = cfg.Besu.AdditionalFlags.Value
-	newSettings[keys.E1ec_lm_besu_historical_block_replay_limit] = cfg.Besu.MaxBackLayers.Value
+	newSettings[keys.E1ec_lm_besu_historical_block_replay_limit] = format(cfg.Besu.MaxBackLayers.Value)
 
 	return nil
 }

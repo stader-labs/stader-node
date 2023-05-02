@@ -273,22 +273,20 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
 
 	// update mev boost
+	cfg.EnableMevBoost.Value = true
 	if newSettings.MEVBoost == "external" {
-		cfg.EnableMevBoost.Value = true
 		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
 	} else if newSettings.MEVBoost == "local" {
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
 		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
 		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
-		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
 	}
 
 	// unset mev boost mode value if mev boost is disabled
 	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
 		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
 		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Unknow
-		cfg.EnableMevBoost.Value = false
 	}
 
 	return cfg, nil
