@@ -83,7 +83,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	stateCache := collector.NewMetricsCacheContainer()
+	metricsCache := collector.NewMetricsCacheContainer()
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return err
@@ -127,7 +127,7 @@ func run(c *cli.Context) error {
 				time.Sleep(taskCooldown)
 				continue
 			}
-			stateCache.UpdateMetricsContainer(networkStateCache)
+			metricsCache.UpdateMetricsContainer(networkStateCache)
 			time.Sleep(tasksInterval)
 		}
 
@@ -135,7 +135,7 @@ func run(c *cli.Context) error {
 	}()
 
 	go func() {
-		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), stateCache)
+		err := runMetricsServer(c, log.NewColorLogger(MetricsColor), metricsCache)
 		if err != nil {
 			errorLog.Println(err)
 		}
@@ -158,9 +158,9 @@ func configureHTTP() {
 
 func updateMetricsCache(m *state.MetricsCacheManager, nodeAddress common.Address) (*state.MetricsCache, error) {
 	// Get the networkStateCache of the network
-	networkStateCache, err := m.GetHeadStateForNode(nodeAddress)
+	metricsCache, err := m.GetHeadStateForNode(nodeAddress)
 	if err != nil {
-		return nil, fmt.Errorf("error updating network state: %w", err)
+		return nil, fmt.Errorf("error updating metrics cache: %w", err)
 	}
-	return networkStateCache, nil
+	return metricsCache, nil
 }
