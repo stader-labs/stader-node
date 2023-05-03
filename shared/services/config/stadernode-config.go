@@ -246,6 +246,13 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
+
+		staderConfigAddress: map[config.Network]string{
+			config.Network_Prater:   "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
+			config.Network_Devnet:   "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
+			config.Network_Mainnet:  "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
 	}
 }
 
