@@ -141,6 +141,8 @@ type ContractsInfoResponse struct {
 	SocializingPoolContract    common.Address `json:"socializingPoolContract"`
 	PermisionlessPool          common.Address `json:"permisionlessPool"`
 	StaderOracle               common.Address `json:"staderOracle"`
+	PenaltyTracker             common.Address `json:"penaltyTracker"`
+	StakePoolManager           common.Address `json:"stakePoolManager"`
 }
 
 type DebugExitResponse struct {

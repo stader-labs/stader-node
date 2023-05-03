@@ -33,14 +33,43 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 
 	response.BeaconNetwork = eth2DepositContract.ChainID
 	response.BeaconDepositContract = eth2DepositContract.Address
-	response.SdCollateralContract = config.StaderNode.GetSdCollateralContractAddress()
-	response.EthxToken = config.StaderNode.GetEthxTokenAddress()
-	response.SdToken = config.StaderNode.GetSdTokenAddress()
-	response.PermissionlessNodeRegistry = config.StaderNode.GetPermissionlessNodeRegistryAddress()
-	response.VaultFactory = config.StaderNode.GetVaultFactoryAddress()
-	response.SocializingPoolContract = config.StaderNode.GetSocializingPoolAddress()
-	response.PermisionlessPool = config.StaderNode.GetPermissionlessPoolAddress()
-	response.StaderOracle = config.StaderNode.GetStaderOracleAddress()
+	response.SdCollateralContract, err = services.GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.EthxToken, err = services.GetEthxTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.SdToken, err = services.GetSdTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.PermissionlessNodeRegistry, err = services.GetPermissionlessNodeRegistryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.VaultFactory, err = services.GetVaultFactoryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.SocializingPoolContract, err = services.GetSocializingPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.PermisionlessPool, err = services.GetPermissionlessPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.StaderOracle, err = services.GetStaderOracleAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.StakePoolManager, err = services.GetStakePoolManagerAddress(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Return response
 	return &response, nil
