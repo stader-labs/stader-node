@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,8 +25,19 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
+
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
+	"github.com/stader-labs/stader-node/shared/utils/crypto"
+	"github.com/stader-labs/stader-node/shared/utils/eth2"
+	"github.com/stader-labs/stader-node/shared/utils/stader"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
+	"github.com/stader-labs/stader-node/shared/utils/validator"
+	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	eth2types "github.com/wealdtech/go-eth2-types/v2"
 
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -36,15 +47,20 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
-// TODO - increase the tasksInterval to 5m
-var tasksInterval, _ = time.ParseDuration("10s")
+// Config
+var preSignedCooldown, _ = time.ParseDuration("1h")
+var preSignedBatchCooldown, _ = time.ParseDuration("5s")
+var preSignBatchSize = 100 // Go thru 100 keys in each pass
+var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
 var taskCooldown, _ = time.ParseDuration("10s")
+var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
 
 const (
-	MaxConcurrentEth1Requests = 200
-
-	ManageFeeRecipientColor = color.FgHiCyan
-	ErrorColor              = color.FgRed
+	MaxConcurrentEth1Requests   = 200
+	ManageFeeRecipientColor     = color.FgHiCyan
+	MerkleProofsDownloaderColor = color.FgHiBlue
+	ErrorColor                  = color.FgRed
+	InfoColor                   = color.FgHiGreen
 )
 
 // Register node command
@@ -59,11 +75,33 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	})
 }
 
-// Run daemon
+// run daemon
 func run(c *cli.Context) error {
 
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
+	if err != nil {
+		return err
+	}
+
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
+
+	publicKey, err := stader.GetPublicKey()
 	if err != nil {
 		return err
 	}
@@ -76,13 +114,171 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	merkleProofsDownloader, err := NewMerkleProofsDownloader(c, log.NewColorLogger(MerkleProofsDownloaderColor))
+	if err != nil {
+		return err
+	}
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
+	infoLog := log.NewColorLogger(InfoColor)
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return err
+	}
+
+	// get all registered validators with smart contracts
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(1)
+	wg.Add(3)
+
+	// validator presigned loop
+	go func() {
+		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+				continue
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+					continue
+				}
+			}
+
+			// make a map of all validators actually registered with stader
+			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
+
+			infoLog.Println("Building a map of user validators registered with stader")
+			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			if err != nil {
+				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
+				continue
+			}
+
+			infoLog.Println("Starting a pass of the presign daemon!")
+			walletIndex := w.GetNextAccount()
+			noOfBatches := walletIndex / uint(preSignBatchSize)
+			batchIndex := 0
+
+			currentHead, err := bc.GetBeaconHead()
+			if err != nil {
+				panic("not able to communicate with beacon chain!")
+			}
+
+			for i := uint(0); i <= noOfBatches; i++ {
+				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
+					infoLog.Printf("Checking validator index %d\n", j)
+					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
+					// log the errors and continue. dont need to sleep post an error
+					if err != nil {
+						errorLog.Printf("Could not find validator private key for validator index %d\n", j)
+						continue
+					}
+
+					validatorPubKey := types.BytesToValidatorPubkey(validatorPrivateKey.PublicKey().Marshal())
+					infoLog.Printf("Checking validator Pub key: %s\n", validatorPubKey.String())
+
+					validatorInfo, registered := registeredValidators[validatorPubKey]
+					if !registered {
+						errorLog.Printf("Validator pub key: %s not registered with stader\n", validatorPubKey)
+						continue
+					}
+					if stdr.IsValidatorTerminal(validatorInfo) {
+						errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
+						continue
+					}
+
+					// check if validator has not yet been registered on beacon chain
+					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
+					if err != nil {
+						errorLog.Printf("Error finding validator status for validator: %s\n", validatorPubKey)
+						continue
+					}
+					if !validatorStatus.Exists {
+						errorLog.Printf("Validator pub key: %s not found on beacon chain\n", validatorPubKey)
+						continue
+					}
+
+					// check if validator is already in an exiting phase, then no point sending a pre-signed message
+					if eth2.IsValidatorExiting(validatorStatus) {
+						errorLog.Printf("Validator pub key: %s already exiting or exited with status %s", validatorPubKey, validatorStatus.Status)
+						continue
+					}
+
+					// check if the presigned message has been registered. if it has been registered, then continue
+					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
+					if isRegistered {
+						errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
+						continue
+					} else if err != nil {
+						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
+					}
+
+					exitEpoch := currentHead.Epoch
+
+					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
+					if err != nil {
+						errorLog.Printf("Failed to get the signature domain from beacon chain\n")
+						continue
+					}
+
+					// get the presigned msg
+					exitSignature, _, err := validator.GetSignedExitMessage(validatorPrivateKey, validatorStatus.Index, exitEpoch, signatureDomain)
+					if err != nil {
+						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
+						continue
+					}
+
+					// encrypt the signature and srHash
+					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
+					if err != nil {
+						errorLog.Printf("Failed to encrypt exit signature for validator: %s\n", validatorPubKey)
+						continue
+					}
+					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
+
+					// send it to the presigned api
+					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
+						Message: struct {
+							Epoch          string `json:"epoch"`
+							ValidatorIndex string `json:"validator_index"`
+						}{
+							Epoch:          strconv.FormatUint(exitEpoch, 10),
+							ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
+						},
+						Signature:          exitSignatureEncryptedString,
+						ValidatorPublicKey: validatorPubKey.String(),
+					})
+					if !backendRes.Success {
+						errorLog.Printf("Failed to send the presigned api: %s\n", backendRes.Message)
+						continue
+					} else if backendRes.Success {
+						errorLog.Printf("Successfully sent the presigned message for validator: %s\n", validatorPubKey)
+						continue
+					} else if err != nil {
+						errorLog.Printf("Sending presigned message failed with %v\n", err)
+						continue
+					}
+
+					time.Sleep(preSignedBatchCooldown)
+				}
+
+				batchIndex = batchIndex + preSignBatchSize
+			}
+
+			errorLog.Printf("Done with the pass of presign daemon")
+			// run loop every 12 hours
+			time.Sleep(preSignedCooldown)
+		}
+
+		wg.Done()
+	}()
 
 	// Run task loop
 	go func() {
@@ -104,7 +300,33 @@ func run(c *cli.Context) error {
 					time.Sleep(taskCooldown)
 				}
 			}
-			time.Sleep(tasksInterval)
+			time.Sleep(feeRecepientPollingInterval)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		for {
+			infoLog.Printlnf("Checking if there are any available merkle proofs to download")
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+			} else {
+				// Check the BC status
+				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				if err != nil {
+					errorLog.Println(err)
+				} else {
+					// Manage the fee recipient for the node
+					if err := merkleProofsDownloader.run(); err != nil {
+						errorLog.Println(err)
+					}
+					time.Sleep(taskCooldown)
+				}
+			}
+			infoLog.Printlnf("Done checking for merkle proofs to download")
+			time.Sleep(merkleProofsDownloadInterval)
 		}
 		wg.Done()
 	}()

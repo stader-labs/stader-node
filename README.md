@@ -7,5 +7,25 @@ This version of the release is a pre production version and may contain bugs/ vu
 For clarity, this version of the software is not meant for public consumption and may lead to technological and/ or financial losses. This version of the software is provided as is and only for testing purposes and should not be redistributed without the express consent of Stakeinfra Technologies Inc.
 
 ### Changelog
-
-https://github.com/stader-labs/stader-node/commits/beta
+## What's Changed
+* Actions deploy
+* Remove upgrade flags after run
+* Contracts Update
+* add collateral ratio in sd
+* SP rewards fix
+* Socializing pool reward claiming bug fixes
+* Minor bug fixes
+* update stader abis
+* Fixes for withdraw-sd command
+* Consider total non terminal validators in hasEnoughSdCollateral
+* update apis
+* Add metrics
+* add eth price in sd metric
+* Actions to deploy
+* Fix mev boots values not set corrected
+* Final fixes + refactoring
+* handle 400 error in sp rewards merkle
+* Format value
+* Socializing Pool contract updates
+* update api links
+* clamp noOfValidatorsWhichWeCanRegisterBasedOnSdCollateral to 0

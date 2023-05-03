@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,18 +28,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stader-labs/ethcli-ui/pages"
-
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
 
 	"github.com/dustin/go-humanize"
 	"github.com/shirou/gopsutil/v3/disk"
-	ethcliui "github.com/stader-labs/ethcli-ui"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/services/config"
 
+	"github.com/stader-labs/ethcli-ui/wizard/pages"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -154,7 +152,6 @@ func installService(c *cli.Context) error {
 }
 
 // Print the latest patch notes for this release
-// TODO: get this from an external source and don't hardcode it into the CLI
 func printPatchNotes(c *cli.Context) {
 
 	fmt.Printf(`%s
@@ -224,78 +221,79 @@ func HasBeenUpdated(settings1 pages.SettingsType, settings2 pages.SettingsType) 
 	return true
 }
 
-// Configure the service
+func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (config.StaderConfig, error) {
+	cfg := *_cfg
+	// update the network
+	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
 
-// Configure the service
-func configureService(c *cli.Context) error {
+	// update the consensus and execution client
+	cfg.ConsensusClientMode.Value = cfgtypes.Mode(newSettings.EthClient)
+	cfg.ExecutionClientMode.Value = cfgtypes.Mode(newSettings.EthClient)
 
-	// Make sure the config directory exists first
-	configPath := c.GlobalString("config-path")
-	fmt.Println("configPath", configPath)
-	path, err := homedir.Expand(configPath)
-	if err != nil {
-		return fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
+	if newSettings.EthClient == "local" {
+		cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings.ExecutionClient.SelectionOption))
+		cfg.ConsensusClient.Value = cfgtypes.ConsensusClient(newSettings.ConsensusClient.Selection)
+	} else if newSettings.EthClient == "external" {
+		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
+		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
+		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
+		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
+		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
+		cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
+		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
 	}
-	_, err = os.Stat(path)
-	if os.IsNotExist(err) {
-		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
-		return nil
-	}
+	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
+	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
-	staderClient, err := stader.NewClientFromCtx(c)
-	if err != nil {
-		return err
-	}
-	defer staderClient.Close()
-
-	// Load the config, checking to see if it's new (hasn't been installed before)
-	// var oldCfg *config.StaderConfig
-	cfg, isNew, err := staderClient.LoadConfig()
-	if err != nil {
-		return fmt.Errorf("error loading user settings: %w", err)
-	}
-
-	// Check to see if this is a migration from a legacy config
-	isMigration := false
-	if isNew {
-		// Look for a legacy config to migrate
-		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
-		if err != nil {
-			return err
-		}
-		if migratedConfig != nil {
-			cfg = migratedConfig
-			isMigration = true
-		}
+	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
+	// get the consensus client we are using for fallback
+	fallBackConsensusClient := newSettings.ConsensusClient.Selection
+	if newSettings.EthClient == "external" {
+		fallBackConsensusClient = newSettings.ConsensusClient.ExternalSelection
 	}
 
-	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
-	if err != nil {
-		return fmt.Errorf("error checking for first-run status: %w", err)
+	switch fallBackConsensusClient {
+	case "prysm":
+		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings.FallbackClients.Prysm.ExecutionClientUrl
+		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeHttpUrl
+		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeJsonRpcpUrl
+	case "lighthouse":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.BeaconNodeHttpUrl
+	case "teku":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
 	}
 
-	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
-	if isMigration || isUpdate {
-		// oldCfg = cfg
-		cfg = cfg.CreateCopy()
-		err = cfg.UpdateDefaults()
-		if err != nil {
-			return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
-		}
+	// update monitoring
+	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
+
+	// update mev boost
+	cfg.EnableMevBoost.Value = true
+	if newSettings.MEVBoost == "external" {
+		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
+	} else if newSettings.MEVBoost == "local" {
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
+		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
 	}
 
-	// Save the config and exit in headless mode
-	if c.NumFlags() > 0 {
-		err := configureHeadless(c, cfg)
-		if err != nil {
-			return fmt.Errorf("error updating config from provided arguments: %w", err)
-		}
-		return staderClient.SaveConfig(cfg)
+	// unset mev boost mode value if mev boost is disabled
+	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
+		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
+		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Unknow
 	}
 
+	return cfg, nil
+}
+
+func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 	currentSettings := pages.SettingsType{
-		Confirmed: true,
 		Network:   "prater",
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
@@ -347,102 +345,78 @@ func configureService(c *cli.Context) error {
 		},
 	}
 
-	set, err := ethcliui.Run(&currentSettings)
+	return currentSettings
+}
+
+// Configure the service
+func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
+	// Make sure the config directory exists first
+	configPath := c.GlobalString("config-path")
+	fmt.Println("configPath", configPath)
+	path, err := homedir.Expand(configPath)
 	if err != nil {
-		return err
+		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
 	}
-
-	newSettings := set()
-	if !newSettings.Confirmed {
-		fmt.Printf("You have exited the wizard. Your settings have not been saved\n")
-		return nil
-	}
-	if !HasBeenUpdated(currentSettings, newSettings) {
-		fmt.Printf("Your settings have not changed.\n")
-		return nil
-	}
-
-	// update the network
-	cfg.ChangeNetwork(cfgtypes.Network(newSettings.Network))
-
-	// update the consensus and execution client
-	cfg.ConsensusClientMode.Value = newSettings.EthClient
-	cfg.ExecutionClientMode.Value = newSettings.EthClient
-
-	if newSettings.EthClient == "local" {
-		cfg.ExecutionClient.Value = newSettings.ExecutionClient.SelectionOption
-		cfg.ConsensusClient.Value = newSettings.ConsensusClient.Selection
-	} else if newSettings.EthClient == "external" {
-		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
-		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
-		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
-		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
-		cfg.ExternalPrysm.HttpUrl.Value = newSettings.ConsensusClient.External.Prysm.HTTPUrl
-		cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings.ConsensusClient.External.Prysm.JSONRpcUrl
-		cfg.ExternalLighthouse.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
-		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
-		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
-		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
-	}
-	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
-	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
-	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
-
-	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
-	// get the consensus client we are using for fallback
-	fallBackConsensusClient := newSettings.ConsensusClient.Selection
-	if newSettings.EthClient == "external" {
-		fallBackConsensusClient = newSettings.ConsensusClient.ExternalSelection
-	}
-
-	switch fallBackConsensusClient {
-	case "prysm":
-		cfg.FallbackPrysm.EcHttpUrl.Value = newSettings.FallbackClients.Prysm.ExecutionClientUrl
-		cfg.FallbackPrysm.CcHttpUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeHttpUrl
-		cfg.FallbackPrysm.JsonRpcUrl.Value = newSettings.FallbackClients.Prysm.BeaconNodeJsonRpcpUrl
-	case "lighthouse":
-		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.ExecutionClientUrl
-		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lighthouse.BeaconNodeHttpUrl
-	case "teku":
-		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
-		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
-	}
-
-	// update monitoring
-	cfg.EnableMetrics.Value = ConvertStringToBool(newSettings.Monitoring)
-
-	// update mev boost
-	if newSettings.MEVBoost == "external" {
-		cfg.EnableMevBoost.Value = true
-		cfg.MevBoost.ExternalUrl.Value = newSettings.MEVBoostExternalMevUrl
-		cfg.MevBoost.Mode.Value = cfgtypes.Mode_External
-	} else if newSettings.MEVBoost == "local" {
-		cfg.MevBoost.Mode.Value = cfgtypes.Mode_Local
-		cfg.MevBoost.SelectionMode.Value = cfgtypes.MevSelectionMode_Profile
-		cfg.MevBoost.EnableUnregulatedAllMev.Value = newSettings.MEVBoostLocalUnregulated
-		cfg.MevBoost.EnableRegulatedAllMev.Value = newSettings.MEVBoostLocalRegulated
-		cfg.EnableMevBoost.Value = newSettings.MEVBoostLocalRegulated || newSettings.MEVBoostLocalUnregulated
-	}
-
-	// unset mev boost mode value if mev boost is disabled
-	if newSettings.MEVBoost == "local" && cfg.EnableMevBoost.Value.(bool) == false {
-		cfg.MevBoost.Mode.Value = "local"
-		cfg.MevBoost.SelectionMode.Value = ""
-		cfg.EnableMevBoost.Value = false
-	}
-
-	err = staderClient.SaveConfig(cfg)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	defer staderClient.Close()
+
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		fmt.Printf("%sYour configured Stader config directory of [%s] does not exist.\n%s\n", colorYellow, path, colorReset)
+		if err != nil {
+			return nil, fmt.Errorf("error installService: %w", err)
+		}
 	}
 
-	// Restart the services
-	err = startService(c, false)
+	// Load the config, checking to see if it's new (hasn't been installed before)
+	// var oldCfg *config.StaderConfig
+	cfg, isNew, err := staderClient.LoadConfig()
 	if err != nil {
-		return err
+		return nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	return err
+	// Check to see if this is a migration from a legacy config
+	isMigration := false
+	if isNew {
+		// Look for a legacy config to migrate
+		migratedConfig, err := staderClient.LoadLegacyConfigFromBackup()
+		if err != nil {
+			return nil, err
+		}
+		if migratedConfig != nil {
+			cfg = migratedConfig
+			isMigration = true
+		}
+	}
+
+	// Check if this is a new install
+	isUpdate, err := staderClient.IsFirstRun()
+	if err != nil {
+		return nil, fmt.Errorf("error checking for first-run status: %w", err)
+	}
+
+	// For migrations and upgrades, move the config to the old one and create a new upgraded copy
+	if isMigration || isUpdate {
+		// oldCfg = cfg
+		cfg = cfg.CreateCopy()
+		err = cfg.UpdateDefaults()
+		if err != nil {
+			return nil, fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
+		}
+	}
+
+	// Save the config and exit in headless mode
+	if c.NumFlags() > 0 {
+		err := configureHeadless(c, cfg)
+		if err != nil {
+			return nil, fmt.Errorf("error updating config from provided arguments: %w", err)
+		}
+		return nil, staderClient.SaveConfig(cfg)
+	}
+	return cfg, nil
 }
 
 // Updates a configuration from the provided CLI arguments headlessly

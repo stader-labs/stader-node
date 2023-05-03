@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,4 +26,77 @@ import (
 // Get an eth2 epoch number by time
 func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 	return config.GenesisEpoch + (time-config.GenesisTime)/config.SecondsPerEpoch
+}
+
+func IsValidatorWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_WithdrawalPossible:
+		return true
+	case beacon.ValidatorState_WithdrawalDone:
+		return true
+	}
+
+	return false
+}
+
+func IsValidatorQueued(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_PendingInitialized:
+		return true
+	case beacon.ValidatorState_PendingQueued:
+		return true
+	}
+
+	return false
+}
+
+func IsValidatorSlashed(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveSlashed:
+		return true
+	case beacon.ValidatorState_ExitedSlashed:
+		return true
+	}
+
+	return false
+}
+
+func IsValidatorExitingButNotWithdrawn(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveExiting:
+		return true
+	case beacon.ValidatorState_ExitedSlashed:
+		return true
+	case beacon.ValidatorState_ExitedUnslashed:
+		return true
+	}
+
+	return false
+}
+
+func IsValidatorExiting(validatorStatus beacon.ValidatorStatus) bool {
+	//fmt.Printf("Validator status: %v", validatorStatus)
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_PendingInitialized:
+		return false
+	case beacon.ValidatorState_PendingQueued:
+		return false
+	case beacon.ValidatorState_ActiveOngoing:
+		return false
+	case beacon.ValidatorState_ActiveSlashed:
+		return false
+	}
+
+	return true
+}
+
+func IsValidatorActive(validatorStatus beacon.ValidatorStatus) bool {
+	switch validatorStatus.Status {
+	case beacon.ValidatorState_ActiveOngoing:
+		return true
+	case beacon.ValidatorState_ActiveSlashed:
+		return true
+	}
+
+	return false
 }

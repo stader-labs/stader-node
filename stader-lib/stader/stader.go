@@ -162,3 +162,226 @@ func NewPermissionlessPoolFactory(client ExecutionClient, permissionPoolAddress 
 	}, nil
 
 }
+
+type NodeElRewardVaultContractManager struct {
+	Client                    ExecutionClient
+	NodeElRewardVault         *contracts.NodeElRewardVault
+	NodeElRewardVaultContract *Contract
+}
+
+func NewNodeElRewardVaultFactory(client ExecutionClient, nodeElRewardVaultAddress common.Address) (*NodeElRewardVaultContractManager, error) {
+	nodeElRewardVault, err := contracts.NewNodeElRewardVault(nodeElRewardVaultAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	nodeElRewardVaultContractAbi, err := abi.JSON(strings.NewReader(contracts.NodeElRewardVaultMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	nodeElRewardContract := &Contract{
+		Contract: bind.NewBoundContract(nodeElRewardVaultAddress, nodeElRewardVaultContractAbi, client, client, client),
+		Address:  &nodeElRewardVaultAddress,
+		ABI:      &nodeElRewardVaultContractAbi,
+		Client:   client,
+	}
+
+	return &NodeElRewardVaultContractManager{
+		Client:                    client,
+		NodeElRewardVault:         nodeElRewardVault,
+		NodeElRewardVaultContract: nodeElRewardContract,
+	}, nil
+
+}
+
+type ValidatorWithdrawVaultContractManager struct {
+	Client                         ExecutionClient
+	ValidatorWithdrawVault         *contracts.ValidatorWithdrawVault
+	ValidatorWithdrawVaultContract *Contract
+}
+
+func NewValidatorWithdrawVaultFactory(client ExecutionClient, validatorWithdrawVaultAddress common.Address) (*ValidatorWithdrawVaultContractManager, error) {
+	validatorWithdrawVault, err := contracts.NewValidatorWithdrawVault(validatorWithdrawVaultAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	validatorWithdrawVaultContractAbi, err := abi.JSON(strings.NewReader(contracts.ValidatorWithdrawVaultMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	validatorWithdrawContract := &Contract{
+		Contract: bind.NewBoundContract(validatorWithdrawVaultAddress, validatorWithdrawVaultContractAbi, client, client, client),
+		Address:  &validatorWithdrawVaultAddress,
+		ABI:      &validatorWithdrawVaultContractAbi,
+		Client:   client,
+	}
+
+	return &ValidatorWithdrawVaultContractManager{
+		Client:                         client,
+		ValidatorWithdrawVault:         validatorWithdrawVault,
+		ValidatorWithdrawVaultContract: validatorWithdrawContract,
+	}, nil
+
+}
+
+type StaderConfigContractManager struct {
+	Client               ExecutionClient
+	StaderConfig         *contracts.StaderConfig
+	StaderConfigContract *Contract
+}
+
+func NewStaderConfig(client ExecutionClient, staderConfigAddress common.Address) (*StaderConfigContractManager, error) {
+	staderConfig, err := contracts.NewStaderConfig(staderConfigAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	staderConfigContractAbi, err := abi.JSON(strings.NewReader(contracts.StaderConfigMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	staderConfigContract := &Contract{
+		Contract: bind.NewBoundContract(staderConfigAddress, staderConfigContractAbi, client, client, client),
+		Address:  &staderConfigAddress,
+		ABI:      &staderConfigContractAbi,
+		Client:   client,
+	}
+
+	return &StaderConfigContractManager{
+		Client:               client,
+		StaderConfig:         staderConfig,
+		StaderConfigContract: staderConfigContract,
+	}, nil
+
+}
+
+type SocializingPoolContractManager struct {
+	Client                  ExecutionClient
+	SocializingPool         *contracts.SocializingPool
+	SocializingPoolContract *Contract
+}
+
+func NewSocializingPool(client ExecutionClient, socializingPoolAddress common.Address) (*SocializingPoolContractManager, error) {
+	socializingPool, err := contracts.NewSocializingPool(socializingPoolAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	socializingPoolContractAbi, err := abi.JSON(strings.NewReader(contracts.SocializingPoolMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	socializingPoolContract := &Contract{
+		Contract: bind.NewBoundContract(socializingPoolAddress, socializingPoolContractAbi, client, client, client),
+		Address:  &socializingPoolAddress,
+		ABI:      &socializingPoolContractAbi,
+		Client:   client,
+	}
+
+	return &SocializingPoolContractManager{
+		Client:                  client,
+		SocializingPool:         socializingPool,
+		SocializingPoolContract: socializingPoolContract,
+	}, nil
+
+}
+
+// Write bindings similar to the above for PoolUtils
+
+type PoolUtilsContractManager struct {
+	Client            ExecutionClient
+	PoolUtils         *contracts.PoolUtils
+	PoolUtilsContract *Contract
+}
+
+func NewPoolUtils(client ExecutionClient, poolUtilsAddress common.Address) (*PoolUtilsContractManager, error) {
+	poolUtils, err := contracts.NewPoolUtils(poolUtilsAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	poolUtilsContractAbi, err := abi.JSON(strings.NewReader(contracts.PoolUtilsMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	poolUtilsContract := &Contract{
+		Contract: bind.NewBoundContract(poolUtilsAddress, poolUtilsContractAbi, client, client, client),
+		Address:  &poolUtilsAddress,
+		ABI:      &poolUtilsContractAbi,
+		Client:   client,
+	}
+
+	return &PoolUtilsContractManager{
+		Client:            client,
+		PoolUtils:         poolUtils,
+		PoolUtilsContract: poolUtilsContract,
+	}, nil
+
+}
+
+// implement similar bindings as above for Penalty
+
+type PenaltyTrackerContractManager struct {
+	Client          ExecutionClient
+	Penalty         *contracts.PenaltyTracker
+	PenaltyContract *Contract
+}
+
+func NewPenaltyTracker(client ExecutionClient, penaltyAddress common.Address) (*PenaltyTrackerContractManager, error) {
+	penalty, err := contracts.NewPenaltyTracker(penaltyAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	penaltyContractAbi, err := abi.JSON(strings.NewReader(contracts.PenaltyTrackerMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	penaltyContract := &Contract{
+		Contract: bind.NewBoundContract(penaltyAddress, penaltyContractAbi, client, client, client),
+		Address:  &penaltyAddress,
+		ABI:      &penaltyContractAbi,
+		Client:   client,
+	}
+
+	return &PenaltyTrackerContractManager{
+		Client:          client,
+		Penalty:         penalty,
+		PenaltyContract: penaltyContract,
+	}, nil
+
+}
+
+// implement simliar bindings as above for stake pool manager
+
+type StakePoolManagerContractManager struct {
+	Client                   ExecutionClient
+	StakePoolManager         *contracts.StakePoolManager
+	StakePoolManagerContract *Contract
+}
+
+func NewStakePoolManager(client ExecutionClient, stakePoolManagerAddress common.Address) (*StakePoolManagerContractManager, error) {
+	stakePoolManager, err := contracts.NewStakePoolManager(stakePoolManagerAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	stakePoolManagerContractAbi, err := abi.JSON(strings.NewReader(contracts.StakePoolManagerMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	stakePoolManagerContract := &Contract{
+		Contract: bind.NewBoundContract(stakePoolManagerAddress, stakePoolManagerContractAbi, client, client, client),
+		Address:  &stakePoolManagerAddress,
+		ABI:      &stakePoolManagerContractAbi,
+		Client:   client,
+	}
+
+	return &StakePoolManagerContractManager{
+		Client:                   client,
+		StakePoolManager:         stakePoolManager,
+		StakePoolManagerContract: stakePoolManagerContract,
+	}, nil
+
+}

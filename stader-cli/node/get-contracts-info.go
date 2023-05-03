@@ -38,6 +38,9 @@ func getContractsInfo(c *cli.Context) error {
 	fmt.Printf("Sd Collateral Lock: %s\n\n", response.SdCollateralContract)
 	fmt.Printf("EthX Token: %s\n\n", response.EthxToken)
 	fmt.Printf("Sd Token: %s\n\n", response.SdToken)
+	fmt.Printf("Socializing Pool: %s\n\n", response.SocializingPoolContract)
+	fmt.Printf("Permissionless Pool: %s\n\n", response.PermisionlessPool)
+	fmt.Printf("Stader Oracle: %s\n\n", response.StaderOracle)
 
 	return nil
 }

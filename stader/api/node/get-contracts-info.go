@@ -10,27 +10,6 @@ import (
 )
 
 func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
-	prn, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return nil, err
-	}
-	vf, err := services.GetVaultFactory(c)
-	if err != nil {
-		return nil, err
-	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
-	ethx, err := services.GetEthxTokenContract(c)
-	if err != nil {
-		return nil, err
-	}
-	sdt, err := services.GetSdTokenContract(c)
-	if err != nil {
-		return nil, err
-	}
-
 	// Response
 	response := api.ContractsInfoResponse{}
 
@@ -46,6 +25,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client: %w", err)
 	}
+
 	eth2DepositContract, err := bc.GetEth2DepositContract()
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client deposit contract: %w", err)
@@ -53,11 +33,14 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 
 	response.BeaconNetwork = eth2DepositContract.ChainID
 	response.BeaconDepositContract = eth2DepositContract.Address
-	response.SdCollateralContract = *sdc.SdCollateralContract.Address
-	response.EthxToken = *ethx.Erc20TokenContract.Address
-	response.SdToken = *sdt.Erc20TokenContract.Address
-	response.PermissionlessNodeRegistry = *prn.PermissionlessNodeRegistryContract.Address
-	response.VaultFactory = *vf.VaultFactoryContract.Address
+	response.SdCollateralContract = config.StaderNode.GetSdCollateralContractAddress()
+	response.EthxToken = config.StaderNode.GetEthxTokenAddress()
+	response.SdToken = config.StaderNode.GetSdTokenAddress()
+	response.PermissionlessNodeRegistry = config.StaderNode.GetPermissionlessNodeRegistryAddress()
+	response.VaultFactory = config.StaderNode.GetVaultFactoryAddress()
+	response.SocializingPoolContract = config.StaderNode.GetSocializingPoolAddress()
+	response.PermisionlessPool = config.StaderNode.GetPermissionlessPoolAddress()
+	response.StaderOracle = config.StaderNode.GetStaderOracleAddress()
 
 	// Return response
 	return &response, nil

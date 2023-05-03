@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,6 +52,8 @@ func getStatus(c *cli.Context) error {
 	if status.WalletInitialized {
 		fmt.Println("The node wallet is initialized.")
 		fmt.Printf("Node account: %s\n", status.AccountAddress.Hex())
+		fmt.Printf("Current Nonce: %d\n", status.CurrentNonce)
+		fmt.Printf("Pending Nonce: %d\n", status.PendingNonce)
 	} else {
 		fmt.Println("The node wallet has not been initialized.")
 	}

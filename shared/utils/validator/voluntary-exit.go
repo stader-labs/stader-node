@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ import (
 )
 
 // Get a voluntary exit message signature for a given validator key and index
-func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex uint64, epoch uint64, signatureDomain []byte) (types.ValidatorSignature, error) {
+func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex uint64, epoch uint64, signatureDomain []byte) (types.ValidatorSignature, [32]byte, error) {
 
 	// Build voluntary exit message
 	exitMessage := eth2.VoluntaryExit{
@@ -37,7 +37,7 @@ func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex 
 	// Get object root
 	or, err := exitMessage.HashTreeRoot()
 	if err != nil {
-		return types.ValidatorSignature{}, err
+		return types.ValidatorSignature{}, [32]byte{}, err
 	}
 
 	// Get signing root
@@ -48,13 +48,13 @@ func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex 
 
 	srHash, err := sr.HashTreeRoot()
 	if err != nil {
-		return types.ValidatorSignature{}, err
+		return types.ValidatorSignature{}, [32]byte{}, nil
 	}
 
 	// Sign message
 	signature := validatorKey.Sign(srHash[:]).Marshal()
 
 	// Return
-	return types.BytesToValidatorSignature(signature), nil
+	return types.BytesToValidatorSignature(signature), srHash, nil
 
 }

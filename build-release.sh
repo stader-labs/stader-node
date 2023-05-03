@@ -3,7 +3,7 @@
 # This work is licensed and released under GNU GPL v3 or any other later versions. 
 # The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -131,10 +131,6 @@ build_docker_prune_provision_manifest() {
     echo "done!"
 }
 
-send_slack() {
-    # TODO: @prabhakar087 - add slack messaging
-}
-
 # Print usage
 usage() {
     echo "Usage: build-release.sh [options] -v <version number>"
@@ -210,11 +206,4 @@ if [ "$PRUNE" = true ]; then
 fi
 if [ "$PRUNE_MANIFEST" = true ]; then
     build_docker_prune_provision_manifest
-fi
-# if all successful, send slack message
-if [ $? -eq 0 ]; then
-    send_slack "Stader Node $VERSION has been built and pushed to Docker Hub."
-# else send failure message
-else
-    send_slack "Stader Node $VERSION has failed to build and push to Docker Hub."
 fi

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,15 +40,16 @@ import (
 
 // Manage fee recipient task
 type manageFeeRecipient struct {
-	c   *cli.Context
-	log log.ColorLogger
-	cfg *config.StaderConfig
-	w   *wallet.Wallet
-	prn *stader.PermissionlessNodeRegistryContractManager
-	vf  *stader.VaultFactoryContractManager
-	pp  *stader.PermissionlessPoolContractManager
-	d   *client.Client
-	bc  beacon.Client
+	c     *cli.Context
+	log   log.ColorLogger
+	cfg   *config.StaderConfig
+	w     *wallet.Wallet
+	prn   *stader.PermissionlessNodeRegistryContractManager
+	vf    *stader.VaultFactoryContractManager
+	pp    *stader.PermissionlessPoolContractManager
+	sdcfg *stader.StaderConfigContractManager
+	d     *client.Client
+	bc    beacon.Client
 }
 
 // Create manage fee recipient task
@@ -71,7 +72,7 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
-	pp, err := services.GetPermissionlessPoolFactory(c)
+	pp, err := services.GetPermissionlessPoolContract(c)
 	if err != nil {
 		return nil, err
 	}
@@ -83,18 +84,23 @@ func newManageFeeRecipient(c *cli.Context, logger log.ColorLogger) (*manageFeeRe
 	if err != nil {
 		return nil, err
 	}
+	sdcfg, err := services.GetStaderConfigContract(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Return task
 	return &manageFeeRecipient{
-		c:   c,
-		log: logger,
-		cfg: cfg,
-		w:   w,
-		prn: prn,
-		vf:  vf,
-		pp:  pp,
-		d:   d,
-		bc:  bc,
+		c:     c,
+		log:   logger,
+		cfg:   cfg,
+		w:     w,
+		prn:   prn,
+		vf:    vf,
+		pp:    pp,
+		d:     d,
+		bc:    bc,
+		sdcfg: sdcfg,
 	}, nil
 
 }
@@ -114,7 +120,7 @@ func (m *manageFeeRecipient) run() error {
 	}
 
 	// Get the fee recipient info for the node
-	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.pp, nodeAccount.Address, nil)
+	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.sdcfg, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}

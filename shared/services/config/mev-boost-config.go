@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,11 +29,10 @@ import (
 
 // Constants
 const (
-	mevBoostPortableTag  string = "flashbots/mev-boost:1.4.0-portable"
-	mevBoostModernTag    string = "flashbots/mev-boost:1.4.0"
-	mevBoostUrlEnvVar    string = "MEV_BOOST_URL"
-	mevBoostRelaysEnvVar string = "MEV_BOOST_RELAYS"
-	// TODO: add docs ur
+	mevBoostPortableTag         string = "flashbots/mev-boost:1.5.0-portable"
+	mevBoostModernTag           string = "flashbots/mev-boost:1.5.0"
+	mevBoostUrlEnvVar           string = "MEV_BOOST_URL"
+	mevBoostRelaysEnvVar        string = "MEV_BOOST_RELAYS"
 	mevDocsUrl                  string = "#"
 	RegulatedRelayDescription   string = "Select this to enable the relays that comply with government regulations (e.g. OFAC sanctions), "
 	UnregulatedRelayDescription string = "Select this to enable the relays that do not follow any sanctions lists (do not censor transactions), "

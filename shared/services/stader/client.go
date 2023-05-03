@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -432,8 +432,6 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			convertUintParam(param, &cfg.NodeMetricsPort, network, 16)
 		case "EXPORTER_METRICS_PORT":
 			convertUintParam(param, &cfg.ExporterMetricsPort, network, 16)
-		case "GUARDIAN_METRICS_PORT":
-			convertUintParam(param, &cfg.GuardianMetricsPort, network, 16)
 		case "PROMETHEUS_PORT":
 			convertUintParam(param, &cfg.Prometheus.Port, network, 16)
 		case "GRAFANA_PORT":

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
 }
 
-func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
+func GetPermissionlessPoolContract(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err
@@ -150,6 +150,32 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 	}
 
 	return stader.NewSdCollateralContract(ec, cfg.StaderNode.GetSdCollateralContractAddress())
+}
+
+func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
+}
+
+func GetSocializingPoolContract(c *cli.Context) (*stader.SocializingPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSocializingPool(ec, cfg.StaderNode.GetSocializingPoolAddress())
 }
 
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -176,6 +202,44 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 	}
 
 	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetEthxTokenAddress())
+}
+
+func GetPoolUtilsContract(c *cli.Context) (*stader.PoolUtilsContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPoolUtils(ec, cfg.StaderNode.GetPoolUtilsAddress())
+}
+
+func GetPenaltyTrackerContract(c *cli.Context) (*stader.PenaltyTrackerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPenaltyTracker(ec, cfg.StaderNode.GetPenaltyTrackerAddress())
+}
+
+func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+	return stader.NewStakePoolManager(ec, cfg.StaderNode.GetStakePoolManagerAddress())
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {

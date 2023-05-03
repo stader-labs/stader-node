@@ -18,8 +18,15 @@ import (
 )
 
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
-	canNodeDepositResponse := api.CanNodeDepositResponse{}
-
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeActive(c); err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -66,25 +73,14 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	opts.Value = amountToSend
 
+	canNodeDepositResponse := api.CanNodeDepositResponse{}
+
 	userBalance, err := tokens.GetEthBalance(prn.Client, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
 	if userBalance.Cmp(amountToSend) < 0 {
 		canNodeDepositResponse.InsufficientBalance = true
-	}
-
-	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	operatorRegistryInfo, err := node.GetOperatorInfo(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-	if operatorRegistryInfo.OperatorName == "" {
-		canNodeDepositResponse.NotRegistered = true
-		return &canNodeDepositResponse, nil
 	}
 
 	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
@@ -96,12 +92,37 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
-	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
+	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+	maxKeysPerOperator, err := node.GetMaxValidatorKeysPerOperator(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorsPostAddition := totalValidatorNonTerminalKeys + numValidators.Uint64()
+
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, big.NewInt(int64(totalValidatorsPostAddition)), nil)
 	if err != nil {
 		return nil, err
 	}
 	if !hasEnoughSdCollateral {
 		canNodeDepositResponse.NotEnoughSdCollateral = true
+		return &canNodeDepositResponse, nil
+	}
+
+	if totalValidatorsPostAddition > maxKeysPerOperator {
+		canNodeDepositResponse.MaxValidatorLimitReached = true
 		return &canNodeDepositResponse, nil
 	}
 
@@ -189,6 +210,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.NodeDepositResponse, error) {
 
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -206,6 +231,10 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return nil, err
+	}
+	d, err := services.GetDocker(c)
 	if err != nil {
 		return nil, err
 	}
@@ -249,12 +278,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
 
-	nodeAccount, err = w.GetNodeAccount()
-	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	// Adjust the salt
 	if salt.Cmp(big.NewInt(0)) == 0 {
 		nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
@@ -262,6 +285,11 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 			return nil, err
 		}
 		salt.SetUint64(nonce)
+	}
+
+	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	newValidatorKey := validatorKeyCount
@@ -322,6 +350,12 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		}
 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
+	}
+
+	// Restart the validator container when a new key have been saved
+	err = validator.RestartValidator(cfg, bc, nil, d)
+	if err != nil {
+		return nil, err
 	}
 
 	// Override the provided pending TX if requested
