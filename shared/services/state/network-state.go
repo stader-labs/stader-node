@@ -168,16 +168,6 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
-	fmt.Printf("prnAddress: %s\n", prnAddress.String())
-	fmt.Printf("ptAddress: %s\n", ptAddress.String())
-	fmt.Printf("sdcAddress: %s\n", sdcAddress.String())
-	fmt.Printf("ethxAddress: %s\n", ethxAddress.String())
-	fmt.Printf("stakePoolManagerAddress: %s\n", stakePoolManagerAddress.String())
-	fmt.Printf("poolUtilsAddress: %s\n", poolUtilsAddress.String())
-	fmt.Printf("socializingPoolAddress: %s\n", socializingPoolAddress.String())
-	fmt.Printf("vaultFactoryAddress: %s\n", vaultFactoryAddress.String())
-	fmt.Printf("staderConfigAddress: %s\n", staderConfigAddress.String())
-
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
 		return nil, err
@@ -301,8 +291,7 @@ func CreateMetricsCache(
 
 		pubkeys = append(pubkeys, pubKey)
 	}
-	state.logLine("pubkeys: %s\n", pubkeys)
-	state.logLine("validatorInfoMap: %s\n", validatorInfoMap)
+
 	activeValidators := big.NewInt(0)
 	slashedValidators := big.NewInt(0)
 	queuedValidators := big.NewInt(0)
