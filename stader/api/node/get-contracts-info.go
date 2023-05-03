@@ -49,7 +49,6 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	response.VaultFactory, err = services.GetVaultFactoryAddress(c)
 	if err != nil {
 		return nil, err

@@ -28,6 +28,7 @@ import (
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	"github.com/urfave/cli"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -42,10 +43,11 @@ type MetricsCacheManager struct {
 	Network      cfgtypes.Network
 	ChainID      uint
 	BeaconConfig beacon.Eth2Config
+	c            *cli.Context
 }
 
 // Create a new manager for the network state
-func NewMetricsCache(cfg *config.StaderConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger) (*MetricsCacheManager, error) {
+func NewMetricsCache(c *cli.Context, cfg *config.StaderConfig, ec stader.ExecutionClient, bc beacon.Client, log *log.ColorLogger) (*MetricsCacheManager, error) {
 
 	// Create the manager
 	m := &MetricsCacheManager{
@@ -56,6 +58,7 @@ func NewMetricsCache(cfg *config.StaderConfig, ec stader.ExecutionClient, bc bea
 		Config:  cfg,
 		Network: cfg.StaderNode.Network.Value.(cfgtypes.Network),
 		ChainID: cfg.StaderNode.GetChainID(),
+		c:       c,
 	}
 
 	// Get the Beacon config info
@@ -101,7 +104,7 @@ func (m *MetricsCacheManager) GetHeadSlot() (uint64, error) {
 }
 
 func (m *MetricsCacheManager) getNodeMetrics(nodeAddress common.Address, slotNumber uint64) (*MetricsCache, error) {
-	state, err := CreateMetricsCache(m.cfg.StaderNode, m.ec, m.bc, m.log, slotNumber, m.BeaconConfig, nodeAddress)
+	state, err := CreateMetricsCache(m.c, m.cfg.StaderNode, m.ec, m.bc, m.log, slotNumber, m.BeaconConfig, nodeAddress)
 	if err != nil {
 		return nil, err
 	}

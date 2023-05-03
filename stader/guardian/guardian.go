@@ -99,7 +99,7 @@ func run(c *cli.Context) error {
 
 	// Run metrics loop
 	go func() {
-		m, err := state.NewMetricsCache(cfg, ec, bc, &updateLog)
+		m, err := state.NewMetricsCache(c, cfg, ec, bc, &updateLog)
 		if err != nil {
 			panic(err)
 		}

@@ -2,6 +2,8 @@ package state
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/urfave/cli"
 	"math/big"
 	"time"
 
@@ -123,6 +125,7 @@ type MetricsCache struct {
 }
 
 func CreateMetricsCache(
+	c *cli.Context,
 	cfg *config.StaderNodeConfig,
 	ec stader.ExecutionClient,
 	bc beacon.Client,
@@ -131,15 +134,49 @@ func CreateMetricsCache(
 	beaconConfig beacon.Eth2Config,
 	nodeAddress common.Address,
 ) (*MetricsCache, error) {
-	prnAddress := cfg.GetPermissionlessNodeRegistryAddress()
-	ptAddress := cfg.GetPenaltyTrackerAddress()
-	sdcAddress := cfg.GetSdCollateralContractAddress()
-	ethxAddress := cfg.GetEthxTokenAddress()
-	stakePoolManagerAddress := cfg.GetStakePoolManagerAddress()
-	poolUtilsAddress := cfg.GetPoolUtilsAddress()
+	prnAddress, err := services.GetPermissionlessNodeRegistryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	ptAddress, err := services.GetPenaltyTrackerAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	sdcAddress, err := services.GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	ethxAddress, err := services.GetEthxTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	stakePoolManagerAddress, err := services.GetStakePoolManagerAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	poolUtilsAddress, err := services.GetPoolUtilsAddress(c)
+	if err != nil {
+		return nil, err
+	}
 	staderConfigAddress := cfg.GetStaderConfigAddress()
-	socializingPoolAddress := cfg.GetSocializingPoolAddress()
-	vaultFactoryAddress := cfg.GetVaultFactoryAddress()
+	socializingPoolAddress, err := services.GetSocializingPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	vaultFactoryAddress, err := services.GetVaultFactoryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("prnAddress: %s\n", prnAddress.String())
+	fmt.Printf("ptAddress: %s\n", ptAddress.String())
+	fmt.Printf("sdcAddress: %s\n", sdcAddress.String())
+	fmt.Printf("ethxAddress: %s\n", ethxAddress.String())
+	fmt.Printf("stakePoolManagerAddress: %s\n", stakePoolManagerAddress.String())
+	fmt.Printf("poolUtilsAddress: %s\n", poolUtilsAddress.String())
+	fmt.Printf("socializingPoolAddress: %s\n", socializingPoolAddress.String())
+	fmt.Printf("vaultFactoryAddress: %s\n", vaultFactoryAddress.String())
+	fmt.Printf("staderConfigAddress: %s\n", staderConfigAddress.String())
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {

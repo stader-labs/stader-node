@@ -240,87 +240,10 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Zhejiang: 1337803, // Zhejiang
 		},
 
-		permissionlessNodeRegistryAddress: map[config.Network]string{
-			config.Network_Devnet:   "0x772Bda00043C03291E72dFa408CbA2D9441c5f44",
-			config.Network_Prater:   "0x772Bda00043C03291E72dFa408CbA2D9441c5f44",
-			config.Network_Mainnet:  "0x772Bda00043C03291E72dFa408CbA2D9441c5f44",
-			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
-		},
-
-		permissionlessPoolAddress: map[config.Network]string{
-			config.Network_Devnet:   "0x7Ee5eD14D2721045C0Ac9AcdF65Ee7BE98639fB6",
-			config.Network_Prater:   "0x7Ee5eD14D2721045C0Ac9AcdF65Ee7BE98639fB6",
-			config.Network_Mainnet:  "0x7Ee5eD14D2721045C0Ac9AcdF65Ee7BE98639fB6",
-			config.Network_Zhejiang: "0x55c1D10b097dAf0E565B6C6D44f9E04ea3EEe2c7",
-		},
-
-		vaultFactoryAddress: map[config.Network]string{
-			config.Network_Prater:   "0x5D888115911760Cd0f6Ed7b06e054e49362c1C08",
-			config.Network_Devnet:   "0x5D888115911760Cd0f6Ed7b06e054e49362c1C08",
-			config.Network_Mainnet:  "0x5D888115911760Cd0f6Ed7b06e054e49362c1C08",
-			config.Network_Zhejiang: "0xacC1766b4a6dacbB67063a639F588EaB8b6b5A2d",
-		},
-
-		sdTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
-			config.Network_Devnet:   "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
-			config.Network_Mainnet:  "0x0406f539f24Be69baa8b88ED6eABEdb7b3cfdc60",
-			config.Network_Zhejiang: "0x117f8c20b91e34049798ca66f9234dea4a700f19",
-		},
-
-		sdCollateralAddress: map[config.Network]string{
-			config.Network_Prater:   "0x822070c8d36CaA5FE995a7FFe7d63519bAA9d16a",
-			config.Network_Devnet:   "0x822070c8d36CaA5FE995a7FFe7d63519bAA9d16a",
-			config.Network_Mainnet:  "0x822070c8d36CaA5FE995a7FFe7d63519bAA9d16a",
-			config.Network_Zhejiang: "0x206fdA2D637C05F69E9d5F0C91a6949F7d0555Fc",
-		},
-
 		ethxTokenAddress: map[config.Network]string{
 			config.Network_Prater:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		staderConfigAddress: map[config.Network]string{
-			config.Network_Prater:   "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
-			config.Network_Devnet:   "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
-			config.Network_Mainnet:  "0x8eF9036E524ce6340eF71844C29508C26Fbbe478",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		socializingPoolAddress: map[config.Network]string{
-			config.Network_Prater:   "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
-			config.Network_Devnet:   "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
-			config.Network_Mainnet:  "0x82fd8d00Af6a2b19E831620fBdC35348a629f1Af",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		staderOracleAddress: map[config.Network]string{
-			config.Network_Prater:   "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
-			config.Network_Devnet:   "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
-			config.Network_Mainnet:  "0xE49fAFd6B4C8bF2621f2453aDE02e2753B9640FA",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		poolUtilsAddress: map[config.Network]string{
-			config.Network_Prater:   "0x8FdDD1F57dFF2bab554138f3619De594DA0397a5",
-			config.Network_Devnet:   "0x8FdDD1F57dFF2bab554138f3619De594DA0397a5",
-			config.Network_Mainnet:  "0x8FdDD1F57dFF2bab554138f3619De594DA0397a5",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		penaltyTrackerAddress: map[config.Network]string{
-			config.Network_Prater:   "0x73d594025A6B1702FC4240045D9D1B7B33Df28Df",
-			config.Network_Devnet:   "0x73d594025A6B1702FC4240045D9D1B7B33Df28Df",
-			config.Network_Mainnet:  "0x73d594025A6B1702FC4240045D9D1B7B33Df28Df",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-		},
-
-		stakePoolManagerAddress: map[config.Network]string{
-			config.Network_Prater:   "0x571497926e64113eD9598594bAb6e945bfbd45Ec",
-			config.Network_Devnet:   "0x571497926e64113eD9598594bAb6e945bfbd45Ec",
-			config.Network_Mainnet:  "0x571497926e64113eD9598594bAb6e945bfbd45Ec",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
@@ -429,52 +352,12 @@ func (cfg *StaderNodeConfig) GetConfigTitle() string {
 	return cfg.Title
 }
 
-func (cfg *StaderNodeConfig) GetPermissionlessNodeRegistryAddress() common.Address {
-	return common.HexToAddress(cfg.permissionlessNodeRegistryAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetPermissionlessPoolAddress() common.Address {
-	return common.HexToAddress(cfg.permissionlessPoolAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetVaultFactoryAddress() common.Address {
-	return common.HexToAddress(cfg.vaultFactoryAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetSdCollateralContractAddress() common.Address {
-	return common.HexToAddress(cfg.sdCollateralAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetSdTokenAddress() common.Address {
-	return common.HexToAddress(cfg.sdTokenAddress[cfg.Network.Value.(config.Network)])
-}
-
 func (cfg *StaderNodeConfig) GetEthxTokenAddress() common.Address {
 	return common.HexToAddress(cfg.ethxTokenAddress[cfg.Network.Value.(config.Network)])
 }
 
 func (cfg *StaderNodeConfig) GetStaderConfigAddress() common.Address {
 	return common.HexToAddress(cfg.staderConfigAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetSocializingPoolAddress() common.Address {
-	return common.HexToAddress(cfg.socializingPoolAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetStaderOracleAddress() common.Address {
-	return common.HexToAddress(cfg.staderOracleAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetPoolUtilsAddress() common.Address {
-	return common.HexToAddress(cfg.poolUtilsAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetPenaltyTrackerAddress() common.Address {
-	return common.HexToAddress(cfg.penaltyTrackerAddress[cfg.Network.Value.(config.Network)])
-}
-
-func (cfg *StaderNodeConfig) GetStakePoolManagerAddress() common.Address {
-	return common.HexToAddress(cfg.stakePoolManagerAddress[cfg.Network.Value.(config.Network)])
 }
 
 func getDefaultDataDir(config *StaderConfig) string {

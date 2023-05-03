@@ -798,6 +798,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	// Basic variables and root parameters
 	envVars["STADER_NODE_IMAGE"] = cfg.StaderNode.GetStadernodeContainerTag()
 	envVars["STADER_FOLDER"] = cfg.StaderDirectory
+	// TODO - we have to pick this from stader config but ethx address shouldnt change
 	envVars["ETHX_ADDRESS"] = cfg.StaderNode.GetEthxTokenAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
