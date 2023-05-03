@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,12 +27,14 @@ import (
 )
 
 const (
-	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
-	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
-	prysmTagArm64Test       string = "staderdev/prysm:v3.2.2-rc.3"
-	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-e2fa7d-debug"
-	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-e2fa7d-debug"
-	prysmTagArm64Prod       string = "staderdev/prysm:v3.2.2-rc.3"
+	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:HEAD-f4681f-debug"
+	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:HEAD-f4681f-debug"
+	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-f4681f-debug"
+	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-f4681f-debug"
+	prysmBnTagArm64Prod     string = "prysmaticlabs/prysm-beacon-chain:v4.0.3"
+	prysmVcTagArm64Prod     string = "prysmaticlabs/prysm-validator:v4.0.3"
+	prysmBnTagArm64Test     string = "prysmaticlabs/prysm-beacon-chain:v4.0.3"
+	prysmVcTagArm64Test     string = "prysmaticlabs/prysm-validator:v4.0.3"
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45
@@ -173,7 +175,7 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 // Get the container tag for the Prysm BN based on the current architecture
 func getPrysmBnProdTag() string {
 	if runtime.GOARCH == "arm64" {
-		return prysmTagArm64Prod
+		return prysmBnTagArm64Prod
 	} else if runtime.GOARCH == "amd64" {
 		return prysmBnTagAmd64Prod
 	} else {
@@ -184,7 +186,7 @@ func getPrysmBnProdTag() string {
 // Get the container tag for the Prysm BN based on the current architecture
 func getPrysmBnTestTag() string {
 	if runtime.GOARCH == "arm64" {
-		return prysmTagArm64Test
+		return prysmBnTagArm64Test
 	} else if runtime.GOARCH == "amd64" {
 		return prysmBnTagAmd64Test
 	} else {
@@ -195,7 +197,7 @@ func getPrysmBnTestTag() string {
 // Get the container tag for the Prysm VC based on the current architecture
 func getPrysmVcProdTag() string {
 	if runtime.GOARCH == "arm64" {
-		return prysmTagArm64Prod
+		return prysmVcTagArm64Prod
 	} else if runtime.GOARCH == "amd64" {
 		return prysmVcTagAmd64Prod
 	} else {
@@ -206,7 +208,7 @@ func getPrysmVcProdTag() string {
 // Get the container tag for the Prysm VC based on the current architecture
 func getPrysmVcTestTag() string {
 	if runtime.GOARCH == "arm64" {
-		return prysmTagArm64Test
+		return prysmVcTagArm64Test
 	} else if runtime.GOARCH == "amd64" {
 		return prysmVcTagAmd64Test
 	} else {

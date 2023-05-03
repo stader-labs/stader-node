@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -446,6 +446,384 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 					// Run
 					api.PrintResponse(signMessage(c, message))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-exit-validator",
+				Usage:     "Can validator exit",
+				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canExitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "exit-validator",
+				Usage:     "Exit validator",
+				UsageText: "stader-cli api node exit-validator validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(exitValidator(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-update-socialize-el",
+				Usage:     "Can opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node can-update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					//if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					//	return err
+					//}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canUpdateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-socialize-el",
+				Usage:     "Opt in or opt out of socializing pool",
+				UsageText: "stader-cli api node update-socialize-el --socialize-el",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					socializeEl, err := cliutils.ValidateBool("socialize-el", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(updateSocializeEl(c, socializeEl))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-claim-el-rewards",
+				Usage:     "Can claim el rewards",
+				UsageText: "stader-cli api node can-claim-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanClaimElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "claim-el-rewards",
+				Usage:     "Claim el rewards",
+				UsageText: "stader-cli api node claim-el-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(ClaimElRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-claim-cl-rewards",
+				Usage:     "Can claim cl rewards of a validator",
+				UsageText: "stader-cli api node can-claim-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanClaimClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "claim-cl-rewards",
+				Usage:     "Claim cl rewards of a validator",
+				UsageText: "stader-cli api node claim-cl-rewards --validator-pub-key",
+				Action: func(c *cli.Context) error {
+
+					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(ClaimClRewards(c, validatorPubKey))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-node-request-sd-withdraw",
+				Usage:     "Check whether the node can request to withdraw SD",
+				UsageText: "stader-cli api node can-node-request-sd-withdraw amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canRequestSdWithdraw(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-request-sd-withdraw",
+				Usage:     "Request SD withdraw",
+				UsageText: "stader-cli api node node-request-sd-withdraw amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(requestSdWithdraw(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-node-claim-sd",
+				Usage:     "Check whether the node can claim the SD requested to withdraw",
+				UsageText: "stader-cli api node can-node-claim-sd",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canClaimSd(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "node-claim-sd",
+				Usage:     "Claim the SD requested to withdraw",
+				UsageText: "stader-cli api node node-claim-sd",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(claimSd(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-download-sp-merkle-proofs",
+				Usage:     "Can we Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node can-download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canDownloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "download-sp-merkle-proofs",
+				Usage:     "Download missing socializing merkle proofs",
+				UsageText: "stader-cli api node download-sp-merkle-proofs",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(downloadSpMerkleProofs(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "detailed-cycles-info",
+				Usage:     "Get detailed reward cycles info",
+				UsageText: "stader-cli api node detailed-cycles-info cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+
+					// Run
+					api.PrintResponse(GetCyclesDetailedInfo(c, cycles))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-claim-sp-rewards",
+				Usage:     "Can we claim the SP rewards",
+				UsageText: "stader-cli api node can-claim-sp-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canClaimSpRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "claim-sp-rewards",
+				Usage:     "Claim the SP rewards",
+				UsageText: "stader-cli api node claim-sp-rewards cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					//fmt.Printf("cycles is %s\n", cycles)
+					// Run
+					api.PrintResponse(claimSpRewards(c, cycles))
+					return nil
+
+				},
+			},
+			{
+				Name:      "estimate-claim-sp-rewards-gas",
+				Usage:     "Estimate the gas required to claim the SP rewards",
+				UsageText: "stader-cli api node estimate-claim-sp-rewards-gas cycles",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					cycles := c.Args().Get(0)
+					// Run
+					api.PrintResponse(estimateSpRewardsGas(c, cycles))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-update-operator-details",
+				Usage:     "Can we update the operator details",
+				UsageText: "stader-cli api node can-update-operator-details operator-name operator-reward-address",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(CanUpdateOperatorDetails(c, operatorName, operatorRewardAddress))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-operator-details",
+				Usage:     "Update the operator details",
+				UsageText: "stader-cli api node update-operator-details operator-name operator-reward-address",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+
+					operatorName := c.Args().Get(0)
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+					// Run
+					api.PrintResponse(UpdateOperatorDetails(c, operatorName, operatorRewardAddress))
 					return nil
 
 				},

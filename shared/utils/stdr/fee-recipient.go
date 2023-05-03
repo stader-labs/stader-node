@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 )
 
 type FeeRecipientInfo struct {
@@ -13,7 +14,7 @@ type FeeRecipientInfo struct {
 	IsInSocializingPool    bool           `json:"isInSocializingPool"`
 }
 
-func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, vf *stader.VaultFactoryContractManager, pp *stader.PermissionlessPoolContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
+func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, vf *stader.VaultFactoryContractManager, sdcfg *stader.StaderConfigContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*FeeRecipientInfo, error) {
 	feeRecipientInfo := FeeRecipientInfo{
 		SocializingPoolAddress: common.Address{},
 		FeeDistributorAddress:  common.Address{},
@@ -31,7 +32,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 
 	if operatorInfo.OptedForSocializingPool {
 		feeRecipientInfo.IsInSocializingPool = true
-		socializingPoolAddress, err := node.GetSocializingPoolContract(pp, opts)
+		socializingPoolAddress, err := stader_config.GetSocializingPoolContractAddress(sdcfg, nil)
 		if err != nil {
 			return nil, err
 		}

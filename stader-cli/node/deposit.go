@@ -29,8 +29,6 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Your eth2 client is on the correct network.")
-
 	numValidators := c.Uint64("num-validators")
 
 	baseAmountInEth := 4
@@ -80,11 +78,15 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 	if canNodeDepositResponse.DepositPaused {
-		fmt.Printf("Deposits are currently paused!")
+		fmt.Printf("Deposit is paused")
 		return nil
 	}
 	if canNodeDepositResponse.NotEnoughSdCollateral {
 		fmt.Printf("Not enough SD as collateral")
+		return nil
+	}
+	if canNodeDepositResponse.MaxValidatorLimitReached {
+		fmt.Printf("Max validator limit reached")
 		return nil
 	}
 

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -98,12 +98,26 @@ func RequireNodeRegistered(c *cli.Context) error {
 	if err := RequireNodeWallet(c); err != nil {
 		return err
 	}
-	nodeRegistered, err := getNodeRegistered(c)
+	nodeRegistered, err := isNodeRegistered(c)
 	if err != nil {
 		return err
 	}
 	if !nodeRegistered {
 		return errors.New("The node is not registered with Stader. Please run 'stader-cli node register' and try again.")
+	}
+	return nil
+}
+
+func RequireNodeActive(c *cli.Context) error {
+	if err := RequireNodeWallet(c); err != nil {
+		return err
+	}
+	nodeActive, err := isNodeActive(c)
+	if err != nil {
+		return err
+	}
+	if !nodeActive {
+		return errors.New("The node has been deactivated with Stader. You might have front run one of your keys, Please reach out to the Stader team on discord for more information.")
 	}
 	return nil
 }
@@ -180,7 +194,7 @@ func getNodeWalletInitialized(c *cli.Context) (bool, error) {
 }
 
 // Check if the node is registered
-func getNodeRegistered(c *cli.Context) (bool, error) {
+func isNodeRegistered(c *cli.Context) (bool, error) {
 	w, err := GetWallet(c)
 	if err != nil {
 		return false, err
@@ -199,6 +213,31 @@ func getNodeRegistered(c *cli.Context) (bool, error) {
 	}
 
 	return operatorId.Int64() != 0, nil
+}
+
+func isNodeActive(c *cli.Context) (bool, error) {
+	w, err := GetWallet(c)
+	if err != nil {
+		return false, err
+	}
+	pnr, err := GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return false, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return false, err
+	}
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return false, err
+	}
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return false, err
+	}
+
+	return operatorInfo.Active, nil
 }
 
 // Wait for the eth client to sync

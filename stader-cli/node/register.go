@@ -11,7 +11,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
 
-func registerNode(c *cli.Context) error {
+func registerNode(c *cli.Context, operatorName string, socializeEl bool) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -30,31 +30,30 @@ func registerNode(c *cli.Context) error {
 		return err
 	}
 
-	operatorName := c.String("operator-name")
 	operatorRewardAddressString := c.String("operator-reward-address")
 	if operatorRewardAddressString == "" {
 		operatorRewardAddressString = walletStatus.AccountAddress.String()
 	}
-	socializeEl := c.String("socialize-el")
-	// default socialize el to true
-	if socializeEl == "" {
-		socializeEl = "true"
-	}
-	socializeElBool := parseToBool(socializeEl)
 
 	// Check node can be registered
-	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeElBool)
+	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeEl)
 	if err != nil {
 		return err
 	}
-	if !canRegister.CanRegister {
-		fmt.Println("The node cannot be registered:")
-		if canRegister.AlreadyRegistered {
-			fmt.Println("The node is already registered with Stader.")
-		}
-		if canRegister.RegistrationPaused {
-			fmt.Println("Node registrations are currently disabled.")
-		}
+	if canRegister.AlreadyRegistered {
+		fmt.Println("The node is already registered with Stader.")
+		return nil
+	}
+	if canRegister.RegistrationPaused {
+		fmt.Println("Node registrations are currently disabled.")
+		return nil
+	}
+	if canRegister.OperatorNameTooLong {
+		fmt.Println("The operator name is too long.")
+		return nil
+	}
+	if canRegister.OperatorRewardAddressZero {
+		fmt.Println("The operator reward address cannot be zero.")
 		return nil
 	}
 
@@ -71,7 +70,7 @@ func registerNode(c *cli.Context) error {
 	}
 
 	// Register node
-	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeElBool)
+	response, err := staderClient.RegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeEl)
 	if err != nil {
 		return err
 	}
@@ -86,12 +85,4 @@ func registerNode(c *cli.Context) error {
 	fmt.Println("The node was successfully registered with Stader.")
 	return nil
 
-}
-
-func parseToBool(c string) bool {
-	if c == "true" {
-		return true
-	}
-
-	return false
 }

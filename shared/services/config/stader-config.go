@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,9 +59,8 @@ const (
 // Defaults
 const defaultBnMetricsPort uint16 = 9100
 const defaultVcMetricsPort uint16 = 9101
-const defaultNodeMetricsPort uint16 = 9102
+const defaultNodeMetricsPort uint16 = 9104
 const defaultExporterMetricsPort uint16 = 9103
-const defaultGuardianMetricsPort uint16 = 9104
 const defaultEcMetricsPort uint16 = 9105
 
 // The master configuration struct
@@ -95,7 +94,6 @@ type StaderConfig struct {
 	VcMetricsPort           config.Parameter `yaml:"vcMetricsPort,omitempty"`
 	NodeMetricsPort         config.Parameter `yaml:"nodeMetricsPort,omitempty"`
 	ExporterMetricsPort     config.Parameter `yaml:"exporterMetricsPort,omitempty"`
-	GuardianMetricsPort     config.Parameter `yaml:"guardianMetricsPort,omitempty"`
 	EnableBitflyNodeMetrics config.Parameter `yaml:"enableBitflyNodeMetrics,omitempty"`
 
 	// The StaderNode configuration
@@ -416,18 +414,6 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
-		GuardianMetricsPort: config.Parameter{
-			ID:                   "guardianMetricsPort",
-			Name:                 "Guardian Oracle Port",
-			Description:          "The port your Guardian Oracle container should expose its metrics on.\nThis is only relevant for Oracle Nodes.",
-			Type:                 config.ParameterType_Uint16,
-			Default:              map[config.Network]interface{}{config.Network_All: defaultGuardianMetricsPort},
-			AffectsContainers:    []config.ContainerID{config.ContainerID_Guardian, config.ContainerID_Prometheus},
-			EnvironmentVariables: []string{"GUARDIAN_METRICS_PORT"},
-			CanBeBlank:           false,
-			OverwriteOnUpgrade:   false,
-		},
-
 		EnableMevBoost: config.Parameter{
 			ID:                   "enableMevBoost",
 			Name:                 "Enable MEV-Boost",
@@ -535,7 +521,6 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.VcMetricsPort,
 		&cfg.NodeMetricsPort,
 		&cfg.ExporterMetricsPort,
-		&cfg.GuardianMetricsPort,
 		&cfg.EnableMevBoost,
 	}
 }
@@ -1059,23 +1044,6 @@ func (cfg *StaderConfig) GetChanges(oldConfig *StaderConfig) (map[string][]confi
 // Checks to see if the current configuration is valid; if not, returns a list of errors
 func (cfg *StaderConfig) Validate() []string {
 	errors := []string{}
-
-	// Check for illegal blank strings
-	/* TODO - this needs to be smarter and ignore irrelevant settings
-	for _, param := range config.GetParameters() {
-		if param.Type == ParameterType_String && !param.CanBeBlank && param.Value == "" {
-			errors = append(errors, fmt.Sprintf("[%s] cannot be blank.", param.Name))
-		}
-	}
-
-	for name, subconfig := range config.GetSubconfigs() {
-		for _, param := range subconfig.GetParameters() {
-			if param.Type == ParameterType_String && !param.CanBeBlank && param.Value == "" {
-				errors = append(errors, fmt.Sprintf("[%s - %s] cannot be blank.", name, param.Name))
-			}
-		}
-	}
-	*/
 
 	// Force switching of Pocket and Infura
 	if cfg.ExecutionClientMode.Value.(config.Mode) == config.Mode_Local {

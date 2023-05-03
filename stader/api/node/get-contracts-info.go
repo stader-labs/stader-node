@@ -10,27 +10,6 @@ import (
 )
 
 func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
-	prn, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return nil, err
-	}
-	vf, err := services.GetVaultFactory(c)
-	if err != nil {
-		return nil, err
-	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
-	ethx, err := services.GetEthxTokenContract(c)
-	if err != nil {
-		return nil, err
-	}
-	sdt, err := services.GetSdTokenContract(c)
-	if err != nil {
-		return nil, err
-	}
-
 	// Response
 	response := api.ContractsInfoResponse{}
 
@@ -46,6 +25,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client: %w", err)
 	}
+
 	eth2DepositContract, err := bc.GetEth2DepositContract()
 	if err != nil {
 		return nil, fmt.Errorf("Error getting beacon client deposit contract: %w", err)
@@ -53,11 +33,43 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 
 	response.BeaconNetwork = eth2DepositContract.ChainID
 	response.BeaconDepositContract = eth2DepositContract.Address
-	response.SdCollateralContract = *sdc.SdCollateralContract.Address
-	response.EthxToken = *ethx.Erc20TokenContract.Address
-	response.SdToken = *sdt.Erc20TokenContract.Address
-	response.PermissionlessNodeRegistry = *prn.PermissionlessNodeRegistryContract.Address
-	response.VaultFactory = *vf.VaultFactoryContract.Address
+	response.SdCollateralContract, err = services.GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.EthxToken, err = services.GetEthxTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.SdToken, err = services.GetSdTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.PermissionlessNodeRegistry, err = services.GetPermissionlessNodeRegistryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.VaultFactory, err = services.GetVaultFactoryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.SocializingPoolContract, err = services.GetSocializingPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.PermisionlessPool, err = services.GetPermissionlessPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.StaderOracle, err = services.GetStaderOracleAddress(c)
+	if err != nil {
+		return nil, err
+	}
+	response.StakePoolManager, err = services.GetStakePoolManagerAddress(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Return response
 	return &response, nil

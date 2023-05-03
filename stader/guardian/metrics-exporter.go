@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,10 @@ package guardian
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
+
+	"github.com/stader-labs/stader-node/stader/guardian/collector"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -30,7 +34,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
+func runMetricsServer(c *cli.Context, logger log.ColorLogger, stateLocker *collector.MetricsCacheContainer) error {
 
 	// Get services
 	cfg, err := services.GetConfig(c)
@@ -38,13 +42,43 @@ func runMetricsServer(c *cli.Context, logger log.ColorLogger) error {
 		return err
 	}
 
-	// Return if metrics are disabled
-	if cfg.EnableMetrics.Value == false {
-		return nil
+	bc, err := services.GetBeaconClient(c)
+	if err != nil {
+		return err
+	}
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return err
 	}
 
+	// Return if metrics are disabled
+	if cfg.EnableMetrics.Value == false {
+		if strings.ToLower(os.Getenv("ENABLE_METRICS")) == "true" {
+			logger.Printlnf("ENABLE_METRICS override set to true, will start Metrics exporter anyway!")
+		} else {
+			return nil
+		}
+	}
+
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return err
+	}
+
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
+	nodeAccountAddr := nodeAccount.Address
+	beaconCollector := collector.NewBeaconCollector(bc, ec, nodeAccountAddr, stateLocker)
+	networkCollector := collector.NewNetworkCollector(bc, ec, nodeAccountAddr, stateLocker)
+	operatorCollector := collector.NewOperatorCollector(bc, ec, nodeAccountAddr, stateLocker)
 	// Set up Prometheus
 	registry := prometheus.NewRegistry()
+	registry.MustRegister(beaconCollector)
+	registry.MustRegister(networkCollector)
+	registry.MustRegister(operatorCollector)
+
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 
 	// Start the HTTP server

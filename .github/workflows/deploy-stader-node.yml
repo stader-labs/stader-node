@@ -1,0 +1,53 @@
+name: Deploy Stader Node
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  BUILD_AND_DEPLOY_STADER_NODE:
+
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION : "us-east-1"
+
+    steps:
+
+      - name: Install binaries to build stader node
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: qemu-user-static binfmt-support
+
+      - name: Initializing multiarch build environment.
+        run: |
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: yuya-takeyama/docker-tag-from-github-ref-action@v1
+
+      - name: Prepare to upload binaries to s3
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ETHX_STADER_NODE_STAGE_DEPLOY_ROLE_ARN }}
+          role-duration-seconds: 1200
+          role-session-name: githubActionsSession
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Release Stader Node CLI
+        run: |
+          ./build-release.sh -a -v ${{ steps.meta.outputs.tag }}

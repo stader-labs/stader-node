@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ package services
 
 import (
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 	"os"
 	"sync"
@@ -100,6 +102,116 @@ func GetEthClient(c *cli.Context) (*ExecutionClientManager, error) {
 	return ec, nil
 }
 
+func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
+}
+
+func GetPermissionlessNodeRegistryAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetPermissionlessNodeRegistryAddress(sdcfg, nil)
+}
+
+func GetPermissionlessPoolAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetPermissionlessPoolAddress(sdcfg, nil)
+}
+
+func GetVaultFactoryAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetVaultFactoryAddress(sdcfg, nil)
+}
+
+func GetSdCollateralAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetSdCollateralAddress(sdcfg, nil)
+}
+
+func GetSdTokenAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetSdTokenAddress(sdcfg, nil)
+}
+
+func GetEthxTokenAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetEthxTokenAddress(sdcfg, nil)
+}
+
+func GetSocializingPoolAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetSocializingPoolContractAddress(sdcfg, nil)
+}
+
+func GetStaderOracleAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetStaderOracleAddress(sdcfg, nil)
+}
+
+func GetPoolUtilsAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetPoolUtilsAddress(sdcfg, nil)
+}
+
+func GetPenaltyTrackerAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+	return stader_config.GetPenaltyTrackerAddress(sdcfg, nil)
+}
+
+func GetStakePoolManagerAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+	return stader_config.GetStakePoolManagerAddress(sdcfg, nil)
+}
+
 func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRegistryContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -110,7 +222,12 @@ func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRe
 		return nil, err
 	}
 
-	return stader.NewPermissionlessNodeRegistry(ec, cfg.StaderNode.GetPermissionlessNodeRegistryAddress())
+	permissionlessNodeRegistryAddress, err := GetPermissionlessNodeRegistryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPermissionlessNodeRegistry(ec, permissionlessNodeRegistryAddress)
 }
 
 func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error) {
@@ -123,10 +240,15 @@ func GetVaultFactory(c *cli.Context) (*stader.VaultFactoryContractManager, error
 		return nil, err
 	}
 
-	return stader.NewVaultFactory(ec, cfg.StaderNode.GetVaultFactoryAddress())
+	vaultFactoryAddress, err := GetVaultFactoryAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewVaultFactory(ec, vaultFactoryAddress)
 }
 
-func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
+func GetPermissionlessPoolContract(c *cli.Context) (*stader.PermissionlessPoolContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err
@@ -136,7 +258,12 @@ func GetPermissionlessPoolFactory(c *cli.Context) (*stader.PermissionlessPoolCon
 		return nil, err
 	}
 
-	return stader.NewPermissionlessPoolFactory(ec, cfg.StaderNode.GetPermissionlessPoolAddress())
+	permissionlessPoolAddress, err := GetPermissionlessPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPermissionlessPoolFactory(ec, permissionlessPoolAddress)
 }
 
 func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManager, error) {
@@ -149,7 +276,30 @@ func GetSdCollateralContract(c *cli.Context) (*stader.SdCollateralContractManage
 		return nil, err
 	}
 
-	return stader.NewSdCollateralContract(ec, cfg.StaderNode.GetSdCollateralContractAddress())
+	sdCollateralAddress, err := GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSdCollateralContract(ec, sdCollateralAddress)
+}
+
+func GetSocializingPoolContract(c *cli.Context) (*stader.SocializingPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	socializingPoolAddress, err := GetSocializingPoolAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSocializingPool(ec, socializingPoolAddress)
 }
 
 func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -162,7 +312,12 @@ func GetSdTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, erro
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetSdTokenAddress())
+	sdTokenAddress, err := GetSdTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, sdTokenAddress)
 }
 
 func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, error) {
@@ -175,7 +330,66 @@ func GetEthxTokenContract(c *cli.Context) (*stader.Erc20TokenContractManager, er
 		return nil, err
 	}
 
-	return stader.NewErc20TokenContract(ec, cfg.StaderNode.GetEthxTokenAddress())
+	ethxTokenAddress, err := GetEthxTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewErc20TokenContract(ec, ethxTokenAddress)
+}
+
+func GetPoolUtilsContract(c *cli.Context) (*stader.PoolUtilsContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	poolUtilsAddress, err := GetPoolUtilsAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPoolUtils(ec, poolUtilsAddress)
+}
+
+func GetPenaltyTrackerContract(c *cli.Context) (*stader.PenaltyTrackerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	penaltyTracker, err := GetPenaltyTrackerAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewPenaltyTracker(ec, penaltyTracker)
+}
+
+func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	stakePoolManagerAddress, err := GetStakePoolManagerAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewStakePoolManager(ec, stakePoolManagerAddress)
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {

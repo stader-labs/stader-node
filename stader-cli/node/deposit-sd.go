@@ -72,7 +72,7 @@ func nodeDepositSd(c *cli.Context) error {
 		}
 
 		// Prompt for confirmation
-		if !(c.Bool("yes") || cliutils.Confirm("Do you want to deposit your SD into the Collateral contract")) {
+		if !(c.Bool("yes") || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
 			fmt.Println("Cancelled.")
 			return nil
 		}
@@ -99,11 +99,12 @@ func nodeDepositSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if !canDeposit.CanDeposit {
-		fmt.Println("Cannot deposit SD:")
-		if canDeposit.InsufficientBalance {
-			fmt.Println("The node's SD balance is insufficient.")
-		}
+	if canDeposit.InsufficientBalance {
+		fmt.Println("The node's SD balance is insufficient.")
+		return nil
+	}
+	if canDeposit.CollateralContractPaused {
+		fmt.Println("The collateral contract is paused.")
 		return nil
 	}
 

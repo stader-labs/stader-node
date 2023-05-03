@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.3.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,10 @@ package eth1
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -73,4 +76,41 @@ func CheckForNonceOverride(c *cli.Context, opts *bind.TransactOpts) error {
 	}
 	return nil
 
+}
+
+func GetCurrentBlockNumber(c *cli.Context) (uint64, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return 0, err
+	}
+	return ec.BlockNumber(context.Background())
+}
+
+func GetBlockHeader(c *cli.Context, blockNumber uint64) (*types.Header, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return nil, err
+	}
+	return ec.HeaderByNumber(context.Background(), big.NewInt(int64(blockNumber)))
+}
+
+func IsZeroAddress(address common.Address) bool {
+	zeroAddress := common.HexToAddress("0x0000000000000000000000000000000000000000")
+	return address == zeroAddress
+}
+
+func ConvertBlockToTimestamp(c *cli.Context, blockNumber int64) (time.Time, error) {
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	blockHeader, err := ec.HeaderByNumber(context.Background(), big.NewInt(blockNumber))
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	t := time.Unix(int64(blockHeader.Time), 0)
+
+	return t, nil
 }
