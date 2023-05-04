@@ -48,7 +48,7 @@ import (
 )
 
 // Config
-var preSignedCooldown, _ = time.ParseDuration("10s")
+var preSignedCooldown, _ = time.ParseDuration("1h")
 var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 100 // Go thru 100 keys in each pass
 var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
