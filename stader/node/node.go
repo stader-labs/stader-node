@@ -162,12 +162,13 @@ func run(c *cli.Context) error {
 			}
 
 			infoLog.Println("Starting a pass of the presign daemon!")
+			fmt.Printf("Reading latest wallet info\n")
 			latestWallet, err := services.GetWallet(c)
 			if err != nil {
 				errorLog.Println(err)
 				continue
 			}
-			walletIndex := latestWallet.GetNextAccount()
+			walletIndex := latestWallet.GetNextAccount() + 50
 			fmt.Printf("Wallet index: %d\n", walletIndex)
 			noOfBatches := walletIndex / uint(preSignBatchSize)
 			batchIndex := 0
