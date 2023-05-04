@@ -168,6 +168,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 			walletIndex := latestWallet.GetNextAccount()
+			fmt.Printf("Wallet index: %d\n", walletIndex)
 			noOfBatches := walletIndex / uint(preSignBatchSize)
 			batchIndex := 0
 
