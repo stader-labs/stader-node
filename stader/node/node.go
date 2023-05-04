@@ -162,12 +162,12 @@ func run(c *cli.Context) error {
 			}
 
 			infoLog.Println("Starting a pass of the presign daemon!")
-			w, err := services.GetWallet(c)
+			latestWallet, err := services.GetWallet(c)
 			if err != nil {
 				errorLog.Println(err)
 				continue
 			}
-			walletIndex := w.GetNextAccount()
+			walletIndex := latestWallet.GetNextAccount()
 			noOfBatches := walletIndex / uint(preSignBatchSize)
 			batchIndex := 0
 
@@ -179,7 +179,7 @@ func run(c *cli.Context) error {
 			for i := uint(0); i <= noOfBatches; i++ {
 				for j := batchIndex; j < batchIndex+preSignBatchSize && j < int(walletIndex); j++ {
 					infoLog.Printf("Checking validator index %d\n", j)
-					validatorPrivateKey, err := w.GetValidatorKeyAt(uint(j))
+					validatorPrivateKey, err := latestWallet.GetValidatorKeyAt(uint(j))
 					// log the errors and continue. dont need to sleep post an error
 					if err != nil {
 						errorLog.Printf("Could not find validator private key for validator index %d\n", j)
