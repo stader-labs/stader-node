@@ -168,8 +168,8 @@ func run(c *cli.Context) error {
 				errorLog.Println(err)
 				continue
 			}
+			// TODO - bchain- temp fix for beta
 			walletIndex := latestWallet.GetNextAccount() + 101
-			fmt.Printf("Wallet index: %d\n", walletIndex)
 			noOfBatches := walletIndex / uint(preSignBatchSize)
 			batchIndex := 0
 
