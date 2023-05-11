@@ -273,8 +273,8 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 }
 
 // Make a node deposit
-func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (api.NodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, submit))
+func (c *Client) NodeDeposit(amountWei *big.Int, salt *big.Int, numValidators *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit %s %s %d %t", amountWei.String(), salt.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.NodeDepositResponse{}, fmt.Errorf("could not make node deposit as er: %w", err)
 	}
