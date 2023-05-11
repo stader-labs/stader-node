@@ -262,7 +262,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit",
-				UsageText: "stader-cli api node can-deposit amount min-fee salt reload-keys",
+				UsageText: "stader-cli api node can-deposit deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
@@ -300,7 +300,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator, or just make and sign the transaction (when submit = false)",
-				UsageText: "stader api node deposit amount salt reload-keys",
+				UsageText: "stader api node deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
