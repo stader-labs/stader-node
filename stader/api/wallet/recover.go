@@ -161,7 +161,6 @@ func searchAndRecoverWallet(c *cli.Context, mnemonic string, address common.Addr
 
 			// Get recovered account
 			recoveredAccount, err := recoveredWallet.GetNodeAccount()
-
 			if err != nil {
 				return nil, fmt.Errorf("error getting recovered account: %w", err)
 			}
