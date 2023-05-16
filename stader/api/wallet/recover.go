@@ -24,11 +24,12 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/urfave/cli"
-
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	"github.com/urfave/cli"
 )
 
 const (
@@ -85,9 +86,40 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 		return nil, err
 	}
 
-	// Return response
-	return &response, nil
+	// Handle validator key recovery skipping
+	if c.Bool("skip-validator-key-recovery") {
+		return &response, nil
+	}
 
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return nil, err
+	}
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, fmt.Errorf("GetOperatorId err %+v", err)
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	if err != nil {
+		return nil, fmt.Errorf("GetTotalValidatorKeys err %+v", err)
+	}
+
+	if err = w.DeleteValidatorStores(); err != nil {
+		return nil, fmt.Errorf("DeleteValidatorStores err %+v", err)
+	}
+
+	var validatorsKeys []types.ValidatorPubkey
+	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
+		privKey, err := w.CreateValidatorKey()
+		validatorsKeys = append(validatorsKeys, types.BytesToValidatorPubkey(privKey.PublicKey().Marshal()))
+		if err != nil {
+			return nil, fmt.Errorf("ValidatorsKeys Marshal err %+v", err)
+		}
+	}
+
+	response.ValidatorKeys = validatorsKeys
+	return &response, nil
 }
 
 func searchAndRecoverWallet(c *cli.Context, mnemonic string, address common.Address) (*api.SearchAndRecoverWalletResponse, error) {
@@ -129,6 +161,7 @@ func searchAndRecoverWallet(c *cli.Context, mnemonic string, address common.Addr
 
 			// Get recovered account
 			recoveredAccount, err := recoveredWallet.GetNodeAccount()
+
 			if err != nil {
 				return nil, fmt.Errorf("error getting recovered account: %w", err)
 			}
