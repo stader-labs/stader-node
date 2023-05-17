@@ -22,6 +22,7 @@ package wallet
 import (
 	"errors"
 	"fmt"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -105,17 +106,30 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 		return nil, fmt.Errorf("GetTotalValidatorKeys err %+v", err)
 	}
 
-	if err = w.DeleteValidatorStores(); err != nil {
-		return nil, fmt.Errorf("DeleteValidatorStores err %+v", err)
+	var i int64 = 0
+	var validatorsKeys []types.ValidatorPubkey
+	for ; i < totalValidatorKeys.Int64(); i++ {
+
+		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
+		if err != nil {
+			return nil, fmt.Errorf("DeleteValidatorStores err %+v", err)
+		}
+
+		validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
+		if err != nil {
+			return nil, fmt.Errorf("GetValidatorInfo: %d err %+v", validatorId, err)
+		}
+
+		validatorsKeys = append(validatorsKeys, types.BytesToValidatorPubkey(validatorInfo.Pubkey))
+
+		if _, err := w.RecoverValidatorKey(types.BytesToValidatorPubkey(validatorInfo.Pubkey), 0); err != nil {
+			return nil, fmt.Errorf("RecoverValidatorKey: %+v err %+v", validatorInfo.Pubkey, err)
+		}
 	}
 
-	var validatorsKeys []types.ValidatorPubkey
-	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
-		privKey, err := w.CreateValidatorKey()
-		validatorsKeys = append(validatorsKeys, types.BytesToValidatorPubkey(privKey.PublicKey().Marshal()))
-		if err != nil {
-			return nil, fmt.Errorf("ValidatorsKeys Marshal err %+v", err)
-		}
+	// To save the validator index update
+	if err := w.Save(); err != nil {
+		return nil, err
 	}
 
 	response.ValidatorKeys = validatorsKeys
