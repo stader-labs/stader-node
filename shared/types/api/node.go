@@ -256,7 +256,7 @@ type ClaimElRewardsResponse struct {
 	TxHash                common.Hash    `json:"txHash"`
 }
 
-type CanRequestWithdrawSdResponse struct {
+type CanWithdrawSdResponse struct {
 	Status                     string         `json:"status"`
 	Error                      string         `json:"error"`
 	InsufficientSdCollateral   bool           `json:"insufficientSdCollateral"`
@@ -264,7 +264,7 @@ type CanRequestWithdrawSdResponse struct {
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
-type RequestWithdrawSdResponse struct {
+type WithdrawSdResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

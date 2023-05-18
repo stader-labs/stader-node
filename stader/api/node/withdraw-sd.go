@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawSdResponse, error) {
+func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawS
 	}
 
 	// Response
-	response := api.CanRequestWithdrawSdResponse{}
+	response := api.CanWithdrawSdResponse{}
 
 	// Get node account
 	nodeAccount, err := w.GetNodeAccount()
@@ -80,7 +80,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawS
 	}
 
 	if operatorSdCollateral.Cmp(amountWei) < 0 {
-		response.InsufficientSdCollateral = true
+		response.InsufficientWithdrawableSd = true
 		return &response, nil
 	}
 
@@ -98,7 +98,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanRequestWithdrawS
 	return &response, nil
 }
 
-func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.RequestWithdrawSdResponse, error) {
+func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.WithdrawSdResponse, error) {
 	// Get services
 	w, err := services.GetWallet(c)
 	if err != nil {
@@ -110,7 +110,7 @@ func withdrawSd(c *cli.Context, amountWei *big.Int) (*api.RequestWithdrawSdRespo
 	}
 
 	// Response
-	response := api.RequestWithdrawSdResponse{}
+	response := api.WithdrawSdResponse{}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
