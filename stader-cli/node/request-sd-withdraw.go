@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func withdrawSd(c *cli.Context) error {
+func WithdrawSd(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
