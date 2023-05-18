@@ -58,9 +58,6 @@ func (c *Client) NodeStatus() (api.NodeStatusResponse, error) {
 		response.OperatorRewardInETH = big.NewInt(0)
 	}
 
-	if response.SdCollateralRequestedToWithdraw == nil {
-		response.SdCollateralRequestedToWithdraw = big.NewInt(0)
-	}
 	if response.TotalNonTerminalValidators == nil {
 		response.TotalNonTerminalValidators = big.NewInt(0)
 	}
