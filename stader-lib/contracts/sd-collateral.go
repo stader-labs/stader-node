@@ -31,7 +31,7 @@ var (
 
 // SdCollateralMetaData contains all meta data concerning the SdCollateral contract.
 var SdCollateralMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AlreadyClaimed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotWithdrawVault\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ClaimNotReady\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorSDCollateral\",\"type\":\"uint256\"}],\"name\":\"InsufficientSDToWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidExecutor\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolLimit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoStateChange\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"requestedSD\",\"type\":\"uint256\"}],\"name\":\"SDClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"auction\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashed\",\"type\":\"uint256\"}],\"name\":\"SDSlashed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"requestedSD\",\"type\":\"uint256\"}],\"name\":\"SDWithdrawRequested\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"UpdatedPoolIdForOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"}],\"name\":\"UpdatedPoolThreshold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"withdrawDelay\",\"type\":\"uint256\"}],\"name\":\"WithdrawDelayUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"claimWithdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getMinimumSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_minSDToBond\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getRemainingSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getRewardEligibleSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEligibleSD\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spenderAddr\",\"type\":\"address\"}],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"requestWithdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_withdrawDelay\",\"type\":\"uint256\"}],\"name\":\"setWithdrawDelay\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"slashValidatorSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSDCollateral\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawDelay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"withdrawReq\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"lastWithdrawReqTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalSDWithdrawReqAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotWithdrawVault\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorSDCollateral\",\"type\":\"uint256\"}],\"name\":\"InsufficientSDToWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolLimit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoStateChange\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"auction\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashed\",\"type\":\"uint256\"}],\"name\":\"SDSlashed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"UpdatedPoolIdForOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"}],\"name\":\"UpdatedPoolThreshold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getMinimumSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_minSDToBond\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorWithdrawThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorWithdrawThreshold\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getRemainingSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getRewardEligibleSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEligibleSD\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spenderAddr\",\"type\":\"address\"}],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"slashValidatorSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSDCollateral\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SdCollateralABI is the input ABI used to generate the binding from.
@@ -302,6 +302,37 @@ func (_SdCollateral *SdCollateralSession) GetMinimumSDToBond(_poolId uint8, _num
 // Solidity: function getMinimumSDToBond(uint8 _poolId, uint256 _numValidator) view returns(uint256 _minSDToBond)
 func (_SdCollateral *SdCollateralCallerSession) GetMinimumSDToBond(_poolId uint8, _numValidator *big.Int) (*big.Int, error) {
 	return _SdCollateral.Contract.GetMinimumSDToBond(&_SdCollateral.CallOpts, _poolId, _numValidator)
+}
+
+// GetOperatorWithdrawThreshold is a free data retrieval call binding the contract method 0x9871a30a.
+//
+// Solidity: function getOperatorWithdrawThreshold(address _operator) view returns(uint256 operatorWithdrawThreshold)
+func (_SdCollateral *SdCollateralCaller) GetOperatorWithdrawThreshold(opts *bind.CallOpts, _operator common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _SdCollateral.contract.Call(opts, &out, "getOperatorWithdrawThreshold", _operator)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetOperatorWithdrawThreshold is a free data retrieval call binding the contract method 0x9871a30a.
+//
+// Solidity: function getOperatorWithdrawThreshold(address _operator) view returns(uint256 operatorWithdrawThreshold)
+func (_SdCollateral *SdCollateralSession) GetOperatorWithdrawThreshold(_operator common.Address) (*big.Int, error) {
+	return _SdCollateral.Contract.GetOperatorWithdrawThreshold(&_SdCollateral.CallOpts, _operator)
+}
+
+// GetOperatorWithdrawThreshold is a free data retrieval call binding the contract method 0x9871a30a.
+//
+// Solidity: function getOperatorWithdrawThreshold(address _operator) view returns(uint256 operatorWithdrawThreshold)
+func (_SdCollateral *SdCollateralCallerSession) GetOperatorWithdrawThreshold(_operator common.Address) (*big.Int, error) {
+	return _SdCollateral.Contract.GetOperatorWithdrawThreshold(&_SdCollateral.CallOpts, _operator)
 }
 
 // GetRemainingSDToBond is a free data retrieval call binding the contract method 0x351691ab.
@@ -638,103 +669,6 @@ func (_SdCollateral *SdCollateralCallerSession) TotalSDCollateral() (*big.Int, e
 	return _SdCollateral.Contract.TotalSDCollateral(&_SdCollateral.CallOpts)
 }
 
-// WithdrawDelay is a free data retrieval call binding the contract method 0x0288a39c.
-//
-// Solidity: function withdrawDelay() view returns(uint256)
-func (_SdCollateral *SdCollateralCaller) WithdrawDelay(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "withdrawDelay")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// WithdrawDelay is a free data retrieval call binding the contract method 0x0288a39c.
-//
-// Solidity: function withdrawDelay() view returns(uint256)
-func (_SdCollateral *SdCollateralSession) WithdrawDelay() (*big.Int, error) {
-	return _SdCollateral.Contract.WithdrawDelay(&_SdCollateral.CallOpts)
-}
-
-// WithdrawDelay is a free data retrieval call binding the contract method 0x0288a39c.
-//
-// Solidity: function withdrawDelay() view returns(uint256)
-func (_SdCollateral *SdCollateralCallerSession) WithdrawDelay() (*big.Int, error) {
-	return _SdCollateral.Contract.WithdrawDelay(&_SdCollateral.CallOpts)
-}
-
-// WithdrawReq is a free data retrieval call binding the contract method 0x20f5def2.
-//
-// Solidity: function withdrawReq(address ) view returns(uint256 lastWithdrawReqTimestamp, uint256 totalSDWithdrawReqAmount)
-func (_SdCollateral *SdCollateralCaller) WithdrawReq(opts *bind.CallOpts, arg0 common.Address) (struct {
-	LastWithdrawReqTimestamp *big.Int
-	TotalSDWithdrawReqAmount *big.Int
-}, error) {
-	var out []interface{}
-	err := _SdCollateral.contract.Call(opts, &out, "withdrawReq", arg0)
-
-	outstruct := new(struct {
-		LastWithdrawReqTimestamp *big.Int
-		TotalSDWithdrawReqAmount *big.Int
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.LastWithdrawReqTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.TotalSDWithdrawReqAmount = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
-
-	return *outstruct, err
-
-}
-
-// WithdrawReq is a free data retrieval call binding the contract method 0x20f5def2.
-//
-// Solidity: function withdrawReq(address ) view returns(uint256 lastWithdrawReqTimestamp, uint256 totalSDWithdrawReqAmount)
-func (_SdCollateral *SdCollateralSession) WithdrawReq(arg0 common.Address) (struct {
-	LastWithdrawReqTimestamp *big.Int
-	TotalSDWithdrawReqAmount *big.Int
-}, error) {
-	return _SdCollateral.Contract.WithdrawReq(&_SdCollateral.CallOpts, arg0)
-}
-
-// WithdrawReq is a free data retrieval call binding the contract method 0x20f5def2.
-//
-// Solidity: function withdrawReq(address ) view returns(uint256 lastWithdrawReqTimestamp, uint256 totalSDWithdrawReqAmount)
-func (_SdCollateral *SdCollateralCallerSession) WithdrawReq(arg0 common.Address) (struct {
-	LastWithdrawReqTimestamp *big.Int
-	TotalSDWithdrawReqAmount *big.Int
-}, error) {
-	return _SdCollateral.Contract.WithdrawReq(&_SdCollateral.CallOpts, arg0)
-}
-
-// ClaimWithdraw is a paid mutator transaction binding the contract method 0x0e8584aa.
-//
-// Solidity: function claimWithdraw() returns()
-func (_SdCollateral *SdCollateralTransactor) ClaimWithdraw(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _SdCollateral.contract.Transact(opts, "claimWithdraw")
-}
-
-// ClaimWithdraw is a paid mutator transaction binding the contract method 0x0e8584aa.
-//
-// Solidity: function claimWithdraw() returns()
-func (_SdCollateral *SdCollateralSession) ClaimWithdraw() (*types.Transaction, error) {
-	return _SdCollateral.Contract.ClaimWithdraw(&_SdCollateral.TransactOpts)
-}
-
-// ClaimWithdraw is a paid mutator transaction binding the contract method 0x0e8584aa.
-//
-// Solidity: function claimWithdraw() returns()
-func (_SdCollateral *SdCollateralTransactorSession) ClaimWithdraw() (*types.Transaction, error) {
-	return _SdCollateral.Contract.ClaimWithdraw(&_SdCollateral.TransactOpts)
-}
-
 // DepositSDAsCollateral is a paid mutator transaction binding the contract method 0xfcb7e032.
 //
 // Solidity: function depositSDAsCollateral(uint256 _sdAmount) returns()
@@ -840,27 +774,6 @@ func (_SdCollateral *SdCollateralTransactorSession) RenounceRole(role [32]byte, 
 	return _SdCollateral.Contract.RenounceRole(&_SdCollateral.TransactOpts, role, account)
 }
 
-// RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
-//
-// Solidity: function requestWithdraw(uint256 _requestedSD) returns()
-func (_SdCollateral *SdCollateralTransactor) RequestWithdraw(opts *bind.TransactOpts, _requestedSD *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.contract.Transact(opts, "requestWithdraw", _requestedSD)
-}
-
-// RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
-//
-// Solidity: function requestWithdraw(uint256 _requestedSD) returns()
-func (_SdCollateral *SdCollateralSession) RequestWithdraw(_requestedSD *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.RequestWithdraw(&_SdCollateral.TransactOpts, _requestedSD)
-}
-
-// RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
-//
-// Solidity: function requestWithdraw(uint256 _requestedSD) returns()
-func (_SdCollateral *SdCollateralTransactorSession) RequestWithdraw(_requestedSD *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.RequestWithdraw(&_SdCollateral.TransactOpts, _requestedSD)
-}
-
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
@@ -880,27 +793,6 @@ func (_SdCollateral *SdCollateralSession) RevokeRole(role [32]byte, account comm
 // Solidity: function revokeRole(bytes32 role, address account) returns()
 func (_SdCollateral *SdCollateralTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
 	return _SdCollateral.Contract.RevokeRole(&_SdCollateral.TransactOpts, role, account)
-}
-
-// SetWithdrawDelay is a paid mutator transaction binding the contract method 0x72f0cb30.
-//
-// Solidity: function setWithdrawDelay(uint256 _withdrawDelay) returns()
-func (_SdCollateral *SdCollateralTransactor) SetWithdrawDelay(opts *bind.TransactOpts, _withdrawDelay *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.contract.Transact(opts, "setWithdrawDelay", _withdrawDelay)
-}
-
-// SetWithdrawDelay is a paid mutator transaction binding the contract method 0x72f0cb30.
-//
-// Solidity: function setWithdrawDelay(uint256 _withdrawDelay) returns()
-func (_SdCollateral *SdCollateralSession) SetWithdrawDelay(_withdrawDelay *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.SetWithdrawDelay(&_SdCollateral.TransactOpts, _withdrawDelay)
-}
-
-// SetWithdrawDelay is a paid mutator transaction binding the contract method 0x72f0cb30.
-//
-// Solidity: function setWithdrawDelay(uint256 _withdrawDelay) returns()
-func (_SdCollateral *SdCollateralTransactorSession) SetWithdrawDelay(_withdrawDelay *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.SetWithdrawDelay(&_SdCollateral.TransactOpts, _withdrawDelay)
 }
 
 // SlashValidatorSD is a paid mutator transaction binding the contract method 0x4c538f58.
@@ -964,6 +856,27 @@ func (_SdCollateral *SdCollateralSession) UpdateStaderConfig(_staderConfig commo
 // Solidity: function updateStaderConfig(address _staderConfig) returns()
 func (_SdCollateral *SdCollateralTransactorSession) UpdateStaderConfig(_staderConfig common.Address) (*types.Transaction, error) {
 	return _SdCollateral.Contract.UpdateStaderConfig(&_SdCollateral.TransactOpts, _staderConfig)
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
+//
+// Solidity: function withdraw(uint256 _requestedSD) returns()
+func (_SdCollateral *SdCollateralTransactor) Withdraw(opts *bind.TransactOpts, _requestedSD *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "withdraw", _requestedSD)
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
+//
+// Solidity: function withdraw(uint256 _requestedSD) returns()
+func (_SdCollateral *SdCollateralSession) Withdraw(_requestedSD *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.Withdraw(&_SdCollateral.TransactOpts, _requestedSD)
+}
+
+// Withdraw is a paid mutator transaction binding the contract method 0x2e1a7d4d.
+//
+// Solidity: function withdraw(uint256 _requestedSD) returns()
+func (_SdCollateral *SdCollateralTransactorSession) Withdraw(_requestedSD *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.Withdraw(&_SdCollateral.TransactOpts, _requestedSD)
 }
 
 // SdCollateralInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the SdCollateral contract.
@@ -1586,151 +1499,6 @@ func (_SdCollateral *SdCollateralFilterer) ParseRoleRevoked(log types.Log) (*SdC
 	return event, nil
 }
 
-// SdCollateralSDClaimedIterator is returned from FilterSDClaimed and is used to iterate over the raw logs and unpacked data for SDClaimed events raised by the SdCollateral contract.
-type SdCollateralSDClaimedIterator struct {
-	Event *SdCollateralSDClaimed // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *SdCollateralSDClaimedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(SdCollateralSDClaimed)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(SdCollateralSDClaimed)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *SdCollateralSDClaimedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *SdCollateralSDClaimedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// SdCollateralSDClaimed represents a SDClaimed event raised by the SdCollateral contract.
-type SdCollateralSDClaimed struct {
-	Operator    common.Address
-	RequestedSD *big.Int
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterSDClaimed is a free log retrieval operation binding the contract event 0x75eb46d7be431b21ec217e4e73eb60401f935cc8fc80a92a064b46314b7c0a7c.
-//
-// Solidity: event SDClaimed(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) FilterSDClaimed(opts *bind.FilterOpts, operator []common.Address) (*SdCollateralSDClaimedIterator, error) {
-
-	var operatorRule []interface{}
-	for _, operatorItem := range operator {
-		operatorRule = append(operatorRule, operatorItem)
-	}
-
-	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "SDClaimed", operatorRule)
-	if err != nil {
-		return nil, err
-	}
-	return &SdCollateralSDClaimedIterator{contract: _SdCollateral.contract, event: "SDClaimed", logs: logs, sub: sub}, nil
-}
-
-// WatchSDClaimed is a free log subscription operation binding the contract event 0x75eb46d7be431b21ec217e4e73eb60401f935cc8fc80a92a064b46314b7c0a7c.
-//
-// Solidity: event SDClaimed(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) WatchSDClaimed(opts *bind.WatchOpts, sink chan<- *SdCollateralSDClaimed, operator []common.Address) (event.Subscription, error) {
-
-	var operatorRule []interface{}
-	for _, operatorItem := range operator {
-		operatorRule = append(operatorRule, operatorItem)
-	}
-
-	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "SDClaimed", operatorRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(SdCollateralSDClaimed)
-				if err := _SdCollateral.contract.UnpackLog(event, "SDClaimed", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseSDClaimed is a log parse operation binding the contract event 0x75eb46d7be431b21ec217e4e73eb60401f935cc8fc80a92a064b46314b7c0a7c.
-//
-// Solidity: event SDClaimed(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) ParseSDClaimed(log types.Log) (*SdCollateralSDClaimed, error) {
-	event := new(SdCollateralSDClaimed)
-	if err := _SdCollateral.contract.UnpackLog(event, "SDClaimed", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // SdCollateralSDDepositedIterator is returned from FilterSDDeposited and is used to iterate over the raw logs and unpacked data for SDDeposited events raised by the SdCollateral contract.
 type SdCollateralSDDepositedIterator struct {
 	Event *SdCollateralSDDeposited // Event containing the contract specifics and raw log
@@ -2030,9 +1798,9 @@ func (_SdCollateral *SdCollateralFilterer) ParseSDSlashed(log types.Log) (*SdCol
 	return event, nil
 }
 
-// SdCollateralSDWithdrawRequestedIterator is returned from FilterSDWithdrawRequested and is used to iterate over the raw logs and unpacked data for SDWithdrawRequested events raised by the SdCollateral contract.
-type SdCollateralSDWithdrawRequestedIterator struct {
-	Event *SdCollateralSDWithdrawRequested // Event containing the contract specifics and raw log
+// SdCollateralSDWithdrawnIterator is returned from FilterSDWithdrawn and is used to iterate over the raw logs and unpacked data for SDWithdrawn events raised by the SdCollateral contract.
+type SdCollateralSDWithdrawnIterator struct {
+	Event *SdCollateralSDWithdrawn // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2046,7 +1814,7 @@ type SdCollateralSDWithdrawRequestedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *SdCollateralSDWithdrawRequestedIterator) Next() bool {
+func (it *SdCollateralSDWithdrawnIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2055,7 +1823,7 @@ func (it *SdCollateralSDWithdrawRequestedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(SdCollateralSDWithdrawRequested)
+			it.Event = new(SdCollateralSDWithdrawn)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2070,7 +1838,7 @@ func (it *SdCollateralSDWithdrawRequestedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(SdCollateralSDWithdrawRequested)
+		it.Event = new(SdCollateralSDWithdrawn)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2086,52 +1854,52 @@ func (it *SdCollateralSDWithdrawRequestedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *SdCollateralSDWithdrawRequestedIterator) Error() error {
+func (it *SdCollateralSDWithdrawnIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *SdCollateralSDWithdrawRequestedIterator) Close() error {
+func (it *SdCollateralSDWithdrawnIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// SdCollateralSDWithdrawRequested represents a SDWithdrawRequested event raised by the SdCollateral contract.
-type SdCollateralSDWithdrawRequested struct {
-	Operator    common.Address
-	RequestedSD *big.Int
-	Raw         types.Log // Blockchain specific contextual infos
+// SdCollateralSDWithdrawn represents a SDWithdrawn event raised by the SdCollateral contract.
+type SdCollateralSDWithdrawn struct {
+	Operator common.Address
+	SdAmount *big.Int
+	Raw      types.Log // Blockchain specific contextual infos
 }
 
-// FilterSDWithdrawRequested is a free log retrieval operation binding the contract event 0x7e89387f74c5c6c8b64bc9d71f2f8b0d4b0fd014e9a2673ac02215beac58ba42.
+// FilterSDWithdrawn is a free log retrieval operation binding the contract event 0x48c1f846fa4bc05385324ee60316f9c6778ed2b5f205a6319678a609b8767607.
 //
-// Solidity: event SDWithdrawRequested(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) FilterSDWithdrawRequested(opts *bind.FilterOpts, operator []common.Address) (*SdCollateralSDWithdrawRequestedIterator, error) {
+// Solidity: event SDWithdrawn(address indexed operator, uint256 sdAmount)
+func (_SdCollateral *SdCollateralFilterer) FilterSDWithdrawn(opts *bind.FilterOpts, operator []common.Address) (*SdCollateralSDWithdrawnIterator, error) {
 
 	var operatorRule []interface{}
 	for _, operatorItem := range operator {
 		operatorRule = append(operatorRule, operatorItem)
 	}
 
-	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "SDWithdrawRequested", operatorRule)
+	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "SDWithdrawn", operatorRule)
 	if err != nil {
 		return nil, err
 	}
-	return &SdCollateralSDWithdrawRequestedIterator{contract: _SdCollateral.contract, event: "SDWithdrawRequested", logs: logs, sub: sub}, nil
+	return &SdCollateralSDWithdrawnIterator{contract: _SdCollateral.contract, event: "SDWithdrawn", logs: logs, sub: sub}, nil
 }
 
-// WatchSDWithdrawRequested is a free log subscription operation binding the contract event 0x7e89387f74c5c6c8b64bc9d71f2f8b0d4b0fd014e9a2673ac02215beac58ba42.
+// WatchSDWithdrawn is a free log subscription operation binding the contract event 0x48c1f846fa4bc05385324ee60316f9c6778ed2b5f205a6319678a609b8767607.
 //
-// Solidity: event SDWithdrawRequested(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) WatchSDWithdrawRequested(opts *bind.WatchOpts, sink chan<- *SdCollateralSDWithdrawRequested, operator []common.Address) (event.Subscription, error) {
+// Solidity: event SDWithdrawn(address indexed operator, uint256 sdAmount)
+func (_SdCollateral *SdCollateralFilterer) WatchSDWithdrawn(opts *bind.WatchOpts, sink chan<- *SdCollateralSDWithdrawn, operator []common.Address) (event.Subscription, error) {
 
 	var operatorRule []interface{}
 	for _, operatorItem := range operator {
 		operatorRule = append(operatorRule, operatorItem)
 	}
 
-	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "SDWithdrawRequested", operatorRule)
+	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "SDWithdrawn", operatorRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2141,8 +1909,8 @@ func (_SdCollateral *SdCollateralFilterer) WatchSDWithdrawRequested(opts *bind.W
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(SdCollateralSDWithdrawRequested)
-				if err := _SdCollateral.contract.UnpackLog(event, "SDWithdrawRequested", log); err != nil {
+				event := new(SdCollateralSDWithdrawn)
+				if err := _SdCollateral.contract.UnpackLog(event, "SDWithdrawn", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2163,12 +1931,12 @@ func (_SdCollateral *SdCollateralFilterer) WatchSDWithdrawRequested(opts *bind.W
 	}), nil
 }
 
-// ParseSDWithdrawRequested is a log parse operation binding the contract event 0x7e89387f74c5c6c8b64bc9d71f2f8b0d4b0fd014e9a2673ac02215beac58ba42.
+// ParseSDWithdrawn is a log parse operation binding the contract event 0x48c1f846fa4bc05385324ee60316f9c6778ed2b5f205a6319678a609b8767607.
 //
-// Solidity: event SDWithdrawRequested(address indexed operator, uint256 requestedSD)
-func (_SdCollateral *SdCollateralFilterer) ParseSDWithdrawRequested(log types.Log) (*SdCollateralSDWithdrawRequested, error) {
-	event := new(SdCollateralSDWithdrawRequested)
-	if err := _SdCollateral.contract.UnpackLog(event, "SDWithdrawRequested", log); err != nil {
+// Solidity: event SDWithdrawn(address indexed operator, uint256 sdAmount)
+func (_SdCollateral *SdCollateralFilterer) ParseSDWithdrawn(log types.Log) (*SdCollateralSDWithdrawn, error) {
+	event := new(SdCollateralSDWithdrawn)
+	if err := _SdCollateral.contract.UnpackLog(event, "SDWithdrawn", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2584,140 +2352,6 @@ func (_SdCollateral *SdCollateralFilterer) WatchUpdatedStaderConfig(opts *bind.W
 func (_SdCollateral *SdCollateralFilterer) ParseUpdatedStaderConfig(log types.Log) (*SdCollateralUpdatedStaderConfig, error) {
 	event := new(SdCollateralUpdatedStaderConfig)
 	if err := _SdCollateral.contract.UnpackLog(event, "UpdatedStaderConfig", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// SdCollateralWithdrawDelayUpdatedIterator is returned from FilterWithdrawDelayUpdated and is used to iterate over the raw logs and unpacked data for WithdrawDelayUpdated events raised by the SdCollateral contract.
-type SdCollateralWithdrawDelayUpdatedIterator struct {
-	Event *SdCollateralWithdrawDelayUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *SdCollateralWithdrawDelayUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(SdCollateralWithdrawDelayUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(SdCollateralWithdrawDelayUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *SdCollateralWithdrawDelayUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *SdCollateralWithdrawDelayUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// SdCollateralWithdrawDelayUpdated represents a WithdrawDelayUpdated event raised by the SdCollateral contract.
-type SdCollateralWithdrawDelayUpdated struct {
-	WithdrawDelay *big.Int
-	Raw           types.Log // Blockchain specific contextual infos
-}
-
-// FilterWithdrawDelayUpdated is a free log retrieval operation binding the contract event 0xe45306500c5a84a3037639308e96ec82389ee645d043e7a34ff654342872bdbc.
-//
-// Solidity: event WithdrawDelayUpdated(uint256 withdrawDelay)
-func (_SdCollateral *SdCollateralFilterer) FilterWithdrawDelayUpdated(opts *bind.FilterOpts) (*SdCollateralWithdrawDelayUpdatedIterator, error) {
-
-	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "WithdrawDelayUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &SdCollateralWithdrawDelayUpdatedIterator{contract: _SdCollateral.contract, event: "WithdrawDelayUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchWithdrawDelayUpdated is a free log subscription operation binding the contract event 0xe45306500c5a84a3037639308e96ec82389ee645d043e7a34ff654342872bdbc.
-//
-// Solidity: event WithdrawDelayUpdated(uint256 withdrawDelay)
-func (_SdCollateral *SdCollateralFilterer) WatchWithdrawDelayUpdated(opts *bind.WatchOpts, sink chan<- *SdCollateralWithdrawDelayUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "WithdrawDelayUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(SdCollateralWithdrawDelayUpdated)
-				if err := _SdCollateral.contract.UnpackLog(event, "WithdrawDelayUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseWithdrawDelayUpdated is a log parse operation binding the contract event 0xe45306500c5a84a3037639308e96ec82389ee645d043e7a34ff654342872bdbc.
-//
-// Solidity: event WithdrawDelayUpdated(uint256 withdrawDelay)
-func (_SdCollateral *SdCollateralFilterer) ParseWithdrawDelayUpdated(log types.Log) (*SdCollateralWithdrawDelayUpdated, error) {
-	event := new(SdCollateralWithdrawDelayUpdated)
-	if err := _SdCollateral.contract.UnpackLog(event, "WithdrawDelayUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

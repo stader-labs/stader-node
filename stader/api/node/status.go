@@ -1,14 +1,15 @@
 package node
 
 import (
+	"math/big"
+	"time"
+
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"time"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -203,20 +204,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			return nil, err
 		}
 		response.SdCollateralWorthValidators = totalSdWorthValidators
-
-		//fmt.Printf("Getting operator sd withdraw request\n")
-		// get sd collateral in unbonding phase
-		withdrawReqSd, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-		//fmt.Printf("Getting operator sd withdraw delay\n")
-		withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
-		if err != nil {
-			return nil, err
-		}
-		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
-		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
 
 		//fmt.Printf("Getting reward details\n")
 		rewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
