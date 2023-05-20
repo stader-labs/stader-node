@@ -31,50 +31,40 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 		return nil, fmt.Errorf("Error getting beacon client deposit contract: %w", err)
 	}
 
-	fmt.Printf("eth2DepositContract: %+v\n", eth2DepositContract)
 	response.BeaconNetwork = eth2DepositContract.ChainID
 	response.BeaconDepositContract = eth2DepositContract.Address
-	fmt.Printf("Getting sd collateral address\n")
 	response.SdCollateralContract, err = services.GetSdCollateralAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting ethx token address\n")
 	response.EthxToken, err = services.GetEthxTokenAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting sd token address\n")
 	response.SdToken, err = services.GetSdTokenAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting permissionless node registry address\n")
 	response.PermissionlessNodeRegistry, err = services.GetPermissionlessNodeRegistryAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting vault factory address\n")
 	response.VaultFactory, err = services.GetVaultFactoryAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting socializing pool address\n")
 	response.SocializingPoolContract, err = services.GetSocializingPoolAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting permissionless pool address\n")
 	response.PermisionlessPool, err = services.GetPermissionlessPoolAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting stader oracle address\n")
 	response.StaderOracle, err = services.GetStaderOracleAddress(c)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("Getting stake pool manager addres\n")
 	response.StakePoolManager, err = services.GetStakePoolManagerAddress(c)
 	if err != nil {
 		return nil, err
