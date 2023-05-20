@@ -52,10 +52,6 @@ func CanClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	if err != nil {
 		return nil, err
 	}
-	if validatorContractInfo.Status > 8 {
-		response.ValidatorWithdrawn = true
-		return &response, nil
-	}
 
 	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
 	if err != nil {

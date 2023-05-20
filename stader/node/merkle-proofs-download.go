@@ -3,10 +3,8 @@ package node
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/docker/docker/client"
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
-	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -20,8 +18,6 @@ type MerkleProofsDownloader struct {
 	log log.ColorLogger
 	cfg *config.StaderConfig
 	w   *wallet.Wallet
-	d   *client.Client
-	bc  beacon.Client
 }
 
 func NewMerkleProofsDownloader(c *cli.Context, logger log.ColorLogger) (*MerkleProofsDownloader, error) {
@@ -33,22 +29,12 @@ func NewMerkleProofsDownloader(c *cli.Context, logger log.ColorLogger) (*MerkleP
 	if err != nil {
 		return nil, err
 	}
-	d, err := services.GetDocker(c)
-	if err != nil {
-		return nil, err
-	}
-	bc, err := services.GetBeaconClient(c)
-	if err != nil {
-		return nil, err
-	}
 
 	return &MerkleProofsDownloader{
 		c:   c,
 		log: logger,
 		cfg: cfg,
 		w:   w,
-		d:   d,
-		bc:  bc,
 	}, nil
 }
 
