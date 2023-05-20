@@ -1,9 +1,10 @@
 package api
 
 import (
-	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"math/big"
 	"time"
+
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -34,8 +35,6 @@ type NodeStatusResponse struct {
 	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`
 	DepositedSdCollateral             *big.Int                           `json:"depositedSdCollateral"`
-	SdCollateralRequestedToWithdraw   *big.Int                           `json:"sdCollateralRequestedToWithdraw"`
-	SdCollateralWithdrawTime          *big.Int                           `json:"withdrawTime"`
 	SdCollateralWorthValidators       *big.Int                           `json:"sdCollateralWorthValidators"`
 	Registered                        bool                               `json:"registered"`
 	AccountBalances                   tokens.Balances                    `json:"accountBalances"`
@@ -256,7 +255,7 @@ type ClaimElRewardsResponse struct {
 	TxHash                common.Hash    `json:"txHash"`
 }
 
-type CanRequestWithdrawSdResponse struct {
+type CanWithdrawSdResponse struct {
 	Status                     string         `json:"status"`
 	Error                      string         `json:"error"`
 	InsufficientSdCollateral   bool           `json:"insufficientSdCollateral"`
@@ -264,7 +263,7 @@ type CanRequestWithdrawSdResponse struct {
 	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
-type RequestWithdrawSdResponse struct {
+type WithdrawSdResponse struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`
