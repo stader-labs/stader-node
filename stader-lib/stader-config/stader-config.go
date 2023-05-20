@@ -20,7 +20,7 @@ func GetOperatorNameMaxLength(sdConfig *stader.StaderConfigContractManager, opts
 }
 
 func GetSocializingPoolContractAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
-	return sdConfig.StaderConfig.GetSocializingPool(opts)
+	return sdConfig.StaderConfig.GetPermissionlessSocializingPool(opts)
 }
 
 func GetPermissionlessNodeRegistryAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {

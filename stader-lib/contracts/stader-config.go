@@ -31,7 +31,7 @@ var (
 
 // StaderConfigMetaData contains all meta data concerning the StaderConfig contract.
 var StaderConfigMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"InvalidLimits\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetAccount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"SetConstant\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetContract\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"SetVariable\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMIN\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"AUCTION_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_DEPOSIT_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_PER_NODE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETHx\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PENALTY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_SELECTOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_UTILS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"REWARD_THRESHOLD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD_COLLATERAL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_CYCLE_DURATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_OPT_IN_COOLING_PERIOD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_INSURANCE_FUND\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_TREASURY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKE_POOL_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOTAL_FEE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_WITHDRAW_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VAULT_FACTORY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WITHDRAWN_KEYS_BATCH_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAuctionContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHDepositContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHxToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getFullDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOperatorMaxNameLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPenaltyContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolSelector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolUtils\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPreDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardsThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSDCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolCycleDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolOptInCoolingPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderInsuranceFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakePoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakedEthPerNode\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getUserWithdrawManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getVaultFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getWithdrawnKeyBatchSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethDepositContract\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyManagerRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyOperatorRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_contractName\",\"type\":\"bytes32\"}],\"name\":\"onlyStaderContract\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"updateAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_auctionContract\",\"type\":\"address\"}],\"name\":\"updateAuctionContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_ethX\",\"type\":\"address\"}],\"name\":\"updateETHxToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minBlockDelay\",\"type\":\"uint256\"}],\"name\":\"updateMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_penaltyContract\",\"type\":\"address\"}],\"name\":\"updatePenaltyContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionedNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedPool\",\"type\":\"address\"}],\"name\":\"updatePermissionedPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionlessNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolSelector\",\"type\":\"address\"}],\"name\":\"updatePoolSelector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolUtils\",\"type\":\"address\"}],\"name\":\"updatePoolUtils\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardsThreshold\",\"type\":\"uint256\"}],\"name\":\"updateRewardsThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_socializePool\",\"type\":\"address\"}],\"name\":\"updateSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_socializingPoolCycleDuration\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolCycleDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_SocializePoolOptInCoolingPeriod\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolOptInCoolingPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderInsuranceFund\",\"type\":\"address\"}],\"name\":\"updateStaderInsuranceFund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderOracle\",\"type\":\"address\"}],\"name\":\"updateStaderOracle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderToken\",\"type\":\"address\"}],\"name\":\"updateStaderToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderTreasury\",\"type\":\"address\"}],\"name\":\"updateStaderTreasury\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_stakePoolManager\",\"type\":\"address\"}],\"name\":\"updateStakePoolManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userWithdrawManager\",\"type\":\"address\"}],\"name\":\"updateUserWithdrawManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactory\",\"type\":\"address\"}],\"name\":\"updateVaultFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_withdrawnKeysBatchSize\",\"type\":\"uint256\"}],\"name\":\"updateWithdrawnKeysBatchSize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"InvalidLimits\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMaxWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinDepositValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidMinWithdrawValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetAccount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"SetConstant\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetContract\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAddress\",\"type\":\"address\"}],\"name\":\"SetToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"key\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"SetVariable\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"ADMIN\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"AUCTION_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DECIMALS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_DEPOSIT_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETH_PER_NODE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ETHx\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"FULL_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_BLOCK_DELAY_TO_FINALIZE_WITHDRAW_REQUEST\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_DEPOSIT_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MIN_WITHDRAW_AMOUNT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NODE_EL_REWARD_VAULT_IMPLEMENTATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_MAX_NAME_LENGTH\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_REWARD_COLLECTOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PENALTY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONED_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_NODE_REGISTRY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PERMISSIONLESS_SOCIALIZING_POOL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_SELECTOR\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"POOL_UTILS\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PRE_DEPOSIT_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"REWARD_THRESHOLD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SD_COLLATERAL\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_CYCLE_DURATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"SOCIALIZING_POOL_OPT_IN_COOLING_PERIOD\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_INSURANCE_FUND\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_ORACLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STADER_TREASURY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"STAKE_POOL_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TOTAL_FEE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"USER_WITHDRAW_MANAGER\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"VAULT_FACTORY\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"WITHDRAWN_KEYS_BATCH_SIZE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAdmin\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAuctionContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecimals\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHDepositContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getETHxToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getFullDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMaxWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinDepositAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getMinWithdrawAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNodeELRewardVaultImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOperatorMaxNameLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getOperatorRewardsCollector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPenaltyContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionedSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessNodeRegistry\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPermissionlessSocializingPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolSelector\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolUtils\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPreDepositSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRewardsThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSDCollateral\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolCycleDuration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSocializingPoolOptInCoolingPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderInsuranceFund\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderOracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStaderTreasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakePoolManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStakedEthPerNode\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTotalFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getUserWithdrawManager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getValidatorWithdrawalVaultImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getVaultFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getWithdrawnKeyBatchSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethDepositContract\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyManagerRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"onlyOperatorRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_contractName\",\"type\":\"bytes32\"}],\"name\":\"onlyStaderContract\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"updateAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_auctionContract\",\"type\":\"address\"}],\"name\":\"updateAuctionContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_ethX\",\"type\":\"address\"}],\"name\":\"updateETHxToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMaxWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minBlockDelay\",\"type\":\"uint256\"}],\"name\":\"updateMinBlockDelayToFinalizeWithdrawRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minDepositAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinDepositAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minWithdrawAmount\",\"type\":\"uint256\"}],\"name\":\"updateMinWithdrawAmount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nodeELRewardVaultImpl\",\"type\":\"address\"}],\"name\":\"updateNodeELRewardImplementation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_payments\",\"type\":\"address\"}],\"name\":\"updateOperatorRewardsCollector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_penaltyContract\",\"type\":\"address\"}],\"name\":\"updatePenaltyContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionedNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedPool\",\"type\":\"address\"}],\"name\":\"updatePermissionedPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionedSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionedSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessNodeRegistry\",\"type\":\"address\"}],\"name\":\"updatePermissionlessNodeRegistry\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessPool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_permissionlessSocializePool\",\"type\":\"address\"}],\"name\":\"updatePermissionlessSocializingPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolSelector\",\"type\":\"address\"}],\"name\":\"updatePoolSelector\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_poolUtils\",\"type\":\"address\"}],\"name\":\"updatePoolUtils\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardsThreshold\",\"type\":\"uint256\"}],\"name\":\"updateRewardsThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sdCollateral\",\"type\":\"address\"}],\"name\":\"updateSDCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_socializingPoolCycleDuration\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolCycleDuration\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_SocializePoolOptInCoolingPeriod\",\"type\":\"uint256\"}],\"name\":\"updateSocializingPoolOptInCoolingPeriod\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderInsuranceFund\",\"type\":\"address\"}],\"name\":\"updateStaderInsuranceFund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderOracle\",\"type\":\"address\"}],\"name\":\"updateStaderOracle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderToken\",\"type\":\"address\"}],\"name\":\"updateStaderToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderTreasury\",\"type\":\"address\"}],\"name\":\"updateStaderTreasury\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_stakePoolManager\",\"type\":\"address\"}],\"name\":\"updateStakePoolManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userWithdrawManager\",\"type\":\"address\"}],\"name\":\"updateUserWithdrawManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_validatorWithdrawalVaultImpl\",\"type\":\"address\"}],\"name\":\"updateValidatorWithdrawalVaultImplementation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultFactory\",\"type\":\"address\"}],\"name\":\"updateVaultFactory\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_withdrawnKeysBatchSize\",\"type\":\"uint256\"}],\"name\":\"updateWithdrawnKeysBatchSize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // StaderConfigABI is the input ABI used to generate the binding from.
@@ -614,6 +614,37 @@ func (_StaderConfig *StaderConfigCallerSession) MINWITHDRAWAMOUNT() ([32]byte, e
 	return _StaderConfig.Contract.MINWITHDRAWAMOUNT(&_StaderConfig.CallOpts)
 }
 
+// NODEELREWARDVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x0bdf3166.
+//
+// Solidity: function NODE_EL_REWARD_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) NODEELREWARDVAULTIMPLEMENTATION(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "NODE_EL_REWARD_VAULT_IMPLEMENTATION")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// NODEELREWARDVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x0bdf3166.
+//
+// Solidity: function NODE_EL_REWARD_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) NODEELREWARDVAULTIMPLEMENTATION() ([32]byte, error) {
+	return _StaderConfig.Contract.NODEELREWARDVAULTIMPLEMENTATION(&_StaderConfig.CallOpts)
+}
+
+// NODEELREWARDVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x0bdf3166.
+//
+// Solidity: function NODE_EL_REWARD_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) NODEELREWARDVAULTIMPLEMENTATION() ([32]byte, error) {
+	return _StaderConfig.Contract.NODEELREWARDVAULTIMPLEMENTATION(&_StaderConfig.CallOpts)
+}
+
 // OPERATOR is a free data retrieval call binding the contract method 0x983d2737.
 //
 // Solidity: function OPERATOR() view returns(bytes32)
@@ -674,6 +705,37 @@ func (_StaderConfig *StaderConfigSession) OPERATORMAXNAMELENGTH() ([32]byte, err
 // Solidity: function OPERATOR_MAX_NAME_LENGTH() view returns(bytes32)
 func (_StaderConfig *StaderConfigCallerSession) OPERATORMAXNAMELENGTH() ([32]byte, error) {
 	return _StaderConfig.Contract.OPERATORMAXNAMELENGTH(&_StaderConfig.CallOpts)
+}
+
+// OPERATORREWARDCOLLECTOR is a free data retrieval call binding the contract method 0x79175a74.
+//
+// Solidity: function OPERATOR_REWARD_COLLECTOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) OPERATORREWARDCOLLECTOR(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "OPERATOR_REWARD_COLLECTOR")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// OPERATORREWARDCOLLECTOR is a free data retrieval call binding the contract method 0x79175a74.
+//
+// Solidity: function OPERATOR_REWARD_COLLECTOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) OPERATORREWARDCOLLECTOR() ([32]byte, error) {
+	return _StaderConfig.Contract.OPERATORREWARDCOLLECTOR(&_StaderConfig.CallOpts)
+}
+
+// OPERATORREWARDCOLLECTOR is a free data retrieval call binding the contract method 0x79175a74.
+//
+// Solidity: function OPERATOR_REWARD_COLLECTOR() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) OPERATORREWARDCOLLECTOR() ([32]byte, error) {
+	return _StaderConfig.Contract.OPERATORREWARDCOLLECTOR(&_StaderConfig.CallOpts)
 }
 
 // PENALTYCONTRACT is a free data retrieval call binding the contract method 0x1bf6a41c.
@@ -769,6 +831,37 @@ func (_StaderConfig *StaderConfigCallerSession) PERMISSIONEDPOOL() ([32]byte, er
 	return _StaderConfig.Contract.PERMISSIONEDPOOL(&_StaderConfig.CallOpts)
 }
 
+// PERMISSIONEDSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x12020075.
+//
+// Solidity: function PERMISSIONED_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) PERMISSIONEDSOCIALIZINGPOOL(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "PERMISSIONED_SOCIALIZING_POOL")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// PERMISSIONEDSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x12020075.
+//
+// Solidity: function PERMISSIONED_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) PERMISSIONEDSOCIALIZINGPOOL() ([32]byte, error) {
+	return _StaderConfig.Contract.PERMISSIONEDSOCIALIZINGPOOL(&_StaderConfig.CallOpts)
+}
+
+// PERMISSIONEDSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x12020075.
+//
+// Solidity: function PERMISSIONED_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) PERMISSIONEDSOCIALIZINGPOOL() ([32]byte, error) {
+	return _StaderConfig.Contract.PERMISSIONEDSOCIALIZINGPOOL(&_StaderConfig.CallOpts)
+}
+
 // PERMISSIONLESSNODEREGISTRY is a free data retrieval call binding the contract method 0x152a91da.
 //
 // Solidity: function PERMISSIONLESS_NODE_REGISTRY() view returns(bytes32)
@@ -829,6 +922,37 @@ func (_StaderConfig *StaderConfigSession) PERMISSIONLESSPOOL() ([32]byte, error)
 // Solidity: function PERMISSIONLESS_POOL() view returns(bytes32)
 func (_StaderConfig *StaderConfigCallerSession) PERMISSIONLESSPOOL() ([32]byte, error) {
 	return _StaderConfig.Contract.PERMISSIONLESSPOOL(&_StaderConfig.CallOpts)
+}
+
+// PERMISSIONLESSSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x3b6bcca0.
+//
+// Solidity: function PERMISSIONLESS_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) PERMISSIONLESSSOCIALIZINGPOOL(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "PERMISSIONLESS_SOCIALIZING_POOL")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// PERMISSIONLESSSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x3b6bcca0.
+//
+// Solidity: function PERMISSIONLESS_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) PERMISSIONLESSSOCIALIZINGPOOL() ([32]byte, error) {
+	return _StaderConfig.Contract.PERMISSIONLESSSOCIALIZINGPOOL(&_StaderConfig.CallOpts)
+}
+
+// PERMISSIONLESSSOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x3b6bcca0.
+//
+// Solidity: function PERMISSIONLESS_SOCIALIZING_POOL() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) PERMISSIONLESSSOCIALIZINGPOOL() ([32]byte, error) {
+	return _StaderConfig.Contract.PERMISSIONLESSSOCIALIZINGPOOL(&_StaderConfig.CallOpts)
 }
 
 // POOLSELECTOR is a free data retrieval call binding the contract method 0xdde63e8f.
@@ -1015,37 +1139,6 @@ func (_StaderConfig *StaderConfigSession) SDCOLLATERAL() ([32]byte, error) {
 // Solidity: function SD_COLLATERAL() view returns(bytes32)
 func (_StaderConfig *StaderConfigCallerSession) SDCOLLATERAL() ([32]byte, error) {
 	return _StaderConfig.Contract.SDCOLLATERAL(&_StaderConfig.CallOpts)
-}
-
-// SOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x8d5c1460.
-//
-// Solidity: function SOCIALIZING_POOL() view returns(bytes32)
-func (_StaderConfig *StaderConfigCaller) SOCIALIZINGPOOL(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "SOCIALIZING_POOL")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// SOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x8d5c1460.
-//
-// Solidity: function SOCIALIZING_POOL() view returns(bytes32)
-func (_StaderConfig *StaderConfigSession) SOCIALIZINGPOOL() ([32]byte, error) {
-	return _StaderConfig.Contract.SOCIALIZINGPOOL(&_StaderConfig.CallOpts)
-}
-
-// SOCIALIZINGPOOL is a free data retrieval call binding the contract method 0x8d5c1460.
-//
-// Solidity: function SOCIALIZING_POOL() view returns(bytes32)
-func (_StaderConfig *StaderConfigCallerSession) SOCIALIZINGPOOL() ([32]byte, error) {
-	return _StaderConfig.Contract.SOCIALIZINGPOOL(&_StaderConfig.CallOpts)
 }
 
 // SOCIALIZINGPOOLCYCLEDURATION is a free data retrieval call binding the contract method 0xbedcb34c.
@@ -1294,6 +1387,37 @@ func (_StaderConfig *StaderConfigSession) USERWITHDRAWMANAGER() ([32]byte, error
 // Solidity: function USER_WITHDRAW_MANAGER() view returns(bytes32)
 func (_StaderConfig *StaderConfigCallerSession) USERWITHDRAWMANAGER() ([32]byte, error) {
 	return _StaderConfig.Contract.USERWITHDRAWMANAGER(&_StaderConfig.CallOpts)
+}
+
+// VALIDATORWITHDRAWALVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x1c55cccd.
+//
+// Solidity: function VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigCaller) VALIDATORWITHDRAWALVAULTIMPLEMENTATION(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// VALIDATORWITHDRAWALVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x1c55cccd.
+//
+// Solidity: function VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigSession) VALIDATORWITHDRAWALVAULTIMPLEMENTATION() ([32]byte, error) {
+	return _StaderConfig.Contract.VALIDATORWITHDRAWALVAULTIMPLEMENTATION(&_StaderConfig.CallOpts)
+}
+
+// VALIDATORWITHDRAWALVAULTIMPLEMENTATION is a free data retrieval call binding the contract method 0x1c55cccd.
+//
+// Solidity: function VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION() view returns(bytes32)
+func (_StaderConfig *StaderConfigCallerSession) VALIDATORWITHDRAWALVAULTIMPLEMENTATION() ([32]byte, error) {
+	return _StaderConfig.Contract.VALIDATORWITHDRAWALVAULTIMPLEMENTATION(&_StaderConfig.CallOpts)
 }
 
 // VAULTFACTORY is a free data retrieval call binding the contract method 0x103f2907.
@@ -1699,6 +1823,37 @@ func (_StaderConfig *StaderConfigCallerSession) GetMinWithdrawAmount() (*big.Int
 	return _StaderConfig.Contract.GetMinWithdrawAmount(&_StaderConfig.CallOpts)
 }
 
+// GetNodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0xe8fe1873.
+//
+// Solidity: function getNodeELRewardVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetNodeELRewardVaultImplementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getNodeELRewardVaultImplementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetNodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0xe8fe1873.
+//
+// Solidity: function getNodeELRewardVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetNodeELRewardVaultImplementation() (common.Address, error) {
+	return _StaderConfig.Contract.GetNodeELRewardVaultImplementation(&_StaderConfig.CallOpts)
+}
+
+// GetNodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0xe8fe1873.
+//
+// Solidity: function getNodeELRewardVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetNodeELRewardVaultImplementation() (common.Address, error) {
+	return _StaderConfig.Contract.GetNodeELRewardVaultImplementation(&_StaderConfig.CallOpts)
+}
+
 // GetOperatorMaxNameLength is a free data retrieval call binding the contract method 0x10deba2b.
 //
 // Solidity: function getOperatorMaxNameLength() view returns(uint256)
@@ -1728,6 +1883,37 @@ func (_StaderConfig *StaderConfigSession) GetOperatorMaxNameLength() (*big.Int, 
 // Solidity: function getOperatorMaxNameLength() view returns(uint256)
 func (_StaderConfig *StaderConfigCallerSession) GetOperatorMaxNameLength() (*big.Int, error) {
 	return _StaderConfig.Contract.GetOperatorMaxNameLength(&_StaderConfig.CallOpts)
+}
+
+// GetOperatorRewardsCollector is a free data retrieval call binding the contract method 0x278671bb.
+//
+// Solidity: function getOperatorRewardsCollector() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetOperatorRewardsCollector(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getOperatorRewardsCollector")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetOperatorRewardsCollector is a free data retrieval call binding the contract method 0x278671bb.
+//
+// Solidity: function getOperatorRewardsCollector() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetOperatorRewardsCollector() (common.Address, error) {
+	return _StaderConfig.Contract.GetOperatorRewardsCollector(&_StaderConfig.CallOpts)
+}
+
+// GetOperatorRewardsCollector is a free data retrieval call binding the contract method 0x278671bb.
+//
+// Solidity: function getOperatorRewardsCollector() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetOperatorRewardsCollector() (common.Address, error) {
+	return _StaderConfig.Contract.GetOperatorRewardsCollector(&_StaderConfig.CallOpts)
 }
 
 // GetPenaltyContract is a free data retrieval call binding the contract method 0x8910115c.
@@ -1823,6 +2009,37 @@ func (_StaderConfig *StaderConfigCallerSession) GetPermissionedPool() (common.Ad
 	return _StaderConfig.Contract.GetPermissionedPool(&_StaderConfig.CallOpts)
 }
 
+// GetPermissionedSocializingPool is a free data retrieval call binding the contract method 0xa469e247.
+//
+// Solidity: function getPermissionedSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetPermissionedSocializingPool(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getPermissionedSocializingPool")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetPermissionedSocializingPool is a free data retrieval call binding the contract method 0xa469e247.
+//
+// Solidity: function getPermissionedSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetPermissionedSocializingPool() (common.Address, error) {
+	return _StaderConfig.Contract.GetPermissionedSocializingPool(&_StaderConfig.CallOpts)
+}
+
+// GetPermissionedSocializingPool is a free data retrieval call binding the contract method 0xa469e247.
+//
+// Solidity: function getPermissionedSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetPermissionedSocializingPool() (common.Address, error) {
+	return _StaderConfig.Contract.GetPermissionedSocializingPool(&_StaderConfig.CallOpts)
+}
+
 // GetPermissionlessNodeRegistry is a free data retrieval call binding the contract method 0x360374a4.
 //
 // Solidity: function getPermissionlessNodeRegistry() view returns(address)
@@ -1883,6 +2100,37 @@ func (_StaderConfig *StaderConfigSession) GetPermissionlessPool() (common.Addres
 // Solidity: function getPermissionlessPool() view returns(address)
 func (_StaderConfig *StaderConfigCallerSession) GetPermissionlessPool() (common.Address, error) {
 	return _StaderConfig.Contract.GetPermissionlessPool(&_StaderConfig.CallOpts)
+}
+
+// GetPermissionlessSocializingPool is a free data retrieval call binding the contract method 0x0a3fbd9a.
+//
+// Solidity: function getPermissionlessSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetPermissionlessSocializingPool(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getPermissionlessSocializingPool")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetPermissionlessSocializingPool is a free data retrieval call binding the contract method 0x0a3fbd9a.
+//
+// Solidity: function getPermissionlessSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetPermissionlessSocializingPool() (common.Address, error) {
+	return _StaderConfig.Contract.GetPermissionlessSocializingPool(&_StaderConfig.CallOpts)
+}
+
+// GetPermissionlessSocializingPool is a free data retrieval call binding the contract method 0x0a3fbd9a.
+//
+// Solidity: function getPermissionlessSocializingPool() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetPermissionlessSocializingPool() (common.Address, error) {
+	return _StaderConfig.Contract.GetPermissionlessSocializingPool(&_StaderConfig.CallOpts)
 }
 
 // GetPoolSelector is a free data retrieval call binding the contract method 0x5458a106.
@@ -2069,37 +2317,6 @@ func (_StaderConfig *StaderConfigSession) GetSDCollateral() (common.Address, err
 // Solidity: function getSDCollateral() view returns(address)
 func (_StaderConfig *StaderConfigCallerSession) GetSDCollateral() (common.Address, error) {
 	return _StaderConfig.Contract.GetSDCollateral(&_StaderConfig.CallOpts)
-}
-
-// GetSocializingPool is a free data retrieval call binding the contract method 0x1c87082c.
-//
-// Solidity: function getSocializingPool() view returns(address)
-func (_StaderConfig *StaderConfigCaller) GetSocializingPool(opts *bind.CallOpts) (common.Address, error) {
-	var out []interface{}
-	err := _StaderConfig.contract.Call(opts, &out, "getSocializingPool")
-
-	if err != nil {
-		return *new(common.Address), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-
-	return out0, err
-
-}
-
-// GetSocializingPool is a free data retrieval call binding the contract method 0x1c87082c.
-//
-// Solidity: function getSocializingPool() view returns(address)
-func (_StaderConfig *StaderConfigSession) GetSocializingPool() (common.Address, error) {
-	return _StaderConfig.Contract.GetSocializingPool(&_StaderConfig.CallOpts)
-}
-
-// GetSocializingPool is a free data retrieval call binding the contract method 0x1c87082c.
-//
-// Solidity: function getSocializingPool() view returns(address)
-func (_StaderConfig *StaderConfigCallerSession) GetSocializingPool() (common.Address, error) {
-	return _StaderConfig.Contract.GetSocializingPool(&_StaderConfig.CallOpts)
 }
 
 // GetSocializingPoolCycleDuration is a free data retrieval call binding the contract method 0x1ca197a5.
@@ -2410,6 +2627,37 @@ func (_StaderConfig *StaderConfigSession) GetUserWithdrawManager() (common.Addre
 // Solidity: function getUserWithdrawManager() view returns(address)
 func (_StaderConfig *StaderConfigCallerSession) GetUserWithdrawManager() (common.Address, error) {
 	return _StaderConfig.Contract.GetUserWithdrawManager(&_StaderConfig.CallOpts)
+}
+
+// GetValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x6d28ad1c.
+//
+// Solidity: function getValidatorWithdrawalVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigCaller) GetValidatorWithdrawalVaultImplementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _StaderConfig.contract.Call(opts, &out, "getValidatorWithdrawalVaultImplementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// GetValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x6d28ad1c.
+//
+// Solidity: function getValidatorWithdrawalVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigSession) GetValidatorWithdrawalVaultImplementation() (common.Address, error) {
+	return _StaderConfig.Contract.GetValidatorWithdrawalVaultImplementation(&_StaderConfig.CallOpts)
+}
+
+// GetValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x6d28ad1c.
+//
+// Solidity: function getValidatorWithdrawalVaultImplementation() view returns(address)
+func (_StaderConfig *StaderConfigCallerSession) GetValidatorWithdrawalVaultImplementation() (common.Address, error) {
+	return _StaderConfig.Contract.GetValidatorWithdrawalVaultImplementation(&_StaderConfig.CallOpts)
 }
 
 // GetVaultFactory is a free data retrieval call binding the contract method 0x18bcb284.
@@ -2881,6 +3129,48 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdateMinWithdrawAmount(_min
 	return _StaderConfig.Contract.UpdateMinWithdrawAmount(&_StaderConfig.TransactOpts, _minWithdrawAmount)
 }
 
+// UpdateNodeELRewardImplementation is a paid mutator transaction binding the contract method 0x5be6ce69.
+//
+// Solidity: function updateNodeELRewardImplementation(address _nodeELRewardVaultImpl) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdateNodeELRewardImplementation(opts *bind.TransactOpts, _nodeELRewardVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updateNodeELRewardImplementation", _nodeELRewardVaultImpl)
+}
+
+// UpdateNodeELRewardImplementation is a paid mutator transaction binding the contract method 0x5be6ce69.
+//
+// Solidity: function updateNodeELRewardImplementation(address _nodeELRewardVaultImpl) returns()
+func (_StaderConfig *StaderConfigSession) UpdateNodeELRewardImplementation(_nodeELRewardVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateNodeELRewardImplementation(&_StaderConfig.TransactOpts, _nodeELRewardVaultImpl)
+}
+
+// UpdateNodeELRewardImplementation is a paid mutator transaction binding the contract method 0x5be6ce69.
+//
+// Solidity: function updateNodeELRewardImplementation(address _nodeELRewardVaultImpl) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdateNodeELRewardImplementation(_nodeELRewardVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateNodeELRewardImplementation(&_StaderConfig.TransactOpts, _nodeELRewardVaultImpl)
+}
+
+// UpdateOperatorRewardsCollector is a paid mutator transaction binding the contract method 0x1de03db8.
+//
+// Solidity: function updateOperatorRewardsCollector(address _payments) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdateOperatorRewardsCollector(opts *bind.TransactOpts, _payments common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updateOperatorRewardsCollector", _payments)
+}
+
+// UpdateOperatorRewardsCollector is a paid mutator transaction binding the contract method 0x1de03db8.
+//
+// Solidity: function updateOperatorRewardsCollector(address _payments) returns()
+func (_StaderConfig *StaderConfigSession) UpdateOperatorRewardsCollector(_payments common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateOperatorRewardsCollector(&_StaderConfig.TransactOpts, _payments)
+}
+
+// UpdateOperatorRewardsCollector is a paid mutator transaction binding the contract method 0x1de03db8.
+//
+// Solidity: function updateOperatorRewardsCollector(address _payments) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdateOperatorRewardsCollector(_payments common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateOperatorRewardsCollector(&_StaderConfig.TransactOpts, _payments)
+}
+
 // UpdatePenaltyContract is a paid mutator transaction binding the contract method 0xf83c7787.
 //
 // Solidity: function updatePenaltyContract(address _penaltyContract) returns()
@@ -2944,6 +3234,27 @@ func (_StaderConfig *StaderConfigTransactorSession) UpdatePermissionedPool(_perm
 	return _StaderConfig.Contract.UpdatePermissionedPool(&_StaderConfig.TransactOpts, _permissionedPool)
 }
 
+// UpdatePermissionedSocializingPool is a paid mutator transaction binding the contract method 0xe4f59b6c.
+//
+// Solidity: function updatePermissionedSocializingPool(address _permissionedSocializePool) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdatePermissionedSocializingPool(opts *bind.TransactOpts, _permissionedSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updatePermissionedSocializingPool", _permissionedSocializePool)
+}
+
+// UpdatePermissionedSocializingPool is a paid mutator transaction binding the contract method 0xe4f59b6c.
+//
+// Solidity: function updatePermissionedSocializingPool(address _permissionedSocializePool) returns()
+func (_StaderConfig *StaderConfigSession) UpdatePermissionedSocializingPool(_permissionedSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePermissionedSocializingPool(&_StaderConfig.TransactOpts, _permissionedSocializePool)
+}
+
+// UpdatePermissionedSocializingPool is a paid mutator transaction binding the contract method 0xe4f59b6c.
+//
+// Solidity: function updatePermissionedSocializingPool(address _permissionedSocializePool) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdatePermissionedSocializingPool(_permissionedSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePermissionedSocializingPool(&_StaderConfig.TransactOpts, _permissionedSocializePool)
+}
+
 // UpdatePermissionlessNodeRegistry is a paid mutator transaction binding the contract method 0xf63718e7.
 //
 // Solidity: function updatePermissionlessNodeRegistry(address _permissionlessNodeRegistry) returns()
@@ -2984,6 +3295,27 @@ func (_StaderConfig *StaderConfigSession) UpdatePermissionlessPool(_permissionle
 // Solidity: function updatePermissionlessPool(address _permissionlessPool) returns()
 func (_StaderConfig *StaderConfigTransactorSession) UpdatePermissionlessPool(_permissionlessPool common.Address) (*types.Transaction, error) {
 	return _StaderConfig.Contract.UpdatePermissionlessPool(&_StaderConfig.TransactOpts, _permissionlessPool)
+}
+
+// UpdatePermissionlessSocializingPool is a paid mutator transaction binding the contract method 0x1049e32e.
+//
+// Solidity: function updatePermissionlessSocializingPool(address _permissionlessSocializePool) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdatePermissionlessSocializingPool(opts *bind.TransactOpts, _permissionlessSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updatePermissionlessSocializingPool", _permissionlessSocializePool)
+}
+
+// UpdatePermissionlessSocializingPool is a paid mutator transaction binding the contract method 0x1049e32e.
+//
+// Solidity: function updatePermissionlessSocializingPool(address _permissionlessSocializePool) returns()
+func (_StaderConfig *StaderConfigSession) UpdatePermissionlessSocializingPool(_permissionlessSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePermissionlessSocializingPool(&_StaderConfig.TransactOpts, _permissionlessSocializePool)
+}
+
+// UpdatePermissionlessSocializingPool is a paid mutator transaction binding the contract method 0x1049e32e.
+//
+// Solidity: function updatePermissionlessSocializingPool(address _permissionlessSocializePool) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdatePermissionlessSocializingPool(_permissionlessSocializePool common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdatePermissionlessSocializingPool(&_StaderConfig.TransactOpts, _permissionlessSocializePool)
 }
 
 // UpdatePoolSelector is a paid mutator transaction binding the contract method 0x047cb439.
@@ -3068,27 +3400,6 @@ func (_StaderConfig *StaderConfigSession) UpdateSDCollateral(_sdCollateral commo
 // Solidity: function updateSDCollateral(address _sdCollateral) returns()
 func (_StaderConfig *StaderConfigTransactorSession) UpdateSDCollateral(_sdCollateral common.Address) (*types.Transaction, error) {
 	return _StaderConfig.Contract.UpdateSDCollateral(&_StaderConfig.TransactOpts, _sdCollateral)
-}
-
-// UpdateSocializingPool is a paid mutator transaction binding the contract method 0xb479f85d.
-//
-// Solidity: function updateSocializingPool(address _socializePool) returns()
-func (_StaderConfig *StaderConfigTransactor) UpdateSocializingPool(opts *bind.TransactOpts, _socializePool common.Address) (*types.Transaction, error) {
-	return _StaderConfig.contract.Transact(opts, "updateSocializingPool", _socializePool)
-}
-
-// UpdateSocializingPool is a paid mutator transaction binding the contract method 0xb479f85d.
-//
-// Solidity: function updateSocializingPool(address _socializePool) returns()
-func (_StaderConfig *StaderConfigSession) UpdateSocializingPool(_socializePool common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateSocializingPool(&_StaderConfig.TransactOpts, _socializePool)
-}
-
-// UpdateSocializingPool is a paid mutator transaction binding the contract method 0xb479f85d.
-//
-// Solidity: function updateSocializingPool(address _socializePool) returns()
-func (_StaderConfig *StaderConfigTransactorSession) UpdateSocializingPool(_socializePool common.Address) (*types.Transaction, error) {
-	return _StaderConfig.Contract.UpdateSocializingPool(&_StaderConfig.TransactOpts, _socializePool)
 }
 
 // UpdateSocializingPoolCycleDuration is a paid mutator transaction binding the contract method 0x6870bb2b.
@@ -3257,6 +3568,27 @@ func (_StaderConfig *StaderConfigSession) UpdateUserWithdrawManager(_userWithdra
 // Solidity: function updateUserWithdrawManager(address _userWithdrawManager) returns()
 func (_StaderConfig *StaderConfigTransactorSession) UpdateUserWithdrawManager(_userWithdrawManager common.Address) (*types.Transaction, error) {
 	return _StaderConfig.Contract.UpdateUserWithdrawManager(&_StaderConfig.TransactOpts, _userWithdrawManager)
+}
+
+// UpdateValidatorWithdrawalVaultImplementation is a paid mutator transaction binding the contract method 0x5b5961fc.
+//
+// Solidity: function updateValidatorWithdrawalVaultImplementation(address _validatorWithdrawalVaultImpl) returns()
+func (_StaderConfig *StaderConfigTransactor) UpdateValidatorWithdrawalVaultImplementation(opts *bind.TransactOpts, _validatorWithdrawalVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "updateValidatorWithdrawalVaultImplementation", _validatorWithdrawalVaultImpl)
+}
+
+// UpdateValidatorWithdrawalVaultImplementation is a paid mutator transaction binding the contract method 0x5b5961fc.
+//
+// Solidity: function updateValidatorWithdrawalVaultImplementation(address _validatorWithdrawalVaultImpl) returns()
+func (_StaderConfig *StaderConfigSession) UpdateValidatorWithdrawalVaultImplementation(_validatorWithdrawalVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateValidatorWithdrawalVaultImplementation(&_StaderConfig.TransactOpts, _validatorWithdrawalVaultImpl)
+}
+
+// UpdateValidatorWithdrawalVaultImplementation is a paid mutator transaction binding the contract method 0x5b5961fc.
+//
+// Solidity: function updateValidatorWithdrawalVaultImplementation(address _validatorWithdrawalVaultImpl) returns()
+func (_StaderConfig *StaderConfigTransactorSession) UpdateValidatorWithdrawalVaultImplementation(_validatorWithdrawalVaultImpl common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.UpdateValidatorWithdrawalVaultImplementation(&_StaderConfig.TransactOpts, _validatorWithdrawalVaultImpl)
 }
 
 // UpdateVaultFactory is a paid mutator transaction binding the contract method 0x98c35927.
