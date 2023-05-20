@@ -385,3 +385,35 @@ func NewStakePoolManager(client ExecutionClient, stakePoolManagerAddress common.
 	}, nil
 
 }
+
+// Write above bindings for VaultProxy
+type VaultProxyContractManager struct {
+	Client             ExecutionClient
+	VaultProxy         *contracts.VaultProxy
+	VaultProxyContract *Contract
+}
+
+func NewVaultProxy(client ExecutionClient, vaultProxyAddress common.Address) (*VaultProxyContractManager, error) {
+	vaultProxy, err := contracts.NewVaultProxy(vaultProxyAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	vaultProxyContractAbi, err := abi.JSON(strings.NewReader(contracts.VaultProxyMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	vaultProxyContract := &Contract{
+		Contract: bind.NewBoundContract(vaultProxyAddress, vaultProxyContractAbi, client, client, client),
+		Address:  &vaultProxyAddress,
+		ABI:      &vaultProxyContractAbi,
+		Client:   client,
+	}
+
+	return &VaultProxyContractManager{
+		Client:             client,
+		VaultProxy:         vaultProxy,
+		VaultProxyContract: vaultProxyContract,
+	}, nil
+
+}

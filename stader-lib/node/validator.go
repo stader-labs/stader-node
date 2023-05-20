@@ -103,14 +103,13 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
 }
 
-// TODO - bchain - check with sanjay on it
 func GetValidatorWithdrawVaultSettleStatus(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (bool, error) {
-	//vwv, err := stader.NewValidatorWithdrawVaultFactory(executionClient, validatorWithdrawVaultAddress)
-	//if err != nil {
-	//	return false, err
-	//}
+	vpxy, err := stader.NewVaultProxy(executionClient, validatorWithdrawVaultAddress)
+	if err != nil {
+		return false, err
+	}
 
-	return false, nil
+	return vpxy.VaultProxy.VaultSettleStatus(opts)
 }
 
 func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
