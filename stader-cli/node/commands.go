@@ -354,6 +354,27 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "claim-sd",
+				Aliases:   []string{"cs"},
+				Usage:     "Claim SD from the stader contract",
+				UsageText: "stader-cli node claim-sd",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm withdraw sd collateral",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					return claimSd(c)
+				},
+			},
+			{
 				Name:      "download-sp-merkle-proofs",
 				Aliases:   []string{"dspmp"},
 				Usage:     "Download all the missing Socializing Pool merkle proofs for the operator",

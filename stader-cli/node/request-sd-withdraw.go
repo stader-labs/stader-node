@@ -2,14 +2,13 @@ package node
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
+	"strconv"
 )
 
 func WithdrawSd(c *cli.Context) error {
@@ -32,7 +31,7 @@ func WithdrawSd(c *cli.Context) error {
 	}
 	amountWei := eth.EthToWei(amount)
 
-	canWithdrawSdResponse, err := staderClient.CanSdCollateralWithdraw(amountWei)
+	canWithdrawSdResponse, err := staderClient.CanRequestSdCollateralWithdraw(amountWei)
 	if err != nil {
 		return err
 	}
@@ -41,7 +40,7 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 	if canWithdrawSdResponse.InsufficientSdCollateral {
-		fmt.Println("Insufficient SD collateral: below withdraw threshold")
+		fmt.Println("Insufficient SD collateral!")
 		return nil
 	}
 
@@ -58,7 +57,7 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
-	res, err := staderClient.SdCollateralWithdraw(amountWei)
+	res, err := staderClient.RequestSdCollateralWithdraw(amountWei)
 	if err != nil {
 		return err
 	}
