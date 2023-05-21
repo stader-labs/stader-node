@@ -98,6 +98,8 @@ type CanNodeDepositResponse struct {
 	DepositPaused            bool           `json:"depositPaused"`
 	NotEnoughSdCollateral    bool           `json:"notEnoughSdCollateral"`
 	MaxValidatorLimitReached bool           `json:"maxValidatorLimitReached"`
+	InputKeyLimitReached     bool           `json:"inputKeyLimitReached"`
+	InputKeyLimit            uint16         `json:"inputKeyLimit"`
 	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 

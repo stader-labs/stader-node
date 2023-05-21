@@ -121,6 +121,16 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
+	inputKeyLimitCount, err := node.GetInputKeyLimitCount(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	if numValidators.Cmp(big.NewInt(int64(inputKeyLimitCount))) > 0 {
+		canNodeDepositResponse.InputKeyLimitReached = true
+		canNodeDepositResponse.InputKeyLimit = inputKeyLimitCount
+		return &canNodeDepositResponse, nil
+	}
+
 	if totalValidatorsPostAddition > maxKeysPerOperator {
 		canNodeDepositResponse.MaxValidatorLimitReached = true
 		return &canNodeDepositResponse, nil

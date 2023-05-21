@@ -89,6 +89,10 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("Max validator limit reached")
 		return nil
 	}
+	if canNodeDepositResponse.InputKeyLimitReached {
+		fmt.Printf("You can only add %d keys at a time\n", canNodeDepositResponse.InputKeyLimit)
+		return nil
+	}
 
 	//Assign max fees
 	err = gas.AssignMaxFeeAndLimit(canNodeDepositResponse.GasInfo, staderClient, c.Bool("yes"))
