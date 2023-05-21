@@ -1,4 +1,4 @@
-package node
+package validator
 
 import (
 	"github.com/stader-labs/stader-node/shared/services"

@@ -21,7 +21,6 @@ package node
 
 import (
 	"fmt"
-
 	"github.com/urfave/cli"
 
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -174,47 +173,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-			{
-				Name:      "deposit",
-				Aliases:   []string{"d"},
-				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli node deposit [options]",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm deposit",
-					},
-					cli.StringFlag{
-						Name:  "salt, l",
-						Usage: "An optional seed to use when generating the new validator address.",
-					},
-					cli.Uint64Flag{
-						Name:  "num-validators, nv",
-						Usage: "Number of validators you want to create (Required)",
-					},
-				},
-				Action: func(c *cli.Context) error {
 
-					// Validate flags
-					if c.String("amount") != "" {
-						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {
-							return err
-						}
-					}
-					if c.String("salt") != "" {
-						if _, err := cliutils.ValidateBigInt("salt", c.String("salt")); err != nil {
-							return err
-						}
-					}
-					if c.Uint64("num-validators") == 0 {
-						return fmt.Errorf("num-validator needs to be > 0")
-					}
-
-					// Run
-					return nodeDeposit(c)
-
-				},
-			},
 			{
 				Name:      "send",
 				Aliases:   []string{"n"},
@@ -263,33 +222,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "exit-validator",
-				Aliases:   []string{"e"},
-				Usage:     "Exit validator",
-				UsageText: "stader-cli node exit-validator --validator-pub-key",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "validator-pub-key, vpk",
-						Usage: "Public key of validator we want to exit",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm validator exit",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					//// Validate args
-					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					return ExitValidator(c, validatorPubKey)
-				},
-			},
-			{
 				Name:      "claim-el-rewards",
 				Aliases:   []string{"wer"},
 				Usage:     "Claim all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
@@ -301,31 +233,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 					// Run
 					return ClaimElRewards(c)
-				},
-			},
-			{
-				Name:      "claim-cl-rewards",
-				Aliases:   []string{"wcr"},
-				Usage:     "Claim all Consensus Layer rewards to the node reward address.",
-				UsageText: "stader-cli node claim-cl-rewards --validator-pub-key",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "validator-pub-key, vpk",
-						Usage: "Public key of validator we want to exit",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm CL rewards withdrawal",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.String("validator-pub-key"))
-					if err != nil {
-						return err
-					}
-					// Run
-					return ClaimClRewards(c, validatorPubKey)
 				},
 			},
 			{
