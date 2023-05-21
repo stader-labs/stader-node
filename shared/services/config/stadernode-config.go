@@ -95,23 +95,11 @@ type StaderNodeConfig struct {
 	// The URL to use for staking EthX
 	stakeUrl map[config.Network]string `yaml:"-"`
 
+	// The URL of the beacon chain explorer
+	beaconChainUrl map[config.Network]string `yaml:"-"`
+
 	// The map of networks to execution chain IDs
 	chainID map[config.Network]uint `yaml:"-"`
-
-	// The contract address of the permissionless node operator registry
-	permissionlessNodeRegistryAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the permissionless pool
-	permissionlessPoolAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the withdraw vault factory
-	vaultFactoryAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the SD collateral holder
-	sdCollateralAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of SD token ERC20
-	sdTokenAddress map[config.Network]string `yaml:"-"`
 
 	// The contract address of EthX ERC20
 	ethxTokenAddress map[config.Network]string `yaml:"-"`
@@ -119,20 +107,8 @@ type StaderNodeConfig struct {
 	// The contract address of stader config
 	staderConfigAddress map[config.Network]string `yaml:"-"`
 
-	// The contract address of the socializing pool
-	socializingPoolAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the stader oracle
-	staderOracleAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the pool utils contract
-	poolUtilsAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the penalty tracker to which data is pushed by rated network oracles
-	penaltyTrackerAddress map[config.Network]string `yaml:"-"`
-
-	// The contract address of the stake pool manager contract
-	stakePoolManagerAddress map[config.Network]string `yaml:"-"`
+	// The base url of stader backend
+	baseStaderBackendUrl map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -227,6 +203,12 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
+		beaconChainUrl: map[config.Network]string{
+			config.Network_Mainnet: "https://beaconcha.in",
+			config.Network_Prater:  "https://prater.beaconcha.in",
+			config.Network_Devnet:  "https://prater.beaconcha.in",
+		},
+
 		txWatchUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://etherscan.io/tx",
 			config.Network_Prater:  "https://goerli.etherscan.io/tx",
@@ -253,6 +235,13 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet:  "0x4eAd20915791180AE4f426bE254b71B93B7D795b",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
+
+		baseStaderBackendUrl: map[config.Network]string{
+			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
+			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Mainnet:  "https://stage-ethx-offchain.staderlabs.click",
+			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
 	}
 }
 
@@ -269,6 +258,27 @@ func (cfg *StaderNodeConfig) GetParameters() []*config.Parameter {
 }
 
 // Getters for the non-editable parameters
+
+func (cfg *StaderNodeConfig) GetBeaconChainUrl() string {
+	return cfg.beaconChainUrl[cfg.Network.Value.(config.Network)]
+}
+
+// Getters for the non-editable parameters
+func (cfg *StaderNodeConfig) GetPresignSendApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/presign"
+}
+
+func (cfg *StaderNodeConfig) GetPresignCheckApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/msgSubmitted"
+}
+
+func (cfg *StaderNodeConfig) GetPresignPublicKeyApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/publicKey"
+}
+
+func (cfg *StaderNodeConfig) GetMerkleProofApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/merklesForElRewards/proofs/%s"
+}
 
 func (cfg *StaderNodeConfig) GetTxWatchUrl() string {
 	return cfg.txWatchUrl[cfg.Network.Value.(config.Network)]

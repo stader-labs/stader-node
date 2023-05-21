@@ -3,15 +3,21 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
-	"github.com/stader-labs/stader-node/shared/services/stader"
+	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/stader-labs/stader-node/stader-lib/types"
+	"github.com/urfave/cli"
 )
 
-func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
-	res, err := net.MakePostRequest(stader.PreSignSendApi, preSignedMessage)
+func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
+	config, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := net.MakePostRequest(config.StaderNode.GetPresignSendApi(), preSignedMessage)
 	if err != nil {
 		return nil, err
 	}
@@ -26,13 +32,18 @@ func SendPresignedMessageToStaderBackend(preSignedMessage stader_backend.PreSign
 	return &preSignSendResponse, nil
 }
 
-func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, error) {
-	//// check if it is already there
+func IsPresignedKeyRegistered(c *cli.Context, validatorPubKey types.ValidatorPubkey) (bool, error) {
+	config, err := services.GetConfig(c)
+	if err != nil {
+		return false, err
+	}
+
+	// check if it is already there
 	preSignCheckRequest := stader_backend.PreSignCheckApiRequestType{
 		ValidatorPublicKey: validatorPubKey.String(),
 	}
 
-	res, err := net.MakePostRequest(stader.PreSignCheckApi, preSignCheckRequest)
+	res, err := net.MakePostRequest(config.StaderNode.GetPresignCheckApi(), preSignCheckRequest)
 
 	defer res.Body.Close()
 	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
@@ -43,9 +54,14 @@ func IsPresignedKeyRegistered(validatorPubKey types.ValidatorPubkey) (bool, erro
 	return preSignCheckResponse.Value, nil
 }
 
-func GetPublicKey() (*rsa.PublicKey, error) {
+func GetPublicKey(c *cli.Context) (*rsa.PublicKey, error) {
+	config, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
+
 	// get public key from api
-	res, err := net.MakeGetRequest(stader.PublicKeyApi, struct{}{})
+	res, err := net.MakeGetRequest(config.StaderNode.GetPresignPublicKeyApi(), struct{}{})
 	if err != nil {
 		return nil, err
 	}

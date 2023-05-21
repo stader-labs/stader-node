@@ -101,11 +101,6 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	publicKey, err := stader.GetPublicKey()
-	if err != nil {
-		return err
-	}
-
 	// Configure
 	configureHTTP()
 
@@ -122,11 +117,6 @@ func run(c *cli.Context) error {
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
-
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return err
-	}
 
 	// get all registered validators with smart contracts
 
@@ -151,6 +141,18 @@ func run(c *cli.Context) error {
 				}
 			}
 
+			publicKey, err := stader.GetPublicKey(c)
+			if err != nil {
+				errorLog.Printf("Failed to get public key: %s\n", err.Error())
+				continue
+			}
+
+			operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+			if err != nil {
+				errorLog.Printf("Failed to get operator id: %s\n", err.Error())
+				continue
+			}
+
 			// make a map of all validators actually registered with stader
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
 
@@ -168,7 +170,6 @@ func run(c *cli.Context) error {
 				errorLog.Println(err)
 				continue
 			}
-			// TODO - bchain- temp fix for beta
 			walletIndex := latestWallet.GetNextAccount() + 101
 			noOfBatches := walletIndex / uint(preSignBatchSize)
 			batchIndex := 0
@@ -219,7 +220,7 @@ func run(c *cli.Context) error {
 					}
 
 					// check if the presigned message has been registered. if it has been registered, then continue
-					isRegistered, err := stader.IsPresignedKeyRegistered(validatorPubKey)
+					isRegistered, err := stader.IsPresignedKeyRegistered(c, validatorPubKey)
 					if isRegistered {
 						errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
 						continue
@@ -251,7 +252,7 @@ func run(c *cli.Context) error {
 					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
 
 					// send it to the presigned api
-					backendRes, err := stader.SendPresignedMessageToStaderBackend(stader_backend.PreSignSendApiRequestType{
+					backendRes, err := stader.SendPresignedMessageToStaderBackend(c, stader_backend.PreSignSendApiRequestType{
 						Message: struct {
 							Epoch          string `json:"epoch"`
 							ValidatorIndex string `json:"validator_index"`

@@ -79,7 +79,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 	response := api.DownloadSpMerkleProofsResponse{}
 
-	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(nodeAccount.Address)
+	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(c, nodeAccount.Address)
 	if err != nil {
 		return nil, err
 	}
