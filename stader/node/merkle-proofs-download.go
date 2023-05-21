@@ -49,7 +49,7 @@ func (m *MerkleProofsDownloader) run() error {
 		return err
 	}
 
-	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(nodeAccount.Address)
+	allMerkleProofs, err := stader.GetAllMerkleProofsForOperator(m.c, nodeAccount.Address)
 	if err != nil {
 		return err
 	}

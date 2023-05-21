@@ -1,4 +1,4 @@
-package node
+package validator
 
 import (
 	"fmt"
@@ -47,13 +47,12 @@ func ExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 	}
 
 	// now exit
-	_, err = staderClient.ExitValidator(validatorPubKey)
+	exitResponse, err := staderClient.ExitValidator(validatorPubKey)
 	if err != nil {
 		return err
 	}
 
-	// TODO - bchain - pick up the link from the config depending on the n/w
-	fmt.Printf("Exiting validator %s, you check check the validator status at %s\n", validatorPubKey, fmt.Sprintf("https://prater.beaconcha.in/validator/%s#withdrawals", validatorPubKey))
+	fmt.Printf("Exiting validator %s, you check check the validator status at %s\n", validatorPubKey, fmt.Sprintf("%s/validator/%s#withdrawals", exitResponse.BeaconChainUrl, validatorPubKey))
 
 	return nil
 }

@@ -21,6 +21,7 @@ package api
 
 import (
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/stader-labs/stader-node/stader/api/validator"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -73,6 +74,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 	node.RegisterSubcommands(&command, "node", []string{"n"})
 	wallet.RegisterSubcommands(&command, "wallet", []string{"w"})
 	apiservice.RegisterSubcommands(&command, "service", []string{"s"})
+	validator.RegisterSubcommands(&command, "validator", []string{"v"})
 
 	// Append a general wait-for-transaction command to support async operations
 	command.Subcommands = append(command.Subcommands, cli.Command{

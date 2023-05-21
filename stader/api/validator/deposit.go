@@ -1,4 +1,4 @@
-package node
+package validator
 
 import (
 	"context"
@@ -17,7 +17,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.CanNodeDepositResponse, error) {
+func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -121,6 +121,16 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return &canNodeDepositResponse, nil
 	}
 
+	inputKeyLimitCount, err := node.GetInputKeyLimitCount(prn, nil)
+	if err != nil {
+		return nil, err
+	}
+	if numValidators.Cmp(big.NewInt(int64(inputKeyLimitCount))) > 0 {
+		canNodeDepositResponse.InputKeyLimitReached = true
+		canNodeDepositResponse.InputKeyLimit = inputKeyLimitCount
+		return &canNodeDepositResponse, nil
+	}
+
 	if totalValidatorsPostAddition > maxKeysPerOperator {
 		canNodeDepositResponse.MaxValidatorLimitReached = true
 		return &canNodeDepositResponse, nil
@@ -193,10 +203,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
-
-	// Do not send transaction unless requested
-	opts.NoSend = !submit
-
+	
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
@@ -208,7 +215,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	return &canNodeDepositResponse, nil
 }
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, submit bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
 
 	cfg, err := services.GetConfig(c)
 	if err != nil {
@@ -231,10 +238,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, err
 	}
 	bc, err := services.GetBeaconClient(c)
-	if err != nil {
-		return nil, err
-	}
-	d, err := services.GetDocker(c)
 	if err != nil {
 		return nil, err
 	}
@@ -352,10 +355,17 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 	}
 
-	// Restart the validator container when a new key have been saved
-	err = validator.RestartValidator(cfg, bc, nil, d)
-	if err != nil {
-		return nil, err
+	if reloadKeys {
+		d, err := services.GetDocker(c)
+		if err != nil {
+			return nil, err
+		}
+
+		// Restart the validator container when a new key have been saved
+		err = validator.RestartValidator(cfg, bc, nil, d)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Override the provided pending TX if requested
@@ -364,21 +374,9 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	// Do not send transaction unless requested
-	opts.NoSend = !submit
-
 	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
-	}
-
-	// Print transaction if requested
-	if !submit {
-		b, err := tx.MarshalBinary()
-		if err != nil {
-			return nil, err
-		}
-		fmt.Printf("%x\n", b)
 	}
 
 	response.TxHash = tx.Hash()

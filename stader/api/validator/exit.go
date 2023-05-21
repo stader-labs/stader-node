@@ -1,4 +1,4 @@
-package node
+package validator
 
 import (
 	"github.com/stader-labs/stader-node/shared/services"
@@ -74,6 +74,10 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 	if err != nil {
 		return nil, err
 	}
+	cfg, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.ExitValidatorResponse{}
@@ -108,6 +112,8 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 	if err := bc.ExitValidator(validatorIndex, head.Epoch, signature); err != nil {
 		return nil, err
 	}
+
+	response.BeaconChainUrl = cfg.StaderNode.GetBeaconChainUrl()
 
 	// Return response
 	return &response, nil

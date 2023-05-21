@@ -28,6 +28,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/stader-cli/node"
 	"github.com/stader-labs/stader-node/stader-cli/service"
+	"github.com/stader-labs/stader-node/stader-cli/validator"
 	"github.com/stader-labs/stader-node/stader-cli/wallet"
 	"github.com/urfave/cli"
 )
@@ -816,6 +817,7 @@ Public License instead of this License. But first, please read
 	node.RegisterCommands(app, "node", []string{"n"})
 	service.RegisterCommands(app, "service", []string{"s"})
 	wallet.RegisterCommands(app, "wallet", []string{"w"})
+	validator.RegisterCommands(app, "validator", []string{"v"})
 	app.Commands = append(app.Commands, cli.Command{
 		Name:    "license",
 		Aliases: []string{"l"},

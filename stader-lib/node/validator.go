@@ -140,3 +140,7 @@ func GetSlashedValidator(pnr *stader.PermissionlessNodeRegistryContractManager, 
 func GetCollateralETH(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.GetCollateralETH(opts)
 }
+
+func GetInputKeyLimitCount(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (uint16, error) {
+	return pnr.PermissionlessNodeRegistry.InputKeyCountLimit(opts)
+}

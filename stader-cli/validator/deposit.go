@@ -1,4 +1,4 @@
-package node
+package validator
 
 import (
 	"crypto/rand"
@@ -87,6 +87,10 @@ func nodeDeposit(c *cli.Context) error {
 	}
 	if canNodeDepositResponse.MaxValidatorLimitReached {
 		fmt.Printf("Max validator limit reached")
+		return nil
+	}
+	if canNodeDepositResponse.InputKeyLimitReached {
+		fmt.Printf("You can only add %d keys at a time\n", canNodeDepositResponse.InputKeyLimit)
 		return nil
 	}
 
