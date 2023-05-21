@@ -37,7 +37,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit to create a validator",
-				UsageText: "stader-cli api node can-deposit amount min-fee salt",
+				UsageText: "stader-cli api node can-deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
@@ -60,12 +60,12 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
-					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, submit))
+					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, reloadKeys))
 
 					return nil
 
@@ -74,8 +74,8 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "deposit",
 				Aliases:   []string{"d"},
-				Usage:     "Make a deposit and create a validator, or just make and sign the transaction (when submit = false)",
-				UsageText: "stader api node deposit amount salt submit",
+				Usage:     "Make a deposit and create a validator",
+				UsageText: "stader-cli api node deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -97,16 +97,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					submit, err := cliutils.ValidateBool("submit", c.Args().Get(3))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, salt, numValidators, submit)
-					if submit {
-						api.PrintResponse(response, err)
-					}
+					response, err := nodeDeposit(c, amountWei, salt, numValidators, reloadKeys)
+					api.PrintResponse(response, err)
+
 					return nil
 
 				},
