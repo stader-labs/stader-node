@@ -5,6 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
@@ -110,4 +111,26 @@ func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, op
 
 func GetOperatorRewardsCollectorBalance(orc *stader.OperatorRewardsCollectorContractManager, operatorRewardAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
 	return orc.OperatorRewardsCollector.Balances(opts, operatorRewardAddress)
+}
+
+func GetValidatorInfosByOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, pageNumber *big.Int, pageSize *big.Int, opts *bind.CallOpts) ([]contracts.Validator, error) {
+	return pnr.PermissionlessNodeRegistry.GetValidatorsByOperator(opts, operatorAddress, pageNumber, pageSize)
+}
+
+func GetAllValidatorsInfoByOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, opts *bind.CallOpts) ([]contracts.Validator, error) {
+	finalValidators := []contracts.Validator{}
+	pageNumber := big.NewInt(1)
+	pageSize := big.NewInt(100)
+
+	for {
+		validators, err := pnr.PermissionlessNodeRegistry.GetValidatorsByOperator(opts, operatorAddress, pageNumber, pageSize)
+		if err != nil {
+			break
+		}
+
+		finalValidators = append(finalValidators, validators...)
+		pageNumber.Add(pageNumber, big.NewInt(1))
+	}
+
+	return finalValidators, nil
 }
