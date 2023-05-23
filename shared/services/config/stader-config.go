@@ -21,19 +21,17 @@ package config
 
 import (
 	"fmt"
+	"github.com/alessio/shellescape"
+	"github.com/pbnjay/memory"
+	"github.com/stader-labs/stader-node/shared"
+	"github.com/stader-labs/stader-node/shared/types/config"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
 	"strconv"
-	"strings"
-
-	"github.com/alessio/shellescape"
-	"github.com/pbnjay/memory"
-	"github.com/stader-labs/stader-node/shared"
-	"github.com/stader-labs/stader-node/shared/types/config"
-	"gopkg.in/yaml.v2"
 )
 
 // Constants
@@ -894,24 +892,14 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars["CC_CLIENT"] = fmt.Sprint(consensusClient)
 
 	// Graffiti
-	identifier := ""
 	versionString := fmt.Sprintf("v%s", shared.StaderVersion)
 	envVars["STADER_VERSION"] = versionString
-	if len(versionString) < 8 {
-		ecInitial := strings.ToUpper(string(envVars["EC_CLIENT"][0]))
-		ccInitial := strings.ToUpper(string(envVars["CC_CLIENT"][0]))
-		identifier = fmt.Sprintf("-%s%s", ecInitial, ccInitial)
-	}
 
-	graffitiPrefix := fmt.Sprintf("SD%s %s", identifier, versionString)
+	graffitiValue := cfg.ConsensusCommon.Graffiti.Value.(string)
+	graffitiPrefix := fmt.Sprintf("SD%s", versionString)
 	envVars["GRAFFITI_PREFIX"] = graffitiPrefix
-
-	customGraffiti := envVars[CustomGraffitiEnvVar]
-	if customGraffiti == "" {
-		envVars["GRAFFITI"] = graffitiPrefix
-	} else {
-		envVars["GRAFFITI"] = fmt.Sprintf("%s (%s)", graffitiPrefix, customGraffiti)
-	}
+	graffiti := fmt.Sprintf("%s-%s", graffitiPrefix, graffitiValue)
+	envVars["GRAFFITI"] = graffiti
 
 	// Get the hostname of the Consensus client, necessary for Prometheus to work in hybrid mode
 	ccUrl, err := url.Parse(envVars["CC_API_ENDPOINT"])
