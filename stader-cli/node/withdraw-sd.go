@@ -31,11 +31,12 @@ func WithdrawSd(c *cli.Context) error {
 	}
 	amountWei := eth.EthToWei(amount)
 
-	canWithdrawSdResponse, err := staderClient.CanRequestSdCollateralWithdraw(amountWei)
+	canWithdrawSdResponse, err := staderClient.CanWithdrawSd(amountWei)
 	if err != nil {
 		return err
 	}
 	if canWithdrawSdResponse.InsufficientWithdrawableSd {
+		// TODO - bchain - rework error messages
 		fmt.Println("Insufficient withdrawable SD!")
 		return nil
 	}
@@ -57,19 +58,19 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
-	res, err := staderClient.RequestSdCollateralWithdraw(amountWei)
+	res, err := staderClient.WithdrawSd(amountWei)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Requesting withdrawal of %s SD from the collateral contract.\n", amountInString)
+	fmt.Printf("Withdrawing %s SD from the collateral contract.\n", amountInString)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully requested to withdraw %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully withdrawn %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
 
 	return nil
 }

@@ -204,20 +204,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.SdCollateralWorthValidators = totalSdWorthValidators
 
-		//fmt.Printf("Getting operator sd withdraw request\n")
-		// get sd collateral in unbonding phase
-		withdrawReqSd, err := sd_collateral.GetOperatorWithdrawInfo(sdc, nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-		//fmt.Printf("Getting operator sd withdraw delay\n")
-		withdrawDelay, err := sd_collateral.GetWithdrawDelay(sdc, nil)
-		if err != nil {
-			return nil, err
-		}
-		response.SdCollateralRequestedToWithdraw = withdrawReqSd.TotalSDWithdrawReqAmount
-		response.SdCollateralWithdrawTime = withdrawReqSd.LastWithdrawReqTimestamp.Add(withdrawReqSd.LastWithdrawReqTimestamp, withdrawDelay.Add(withdrawDelay, big.NewInt(20)))
-
 		//fmt.Printf("Getting reward details\n")
 		rewardCycleDetails, err := socializing_pool.GetRewardDetails(sp, nil)
 		if err != nil {

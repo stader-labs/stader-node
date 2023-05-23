@@ -448,9 +448,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-node-request-sd-withdraw",
-				Usage:     "Check whether the node can request to withdraw SD",
-				UsageText: "stader-cli api node can-node-request-sd-withdraw amount",
+				Name:      "can-withdraw-sd",
+				Usage:     "Check whether the node can withdraw SD",
+				UsageText: "stader-cli api node can-withdraw-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -463,15 +463,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(canRequestSdWithdraw(c, amountWei))
+					api.PrintResponse(canWithdrawSd(c, amountWei))
 					return nil
 
 				},
 			},
 			{
-				Name:      "node-request-sd-withdraw",
-				Usage:     "Request SD withdraw",
-				UsageText: "stader-cli api node node-request-sd-withdraw amount",
+				Name:      "withdraw-sd",
+				Usage:     "Withdraw SD",
+				UsageText: "stader-cli api node withdraw-sd amount",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -484,41 +484,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(requestSdWithdraw(c, amountWei))
-					return nil
-
-				},
-			},
-			{
-				Name:      "can-node-claim-sd",
-				Usage:     "Check whether the node can claim the SD requested to withdraw",
-				UsageText: "stader-cli api node can-node-claim-sd",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(canClaimSd(c))
-					return nil
-
-				},
-			},
-			{
-				Name:      "node-claim-sd",
-				Usage:     "Claim the SD requested to withdraw",
-				UsageText: "stader-cli api node node-claim-sd",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(claimSd(c))
+					api.PrintResponse(withdrawSd(c, amountWei))
 					return nil
 
 				},

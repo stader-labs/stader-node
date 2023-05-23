@@ -236,9 +236,9 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "request-withdraw-sd-collateral",
+				Name:      "withdraw-sd-collateral",
 				Aliases:   []string{"sef"},
-				Usage:     "Request to withdraw SD collateral",
+				Usage:     "Withdraw Sd collateral",
 				UsageText: "stader-cli node withdraw-sd-collateral --amount",
 				Flags: []cli.Flag{
 					cli.StringFlag{
@@ -258,27 +258,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return WithdrawSd(c)
-				},
-			},
-			{
-				Name:      "claim-sd",
-				Aliases:   []string{"cs"},
-				Usage:     "Claim SD from the stader contract",
-				UsageText: "stader-cli node claim-sd",
-				Flags: []cli.Flag{
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm withdraw sd collateral",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					return claimSd(c)
 				},
 			},
 			{
