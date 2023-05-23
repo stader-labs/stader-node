@@ -303,18 +303,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "update-operator-details",
-				Aliases:   []string{"uod"},
-				Usage:     "Update Operator name or Operator reward address",
-				UsageText: "stader-cli node update-operator-details --operator-name --operator-reward-address",
+				Name:      "update-operator-name",
+				Aliases:   []string{"uon"},
+				Usage:     "Update Operator name",
+				UsageText: "stader-permissioned-cli node update-operator-name --operator-name",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-name, on",
 						Usage: "The new operator name",
-					},
-					cli.StringFlag{
-						Name:  "operator-reward-address, ora",
-						Usage: "New operator reward address",
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -327,13 +323,35 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					if operatorName == "" {
 						return fmt.Errorf("operator name can't be empty string")
 					}
+
+					// Run
+					return updateOperatorName(c, operatorName)
+				},
+			},
+			{
+				Name:      "update-operator-reward-address",
+				Aliases:   []string{"uod"},
+				Usage:     "Update Operator reward address",
+				UsageText: "stader-permissioned-cli node update-operator-reward-address --operator-reward-address",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "operator-reward-address, ora",
+						Usage: "New operator reward address",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm claim of rewards",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
 					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address"))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					return updateOperatorDetails(c, operatorName, operatorRewardAddress)
+					return updateOperatorRewardAddress(c, operatorRewardAddress)
 				},
 			},
 		},

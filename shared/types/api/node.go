@@ -346,6 +346,36 @@ type UpdateOperatorDetails struct {
 	TxHash common.Hash `json:"txHash"`
 }
 
+type CanUpdateOperatorName struct {
+	Status              string         `json:"status"`
+	Error               string         `json:"error"`
+	OperatorNotActive   bool           `json:"operatorNotActive"`
+	OperatorNameTooLong bool           `json:"operatorNameTooLong"`
+	NothingToUpdate     bool           `json:"nothingToUpdate"`
+	GasInfo             stader.GasInfo `json:"gasInfo"`
+}
+
+type UpdateOperatorName struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanUpdateOperatorRewardAddress struct {
+	Status                    string         `json:"status"`
+	Error                     string         `json:"error"`
+	OperatorNotActive         bool           `json:"operatorNotActive"`
+	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
+	NothingToUpdate           bool           `json:"nothingToUpdate"`
+	GasInfo                   stader.GasInfo `json:"gasInfo"`
+}
+
+type UpdateOperatorRewardAddress struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
 type NodeSignResponse struct {
 	Status     string `json:"status"`
 	Error      string `json:"error"`

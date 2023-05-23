@@ -597,48 +597,83 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-update-operator-details",
-				Usage:     "Can we update the operator details",
-				UsageText: "stader-cli api node can-update-operator-details operator-name operator-reward-address",
+				Name:      "can-update-operator-name",
+				Usage:     "Can we update the operator name",
+				UsageText: "stader-permissioned-cli api node can-update-operator-name operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
 						return err
 					}
 
 					operatorName := c.Args().Get(0)
 
-					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
-					if err != nil {
-						return err
-					}
-
 					// Run
-					api.PrintResponse(CanUpdateOperatorDetails(c, operatorName, operatorRewardAddress))
+					api.PrintResponse(CanUpdateOperatorName(c, operatorName))
 					return nil
 
 				},
 			},
 			{
-				Name:      "update-operator-details",
-				Usage:     "Update the operator details",
-				UsageText: "stader-cli api node update-operator-details operator-name operator-reward-address",
+				Name:      "update-operator-name",
+				Usage:     "Update the operator name",
+				UsageText: "stader-permissioned-cli api node update-operator-name operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
 						return err
 					}
 
 					operatorName := c.Args().Get(0)
 
-					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(1))
+					// Run
+					api.PrintResponse(UpdateOperatorName(c, operatorName))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-update-operator-reward-address",
+				Usage:     "Can we update the operator reward address",
+				UsageText: "stader-permissioned-cli api node can-update-operator-reward-address operator-name",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
+
 					// Run
-					api.PrintResponse(UpdateOperatorDetails(c, operatorName, operatorRewardAddress))
+					api.PrintResponse(CanUpdateOperatorRewardAddress(c, operatorRewardAddress))
+					return nil
+
+				},
+			},
+			{
+				Name:      "update-operator-reward-address",
+				Usage:     "Update the operator reward address",
+				UsageText: "stader-permissioned-cli api node update-operator-reward-address operator-name",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+
+					operatorRewardAddress, err := cliutils.ValidateAddress("operator-reward-address", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(UpdateOperatorRewardAddress(c, operatorRewardAddress))
 					return nil
 
 				},

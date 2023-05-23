@@ -2,7 +2,6 @@ package node
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
@@ -11,14 +10,11 @@ import (
 	"github.com/urfave/cli"
 )
 
-func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) (*api.CanUpdateOperatorDetails, error) {
+func CanUpdateOperatorName(c *cli.Context, operatorName string) (*api.CanUpdateOperatorName, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
 	if err := services.RequireNodeRegistered(c); err != nil {
-		return nil, err
-	}
-	if err := services.RequireNodeActive(c); err != nil {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
@@ -38,7 +34,7 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return nil, err
 	}
 
-	response := api.CanUpdateOperatorDetails{}
+	response := api.CanUpdateOperatorName{}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
@@ -49,8 +45,12 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 	if err != nil {
 		return nil, err
 	}
+	if !operatorInfo.Active {
+		response.OperatorNotActive = true
+		return &response, nil
+	}
 
-	if operatorInfo.OperatorName == operatorName && operatorInfo.OperatorRewardAddress == operatorRewardAddress {
+	if operatorInfo.OperatorName == operatorName {
 		response.NothingToUpdate = true
 		return &response, nil
 	}
@@ -64,18 +64,13 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 		return &response, nil
 	}
 
-	if eth1.IsZeroAddress(operatorRewardAddress) {
-		response.OperatorRewardAddressZero = true
-		return &response, nil
-	}
-
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
 
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, opts)
+	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorInfo.OperatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +80,7 @@ func CanUpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewar
 	return &response, nil
 }
 
-func UpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) (*api.UpdateOperatorDetails, error) {
+func UpdateOperatorName(c *cli.Context, operatorName string) (*api.UpdateOperatorName, error) {
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -103,9 +98,24 @@ func UpdateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAd
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	response := api.UpdateOperatorDetails{}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
 
-	tx, err := node.UpdateOperatorDetails(pnr, operatorName, operatorRewardAddress, opts)
+	response := api.UpdateOperatorName{}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := node.UpdateOperatorDetails(pnr, operatorName, operatorInfo.OperatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

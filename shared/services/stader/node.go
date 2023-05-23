@@ -542,32 +542,62 @@ func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, 
 	return response, nil
 }
 
-func (c *Client) CanUpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.CanUpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI("node can-update-operator-details", operatorName, operatorRewardAddress.Hex())
+func (c *Client) CanUpdateOperatorName(operatorName string) (api.CanUpdateOperatorName, error) {
+	responseBytes, err := c.callAPI("node can-update-operator-name", operatorName)
 	if err != nil {
-		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %w", err)
+		return api.CanUpdateOperatorName{}, fmt.Errorf("could not get can-update-operator-name response: %w", err)
 	}
-	var response api.CanUpdateOperatorDetails
+	var response api.CanUpdateOperatorName
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not decode can-update-operator-details response: %w", err)
+		return api.CanUpdateOperatorName{}, fmt.Errorf("could not decode can-update-operator-name response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanUpdateOperatorDetails{}, fmt.Errorf("could not get can-update-operator-details response: %s", response.Error)
+		return api.CanUpdateOperatorName{}, fmt.Errorf("could not get can-update-operator-name response: %s", response.Error)
 	}
 	return response, nil
 }
 
-func (c *Client) UpdateOperatorDetails(operatorName string, operatorRewardAddress common.Address) (api.UpdateOperatorDetails, error) {
-	responseBytes, err := c.callAPI("node update-operator-details", operatorName, operatorRewardAddress.Hex())
+func (c *Client) UpdateOperatorName(operatorName string) (api.UpdateOperatorName, error) {
+	responseBytes, err := c.callAPI("node update-operator-name", operatorName)
 	if err != nil {
-		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %w", err)
+		return api.UpdateOperatorName{}, fmt.Errorf("could not get update-operator-name response: %w", err)
 	}
-	var response api.UpdateOperatorDetails
+	var response api.UpdateOperatorName
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.UpdateOperatorDetails{}, fmt.Errorf("could not decode update-operator-details response: %w", err)
+		return api.UpdateOperatorName{}, fmt.Errorf("could not decode update-operator-name response: %w", err)
 	}
 	if response.Error != "" {
-		return api.UpdateOperatorDetails{}, fmt.Errorf("could not get update-operator-details response: %s", response.Error)
+		return api.UpdateOperatorName{}, fmt.Errorf("could not get update-operator-name response: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanUpdateOperatorRewardAddress(operatorRewardAddress common.Address) (api.CanUpdateOperatorRewardAddress, error) {
+	responseBytes, err := c.callAPI("node can-update-operator-reward-address", operatorRewardAddress.Hex())
+	if err != nil {
+		return api.CanUpdateOperatorRewardAddress{}, fmt.Errorf("could not get can-update-operator-reward-address response: %w", err)
+	}
+	var response api.CanUpdateOperatorRewardAddress
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUpdateOperatorRewardAddress{}, fmt.Errorf("could not decode can-update-operator-reward-address response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUpdateOperatorRewardAddress{}, fmt.Errorf("could not get can-update-operator-reward-address response: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) UpdateOperatorRewardAddress(operatorRewardAddress common.Address) (api.UpdateOperatorRewardAddress, error) {
+	responseBytes, err := c.callAPI("node update-operator-reward-address", operatorRewardAddress.Hex())
+	if err != nil {
+		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not get update-operator-reward-address response: %w", err)
+	}
+	var response api.UpdateOperatorRewardAddress
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not decode update-operator-reward-address response: %w", err)
+	}
+	if response.Error != "" {
+		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not get update-operator-reward-address response: %s", response.Error)
 	}
 	return response, nil
 }

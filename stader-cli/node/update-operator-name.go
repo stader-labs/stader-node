@@ -2,14 +2,13 @@ package node
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/urfave/cli"
 )
 
-func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAddress common.Address) error {
+func updateOperatorName(c *cli.Context, operatorName string) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -17,23 +16,17 @@ func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAd
 	}
 	defer staderClient.Close()
 
-	// Check and assign the EC status
-	err = cliutils.CheckClientStatus(staderClient)
+	// check if we can update the el
+	res, err := staderClient.CanUpdateOperatorName(operatorName)
 	if err != nil {
 		return err
 	}
-
-	// check if we can update the el
-	res, err := staderClient.CanUpdateOperatorDetails(operatorName, operatorRewardAddress)
-	if err != nil {
-		return err
+	if res.OperatorNotActive {
+		fmt.Println("Operator not active")
+		return nil
 	}
 	if res.OperatorNameTooLong {
 		fmt.Println("Operator name too long")
-		return nil
-	}
-	if res.OperatorRewardAddressZero {
-		fmt.Println("Operator reward address cannot be zero")
 		return nil
 	}
 	if res.NothingToUpdate {
@@ -47,18 +40,18 @@ func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAd
 	}
 
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to update your operator details?"))) {
+		"Are you sure you want to update your operator name?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
 	// update the socializing pool el
-	response, err := staderClient.UpdateOperatorDetails(operatorName, operatorRewardAddress)
+	response, err := staderClient.UpdateOperatorName(operatorName)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Updating operator details...")
+	fmt.Println("Updating operator name...")
 
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
@@ -66,7 +59,7 @@ func updateOperatorDetails(c *cli.Context, operatorName string, operatorRewardAd
 		return err
 	}
 
-	fmt.Println("Operator details updated!")
+	fmt.Println("Operator name updated!")
 
 	return nil
 }
