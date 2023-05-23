@@ -128,19 +128,6 @@ func GetTotalQueuedValidators(pnr *stader.PermissionlessNodeRegistryContractMana
 	return pnr.PermissionlessNodeRegistry.GetTotalQueuedValidatorCount(opts)
 }
 
-func GetSlashedValidator(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
-	vals, err := pnr.PermissionlessNodeRegistry.GetAllActiveValidators(opts, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return big.NewInt(int64(len(vals))), nil
-}
-
-func GetCollateralETH(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
-	return pnr.PermissionlessNodeRegistry.GetCollateralETH(opts)
-}
-
 func GetInputKeyLimitCount(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (uint16, error) {
 	return pnr.PermissionlessNodeRegistry.InputKeyCountLimit(opts)
 }

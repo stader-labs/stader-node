@@ -23,25 +23,12 @@ func DepositSdAsCollateral(sdc *stader.SdCollateralContractManager, amount *big.
 	return tx, nil
 }
 
-func EstimateRequestSdCollateralWithdraw(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "requestWithdraw", amount)
+func EstimateWithdrawSd(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "withdraw", amount)
 }
 
-func RequestSdCollateralWithdraw(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := sdc.SdCollateral.RequestWithdraw(opts, amount)
-	if err != nil {
-		return nil, err
-	}
-
-	return tx, nil
-}
-
-func EstimateClaimWithdrawnSd(sdc *stader.SdCollateralContractManager, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return sdc.SdCollateralContract.GetTransactionGasInfo(opts, "claimWithdraw")
-}
-
-func ClaimWithdrawnSd(sdc *stader.SdCollateralContractManager, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := sdc.SdCollateral.ClaimWithdraw(opts)
+func WithdrawSd(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := sdc.SdCollateral.Withdraw(opts, amount)
 	if err != nil {
 		return nil, err
 	}
@@ -110,24 +97,6 @@ func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.Ca
 	}
 
 	return totalSdCollateral, nil
-}
-
-func GetWithdrawDelay(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
-	withdrawDelay, err := sdc.SdCollateral.WithdrawDelay(opts)
-	if err != nil {
-		return nil, err
-	}
-
-	return withdrawDelay, nil
-}
-
-func GetOperatorWithdrawInfo(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (types2.OperatorWithdrawInfo, error) {
-	withdrawInfo, err := sdc.SdCollateral.WithdrawReq(opts, operatorAddress)
-	if err != nil {
-		return types2.OperatorWithdrawInfo{}, err
-	}
-
-	return withdrawInfo, nil
 }
 
 func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (types2.PoolThresholdInfo, error) {

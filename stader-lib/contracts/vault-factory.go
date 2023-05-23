@@ -31,7 +31,7 @@ var (
 
 // VaultFactoryMetaData contains all meta data concerning the VaultFactory contract.
 var VaultFactoryMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"nodeDistributor\",\"type\":\"address\"}],\"name\":\"NodeELRewardVaultCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"vaultProxyImplementation\",\"type\":\"address\"}],\"name\":\"UpdatedVaultProxyImplementation\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"withdrawVault\",\"type\":\"address\"}],\"name\":\"WithdrawVaultCreated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NODE_REGISTRY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"computeNodeELRewardVaultAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"}],\"name\":\"computeWithdrawVaultAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"deployNodeELRewardVault\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"deployWithdrawVault\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_withdrawVault\",\"type\":\"address\"}],\"name\":\"getValidatorWithdrawCredential\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_vaultProxyImpl\",\"type\":\"address\"}],\"name\":\"updateProxyAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"nodeDistributor\",\"type\":\"address\"}],\"name\":\"NodeELRewardVaultCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"withdrawVault\",\"type\":\"address\"}],\"name\":\"WithdrawVaultCreated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NODE_REGISTRY_CONTRACT\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"computeNodeELRewardVaultAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"}],\"name\":\"computeWithdrawVaultAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"}],\"name\":\"deployNodeELRewardVault\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"}],\"name\":\"deployWithdrawVault\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_withdrawVault\",\"type\":\"address\"}],\"name\":\"getValidatorWithdrawCredential\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nodeELRewardVaultImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"validatorWithdrawalVaultImplementation\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // VaultFactoryABI is the input ABI used to generate the binding from.
@@ -397,6 +397,37 @@ func (_VaultFactory *VaultFactoryCallerSession) HasRole(role [32]byte, account c
 	return _VaultFactory.Contract.HasRole(&_VaultFactory.CallOpts, role, account)
 }
 
+// NodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0x6a9f22ba.
+//
+// Solidity: function nodeELRewardVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactoryCaller) NodeELRewardVaultImplementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _VaultFactory.contract.Call(opts, &out, "nodeELRewardVaultImplementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// NodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0x6a9f22ba.
+//
+// Solidity: function nodeELRewardVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactorySession) NodeELRewardVaultImplementation() (common.Address, error) {
+	return _VaultFactory.Contract.NodeELRewardVaultImplementation(&_VaultFactory.CallOpts)
+}
+
+// NodeELRewardVaultImplementation is a free data retrieval call binding the contract method 0x6a9f22ba.
+//
+// Solidity: function nodeELRewardVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactoryCallerSession) NodeELRewardVaultImplementation() (common.Address, error) {
+	return _VaultFactory.Contract.NodeELRewardVaultImplementation(&_VaultFactory.CallOpts)
+}
+
 // StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
 //
 // Solidity: function staderConfig() view returns(address)
@@ -457,6 +488,37 @@ func (_VaultFactory *VaultFactorySession) SupportsInterface(interfaceId [4]byte)
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
 func (_VaultFactory *VaultFactoryCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
 	return _VaultFactory.Contract.SupportsInterface(&_VaultFactory.CallOpts, interfaceId)
+}
+
+// ValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x436c55e6.
+//
+// Solidity: function validatorWithdrawalVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactoryCaller) ValidatorWithdrawalVaultImplementation(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _VaultFactory.contract.Call(opts, &out, "validatorWithdrawalVaultImplementation")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// ValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x436c55e6.
+//
+// Solidity: function validatorWithdrawalVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactorySession) ValidatorWithdrawalVaultImplementation() (common.Address, error) {
+	return _VaultFactory.Contract.ValidatorWithdrawalVaultImplementation(&_VaultFactory.CallOpts)
+}
+
+// ValidatorWithdrawalVaultImplementation is a free data retrieval call binding the contract method 0x436c55e6.
+//
+// Solidity: function validatorWithdrawalVaultImplementation() view returns(address)
+func (_VaultFactory *VaultFactoryCallerSession) ValidatorWithdrawalVaultImplementation() (common.Address, error) {
+	return _VaultFactory.Contract.ValidatorWithdrawalVaultImplementation(&_VaultFactory.CallOpts)
 }
 
 // DeployNodeELRewardVault is a paid mutator transaction binding the contract method 0x6a0b6881.
@@ -583,27 +645,6 @@ func (_VaultFactory *VaultFactorySession) RevokeRole(role [32]byte, account comm
 // Solidity: function revokeRole(bytes32 role, address account) returns()
 func (_VaultFactory *VaultFactoryTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
 	return _VaultFactory.Contract.RevokeRole(&_VaultFactory.TransactOpts, role, account)
-}
-
-// UpdateProxyAddress is a paid mutator transaction binding the contract method 0xeac32a8e.
-//
-// Solidity: function updateProxyAddress(address _vaultProxyImpl) returns()
-func (_VaultFactory *VaultFactoryTransactor) UpdateProxyAddress(opts *bind.TransactOpts, _vaultProxyImpl common.Address) (*types.Transaction, error) {
-	return _VaultFactory.contract.Transact(opts, "updateProxyAddress", _vaultProxyImpl)
-}
-
-// UpdateProxyAddress is a paid mutator transaction binding the contract method 0xeac32a8e.
-//
-// Solidity: function updateProxyAddress(address _vaultProxyImpl) returns()
-func (_VaultFactory *VaultFactorySession) UpdateProxyAddress(_vaultProxyImpl common.Address) (*types.Transaction, error) {
-	return _VaultFactory.Contract.UpdateProxyAddress(&_VaultFactory.TransactOpts, _vaultProxyImpl)
-}
-
-// UpdateProxyAddress is a paid mutator transaction binding the contract method 0xeac32a8e.
-//
-// Solidity: function updateProxyAddress(address _vaultProxyImpl) returns()
-func (_VaultFactory *VaultFactoryTransactorSession) UpdateProxyAddress(_vaultProxyImpl common.Address) (*types.Transaction, error) {
-	return _VaultFactory.Contract.UpdateProxyAddress(&_VaultFactory.TransactOpts, _vaultProxyImpl)
 }
 
 // UpdateStaderConfig is a paid mutator transaction binding the contract method 0x9ee804cb.
@@ -1509,140 +1550,6 @@ func (_VaultFactory *VaultFactoryFilterer) WatchUpdatedStaderConfig(opts *bind.W
 func (_VaultFactory *VaultFactoryFilterer) ParseUpdatedStaderConfig(log types.Log) (*VaultFactoryUpdatedStaderConfig, error) {
 	event := new(VaultFactoryUpdatedStaderConfig)
 	if err := _VaultFactory.contract.UnpackLog(event, "UpdatedStaderConfig", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// VaultFactoryUpdatedVaultProxyImplementationIterator is returned from FilterUpdatedVaultProxyImplementation and is used to iterate over the raw logs and unpacked data for UpdatedVaultProxyImplementation events raised by the VaultFactory contract.
-type VaultFactoryUpdatedVaultProxyImplementationIterator struct {
-	Event *VaultFactoryUpdatedVaultProxyImplementation // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *VaultFactoryUpdatedVaultProxyImplementationIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(VaultFactoryUpdatedVaultProxyImplementation)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(VaultFactoryUpdatedVaultProxyImplementation)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *VaultFactoryUpdatedVaultProxyImplementationIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *VaultFactoryUpdatedVaultProxyImplementationIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// VaultFactoryUpdatedVaultProxyImplementation represents a UpdatedVaultProxyImplementation event raised by the VaultFactory contract.
-type VaultFactoryUpdatedVaultProxyImplementation struct {
-	VaultProxyImplementation common.Address
-	Raw                      types.Log // Blockchain specific contextual infos
-}
-
-// FilterUpdatedVaultProxyImplementation is a free log retrieval operation binding the contract event 0x77358c5e9bc05f53688720682a283a5de55b771a614836c83cb1428deb2ece2d.
-//
-// Solidity: event UpdatedVaultProxyImplementation(address vaultProxyImplementation)
-func (_VaultFactory *VaultFactoryFilterer) FilterUpdatedVaultProxyImplementation(opts *bind.FilterOpts) (*VaultFactoryUpdatedVaultProxyImplementationIterator, error) {
-
-	logs, sub, err := _VaultFactory.contract.FilterLogs(opts, "UpdatedVaultProxyImplementation")
-	if err != nil {
-		return nil, err
-	}
-	return &VaultFactoryUpdatedVaultProxyImplementationIterator{contract: _VaultFactory.contract, event: "UpdatedVaultProxyImplementation", logs: logs, sub: sub}, nil
-}
-
-// WatchUpdatedVaultProxyImplementation is a free log subscription operation binding the contract event 0x77358c5e9bc05f53688720682a283a5de55b771a614836c83cb1428deb2ece2d.
-//
-// Solidity: event UpdatedVaultProxyImplementation(address vaultProxyImplementation)
-func (_VaultFactory *VaultFactoryFilterer) WatchUpdatedVaultProxyImplementation(opts *bind.WatchOpts, sink chan<- *VaultFactoryUpdatedVaultProxyImplementation) (event.Subscription, error) {
-
-	logs, sub, err := _VaultFactory.contract.WatchLogs(opts, "UpdatedVaultProxyImplementation")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(VaultFactoryUpdatedVaultProxyImplementation)
-				if err := _VaultFactory.contract.UnpackLog(event, "UpdatedVaultProxyImplementation", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseUpdatedVaultProxyImplementation is a log parse operation binding the contract event 0x77358c5e9bc05f53688720682a283a5de55b771a614836c83cb1428deb2ece2d.
-//
-// Solidity: event UpdatedVaultProxyImplementation(address vaultProxyImplementation)
-func (_VaultFactory *VaultFactoryFilterer) ParseUpdatedVaultProxyImplementation(log types.Log) (*VaultFactoryUpdatedVaultProxyImplementation, error) {
-	event := new(VaultFactoryUpdatedVaultProxyImplementation)
-	if err := _VaultFactory.contract.UnpackLog(event, "UpdatedVaultProxyImplementation", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
