@@ -62,3 +62,7 @@ func GetStakePoolManagerAddress(sdConfig *stader.StaderConfigContractManager, op
 func GetSdCollateralAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return sdConfig.StaderConfig.GetSDCollateral(opts)
 }
+
+func GetOperatorRewardsCollectorAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
+	return sdConfig.StaderConfig.GetOperatorRewardsCollector(opts)
+}

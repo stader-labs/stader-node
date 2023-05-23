@@ -236,6 +236,20 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "withdraw-rewards",
+				Aliases:   []string{"wer"},
+				Usage:     "Transfer all rewards to the operator reward address",
+				UsageText: "stader-cli node withdraw-rewards",
+				Flags: []cli.Flag{cli.BoolFlag{
+					Name:  "yes, y",
+					Usage: "Automatically confirm rewards transfer to operator reward address",
+				}},
+				Action: func(c *cli.Context) error {
+					// Run
+					return WithdrawRewards(c)
+				},
+			},
+			{
 				Name:      "withdraw-sd-collateral",
 				Aliases:   []string{"sef"},
 				Usage:     "Withdraw Sd collateral",

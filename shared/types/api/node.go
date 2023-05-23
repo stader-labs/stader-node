@@ -381,3 +381,17 @@ type NodeSignResponse struct {
 	Error      string `json:"error"`
 	SignedData string `json:"signedData"`
 }
+
+type CanWithdrawRewards struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
+type WithdrawRewards struct {
+	Status                 string         `json:"status"`
+	Error                  string         `json:"error"`
+	OperatorRewardsBalance *big.Int       `json:"operatorRewardsBalance"`
+	OperatorRewardAddress  common.Address `json:"operatorRewardAddress"`
+	TxHash                 common.Hash    `json:"txHash"`
+}

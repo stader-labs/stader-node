@@ -23,6 +23,19 @@ func OnboardNodeOperator(pnr *stader.PermissionlessNodeRegistryContractManager, 
 	return tx, nil
 }
 
+func EstimateClaimOperatorRewards(orc *stader.OperatorRewardsCollectorContractManager, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return orc.OperatorRewardsCollectorContract.GetTransactionGasInfo(opts, "claim")
+}
+
+func ClaimOperatorRewards(orc *stader.OperatorRewardsCollectorContractManager, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := orc.OperatorRewardsCollector.Claim(opts)
+	if err != nil {
+		return nil, fmt.Errorf("Could not claim operator rewards: %w", err)
+	}
+
+	return tx, nil
+}
+
 func EstimateChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (stader.GasInfo, error) {
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "changeSocializingPoolState", socializeEl)
 }
@@ -93,4 +106,8 @@ func GetSocializingPoolStateChangeBlock(pnr *stader.PermissionlessNodeRegistryCo
 
 func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.NextOperatorId(opts)
+}
+
+func GetOperatorRewardsCollectorBalance(orc *stader.OperatorRewardsCollectorContractManager, operatorRewardAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
+	return orc.OperatorRewardsCollector.Balances(opts, operatorRewardAddress)
 }

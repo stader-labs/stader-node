@@ -204,6 +204,14 @@ func GetPenaltyTrackerAddress(c *cli.Context) (common.Address, error) {
 	return stader_config.GetPenaltyTrackerAddress(sdcfg, nil)
 }
 
+func GetOperatorRewardsCollectorAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+	return stader_config.GetOperatorRewardsCollectorAddress(sdcfg, nil)
+}
+
 func GetStakePoolManagerAddress(c *cli.Context) (common.Address, error) {
 	sdcfg, err := GetStaderConfigContract(c)
 	if err != nil {
@@ -372,6 +380,25 @@ func GetPenaltyTrackerContract(c *cli.Context) (*stader.PenaltyTrackerContractMa
 	}
 
 	return stader.NewPenaltyTracker(ec, penaltyTracker)
+}
+
+func GetOperatorRewardsCollectorContract(c *cli.Context) (*stader.OperatorRewardsCollectorContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+
+	if err != nil {
+		return nil, err
+	}
+
+	operatorRewardsCollector, err := GetOperatorRewardsCollectorAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewOperatorRewardsCollector(ec, operatorRewardsCollector)
 }
 
 func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManager, error) {

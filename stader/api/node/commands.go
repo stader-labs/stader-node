@@ -448,6 +448,38 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "can-withdraw-rewards",
+				Usage:     "Can withdraw rewards to operator reward address",
+				UsageText: "stader-cli api node can-withdraw-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(CanWithdrawRewards(c))
+					return nil
+
+				},
+			},
+			{
+				Name:      "withdraw-rewards",
+				Usage:     "Transfer rewards from operator reward collector to operator reward address",
+				UsageText: "stader-cli api node withdraw-rewards",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(WithdrawRewards(c))
+					return nil
+
+				},
+			},
+			{
 				Name:      "can-withdraw-sd",
 				Usage:     "Check whether the node can withdraw SD",
 				UsageText: "stader-cli api node can-withdraw-sd amount",

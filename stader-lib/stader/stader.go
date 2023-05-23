@@ -417,3 +417,36 @@ func NewVaultProxy(client ExecutionClient, vaultProxyAddress common.Address) (*V
 	}, nil
 
 }
+
+// Add bindings similar to the above for OperatorRewardsCollector
+
+type OperatorRewardsCollectorContractManager struct {
+	Client                           ExecutionClient
+	OperatorRewardsCollector         *contracts.OperatorRewardsCollector
+	OperatorRewardsCollectorContract *Contract
+}
+
+func NewOperatorRewardsCollector(client ExecutionClient, operatorRewardsCollectorAddress common.Address) (*OperatorRewardsCollectorContractManager, error) {
+	operatorRewardsCollector, err := contracts.NewOperatorRewardsCollector(operatorRewardsCollectorAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorRewardsCollectorContractAbi, err := abi.JSON(strings.NewReader(contracts.OperatorRewardsCollectorMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	operatorRewardsCollectorContract := &Contract{
+		Contract: bind.NewBoundContract(operatorRewardsCollectorAddress, operatorRewardsCollectorContractAbi, client, client, client),
+		Address:  &operatorRewardsCollectorAddress,
+		ABI:      &operatorRewardsCollectorContractAbi,
+		Client:   client,
+	}
+
+	return &OperatorRewardsCollectorContractManager{
+		Client:                           client,
+		OperatorRewardsCollector:         operatorRewardsCollector,
+		OperatorRewardsCollectorContract: operatorRewardsCollectorContract,
+	}, nil
+
+}
