@@ -33,6 +33,7 @@ type NodeStatusResponse struct {
 	SocializingPoolAddress            common.Address                     `json:"socializingPoolAddress"`
 	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`
+	OperatorRewardCollectorBalance    *big.Int                           `json:"operatorRewardCollectorBalance"`
 	DepositedSdCollateral             *big.Int                           `json:"depositedSdCollateral"`
 	SdCollateralWorthValidators       *big.Int                           `json:"sdCollateralWorthValidators"`
 	Registered                        bool                               `json:"registered"`

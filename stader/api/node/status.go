@@ -109,6 +109,10 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	orc, err := services.GetOperatorRewardsCollectorContract(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Response
 	response := api.NodeStatusResponse{}
@@ -180,6 +184,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.OperatorELRewardsAddress = operatorElRewardAddress
 		response.OperatorELRewardsAddressBalance = operatorElRewards.OperatorShare
+
+		operatorRewardCollectorBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.OperatorRewardCollectorBalance = operatorRewardCollectorBalance
 
 		//fmt.Printf("Getting operator reward address balance\n")
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
