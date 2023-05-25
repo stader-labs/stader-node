@@ -25,6 +25,7 @@ import (
 	"github.com/pbnjay/memory"
 	"github.com/stader-labs/stader-node/shared"
 	"github.com/stader-labs/stader-node/shared/types/config"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/url"
@@ -799,6 +800,11 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	// TODO - we have to pick this from stader config but ethx address shouldnt change
 	envVars["ETHX_ADDRESS"] = cfg.StaderNode.GetEthxTokenAddress().Hex()
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
+	//envVars["TX_FEE_CAP"] = bigcfg.StaderNode.TxFeeCap.Value.(float64)
+	txFeeCapInWei := eth.EthToWei(cfg.StaderNode.TxFeeCap.Value.(float64))
+	txFeeCap := cfg.StaderNode.TxFeeCap.Value.(float64)
+	envVars["TX_FEE_CAP_IN_WEI"] = txFeeCapInWei.String()
+	envVars["TX_FEE_CAP"] = fmt.Sprintf("%f", txFeeCap)
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 

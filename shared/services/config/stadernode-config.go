@@ -82,6 +82,9 @@ type StaderNodeConfig struct {
 	// Manual priority fee override
 	PriorityFee config.Parameter `yaml:"priorityFee,omitempty"`
 
+	// Max tx fee for a single tx override
+	TxFeeCap config.Parameter `yaml:"txFeeCap,omitempty"`
+
 	// URL for an EC with archive mode, for manual rewards tree generation
 	ArchiveECUrl config.Parameter `yaml:"archiveEcUrl,omitempty"`
 
@@ -191,6 +194,18 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
+		TxFeeCap: config.Parameter{
+			ID:                   "txFeeCap",
+			Name:                 "Tx Fee Cap",
+			Description:          "The max fee which can be paid for a transaction (in eth) including priority fee",
+			Type:                 config.ParameterType_Float,
+			Default:              map[config.Network]interface{}{config.Network_All: float64(1)},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Guardian},
+			EnvironmentVariables: []string{"TX_FEE_CAP"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
+
 		ArchiveECUrl: config.Parameter{
 			ID:                   "archiveECUrl",
 			Name:                 "Archive-Mode EC URL",
@@ -253,6 +268,7 @@ func (cfg *StaderNodeConfig) GetParameters() []*config.Parameter {
 		&cfg.DataPath,
 		&cfg.ManualMaxFee,
 		&cfg.PriorityFee,
+		&cfg.TxFeeCap,
 		&cfg.ArchiveECUrl,
 	}
 }
