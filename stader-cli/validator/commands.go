@@ -126,6 +126,18 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return SendClRewards(c, validatorPubKey)
 				},
 			},
+			{
+				Name:      "status",
+				Aliases:   []string{"e"},
+				Usage:     "Validator Status",
+				UsageText: "stader-cli validator status",
+				Flags:     []cli.Flag{},
+				Action: func(c *cli.Context) error {
+
+					// Run
+					return getValidatorStatus(c)
+				},
+			},
 		},
 	})
 }

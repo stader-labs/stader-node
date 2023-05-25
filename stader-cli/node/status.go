@@ -12,7 +12,7 @@ import (
 	"math/big"
 )
 
-func getStatus(c *cli.Context) error {
+func getNodeStatus(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
