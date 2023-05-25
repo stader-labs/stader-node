@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func WithdrawRewards(c *cli.Context) error {
+func ClaimRewards(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -27,7 +27,7 @@ func WithdrawRewards(c *cli.Context) error {
 	err = cliutils.PrintNetwork(staderClient)
 
 	// Check if we can Withdraw El Rewards
-	canClaimElRewardsResponse, err := staderClient.CanWithdrawRewards()
+	canClaimElRewardsResponse, err := staderClient.CanClaimRewards()
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func WithdrawRewards(c *cli.Context) error {
 	}
 
 	// Withdraw El Rewards
-	res, err := staderClient.WithdrawRewards()
+	res, err := staderClient.ClaimRewards()
 	if err != nil {
 		return err
 	}

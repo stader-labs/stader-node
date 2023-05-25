@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
+func SendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error
 	// Print what network we're on
 	err = cliutils.PrintNetwork(staderClient)
 
-	canClaimClRewardsResponse, err := staderClient.CanClaimClRewards(validatorPubKey)
+	canClaimClRewardsResponse, err := staderClient.CanSendClRewards(validatorPubKey)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error
 		return nil
 	}
 
-	res, err := staderClient.ClaimClRewards(validatorPubKey)
+	res, err := staderClient.SendClRewards(validatorPubKey)
 	if err != nil {
 		return err
 	}

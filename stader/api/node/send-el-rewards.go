@@ -10,7 +10,7 @@ import (
 	"math/big"
 )
 
-func CanClaimElRewards(c *cli.Context) (*api.CanClaimElRewardsResponse, error) {
+func CanSendElRewards(c *cli.Context) (*api.CanSendElRewardsResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func CanClaimElRewards(c *cli.Context) (*api.CanClaimElRewardsResponse, error) {
 		return nil, err
 	}
 	// Response
-	response := api.CanClaimElRewardsResponse{}
+	response := api.CanSendElRewardsResponse{}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
@@ -79,7 +79,7 @@ func CanClaimElRewards(c *cli.Context) (*api.CanClaimElRewardsResponse, error) {
 	return &response, nil
 }
 
-func ClaimElRewards(c *cli.Context) (*api.ClaimElRewardsResponse, error) {
+func SendElRewards(c *cli.Context) (*api.SendElRewardsResponse, error) {
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -105,7 +105,7 @@ func ClaimElRewards(c *cli.Context) (*api.ClaimElRewardsResponse, error) {
 		return nil, err
 	}
 
-	response := api.ClaimElRewardsResponse{}
+	response := api.SendElRewardsResponse{}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {

@@ -125,6 +125,9 @@ func GetAllValidatorsInfoByOperator(pnr *stader.PermissionlessNodeRegistryContra
 	for {
 		validators, err := pnr.PermissionlessNodeRegistry.GetValidatorsByOperator(opts, operatorAddress, pageNumber, pageSize)
 		if err != nil {
+			return nil, err
+		}
+		if len(validators) == 0 {
 			break
 		}
 

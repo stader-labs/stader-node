@@ -416,9 +416,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "can-claim-el-rewards",
-				Usage:     "Can claim el rewards",
-				UsageText: "stader-cli api node can-claim-el-rewards",
+				Name:      "can-send-el-rewards",
+				Usage:     "Can send el rewards to claim vault",
+				UsageText: "stader-cli api node can-send-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -426,15 +426,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanClaimElRewards(c))
+					api.PrintResponse(CanSendElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "claim-el-rewards",
-				Usage:     "Claim el rewards",
-				UsageText: "stader-cli api node claim-el-rewards",
+				Name:      "send-el-rewards",
+				Usage:     "Send el rewards to claim vault",
+				UsageText: "stader-cli api node send-el-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -442,15 +442,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(ClaimElRewards(c))
+					api.PrintResponse(SendElRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "can-withdraw-rewards",
-				Usage:     "Can withdraw rewards to operator reward address",
-				UsageText: "stader-cli api node can-withdraw-rewards",
+				Name:      "can-claim-rewards",
+				Usage:     "Can claim rewards to operator reward address from operator reward collector",
+				UsageText: "stader-cli api node can-claim-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -458,15 +458,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(CanWithdrawRewards(c))
+					api.PrintResponse(CanClaimRewards(c))
 					return nil
 
 				},
 			},
 			{
-				Name:      "withdraw-rewards",
-				Usage:     "Transfer rewards from operator reward collector to operator reward address",
-				UsageText: "stader-cli api node withdraw-rewards",
+				Name:      "claim-rewards",
+				Usage:     "Claim rewards to operator reward address from operator reward collector",
+				UsageText: "stader-cli api node claim-rewards",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -474,7 +474,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					api.PrintResponse(WithdrawRewards(c))
+					api.PrintResponse(ClaimRewards(c))
 					return nil
 
 				},

@@ -102,18 +102,18 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "claim-cl-rewards",
+				Name:      "send-cl-rewards",
 				Aliases:   []string{"wcr"},
-				Usage:     "Claim all Consensus Layer rewards to the node reward address.",
-				UsageText: "stader-cli node claim-cl-rewards --validator-pub-key",
+				Usage:     "Send all Consensus Layer rewards to the operator claim vault",
+				UsageText: "stader-cli node send-cl-rewards --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
-						Usage: "Public key of validator we want to exit",
+						Usage: "Public key of the validator whose CL rewards we want to send to operator claim vault",
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
-						Usage: "Automatically confirm CL rewards withdrawal",
+						Usage: "Automatically confirm CL rewards send",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -123,7 +123,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 					// Run
-					return ClaimClRewards(c, validatorPubKey)
+					return SendClRewards(c, validatorPubKey)
 				},
 			},
 		},

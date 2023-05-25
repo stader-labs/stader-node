@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func CanClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanClaimClRewardsResponse, error) {
+func CanSendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.CanSendClRewardsResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func CanClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	}
 
 	// Response
-	response := api.CanClaimClRewardsResponse{}
+	response := api.CanSendClRewardsResponse{}
 
 	validatorId, err := node.GetValidatorIdByPubKey(pnr, validatorPubKey.Bytes(), nil)
 	if err != nil {
@@ -101,7 +101,7 @@ func CanClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*
 	return &response, nil
 }
 
-func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.ClaimClRewardsResponse, error) {
+func SendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.SendClRewardsResponse, error) {
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func ClaimClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api
 		return nil, err
 	}
 
-	response := api.ClaimClRewardsResponse{}
+	response := api.SendClRewardsResponse{}
 
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {

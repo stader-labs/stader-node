@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func CanWithdrawRewards(c *cli.Context) (*api.CanWithdrawRewards, error) {
+func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func CanWithdrawRewards(c *cli.Context) (*api.CanWithdrawRewards, error) {
 		return nil, err
 	}
 
-	response := api.CanWithdrawRewards{}
+	response := api.CanClaimRewards{}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
@@ -41,7 +41,7 @@ func CanWithdrawRewards(c *cli.Context) (*api.CanWithdrawRewards, error) {
 	return &response, nil
 }
 
-func WithdrawRewards(c *cli.Context) (*api.WithdrawRewards, error) {
+func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func WithdrawRewards(c *cli.Context) (*api.WithdrawRewards, error) {
 		return nil, err
 	}
 
-	response := api.WithdrawRewards{}
+	response := api.ClaimRewards{}
 
 	nodeAddress, err := w.GetNodeAccount()
 	if err != nil {

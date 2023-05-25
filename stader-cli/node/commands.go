@@ -222,31 +222,31 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "claim-el-rewards",
+				Name:      "send-el-rewards",
 				Aliases:   []string{"wer"},
-				Usage:     "Claim all Execution Layer rewards to the node reward address. This only includes non-socializing pool rewards",
-				UsageText: "stader-cli node claim-el-rewards",
+				Usage:     "Send all Execution Layer rewards to the operator claim vault. This only includes non-socializing pool rewards",
+				UsageText: "stader-cli node send-el-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
 					Name:  "yes, y",
-					Usage: "Automatically confirm EL rewards withdrawal",
+					Usage: "Automatically confirm EL rewards send to operator claim vault",
 				}},
 				Action: func(c *cli.Context) error {
 					// Run
-					return ClaimElRewards(c)
+					return SendElRewards(c)
 				},
 			},
 			{
-				Name:      "withdraw-rewards",
+				Name:      "claim-rewards",
 				Aliases:   []string{"wer"},
-				Usage:     "Transfer all rewards to the operator reward address",
-				UsageText: "stader-cli node withdraw-rewards",
+				Usage:     "Claim rewards from claim vault to the operator reward address",
+				UsageText: "stader-cli node claim-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
 					Name:  "yes, y",
 					Usage: "Automatically confirm rewards transfer to operator reward address",
 				}},
 				Action: func(c *cli.Context) error {
 					// Run
-					return WithdrawRewards(c)
+					return ClaimRewards(c)
 				},
 			},
 			{
