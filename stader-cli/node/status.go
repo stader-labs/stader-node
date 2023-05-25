@@ -6,7 +6,6 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
-	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 	"math/big"
@@ -159,39 +158,41 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("To transfer the rewards to your operator address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
-	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
-
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
-	if totalRegisteredValidators.Int64() <= 0 {
-		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
-		return nil
-	}
+	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
 
-	for i := 0; i < len(status.ValidatorInfos); i++ {
-		fmt.Printf("%d)\n", i+1)
-		validatorInfo := status.ValidatorInfos[i]
-		validatorPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
-		fmt.Printf("-Validator Pub Key: %s\n\n", validatorPubKey)
-		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
-		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
-		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
-			fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards %s command\n\n", log.ColorGreen, log.ColorReset)
-		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
-		}
-
-		if validatorInfo.Status > 3 {
-			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))
-		}
-
-		if validatorInfo.WithdrawnBlock.Int64() > 0 {
-			fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.Format("2006-01-02 15:04:05"))
-		}
-
-		fmt.Printf("\n\n")
-	}
+	//fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
+	//
+	//if totalRegisteredValidators.Int64() <= 0 {
+	//	fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
+	//	return nil
+	//}
+	//
+	//for i := 0; i < len(status.ValidatorInfos); i++ {
+	//	fmt.Printf("%d)\n", i+1)
+	//	validatorInfo := status.ValidatorInfos[i]
+	//	validatorPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
+	//	fmt.Printf("-Validator Pub Key: %s\n\n", validatorPubKey)
+	//	fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
+	//	fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+	//	if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
+	//		fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
+	//		fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards %s command\n\n", log.ColorGreen, log.ColorReset)
+	//	} else if validatorInfo.CrossedRewardsThreshold {
+	//		fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
+	//	}
+	//
+	//	if validatorInfo.Status > 3 {
+	//		fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))
+	//	}
+	//
+	//	if validatorInfo.WithdrawnBlock.Int64() > 0 {
+	//		fmt.Printf("-Withdraw Time: %s\n\n", validatorInfo.WithdrawnTime.Format("2006-01-02 15:04:05"))
+	//	}
+	//
+	//	fmt.Printf("\n\n")
+	//}
 
 	return nil
 }
