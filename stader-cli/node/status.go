@@ -126,44 +126,37 @@ func getStatus(c *cli.Context) error {
 	}
 	fmt.Printf("The Operator has registered a total of %d validators\n\n", len(status.ValidatorInfos))
 
-	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator reward address %s has %.6f SD as unclaimed SD rewards\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18))
-		fmt.Printf("To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-	}
-
-	if totalUnclaimedSocializingPoolEth.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator reward address %s has %.6f ETH as unclaimed EL rewards through socializing pool till\n\n", status.OperatorAddress.String(), math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18))
-		fmt.Printf("To claim Socializing pool EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-	}
-
-	if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf(
-			"The Operator %s%s%s fee recepient %s%s%s has unclaimed rewards of %.6f ETH.\n\n",
-			log.ColorBlue,
-			status.AccountAddress,
-			log.ColorReset,
-			log.ColorBlue,
-			status.OperatorELRewardsAddress,
-			log.ColorReset,
-			math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6))
-		fmt.Printf("To claim fee recepient EL rewards use the %sstader-cli node claim-el-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-	}
-
 	if !status.OptedInForSocializingPool {
-		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
+		fmt.Printf("Operator has Opted Out for Socializing Pool\n")
 		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 	}
 
+	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf("The Operator has %.6f SD as unclaimed SD rewards. To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), log.ColorGreen, log.ColorReset)
+	}
+
+	if totalUnclaimedSocializingPoolEth.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf("The Operator has %.6f ETH as unclaimed Socializing Pool EL rewards. To claim Socialized EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), log.ColorGreen, log.ColorReset)
+	}
+
+	if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf(
+			"The Operator has a total of %.6f ETH as EL rewards for all validators. These rewards are sent to the claim vault periodically by Stader. Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim for all validators in one transaction\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
+		fmt.Println("If the operator wishes to claim EL rewards by themselves, follow these steps:")
+		fmt.Printf("1. Use the %sstader-cli node send-el-rewards%s command to claim the EL rewards\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
+	}
+
 	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
-			"The Operator %s%s%s has aggregated total rewards of %.6f ETH.\n\n",
+			"The Operator %s%s%s has aggregated total rewards of %.6f ETH in the claim vault\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
 			math.RoundDown(eth.WeiToEth(status.OperatorRewardCollectorBalance), 6))
-		fmt.Printf("To transfer the rewards to your operator address use the %sstader-cli node withdraw-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("To transfer the rewards to your operator address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
