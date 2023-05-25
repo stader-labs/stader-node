@@ -159,6 +159,8 @@ func getStatus(c *cli.Context) error {
 		fmt.Printf("To transfer the rewards to your operator address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
+	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
+
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	if totalRegisteredValidators.Int64() <= 0 {
@@ -177,9 +179,7 @@ func getStatus(c *cli.Context) error {
 			fmt.Printf("-Validator Skimmed Rewards: %.6f\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 			fmt.Printf("To claim skimmed rewards use the %sstader-cli node claim-cl-rewards %s command\n\n", log.ColorGreen, log.ColorReset)
 		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("Too many CL rewards to withdraw for validator %s.\n", validatorPubKey.String())
-			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n")
-			fmt.Printf("If you have not exited the validator, Please reach out to the Stader Team on discord!\n")
+			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
 		}
 
 		if validatorInfo.Status > 3 {

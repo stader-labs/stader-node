@@ -238,6 +238,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		response.TotalNonTerminalValidators = big.NewInt(int64(totalNonTerminalValidatorKeys))
 
+		totalValidatorClRewards := big.NewInt(0)
 		validatorInfoArray := make([]stdr.ValidatorInfo, totalValidatorKeys.Int64())
 
 		for i := int64(0); i < totalValidatorKeys.Int64(); i++ {
@@ -266,6 +267,8 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			crossedRewardThreshold := false
 			if withdrawVaultBalance.Cmp(rewardsThreshold) > 0 {
 				crossedRewardThreshold = true
+			} else {
+				totalValidatorClRewards.Add(totalValidatorClRewards, withdrawVaultRewardShares.OperatorShare)
 			}
 
 			withdrawVaultWithdrawShares, err := node.CalculateValidatorWithdrawVaultWithdrawShare(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
@@ -314,6 +317,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 
 		response.ValidatorInfos = validatorInfoArray
+		response.TotalValidatorClRewards = totalValidatorClRewards
 
 		//fmt.Printf("Getting operator claimed and unclaimed socializing pool merkles\n")
 		claimedMerkles, unclaimedMerkles, err := GetClaimedAndUnclaimedSocializingPoolMerkles(c)

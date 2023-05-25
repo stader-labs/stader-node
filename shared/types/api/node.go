@@ -40,6 +40,7 @@ type NodeStatusResponse struct {
 	AccountBalances                   tokens.Balances                    `json:"accountBalances"`
 	TotalNonTerminalValidators        *big.Int                           `json:"nonTerminalValidators"`
 	ValidatorInfos                    []stdr.ValidatorInfo               `json:"validatorInfos"`
+	TotalValidatorClRewards           *big.Int                           `json:"totalValidatorClRewards"`
 	ClaimedSocializingPoolMerkles     []stader_backend.CycleMerkleProofs `json:"claimedSocializingPoolMerkles"`
 	UnclaimedSocializingPoolMerkles   []stader_backend.CycleMerkleProofs `json:"unclaimedSocializingPoolMerkles"`
 }
