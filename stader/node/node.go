@@ -83,6 +83,9 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	// Configure
+	configureHTTP()
+
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return err
@@ -99,9 +102,6 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
-	// Configure
-	configureHTTP()
 
 	// Initialize tasks
 	manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
@@ -155,7 +155,7 @@ func run(c *cli.Context) error {
 			// make a map of all validators actually registered with stader
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
 			infoLog.Println("Building a map of user validators registered with stader")
-			registeredValidators, _, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			registeredValidators, validatorPubKeys, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Could not get all validators registered with operator %s with error %s\n", operatorId, err.Error())
 				continue
@@ -176,7 +176,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			for validatorPubKey, validatorInfo := range registeredValidators {
+			for _, validatorPubKey := range validatorPubKeys {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
 				// log the errors and continue. dont need to sleep post an error
@@ -185,6 +185,11 @@ func run(c *cli.Context) error {
 					continue
 				}
 
+				validatorInfo, ok := registeredValidators[validatorPubKey]
+				if !ok {
+					errorLog.Printf("Validator pub key: %s not found in stader contracts\n", validatorPubKey)
+					continue
+				}
 				if stdr.IsValidatorTerminal(validatorInfo) {
 					errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
 					continue

@@ -23,7 +23,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"log"
+	"math/big"
 	"sync"
 	"time"
 
@@ -38,6 +40,7 @@ const EthClientSyncTimeout = 16    // 16 seconds
 const BeaconClientSyncTimeout = 16 // 16 seconds
 var checkNodePasswordInterval, _ = time.ParseDuration("15s")
 var checkNodeWalletInterval, _ = time.ParseDuration("15s")
+var checkNodeRegisteredInterval, _ = time.ParseDuration("10s")
 var ethClientSyncPollInterval, _ = time.ParseDuration("5s")
 var beaconClientSyncPollInterval, _ = time.ParseDuration("5s")
 var ethClientRecentBlockThreshold, _ = time.ParseDuration("5m")
@@ -158,6 +161,29 @@ func WaitNodeWallet(c *cli.Context, verbose bool) error {
 			log.Printf("The node wallet has not been initialized, retrying in %s...\n", checkNodeWalletInterval.String())
 		}
 		time.Sleep(checkNodeWalletInterval)
+	}
+}
+
+func WaitNodeRegistered(c *cli.Context, operatorAddress common.Address, verbose bool) error {
+	if err := WaitNodeWallet(c, verbose); err != nil {
+		return err
+	}
+	for {
+		pnr, err := GetPermissionlessNodeRegistry(c)
+		if err != nil {
+			return err
+		}
+		operatorId, err := node.GetOperatorId(pnr, operatorAddress, nil)
+		if err != nil {
+			return err
+		}
+		if operatorId.Cmp(big.NewInt(0)) != 0 {
+			return nil
+		}
+		if verbose {
+			log.Printf("The node is not registered with Stader, retrying in %s...\n", checkNodeRegisteredInterval.String())
+		}
+		time.Sleep(checkNodeRegisteredInterval)
 	}
 }
 
