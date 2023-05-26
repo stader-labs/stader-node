@@ -47,7 +47,7 @@ import (
 )
 
 // Config
-var preSignedCooldown, _ = time.ParseDuration("1h")
+var preSignedCooldown, _ = time.ParseDuration("10s")
 var preSignedBatchCooldown, _ = time.ParseDuration("5s")
 var preSignBatchSize = 100 // Go thru 100 keys in each pass
 var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
@@ -158,7 +158,7 @@ func run(c *cli.Context) error {
 			infoLog.Println("Building a map of user validators registered with stader")
 			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
-				errorLog.Printf("Could not get all validators registered with operator %s\n", operatorId)
+				errorLog.Printf("Could not get all validators registered with operator %s with error %s\n", operatorId, err.Error())
 				continue
 			}
 
