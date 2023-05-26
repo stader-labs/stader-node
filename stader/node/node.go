@@ -156,7 +156,7 @@ func run(c *cli.Context) error {
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
 
 			infoLog.Println("Building a map of user validators registered with stader")
-			registeredValidators, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
+			registeredValidators, _, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Could not get all validators registered with operator %s with error %s\n", operatorId, err.Error())
 				continue
