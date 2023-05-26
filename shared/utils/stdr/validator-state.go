@@ -39,39 +39,42 @@ type ValidatorInfo struct {
 }
 
 func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]contracts.Validator, []types.ValidatorPubkey, error) {
-	//validators, err := node.GetAllValidatorsInfoByOperator(pnr, operatorAddress, opts)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//validatorInfoMap := make(map[types.ValidatorPubkey]contracts.Validator)
-	//for _, validator := range validators {
-	//	validatorInfoMap[types.BytesToValidatorPubkey(validator.Pubkey)] = validator
-	//}
-	totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
+	validators, err := node.GetAllValidatorsInfoByOperator(pnr, operatorAddress, opts)
 	if err != nil {
 		return nil, []types.ValidatorPubkey{}, err
 	}
 
-	validators := make(map[types.ValidatorPubkey]contracts.Validator)
+	validatorInfoMap := make(map[types.ValidatorPubkey]contracts.Validator)
 	validatorPubKeys := []types.ValidatorPubkey{}
-	for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
-		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
-		if err != nil {
-			return nil, []types.ValidatorPubkey{}, err
-		}
-
-		validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
-		if err != nil {
-			return nil, []types.ValidatorPubkey{}, err
-		}
-
-		valPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
-		validators[valPubKey] = validatorInfo
-		validatorPubKeys = append(validatorPubKeys, valPubKey)
+	for _, validator := range validators {
+		pubKey := types.BytesToValidatorPubkey(validator.Pubkey)
+		validatorInfoMap[pubKey] = validator
+		validatorPubKeys = append(validatorPubKeys, pubKey)
 	}
+	//totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
+	//if err != nil {
+	//	return nil, []types.ValidatorPubkey{}, err
+	//}
+	//
+	//validators := make(map[types.ValidatorPubkey]contracts.Validator)
+	//validatorPubKeys := []types.ValidatorPubkey{}
+	//for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
+	//	validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
+	//	if err != nil {
+	//		return nil, []types.ValidatorPubkey{}, err
+	//	}
+	//
+	//	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
+	//	if err != nil {
+	//		return nil, []types.ValidatorPubkey{}, err
+	//	}
+	//
+	//	valPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
+	//	validators[valPubKey] = validatorInfo
+	//	validatorPubKeys = append(validatorPubKeys, valPubKey)
+	//}
 
-	return validators, validatorPubKeys, err
+	return validatorInfoMap, validatorPubKeys, err
 
 }
 
