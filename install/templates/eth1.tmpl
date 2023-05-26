@@ -62,6 +62,8 @@ services:
       - STADER_NETHERMIND_ADDITIONAL_MODULES=${NETHERMIND_ADDITIONAL_MODULES}
       - STADER_NETHERMIND_ADDITIONAL_URLS=${NETHERMIND_ADDITIONAL_URLS}
       - GETH_USE_PEBBLE=${GETH_USE_PEBBLE}
+      - TX_FEE_CAP=${TX_FEE_CAP}
+      - TX_FEE_CAP_IN_WEI=${TX_FEE_CAP_IN_WEI}
     entrypoint: sh
     command: "/setup/start-ec.sh"
     cap_drop:
