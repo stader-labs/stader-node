@@ -170,12 +170,11 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			w, err = services.GetWallet(c)
+			err = w.Reload()
 			if err != nil {
-				errorLog.Printf("Could not get wallet with error %s\n", err.Error())
+				errorLog.Printf("Could not reload wallet: %s\n", err.Error())
 				continue
 			}
-			fmt.Printf("next account is %d\n", w.GetNextAccount())
 			for validatorPubKey, validatorInfo := range registeredValidators {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
