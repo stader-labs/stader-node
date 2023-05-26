@@ -154,7 +154,6 @@ func run(c *cli.Context) error {
 
 			// make a map of all validators actually registered with stader
 			// user might just move the validator keys to the directory. we don't wanna send the presigned msg of them
-
 			infoLog.Println("Building a map of user validators registered with stader")
 			registeredValidators, _, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
@@ -167,9 +166,15 @@ func run(c *cli.Context) error {
 
 			currentHead, err := bc.GetBeaconHead()
 			if err != nil {
-				panic("not able to communicate with beacon chain!")
+				errorLog.Printf("Could not get beacon head with error %s\n", err.Error())
+				continue
 			}
 
+			w, err = services.GetWallet(c)
+			if err != nil {
+				errorLog.Printf("Could not get wallet with error %s\n", err.Error())
+				continue
+			}
 			for validatorPubKey, validatorInfo := range registeredValidators {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
