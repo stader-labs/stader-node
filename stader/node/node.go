@@ -291,20 +291,22 @@ func run(c *cli.Context) error {
 			//fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
 			fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
 			fmt.Printf("Pre-sign messages being sent are %v\n", preSignSendMessages)
-			res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
-			if err != nil {
-				errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
-				continue
-			}
-			for pubKey, response := range *res {
-				if response.Success {
-					infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
-				} else {
-					errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+			if len(preSignSendMessages) > 0 {
+				res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
+				if err != nil {
+					errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
+					continue
+				}
+				for pubKey, response := range *res {
+					if response.Success {
+						infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
+					} else {
+						errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+					}
 				}
 			}
 
-			errorLog.Printf("Done with the pass of presign daemon")
+			infoLog.Printf("Done with the pass of presign daemon")
 			// run loop every 12 hours
 			time.Sleep(preSignedCooldown)
 		}
