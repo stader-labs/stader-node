@@ -90,15 +90,20 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return err
+	}
+	err = services.WaitNodeRegistered(c, nodeAccount.Address, true)
+	if err != nil {
+		return err
+	}
+
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return err
 	}
 	pnr, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return err
-	}
-	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return err
 	}
