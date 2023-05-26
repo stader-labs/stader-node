@@ -175,7 +175,7 @@ func run(c *cli.Context) error {
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
 				// log the errors and continue. dont need to sleep post an error
 				if err != nil {
-					errorLog.Printf("Could not find validator private key for %s\n", validatorPubKey)
+					errorLog.Printf("Could not find validator private key for %s with err: %s\n", validatorPubKey, err.Error())
 					continue
 				}
 
