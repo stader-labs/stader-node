@@ -1,5 +1,7 @@
 package stader_backend
 
+import "github.com/stader-labs/stader-node/stader-lib/types"
+
 type PreSignCheckApiRequestType struct {
 	ValidatorPublicKey string `json:"validatorPublicKey"`
 }
@@ -25,7 +27,10 @@ type PreSignSendApiRequestType struct {
 type BulkPreSignSendApiRequestType = []PreSignSendApiRequestType
 type BulkPreSignSendApiResponseType = []PreSignSendApiResponseType
 
-type BulkPreSignCheckApiRequestType = []string
+type BulkPreSignCheckApiRequestType struct {
+	ValidatorPubKeys []types.ValidatorPubkey `json:"pubKeys"`
+}
+
 type BulkPreSignCheckApiResponseType = map[string]bool
 
 type PublicKeyApiResponse struct {

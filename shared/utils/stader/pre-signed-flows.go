@@ -3,14 +3,12 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
-	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
-	"io/ioutil"
 )
 
 func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
@@ -83,16 +81,15 @@ func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.Valid
 		return nil, err
 	}
 
-	fmt.Printf("Sending bulk presign check request to %s\n", config.StaderNode.GetBulkPresignCheckApi())
-	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), validatorPubKeys)
+	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), stader_backend.BulkPreSignCheckApiRequestType{ValidatorPubKeys: validatorPubKeys})
 
 	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("Debug: bulk presign check response is %s\n", string(body))
+	//body, err := ioutil.ReadAll(res.Body)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//fmt.Printf("Debug: bulk presign check response is %s\n", string(body))
 
 	//fmt.Printf("res.body is %s\n", res)
 	var preSignCheckResponse map[string]bool
