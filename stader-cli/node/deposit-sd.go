@@ -125,7 +125,7 @@ func nodeDepositSd(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Deposting SD...\n")
+	fmt.Printf("Depositing SD...\n")
 	cliutils.PrintTransactionHash(staderClient, depositSdResponse.DepositTxHash)
 	if _, err = staderClient.WaitForTransaction(depositSdResponse.DepositTxHash); err != nil {
 		return err
