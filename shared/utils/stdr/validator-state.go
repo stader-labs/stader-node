@@ -39,36 +39,36 @@ type ValidatorInfo struct {
 }
 
 func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, operatorAddress common.Address, opts *bind.CallOpts) (map[types.ValidatorPubkey]contracts.Validator, error) {
-	validators, err := node.GetAllValidatorsInfoByOperator(pnr, operatorAddress, opts)
-	if err != nil {
-		return nil, err
-	}
-
-	validatorInfoMap := make(map[types.ValidatorPubkey]contracts.Validator)
-	for _, validator := range validators {
-		validatorInfoMap[types.BytesToValidatorPubkey(validator.Pubkey)] = validator
-	}
-	//totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
+	//validators, err := node.GetAllValidatorsInfoByOperator(pnr, operatorAddress, opts)
 	//if err != nil {
 	//	return nil, err
 	//}
 	//
-	//validators := make(map[types.ValidatorPubkey]types.ValidatorContractInfo)
-	//for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
-	//	validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	validators[types.BytesToValidatorPubkey(validatorInfo.Pubkey)] = validatorInfo
+	//validatorInfoMap := make(map[types.ValidatorPubkey]contracts.Validator)
+	//for _, validator := range validators {
+	//	validatorInfoMap[types.BytesToValidatorPubkey(validator.Pubkey)] = validator
 	//}
+	totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
+	if err != nil {
+		return nil, err
+	}
 
-	return validatorInfoMap, err
+	validators := make(map[types.ValidatorPubkey]contracts.Validator)
+	for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
+		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
+		if err != nil {
+			return nil, err
+		}
+
+		validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
+		if err != nil {
+			return nil, err
+		}
+
+		validators[types.BytesToValidatorPubkey(validatorInfo.Pubkey)] = validatorInfo
+	}
+
+	return validators, err
 
 }
 
