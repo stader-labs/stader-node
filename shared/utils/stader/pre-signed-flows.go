@@ -3,12 +3,14 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
+	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
+	"io/ioutil"
 )
 
 func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader_backend.PreSignSendApiRequestType) (*stader_backend.PreSignSendApiResponseType, error) {
@@ -43,6 +45,13 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("Debug: send bulk presign response is %s\n", string(body))
 
 	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
