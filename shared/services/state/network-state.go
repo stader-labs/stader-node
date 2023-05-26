@@ -3,6 +3,7 @@ package state
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/urfave/cli"
 	"math/big"
@@ -275,22 +276,26 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
-	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
-	validatorInfoMap := map[types.ValidatorPubkey]contracts.Validator{}
-	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
-		validatorId, err := node.GetValidatorIdByOperatorId(prn, operatorId, big.NewInt(int64(i)), nil)
-		if err != nil {
-			return nil, err
-		}
-		validatorInfo, err := node.GetValidatorInfo(prn, validatorId, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		pubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
-		validatorInfoMap[pubKey] = validatorInfo
-
-		pubkeys = append(pubkeys, pubKey)
+	//pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
+	//validatorInfoMap := map[types.ValidatorPubkey]contracts.Validator{}
+	//for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
+	//	validatorId, err := node.GetValidatorIdByOperatorId(prn, operatorId, big.NewInt(int64(i)), nil)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	validatorInfo, err := node.GetValidatorInfo(prn, validatorId, nil)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	pubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
+	//	validatorInfoMap[pubKey] = validatorInfo
+	//
+	//	pubkeys = append(pubkeys, pubKey)
+	//}
+	validatorInfoMap, pubkeys, err := stdr.GetAllValidatorsRegisteredWithOperator(prn, operatorId, nodeAddress, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	activeValidators := big.NewInt(0)
