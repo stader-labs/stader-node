@@ -83,6 +83,7 @@ func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.Valid
 		return nil, err
 	}
 
+	fmt.Printf("Sending bulk presign check request to %s\n", config.StaderNode.GetBulkPresignCheckApi())
 	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), validatorPubKeys)
 
 	defer res.Body.Close()
