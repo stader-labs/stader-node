@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
 	"math/big"
 
@@ -77,7 +78,7 @@ func GetValidatorIdByOperatorId(pnr *stader.PermissionlessNodeRegistryContractMa
 	return pnr.PermissionlessNodeRegistry.ValidatorIdsByOperatorId(opts, operatorId, validatorIndex)
 }
 
-func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (types2.ValidatorContractInfo, error) {
+func GetValidatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, validatorId *big.Int, opts *bind.CallOpts) (contracts.Validator, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorRegistry(opts, validatorId)
 }
 

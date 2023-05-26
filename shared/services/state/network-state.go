@@ -3,6 +3,7 @@ package state
 import (
 	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/urfave/cli"
 	"math/big"
 	"time"
@@ -79,7 +80,7 @@ type MetricDetails struct {
 	FundsSettledValidators *big.Int
 	// done
 	ValidatorStatusMap map[types.ValidatorPubkey]beacon.ValidatorStatus
-	ValidatorInfoMap   map[types.ValidatorPubkey]types.ValidatorContractInfo
+	ValidatorInfoMap   map[types.ValidatorPubkey]contracts.Validator
 
 	// done
 	CumulativePenalty float64
@@ -275,7 +276,7 @@ func CreateMetricsCache(
 	}
 
 	pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
-	validatorInfoMap := map[types.ValidatorPubkey]types.ValidatorContractInfo{}
+	validatorInfoMap := map[types.ValidatorPubkey]contracts.Validator{}
 	for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
 		validatorId, err := node.GetValidatorIdByOperatorId(prn, operatorId, big.NewInt(int64(i)), nil)
 		if err != nil {

@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"math/big"
 	"sync"
 
@@ -53,7 +54,7 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 					CurrentEndBlock:   big.NewInt(0),
 				},
 				ValidatorStatusMap:  make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
-				ValidatorInfoMap:    make(map[types.ValidatorPubkey]types.ValidatorContractInfo),
+				ValidatorInfoMap:    make(map[types.ValidatorPubkey]contracts.Validator),
 				CollateralRatio:     0,
 				CollateralRatioInSd: 0,
 			},
