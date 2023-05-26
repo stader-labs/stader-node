@@ -181,7 +181,6 @@ func run(c *cli.Context) error {
 				errorLog.Printf("Could not bulk check presigned keys with error %s\n", err.Error())
 				continue
 			}
-			fmt.Printf("preSignRegisteredMap: %+v\n", preSignRegisteredMap)
 
 			for _, validatorPubKey := range validatorPubKeys {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
@@ -202,6 +201,18 @@ func run(c *cli.Context) error {
 					continue
 				}
 
+				registeredPresign, ok := preSignRegisteredMap[validatorPubKey.String()]
+				fmt.Printf("registeredPresign: %t\n", registeredPresign)
+				fmt.Printf("ok: %t\n", ok)
+				if !ok {
+					errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
+					continue
+				}
+				if registeredPresign {
+					infoLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
+					continue
+				}
+
 				// check if validator has not yet been registered on beacon chain
 				validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 				if err != nil {
@@ -219,14 +230,14 @@ func run(c *cli.Context) error {
 					continue
 				}
 
-				// check if the presigned message has been registered. if it has been registered, then continue
-				isRegistered, err := stader.IsPresignedKeyRegistered(c, validatorPubKey)
-				if isRegistered {
-					errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
-					continue
-				} else if err != nil {
-					errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
-				}
+				//// check if the presigned message has been registered. if it has been registered, then continue
+				//isRegistered, err := stader.IsPresignedKeyRegistered(c, validatorPubKey)
+				//if isRegistered {
+				//	errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
+				//	continue
+				//} else if err != nil {
+				//	errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
+				//}
 
 				exitEpoch := currentHead.Epoch
 
