@@ -176,12 +176,6 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			keyCount, err := w.GetValidatorKeyCount()
-			if err != nil {
-				errorLog.Printf("Could not get validator key count: %s\n", err.Error())
-				continue
-			}
-			fmt.Printf("next account is %d\n", keyCount)
 			for validatorPubKey, validatorInfo := range registeredValidators {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
