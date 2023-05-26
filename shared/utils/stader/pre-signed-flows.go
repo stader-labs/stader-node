@@ -32,6 +32,27 @@ func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader
 	return &preSignSendResponse, nil
 }
 
+func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages []stader_backend.PreSignSendApiRequestType) (*stader_backend.BulkPreSignSendApiResponseType, error) {
+	config, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignSendApi(), preSignedMessages)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var preSignSendResponse stader_backend.BulkPreSignSendApiResponseType
+	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &preSignSendResponse, nil
+}
+
 func IsPresignedKeyRegistered(c *cli.Context, validatorPubKey types.ValidatorPubkey) (bool, error) {
 	config, err := services.GetConfig(c)
 	if err != nil {
@@ -52,6 +73,23 @@ func IsPresignedKeyRegistered(c *cli.Context, validatorPubKey types.ValidatorPub
 		return false, err
 	}
 	return preSignCheckResponse.Value, nil
+}
+
+func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.ValidatorPubkey) (map[string]bool, error) {
+	config, err := services.GetConfig(c)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), validatorPubKeys)
+
+	defer res.Body.Close()
+	var preSignCheckResponse map[string]bool
+	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
+	if err != nil {
+		return nil, err
+	}
+	return preSignCheckResponse, nil
 }
 
 func GetPublicKey(c *cli.Context) (*rsa.PublicKey, error) {

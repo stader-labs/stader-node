@@ -284,8 +284,16 @@ func (cfg *StaderNodeConfig) GetPresignSendApi() string {
 	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/presign"
 }
 
+func (cfg *StaderNodeConfig) GetBulkPresignSendApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/presigns"
+}
+
 func (cfg *StaderNodeConfig) GetPresignCheckApi() string {
 	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/msgSubmitted"
+}
+
+func (cfg *StaderNodeConfig) GetBulkPresignCheckApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/presignsSubmitted"
 }
 
 func (cfg *StaderNodeConfig) GetPresignPublicKeyApi() string {

@@ -22,6 +22,12 @@ type PreSignSendApiRequestType struct {
 	ValidatorPublicKey string `json:"validatorPublicKey"`
 }
 
+type BulkPreSignSendApiRequestType = []PreSignSendApiRequestType
+type BulkPreSignSendApiResponseType = []PreSignSendApiResponseType
+
+type BulkPreSignCheckApiRequestType = []string
+type BulkPreSignCheckApiResponseType = map[string]bool
+
 type PublicKeyApiResponse struct {
 	Value string `json:"value"`
 }

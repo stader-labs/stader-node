@@ -176,6 +176,13 @@ func run(c *cli.Context) error {
 				continue
 			}
 
+			preSignRegisteredMap, err := stader.BulkIsPresignedKeyRegistered(c, validatorPubKeys)
+			if err != nil {
+				errorLog.Printf("Could not bulk check presigned keys with error %s\n", err.Error())
+				continue
+			}
+			fmt.Printf("preSignRegisteredMap: %+v\n", preSignRegisteredMap)
+
 			for _, validatorPubKey := range validatorPubKeys {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
