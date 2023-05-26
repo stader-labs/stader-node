@@ -175,6 +175,7 @@ func run(c *cli.Context) error {
 				errorLog.Printf("Could not get wallet with error %s\n", err.Error())
 				continue
 			}
+			fmt.Printf("next account is %d\n", w.GetNextAccount())
 			for validatorPubKey, validatorInfo := range registeredValidators {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
