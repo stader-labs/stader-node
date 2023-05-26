@@ -32,7 +32,7 @@ func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader
 	return &preSignSendResponse, nil
 }
 
-func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages []stader_backend.PreSignSendApiRequestType) (*stader_backend.BulkPreSignSendApiResponseType, error) {
+func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages []stader_backend.PreSignSendApiRequestType) (*map[string]stader_backend.PreSignSendApiResponseType, error) {
 	config, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 	}
 	defer res.Body.Close()
 
-	var preSignSendResponse stader_backend.BulkPreSignSendApiResponseType
+	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
 		return nil, err

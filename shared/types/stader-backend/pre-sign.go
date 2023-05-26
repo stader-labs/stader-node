@@ -25,7 +25,7 @@ type PreSignSendApiRequestType struct {
 }
 
 type BulkPreSignSendApiRequestType = []PreSignSendApiRequestType
-type BulkPreSignSendApiResponseType = []PreSignSendApiResponseType
+type BulkPreSignSendApiResponseType = map[string]PreSignSendApiResponseType
 
 type BulkPreSignCheckApiRequestType struct {
 	ValidatorPubKeys []types.ValidatorPubkey `json:"pubkeys"`

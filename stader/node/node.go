@@ -182,6 +182,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 
+			preSignSendMessages := []stader_backend.PreSignSendApiRequestType{}
 			for _, validatorPubKey := range validatorPubKeys {
 				infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
 				validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
@@ -202,8 +203,6 @@ func run(c *cli.Context) error {
 				}
 
 				registeredPresign, ok := preSignRegisteredMap[validatorPubKey.String()]
-				fmt.Printf("registeredPresign: %t\n", registeredPresign)
-				fmt.Printf("ok: %t\n", ok)
 				if !ok {
 					errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
 					continue
@@ -230,15 +229,6 @@ func run(c *cli.Context) error {
 					continue
 				}
 
-				//// check if the presigned message has been registered. if it has been registered, then continue
-				//isRegistered, err := stader.IsPresignedKeyRegistered(c, validatorPubKey)
-				//if isRegistered {
-				//	errorLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
-				//	continue
-				//} else if err != nil {
-				//	errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
-				//}
-
 				exitEpoch := currentHead.Epoch
 
 				signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
@@ -263,7 +253,7 @@ func run(c *cli.Context) error {
 				exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
 
 				// send it to the presigned api
-				backendRes, err := stader.SendPresignedMessageToStaderBackend(c, stader_backend.PreSignSendApiRequestType{
+				preSignSendMessages = append(preSignSendMessages, stader_backend.PreSignSendApiRequestType{
 					Message: struct {
 						Epoch          string `json:"epoch"`
 						ValidatorIndex string `json:"validator_index"`
@@ -274,18 +264,41 @@ func run(c *cli.Context) error {
 					Signature:          exitSignatureEncryptedString,
 					ValidatorPublicKey: validatorPubKey.String(),
 				})
-				if !backendRes.Success {
-					errorLog.Printf("Failed to send the presigned api: %s\n", backendRes.Message)
-					continue
-				} else if backendRes.Success {
-					errorLog.Printf("Successfully sent the presigned message for validator: %s\n", validatorPubKey)
-					continue
-				} else if err != nil {
-					errorLog.Printf("Sending presigned message failed with %v\n", err)
-					continue
-				}
 
-				time.Sleep(preSignedBatchCooldown)
+				//backendRes, err := stader.SendPresignedMessageToStaderBackend(c, stader_backend.PreSignSendApiRequestType{
+				//	Message: struct {
+				//		Epoch          string `json:"epoch"`
+				//		ValidatorIndex string `json:"validator_index"`
+				//	}{
+				//		Epoch:          strconv.FormatUint(exitEpoch, 10),
+				//		ValidatorIndex: strconv.FormatUint(validatorStatus.Index, 10),
+				//	},
+				//	Signature:          exitSignatureEncryptedString,
+				//	ValidatorPublicKey: validatorPubKey.String(),
+				//})
+				//if !backendRes.Success {
+				//	errorLog.Printf("Failed to send the presigned api: %s\n", backendRes.Message)
+				//	continue
+				//} else if backendRes.Success {
+				//	errorLog.Printf("Successfully sent the presigned message for validator: %s\n", validatorPubKey)
+				//	continue
+				//} else if err != nil {
+				//	errorLog.Printf("Sending presigned message failed with %v\n", err)
+				//	continue
+				//}
+			}
+
+			res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
+			if err != nil {
+				errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
+				continue
+			}
+			for pubKey, response := range *res {
+				if response.Success {
+					infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
+				} else {
+					errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+				}
 			}
 
 			errorLog.Printf("Done with the pass of presign daemon")
