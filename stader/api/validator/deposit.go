@@ -156,7 +156,10 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 
 	newValidatorKey := operatorKeyCount
 
-	walletIndex := w.GetNextAccount()
+	walletIndex, err := w.GetValidatorKeyCount()
+	if err != nil {
+		return nil, err
+	}
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		// Create and save a new validator key
@@ -203,7 +206,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	if err != nil {
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
-	
+
 	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
 		return nil, err
