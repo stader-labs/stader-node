@@ -134,10 +134,6 @@ func (w *Wallet) CreateValidatorKeyFromIndex(index uint) (*eth2types.BLSPrivateK
 
 }
 
-func (w *Wallet) GetNextAccount() uint {
-	return w.ws.NextAccount
-}
-
 // Create a new validator key
 func (w *Wallet) CreateValidatorKey() (*eth2types.BLSPrivateKey, error) {
 
