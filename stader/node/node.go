@@ -201,6 +201,9 @@ func run(c *cli.Context) error {
 					endIndex = len(validatorPubKeys)
 				}
 
+				infoLog.Printf("Starting a batch of %d validators\n", endIndex-startIndex)
+				infoLog.Printf("Starting index: %d, End index: %d\n", startIndex, endIndex)
+
 				validatorKeyBatch := validatorPubKeys[startIndex:endIndex]
 
 				for _, validatorPubKey := range validatorKeyBatch {
