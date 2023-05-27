@@ -215,6 +215,8 @@ func run(c *cli.Context) error {
 				if registeredPresign {
 					infoLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
 					continue
+				} else {
+					infoLog.Printf("Validator pub key: %s pre signed key not registered. Creating presigned message\n", validatorPubKey)
 				}
 
 				// check if validator has not yet been registered on beacon chain
