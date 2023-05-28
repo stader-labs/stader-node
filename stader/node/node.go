@@ -190,7 +190,7 @@ func run(c *cli.Context) error {
 			preSignSendMessages := []stader_backend.PreSignSendApiRequestType{}
 
 			pageNumber := 0
-			pageSize := 5
+			pageSize := 40
 			for {
 				startIndex := pageNumber * pageSize
 				if startIndex > len(validatorPubKeys) {
