@@ -34,7 +34,7 @@ services:
       - ${STADER_DATA_FOLDER}:/.stader/data
     networks:
       - net
-    command: "-m 0.0.0.0 -r ${GUARDIAN_METRICS_PORT:-9104} guardian"
+    command: "-m 0.0.0.0 -r ${NODE_METRICS_PORT:-9104} guardian"
     cap_drop:
       - all
     cap_add:

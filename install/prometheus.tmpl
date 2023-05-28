@@ -55,4 +55,4 @@ scrape_configs:
     scrape_interval: 5m
     scrape_timeout: 5m
     static_configs:
-      - targets: ['guardian:9104']
+      - targets: ['guardian:${NODE_METRICS_PORT:-9104}']

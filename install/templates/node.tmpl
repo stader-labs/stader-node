@@ -35,7 +35,7 @@ services:
       - ${STADER_DATA_FOLDER}:/.stader/data
     networks:
       - net
-    command: "-m 0.0.0.0 -r ${NODE_METRICS_PORT:-9102} node"
+    command: "infinity"
     cap_drop:
       - all
     cap_add:
