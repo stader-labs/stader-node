@@ -56,7 +56,7 @@ func getValidatorStatus(c *cli.Context) error {
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	if len(status.ValidatorInfos) == 0 {
-		fmt.Printf("The node has no registered validators. Please use the %sstader-cli node deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("The node has no registered validators. Please use the %sstader-cli validator deposit%s command to register a validator with Stader\n\n", log.ColorGreen, log.ColorReset)
 		return nil
 	}
 
