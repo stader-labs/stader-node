@@ -199,12 +199,13 @@ func run(c *cli.Context) error {
 				endIndex := (pageNumber + 1) * pageSize
 				if endIndex > len(validatorPubKeys) {
 					endIndex = len(validatorPubKeys)
+				} else if endIndex == len(validatorPubKeys) {
+					endIndex = len(validatorPubKeys) + 1
 				}
-
-				infoLog.Printf("Starting a batch of %d validators\n", endIndex-startIndex)
 				infoLog.Printf("Starting index: %d, End index: %d\n", startIndex, endIndex)
 
 				validatorKeyBatch := validatorPubKeys[startIndex:endIndex]
+				infoLog.Printf("Checking %d validator keys\n", len(validatorKeyBatch))
 
 				for _, validatorPubKey := range validatorKeyBatch {
 					infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
