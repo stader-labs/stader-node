@@ -56,6 +56,7 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
+		fmt.Printf("parsing the response failed: %s\n", err.Error())
 		return nil, err
 	}
 
