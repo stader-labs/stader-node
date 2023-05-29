@@ -3,7 +3,6 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
-	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
@@ -48,7 +47,6 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
-		fmt.Printf("parsing the response failed: %s\n", err.Error())
 		return nil, err
 	}
 
