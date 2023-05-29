@@ -199,8 +199,6 @@ func run(c *cli.Context) error {
 				endIndex := (pageNumber + 1) * pageSize
 				if endIndex > len(validatorPubKeys) {
 					endIndex = len(validatorPubKeys)
-				} else if endIndex == len(validatorPubKeys) {
-					endIndex = len(validatorPubKeys) + 1
 				}
 				infoLog.Printf("Starting index: %d, End index: %d\n", startIndex, endIndex)
 
