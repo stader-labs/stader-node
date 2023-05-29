@@ -187,8 +187,6 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			preSignSendMessages := []stader_backend.PreSignSendApiRequestType{}
-
 			pageNumber := 0
 			pageSize := 40
 			for {
@@ -204,6 +202,8 @@ func run(c *cli.Context) error {
 
 				validatorKeyBatch := validatorPubKeys[startIndex:endIndex]
 				infoLog.Printf("Checking %d validator keys\n", len(validatorKeyBatch))
+
+				preSignSendMessages := []stader_backend.PreSignSendApiRequestType{}
 
 				for _, validatorPubKey := range validatorKeyBatch {
 					infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
