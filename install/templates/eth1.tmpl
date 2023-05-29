@@ -64,6 +64,7 @@ services:
       - GETH_USE_PEBBLE=${GETH_USE_PEBBLE}
       - TX_FEE_CAP=${TX_FEE_CAP}
       - TX_FEE_CAP_IN_WEI=${TX_FEE_CAP_IN_WEI}
+      - TX_FEE_CAP_IN_GWEI=${TX_FEE_CAP_IN_GWEI}
     entrypoint: sh
     command: "/setup/start-ec.sh"
     cap_drop:

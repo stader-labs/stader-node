@@ -802,9 +802,11 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars[FeeRecipientFileEnvVar] = FeeRecipientFilename // If this is running, we're in Docker mode by definition so use the Docker fee recipient filename
 	//envVars["TX_FEE_CAP"] = bigcfg.StaderNode.TxFeeCap.Value.(float64)
 	txFeeCapInWei := eth.EthToWei(cfg.StaderNode.TxFeeCap.Value.(float64))
+	txFeeCapInGwei := eth.WeiToGwei(txFeeCapInWei)
 	txFeeCap := cfg.StaderNode.TxFeeCap.Value.(float64)
 	envVars["TX_FEE_CAP_IN_WEI"] = txFeeCapInWei.String()
 	envVars["TX_FEE_CAP"] = fmt.Sprintf("%f", txFeeCap)
+	envVars["TX_FEE_CAP_IN_GWEI"] = fmt.Sprintf("%f", txFeeCapInGwei)
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 
