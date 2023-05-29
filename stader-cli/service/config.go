@@ -166,7 +166,7 @@ func configureService(c *cli.Context) error {
 	}
 
 	// Restart the services
-	err = startService(c, false)
+	err = startService(c, true)
 	if err != nil {
 		return fmt.Errorf("error startService: %w", err)
 	}
