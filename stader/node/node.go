@@ -297,12 +297,13 @@ func run(c *cli.Context) error {
 					res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
 					if err != nil {
 						errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
-					}
-					for pubKey, response := range *res {
-						if response.Success {
-							infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
-						} else {
-							errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+					} else {
+						for pubKey, response := range *res {
+							if response.Success {
+								infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
+							} else {
+								errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+							}
 						}
 					}
 				}
