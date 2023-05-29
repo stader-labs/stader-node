@@ -12,7 +12,7 @@ type PreSignCheckApiResponseType struct {
 
 type PreSignSendApiResponseType struct {
 	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Error   string `json:"error"`
 }
 
 type PreSignSendApiRequestType struct {

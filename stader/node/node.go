@@ -300,7 +300,7 @@ func run(c *cli.Context) error {
 							if response.Success {
 								infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
 							} else {
-								errorLog.Printf("Failed to send the presigned api: %s\n", response.Message)
+								errorLog.Printf("Failed to send the presigned api: %s\n", response.Error)
 							}
 						}
 					}

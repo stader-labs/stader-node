@@ -81,7 +81,7 @@ func signMessage(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Signed Message:\n\n%s\n", string(bytes))
+	fmt.Printf("Signed Error:\n\n%s\n", string(bytes))
 
 	return nil
 
