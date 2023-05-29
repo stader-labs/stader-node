@@ -297,7 +297,6 @@ func run(c *cli.Context) error {
 					res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
 					if err != nil {
 						errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
-						continue
 					}
 					for pubKey, response := range *res {
 						if response.Success {
