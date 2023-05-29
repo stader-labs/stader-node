@@ -45,13 +45,6 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 	}
 	defer res.Body.Close()
 
-	//body, err := ioutil.ReadAll(res.Body)
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	//fmt.Printf("Debug: send bulk presign response is %s\n", string(body))
-
 	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
