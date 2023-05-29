@@ -82,7 +82,7 @@ func nodeDepositSd(c *cli.Context) error {
 			return err
 		}
 		hash := response.ApproveTxHash
-		fmt.Printf("Approving SD for deposting...\n")
+		fmt.Printf("Approving SD for depositing...\n")
 		cliutils.PrintTransactionHash(staderClient, hash)
 		if _, err = staderClient.WaitForTransaction(hash); err != nil {
 			return err
