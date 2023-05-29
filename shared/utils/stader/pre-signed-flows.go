@@ -84,14 +84,7 @@ func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.Valid
 	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), stader_backend.BulkPreSignCheckApiRequestType{ValidatorPubKeys: validatorPubKeys})
 
 	defer res.Body.Close()
-	//body, err := ioutil.ReadAll(res.Body)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//fmt.Printf("Debug: bulk presign check response is %s\n", string(body))
 
-	//fmt.Printf("res.body is %s\n", res)
 	var preSignCheckResponse map[string]bool
 	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
 	if err != nil {
