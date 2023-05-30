@@ -22,15 +22,14 @@ package wallet
 import (
 	"errors"
 	"fmt"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/urfave/cli"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/types/api"
-	"github.com/stader-labs/stader-node/stader-lib/node"
-	"github.com/stader-labs/stader-node/stader-lib/types"
-	"github.com/urfave/cli"
+	walletutils "github.com/stader-labs/stader-node/shared/utils/wallet"
 )
 
 const (
@@ -44,6 +43,10 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
 	}
@@ -82,58 +85,21 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 	}
 	response.AccountAddress = nodeAccount.Address
 
+	if !c.Bool("skip-validator-key-recovery") {
+		response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// Save wallet
 	if err := w.Save(); err != nil {
 		return nil, err
 	}
 
-	// Handle validator key recovery skipping
-	if c.Bool("skip-validator-key-recovery") {
-		return &response, nil
-	}
-
-	pnr, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return nil, err
-	}
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, fmt.Errorf("GetOperatorId err %+v", err)
-	}
-
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
-	if err != nil {
-		return nil, fmt.Errorf("GetTotalValidatorKeys err %+v", err)
-	}
-
-	var i int64 = 0
-	var validatorsKeys []types.ValidatorPubkey
-	for ; i < totalValidatorKeys.Int64(); i++ {
-
-		validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, big.NewInt(i), nil)
-		if err != nil {
-			return nil, fmt.Errorf("DeleteValidatorStores err %+v", err)
-		}
-
-		validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, nil)
-		if err != nil {
-			return nil, fmt.Errorf("GetValidatorInfo: %d err %+v", validatorId, err)
-		}
-
-		validatorsKeys = append(validatorsKeys, types.BytesToValidatorPubkey(validatorInfo.Pubkey))
-
-		if _, err := w.RecoverValidatorKey(types.BytesToValidatorPubkey(validatorInfo.Pubkey), 0); err != nil {
-			return nil, fmt.Errorf("RecoverValidatorKey: %+v err %+v", validatorInfo.Pubkey, err)
-		}
-	}
-
-	// To save the validator index update
-	if err := w.Save(); err != nil {
-		return nil, err
-	}
-
-	response.ValidatorKeys = validatorsKeys
+	// Return response
 	return &response, nil
+
 }
 
 func searchAndRecoverWallet(c *cli.Context, mnemonic string, address common.Address) (*api.SearchAndRecoverWalletResponse, error) {

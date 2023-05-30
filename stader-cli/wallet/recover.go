@@ -21,7 +21,6 @@ package wallet
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -40,12 +39,6 @@ func recoverWallet(c *cli.Context) error {
 		return err
 	}
 	defer staderOwner.Close()
-
-	// Load the config
-	cfg, _, err := staderOwner.LoadConfig()
-	if err != nil {
-		return err
-	}
 
 	// Get & check wallet status
 	status, err := staderOwner.WalletStatus()
@@ -84,28 +77,6 @@ func recoverWallet(c *cli.Context) error {
 
 	// Handle validator key recovery skipping
 	skipValidatorKeyRecovery := c.Bool("skip-validator-key-recovery")
-
-	// Check for custom keys
-	if !skipValidatorKeyRecovery {
-		customKeyPasswordFile, err := promptForCustomKeyPasswords(staderOwner, cfg, false)
-		if err != nil {
-			return err
-		}
-		if customKeyPasswordFile != "" {
-			// Defer deleting the custom keystore password file
-			defer func(customKeyPasswordFile string) {
-				_, err := os.Stat(customKeyPasswordFile)
-				if os.IsNotExist(err) {
-					return
-				}
-
-				err = os.Remove(customKeyPasswordFile)
-				if err != nil {
-					fmt.Printf("*** WARNING ***\nAn error occurred while removing the custom keystore password file: %s\n\nThis file contains the passwords to your custom validator keys.\nYou *must* delete it manually as soon as possible so nobody can read it.\n\nThe file is located here:\n\n\t%s\n\n", err.Error(), customKeyPasswordFile)
-				}
-			}(customKeyPasswordFile)
-		}
-	}
 
 	// Check for a search-by-address operation
 	addressString := c.String("address")
