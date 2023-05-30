@@ -290,7 +290,7 @@ func run(c *cli.Context) error {
 
 				//fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
 				fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
-				fmt.Printf("Pre-sign messages being sent are %v\n", preSignSendMessages)
+				//fmt.Printf("Pre-sign messages being sent are %v\n", preSignSendMessages)
 				if len(preSignSendMessages) > 0 {
 					res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
 					if err != nil {
