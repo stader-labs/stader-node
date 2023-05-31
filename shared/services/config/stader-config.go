@@ -127,9 +127,8 @@ type StaderConfig struct {
 	Exporter   *ExporterConfig   `yaml:"exporter,omitempty"`
 
 	// Metrics external
-	ExternalGrafana    *ExternalGrafanaConfig    `yaml:"grafana,omitempty"`
-	ExternalPrometheus *ExternalPrometheusConfig `yaml:"prometheus,omitempty"`
-	ExternalExporter   *ExternalExporterConfig   `yaml:"exporter,omitempty"`
+	ExternalGrafana  *ExternalGrafanaConfig  `yaml:"grafana,omitempty"`
+	ExternalExporter *ExternalExporterConfig `yaml:"exporter,omitempty"`
 
 	BitflyNodeMetrics *BitflyNodeMetricsConfig `yaml:"bitflyNodeMetrics,omitempty"`
 

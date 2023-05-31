@@ -1456,13 +1456,12 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Check the metrics containers
-	grafane := false
-	nodeExporter := false
-	prometheus := false
+	isLocalGrafana := cfg.ExternalGrafana == nil
+	isLocalNodeExporter := cfg.ExternalExporter == nil
 
 	if cfg.EnableMetrics.Value == true {
 		// Grafana
-		if grafane {
+		if isLocalGrafana {
 			contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.GrafanaContainerName+templateSuffix))
 			if err != nil {
 				return []string{}, fmt.Errorf("error reading and substituting Grafana container template: %w", err)
@@ -1477,7 +1476,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		}
 
 		// Node exporter
-		if nodeExporter {
+		if isLocalNodeExporter {
 			contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ExporterContainerName+templateSuffix))
 			if err != nil {
 				return []string{}, fmt.Errorf("error reading and substituting Node Exporter container template: %w", err)
@@ -1492,19 +1491,17 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		}
 
 		// Prometheus\
-		if prometheus {
-			contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.PrometheusContainerName+templateSuffix))
-			if err != nil {
-				return []string{}, fmt.Errorf("error reading and substituting Prometheus container template: %w", err)
-			}
-			prometheusComposePath := filepath.Join(runtimeFolder, config.PrometheusContainerName+composeFileSuffix)
-			err = ioutil.WriteFile(prometheusComposePath, contents, 0664)
-			if err != nil {
-				return []string{}, fmt.Errorf("could not write Prometheus container file to %s: %w", prometheusComposePath, err)
-			}
-			deployedContainers = append(deployedContainers, prometheusComposePath)
-			deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.PrometheusContainerName+composeFileSuffix))
+		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.PrometheusContainerName+templateSuffix))
+		if err != nil {
+			return []string{}, fmt.Errorf("error reading and substituting Prometheus container template: %w", err)
 		}
+		prometheusComposePath := filepath.Join(runtimeFolder, config.PrometheusContainerName+composeFileSuffix)
+		err = ioutil.WriteFile(prometheusComposePath, contents, 0664)
+		if err != nil {
+			return []string{}, fmt.Errorf("could not write Prometheus container file to %s: %w", prometheusComposePath, err)
+		}
+		deployedContainers = append(deployedContainers, prometheusComposePath)
+		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.PrometheusContainerName+composeFileSuffix))
 	}
 
 	// Check MEV-Boost
