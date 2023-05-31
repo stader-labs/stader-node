@@ -1456,8 +1456,8 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Check the metrics containers
-	isLocalGrafana := cfg.ExternalGrafana == nil
-	isLocalNodeExporter := cfg.ExternalExporter == nil
+	isLocalGrafana := false
+	isLocalNodeExporter := false
 
 	if cfg.EnableMetrics.Value == true {
 		// Grafana
