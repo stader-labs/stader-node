@@ -39,6 +39,12 @@ type GrafanaConfig struct {
 	// The Docker Hub tag for Grafana
 	ContainerTag config.Parameter `yaml:"containerTag,omitempty"`
 }
+type ExternalGrafanaConfig struct {
+	Title string `yaml:"-"`
+
+	// The URL of the HTTP endpoint
+	HttpUrl config.Parameter `yaml:"httpUrl,omitempty"`
+}
 
 // Generates a new Grafana config
 func NewGrafanaConfig(cfg *StaderConfig) *GrafanaConfig {

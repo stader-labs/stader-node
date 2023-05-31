@@ -47,6 +47,13 @@ type PrometheusConfig struct {
 	AdditionalFlags config.Parameter `yaml:"additionalFlags,omitempty"`
 }
 
+type ExternalPrometheusConfig struct {
+	Title string `yaml:"-"`
+
+	// The URL of the HTTP endpoint
+	HttpUrl config.Parameter `yaml:"httpUrl,omitempty"`
+}
+
 // Generates a new Prometheus config
 func NewPrometheusConfig(cfg *StaderConfig) *PrometheusConfig {
 	return &PrometheusConfig{
