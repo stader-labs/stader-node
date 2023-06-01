@@ -5,6 +5,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
+	"math/big"
 )
 
 func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
@@ -22,8 +23,21 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err != nil {
 		return nil, err
 	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
 
 	response := api.CanClaimRewards{}
+
+	operatorClaimVaultBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+	if operatorClaimVaultBalance.Cmp(big.NewInt(0)) == 0 {
+		response.NoRewards = true
+		return &response, nil
+	}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
