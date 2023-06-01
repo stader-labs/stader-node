@@ -142,7 +142,7 @@ func configureService(c *cli.Context) error {
 	}
 	defer staderClient.Close()
 
-	landingUI := "wizard"
+	landingUI := "configuration"
 	cfg, err := loadConfig(c)
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)

@@ -51,6 +51,12 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 	newSettings[keys.Nm_exporter_container_tag] = cfg.Exporter.ContainerTag.Value
 	newSettings[keys.Nm_additional_exporter_flags] = cfg.Exporter.AdditionalFlags.Value
 
+	externalGrafana, _ := cfg.ExternalGrafana.Value.(bool)
+	newSettings[keys.Nm_external_grafana] = externalGrafana
+
+	externalNodeExporter, _ := cfg.ExternalNodeExporter.Value.(bool)
+	newSettings[keys.Nm_external_node_exporter] = externalNodeExporter
+
 	newSettings[keys.Nm_enable_beaconchain_node_metrics] = cfg.EnableBitflyNodeMetrics.Value.(bool)
 
 	newSettings[keys.Nm_beaconchain_api_key] =
@@ -72,6 +78,9 @@ func updateMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{
 	cfg.VcMetricsPort.Value = newSettings[keys.Nm_validator_client_metrics_port]
 	cfg.NodeMetricsPort.Value = newSettings[keys.Nm_node_metrics_port]
 	cfg.ExporterMetricsPort.Value = newSettings[keys.Nm_exporter_metrics_port]
+
+	cfg.ExternalGrafana.Value = newSettings[keys.Nm_external_grafana]
+	cfg.ExternalNodeExporter.Value = newSettings[keys.Nm_external_node_exporter]
 	// cfg.GuardianMetricsPort.Value =
 
 	// TODO:
