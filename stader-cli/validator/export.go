@@ -84,5 +84,7 @@ func exportValidatorStatus(c *cli.Context) error {
 		panic(err)
 	}
 
+	fmt.Printf("Validator status exported to %svalidator_info.csv%s\n\n", log.ColorGreen, log.ColorReset)
+
 	return nil
 }
