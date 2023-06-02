@@ -805,8 +805,8 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	txFeeCapInGwei := eth.WeiToGwei(txFeeCapInWei)
 	txFeeCap := cfg.StaderNode.TxFeeCap.Value.(float64)
 	envVars["TX_FEE_CAP_IN_WEI"] = txFeeCapInWei.String()
-	envVars["TX_FEE_CAP"] = fmt.Sprintf("%f", txFeeCap)
-	envVars["TX_FEE_CAP_IN_GWEI"] = fmt.Sprintf("%f", txFeeCapInGwei)
+	envVars["TX_FEE_CAP"] = fmt.Sprintf("%d", int64(txFeeCap))
+	envVars["TX_FEE_CAP_IN_GWEI"] = fmt.Sprintf("%d", int64(txFeeCapInGwei))
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 
