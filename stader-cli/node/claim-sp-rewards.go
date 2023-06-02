@@ -26,15 +26,12 @@ func ClaimSpRewards(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println("Downloading the merkle proofs for the cycles you may have not downloaded yet...")
 	downloadRes, err := staderClient.DownloadSpMerkleProofs()
 	if err != nil {
 		return err
 	}
 	if len(downloadRes.DownloadedCycles) != 0 {
 		fmt.Printf("Merkle proofs downloaded for cycles %v!\n", downloadRes.DownloadedCycles)
-	} else {
-		fmt.Println("No new merkle proofs downloaded!")
 	}
 
 	// prompt user to select the cycles to claim from
