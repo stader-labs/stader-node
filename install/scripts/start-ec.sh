@@ -200,7 +200,7 @@ if [ "$CLIENT" = "nethermind" ]; then
         --JsonRpc.Host 0.0.0.0 \
         --JsonRpc.Port ${EC_HTTP_PORT:-8545} \
         --JsonRpc.EnginePort ${EC_ENGINE_PORT:-8551} \
-        --JsonRpc.GasRpc ${TX_FEE_CAP_IN_GWEI}
+        --JsonRpc.GasCap ${TX_FEE_CAP_IN_GWEI}
         --JsonRpc.EngineHost 0.0.0.0 \
         --Sync.AncientBodiesBarrier 1 \
         --Sync.AncientReceiptsBarrier 1 \
