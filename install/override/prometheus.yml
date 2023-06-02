@@ -25,3 +25,14 @@ version: "3.7"
 services:
   prometheus:
     x-comment: Add your customizations below this line
+networks:
+  # Bridge so node-exporter can get the real NIC details
+  # See https://stackoverflow.com/a/66689508 for more info
+  monitor-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/16
+          ip_range: 192.168.5.0/24
+          gateway: 192.168.5.254

@@ -72,6 +72,7 @@ func updateMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{
 	cfg.VcMetricsPort.Value = newSettings[keys.Nm_validator_client_metrics_port]
 	cfg.NodeMetricsPort.Value = newSettings[keys.Nm_node_metrics_port]
 	cfg.ExporterMetricsPort.Value = newSettings[keys.Nm_exporter_metrics_port]
+
 	// cfg.GuardianMetricsPort.Value =
 
 	// TODO:

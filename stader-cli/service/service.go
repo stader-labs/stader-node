@@ -293,8 +293,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 }
 
 func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
+
 	currentSettings := pages.SettingsType{
-		Network:   "prater",
+		Network:   string(cfg.StaderNode.Network.Value.(cfgtypes.Network)),
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
 			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),
@@ -611,7 +612,13 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		return fmt.Errorf("No configuration detected. Please run `stader-cli service config` to set up your Stadernode before running it.")
 	}
 
-	if !ignoreConfigSuggestion {
+	// Check if this is a new install
+	isUpdate, err := staderClient.IsFirstRun()
+	if err != nil {
+		return fmt.Errorf("error checking for first-run status: %w", err)
+	}
+
+	if isUpdate && !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {

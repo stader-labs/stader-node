@@ -54,9 +54,9 @@ func updateConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]i
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
 	if network == "Goerli Testnet" {
-		newCfg.ChangeNetwork(cfgtypes.Network("prater"))
-	} else {
-		newCfg.ChangeNetwork(cfgtypes.Network("mainnet"))
+		newCfg.ChangeNetwork(cfgtypes.Network_Prater)
+	} else if network == "Ethereum Mainnet" {
+		newCfg.ChangeNetwork(cfgtypes.Network_Mainnet)
 	}
 
 	// Stader node config
@@ -166,7 +166,7 @@ func configureService(c *cli.Context) error {
 	}
 
 	// Restart the services
-	err = startService(c, false)
+	err = startService(c, true)
 	if err != nil {
 		return fmt.Errorf("error startService: %w", err)
 	}

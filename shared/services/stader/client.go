@@ -1470,7 +1470,6 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		deployedContainers = append(deployedContainers, grafanaComposePath)
 		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GrafanaContainerName+composeFileSuffix))
 
-		// Node exporter
 		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ExporterContainerName+templateSuffix))
 		if err != nil {
 			return []string{}, fmt.Errorf("error reading and substituting Node Exporter container template: %w", err)
@@ -1483,7 +1482,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		deployedContainers = append(deployedContainers, exporterComposePath)
 		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.ExporterContainerName+composeFileSuffix))
 
-		// Prometheus
+		// Prometheus\
 		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.PrometheusContainerName+templateSuffix))
 		if err != nil {
 			return []string{}, fmt.Errorf("error reading and substituting Prometheus container template: %w", err)

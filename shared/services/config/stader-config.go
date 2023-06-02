@@ -21,18 +21,19 @@ package config
 
 import (
 	"fmt"
-	"github.com/alessio/shellescape"
-	"github.com/pbnjay/memory"
-	"github.com/stader-labs/stader-node/shared"
-	"github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
 	"strconv"
+
+	"github.com/alessio/shellescape"
+	"github.com/pbnjay/memory"
+	"github.com/stader-labs/stader-node/shared"
+	"github.com/stader-labs/stader-node/shared/types/config"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"gopkg.in/yaml.v2"
 )
 
 // Constants
@@ -121,9 +122,10 @@ type StaderConfig struct {
 	FallbackPrysm  *FallbackPrysmConfig  `yaml:"fallbackPrysm,omitempty"`
 
 	// Metrics
-	Grafana           *GrafanaConfig           `yaml:"grafana,omitempty"`
-	Prometheus        *PrometheusConfig        `yaml:"prometheus,omitempty"`
-	Exporter          *ExporterConfig          `yaml:"exporter,omitempty"`
+	Grafana    *GrafanaConfig    `yaml:"grafana,omitempty"`
+	Prometheus *PrometheusConfig `yaml:"prometheus,omitempty"`
+	Exporter   *ExporterConfig   `yaml:"exporter,omitempty"`
+
 	BitflyNodeMetrics *BitflyNodeMetricsConfig `yaml:"bitflyNodeMetrics,omitempty"`
 
 	// Native mode

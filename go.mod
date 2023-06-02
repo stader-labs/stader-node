@@ -30,18 +30,20 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
+	github.com/rivo/tview v0.0.0-20230530133550-8bd761dda819 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230502050534-f4d6f8adb9ce
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230502050534-f4d6f8adb9ce
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230602142021-378099c5eca8
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230602142021-378099c5eca8
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
 	github.com/wealdtech/go-eth2-util v1.7.0
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
+	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.7.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/term v0.7.0
+	golang.org/x/term v0.8.0
 	google.golang.org/grpc v1.49.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect

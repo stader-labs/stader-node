@@ -43,6 +43,13 @@ type ExporterConfig struct {
 	AdditionalFlags config.Parameter `yaml:"additionalFlags,omitempty"`
 }
 
+type ExternalExporterConfig struct {
+	Title string `yaml:"-"`
+
+	// The URL of the HTTP endpoint
+	HttpUrl config.Parameter `yaml:"httpUrl,omitempty"`
+}
+
 // Generates a new Exporter config
 func NewExporterConfig(cfg *StaderConfig) *ExporterConfig {
 	return &ExporterConfig{
