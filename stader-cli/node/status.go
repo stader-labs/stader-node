@@ -127,7 +127,6 @@ func getNodeStatus(c *cli.Context) error {
 
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("Operator has Opted Out for Socializing Pool\n")
-		fmt.Printf("Operator Fee Recepient: %s\n\n", status.OperatorELRewardsAddress.String())
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 	}

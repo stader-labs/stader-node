@@ -73,6 +73,8 @@ func getValidatorStatus(c *cli.Context) error {
 			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 		} else if validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
+		} else if validatorInfo.Status == 5 {
+			fmt.Printf("Your validator has been successfully settled by the oracles. Please withdraw your exited settled funds using %sstader-cli node claim-rewards%s", log.ColorGreen, log.ColorReset)
 		}
 
 		if validatorInfo.DepositBlock.Int64() > 0 {
