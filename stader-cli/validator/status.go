@@ -66,6 +66,7 @@ func getValidatorStatus(c *cli.Context) error {
 		validatorPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
 		fmt.Printf("-Validator Pub Key: %s\n\n", validatorPubKey)
 		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
+		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 		} else if validatorInfo.CrossedRewardsThreshold {

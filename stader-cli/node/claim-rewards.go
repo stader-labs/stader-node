@@ -27,12 +27,16 @@ func ClaimRewards(c *cli.Context) error {
 	err = cliutils.PrintNetwork(staderClient)
 
 	// Check if we can Withdraw El Rewards
-	canClaimElRewardsResponse, err := staderClient.CanClaimRewards()
+	canClaimRewardsResponse, err := staderClient.CanClaimRewards()
 	if err != nil {
 		return err
 	}
+	if canClaimRewardsResponse.NoRewards {
+		fmt.Println("No rewards to claim.")
+		return nil
+	}
 
-	err = gas.AssignMaxFeeAndLimit(canClaimElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canClaimRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
@@ -56,6 +60,6 @@ func ClaimRewards(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Withdrawing %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+	fmt.Printf("Withdrawn %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
 	return nil
 }

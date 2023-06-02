@@ -631,7 +631,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-update-operator-name",
 				Usage:     "Can we update the operator name",
-				UsageText: "stader-permissioned-cli api node can-update-operator-name operator-name",
+				UsageText: "stader-cli api node can-update-operator-name operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -650,7 +650,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "update-operator-name",
 				Usage:     "Update the operator name",
-				UsageText: "stader-permissioned-cli api node update-operator-name operator-name",
+				UsageText: "stader-cli api node update-operator-name operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -669,7 +669,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-update-operator-reward-address",
 				Usage:     "Can we update the operator reward address",
-				UsageText: "stader-permissioned-cli api node can-update-operator-reward-address operator-name",
+				UsageText: "stader-cli api node can-update-operator-reward-address operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -691,7 +691,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "update-operator-reward-address",
 				Usage:     "Update the operator reward address",
-				UsageText: "stader-permissioned-cli api node update-operator-reward-address operator-name",
+				UsageText: "stader-cli api node update-operator-reward-address operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
