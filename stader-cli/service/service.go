@@ -293,8 +293,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 }
 
 func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
+
 	currentSettings := pages.SettingsType{
-		Network:   "prater",
+		Network:   string(cfg.StaderNode.Network.Value.(cfgtypes.Network)),
 		EthClient: string(cfg.ConsensusClientMode.Value.(cfgtypes.Mode)),
 		ExecutionClient: pages.ExecutionClientSettingsType{
 			SelectionOption: string(cfg.ExecutionClient.Value.(cfgtypes.ExecutionClient)),

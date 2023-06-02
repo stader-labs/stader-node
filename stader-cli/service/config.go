@@ -54,9 +54,9 @@ func updateConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]i
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
 	if network == "Goerli Testnet" {
-		newCfg.ChangeNetwork(cfgtypes.Network("prater"))
-	} else {
-		newCfg.ChangeNetwork(cfgtypes.Network("mainnet"))
+		newCfg.ChangeNetwork(cfgtypes.Network_Prater)
+	} else if network == "Ethereum Mainnet" {
+		newCfg.ChangeNetwork(cfgtypes.Network_Mainnet)
 	}
 
 	// Stader node config
@@ -142,7 +142,7 @@ func configureService(c *cli.Context) error {
 	}
 	defer staderClient.Close()
 
-	landingUI := "configuration"
+	landingUI := "wizard"
 	cfg, err := loadConfig(c)
 	if err != nil {
 		return fmt.Errorf("error loading user settings: %w", err)
