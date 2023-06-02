@@ -73,7 +73,7 @@ func getValidatorStatus(c *cli.Context) error {
 			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
 		}
 
-		if validatorInfo.Status > 3 {
+		if validatorInfo.DepositBlock.Int64() > 0 {
 			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))
 		}
 
