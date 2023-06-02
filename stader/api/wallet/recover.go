@@ -46,10 +46,6 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 	if err != nil {
 		return nil, err
 	}
-	pnr, err := services.GetPermissionlessNodeRegistry(c)
-	if err != nil {
-		return nil, err
-	}
 
 	// Response
 	response := api.RecoverWalletResponse{}
@@ -86,6 +82,10 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 	response.AccountAddress = nodeAccount.Address
 
 	if !c.Bool("skip-validator-key-recovery") {
+		pnr, err := services.GetPermissionlessNodeRegistry(c)
+		if err != nil {
+			return nil, err
+		}
 		response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
 		if err != nil {
 			return nil, err
