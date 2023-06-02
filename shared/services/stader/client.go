@@ -1456,47 +1456,31 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	}
 
 	// Check the metrics containers
-	isLocalGrafana := true
-	isLocalNodeExporter := true
-
-	if cfg.ExternalGrafana.Value != nil {
-		isLocalGrafana = !cfg.ExternalGrafana.Value.(bool)
-	}
-
-	if cfg.ExternalNodeExporter.Value != nil {
-		isLocalNodeExporter = !cfg.ExternalNodeExporter.Value.(bool)
-	}
-
 	if cfg.EnableMetrics.Value == true {
 		// Grafana
-		if isLocalGrafana {
-			contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.GrafanaContainerName+templateSuffix))
-			if err != nil {
-				return []string{}, fmt.Errorf("error reading and substituting Grafana container template: %w", err)
-			}
-			grafanaComposePath := filepath.Join(runtimeFolder, config.GrafanaContainerName+composeFileSuffix)
-			err = ioutil.WriteFile(grafanaComposePath, contents, 0664)
-			if err != nil {
-				return []string{}, fmt.Errorf("could not write Grafana container file to %s: %w", grafanaComposePath, err)
-			}
-			deployedContainers = append(deployedContainers, grafanaComposePath)
-			deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GrafanaContainerName+composeFileSuffix))
+		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.GrafanaContainerName+templateSuffix))
+		if err != nil {
+			return []string{}, fmt.Errorf("error reading and substituting Grafana container template: %w", err)
 		}
+		grafanaComposePath := filepath.Join(runtimeFolder, config.GrafanaContainerName+composeFileSuffix)
+		err = ioutil.WriteFile(grafanaComposePath, contents, 0664)
+		if err != nil {
+			return []string{}, fmt.Errorf("could not write Grafana container file to %s: %w", grafanaComposePath, err)
+		}
+		deployedContainers = append(deployedContainers, grafanaComposePath)
+		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GrafanaContainerName+composeFileSuffix))
 
-		// Node exporter
-		if isLocalNodeExporter {
-			contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ExporterContainerName+templateSuffix))
-			if err != nil {
-				return []string{}, fmt.Errorf("error reading and substituting Node Exporter container template: %w", err)
-			}
-			exporterComposePath := filepath.Join(runtimeFolder, config.ExporterContainerName+composeFileSuffix)
-			err = ioutil.WriteFile(exporterComposePath, contents, 0664)
-			if err != nil {
-				return []string{}, fmt.Errorf("could not write Node Exporter container file to %s: %w", exporterComposePath, err)
-			}
-			deployedContainers = append(deployedContainers, exporterComposePath)
-			deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.ExporterContainerName+composeFileSuffix))
+		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ExporterContainerName+templateSuffix))
+		if err != nil {
+			return []string{}, fmt.Errorf("error reading and substituting Node Exporter container template: %w", err)
 		}
+		exporterComposePath := filepath.Join(runtimeFolder, config.ExporterContainerName+composeFileSuffix)
+		err = ioutil.WriteFile(exporterComposePath, contents, 0664)
+		if err != nil {
+			return []string{}, fmt.Errorf("could not write Node Exporter container file to %s: %w", exporterComposePath, err)
+		}
+		deployedContainers = append(deployedContainers, exporterComposePath)
+		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.ExporterContainerName+composeFileSuffix))
 
 		// Prometheus\
 		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.PrometheusContainerName+templateSuffix))

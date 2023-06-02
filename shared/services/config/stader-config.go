@@ -126,10 +126,6 @@ type StaderConfig struct {
 	Prometheus *PrometheusConfig `yaml:"prometheus,omitempty"`
 	Exporter   *ExporterConfig   `yaml:"exporter,omitempty"`
 
-	// Metrics external
-	ExternalGrafana      config.Parameter `yaml:"externalGrafana,omitempty"`
-	ExternalNodeExporter config.Parameter `yaml:"externalNodeExporter,omitempty"`
-
 	BitflyNodeMetrics *BitflyNodeMetricsConfig `yaml:"bitflyNodeMetrics,omitempty"`
 
 	// Native mode
@@ -430,26 +426,6 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			CanBeBlank:           false,
 			OverwriteOnUpgrade:   true,
 		},
-		ExternalGrafana: config.Parameter{
-			ID:                 "externalGrafana",
-			Name:               "External Grafana",
-			Description:        "External Grafana",
-			Type:               config.ParameterType_Bool,
-			Default:            map[config.Network]interface{}{config.Network_All: false},
-			AffectsContainers:  []config.ContainerID{config.ContainerID_Grafana},
-			CanBeBlank:         false,
-			OverwriteOnUpgrade: false,
-		},
-		ExternalNodeExporter: config.Parameter{
-			ID:                 "externalNodeExporter",
-			Name:               "External NodeExporter.",
-			Description:        "External NodeExporter",
-			Type:               config.ParameterType_Bool,
-			Default:            map[config.Network]interface{}{config.Network_All: false},
-			AffectsContainers:  []config.ContainerID{config.ContainerID_Exporter},
-			CanBeBlank:         false,
-			OverwriteOnUpgrade: false,
-		},
 	}
 
 	// Set the defaults for choices
@@ -544,8 +520,6 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.EcMetricsPort,
 		&cfg.BnMetricsPort,
 		&cfg.VcMetricsPort,
-		&cfg.ExternalGrafana,
-		&cfg.ExternalNodeExporter,
 		&cfg.NodeMetricsPort,
 		&cfg.ExporterMetricsPort,
 		&cfg.EnableMevBoost,
