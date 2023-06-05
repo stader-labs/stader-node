@@ -27,14 +27,12 @@ import (
 )
 
 const (
-	prysmBnTagAmd64Test     string = "prysmaticlabs/prysm-beacon-chain:HEAD-aa7d0df-debug"
-	prysmVcTagAmd64Test     string = "prysmaticlabs/prysm-validator:HEAD-aa7d0df-debug"
-	prysmBnTagAmd64Prod     string = "prysmaticlabs/prysm-beacon-chain:HEAD-aa7d0df-debug"
-	prysmVcTagAmd64Prod     string = "prysmaticlabs/prysm-validator:HEAD-aa7d0df-debug"
-	prysmBnTagArm64Prod     string = "prysmaticlabs/prysm-beacon-chain:v4.0.3"
-	prysmVcTagArm64Prod     string = "prysmaticlabs/prysm-validator:v4.0.3"
-	prysmBnTagArm64Test     string = "prysmaticlabs/prysm-beacon-chain:v4.0.3"
-	prysmVcTagArm64Test     string = "prysmaticlabs/prysm-validator:v4.0.3"
+	prysmBnTagTest string = "nethermindeth/prysm-beacon-chain:v4.0.5"
+	prysmVcTagTest string = "nethermindeth/prysm-validator:v4.0.5"
+
+	prysmBnTagProd string = "nethermindeth/prysm-beacon-chain:v4.0.5"
+	prysmVcTagProd string = "nethermindeth/prysm-validator:v4.0.5"
+
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
 	defaultPrysmMaxPeers    uint16 = 45
@@ -174,46 +172,34 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 
 // Get the container tag for the Prysm BN based on the current architecture
 func getPrysmBnProdTag() string {
-	if runtime.GOARCH == "arm64" {
-		return prysmBnTagArm64Prod
-	} else if runtime.GOARCH == "amd64" {
-		return prysmBnTagAmd64Prod
-	} else {
-		panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
+	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
+		return prysmBnTagProd
 	}
+	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
 }
 
 // Get the container tag for the Prysm BN based on the current architecture
 func getPrysmBnTestTag() string {
-	if runtime.GOARCH == "arm64" {
-		return prysmBnTagArm64Test
-	} else if runtime.GOARCH == "amd64" {
-		return prysmBnTagAmd64Test
-	} else {
-		panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
+	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
+		return prysmBnTagTest
 	}
+	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
 }
 
 // Get the container tag for the Prysm VC based on the current architecture
 func getPrysmVcProdTag() string {
-	if runtime.GOARCH == "arm64" {
-		return prysmVcTagArm64Prod
-	} else if runtime.GOARCH == "amd64" {
-		return prysmVcTagAmd64Prod
-	} else {
-		panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
+	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
+		return prysmVcTagProd
 	}
+	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
 }
 
 // Get the container tag for the Prysm VC based on the current architecture
 func getPrysmVcTestTag() string {
-	if runtime.GOARCH == "arm64" {
-		return prysmVcTagArm64Test
-	} else if runtime.GOARCH == "amd64" {
-		return prysmVcTagAmd64Test
-	} else {
-		panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
+	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
+		return prysmVcTagTest
 	}
+	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
 }
 
 // Get the parameters for this config
