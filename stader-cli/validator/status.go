@@ -76,7 +76,7 @@ func getValidatorStatus(c *cli.Context) error {
 		} else if validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n")
 		} else if validatorInfo.Status == 5 {
-			fmt.Printf("Your validator has been successfully settled by the oracles. Please withdraw your exited settled funds using %sstader-cli node claim-rewards%s\n", log.ColorGreen, log.ColorReset)
+			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n")
 		}
 
 		if validatorInfo.DepositBlock.Int64() > 0 {
