@@ -126,7 +126,7 @@ func getNodeStatus(c *cli.Context) error {
 	fmt.Printf("The Operator has registered a total of %d validators\n\n", len(status.ValidatorInfos))
 
 	if !status.OptedInForSocializingPool {
-		fmt.Printf("Operator has Opted Out for Socializing Pool\n")
+		fmt.Printf("Operator has Opted Out for Socializing Pool\n\n")
 	} else {
 		fmt.Printf("Operator has Opted In for Socializing Pool\n\n")
 	}
@@ -151,10 +151,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
-			"The Operator %s%s%s has aggregated a total of %.6f ETH in the claim vault\n\n",
-			log.ColorBlue,
-			status.AccountAddress,
-			log.ColorReset,
+			"The Operator has aggregated total claims of %.6f ETH in the claim vault\n\n",
 			math.RoundDown(eth.WeiToEth(status.OperatorRewardCollectorBalance), 6))
 		fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
