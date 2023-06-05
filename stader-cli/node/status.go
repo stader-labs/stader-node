@@ -156,7 +156,7 @@ func getNodeStatus(c *cli.Context) error {
 			status.AccountAddress,
 			log.ColorReset,
 			math.RoundDown(eth.WeiToEth(status.OperatorRewardCollectorBalance), 6))
-		fmt.Printf("To transfer the rewards to your operator address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)

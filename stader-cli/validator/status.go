@@ -74,9 +74,9 @@ func getValidatorStatus(c *cli.Context) error {
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n")
+			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
 		} else if validatorInfo.Status == 5 {
-			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n")
+			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n\n")
 		}
 
 		if validatorInfo.DepositBlock.Int64() > 0 {
