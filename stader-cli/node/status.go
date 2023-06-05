@@ -141,7 +141,9 @@ func getNodeStatus(c *cli.Context) error {
 
 	if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
-			"The Operator has a total of %.6f ETH as EL rewards for all validators. These rewards are sent to the claim vault periodically by Stader. Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim for all validators in one transaction\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
+			"The Operator has a total of %.6f ETH as EL rewards for all validators.\n"+
+				"These rewards are sent to the claim vault periodically by Stader.\n"+
+				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim for all validators in one transaction\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
 		fmt.Println("If the operator wishes to claim EL rewards by themselves, follow these steps:")
 		fmt.Printf("1. Use the %sstader-cli node send-el-rewards%s command to claim the EL rewards\n", log.ColorGreen, log.ColorReset)
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
@@ -149,7 +151,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
-			"The Operator %s%s%s has aggregated total rewards of %.6f ETH in the claim vault\n\n",
+			"The Operator %s%s%s has aggregated a total of %.6f ETH in the claim vault\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
