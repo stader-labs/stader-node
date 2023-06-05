@@ -143,7 +143,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf(
 			"The Operator has a total of %.6f ETH as EL rewards for all validators.\n"+
 				"These rewards are sent to the claim vault periodically by Stader.\n"+
-				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim for all validators in one transaction\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
+				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim EL rewards to their operator reward address\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
 		fmt.Println("If the operator wishes to claim EL rewards by themselves, follow these steps:")
 		fmt.Printf("1. Use the %sstader-cli node send-el-rewards%s command to claim the EL rewards\n", log.ColorGreen, log.ColorReset)
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
