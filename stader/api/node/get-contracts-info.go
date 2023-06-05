@@ -37,10 +37,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	response.StaderConfig, err = services.GetStaderConfigContract(c)
-	if err != nil {
-		return nil, err
-	}
+	response.StaderConfig = config.StaderNode.GetStaderConfigAddress()
 
 	response.EthxToken, err = services.GetEthxTokenAddress(c)
 	if err != nil {
