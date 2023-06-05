@@ -139,6 +139,7 @@ type ContractsInfoResponse struct {
 	VaultFactory               common.Address `json:"vaultFactory"`
 	EthxToken                  common.Address `json:"ethxToken"`
 	SdToken                    common.Address `json:"sdToken"`
+	StaderConfig               common.Address `json:"staderConfig"`
 	SdCollateralContract       common.Address `json:"sdCollateralContract"`
 	SocializingPoolContract    common.Address `json:"socializingPoolContract"`
 	PermisionlessPool          common.Address `json:"permisionlessPool"`

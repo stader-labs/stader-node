@@ -33,6 +33,7 @@ func getContractsInfo(c *cli.Context) error {
 
 	fmt.Printf("%s=== Stader Network Contract Details ===%s\n", log.ColorGreen, log.ColorReset)
 	fmt.Printf("Network: %d\n\n", response.Network)
+	fmt.Printf("Stader Config: %s\n\n", response.StaderConfig)
 	fmt.Printf("Permissionless Node Registry: %s\n\n", response.PermissionlessNodeRegistry)
 	fmt.Printf("Vault Factory: %s\n\n", response.VaultFactory)
 	fmt.Printf("Sd Collateral Lock: %s\n\n", response.SdCollateralContract)
