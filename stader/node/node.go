@@ -48,7 +48,7 @@ import (
 
 // Config
 var preSignedCooldown, _ = time.ParseDuration("1h")
-var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
+var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
 
