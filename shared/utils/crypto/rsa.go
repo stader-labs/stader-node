@@ -23,7 +23,7 @@ func BytesToPublicKey(pub []byte) (*rsa.PublicKey, error) {
 		return nil, err
 	}
 
-	return key.(*rsa.PublicKey), nil
+	return key, nil
 }
 
 func BytesToPrivateKey(pub []byte) (*rsa.PrivateKey, error) {
