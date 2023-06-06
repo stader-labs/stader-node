@@ -240,21 +240,21 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		ethxTokenAddress: map[config.Network]string{
 			config.Network_Prater:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
-			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
+			config.Network_Mainnet:  "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		staderConfigAddress: map[config.Network]string{
 			config.Network_Prater:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
-			config.Network_Mainnet:  "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
+			config.Network_Mainnet:  "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
-			config.Network_Mainnet:  "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
