@@ -17,7 +17,7 @@ func BytesToPublicKey(pub []byte) (*rsa.PublicKey, error) {
 	b := block.Bytes
 	var err error
 
-	key, err := x509.ParsePKIXPublicKey(b)
+	key, err := x509.ParsePKCS1PublicKey(b)
 	if err != nil {
 		fmt.Printf("Error using x509.ParsePKIXPublicKey %v\n", err)
 		return nil, err
