@@ -90,15 +90,6 @@ func ConvertSdToEth(sdc *stader.SdCollateralContractManager, sdAmount *big.Int, 
 	return ethAmount, nil
 }
 
-func GetTotalSdCollateral(sdc *stader.SdCollateralContractManager, opts *bind.CallOpts) (*big.Int, error) {
-	totalSdCollateral, err := sdc.SdCollateral.TotalSDCollateral(opts)
-	if err != nil {
-		return nil, err
-	}
-
-	return totalSdCollateral, nil
-}
-
 func GetPoolThreshold(sdc *stader.SdCollateralContractManager, poolType uint8, opts *bind.CallOpts) (types2.PoolThresholdInfo, error) {
 	poolThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolType)
 	if err != nil {

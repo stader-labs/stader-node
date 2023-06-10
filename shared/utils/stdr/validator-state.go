@@ -51,28 +51,6 @@ func GetAllValidatorsRegisteredWithOperator(pnr *stader.PermissionlessNodeRegist
 		validatorInfoMap[pubKey] = validator
 		validatorPubKeys = append(validatorPubKeys, pubKey)
 	}
-	//totalOperatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, opts)
-	//if err != nil {
-	//	return nil, []types.ValidatorPubkey{}, err
-	//}
-	//
-	//validators := make(map[types.ValidatorPubkey]contracts.Validator)
-	//validatorPubKeys := []types.ValidatorPubkey{}
-	//for i := big.NewInt(0); i.Cmp(totalOperatorKeys) < 0; i.Add(i, big.NewInt(1)) {
-	//	validatorId, err := node.GetValidatorIdByOperatorId(pnr, operatorId, i, opts)
-	//	if err != nil {
-	//		return nil, []types.ValidatorPubkey{}, err
-	//	}
-	//
-	//	validatorInfo, err := node.GetValidatorInfo(pnr, validatorId, opts)
-	//	if err != nil {
-	//		return nil, []types.ValidatorPubkey{}, err
-	//	}
-	//
-	//	valPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
-	//	validators[valPubKey] = validatorInfo
-	//	validatorPubKeys = append(validatorPubKeys, valPubKey)
-	//}
 
 	return validatorInfoMap, validatorPubKeys, err
 

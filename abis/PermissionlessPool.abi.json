@@ -26,16 +26,6 @@
   },
   {
     "inputs": [],
-    "name": "OperatorFeeUnchanged",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ProtocolFeeUnchanged",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "UnsupportedOperation",
     "type": "error"
   },
@@ -279,19 +269,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "POOL_ID",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "bytes",
@@ -323,30 +300,6 @@
       }
     ],
     "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_pageNumber",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_pageSize",
-        "type": "uint256"
-      }
-    ],
-    "name": "getAllSocializingPoolOptOutOperators",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
