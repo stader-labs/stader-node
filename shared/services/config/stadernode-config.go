@@ -37,7 +37,7 @@ import (
 // Constants
 const (
 	stadernodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v0.0.1"
+	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v1.0.0"
 	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
 	NetworkID                   string = "network"
 	ProjectNameID               string = "projectName"
