@@ -26,7 +26,7 @@ func TestNodeSuite(t *testing.T) {
 }
 
 func (s *StaderNodeSuite) TestExample1() {
-	time.Sleep(time.Minute)
+	time.Sleep(time.Second * 5)
 	s.Equal(true, true)
 }
 
@@ -39,7 +39,9 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	flagSet := flag.NewFlagSet("node_testing", flag.PanicOnError)
 	var p string
-	flagSet.StringVar(&p, "settings", ConfigPath, "settings")
+	flagSet.StringVar(&p, "settings", UserSettingPath, "settings")
+	var cp string
+	flagSet.StringVar(&cp, "config-path", ConfigPath, "config-path")
 	c := cli.NewContext(app, flagSet, nil)
 
 	s.staderConfig(ctx, c)

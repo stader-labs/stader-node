@@ -43,7 +43,8 @@ const (
 )
 
 var (
-	ConfigPath = "/Users/batphonghan/.stader_testing/user-settings.yml"
+	UserSettingPath = fmt.Sprintf("%s/user-settings.yml", ConfigPath)
+	ConfigPath      = "~/.stader_testing"
 )
 var cf = []byte(`{
 	"participants": [
@@ -80,7 +81,7 @@ func newApp() *cli.App {
 		cli.StringFlag{
 			Name:  "settings",
 			Usage: "Stader service user config absolute `path`",
-			Value: ConfigPath,
+			Value: UserSettingPath,
 		},
 		cli.StringFlag{
 			Name:  "password, p",
@@ -144,9 +145,10 @@ func newApp() *cli.App {
 	return app
 }
 func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) {
-	cfg := config.NewStaderConfig(ConfigPath, false)
+	cfg := config.NewStaderConfig(UserSettingPath, false)
 
 	staderClient, err := stader.NewClientFromCtx(c)
+	staderClient.GetContractsInfo()
 	assert.Nil(s.T(), err)
 	defer staderClient.Close()
 
@@ -156,6 +158,8 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 	cfg.ExternalConsensusClient.Value = cfgtypes.ConsensusClient_Lighthouse
 	cfg.ConsensusClientMode.Value = cfgtypes.Mode_External
 	cfg.ExternalLighthouse.HttpUrl.Value = clURL
+
+	cfg.StaderNode.DataPath.Value = ConfigPath
 
 	err = staderClient.SaveConfig(cfg)
 	assert.Nil(s.T(), err)

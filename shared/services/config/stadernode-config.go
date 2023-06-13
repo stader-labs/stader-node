@@ -430,7 +430,7 @@ func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) stri
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
-	if !cfg.parent.IsNativeMode {
+	if cfg.parent != nil && cfg.parent.IsNativeMode {
 		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
 	}
 
