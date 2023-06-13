@@ -3,6 +3,7 @@ module github.com/stader-labs/stader-node
 go 1.13
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/a8m/envsubst v1.3.0
 	github.com/alessio/shellescape v1.4.1
@@ -21,6 +22,11 @@ require (
 	github.com/herumi/bls-eth-go-binary v1.28.1 // indirect
 	github.com/imdario/mergo v0.3.13
 	github.com/klauspost/cpuid/v2 v2.1.1
+	github.com/kurtosis-tech/kurtosis-portal/api/golang v0.0.0-20230411133558-b983d9bebe4f // indirect
+	github.com/kurtosis-tech/kurtosis/api/golang v0.78.0
+	github.com/kurtosis-tech/kurtosis/grpc-file-transfer/golang v0.0.0-20230609162710-10b6b91dc9e8 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
@@ -33,19 +39,24 @@ require (
 	github.com/rivo/tview v0.0.0-20230530133550-8bd761dda819 // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230602142021-378099c5eca8
 	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230602142021-378099c5eca8
 	github.com/stretchr/testify v1.8.4
 	github.com/tyler-smith/go-bip39 v1.1.0
+	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
 	github.com/wealdtech/go-eth2-util v1.7.0
 	github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4 v1.3.0
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.7.0
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.1.0
 	golang.org/x/term v0.8.0
-	google.golang.org/grpc v1.49.0 // indirect
+	google.golang.org/genproto v0.0.0-20230530153820-e85fd2cbaebc // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230530153820-e85fd2cbaebc // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect
 )
