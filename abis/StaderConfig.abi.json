@@ -271,6 +271,32 @@
   },
   {
     "inputs": [],
+    "name": "ETHX_SUPPLY_POR_FEED",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ETH_BALANCE_POR_FEED",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "ETH_DEPOSIT_CONTRACT",
     "outputs": [
       {
@@ -389,6 +415,19 @@
   {
     "inputs": [],
     "name": "MIN_WITHDRAW_AMOUNT",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "NODE_EL_REWARD_VAULT_IMPLEMENTATION",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -713,6 +752,19 @@
   },
   {
     "inputs": [],
+    "name": "VALIDATOR_WITHDRAWAL_VAULT_IMPLEMENTATION",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "VAULT_FACTORY",
     "outputs": [
       {
@@ -778,7 +830,33 @@
   },
   {
     "inputs": [],
+    "name": "getETHBalancePORFeedProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getETHDepositContract",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getETHXSupplyPORFeedProxy",
     "outputs": [
       {
         "internalType": "address",
@@ -875,6 +953,19 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNodeELRewardVaultImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1213,6 +1304,19 @@
   },
   {
     "inputs": [],
+    "name": "getValidatorWithdrawalVaultImplementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getVaultFactory",
     "outputs": [
       {
@@ -1444,6 +1548,32 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_ethBalanceProxy",
+        "type": "address"
+      }
+    ],
+    "name": "updateETHBalancePORFeedProxy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_ethXSupplyProxy",
+        "type": "address"
+      }
+    ],
+    "name": "updateETHXSupplyPORFeedProxy",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_ethX",
         "type": "address"
       }
@@ -1514,6 +1644,19 @@
       }
     ],
     "name": "updateMinWithdrawAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nodeELRewardVaultImpl",
+        "type": "address"
+      }
+    ],
+    "name": "updateNodeELRewardImplementation",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1774,6 +1917,19 @@
       }
     ],
     "name": "updateUserWithdrawManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_validatorWithdrawalVaultImpl",
+        "type": "address"
+      }
+    ],
+    "name": "updateValidatorWithdrawalVaultImplementation",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

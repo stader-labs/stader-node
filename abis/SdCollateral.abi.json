@@ -522,13 +522,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "spenderAddr",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "maxApproveSD",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -668,19 +662,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSDCollateral",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
