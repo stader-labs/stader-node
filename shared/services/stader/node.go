@@ -364,7 +364,7 @@ func (c *Client) CanSendElRewards() (api.CanSendElRewardsResponse, error) {
 }
 
 func (c *Client) SendElRewards() (api.SendElRewardsResponse, error) {
-	responseBytes, err := c.callAPI("node claim-el-rewards")
+	responseBytes, err := c.callAPI("node send-el-rewards")
 	if err != nil {
 		return api.SendElRewardsResponse{}, fmt.Errorf("could not get node send-el-rewards response: %w", err)
 	}
