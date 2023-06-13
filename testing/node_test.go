@@ -35,13 +35,15 @@ func (s *StaderNodeSuite) SetupSuite() {
 	ctx, cancelCtxFunc := context.WithCancel(context.Background())
 	defer cancelCtxFunc()
 
-	log.Println("SetupSuite()")
-
 	app := newApp()
 
-	cliCtx := cli.NewContext(app, flag.NewFlagSet("node_testing", flag.PanicOnError), nil)
-	s.staderConfig(ctx, cliCtx)
-	// Run application
+	flagSet := flag.NewFlagSet("node_testing", flag.PanicOnError)
+	var p string
+	flagSet.StringVar(&p, "settings", ConfigPath, "settings")
+	c := cli.NewContext(app, flagSet, nil)
+
+	s.staderConfig(ctx, c)
+
 	go func() {
 		a := os.Args
 		if err := app.Run([]string{
@@ -53,7 +55,6 @@ func (s *StaderNodeSuite) SetupSuite() {
 	}()
 
 	log.Println("Done SetupSuite()")
-	// connect the database, save to 's.db'
 }
 
 // run once, after test suite methods

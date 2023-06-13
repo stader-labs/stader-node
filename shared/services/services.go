@@ -21,11 +21,12 @@ package services
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
-	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 	"os"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/common"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/docker/docker/client"
 	"github.com/stader-labs/stader-node/stader-lib/stader"

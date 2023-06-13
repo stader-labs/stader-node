@@ -7,6 +7,7 @@ import (
 
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/sirupsen/logrus"
+	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader/api"
@@ -42,7 +43,7 @@ const (
 )
 
 var (
-	ConfigPath = "/Users/batphonghan/.stader/user-settings.yml"
+	ConfigPath = "/Users/batphonghan/.stader_testing/user-settings.yml"
 )
 var cf = []byte(`{
 	"participants": [
@@ -77,7 +78,7 @@ func newApp() *cli.App {
 	// Set application flags
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "settings, s",
+			Name:  "settings",
 			Usage: "Stader service user config absolute `path`",
 			Value: ConfigPath,
 		},
@@ -160,7 +161,8 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 	assert.Nil(s.T(), err)
 }
 
-func (s *StaderNodeSuite) staderConfig(ctx context.Context, cliCtx *cli.Context) {
+func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
+
 	t := s.T()
 
 	logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
@@ -215,9 +217,15 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, cliCtx *cli.Context)
 	elPort := apiServiceHttpPortSpec.GetNumber()
 
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", elPort)
-	s.setConfig(cliCtx, fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort), elUrl)
+
+	s.setConfig(c, fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort), elUrl)
 
 	deployContracts(elUrl)
+
+	_, err = services.GetWallet(c)
+
+	assert.Nil(s.T(), err)
+
 }
 
 /*
