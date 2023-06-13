@@ -23,11 +23,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"log"
 	"math/big"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"
@@ -498,7 +499,7 @@ func waitBeaconClientSynced(c *cli.Context, verbose bool, timeout int64) (bool, 
 		// Check sync status
 		if syncStatus.Syncing {
 			if verbose {
-				log.Println("Eth 2.0 node syncing: %.2f%%\n", syncStatus.Progress*100)
+				log.Printf("Eth 2.0 node syncing: %.2f%% \n", syncStatus.Progress*100)
 			}
 		} else {
 			return true, nil

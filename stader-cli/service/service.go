@@ -659,8 +659,8 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 			fmt.Printf("%sWarning: couldn't verify that the validator container can be safely restarted:\n\t%s\n", colorYellow, err.Error())
 			fmt.Println("If you are changing to a different ETH2 client, it may resubmit an attestation you have already submitted.")
 			fmt.Println("This will slash your validator!")
-			fmt.Println("To prevent slashing, you must wait 15 minutes from the time you stopped the clients before starting them again.\n")
-			fmt.Println("**If you did NOT change clients, you can safely ignore this warning.**\n")
+			fmt.Println("To prevent slashing, you must wait 15 minutes from the time you stopped the clients before starting them again.")
+			fmt.Println("**If you did NOT change clients, you can safely ignore this warning.**")
 			if !cliutils.Confirm(fmt.Sprintf("Press y when you understand the above warning, have waited, and are ready to start Stader:%s", colorReset)) {
 				fmt.Println("Cancelled.")
 				return nil
@@ -890,7 +890,7 @@ func pruneExecutionClient(c *cli.Context) error {
 	}
 
 	fmt.Println("This will shut down your main execution client and prune its database, freeing up disk space.")
-	fmt.Println("Once pruning is complete, your execution client will restart automatically.\n")
+	fmt.Println("Once pruning is complete, your execution client will restart automatically.")
 
 	if selectedEc == cfgtypes.ExecutionClient_Geth {
 		if cfg.UseFallbackClients.Value == false {
@@ -1460,7 +1460,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 
 	fmt.Println("This will export your execution client's chain data to an external directory, such as a portable hard drive.")
 	fmt.Println("If your execution client is running, it will be shut down.")
-	fmt.Println("Once the export is complete, your execution client will restart automatically.\n")
+	fmt.Println("Once the export is complete, your execution client will restart automatically.")
 
 	// Get the container prefix
 	prefix, err := getContainerPrefix(staderClient)
@@ -1578,7 +1578,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 
 	fmt.Println("This will import execution layer chain data that you previously exported into your execution client.")
 	fmt.Println("If your execution client is running, it will be shut down.")
-	fmt.Println("Once the import is complete, your execution client will restart automatically.\n")
+	fmt.Println("Once the import is complete, your execution client will restart automatically.")
 
 	// Get the volume to import into
 	executionContainerName := prefix + ExecutionContainerSuffix
