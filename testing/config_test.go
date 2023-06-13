@@ -3,9 +3,12 @@ package testing
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
+	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -13,6 +16,7 @@ import (
 	"github.com/stader-labs/stader-node/stader/api"
 	"github.com/stader-labs/stader-node/stader/node"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/config"
@@ -43,8 +47,8 @@ const (
 )
 
 var (
-	UserSettingPath = fmt.Sprintf("%s/user-settings.yml", ConfigPath)
-	ConfigPath      = "~/.stader_testing"
+	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
+	ConfigPath, _   = homedir.Expand("~/.stader_testing")
 )
 var cf = []byte(`{
 	"participants": [
@@ -149,7 +153,7 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	staderClient.GetContractsInfo()
-	assert.Nil(s.T(), err)
+	require.Nil(s.T(), err)
 	defer staderClient.Close()
 
 	cfg.ExecutionClientMode.Value = cfgtypes.Mode_External
@@ -161,8 +165,13 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	cfg.StaderNode.DataPath.Value = ConfigPath
 
+	path, err := homedir.Expand(ConfigPath)
+	require.Nil(s.T(), err)
+
+	_ = os.Mkdir(path, os.ModePerm)
+
 	err = staderClient.SaveConfig(cfg)
-	assert.Nil(s.T(), err)
+	require.Nil(s.T(), err)
 }
 
 func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
@@ -224,12 +233,12 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	s.setConfig(c, fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort), elUrl)
 
+	logrus.Info("------------ DEPLOYING CONTRACT ---------------")
 	deployContracts(elUrl)
 
 	_, err = services.GetWallet(c)
 
 	assert.Nil(s.T(), err)
-
 }
 
 /*
