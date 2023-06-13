@@ -132,11 +132,11 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator has %.6f SD as unclaimed SD rewards. To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), log.ColorGreen, log.ColorReset)
+		fmt.Printf("The Operator has %.14f SD as unclaimed SD rewards. To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), log.ColorGreen, log.ColorReset)
 	}
 
 	if totalUnclaimedSocializingPoolEth.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator has %.6f ETH as unclaimed Socializing Pool EL rewards. To claim Socialized EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), log.ColorGreen, log.ColorReset)
+		fmt.Printf("The Operator has %.14f ETH as unclaimed Socializing Pool EL rewards. To claim Socialized EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), log.ColorGreen, log.ColorReset)
 	}
 
 	if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
