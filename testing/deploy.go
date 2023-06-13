@@ -60,35 +60,6 @@ func deployContracts(eth1URL string) {
 	fmt.Printf("Api contract deployed to %s\n", address.Hex())
 	fmt.Printf("Tx: %s\n", tx.Hash().Hex())
 
-	// // Get Favorite Number
-	// // Call SimpleStorage contract Retrieve function to get current favorite number
-	// favoriteNumber, err := simpleStorageApi.Retrieve(&bind.CallOpts{})
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Printf("Favorite Number: %d\n", favoriteNumber)
-
-	// // Set Favorite Number
-	// // Get Transaction Ops to make a valid Ethereum transaction
-	// auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// // Call SimpleStorate Store function to store favorite number
-	// reply, err := simpleStorageApi.Store(auth, big.NewInt(20))
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Printf("Reply: %s\n", reply.Hash().Hex())
-
-	// // Get Favorite Number
-	// // P.S. Retrieve is a Gas Free function hence no need to get Transaction Ops
-	// newfavoriteNumber, err := simpleStorageApi.Retrieve(&bind.CallOpts{})
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Printf("Favorite Number: %d\n", newfavoriteNumber)
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue
