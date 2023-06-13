@@ -68,14 +68,14 @@ func SendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return err
 	}
 
-	fmt.Printf("Claiming %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sending %.6f CL Rewards to Claim vault\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully Claimed %.6f CL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sent %.6f CL Rewards to Claim vault\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6))
 
 	return nil
 }

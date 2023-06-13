@@ -53,13 +53,13 @@ func SendElRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Claiming %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sending %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully Claimed %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sent %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
 	return nil
 }
