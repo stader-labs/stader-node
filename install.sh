@@ -137,8 +137,10 @@ fi
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
     PACKAGE_URL="https://$BUCKET.s3.amazonaws.com/latest/stader-node-install.tar.xz"
+    echo $PACKAGE_URL
 else
     PACKAGE_URL="https://$BUCKET.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    echo $PACKAGE_URL
 fi
 
 
