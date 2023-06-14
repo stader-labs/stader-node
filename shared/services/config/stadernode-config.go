@@ -244,7 +244,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0xAb2A01BC351770D09611Ac80f1DE076D56E0487d",
 		},
 
 		staderConfigAddress: map[config.Network]string{
@@ -252,7 +252,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Mainnet:  "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0xAb2A01BC351770D09611Ac80f1DE076D56E0487d",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
@@ -260,7 +260,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Mainnet:  "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0xAb2A01BC351770D09611Ac80f1DE076D56E0487d",
 		},
 	}
 }
@@ -435,11 +435,11 @@ func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) stri
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
-	if cfg.parent != nil && !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
+	if cfg.parent != nil && cfg.parent.IsNativeMode {
+		return filepath.Join(cfg.DataPath.Value.(string), "validators")
 	}
 
-	return filepath.Join(cfg.DataPath.Value.(string), "validators", NativeFeeRecipientFilename)
+	return filepath.Join(DaemonDataPath, "validators", NativeFeeRecipientFilename)
 }
 
 func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {

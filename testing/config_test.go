@@ -214,7 +214,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	assert.NotNil(t, apiServicePublicPorts)
 	apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
 	assert.True(t, found)
-	beaconchainPort := apiServiceHttpPortSpec.GetNumber()
+	clPort := apiServiceHttpPortSpec.GetNumber()
 
 	elContext, err := enclaveCtx.GetServiceContext(elCient)
 	assert.Nil(t, err)
@@ -224,8 +224,8 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	assert.True(t, found)
 	elPort := apiServiceHttpPortSpec.GetNumber()
 
-	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", elPort)
-	clUrl := fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort)
+	elUrl := fmt.Sprintf("http://127.0.0.1:%d", elPort)
+	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
 
 	s.setConfig(c, elUrl, clUrl)
 	s.setupWallet(ctx, c)
