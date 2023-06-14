@@ -169,10 +169,6 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	vaultFactoryAddress, err := services.GetVaultFactoryAddress(c)
-	if err != nil {
-		return nil, err
-	}
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
@@ -210,10 +206,6 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	vf, err := stader.NewVaultFactory(ec, vaultFactoryAddress)
-	if err != nil {
-		return nil, err
-	}
 
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
@@ -244,7 +236,7 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(prn, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}

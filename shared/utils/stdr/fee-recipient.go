@@ -38,7 +38,7 @@ func GetFeeRecipientInfo(prn *stader.PermissionlessNodeRegistryContractManager, 
 		}
 		feeRecipientInfo.SocializingPoolAddress = socializingPoolAddress
 	} else {
-		nodeElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, opts)
+		nodeElRewardAddress, err := node.GetNodeElRewardAddress(prn, 1, operatorId, opts)
 		if err != nil {
 			return nil, err
 		}

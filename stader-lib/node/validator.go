@@ -104,15 +104,6 @@ func CalculateValidatorWithdrawVaultWithdrawShare(executionClient stader.Executi
 	return vwv.ValidatorWithdrawVault.CalculateValidatorWithdrawalShare(opts)
 }
 
-func GetValidatorWithdrawVaultSettleStatus(executionClient stader.ExecutionClient, validatorWithdrawVaultAddress common.Address, opts *bind.CallOpts) (bool, error) {
-	vpxy, err := stader.NewVaultProxy(executionClient, validatorWithdrawVaultAddress)
-	if err != nil {
-		return false, err
-	}
-
-	return vpxy.VaultProxy.VaultSettleStatus(opts)
-}
-
 func GetValidatorIdByPubKey(pnr *stader.PermissionlessNodeRegistryContractManager, validatorPubKey []byte, opts *bind.CallOpts) (*big.Int, error) {
 	return pnr.PermissionlessNodeRegistry.ValidatorIdByPubkey(opts, validatorPubKey)
 }
