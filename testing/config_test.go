@@ -168,6 +168,9 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	cfg.StaderNode.DataPath.Value = ConfigPath
 
+	cfg.Native.EcHttpUrl.Value = elURL
+	cfg.Native.ConsensusClient.Value = clURL
+
 	cfg.ChangeNetwork(cfgtypes.Network_Local)
 	path, err := homedir.Expand(ConfigPath)
 	require.Nil(s.T(), err)
@@ -222,8 +225,9 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	elPort := apiServiceHttpPortSpec.GetNumber()
 
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", elPort)
+	clUrl := fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort)
 
-	s.setConfig(c, fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort), elUrl)
+	s.setConfig(c, elUrl, clUrl)
 	s.setupWallet(ctx, c)
 
 	logrus.Info("------------ DEPLOYING CONTRACT ---------------")
