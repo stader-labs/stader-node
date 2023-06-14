@@ -51,14 +51,24 @@ func deployContracts(eth1URL string) {
 	}
 
 	// deploy the contract
-	address, tx, _, err := api.DeployETHX(auth, client)
+	address, _, _, err := api.DeployETHX(auth, client)
+	if err != nil {
+		panic(err)
+	}
+
+	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	if err != nil {
+		panic(err)
+	}
+
+	staderCfAddress, _, _, err := api.DeployStaderConfig(auth, client)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("Api contract from %s\n", auth.From.Hex())
-	fmt.Printf("Api contract deployed to %s\n", address.Hex())
-	fmt.Printf("Tx: %s\n", tx.Hash().Hex())
+	fmt.Printf("DeployETHX to %s\n", address.Hex())
+	fmt.Printf("DeployStaderConfig to %s\n", staderCfAddress.Hex())
 
 }
 
