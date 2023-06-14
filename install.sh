@@ -114,7 +114,7 @@ install() {
 
 
 # Parse arguments
-while getopts "dp:u:n:v:b" FLAG; do
+while getopts "dp:u:n:v:b:" FLAG; do
     case "$FLAG" in
         d) NO_DEPS=true ;;
         p) STADER_PATH="$OPTARG" ;;
