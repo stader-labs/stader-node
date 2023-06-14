@@ -3,7 +3,6 @@ package testing
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -59,12 +58,12 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	go func() {
 		a := os.Args
-		if err := app.Run([]string{
+		err := app.Run([]string{
 			a[0],
 			"node",
-		}); err != nil {
-			fmt.Printf("ERROR RUN NODE %+v", err)
-		}
+		})
+
+		assert.Nil(s.T(), err)
 	}()
 
 	log.Println("Done SetupSuite()")
