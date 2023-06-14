@@ -26,6 +26,7 @@ import (
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
+	cftypes "github.com/stader-labs/stader-node/shared/types/config"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/docker/docker/client"
@@ -445,6 +446,10 @@ func getConfig(c *cli.Context) (*config.StaderConfig, error) {
 			err = fmt.Errorf("Settings file [%s] not found.", settingsFile)
 		}
 	})
+	if cfg != nil {
+
+		cfg.IsNativeMode = cfg.StaderNode.Network.Value == cftypes.Network_Local
+	}
 	return cfg, err
 }
 

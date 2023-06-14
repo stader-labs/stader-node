@@ -155,6 +155,7 @@ func NewNethermindConfig(cfg *StaderConfig) *NethermindConfig {
 				config.Network_Prater:   nethermindTagTest,
 				config.Network_Devnet:   nethermindTagTest,
 				config.Network_Zhejiang: nethermindTagTest,
+				config.Network_Local:    nethermindTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},

@@ -111,6 +111,7 @@ func NewTekuConfig(cfg *StaderConfig) *TekuConfig {
 				config.Network_Prater:   tekuTagTest,
 				config.Network_Devnet:   tekuTagTest,
 				config.Network_Zhejiang: tekuTagTest,
+				config.Network_Local:    tekuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG", "VC_CONTAINER_TAG"},

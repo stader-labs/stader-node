@@ -123,6 +123,7 @@ func NewBesuConfig(cfg *StaderConfig) *BesuConfig {
 				config.Network_Prater:   besuTagTest,
 				config.Network_Devnet:   besuTagTest,
 				config.Network_Zhejiang: besuTagTest,
+				config.Network_Local:    besuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},

@@ -11,7 +11,9 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/stader"
+	"github.com/stader-labs/stader-node/shared/services/wallet"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader/api"
 	"github.com/stader-labs/stader-node/stader/node"
@@ -49,6 +51,7 @@ const (
 var (
 	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
 	ConfigPath, _   = homedir.Expand("~/.stader_testing")
+	PasswordPath    = filepath.Join(ConfigPath, "password")
 )
 var cf = []byte(`{
 	"participants": [
@@ -165,6 +168,7 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	cfg.StaderNode.DataPath.Value = ConfigPath
 
+	cfg.ChangeNetwork(cfgtypes.Network_Local)
 	path, err := homedir.Expand(ConfigPath)
 	require.Nil(s.T(), err)
 
@@ -209,18 +213,6 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	assert.True(t, found)
 	beaconchainPort := apiServiceHttpPortSpec.GetNumber()
 
-	fmt.Printf("%+v", beaconchainPort)
-
-	validatorContext, err := enclaveCtx.GetServiceContext(clClientValidator)
-	assert.Nil(t, err)
-	apiServicePublicPorts = validatorContext.GetPublicPorts()
-	assert.NotNil(t, apiServicePublicPorts)
-	apiServiceHttpPortSpec, found = apiServicePublicPorts["http"]
-	assert.True(t, found)
-	beaconchainPort = apiServiceHttpPortSpec.GetNumber()
-
-	fmt.Printf("%+v", beaconchainPort)
-
 	elContext, err := enclaveCtx.GetServiceContext(elCient)
 	assert.Nil(t, err)
 	elPublicPorts := elContext.GetPublicPorts()
@@ -232,13 +224,33 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", elPort)
 
 	s.setConfig(c, fmt.Sprintf("http://127.0.0.1:%+v", beaconchainPort), elUrl)
+	s.setupWallet(ctx, c)
 
 	logrus.Info("------------ DEPLOYING CONTRACT ---------------")
 	deployContracts(elUrl)
 
-	_, err = services.GetWallet(c)
+}
 
-	assert.Nil(s.T(), err)
+func (s *StaderNodeSuite) setupWallet(ctx context.Context, c *cli.Context) {
+
+	// Get services
+	pm := passwords.NewPasswordManager(PasswordPath)
+
+	// Set password
+	err := pm.SetPassword("stader_testing_pass")
+	require.Nil(s.T(), err)
+
+	w, err := services.GetWallet(c)
+	require.Nil(s.T(), err)
+
+	mn, err := w.Initialize(wallet.DefaultNodeKeyPath, 0)
+	logrus.Info("------------ MNENOMIC TEST ---------------")
+	logrus.Info(mn)
+
+	require.Nil(s.T(), err)
+
+	err = w.Save()
+	require.Nil(s.T(), err)
 }
 
 /*

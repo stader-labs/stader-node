@@ -222,6 +222,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Mainnet: "https://beaconcha.in",
 			config.Network_Prater:  "https://prater.beaconcha.in",
 			config.Network_Devnet:  "https://prater.beaconcha.in",
+			config.Network_Local:   "https://prater.beaconcha.in",
 		},
 
 		txWatchUrl: map[config.Network]string{
@@ -235,6 +236,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Prater:   5,       // Goerli
 			config.Network_Devnet:   5,       // Also goerli
 			config.Network_Zhejiang: 1337803, // Zhejiang
+			config.Network_Local:    1337809, // Zhejiang
 		},
 
 		ethxTokenAddress: map[config.Network]string{
@@ -242,6 +244,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		staderConfigAddress: map[config.Network]string{
@@ -249,6 +252,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Mainnet:  "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
@@ -256,6 +260,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Mainnet:  "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Local:    "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 	}
 }

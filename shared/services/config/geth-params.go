@@ -124,6 +124,7 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 				config.Network_Prater:   gethTagTest,
 				config.Network_Devnet:   gethTagTest,
 				config.Network_Zhejiang: gethTagTest,
+				config.Network_Local:    gethTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},
