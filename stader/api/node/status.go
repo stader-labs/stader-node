@@ -89,10 +89,6 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	vf, err := services.GetVaultFactory(c)
-	if err != nil {
-		return nil, err
-	}
 	sdcfg, err := services.GetStaderConfigContract(c)
 	if err != nil {
 		return nil, err
@@ -168,7 +164,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 
 		//fmt.Printf("Getting operator node el reward balance\n")
 		// non socializing pool fee recepient
-		operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+		operatorElRewardAddress, err := node.GetNodeElRewardAddress(pnr, 1, operatorId, nil)
 		if err != nil {
 			return nil, err
 		}
