@@ -41,7 +41,7 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return nil
 	}
 	if res.InCooldown {
-		fmt.Println("You are in cooldown period!")
+		fmt.Printf("You are in cooldown period! You can opt in/out after %d block\n", res.NextUpdatableBlock)
 		return nil
 	}
 

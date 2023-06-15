@@ -200,6 +200,7 @@ type CanUpdateSocializeElResponse struct {
 	AlreadyOptedIn                bool           `json:"alreadyOptedIn"`
 	AlreadyOptedOut               bool           `json:"alreadyOptedOut"`
 	InCooldown                    bool           `json:"inCooldown"`
+	NextUpdatableBlock            uint64         `json:"nextUpdatableBlock"`
 	GasInfo                       stader.GasInfo `json:"gasInfo"`
 }
 
