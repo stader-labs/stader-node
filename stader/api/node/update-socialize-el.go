@@ -86,6 +86,7 @@ func canUpdateSocializeEl(c *cli.Context, socializeEl bool) (*api.CanUpdateSocia
 	}
 	if currentBlock < lastChangeBlock.Add(lastChangeBlock, coolDownPeriod).Uint64() {
 		response.InCooldown = true
+		response.NextUpdatableBlock = lastChangeBlock.Uint64()
 		return &response, nil
 	}
 

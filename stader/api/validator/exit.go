@@ -101,6 +101,9 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 	}
 
 	validatorKey, err := w.GetValidatorKeyByPubkey(validatorPubKey)
+	if err != nil {
+		return nil, err
+	}
 
 	// Get signed voluntary exit message
 	signature, _, err := validator.GetSignedExitMessage(validatorKey, validatorIndex, head.Epoch, signatureDomain)

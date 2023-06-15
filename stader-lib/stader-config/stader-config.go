@@ -23,6 +23,10 @@ func GetSocializingPoolContractAddress(sdConfig *stader.StaderConfigContractMana
 	return sdConfig.StaderConfig.GetPermissionlessSocializingPool(opts)
 }
 
+func GetSocializingCoolingPeriod(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sdConfig.StaderConfig.GetSocializingPoolOptInCoolingPeriod(opts)
+}
+
 func GetPermissionlessNodeRegistryAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return sdConfig.StaderConfig.GetPermissionlessNodeRegistry(opts)
 }

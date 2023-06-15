@@ -107,7 +107,7 @@ func installService(c *cli.Context) error {
 	fmt.Println("Installing Stader service...")
 
 	// Install service
-	err = staderClient.InstallService(c.Bool("verbose"), c.Bool("no-deps"), c.String("network"), c.String("version"), c.String("path"), dataPath, c.String("bucket"))
+	err = staderClient.InstallService(c.Bool("verbose"), c.Bool("no-deps"), c.String("network"), c.String("version"), c.String("path"), dataPath)
 	if err != nil {
 		return err
 	}

@@ -36,9 +36,9 @@ import (
 
 // Constants
 const (
-	stadernodeTag                      = "staderlabs/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag         string = "staderlabs/eth1-prune-provision:v1.0.0"
-	ecMigratorTag               string = "staderlabs/ec-migrator:v1.2.0"
+	stadernodeTag                      = shared.DockerAccount + "/stader-node:v" + shared.StaderVersion
+	pruneProvisionerTag                = shared.DockerAccount + "/eth1-prune-provision:v1.0.0"
+	ecMigratorTag                      = shared.DockerAccount + "/ec-migrator:v1.2.0"
 	NetworkID                   string = "network"
 	ProjectNameID               string = "projectName"
 	DaemonDataPath              string = "/.stader/data"
@@ -252,7 +252,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",

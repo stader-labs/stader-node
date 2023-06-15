@@ -43,7 +43,7 @@ func SendElRewards(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim El Rewards?"))) {
+		"Are you sure you want to send El Rewards to claim vault?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

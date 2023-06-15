@@ -43,7 +43,7 @@ func ClaimRewards(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw rewards?"))) {
+		"Are you sure you want to send rewards to your operator reward address?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

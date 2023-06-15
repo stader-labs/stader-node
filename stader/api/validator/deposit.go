@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"context"
 	"fmt"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
@@ -17,7 +16,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
+func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -28,10 +27,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := services.GetEthClient(c)
 	if err != nil {
 		return nil, err
 	}
@@ -145,15 +140,6 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 		return nil, err
 	}
 
-	// Adjust the salt
-	if salt.Cmp(big.NewInt(0)) == 0 {
-		nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-		salt.SetUint64(nonce)
-	}
-
 	newValidatorKey := operatorKeyCount
 
 	walletIndex, err := w.GetValidatorKeyCount()
@@ -218,17 +204,13 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValida
 	return &canNodeDepositResponse, nil
 }
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
 
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
 	}
 	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
-	ec, err := services.GetEthClient(c)
 	if err != nil {
 		return nil, err
 	}
@@ -283,15 +265,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, salt *big.Int, numValidator
 
 	amountToSend := amountWei.Mul(amountWei, numValidators)
 	opts.Value = amountToSend
-
-	// Adjust the salt
-	if salt.Cmp(big.NewInt(0)) == 0 {
-		nonce, err := ec.NonceAt(context.Background(), nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-		salt.SetUint64(nonce)
-	}
 
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {

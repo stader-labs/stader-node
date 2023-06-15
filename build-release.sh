@@ -28,7 +28,7 @@
 # =================
 
 DOCKER_ACCOUNT=staderdev
-S3_BUCKET=stader-cli-permissionless
+S3_BUCKET=stader-cli-permissionless-dev
 
 
 # Print a failure message to stderr and exit
