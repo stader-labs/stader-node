@@ -78,6 +78,8 @@ func getValidatorStatus(c *cli.Context) error {
 			fmt.Println("If you have not exited the validator. Please reach out Stader Developers in discord for more information")
 		} else if validatorInfo.Status == 5 {
 			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n\n")
+		} else {
+			fmt.Printf("\n")
 		}
 
 		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
