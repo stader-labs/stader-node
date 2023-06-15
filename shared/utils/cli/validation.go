@@ -210,7 +210,7 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 // Validate a node password
 func ValidateNodePassword(name, value string) (string, error) {
 	if len(value) < passwords.MinPasswordLength {
-		return "", fmt.Errorf("invalid %s '%s' - must be at least %d characters long", name, value, passwords.MinPasswordLength)
+		return "", fmt.Errorf("invalid password must be at least %d characters long", passwords.MinPasswordLength)
 	}
 	return value, nil
 }
@@ -218,7 +218,7 @@ func ValidateNodePassword(name, value string) (string, error) {
 // Validate a wallet mnemonic phrase
 func ValidateWalletMnemonic(name, value string) (string, error) {
 	if !bip39.IsMnemonicValid(value) {
-		return "", fmt.Errorf("invalid %s '%s'", name, value)
+		return "", fmt.Errorf("invalid mnemonic")
 	}
 	return value, nil
 }
