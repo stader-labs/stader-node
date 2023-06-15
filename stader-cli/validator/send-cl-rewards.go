@@ -58,7 +58,7 @@ func SendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim CL rewards for validator %s?", validatorPubKey))) {
+		"Are you sure you want to send CL rewards for validator %s to claim vault?", validatorPubKey))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
