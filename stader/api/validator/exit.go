@@ -45,7 +45,7 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return &response, nil
 	}
 	if !eth2.IsValidatorActive(res) {
-		response.ValidatorNotActive = false
+		response.ValidatorNotActive = true
 		return &response, nil
 	}
 
