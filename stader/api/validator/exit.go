@@ -44,6 +44,10 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
+	if !eth2.IsValidatorActive(res) {
+		response.ValidatorNotActive = false
+		return &response, nil
+	}
 
 	if eth2.IsValidatorExiting(res) {
 		response.ValidatorExiting = true
