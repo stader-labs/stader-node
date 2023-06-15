@@ -151,10 +151,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Usage: "A custom path to install Stader to",
 					},
 					cli.StringFlag{
-						Name:  "bucket, p",
-						Usage: "The bucket name to install the binary content from",
-					},
-					cli.StringFlag{
 						Name:  "version, v",
 						Usage: "The stader node package version to install",
 						Value: fmt.Sprintf("v%s", shared.StaderVersion),

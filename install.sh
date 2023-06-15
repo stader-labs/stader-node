@@ -114,14 +114,13 @@ install() {
 
 
 # Parse arguments
-while getopts "dp:u:n:v:b:" FLAG; do
+while getopts "dp:u:n:v:" FLAG; do
     case "$FLAG" in
         d) NO_DEPS=true ;;
         p) STADER_PATH="$OPTARG" ;;
         u) DATA_PATH="$OPTARG" ;;
         n) NETWORK="$OPTARG" ;;
         v) PACKAGE_VERSION="$OPTARG" ;;
-        b) BUCKET="$OPTARG" ;;
         *) fail "Incorrect usage." ;;
     esac
 done
@@ -130,16 +129,12 @@ if [ -z "$DATA_PATH" ]; then
     DATA_PATH="$STADER_PATH/data"
 fi
 
-if [ -z "$BUCKET" ]; then
-    BUCKET="stader-cli-permissionless"
-fi
-
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://$BUCKET.s3.amazonaws.com/latest/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-permissionless.s3.amazonaws.com/latest/stader-node-install.tar.xz"
     echo $PACKAGE_URL
 else
-    PACKAGE_URL="https://$BUCKET.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-permissionless.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
     echo $PACKAGE_URL
 fi
 
