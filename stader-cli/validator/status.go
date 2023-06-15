@@ -69,15 +69,18 @@ func getValidatorStatus(c *cli.Context) error {
 		validatorInfo := status.ValidatorInfos[i]
 		validatorPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
 		fmt.Printf("-Validator Pub Key: %s\n\n", validatorPubKey)
-		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
-		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+		fmt.Printf("-Validator Status: %s\n", validatorInfo.StatusToDisplay)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 		} else if validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
 		} else if validatorInfo.Status == 5 {
 			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n\n")
+		} else {
+			fmt.Printf("\n")
 		}
+
+		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 
 		if validatorInfo.DepositBlock.Int64() > 0 {
 			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))
