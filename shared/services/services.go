@@ -117,6 +117,19 @@ func GetStaderConfigContract(c *cli.Context) (*stader.StaderConfigContractManage
 	return stader.NewStaderConfig(ec, cfg.StaderNode.GetStaderConfigAddress())
 }
 
+func GetEthXContract(c *cli.Context) (*stader.EthxContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewEthxContractManager(ec, cfg.StaderNode.GetEthxTokenAddress())
+}
+
 func GetPermissionlessNodeRegistryAddress(c *cli.Context) (common.Address, error) {
 	sdcfg, err := GetStaderConfigContract(c)
 	if err != nil {

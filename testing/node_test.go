@@ -38,17 +38,16 @@ func (s *StaderNodeSuite) TestNodeDaemon() {
 	// 	})
 	// 	require.Nil(s.T(), err)
 	// })
-	time.Sleep(time.Minute * 2)
+	time.Sleep(time.Minute * 5)
 
-	logrus.Printf("SOSSSSSSSSSSSSSSS")
 }
 
 // run once, before test suite methods
 func (s *StaderNodeSuite) SetupSuite() {
 
+	removeTestFolder(s.T())
 	defer func() {
 		r := recover()
-
 		assert.Nil(s.T(), r, "------------ Recovered TESTS ---------------")
 	}()
 
@@ -77,7 +76,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 			a[0],
 			"node",
 		})
-		require.Nil(s.T(), err)
+		assert.Nil(s.T(), err)
 	}()
 }
 
@@ -88,8 +87,12 @@ func (s *StaderNodeSuite) TearDownSuite() {
 
 	defer s.kurtosisCtx.Clean(context.Background(), true)
 
+	removeTestFolder(s.T())
+}
+
+func removeTestFolder(t *testing.T) {
 	path, err := homedir.Expand(ConfigPath)
-	require.Nil(s.T(), err)
+	require.Nil(t, err)
 	_ = os.RemoveAll(path)
 }
 

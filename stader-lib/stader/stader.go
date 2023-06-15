@@ -1,11 +1,12 @@
 package stader
 
 import (
+	"strings"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
-	"strings"
 )
 
 type Erc20TokenContractManager struct {
@@ -35,6 +36,37 @@ func NewErc20TokenContract(client ExecutionClient, erc20TokenAddress common.Addr
 		Client:             client,
 		Erc20Token:         erc20TokenFactory,
 		Erc20TokenContract: erc20Contract,
+	}, nil
+
+}
+
+type EthxContractManager struct {
+	Client       ExecutionClient
+	EthX         *contracts.ETHX
+	EthXContract *Contract
+}
+
+func NewEthxContractManager(client ExecutionClient, ethxAddress common.Address) (*EthxContractManager, error) {
+	ethxFactory, err := contracts.NewETHX(ethxAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	ethxAbi, err := abi.JSON(strings.NewReader(contracts.ETHXABI))
+	if err != nil {
+		return nil, err
+	}
+	ethXContract := &Contract{
+		Contract: bind.NewBoundContract(ethxAddress, ethxAbi, client, client, client),
+		Address:  &ethxAddress,
+		ABI:      &ethxAbi,
+		Client:   client,
+	}
+
+	return &EthxContractManager{
+		Client:       client,
+		EthX:         ethxFactory,
+		EthXContract: ethXContract,
 	}, nil
 
 }

@@ -73,7 +73,7 @@ var cf = []byte(`{
         "num_validator_keys_per_node": 40,
         "network_id": "3151908",
         "deposit_contract_address": "0x4242424242424242424242424242424242424242",
-        "seconds_per_slot": 2,
+        "seconds_per_slot": 1,
         "genesis_delay": 120,
         "capella_fork_epoch": 5
 	}
@@ -231,7 +231,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	s.setupWallet(ctx, c)
 
 	logrus.Info("------------ DEPLOYING CONTRACT ---------------")
-	deployContracts(elUrl)
+	deployContracts(t, c, elUrl)
 
 }
 
@@ -247,9 +247,7 @@ func (s *StaderNodeSuite) setupWallet(ctx context.Context, c *cli.Context) {
 	w, err := services.GetWallet(c)
 	require.Nil(s.T(), err)
 
-	mn, err := w.Initialize(wallet.DefaultNodeKeyPath, 0)
-	logrus.Info("------------ MNENOMIC TEST ---------------")
-	logrus.Info(mn)
+	_, err = w.Initialize(wallet.DefaultNodeKeyPath, 0)
 
 	require.Nil(s.T(), err)
 

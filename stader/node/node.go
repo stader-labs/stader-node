@@ -112,14 +112,14 @@ func run(c *cli.Context) error {
 	}
 
 	// Initialize tasks
-	manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
-	if err != nil {
-		return err
-	}
-	merkleProofsDownloader, err := NewMerkleProofsDownloader(c, log.NewColorLogger(MerkleProofsDownloaderColor))
-	if err != nil {
-		return err
-	}
+	// manageFeeRecipient, err := newManageFeeRecipient(c, log.NewColorLogger(ManageFeeRecipientColor))
+	// if err != nil {
+	// 	return err
+	// }
+	// merkleProofsDownloader, err := NewMerkleProofsDownloader(c, log.NewColorLogger(MerkleProofsDownloaderColor))
+	// if err != nil {
+	// 	return err
+	// }
 
 	// Initialize loggers
 	errorLog := log.NewColorLogger(ErrorColor)
@@ -322,56 +322,56 @@ func run(c *cli.Context) error {
 		wg.Done()
 	}()
 
-	// Run task loop
-	go func() {
-		for {
-			// Check the EC status
-			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-			if err != nil {
-				errorLog.Println(err)
-			} else {
-				// Check the BC status
-				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-				if err != nil {
-					errorLog.Println(err)
-				} else {
-					// Manage the fee recipient for the node
-					if err := manageFeeRecipient.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-				}
-			}
-			time.Sleep(feeRecepientPollingInterval)
-		}
-		wg.Done()
-	}()
+	// // Run task loop
+	// go func() {
+	// 	for {
+	// 		// Check the EC status
+	// 		err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+	// 		if err != nil {
+	// 			errorLog.Println(err)
+	// 		} else {
+	// 			// Check the BC status
+	// 			err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+	// 			if err != nil {
+	// 				errorLog.Println(err)
+	// 			} else {
+	// 				// Manage the fee recipient for the node
+	// 				if err := manageFeeRecipient.run(); err != nil {
+	// 					errorLog.Println(err)
+	// 				}
+	// 				time.Sleep(taskCooldown)
+	// 			}
+	// 		}
+	// 		time.Sleep(feeRecepientPollingInterval)
+	// 	}
+	// 	wg.Done()
+	// }()
 
-	go func() {
-		for {
-			infoLog.Printlnf("Checking if there are any available merkle proofs to download")
-			// Check the EC status
-			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
-			if err != nil {
-				errorLog.Println(err)
-			} else {
-				// Check the BC status
-				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-				if err != nil {
-					errorLog.Println(err)
-				} else {
-					// Manage the fee recipient for the node
-					if err := merkleProofsDownloader.run(); err != nil {
-						errorLog.Println(err)
-					}
-					time.Sleep(taskCooldown)
-				}
-			}
-			infoLog.Printlnf("Done checking for merkle proofs to download")
-			time.Sleep(merkleProofsDownloadInterval)
-		}
-		wg.Done()
-	}()
+	// go func() {
+	// 	for {
+	// 		infoLog.Printlnf("Checking if there are any available merkle proofs to download")
+	// 		// Check the EC status
+	// 		err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+	// 		if err != nil {
+	// 			errorLog.Println(err)
+	// 		} else {
+	// 			// Check the BC status
+	// 			err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+	// 			if err != nil {
+	// 				errorLog.Println(err)
+	// 			} else {
+	// 				// Manage the fee recipient for the node
+	// 				if err := merkleProofsDownloader.run(); err != nil {
+	// 					errorLog.Println(err)
+	// 				}
+	// 				time.Sleep(taskCooldown)
+	// 			}
+	// 		}
+	// 		infoLog.Printlnf("Done checking for merkle proofs to download")
+	// 		time.Sleep(merkleProofsDownloadInterval)
+	// 	}
+	// 	wg.Done()
+	// }()
 
 	// Wait for both threads to stop
 	wg.Wait()

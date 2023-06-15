@@ -3,14 +3,16 @@ package validator
 import (
 	"encoding/csv"
 	"fmt"
+	"os"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/test-go/testify/require"
 	"github.com/urfave/cli"
-	"os"
 )
 
 func exportValidatorStatus(c *cli.Context) error {
@@ -52,9 +54,7 @@ func exportValidatorStatus(c *cli.Context) error {
 	fmt.Printf("Exporting validator status for %d validators\n\n", len(status.ValidatorInfos))
 
 	file, err := os.Create("validator_info.csv")
-	if err != nil {
-		panic(err)
-	}
+	require.Nil(t, err)
 	defer file.Close()
 
 	csvWriter := csv.NewWriter(file)

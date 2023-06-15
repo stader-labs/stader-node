@@ -236,7 +236,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Prater:   5,       // Goerli
 			config.Network_Devnet:   5,       // Also goerli
 			config.Network_Zhejiang: 1337803, // Zhejiang
-			config.Network_Local:    1337809, // Zhejiang
+			config.Network_Local:    3151908, // Zhejiang
 		},
 
 		ethxTokenAddress: map[config.Network]string{
