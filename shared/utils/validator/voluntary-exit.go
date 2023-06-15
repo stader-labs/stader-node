@@ -48,7 +48,7 @@ func GetSignedExitMessage(validatorKey *eth2types.BLSPrivateKey, validatorIndex 
 
 	srHash, err := sr.HashTreeRoot()
 	if err != nil {
-		return types.ValidatorSignature{}, [32]byte{}, nil
+		return types.ValidatorSignature{}, [32]byte{}, err
 	}
 
 	// Sign message
