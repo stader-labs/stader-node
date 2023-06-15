@@ -278,7 +278,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, rel
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("nextAccount is %v\n", nextAccount)
 		// Create and save a new validator key
 		validatorKey, err := w.CreateValidatorKey()
 		if err != nil {
