@@ -27,7 +27,7 @@
 # === Functions ===
 # =================
 
-DOCKER_ACCOUNT=staderdev
+DOCKER_ACCOUNT=staderlabs
 S3_BUCKET=stader-cli-permissionless
 
 
