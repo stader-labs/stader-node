@@ -323,11 +323,6 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, rel
 				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
 		}
 
-		// To save the validator index update
-		if err := w.Save(); err != nil {
-			return nil, err
-		}
-
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 	}
 
@@ -352,6 +347,11 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, rel
 
 	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
 	if err != nil {
+		return nil, err
+	}
+
+	// To save the validator index update
+	if err := w.Save(); err != nil {
 		return nil, err
 	}
 
