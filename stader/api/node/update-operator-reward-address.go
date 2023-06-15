@@ -33,6 +33,15 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 
 	response := api.CanUpdateOperatorRewardAddress{}
 
+	isPermissionlessRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(pnr, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPermissionlessRegistryPaused {
+		response.IsPermissionlessNodeRegistryPaused = true
+		return &response, nil
+	}
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err

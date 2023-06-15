@@ -194,14 +194,14 @@ type ExitValidatorResponse struct {
 }
 
 type CanUpdateSocializeElResponse struct {
-	Status                        string         `json:"status"`
-	Error                         string         `json:"error"`
-	SocializingPoolContractPaused bool           `json:"socializingPoolContractPaused"`
-	AlreadyOptedIn                bool           `json:"alreadyOptedIn"`
-	AlreadyOptedOut               bool           `json:"alreadyOptedOut"`
-	InCooldown                    bool           `json:"inCooldown"`
-	NextUpdatableBlock            uint64         `json:"nextUpdatableBlock"`
-	GasInfo                       stader.GasInfo `json:"gasInfo"`
+	Status                             string         `json:"status"`
+	Error                              string         `json:"error"`
+	IsPermissionlessNodeRegistryPaused bool           `json:"isPermissionlessNodeRegistryPaused"`
+	AlreadyOptedIn                     bool           `json:"alreadyOptedIn"`
+	AlreadyOptedOut                    bool           `json:"alreadyOptedOut"`
+	InCooldown                         bool           `json:"inCooldown"`
+	NextUpdatableBlock                 uint64         `json:"nextUpdatableBlock"`
+	GasInfo                            stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateSocializeElResponse struct {
@@ -351,12 +351,13 @@ type UpdateOperatorDetails struct {
 }
 
 type CanUpdateOperatorName struct {
-	Status              string         `json:"status"`
-	Error               string         `json:"error"`
-	OperatorNotActive   bool           `json:"operatorNotActive"`
-	OperatorNameTooLong bool           `json:"operatorNameTooLong"`
-	NothingToUpdate     bool           `json:"nothingToUpdate"`
-	GasInfo             stader.GasInfo `json:"gasInfo"`
+	Status                             string         `json:"status"`
+	Error                              string         `json:"error"`
+	OperatorNotActive                  bool           `json:"operatorNotActive"`
+	OperatorNameTooLong                bool           `json:"operatorNameTooLong"`
+	NothingToUpdate                    bool           `json:"nothingToUpdate"`
+	IsPermissionlessNodeRegistryPaused bool           `json:"isPermissionlessNodeRegistryPaused"`
+	GasInfo                            stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateOperatorName struct {
@@ -366,12 +367,13 @@ type UpdateOperatorName struct {
 }
 
 type CanUpdateOperatorRewardAddress struct {
-	Status                    string         `json:"status"`
-	Error                     string         `json:"error"`
-	OperatorNotActive         bool           `json:"operatorNotActive"`
-	OperatorRewardAddressZero bool           `json:"operatorRewardAddressZero"`
-	NothingToUpdate           bool           `json:"nothingToUpdate"`
-	GasInfo                   stader.GasInfo `json:"gasInfo"`
+	Status                             string         `json:"status"`
+	Error                              string         `json:"error"`
+	OperatorNotActive                  bool           `json:"operatorNotActive"`
+	OperatorRewardAddressZero          bool           `json:"operatorRewardAddressZero"`
+	NothingToUpdate                    bool           `json:"nothingToUpdate"`
+	IsPermissionlessNodeRegistryPaused bool           `json:"isPermissionlessNodeRegistryPaused"`
+	GasInfo                            stader.GasInfo `json:"gasInfo"`
 }
 
 type UpdateOperatorRewardAddress struct {

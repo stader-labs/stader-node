@@ -34,6 +34,10 @@ func updateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common.Ad
 		fmt.Println("Nothing to update")
 		return nil
 	}
+	if res.IsPermissionlessNodeRegistryPaused {
+		fmt.Println("Permissionless Node Registry is paused.")
+		return nil
+	}
 
 	err = gas.AssignMaxFeeAndLimit(res.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
