@@ -43,10 +43,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "yes, y",
 						Usage: "Automatically confirm deposit",
 					},
-					cli.StringFlag{
-						Name:  "salt, l",
-						Usage: "An optional seed to use when generating the new validator address.",
-					},
 					cli.Uint64Flag{
 						Name:  "num-validators, nv",
 						Usage: "Number of validators you want to create (Required)",
@@ -57,11 +53,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					// Validate flags
 					if c.String("amount") != "" {
 						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {
-							return err
-						}
-					}
-					if c.String("salt") != "" {
-						if _, err := cliutils.ValidateBigInt("salt", c.String("salt")); err != nil {
 							return err
 						}
 					}

@@ -42,7 +42,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 					//// Validate args
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
@@ -50,22 +50,17 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
-					if err != nil {
-						return err
-					}
-
-					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, reloadKeys))
+					api.PrintResponse(canNodeDeposit(c, amountWei, numValidators, reloadKeys))
 
 					return nil
 
@@ -79,7 +74,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
@@ -87,23 +82,18 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
-					if err != nil {
-						return err
-					}
-
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, salt, numValidators, reloadKeys)
+					response, err := nodeDeposit(c, amountWei, numValidators, reloadKeys)
 					api.PrintResponse(response, err)
 
 					return nil
