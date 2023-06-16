@@ -70,13 +70,13 @@ build_daemon() {
     echo "done!"
         # ensure support for arm64 is installed by  sudo apt install -y qemu-user-static binfmt-support
     echo "Building Docker Stader Daemon image..."
-    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
-    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
+    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
+    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker push $DOCKER_ACCOUNT/stader-node:$VERSION-amd64 || fail "Error pushing amd64 Docker Stader Daemon image to Docker Hub."
-    docker push $DOCKER_ACCOUNT/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 || fail "Error pushing amd64 Docker Stader Daemon image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
     rm -f stader/stader-daemon-*
     echo "done!"
 }
@@ -85,8 +85,8 @@ build_daemon() {
 # Builds the Docker prune provisioner image and pushes it to Docker Hub
 build_docker_prune_provision() {
     echo "Building Docker Prune Provisioner image..."
-    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-node:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
-    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-node:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
+    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
+    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
@@ -99,12 +99,12 @@ build_docker_prune_provision() {
 # Builds the Docker Manifests and pushes them to Docker Hub
 build_docker_manifest() {
     echo -n "Building Docker manifest... "
-    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-node-$VERSION
-    docker manifest create $DOCKER_ACCOUNT/stader-node:$VERSION --amend $DOCKER_ACCOUNT/stader-node:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-node:$VERSION-arm64
+    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-permissionless-$VERSION
+    docker manifest create $DOCKER_ACCOUNT/stader-permissionless:$VERSION --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge $DOCKER_ACCOUNT/stader-node:$VERSION
+    docker manifest push --purge $DOCKER_ACCOUNT/stader-permissionless:$VERSION
     echo "done!"
 }
 
@@ -112,12 +112,12 @@ build_docker_manifest() {
 # Builds the 'latest' Docker Manifests and pushes them to Docker Hub
 build_latest_docker_manifest() {
     echo -n "Building 'latest' Docker manifest... "
-    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-node-latest
-    docker manifest create $DOCKER_ACCOUNT/stader-node:latest --amend $DOCKER_ACCOUNT/stader-node:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-node:$VERSION-arm64
+    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-permissionless-latest
+    docker manifest create $DOCKER_ACCOUNT/stader-permissionless:latest --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge $DOCKER_ACCOUNT/stader-node:latest
+    docker manifest push --purge $DOCKER_ACCOUNT/stader-permissionless:latest
     echo "done!"
 }
 
