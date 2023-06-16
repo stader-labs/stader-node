@@ -21,12 +21,13 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/config"
 )
 
-var (
-	preFundedKey    = "dbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97"
-	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
-	ConfigPath, _   = homedir.Expand("~/.stader_testing")
-	PasswordPath    = filepath.Join(ConfigPath, "password")
-	cf              = []byte(`{
+var ( //f02daebbf456faf787c5cd61a33ce780857c1ca10b00972aa451f0e9688e4ead
+	preFundedKeyKur   = "ef5177cd0b6b21c87db5a0bf35d4084a8a57a9d6a064f86d51ac85f2b873a4e2"
+	preFundedKeyAnvil = "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6"
+	UserSettingPath   = filepath.Join(ConfigPath, "user-settings.yml")
+	ConfigPath, _     = homedir.Expand("~/.stader_testing")
+	PasswordPath      = filepath.Join(ConfigPath, "password")
+	cf                = []byte(`{
 		"participants": [
 			{
 				"el_client_type": "geth",
@@ -223,7 +224,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 		elPort := apiServiceHttpPortSpec.GetNumber()
 
 	*/
-	clUrl := fmt.Sprintf("http://127.0.0.1:49982")
+	clUrl := fmt.Sprintf("http://127.0.0.1:54643")
 	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
 
 	s.setConfig(c, elUrl, clUrl)

@@ -44,7 +44,7 @@ var ETHXABI = ETHXMetaData.ABI
 var ETHXBin = ETHXMetaData.Bin
 
 // DeployETHX deploys a new Ethereum contract, binding an instance of ETHX to it.
-func DeployETHX(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ETHX, error) {
+func DeployETHX(auth *bind.TransactOpts, backend bind.ContractBackend, params ...interface{}) (common.Address, *types.Transaction, *ETHX, error) {
 	parsed, err := ETHXMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
@@ -53,7 +53,7 @@ func DeployETHX(auth *bind.TransactOpts, backend bind.ContractBackend) (common.A
 		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(ETHXBin), backend)
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(ETHXBin), backend, params...)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}

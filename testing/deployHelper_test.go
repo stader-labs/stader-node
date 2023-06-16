@@ -22,7 +22,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 
 	// private key of the deployer
-	privateKey, err := crypto.HexToECDSA(preFundedKey)
+	privateKey, err := crypto.HexToECDSA(preFundedKeyAnvil)
 	require.Nil(t, err)
 
 	// extract public key of the deployer from private key
@@ -45,35 +45,29 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 
 	// deploy the ethx contract
-	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client)
+	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, fromAddress)
 	require.Nil(t, err)
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	time.Sleep(5 * time.Second) // Allow it to be processed by the local node :P
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	time.Sleep(5 * time.Second) // Allow it to be processed by the local node :P
-	_, err = ethxContract.Decimals(&bind.CallOpts{
-		Pending: true,
-	})
-	if err != nil {
-		panic(err)
-	}
+	StaderConfigInETHX, _ := ethxContract.StaderConfig(&bind.CallOpts{Pending: true})
+	fmt.Printf(" StaderConfig %+v", StaderConfigInETHX.Hex())
 
 	// deploy the config contract
-	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client)
+	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client, fromAddress)
 	require.Nil(t, err)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	// Init ethx
+	// // Init ethx
 	_, err = ethxContract.Initialize(auth, fromAddress, staderCfAddress)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	stdCfContract.Initialize(auth, fromAddress, ethXAddr)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	admin, _ := stdCfContract.GetAdmin(&bind.CallOpts{Pending: true})
+	fmt.Printf("ADMIN %+v", admin.Hex())
+	// auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	// require.Nil(t, err)
 
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
