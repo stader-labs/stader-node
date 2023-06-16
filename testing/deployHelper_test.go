@@ -17,14 +17,12 @@ import (
 	"github.com/urfave/cli"
 )
 
-var PRE_FUNDED_ACCOUNTS = "ef5177cd0b6b21c87db5a0bf35d4084a8a57a9d6a064f86d51ac85f2b873a4e2"
-
 func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	client, err := ethclient.Dial(eth1URL)
 	require.Nil(t, err)
 
 	// private key of the deployer
-	privateKey, err := crypto.HexToECDSA(PRE_FUNDED_ACCOUNTS)
+	privateKey, err := crypto.HexToECDSA(preFundedKey)
 	require.Nil(t, err)
 
 	// extract public key of the deployer from private key
@@ -46,26 +44,34 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err := GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// deploy the contract
+	// deploy the ethx contract
 	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client)
 	require.Nil(t, err)
-
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	time.Sleep(5 * time.Second) // Allow it to be processed by the local node :P
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
+	time.Sleep(5 * time.Second) // Allow it to be processed by the local node :P
+	_, err = ethxContract.Decimals(&bind.CallOpts{
+		Pending: true,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// deploy the config contract
 	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client)
 	require.Nil(t, err)
-
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
-
-	stdCfContract.Initialize(auth, fromAddress, ethXAddr)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Init ethx
 	_, err = ethxContract.Initialize(auth, fromAddress, staderCfAddress)
 	require.Nil(t, err)
+	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	require.Nil(t, err)
+
+	stdCfContract.Initialize(auth, fromAddress, ethXAddr)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
@@ -90,33 +96,30 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 
 	// Deploy permissionless pool
 	permissionlessPool, _, _, err := contracts.DeployPermissionlessPool(auth, client)
+
+	// client.Commit()
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
 	// Update Node permissionless pool to stader config
-	tx, err := stdCfContract.UpdatePermissionlessPool(auth, permissionlessPool)
+	_, err = stdCfContract.UpdatePermissionlessPool(auth, permissionlessPool)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	for {
-		_, isPending, err := client.TransactionByHash(context.TODO(), tx.Hash())
-		require.Nil(t, err)
-		if isPending != true {
-			break
-		}
-		time.Sleep(10 * time.Second)
+	time.Sleep(time.Second)
+	opt := bind.CallOpts{
+		Pending: true,
+	}
+	ETHxToken, err := ethxContract.Decimals(&opt)
+	if err != nil {
+		panic(err)
 	}
 
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
-
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
-
+	fmt.Printf("ETHxToken from %+v\n", ETHxToken)
 	// time.Sleep(time.Minute)
-	storedPLPool, err := stdCfContract.GetPermissionlessPool(&bind.CallOpts{})
+	storedPLPool, err := stdCfContract.GetPermissionlessPool(&opt)
 	if err != nil {
 		panic(err)
 	}
@@ -143,15 +146,16 @@ func GetNextTransaction(client *ethclient.Client, fromAddress common.Address, pr
 		return nil, err
 	}
 
+	fmt.Println(" >>>>>>>>>>>>>> Nouce ", nonce)
 	// sign the transaction
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
 		return nil, err
 	}
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)             // in wei
-	auth.GasLimit = uint64(3000000)        // in units 1000000
-	auth.GasPrice = big.NewInt(1000000000) // in wei
+	auth.Value = big.NewInt(0)              // in wei
+	auth.GasLimit = uint64(10000000)        // in units
+	auth.GasPrice = big.NewInt(10000000000) // in wei
 
 	return auth, nil
 }

@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
-	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -17,11 +15,42 @@ import (
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader/api"
 	"github.com/stader-labs/stader-node/stader/node"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/config"
+)
+
+var (
+	preFundedKey    = "dbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97"
+	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
+	ConfigPath, _   = homedir.Expand("~/.stader_testing")
+	PasswordPath    = filepath.Join(ConfigPath, "password")
+	cf              = []byte(`{
+		"participants": [
+			{
+				"el_client_type": "geth",
+				"el_client_image": "ethereum/client-go:v1.11.5",
+				"el_client_log_level": "",
+				"cl_client_type": "lighthouse",
+				"cl_client_image": "sigp/lighthouse:v3.5.0",
+				"cl_client_log_level": "",
+				"beacon_extra_params": [],
+				"el_extra_params": ["--http", "--rpc, "--rpccorsdomain "http://localhost:8000"],
+				"validator_extra_params": [],
+				"builder_network_params": null
+			}
+		],
+		"network_params": {
+			"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete",
+			"num_validator_keys_per_node": 40,
+			"network_id": "3151908",
+			"deposit_contract_address": "0x4242424242424242424242424242424242424242",
+			"seconds_per_slot": 1,
+			"genesis_delay": 120,
+			"capella_fork_epoch": 5
+		}
+	}`)
 )
 
 const (
@@ -47,37 +76,6 @@ const (
 	defaultDryRun         = false
 	defaultParallelism    = 4
 )
-
-var (
-	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
-	ConfigPath, _   = homedir.Expand("~/.stader_testing")
-	PasswordPath    = filepath.Join(ConfigPath, "password")
-)
-var cf = []byte(`{
-	"participants": [
-		{
-			"el_client_type": "geth",
-			"el_client_image": "ethereum/client-go:v1.11.5",
-			"el_client_log_level": "",
-			"cl_client_type": "lighthouse",
-			"cl_client_image": "sigp/lighthouse:v3.5.0",
-			"cl_client_log_level": "",
-			"beacon_extra_params": [],
-			"el_extra_params": ["--http"],
-			"validator_extra_params": [],
-			"builder_network_params": null
-		}
-	],
-	"network_params": {
-		"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete",
-        "num_validator_keys_per_node": 40,
-        "network_id": "3151908",
-        "deposit_contract_address": "0x4242424242424242424242424242424242424242",
-        "seconds_per_slot": 1,
-        "genesis_delay": 120,
-        "capella_fork_epoch": 5
-	}
-}`)
 
 func newApp() *cli.App {
 
@@ -184,48 +182,49 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	t := s.T()
+	/*
+		logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
+		kurtosis_context.NewKurtosisContextFromLocalEngine()
+		kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
+		assert.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
 
-	logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
-	kurtosis_context.NewKurtosisContextFromLocalEngine()
-	kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
-	assert.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
+		enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
 
-	enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
+		enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
 
-	enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
+		s.kurtosisCtx = kurtosisCtx
+		s.enclaveId = enclaveId
+		assert.NoError(t, err, "An error occurred creating the enclave")
 
-	s.kurtosisCtx = kurtosisCtx
-	s.enclaveId = enclaveId
-	assert.NoError(t, err, "An error occurred creating the enclave")
+		logrus.Info("------------ EXECUTING PACKAGE ---------------")
 
-	logrus.Info("------------ EXECUTING PACKAGE ---------------")
+		starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
 
-	starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
+		assert.NoError(t, err, "An error executing loading the package")
+		assert.Nil(t, starlarkRunResult.InterpretationError)
+		assert.Empty(t, starlarkRunResult.ValidationErrors)
+		assert.Nil(t, starlarkRunResult.ExecutionError)
 
-	assert.NoError(t, err, "An error executing loading the package")
-	assert.Nil(t, starlarkRunResult.InterpretationError)
-	assert.Empty(t, starlarkRunResult.ValidationErrors)
-	assert.Nil(t, starlarkRunResult.ExecutionError)
+		logrus.Info("------------ EXECUTING TESTS ---------------")
+		beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
+		assert.Nil(t, err)
+		apiServicePublicPorts := beaconContext.GetPublicPorts()
+		assert.NotNil(t, apiServicePublicPorts)
+		apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
+		assert.True(t, found)
+		clPort := apiServiceHttpPortSpec.GetNumber()
 
-	logrus.Info("------------ EXECUTING TESTS ---------------")
-	beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
-	assert.Nil(t, err)
-	apiServicePublicPorts := beaconContext.GetPublicPorts()
-	assert.NotNil(t, apiServicePublicPorts)
-	apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
-	assert.True(t, found)
-	clPort := apiServiceHttpPortSpec.GetNumber()
+		elContext, err := enclaveCtx.GetServiceContext(elCient)
+		assert.Nil(t, err)
+		elPublicPorts := elContext.GetPublicPorts()
+		assert.NotNil(t, apiServicePublicPorts)
+		apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
+		assert.True(t, found)
+		elPort := apiServiceHttpPortSpec.GetNumber()
 
-	elContext, err := enclaveCtx.GetServiceContext(elCient)
-	assert.Nil(t, err)
-	elPublicPorts := elContext.GetPublicPorts()
-	assert.NotNil(t, apiServicePublicPorts)
-	apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
-	assert.True(t, found)
-	elPort := apiServiceHttpPortSpec.GetNumber()
-
-	elUrl := fmt.Sprintf("http://127.0.0.1:%d", elPort)
-	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
+	*/
+	clUrl := fmt.Sprintf("http://127.0.0.1:49982")
+	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
 
 	s.setConfig(c, elUrl, clUrl)
 	s.setupWallet(ctx, c)
@@ -254,9 +253,3 @@ func (s *StaderNodeSuite) setupWallet(ctx context.Context, c *cli.Context) {
 	err = w.Save()
 	require.Nil(s.T(), err)
 }
-
-/*
- Api contract from 0x878705ba3f8Bc32FCf7F4CAa1A35E72AF65CF766
-Api contract deployed to 0xAb2A01BC351770D09611Ac80f1DE076D56E0487d
-Tx: 0xcc52c30d4d4ea67654b23beda69696485ca60577db8c2482adad82eedd199bf5
-*/

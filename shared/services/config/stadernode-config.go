@@ -435,11 +435,18 @@ func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) stri
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
-	if cfg.parent != nil && cfg.parent.IsNativeMode {
-		return filepath.Join(cfg.DataPath.Value.(string), "validators")
+	// if cfg.parent != nil && cfg.parent.IsNativeMode {
+	// 	return filepath.Join(cfg.DataPath.Value.(string), "validators")
+	// }
+
+	// return filepath.Join(DaemonDataPath, "validators", NativeFeeRecipientFilename)
+
+	if cfg.parent != nil && !cfg.parent.IsNativeMode {
+		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
 	}
 
-	return filepath.Join(DaemonDataPath, "validators", NativeFeeRecipientFilename)
+	return filepath.Join(cfg.DataPath.Value.(string), "validators", NativeFeeRecipientFilename)
+
 }
 
 func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
