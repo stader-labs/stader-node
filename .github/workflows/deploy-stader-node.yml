@@ -33,6 +33,8 @@ jobs:
       - name: Docker meta
         id: meta
         uses: yuya-takeyama/docker-tag-from-github-ref-action@v1
+        with:
+          remove-version-tag-prefix: false
 
       - name: Prepare to upload binaries to s3
         uses: aws-actions/configure-aws-credentials@v1
