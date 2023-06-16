@@ -36,7 +36,7 @@ import (
 
 // Constants
 const (
-	stadernodeTag                      = shared.DockerAccount + "/stader-node:v" + shared.StaderVersion
+	stadernodeTag                      = shared.DockerAccount + "/stader-permissionless:v" + shared.StaderVersion
 	pruneProvisionerTag                = shared.DockerAccount + "/eth1-prune-provision:v1.0.0"
 	ecMigratorTag                      = shared.DockerAccount + "/ec-migrator:v1.2.0"
 	NetworkID                   string = "network"
