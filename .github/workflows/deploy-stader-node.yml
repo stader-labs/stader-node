@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  BUILD_AND_PUBLISH_STADER_PERMISSIOLESS_CLI_NODE:
+  BUILD_AND_PUBLISH_STADER_PERMISSIONLESS_CLI_NODE:
 
     runs-on: ubuntu-latest
 
