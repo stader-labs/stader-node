@@ -44,7 +44,7 @@ var StaderConfigABI = StaderConfigMetaData.ABI
 var StaderConfigBin = StaderConfigMetaData.Bin
 
 // DeployStaderConfig deploys a new Ethereum contract, binding an instance of StaderConfig to it.
-func DeployStaderConfig(auth *bind.TransactOpts, backend bind.ContractBackend, params ...interface{}) (common.Address, *types.Transaction, *StaderConfig, error, ) {
+func DeployStaderConfig(auth *bind.TransactOpts, backend bind.ContractBackend,) (common.Address, *types.Transaction, *StaderConfig, error, ) {
 	parsed, err := StaderConfigMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
@@ -53,7 +53,7 @@ func DeployStaderConfig(auth *bind.TransactOpts, backend bind.ContractBackend, p
 		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(StaderConfigBin), backend, params)
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(StaderConfigBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}

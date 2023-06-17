@@ -224,7 +224,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 		elPort := apiServiceHttpPortSpec.GetNumber()
 
 	*/
-	clUrl := fmt.Sprintf("http://127.0.0.1:54643")
+	clUrl := fmt.Sprintf("http://127.0.0.1:49759")
 	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
 
 	s.setConfig(c, elUrl, clUrl)

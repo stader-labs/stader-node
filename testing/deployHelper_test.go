@@ -44,23 +44,39 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err := GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// deploy the ethx contract
-	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, fromAddress)
+	// deploy the config contract
+	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client)
 	require.Nil(t, err)
+
+	fmt.Printf("staderCfAddress %+v", staderCfAddress.Hex())
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// deploy the ethx contract
+	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, staderCfAddress)
+	require.Nil(t, err)
+	fmt.Printf("ethXAddr %+v", ethXAddr.Hex())
+
+	time.Sleep(time.Second)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
+
+	// // Init ethx
+	// _, err = ethxContract.Initialize(auth)
+	// require.Nil(t, err)
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// _, err = ethxContract.UpdateStaderConfig(auth, staderCfAddress)
+	// require.Nil(t, err)
+
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	StaderConfigInETHX, _ := ethxContract.StaderConfig(&bind.CallOpts{Pending: true})
 	fmt.Printf(" StaderConfig %+v", StaderConfigInETHX.Hex())
 
-	// deploy the config contract
-	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client, fromAddress)
-	require.Nil(t, err)
-	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	StaderConfigInETHX, _ = ethxContract.StaderConfig(&bind.CallOpts{Pending: false})
+	time.Sleep(time.Second)
+	fmt.Printf(" StaderConfig %+v", StaderConfigInETHX.Hex())
 
-	// // Init ethx
-	_, err = ethxContract.Initialize(auth, fromAddress, staderCfAddress)
-	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
