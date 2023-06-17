@@ -71,7 +71,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-socialize-el",
 				Aliases:   []string{"y"},
 				Usage:     "Opt in or Opt out of socializing pool",
-				UsageText: "stader-cli node socialize-el [options]",
+				UsageText: "stader-cli node update-socialize-el [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "socialize-el, sel",
@@ -299,7 +299,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "claim-sp-rewards",
 				Aliases:   []string{"cspr"},
 				Usage:     "Claim Socializing Pool Rewards for given cycles",
-				UsageText: "stader-cli node claim-sp-rewards --yes",
+				UsageText: "stader-cli node claim-sp-rewards",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",

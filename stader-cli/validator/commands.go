@@ -37,7 +37,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli node deposit [options]",
+				UsageText: "stader-cli validator deposit [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -69,7 +69,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "exit-validator",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
-				UsageText: "stader-cli node exit-validator --validator-pub-key",
+				UsageText: "stader-cli validator exit-validator --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
@@ -96,7 +96,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "send-cl-rewards",
 				Aliases:   []string{"wcr"},
 				Usage:     "Send all Consensus Layer rewards to the operator claim vault",
-				UsageText: "stader-cli node send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli validator send-cl-rewards --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
