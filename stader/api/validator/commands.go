@@ -37,7 +37,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit to create a validator",
-				UsageText: "stader-cli api node can-deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator can-deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
@@ -70,7 +70,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api node deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -103,7 +103,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-exit-validator",
 				Usage:     "Can validator exit",
-				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
+				UsageText: "stader-cli api validator can-exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -124,7 +124,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "exit-validator",
 				Usage:     "Exit validator",
-				UsageText: "stader-cli api node exit-validator validator-pub-key",
+				UsageText: "stader-cli api validator exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -145,7 +145,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-send-cl-rewards",
 				Usage:     "Can send cl rewards of a validator to the operator claim vault",
-				UsageText: "stader-cli api node can-send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli api validator can-send-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -161,7 +161,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "send-cl-rewards",
 				Usage:     "Send cl rewards of a validator to the operator claim vault",
-				UsageText: "stader-cli api node send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli api validator send-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
