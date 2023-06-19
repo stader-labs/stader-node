@@ -320,7 +320,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-operator-name",
 				Aliases:   []string{"uon"},
 				Usage:     "Update Operator name",
-				UsageText: "stader-permissioned-cli node update-operator-name --operator-name",
+				UsageText: "stader-cli node update-operator-name --operator-name",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-name, on",
@@ -346,7 +346,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-operator-reward-address",
 				Aliases:   []string{"uod"},
 				Usage:     "Update Operator reward address",
-				UsageText: "stader-permissioned-cli node update-operator-reward-address --operator-reward-address",
+				UsageText: "stader-cli node update-operator-reward-address --operator-reward-address",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-reward-address, ora",
