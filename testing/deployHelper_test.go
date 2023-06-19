@@ -6,15 +6,19 @@ import (
 	"fmt"
 	"math/big"
 	"testing"
-	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/stader-labs/stader-node/stader-lib/contracts"
+	"github.com/stader-labs/stader-node/testing/contracts"
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli"
+)
+
+const (
+	staderConfigAddr  = "0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35"
+	ethXPredefineAddr = "0xA15BB66138824a1c7167f5E85b957d04Dd34E468"
 )
 
 func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
@@ -39,13 +43,12 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	chainID, err := client.NetworkID(context.Background())
 	require.Nil(t, err)
 
-	fmt.Printf("FROM: %+v \n ", fromAddress.Hex())
 	// Get Transaction Ops to make a valid Ethereum transaction
 	auth, err := GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
 	// deploy the config contract
-	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client)
+	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client, fromAddress, common.HexToAddress(ethXPredefineAddr))
 	require.Nil(t, err)
 
 	fmt.Printf("staderCfAddress %+v", staderCfAddress.Hex())
@@ -56,44 +59,15 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 	fmt.Printf("ethXAddr %+v", ethXAddr.Hex())
 
-	time.Sleep(time.Second)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
-
-	// // Init ethx
-	// _, err = ethxContract.Initialize(auth)
-	// require.Nil(t, err)
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-
-	// _, err = ethxContract.UpdateStaderConfig(auth, staderCfAddress)
-	// require.Nil(t, err)
-
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-
-	StaderConfigInETHX, _ := ethxContract.StaderConfig(&bind.CallOpts{Pending: true})
-	fmt.Printf(" StaderConfig %+v", StaderConfigInETHX.Hex())
-
-	StaderConfigInETHX, _ = ethxContract.StaderConfig(&bind.CallOpts{Pending: false})
-	time.Sleep(time.Second)
-	fmt.Printf(" StaderConfig %+v", StaderConfigInETHX.Hex())
-
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
-
-	admin, _ := stdCfContract.GetAdmin(&bind.CallOpts{Pending: true})
-	fmt.Printf("ADMIN %+v", admin.Hex())
-	// auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	// require.Nil(t, err)
 
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// sdcfg, err := contractsSrv.GetStaderConfigContract(c)
-	// require.Nil(t, err)
-
 	// Deploy node permission
-	plNodeRegistryAddr, _, _, err := contracts.DeployPermissionlessNodeRegistry(auth, client)
+	plNodeRegistryAddr, _, _, err := contracts.DeployPermissionlessNodeRegistry(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
@@ -105,9 +79,8 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 
 	// Deploy permissionless pool
-	permissionlessPool, _, _, err := contracts.DeployPermissionlessPool(auth, client)
+	permissionlessPool, _, _, err := contracts.DeployPermissionlessPool(auth, client, fromAddress, fromAddress)
 
-	// client.Commit()
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
@@ -118,33 +91,9 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	time.Sleep(time.Second)
-	opt := bind.CallOpts{
-		Pending: true,
-	}
-	ETHxToken, err := ethxContract.Decimals(&opt)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("ETHxToken from %+v\n", ETHxToken)
-	// time.Sleep(time.Minute)
-	storedPLPool, err := stdCfContract.GetPermissionlessPool(&opt)
-	if err != nil {
-		panic(err)
-	}
-
-	storedPLRegis, err := stdCfContract.GetPermissionlessNodeRegistry(&bind.CallOpts{
-		Pending: true,
-	})
-	require.Nil(t, err)
-
 	fmt.Printf("Api contract from %s\n", auth.From.Hex())
 	fmt.Printf("DeployETHX to %s\n", ethXAddr.Hex())
 	fmt.Printf("DeployStaderConfig to %s\n", staderCfAddress.Hex())
-	fmt.Printf("DeployPermissionlessPool to %s <> %s \n", permissionlessPool.Hex(), storedPLPool.Hex())
-	fmt.Printf("permissionlessNR to %s <> store %s\n", plNodeRegistryAddr.Hex(), storedPLRegis.Hex())
-
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue
@@ -156,7 +105,6 @@ func GetNextTransaction(client *ethclient.Client, fromAddress common.Address, pr
 		return nil, err
 	}
 
-	fmt.Println(" >>>>>>>>>>>>>> Nouce ", nonce)
 	// sign the transaction
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {

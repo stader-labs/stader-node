@@ -43,6 +43,7 @@ require (
 	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230602142021-378099c5eca8
 	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230602142021-378099c5eca8
 	github.com/stretchr/testify v1.8.4
+	github.com/test-go/testify v1.1.4 // indirect
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/urfave/cli v1.22.10

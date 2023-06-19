@@ -18,28 +18,24 @@ import (
 )
 
 type StaderNodeSuite struct {
-	done chan struct{}
-	app  *cli.App
+	app *cli.App
 	suite.Suite
 	kurtosisCtx *kurtosis_context.KurtosisContext
 	enclaveId   string
 }
 
 func TestNodeSuite(t *testing.T) {
-	suite.Run(t, new(StaderNodeSuite))
+	s := new(StaderNodeSuite)
+	s.app = newApp()
+	suite.Run(t, s)
 }
 
 func (s *StaderNodeSuite) TestNodeDaemon() {
-	// a := os.Args
-	// run(time.Minute*1, s.done, func() {
-	// 	err := s.app.Run([]string{
-	// 		a[0],
-	// 		"node",
-	// 	})
-	// 	require.Nil(s.T(), err)
-	// })
-	time.Sleep(time.Minute * 5)
+	time.Sleep(time.Second * 5)
+}
 
+func (s *StaderNodeSuite) TestNodeRegistry() {
+	time.Sleep(time.Second * 5)
 }
 
 // run once, before test suite methods
@@ -53,9 +49,6 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	ctx, cancelCtxFunc := context.WithCancel(context.Background())
 	defer cancelCtxFunc()
-
-	s.app = newApp()
-	s.done = make(chan struct{}, 1)
 
 	flagSet := flag.NewFlagSet("node_testing", flag.PanicOnError)
 	var p string
@@ -82,10 +75,13 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 // run once, after test suite methods
 func (s *StaderNodeSuite) TearDownSuite() {
-	// <-s.done
 	logrus.Println("TearDown StaderNodeSuite")
+	defer func() {
+		if s.kurtosisCtx != nil {
 
-	defer s.kurtosisCtx.Clean(context.Background(), true)
+			s.kurtosisCtx.Clean(context.Background(), true)
+		}
+	}()
 
 	removeTestFolder(s.T())
 }

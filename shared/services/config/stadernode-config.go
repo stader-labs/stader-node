@@ -244,7 +244,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0xAb2A01BC351770D09611Ac80f1DE076D56E0487d",
+			config.Network_Local:    "0xA15BB66138824a1c7167f5E85b957d04Dd34E468",
 		},
 
 		staderConfigAddress: map[config.Network]string{
@@ -252,7 +252,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Mainnet:  "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0x4c849Ff66a6F0A954cbf7818b8a763105C2787D6",
+			config.Network_Local:    "0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
