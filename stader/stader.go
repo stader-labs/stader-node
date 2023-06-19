@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,13 +59,9 @@ func main() {
 			// Email: "kane@rocketpool.net",
 		},
 	}
-	app.Description = `This is a beta release solely intended for testing purposes. This release is only meant for private beta participants who have expressed interest in participating in our beta program through our discord servers. Any other usage of this release is unauthorized and if you are in possession of an unauthorized copy you should delete the same and inform admin@staderlabs.com immediately.
+	app.Description = ``
 
-This version of the release is a pre production version, undergoing security audit and may contain bugs/ vulnerabilities and errors which may or may not be known to the Stader team. By using this release you accept that you have the necessary technical know how to independently assess risks associated with the usage of pre production software and agree to hold Stader Labs, and Stakeinfra Technologies Inc. indemnified of any and all damages that may arise from the usage of this release.
-
-For clarity, this version of the software is not meant for public consumption and may lead to technological and/ or financial losses. This version of the software is provided as is and only for testing purposes and should not be redistributed without the express consent of Stakeinfra Technologies Inc.`
-
-	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta].\n   (c) 2023 Stakeinfra Technologies Inc."
+	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0].\n   (c) 2023 Stakeinfra Technologies Inc."
 
 	const GPLv3 = `                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -842,7 +838,7 @@ Public License instead of this License. But first, please read
 		Aliases: []string{"c"},
 		Usage:   "Show the copyright",
 		Action: func(c *cli.Context) error {
-			fmt.Println("(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta].\n(c) 2023 Stakeinfra Technologies Inc.")
+			fmt.Println("(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0].\n(c) 2023 Stakeinfra Technologies Inc.")
 			return nil
 		},
 	})
