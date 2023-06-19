@@ -33,12 +33,15 @@ func TestNodeSuite(t *testing.T) {
 }
 
 func (s *StaderNodeSuite) TestNodeDaemon() {
-	time.Sleep(time.Second * 20)
+	time.Sleep(time.Second * 10)
 }
+
+// func (s *StaderNodeSuite) TestNode2() {
+// 	time.Sleep(time.Second * 20)
+// }
 
 // run once, before test suite methods
 func (s *StaderNodeSuite) SetupSuite() {
-
 	removeTestFolder(s.T())
 	defer func() {
 		r := recover()

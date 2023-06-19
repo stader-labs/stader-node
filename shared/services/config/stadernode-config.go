@@ -260,7 +260,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Mainnet:  "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
-			config.Network_Local:    "0xAb2A01BC351770D09611Ac80f1DE076D56E0487d",
+			config.Network_Local:    "http://localhost:9088",
 		},
 	}
 }

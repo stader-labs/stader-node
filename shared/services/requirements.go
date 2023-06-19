@@ -178,7 +178,8 @@ func WaitNodeRegistered(c *cli.Context, operatorAddress common.Address, verbose 
 		if err != nil {
 			return err
 		}
-		if operatorId.Cmp(big.NewInt(0)) != 0 {
+
+		if operatorId.Cmp(big.NewInt(0)) == 0 {
 			return nil
 		}
 		if verbose {

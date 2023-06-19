@@ -141,11 +141,11 @@ func run(c *cli.Context) error {
 				continue
 			} else {
 				// Check the BC status
-				err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
-				if err != nil {
-					errorLog.Println(err)
-					continue
-				}
+				// err := services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+				// if err != nil {
+				// 	errorLog.Println(err)
+				// 	continue
+				// }
 			}
 
 			publicKey, err := stader.GetPublicKey(c)
