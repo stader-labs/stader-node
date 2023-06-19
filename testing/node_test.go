@@ -11,6 +11,8 @@ import (
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
+
+	//stader/register.go
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -31,11 +33,7 @@ func TestNodeSuite(t *testing.T) {
 }
 
 func (s *StaderNodeSuite) TestNodeDaemon() {
-	time.Sleep(time.Second * 5)
-}
-
-func (s *StaderNodeSuite) TestNodeRegistry() {
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 20)
 }
 
 // run once, before test suite methods
@@ -62,9 +60,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 	logrus.Println("Done SetupSuite()")
 
 	go func() {
-
 		a := os.Args
-		// run(time.Minute*1, s.done, func() {
 		err := s.app.Run([]string{
 			a[0],
 			"node",

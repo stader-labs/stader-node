@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
@@ -90,7 +91,7 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 
 }
 
-func registerNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, mevSocialize bool) (*api.RegisterNodeResponse, error) {
+func RegisterNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, mevSocialize bool) (*api.RegisterNodeResponse, error) {
 
 	// Get services
 	w, err := services.GetWallet(c)

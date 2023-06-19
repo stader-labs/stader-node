@@ -4,13 +4,17 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"log"
 	"math/big"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/testing/contracts"
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli"
@@ -79,7 +83,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 
 	// Deploy permissionless pool
-	permissionlessPool, _, _, err := contracts.DeployPermissionlessPool(auth, client, fromAddress, fromAddress)
+	permissionlessPool, _, _, err := contracts.DeployPermissionlessPool(auth, client, fromAddress, staderCfAddress)
 
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
@@ -94,6 +98,27 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	fmt.Printf("Api contract from %s\n", auth.From.Hex())
 	fmt.Printf("DeployETHX to %s\n", ethXAddr.Hex())
 	fmt.Printf("DeployStaderConfig to %s\n", staderCfAddress.Hex())
+
+	prn, err := services.GetPermissionlessNodeRegistry(c)
+	require.Nil(t, err)
+
+	w, err := services.GetWallet(c)
+	require.Nil(t, err)
+
+	nodePrivateKey, err := w.GetNodePrivateKey()
+	require.Nil(t, err)
+
+	acc, err := w.GetNodeAccount()
+	require.Nil(t, err)
+
+	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
+
+	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
+	require.Nil(t, err)
+
+	// npr.GetRoleAdmin()
+	_, err = node.OnboardNodeOperator(prn, true, "stader", acc.Address, auth)
+	require.Nil(t, err)
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue
@@ -116,4 +141,42 @@ func GetNextTransaction(client *ethclient.Client, fromAddress common.Address, pr
 	auth.GasPrice = big.NewInt(10000000000) // in wei
 
 	return auth, nil
+}
+
+func send1EthTransaction(client *ethclient.Client,
+	fromAddress common.Address,
+	toAddress common.Address,
+	privateKey *ecdsa.PrivateKey,
+	chainID *big.Int,
+) {
+	// nonce
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+
+		log.Fatal(err)
+	}
+
+	gasLimit := uint64(10000000)        // in units
+	gasPrice := big.NewInt(10000000000) // in wei
+
+	var data []byte
+	tx := types.NewTransaction(
+		nonce,
+		toAddress,
+		big.NewInt(9000000000000000000),
+		gasLimit,
+		gasPrice,
+		data)
+
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = client.SendTransaction(context.Background(), signedTx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("tx sent: %s", signedTx.Hash().Hex()) // tx sent: 0x77006fcb3938f648e2cc65bafd27dec30b9bfbe9df41f78498b9c8b7322a249e
 }
