@@ -163,8 +163,7 @@ func printPatchNotes(c *cli.Context) {
  |_____/ \__\__,_|\__,_|\___|_|    |______\__,_|_.__/|___/
 
 `, "\033[34m")
-	fmt.Printf("%s=== Stadernode v%s ===%s\n\n", colorGreen, shared.StaderVersion, colorReset)
-	fmt.Printf("Changes you should be aware of before starting:\n\n")
+
 }
 
 // View the Stader service status
