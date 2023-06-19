@@ -31,33 +31,38 @@ var ( //f02daebbf456faf787c5cd61a33ce780857c1ca10b00972aa451f0e9688e4ead
 		"participants": [
 			{
 				"el_client_type": "geth",
-				"el_client_image": "ethereum/client-go:v1.11.5",
+				"el_client_image": "",
 				"el_client_log_level": "",
 				"cl_client_type": "lighthouse",
-				"cl_client_image": "sigp/lighthouse:v3.5.0",
+				"cl_client_image": "",
 				"cl_client_log_level": "",
 				"beacon_extra_params": [],
-				"el_extra_params": ["--http", "--rpc, "--rpccorsdomain "http://localhost:8000"],
+				"el_extra_params": ["--http"],
 				"validator_extra_params": [],
 				"builder_network_params": null
 			}
 		],
 		"network_params": {
-			"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete",
-			"num_validator_keys_per_node": 40,
 			"network_id": "3151908",
 			"deposit_contract_address": "0x4242424242424242424242424242424242424242",
-			"seconds_per_slot": 1,
-			"genesis_delay": 120,
-			"capella_fork_epoch": 5
-		}
-	}`)
+			"seconds_per_slot": 12,
+			"slots_per_epoch": 32,
+			"num_validator_keys_per_node": 64,
+			"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete"
+		},
+		"launch_additional_services": false,
+		"wait_for_finalization": false,
+		"wait_for_verifications": false,
+		"verifications_epoch_limit": 5,
+		"global_client_log_level": "info"
+	}
+	`)
 )
 
 const (
 	enclaveIdPrefix = "stader"
 
-	remotePackage = "github.com/kurtosis-tech/eth-network-package"
+	remotePackage = "github.com/kurtosis-tech/eth2-package"
 
 	noDryRun = false
 
@@ -224,7 +229,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 		elPort := apiServiceHttpPortSpec.GetNumber()
 
 	*/
-	clUrl := fmt.Sprintf("http://127.0.0.1:51814")
+	clUrl := fmt.Sprintf("http://127.0.0.1:55211")
 	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
 
 	s.setConfig(c, elUrl, clUrl)
