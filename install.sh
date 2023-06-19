@@ -131,9 +131,9 @@ fi
 
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://stader-cli-permissionless.s3.amazonaws.com/latest/stader-node-install.tar.xz"
+    PACKAGE_URL="https://staderlabs.com/eth/stader-node-build/permissionless/latest/stader-node-install.tar.xz"
 else
-    PACKAGE_URL="https://stader-cli-permissionless.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    PACKAGE_URL="https://staderlabs.com/eth/stader-node-build/permissionless/$PACKAGE_VERSION/stader-node-install.tar.xz"
 fi
 
 
