@@ -165,16 +165,6 @@ func printPatchNotes(c *cli.Context) {
 `, "\033[34m")
 	fmt.Printf("%s=== Stadernode v%s ===%s\n\n", colorGreen, shared.StaderVersion, colorReset)
 	fmt.Printf("Changes you should be aware of before starting:\n\n")
-
-	fmt.Printf("%s=== MEV-Boost Updates ===%s\n", colorGreen, colorReset)
-	fmt.Println("MEV-Boost is now opt-out instead of opt-in. Furthermore, there is a new way to select relays: you can now select \"profiles\" instead of individual relays. As new relays are added to the Stadernode, any that belong to the profiles you've selected will automatically be enabled for you.\nNOTE: everyone will have to configure either profile-mode or individual-relay mode when first upgrading from v1.6, even if you had previously configured MEV-Boost.")
-
-	fmt.Printf("%s=== ENS Support ===%s\n", colorGreen, colorReset)
-	fmt.Println("`stader-cli node set-withdrawal-address`, `stader-cli node send`, and `stader-cli node set-voting-delegate` can now use ENS names instead of addresses! This requires your Execution Client to be online and synced.\nAlso, use the `stader-cli wallet set-ens-name` command to confirm an ENS domain or subdomain name that you assign to your node wallet. Once you do this, you can refer to your node's address by its ENS name on explorers like Etherscan.")
-
-	fmt.Printf("%s=== Modern vs. Portable ===%s\n", colorGreen, colorReset)
-	fmt.Println("The Stadernode now automatically checks your node's CPU features and defaults to either the \"modern\" optimized version of certain clients, or the more generic \"portable\" version based on what your machine supports. This only applies to MEV-Boost and Lighthouse.")
-
 }
 
 // View the Stader service status
