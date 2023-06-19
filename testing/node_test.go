@@ -13,6 +13,8 @@ import (
 	"github.com/sirupsen/logrus"
 
 	//stader/register.go
+
+	"github.com/stader-labs/stader-node/testing/httptest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -69,6 +71,10 @@ func (s *StaderNodeSuite) SetupSuite() {
 			"node",
 		})
 		assert.Nil(s.T(), err)
+	}()
+
+	go func() {
+		httptest.SererHttp(s.T())
 	}()
 }
 
