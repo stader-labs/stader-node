@@ -21,7 +21,7 @@ package shared
 
 const BinaryBucket string = "eth/stader-node-build/permissionless"
 const DockerAccount string = "staderlabs"
-const StaderVersion string = "1.0.0-test-build"
+const StaderVersion string = "1.0.0"
 
 const Logo string = ` 
   _____ _            _             _           _       𝅺 	
