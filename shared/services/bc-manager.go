@@ -75,8 +75,6 @@ func NewBeaconClientManager(cfg *config.StaderConfig) (*BeaconClientManager, err
 		return nil, fmt.Errorf("Unknown Consensus client mode '%v'", cfg.ConsensusClientMode.Value)
 	}
 
-	primaryProvider = "http://127.0.0.1:62043"
-
 	// Fallback CC
 	var fallbackProvider string
 	if cfg.UseFallbackClients.Value == true {

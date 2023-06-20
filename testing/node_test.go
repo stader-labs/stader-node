@@ -3,6 +3,7 @@ package testing
 import (
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -10,7 +11,6 @@ import (
 	// store "github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
-	"github.com/sirupsen/logrus"
 
 	//stader/register.go
 
@@ -77,7 +77,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	s.staderConfig(ctx, c)
 
-	logrus.Println("Done SetupSuite()")
+	fmt.Println("Done SetupSuite()")
 
 	go func() {
 		a := os.Args
@@ -95,7 +95,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 // run once, after test suite methods
 func (s *StaderNodeSuite) TearDownSuite() {
-	logrus.Println("TearDown StaderNodeSuite")
+	fmt.Println("TearDown StaderNodeSuite")
 	defer func() {
 		if s.kurtosisCtx != nil {
 

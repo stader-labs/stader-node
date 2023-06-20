@@ -7,10 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/alecthomas/assert"
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
-	"github.com/sirupsen/logrus"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -177,6 +175,7 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	cfg.Native.EcHttpUrl.Value = elURL
 	cfg.Native.ConsensusClient.Value = clURL
+	cfg.Native.CcHttpUrl.Value = clURL
 
 	cfg.ChangeNetwork(cfgtypes.Network_Local)
 	path, err := homedir.Expand(ConfigPath)
@@ -191,10 +190,10 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	t := s.T()
-	logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
+	fmt.Println("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
 	kurtosis_context.NewKurtosisContextFromLocalEngine()
 	kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
-	assert.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
+	require.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
 
 	enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
 
@@ -202,41 +201,41 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	s.kurtosisCtx = kurtosisCtx
 	s.enclaveId = enclaveId
-	assert.NoError(t, err, "An error occurred creating the enclave")
+	require.NoError(t, err, "An error occurred creating the enclave")
 
-	logrus.Info("------------ EXECUTING PACKAGE ---------------")
+	fmt.Println("------------ EXECUTING PACKAGE ---------------")
 
 	starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
 
-	assert.NoError(t, err, "An error executing loading the package")
-	assert.Nil(t, starlarkRunResult.InterpretationError)
-	assert.Empty(t, starlarkRunResult.ValidationErrors)
-	assert.Nil(t, starlarkRunResult.ExecutionError)
+	require.NoError(t, err, "An error executing loading the package")
+	require.Nil(t, starlarkRunResult.InterpretationError)
+	require.Empty(t, starlarkRunResult.ValidationErrors)
+	require.Nil(t, starlarkRunResult.ExecutionError)
 
-	logrus.Info("------------ EXECUTING TESTS ---------------")
+	fmt.Println("------------ EXECUTING TESTS ---------------")
 	beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
-	assert.Nil(t, err)
+	require.Nil(t, err)
 	apiServicePublicPorts := beaconContext.GetPublicPorts()
-	assert.NotNil(t, apiServicePublicPorts)
+	require.NotNil(t, apiServicePublicPorts)
 	apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
-	assert.True(t, found)
+	require.True(t, found)
 	clPort := apiServiceHttpPortSpec.GetNumber()
 
 	elContext, err := enclaveCtx.GetServiceContext(elCient)
-	assert.Nil(t, err)
+	require.Nil(t, err)
 	elPublicPorts := elContext.GetPublicPorts()
-	assert.NotNil(t, apiServicePublicPorts)
+	require.NotNil(t, apiServicePublicPorts)
 	apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
-	assert.True(t, found)
-	// elPort := apiServiceHttpPortSpec.GetNumber()
+	require.True(t, found)
+	elPort := apiServiceHttpPortSpec.GetNumber()
 
 	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
-	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
+	elUrl := fmt.Sprintf("http://127.0.0.1:%d", elPort)
 
 	s.setConfig(c, elUrl, clUrl)
 	s.setupWallet(ctx, c)
 
-	logrus.Info("------------ DEPLOYING CONTRACT ---------------")
+	fmt.Println("------------ DEPLOYING CONTRACT ---------------")
 	deployContracts(t, c, elUrl)
 
 }
