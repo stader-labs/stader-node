@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
+	"github.com/alecthomas/assert"
+	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -188,48 +191,46 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	t := s.T()
-	/*
-		logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
-		kurtosis_context.NewKurtosisContextFromLocalEngine()
-		kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
-		assert.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
+	logrus.Info("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
+	kurtosis_context.NewKurtosisContextFromLocalEngine()
+	kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
+	assert.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
 
-		enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
+	enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
 
-		enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
+	enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
 
-		s.kurtosisCtx = kurtosisCtx
-		s.enclaveId = enclaveId
-		assert.NoError(t, err, "An error occurred creating the enclave")
+	s.kurtosisCtx = kurtosisCtx
+	s.enclaveId = enclaveId
+	assert.NoError(t, err, "An error occurred creating the enclave")
 
-		logrus.Info("------------ EXECUTING PACKAGE ---------------")
+	logrus.Info("------------ EXECUTING PACKAGE ---------------")
 
-		starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
+	starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
 
-		assert.NoError(t, err, "An error executing loading the package")
-		assert.Nil(t, starlarkRunResult.InterpretationError)
-		assert.Empty(t, starlarkRunResult.ValidationErrors)
-		assert.Nil(t, starlarkRunResult.ExecutionError)
+	assert.NoError(t, err, "An error executing loading the package")
+	assert.Nil(t, starlarkRunResult.InterpretationError)
+	assert.Empty(t, starlarkRunResult.ValidationErrors)
+	assert.Nil(t, starlarkRunResult.ExecutionError)
 
-		logrus.Info("------------ EXECUTING TESTS ---------------")
-		beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
-		assert.Nil(t, err)
-		apiServicePublicPorts := beaconContext.GetPublicPorts()
-		assert.NotNil(t, apiServicePublicPorts)
-		apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
-		assert.True(t, found)
-		clPort := apiServiceHttpPortSpec.GetNumber()
+	logrus.Info("------------ EXECUTING TESTS ---------------")
+	beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
+	assert.Nil(t, err)
+	apiServicePublicPorts := beaconContext.GetPublicPorts()
+	assert.NotNil(t, apiServicePublicPorts)
+	apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
+	assert.True(t, found)
+	clPort := apiServiceHttpPortSpec.GetNumber()
 
-		elContext, err := enclaveCtx.GetServiceContext(elCient)
-		assert.Nil(t, err)
-		elPublicPorts := elContext.GetPublicPorts()
-		assert.NotNil(t, apiServicePublicPorts)
-		apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
-		assert.True(t, found)
-		elPort := apiServiceHttpPortSpec.GetNumber()
+	elContext, err := enclaveCtx.GetServiceContext(elCient)
+	assert.Nil(t, err)
+	elPublicPorts := elContext.GetPublicPorts()
+	assert.NotNil(t, apiServicePublicPorts)
+	apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
+	assert.True(t, found)
+	// elPort := apiServiceHttpPortSpec.GetNumber()
 
-	*/
-	clUrl := fmt.Sprintf("http://127.0.0.1:62043")
+	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
 	elUrl := fmt.Sprintf("http://127.0.0.1:8545")
 
 	s.setConfig(c, elUrl, clUrl)
