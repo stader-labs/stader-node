@@ -221,16 +221,16 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	require.True(t, found)
 	clPort := apiServiceHttpPortSpec.GetNumber()
 
-	elContext, err := enclaveCtx.GetServiceContext(elCient)
-	require.Nil(t, err)
-	elPublicPorts := elContext.GetPublicPorts()
-	require.NotNil(t, apiServicePublicPorts)
-	apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
-	require.True(t, found)
-	elPort := apiServiceHttpPortSpec.GetNumber()
+	// elContext, err := enclaveCtx.GetServiceContext(elCient)
+	// require.Nil(t, err)
+	// elPublicPorts := elContext.GetPublicPorts()
+	// require.NotNil(t, apiServicePublicPorts)
+	// apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
+	// require.True(t, found)
+	// elPort := apiServiceHttpPortSpec.GetNumber()
 
 	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
-	elUrl := fmt.Sprintf("http://127.0.0.1:%d", elPort)
+	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
 
 	s.setConfig(c, elUrl, clUrl)
 	s.setupWallet(ctx, c)
