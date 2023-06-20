@@ -38,6 +38,21 @@ func (s *StaderNodeSuite) TestNodeDaemon() {
 	time.Sleep(time.Second * 10)
 }
 
+// func (s *StaderNodeSuite) TestNodeDeposit() {
+// 	a := os.Args
+// 	err := s.app.Run([]string{
+// 		a[0],
+// 		"api",
+// 		"validator",
+// 		"deposit",
+// 		"9000000000000000000",
+// 		"0",
+// 		"1",
+// 		"false",
+// 	})
+// 	assert.Nil(s.T(), err)
+// }
+
 // func (s *StaderNodeSuite) TestNode2() {
 // 	time.Sleep(time.Second * 20)
 // }

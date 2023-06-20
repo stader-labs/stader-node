@@ -2,9 +2,10 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -17,7 +18,12 @@ func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractMana
 }
 
 func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(opts, pubKeys, preDepositSignatures, depositSignatures)
+	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(
+		opts,
+		[][]byte{},
+		[][]byte{},
+		[][]byte{},
+	)
 	if err != nil {
 		return nil, fmt.Errorf("could not add validator keys: %w", err)
 	}

@@ -3,13 +3,14 @@ package validator
 import (
 	"context"
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	_ "golang.org/x/sync/errgroup"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"

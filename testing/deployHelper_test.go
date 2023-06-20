@@ -63,80 +63,79 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	mn, _ := stdCfContract.MANAGER(&bind.CallOpts{})
 	_, err = stdCfContract.GrantRole(auth, mn, fromAddress)
 	require.Nil(t, err)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// am, _ := stdCfContract.ADMIN(&bind.CallOpts{})
+	_, err = stdCfContract.UpdateAdmin(auth, fromAddress)
 	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// deploy the ethx contract
 	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
 	fmt.Printf("EthXAddr %+v", ethXAddr.Hex())
-
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Deploy node permission regis
 	plNodeRegistryAddr, _, nrContact, err := contracts.DeployPermissionlessNodeRegistry(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	_, err = stdCfContract.UpdatePermissionlessNodeRegistry(auth, plNodeRegistryAddr)
 	require.Nil(t, err)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Permissionless pool
 	permissionlessPoolAddr, _, _, err := contracts.DeployPermissionlessPool(auth, client, fromAddress, staderCfAddress)
-
 	require.Nil(t, err)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	_, err = stdCfContract.UpdatePermissionlessPool(auth, permissionlessPoolAddr)
 	require.Nil(t, err)
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// PoolUtils
 	poolUtils, _, poolUtilsContract, err := contracts.DeployPoolUtils(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
-
-	require.Nil(t, err)
 	poolUtilsContract.AddNewPool(auth, uint8(1), permissionlessPoolAddr)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	x, err := poolUtilsContract.GetPoolIdArray(&bind.CallOpts{})
+	fmt.Printf("X %+v", x)
+
 	require.Nil(t, err)
-
 	_, err = stdCfContract.UpdatePoolUtils(auth, poolUtils)
 	require.Nil(t, err)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	// Vault proxy
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	// vaultProxyAddr, _, _, err := contracts.DeployVaultProxy(
-	// 	auth,
-	// 	client,
-	// 	true,
-	// 	1,
-	// 	big.NewInt(1),
-	// 	staderCfAddress,
-	// )
-	// require.Nil(t, err)
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	// Vault factory
+	vaultFactoryAddr, _, vaultFactoryContract, err := contracts.DeployVaultFactory(
+		auth,
+		client,
+		fromAddress,
+		staderCfAddress,
+	)
+	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	// _, err = stdCfContract.UpdateVaultFactory(auth, vaultProxyAddr)
-	// require.Nil(t, err)
-	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	nrcRole, err := vaultFactoryContract.NODEREGISTRYCONTRACT(&bind.CallOpts{})
+	require.Nil(t, err)
+	_, err = vaultFactoryContract.GrantRole(auth, nrcRole, plNodeRegistryAddr)
+	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	// vaultStore, err := stdCfContract.GetVaultFactory(&bind.CallOpts{})
-	// require.Nil(t, err)
-	// require.Equal(t, vaultStore, vaultProxyAddr)
+	_, err = stdCfContract.UpdateVaultFactory(auth, vaultFactoryAddr)
+	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	vaultStore, err := stdCfContract.GetVaultFactory(&bind.CallOpts{})
+	require.Nil(t, err)
+	require.Equal(t, vaultStore, vaultFactoryAddr)
 
 	// SocializingPool
 	spAddr, _, _, err := contracts.DeploySocializingPool(auth, client, fromAddress, staderCfAddress)
