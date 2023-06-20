@@ -26,7 +26,7 @@ jobs:
           go-version: '1.19.x'
       - name: Run avil
         run: |
-          nohup ./anvil_test_node.sh
+          nohup ./anvil_test_node.sh &
       - name: Install dependencies
         run: go mod download all 
       - name: Test with the Go CLI
