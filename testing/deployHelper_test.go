@@ -7,7 +7,6 @@ import (
 	"log"
 	"math/big"
 	"testing"
-	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -57,7 +56,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client, fromAddress, common.HexToAddress(ethXPredefineAddr))
 	require.Nil(t, err)
 
-	fmt.Printf("staderCfAddress %+v", staderCfAddress.Hex())
+	fmt.Printf("Stader config address: %+v \n", staderCfAddress.Hex())
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Update Node permissionless regis to stader config
@@ -70,7 +69,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	// deploy the ethx contract
 	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
-	fmt.Printf("ethXAddr %+v", ethXAddr.Hex())
+	fmt.Printf("EthXAddr %+v", ethXAddr.Hex())
 
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
@@ -79,32 +78,30 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Deploy node permission
-	plNodeRegistryAddr, _, _, err := contracts.DeployPermissionlessNodeRegistry(auth, client, fromAddress, staderCfAddress)
+	// Deploy node permission regis
+	plNodeRegistryAddr, _, nrContact, err := contracts.DeployPermissionlessNodeRegistry(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Update Node permissionless regis to stader config
 	_, err = stdCfContract.UpdatePermissionlessNodeRegistry(auth, plNodeRegistryAddr)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Deploy permissionless pool
+	// Permissionless pool
 	permissionlessPoolAddr, _, _, err := contracts.DeployPermissionlessPool(auth, client, fromAddress, staderCfAddress)
 
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Update Node permissionless pool to stader config
 	_, err = stdCfContract.UpdatePermissionlessPool(auth, permissionlessPoolAddr)
 	require.Nil(t, err)
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Deploy permissionless pool
+	// PoolUtils
 	poolUtils, _, poolUtilsContract, err := contracts.DeployPoolUtils(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
 
@@ -116,14 +113,46 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	require.Nil(t, err)
 
-	// Update Node poolUtils pool to stader config
 	_, err = stdCfContract.UpdatePoolUtils(auth, poolUtils)
 	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// Vault proxy
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	// vaultProxyAddr, _, _, err := contracts.DeployVaultProxy(
+	// 	auth,
+	// 	client,
+	// 	true,
+	// 	1,
+	// 	big.NewInt(1),
+	// 	staderCfAddress,
+	// )
+	// require.Nil(t, err)
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// _, err = stdCfContract.UpdateVaultFactory(auth, vaultProxyAddr)
+	// require.Nil(t, err)
+	// auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	// vaultStore, err := stdCfContract.GetVaultFactory(&bind.CallOpts{})
+	// require.Nil(t, err)
+	// require.Equal(t, vaultStore, vaultProxyAddr)
+
+	// SocializingPool
+	spAddr, _, _, err := contracts.DeploySocializingPool(auth, client, fromAddress, staderCfAddress)
+	require.Nil(t, err)
+
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	_, err = stdCfContract.UpdatePermissionedSocializingPool(auth, spAddr)
+	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	fmt.Printf("Api contract from %s\n", auth.From.Hex())
 	fmt.Printf("DeployETHX to %s\n", ethXAddr.Hex())
 	fmt.Printf("DeployStaderConfig to %s\n", staderCfAddress.Hex())
 	fmt.Printf("DeployPoolUtils to %s\n", poolUtils.Hex())
+	fmt.Printf("PermissionlessPoolAddr %s\n", permissionlessPoolAddr.Hex())
+	fmt.Printf("PLNodeRegistryAddr %s\n", plNodeRegistryAddr.Hex())
 
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	require.Nil(t, err)
@@ -142,11 +171,12 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
 	require.Nil(t, err)
 
-	// npr.GetRoleAdmin()
 	_, err = node.OnboardNodeOperator(prn, true, "nodetesting", acc.Address, auth)
 	require.Nil(t, err)
 
-	time.Sleep(time.Second * 5)
+	exist, err := nrContact.IsExistingOperator(&bind.CallOpts{}, acc.Address)
+	require.Nil(t, err)
+	require.True(t, exist)
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue

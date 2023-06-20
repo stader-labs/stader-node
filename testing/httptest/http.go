@@ -22,13 +22,25 @@ func SererHttp(t *testing.T) {
 	}
 	mux.HandleFunc("/presigns", s.presigns)
 	mux.HandleFunc("/publicKey", s.publicKey)
+	mux.HandleFunc("/presign", s.presign)
+	mux.HandleFunc("/presignsSubmitted", s.presignsSubmitted)
 
 	err := http.ListenAndServe(":9989", mux)
 
 	require.Nil(t, err)
 }
 
+func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var p map[string]bool
+	json.NewEncoder(w).Encode(p)
+}
+
 func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func (s *StaderHandler) presign(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 }
 

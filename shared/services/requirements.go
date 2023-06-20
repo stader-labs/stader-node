@@ -24,7 +24,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"math/big"
 	"sync"
 	"time"
 
@@ -174,18 +173,16 @@ func WaitNodeRegistered(c *cli.Context, operatorAddress common.Address, verbose 
 		if err != nil {
 			return err
 		}
-		operatorId, err := node.GetOperatorId(pnr, operatorAddress, nil)
+		_, err = node.GetOperatorId(pnr, operatorAddress, nil)
 		if err != nil {
+			if verbose {
+				log.Printf("The node is not registered with Stader, retrying in %s...\n", checkNodeRegisteredInterval.String())
+			}
+			time.Sleep(checkNodeRegisteredInterval)
 			return err
 		}
 
-		if operatorId.Cmp(big.NewInt(0)) == 0 {
-			return nil
-		}
-		if verbose {
-			log.Printf("The node is not registered with Stader, retrying in %s...\n", checkNodeRegisteredInterval.String())
-		}
-		time.Sleep(checkNodeRegisteredInterval)
+		return nil
 	}
 }
 
