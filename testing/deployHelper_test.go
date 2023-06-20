@@ -166,6 +166,10 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 
 	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
+	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
+	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
+	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
+	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
 
 	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
 	require.Nil(t, err)

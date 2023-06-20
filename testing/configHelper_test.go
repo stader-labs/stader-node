@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
-	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/passwords"
@@ -190,36 +188,36 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 
 	t := s.T()
-	fmt.Println("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
-	kurtosis_context.NewKurtosisContextFromLocalEngine()
-	kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
-	require.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
+	// fmt.Println("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
+	// kurtosis_context.NewKurtosisContextFromLocalEngine()
+	// kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
+	// require.NoError(t, err, "An error occurred connecting to the Kurtosis engine")
 
-	enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
+	// enclaveId := fmt.Sprintf("%s-%d", enclaveIdPrefix, time.Now().Unix())
 
-	enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
+	// enclaveCtx, err := kurtosisCtx.CreateEnclave(ctx, enclaveId, isPartitioningEnabled)
 
-	s.kurtosisCtx = kurtosisCtx
-	s.enclaveId = enclaveId
-	require.NoError(t, err, "An error occurred creating the enclave")
+	// s.kurtosisCtx = kurtosisCtx
+	// s.enclaveId = enclaveId
+	// require.NoError(t, err, "An error occurred creating the enclave")
 
-	fmt.Println("------------ EXECUTING PACKAGE ---------------")
+	// fmt.Println("------------ EXECUTING PACKAGE ---------------")
 
-	starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
+	// starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
 
-	require.NoError(t, err, "An error executing loading the package")
-	require.Nil(t, starlarkRunResult.InterpretationError)
-	require.Empty(t, starlarkRunResult.ValidationErrors)
-	require.Nil(t, starlarkRunResult.ExecutionError)
+	// require.NoError(t, err, "An error executing loading the package")
+	// require.Nil(t, starlarkRunResult.InterpretationError)
+	// require.Empty(t, starlarkRunResult.ValidationErrors)
+	// require.Nil(t, starlarkRunResult.ExecutionError)
 
-	fmt.Println("------------ EXECUTING TESTS ---------------")
-	beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
-	require.Nil(t, err)
-	apiServicePublicPorts := beaconContext.GetPublicPorts()
-	require.NotNil(t, apiServicePublicPorts)
-	apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
-	require.True(t, found)
-	clPort := apiServiceHttpPortSpec.GetNumber()
+	// fmt.Println("------------ EXECUTING TESTS ---------------")
+	// beaconContext, err := enclaveCtx.GetServiceContext(clClientBeacon)
+	// require.Nil(t, err)
+	// apiServicePublicPorts := beaconContext.GetPublicPorts()
+	// require.NotNil(t, apiServicePublicPorts)
+	// apiServiceHttpPortSpec, found := apiServicePublicPorts["http"]
+	// require.True(t, found)
+	// _ = apiServiceHttpPortSpec.GetNumber()
 
 	// elContext, err := enclaveCtx.GetServiceContext(elCient)
 	// require.Nil(t, err)
@@ -229,7 +227,7 @@ func (s *StaderNodeSuite) staderConfig(ctx context.Context, c *cli.Context) {
 	// require.True(t, found)
 	// elPort := apiServiceHttpPortSpec.GetNumber()
 
-	clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
+	clUrl := fmt.Sprintf("http://127.0.0.1:%d", 54645)
 	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
 
 	s.setConfig(c, elUrl, clUrl)

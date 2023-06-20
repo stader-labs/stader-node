@@ -20,9 +20,9 @@ func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractMana
 func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
 	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(
 		opts,
-		[][]byte{},
-		[][]byte{},
-		[][]byte{},
+		pubKeys,
+		preDepositSignatures,
+		depositSignatures,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("could not add validator keys: %w", err)
