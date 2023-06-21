@@ -93,6 +93,10 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	_, err = ethxContract.Mint(auth, acc.Address, eth.EthToWei(100000))
 	require.Nil(t, err)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	_, err = ethxContract.Mint(auth, acc.Address, eth.EthToWei(100000))
+	require.Nil(t, err)
+
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
@@ -196,6 +200,9 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	exist, err := nrContact.IsExistingOperator(&bind.CallOpts{}, acc.Address)
 	require.Nil(t, err)
 	require.True(t, exist)
+
+	ethxContract.Approve(auth, sdCollateralAddr, eth.EthToWei(100000))
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue

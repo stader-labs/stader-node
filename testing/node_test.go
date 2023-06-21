@@ -15,6 +15,7 @@ import (
 	//stader/register.go
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	_ "github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/testing/httptest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,26 +44,35 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 	// eth.EthToWei(100000).
 	go func() {
 		a := os.Args
+
 		err := s.app.Run([]string{
 			a[0],
 			"api",
 			"node",
-			"deposit-sd",
+			"deposit-sd-approve-sd",
 			eth.EthToWei(10000).String(),
 		})
 		assert.Nil(s.T(), err)
-
 		err = s.app.Run([]string{
 			a[0],
 			"api",
-			"validator",
-			"deposit",
-			"9000000000000000000",
-			"0",
-			"1",
-			"false",
+			"node",
+			"deposit-sd",
+			eth.EthToWei(9000).String(),
 		})
 		assert.Nil(s.T(), err)
+
+		// err = s.app.Run([]string{
+		// 	a[0],
+		// 	"api",
+		// 	"validator",
+		// 	"deposit",
+		// 	"9000000000000000000",
+		// 	"0",
+		// 	"1",
+		// 	"false",
+		// })
+		// assert.Nil(s.T(), err)
 	}()
 
 	time.Sleep(time.Minute * 3)
@@ -90,7 +100,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 	flagSet.StringVar(&cp, "config-path", ConfigPath, "config-path")
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 52703)
+	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 58674)
 	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
 	// s.staderConfig(ctx, c, &clUrl, &elUrl)
 	s.staderConfig(ctx, c, nil, &elUrl)
