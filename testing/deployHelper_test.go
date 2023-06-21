@@ -16,6 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/testing/contracts"
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli"
@@ -32,6 +33,15 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 
 	// private key of the deployer
 	privateKey, err := crypto.HexToECDSA(preFundedKeyAnvil)
+	require.Nil(t, err)
+
+	w, err := services.GetWallet(c)
+	require.Nil(t, err)
+
+	nodePrivateKey, err := w.GetNodePrivateKey()
+	require.Nil(t, err)
+
+	acc, err := w.GetNodeAccount()
 	require.Nil(t, err)
 
 	// extract public key of the deployer from private key
@@ -76,7 +86,22 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	fmt.Printf("EthXAddr %+v", ethXAddr.Hex())
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
+	mint, _ := ethxContract.MINTERROLE(&bind.CallOpts{})
+	ethxContract.GrantRole(auth, mint, fromAddress)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	_, err = ethxContract.Mint(auth, acc.Address, eth.EthToWei(100000))
+	require.Nil(t, err)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	//DeploySDCollateral
+	sdCollateralAddr, _, _, _ := contracts.DeploySDCollateral(auth, client, fromAddress, staderCfAddress)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	_, err = stdCfContract.UpdateSDCollateral(auth, sdCollateralAddr)
+	require.Nil(t, err)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Deploy node permission regis
@@ -156,19 +181,10 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	require.Nil(t, err)
 
-	w, err := services.GetWallet(c)
-	require.Nil(t, err)
-
-	nodePrivateKey, err := w.GetNodePrivateKey()
-	require.Nil(t, err)
-
-	acc, err := w.GetNodeAccount()
-	require.Nil(t, err)
-
 	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
-	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
+	auth, _ = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
 	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
-	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
+	auth, _ = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
 	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
 
 	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
@@ -224,7 +240,7 @@ func send1EthTransaction(client *ethclient.Client,
 	tx := types.NewTransaction(
 		nonce,
 		toAddress,
-		big.NewInt(9000000000000000000),
+		eth.EthToWei(1000),
 		gasLimit,
 		gasPrice,
 		data)
