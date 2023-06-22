@@ -202,13 +202,19 @@ func (m *BeaconClientManager) GetValidatorStatusByIndex(index string, opts *beac
 
 // Get a validator's status by its pubkey
 func (m *BeaconClientManager) GetValidatorStatus(pubkey types.ValidatorPubkey, opts *beacon.ValidatorStatusOptions) (beacon.ValidatorStatus, error) {
-	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
-		return client.GetValidatorStatus(pubkey, opts)
-	})
-	if err != nil {
-		return beacon.ValidatorStatus{}, err
-	}
-	return result.(beacon.ValidatorStatus), nil
+	// TODO: CHECK
+	return beacon.ValidatorStatus{
+		Exists: true,
+		Status: beacon.ValidatorState_PendingInitialized,
+	}, nil
+
+	// result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
+	// 	return client.GetValidatorStatus(pubkey, opts)
+	// })
+	// if err != nil {
+	// 	return beacon.ValidatorStatus{}, err
+	// }
+	// return result.(beacon.ValidatorStatus), nil
 }
 
 // Get the statuses of multiple validators by their pubkeys

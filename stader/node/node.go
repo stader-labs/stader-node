@@ -151,12 +151,14 @@ func run(c *cli.Context) error {
 			publicKey, err := stader.GetPublicKey(c)
 			if err != nil {
 				errorLog.Printf("Failed to get public key: %s\n", err.Error())
+				time.Sleep(taskCooldown)
 				continue
 			}
 
 			operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Failed to get operator id: %s\n", err.Error())
+				time.Sleep(taskCooldown)
 				continue
 			}
 
@@ -166,6 +168,7 @@ func run(c *cli.Context) error {
 			registeredValidators, validatorPubKeys, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Could not get all validators registered with operator %s with error %s\n", operatorId, err.Error())
+				time.Sleep(taskCooldown)
 				continue
 			}
 

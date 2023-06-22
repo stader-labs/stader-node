@@ -104,7 +104,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 65199)
+	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 61431)
 	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
 	// s.staderConfig(ctx, c, &clUrl, &elUrl)
 	s.staderConfig(ctx, c, nil, &elUrl)
@@ -121,6 +121,12 @@ func (s *StaderNodeSuite) SetupSuite() {
 	}()
 
 	go func() {
+		defer func() {
+			r := recover()
+			fmt.Printf("RECOVER TEST SERVER %+v \n", r)
+			require.Nil(s.T(), r)
+		}()
+
 		httptest.SererHttp(s.T())
 	}()
 }

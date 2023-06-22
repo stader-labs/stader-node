@@ -16,14 +16,16 @@ import (
 )
 
 type StaderHandler struct {
-	data   map[string]interface{}
-	t      *testing.T
-	pubPEM string
-	keyPEM []byte
+	data       map[string]interface{}
+	t          *testing.T
+	pubPEM     []byte
+	keyPEM     []byte
+	publickey  *rsa.PublicKey
+	privatekey *rsa.PrivateKey
 }
 
 func makeHanlde(t *testing.T) StaderHandler {
-	privatekey, err := rsa.GenerateKey(rand.Reader, 2048)
+	privatekey, err := rsa.GenerateKey(rand.Reader, 2048*2)
 	require.Nil(t, err)
 
 	publickey := &privatekey.PublicKey
@@ -44,13 +46,13 @@ func makeHanlde(t *testing.T) StaderHandler {
 		},
 	)
 
-	pubkey := crypto.EncodeBase64(pubPEM)
-
 	s := StaderHandler{
-		data:   make(map[string]interface{}),
-		t:      t,
-		pubPEM: pubkey,
-		keyPEM: keyPEM,
+		data:       make(map[string]interface{}),
+		t:          t,
+		pubPEM:     pubPEM,
+		keyPEM:     keyPEM,
+		publickey:  publickey,
+		privatekey: privatekey,
 	}
 
 	return s
@@ -74,7 +76,8 @@ func SererHttp(t *testing.T) {
 func (s *StaderHandler) merklesForElRewards(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var validatorPubKeys map[string]interface{}
-	json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	err := json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	require.Nil(s.t, err)
 
 	var p map[string]bool
 	// for _, v := range validatorPubKeys {
@@ -86,7 +89,8 @@ func (s *StaderHandler) merklesForElRewards(w http.ResponseWriter, r *http.Reque
 func (s *StaderHandler) msgSubmitted(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var validatorPubKeys []types.ValidatorPubkey
-	json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	err := json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	require.Nil(s.t, err)
 
 	var p map[string]bool
 	for _, v := range validatorPubKeys {
@@ -98,7 +102,8 @@ func (s *StaderHandler) msgSubmitted(w http.ResponseWriter, r *http.Request) {
 func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var validatorPubKeys stader_backend.BulkPreSignCheckApiRequestType
-	json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	err := json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+	require.Nil(s.t, err)
 
 	p := make(map[string]bool)
 	for _, v := range validatorPubKeys.ValidatorPubKeys {
@@ -108,6 +113,18 @@ func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request
 }
 
 func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
+	var preSignedMessages []stader_backend.PreSignSendApiRequestType
+	err := json.NewDecoder(r.Body).Decode(&preSignedMessages)
+	require.Nil(s.t, err)
+
+	for _, v := range preSignedMessages {
+		decodeSig, err := crypto.DecodeBase64(v.Signature)
+		require.Nil(s.t, err)
+		_, err = crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
+
+		require.Nil(s.t, err)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 }
 
@@ -118,11 +135,8 @@ func (s *StaderHandler) presign(w http.ResponseWriter, r *http.Request) {
 func (s *StaderHandler) publicKey(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var validatorPubKeys map[string]interface{}
-	json.NewDecoder(r.Body).Decode(&validatorPubKeys)
-
 	p := stader_backend.PublicKeyApiResponse{
-		Value: s.pubPEM,
+		Value: crypto.EncodeBase64(s.pubPEM),
 	}
 	json.NewEncoder(w).Encode(p)
 }
