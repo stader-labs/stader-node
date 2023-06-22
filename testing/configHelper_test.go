@@ -247,8 +247,8 @@ func (s *StaderNodeSuite) staderConfig(
 	s.setupWallet(ctx, c)
 
 	fmt.Println("------------ DEPLOYING CONTRACT ---------------")
-	fmt.Println("EURL: ", elUrl)
-	fmt.Println("CURL: ", clUrl)
+	fmt.Println("EURL: ", *elUrl)
+	fmt.Println("CURL: ", *clUrl)
 	deployContracts(t, c, *elUrl)
 
 }
