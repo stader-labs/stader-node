@@ -105,7 +105,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 	c := cli.NewContext(s.app, flagSet, nil)
 
 	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 61431)
-	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
+	elUrl := fmt.Sprintf("http://0.0.0.0:%d", 8545)
 	// s.staderConfig(ctx, c, &clUrl, &elUrl)
 	s.staderConfig(ctx, c, nil, &elUrl)
 

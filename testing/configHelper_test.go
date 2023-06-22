@@ -236,10 +236,10 @@ func (s *StaderNodeSuite) staderConfig(
 		elPort := apiServiceHttpPortSpec.GetNumber()
 
 		if elUrl == nil {
-			_elUrl := fmt.Sprintf("http://127.0.0.1:%d", elPort)
+			_elUrl := fmt.Sprintf("http://0.0.0.0:%d", elPort)
 			elUrl = &_elUrl
 		}
-		_clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
+		_clUrl := fmt.Sprintf("http://0.0.0.0:%d", clPort)
 		clUrl = &_clUrl
 	}
 
