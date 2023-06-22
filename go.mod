@@ -23,7 +23,7 @@ require (
 	github.com/imdario/mergo v0.3.13
 	github.com/klauspost/cpuid/v2 v2.1.1
 	github.com/kurtosis-tech/kurtosis-portal/api/golang v0.0.0-20230411133558-b983d9bebe4f // indirect
-	github.com/kurtosis-tech/kurtosis/api/golang v0.78.0
+	github.com/kurtosis-tech/kurtosis/api/golang v0.80.0
 	github.com/kurtosis-tech/kurtosis/grpc-file-transfer/golang v0.0.0-20230609162710-10b6b91dc9e8 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
