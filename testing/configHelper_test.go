@@ -195,7 +195,7 @@ func (s *StaderNodeSuite) staderConfig(
 ) {
 
 	t := s.T()
-	if clUrl == nil && elUrl == nil {
+	if clUrl == nil || elUrl == nil {
 		fmt.Println("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
 		kurtosis_context.NewKurtosisContextFromLocalEngine()
 		kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()

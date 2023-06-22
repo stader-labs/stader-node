@@ -62,17 +62,17 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 		})
 		assert.Nil(s.T(), err)
 
-		// err = s.app.Run([]string{
-		// 	a[0],
-		// 	"api",
-		// 	"validator",
-		// 	"deposit",
-		// 	"9000000000000000000",
-		// 	"0",
-		// 	"1",
-		// 	"false",
-		// })
-		// assert.Nil(s.T(), err)
+		err = s.app.Run([]string{
+			a[0],
+			"api",
+			"validator",
+			"deposit",
+			"9000000000000000000",
+			"0",
+			"1",
+			"false",
+		})
+		assert.Nil(s.T(), err)
 	}()
 
 	time.Sleep(time.Minute * 3)
@@ -98,9 +98,13 @@ func (s *StaderNodeSuite) SetupSuite() {
 	flagSet.StringVar(&p, "settings", UserSettingPath, "settings")
 	var cp string
 	flagSet.StringVar(&cp, "config-path", ConfigPath, "config-path")
+
+	// flagSet.StringVar(&cp, "maxFee", "1000000000000000", "maxFee")
+	// flagSet.StringVar(&cp, "maxPrioFee", "1000000000000000", "maxPrioFee")
+
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 58674)
+	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 65199)
 	elUrl := fmt.Sprintf("http://127.0.0.1:%d", 8545)
 	// s.staderConfig(ctx, c, &clUrl, &elUrl)
 	s.staderConfig(ctx, c, nil, &elUrl)

@@ -38,7 +38,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	w, err := services.GetWallet(c)
 	require.Nil(t, err)
 
-	nodePrivateKey, err := w.GetNodePrivateKey()
+	operatorPrivateKey, err := w.GetNodePrivateKey()
 	require.Nil(t, err)
 
 	acc, err := w.GetNodeAccount()
@@ -66,7 +66,6 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	staderCfAddress, _, stdCfContract, err := contracts.DeployStaderConfig(auth, client, fromAddress, common.HexToAddress(ethXPredefineAddr))
 	require.Nil(t, err)
 
-	fmt.Printf("Stader config address: %+v \n", staderCfAddress.Hex())
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	// Update Node permissionless regis to stader config
@@ -83,26 +82,23 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	// deploy the ethx contract
 	ethXAddr, _, ethxContract, err := contracts.DeployETHX(auth, client, fromAddress, staderCfAddress)
 	require.Nil(t, err)
-	fmt.Printf("EthXAddr %+v", ethXAddr.Hex())
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
 	mint, _ := ethxContract.MINTERROLE(&bind.CallOpts{})
 	ethxContract.GrantRole(auth, mint, fromAddress)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	_, err = ethxContract.Mint(auth, acc.Address, eth.EthToWei(100000))
-	require.Nil(t, err)
-	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-	_, err = ethxContract.Mint(auth, acc.Address, eth.EthToWei(100000))
-	require.Nil(t, err)
-
-	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
-
 	ethxContract.UpdateStaderConfig(auth, staderCfAddress)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
+	stdCfContract.UpdateETHxToken(auth, ethXAddr)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
+	stdCfContract.UpdateStaderToken(auth, ethXAddr)
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+
 	//DeploySDCollateral
-	sdCollateralAddr, _, _, _ := contracts.DeploySDCollateral(auth, client, fromAddress, staderCfAddress)
+	sdCollateralAddr, _, sdCollateralContract, _ := contracts.DeploySDCollateral(auth, client, fromAddress, staderCfAddress)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 	_, err = stdCfContract.UpdateSDCollateral(auth, sdCollateralAddr)
 	require.Nil(t, err)
@@ -175,34 +171,62 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	require.Nil(t, err)
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
 
-	fmt.Printf("Api contract from %s\n", auth.From.Hex())
+	// SocializingPool
+	oracleAddr, _, _, err := contracts.DeployStaderOracle(auth, client, fromAddress, staderCfAddress)
+	require.Nil(t, err)
+
+	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	_, err = stdCfContract.UpdateStaderOracle(auth, oracleAddr)
+	require.Nil(t, err)
+
+	fmt.Printf("Stader config address: %+v \n", staderCfAddress.Hex())
+	fmt.Printf("EthXAddr %+v \n", ethXAddr.Hex())
+	fmt.Printf("Deployer %s\n", fromAddress.Hex())
 	fmt.Printf("DeployETHX to %s\n", ethXAddr.Hex())
 	fmt.Printf("DeployStaderConfig to %s\n", staderCfAddress.Hex())
 	fmt.Printf("DeployPoolUtils to %s\n", poolUtils.Hex())
 	fmt.Printf("PermissionlessPoolAddr %s\n", permissionlessPoolAddr.Hex())
 	fmt.Printf("PLNodeRegistryAddr %s\n", plNodeRegistryAddr.Hex())
+	fmt.Printf("OracleAddr %s\n", oracleAddr.Hex())
 
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	require.Nil(t, err)
 
-	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
-	auth, _ = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
-	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
-	auth, _ = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
-	send1EthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
+	sendEthTransaction(client, fromAddress, acc.Address, privateKey, chainID)
 
-	auth, err = GetNextTransaction(client, acc.Address, nodePrivateKey, chainID)
-	require.Nil(t, err)
-
-	_, err = node.OnboardNodeOperator(prn, true, "nodetesting", acc.Address, auth)
+	authOperator, _ := GetNextTransaction(client, acc.Address, operatorPrivateKey, chainID)
+	_, err = node.OnboardNodeOperator(prn, true, "nodetesting", acc.Address, authOperator)
 	require.Nil(t, err)
 
 	exist, err := nrContact.IsExistingOperator(&bind.CallOpts{}, acc.Address)
 	require.Nil(t, err)
 	require.True(t, exist)
 
-	ethxContract.Approve(auth, sdCollateralAddr, eth.EthToWei(100000))
+	// MINT ethx
 	auth, _ = GetNextTransaction(client, fromAddress, privateKey, chainID)
+	_, err = ethxContract.Mint(auth, authOperator.From, eth.EthToWei(10000000)) // 10M
+	require.Nil(t, err)
+
+	authOperator, _ = GetNextTransaction(client, acc.Address, operatorPrivateKey, chainID)
+	_, err = ethxContract.Approve(authOperator, sdCollateralAddr, eth.EthToWei(900000))
+	require.Nil(t, err)
+
+	allo, _ := ethxContract.Allowance(&bind.CallOpts{}, authOperator.From, sdCollateralAddr)
+	fmt.Printf("Allowance %+v \n", allo)
+
+	BalanceOf, _ := ethxContract.BalanceOf(&bind.CallOpts{}, authOperator.From)
+	fmt.Printf("BalanceOf %+v \n", BalanceOf)
+
+	authOperator, _ = GetNextTransaction(client, acc.Address, operatorPrivateKey, chainID)
+
+	StaderConfig, _ := sdCollateralContract.StaderConfig(&bind.CallOpts{})
+	fmt.Printf("StaderConfig %+v \n", StaderConfig)
+
+	GetETHxToken, _ := stdCfContract.GetStaderToken(&bind.CallOpts{})
+	fmt.Printf("GetETHxToken %+v \n", GetETHxToken)
+
+	require.Nil(t, err)
+
 }
 
 // GetNextTransaction returns the next transaction in the pending transaction queue
@@ -227,7 +251,7 @@ func GetNextTransaction(client *ethclient.Client, fromAddress common.Address, pr
 	return auth, nil
 }
 
-func send1EthTransaction(client *ethclient.Client,
+func sendEthTransaction(client *ethclient.Client,
 	fromAddress common.Address,
 	toAddress common.Address,
 	privateKey *ecdsa.PrivateKey,
@@ -262,7 +286,6 @@ func send1EthTransaction(client *ethclient.Client,
 		log.Fatal(err)
 	}
 
-	fmt.Printf("tx sent: %s", signedTx.Hash().Hex()) // tx sent: 0x77006fcb3938f648e2cc65bafd27dec30b9bfbe9df41f78498b9c8b7322a249e
 }
 
 func reset(t *testing.T, rawurl string) {

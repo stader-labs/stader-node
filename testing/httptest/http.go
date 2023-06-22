@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
+	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -32,7 +33,13 @@ func SererHttp(t *testing.T) {
 
 func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	var validatorPubKeys []types.ValidatorPubkey
+	json.NewDecoder(r.Body).Decode(&validatorPubKeys)
+
 	var p map[string]bool
+	for _, v := range validatorPubKeys {
+		p[v.String()] = false
+	}
 	json.NewEncoder(w).Encode(p)
 }
 
