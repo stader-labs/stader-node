@@ -111,12 +111,10 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 61431)
 	ePort := s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%s", ePort)
-	// s.staderConfig(ctx, c, &clUrl, &elUrl)
-	cURL := "http://localhost:61143"
-	s.staderConfig(ctx, c, &cURL, elUrl)
+	// cURL := "http://localhost:61143"
+	s.staderConfig(ctx, c, nil, elUrl)
 
 	fmt.Println("Done SetupSuite()")
 
