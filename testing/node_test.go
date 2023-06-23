@@ -4,13 +4,17 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 	"time"
 
 	// store "github.com/stader-labs/stader-node/stader-lib/contracts"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
+	"github.com/ory/dockertest/v3"
+	"github.com/ory/dockertest/v3/docker"
 
 	//stader/register.go
 
@@ -28,6 +32,9 @@ type StaderNodeSuite struct {
 	suite.Suite
 	kurtosisCtx *kurtosis_context.KurtosisContext
 	enclaveId   string
+	pool        *dockertest.Pool
+	anvil       *dockertest.Resource
+	client      *ethclient.Client
 }
 
 func TestNodeSuite(t *testing.T) {
@@ -75,7 +82,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 		assert.Nil(s.T(), err)
 	}()
 
-	time.Sleep(time.Minute * 3)
+	time.Sleep(time.Minute)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {
@@ -105,9 +112,11 @@ func (s *StaderNodeSuite) SetupSuite() {
 	c := cli.NewContext(s.app, flagSet, nil)
 
 	// clUrl := fmt.Sprintf("http://127.0.0.1:%d", 61431)
-	elUrl := fmt.Sprintf("http://0.0.0.0:%d", 8545)
+	ePort := s.startAnvil(s.T())
+	elUrl := fmt.Sprintf("http://127.0.0.1:%s", ePort)
 	// s.staderConfig(ctx, c, &clUrl, &elUrl)
-	s.staderConfig(ctx, c, nil, &elUrl)
+	cURL := "http://localhost:61143"
+	s.staderConfig(ctx, c, &cURL, elUrl)
 
 	fmt.Println("Done SetupSuite()")
 
@@ -117,7 +126,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 			a[0],
 			"node",
 		})
-		assert.Nil(s.T(), err)
+		require.Nil(s.T(), err)
 	}()
 
 	go func() {
@@ -142,6 +151,11 @@ func (s *StaderNodeSuite) TearDownSuite() {
 	}()
 
 	removeTestFolder(s.T())
+
+	// You can't defer this because os.Exit doesn't care for defer
+	if err := s.pool.Purge(s.anvil); err != nil {
+		log.Fatalf("Could not purge resource: %s", err)
+	}
 }
 
 func removeTestFolder(t *testing.T) {
@@ -150,17 +164,43 @@ func removeTestFolder(t *testing.T) {
 	_ = os.RemoveAll(path)
 }
 
-func run(t time.Duration, done chan<- struct{}, f func()) {
-	c1 := make(chan struct{}, 1)
-	go func() {
-		f()
-		c1 <- struct{}{}
-	}()
+func (s *StaderNodeSuite) startAnvil(t *testing.T) string {
+	pool, err := dockertest.NewPool("")
+	require.Nil(s.T(), err)
 
-	select {
-	case _ = <-c1:
-	case <-time.After(t):
-		done <- struct{}{}
-		return
-	}
+	err = pool.Client.Ping()
+	require.Nil(s.T(), err)
+
+	resource, err := pool.RunWithOptions(
+		&dockertest.RunOptions{
+			Repository:   "ghcr.io/foundry-rs/foundry",
+			Cmd:          []string{"anvil"},
+			ExposedPorts: []string{"8545/tcp", "8545/udp"},
+			Env: []string{
+				"ANVIL_IP_ADDR=0.0.0.0",
+			},
+			// PortBindings: map[docker.Port][]docker.PortBinding{
+			// 	"8545/tcp": {{HostIP: "localhost", HostPort: "8545/tcp"}},
+			// },
+		}, func(hc *docker.HostConfig) {})
+
+	require.Nil(s.T(), err)
+	elPort := resource.GetPort("8545/tcp")
+
+	err = pool.Retry(func() error {
+		client, err := ethclient.Dial(fmt.Sprintf("http://127.0.0.1:%s", elPort))
+		require.Nil(s.T(), err)
+
+		s.client = client
+		return err
+	})
+
+	time.Sleep(time.Second * 5)
+	require.Nil(s.T(), err)
+
+	s.pool = pool
+	s.anvil = resource
+
+	// Get resource's published port for our imposter.
+	return elPort
 }

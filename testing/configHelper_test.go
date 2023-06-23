@@ -44,26 +44,24 @@ var ( //f02daebbf456faf787c5cd61a33ce780857c1ca10b00972aa451f0e9688e4ead
 			}
 		],
 		"network_params": {
+			"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete",
+			"num_validator_keys_per_node": 64,
 			"network_id": "3151908",
 			"deposit_contract_address": "0x4242424242424242424242424242424242424242",
 			"seconds_per_slot": 12,
-			"slots_per_epoch": 32,
-			"num_validator_keys_per_node": 64,
-			"preregistered_validator_keys_mnemonic": "giant issue aisle success illegal bike spike question tent bar rely arctic volcano long crawl hungry vocal artwork sniff fantasy very lucky have athlete"
+			"genesis_delay": 120,
+			"capella_fork_epoch": 5
 		},
-		"launch_additional_services": false,
-		"wait_for_finalization": false,
-		"wait_for_verifications": false,
-		"verifications_epoch_limit": 5,
 		"global_client_log_level": "info"
 	}
+	
 	`)
 )
 
 const (
 	enclaveIdPrefix = "stader"
 
-	remotePackage = "github.com/kurtosis-tech/eth2-package"
+	remotePackage = "github.com/kurtosis-tech/eth-network-package"
 
 	noDryRun = false
 
@@ -191,11 +189,11 @@ func (s *StaderNodeSuite) staderConfig(
 	ctx context.Context,
 	c *cli.Context,
 	clUrl *string,
-	elUrl *string,
+	elUrl string,
 ) {
 
 	t := s.T()
-	if clUrl == nil || elUrl == nil {
+	if clUrl == nil {
 		fmt.Println("------------ CONNECTING TO KURTOSIS ENGINE ---------------")
 		kurtosis_context.NewKurtosisContextFromLocalEngine()
 		kurtosisCtx, err := kurtosis_context.NewKurtosisContextFromLocalEngine()
@@ -227,29 +225,26 @@ func (s *StaderNodeSuite) staderConfig(
 		require.True(t, found)
 		clPort := apiServiceHttpPortSpec.GetNumber()
 
-		elContext, err := enclaveCtx.GetServiceContext(elCient)
-		require.Nil(t, err)
-		elPublicPorts := elContext.GetPublicPorts()
-		require.NotNil(t, apiServicePublicPorts)
-		apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
-		require.True(t, found)
-		elPort := apiServiceHttpPortSpec.GetNumber()
+		// elContext, err := enclaveCtx.GetServiceContext(elCient)
+		// require.Nil(t, err)
+		// elPublicPorts := elContext.GetPublicPorts()
+		// require.NotNil(t, apiServicePublicPorts)
+		// apiServiceHttpPortSpec, found = elPublicPorts["rpc"]
+		// require.True(t, found)
+		// elPort := apiServiceHttpPortSpec.GetNumber()
 
-		if elUrl == nil {
-			_elUrl := fmt.Sprintf("http://0.0.0.0:%d", elPort)
-			elUrl = &_elUrl
-		}
-		_clUrl := fmt.Sprintf("http://0.0.0.0:%d", clPort)
+		_clUrl := fmt.Sprintf("http://localhost:%d", clPort)
 		clUrl = &_clUrl
 	}
 
-	s.setConfig(c, *elUrl, *clUrl)
+	s.setConfig(c, elUrl, *clUrl)
 	s.setupWallet(ctx, c)
 
 	fmt.Println("------------ DEPLOYING CONTRACT ---------------")
-	fmt.Println("EURL: ", *elUrl)
 	fmt.Println("CURL: ", *clUrl)
-	deployContracts(t, c, *elUrl)
+	fmt.Println("EURL: ", elUrl)
+
+	deployContracts(s.T(), c, elUrl)
 
 }
 
