@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"testing"
 	"time"
@@ -36,6 +35,12 @@ type StaderNodeSuite struct {
 	anvil       *dockertest.Resource
 	client      *ethclient.Client
 }
+
+var (
+	maxFee         = "100000"
+	maxPriorityFee = "100000"
+	gasLimit       = "100000000000"
+)
 
 func TestNodeSuite(t *testing.T) {
 	s := new(StaderNodeSuite)
@@ -106,8 +111,9 @@ func (s *StaderNodeSuite) SetupSuite() {
 	var cp string
 	flagSet.StringVar(&cp, "config-path", ConfigPath, "config-path")
 
-	// flagSet.StringVar(&cp, "maxFee", "1000000000000000", "maxFee")
-	// flagSet.StringVar(&cp, "maxPrioFee", "1000000000000000", "maxPrioFee")
+	flagSet.StringVar(&maxFee, "maxFee", maxFee, "Gas fee cap to use for the 1559 transaction execution")
+	flagSet.StringVar(&maxPriorityFee, "maxPrioFee", maxPriorityFee, "Gas priority fee cap to use for the 1559 transaction execution")
+	flagSet.StringVar(&gasLimit, "gasLimit", gasLimit, "Gas priority fee cap to use for the 1559 transaction execution")
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
@@ -141,20 +147,15 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 // run once, after test suite methods
 func (s *StaderNodeSuite) TearDownSuite() {
-	fmt.Println("TearDown StaderNodeSuite")
-	defer func() {
-		if s.kurtosisCtx != nil {
-
-			s.kurtosisCtx.Clean(context.Background(), true)
-		}
-	}()
-
+	if s.kurtosisCtx != nil {
+		s.kurtosisCtx.Clean(context.Background(), true)
+	}
 	removeTestFolder(s.T())
 
-	// You can't defer this because os.Exit doesn't care for defer
-	if err := s.pool.Purge(s.anvil); err != nil {
-		log.Fatalf("Could not purge resource: %s", err)
-	}
+	err := s.pool.Purge(s.anvil)
+	require.Nil(s.T(), err)
+
+	fmt.Println("TearDown StaderNodeSuite")
 }
 
 func removeTestFolder(t *testing.T) {
@@ -164,6 +165,9 @@ func removeTestFolder(t *testing.T) {
 }
 
 func (s *StaderNodeSuite) startAnvil(t *testing.T) string {
+
+	fmt.Println("------------ START ANVIL ---------------")
+
 	pool, err := dockertest.NewPool("")
 	require.Nil(s.T(), err)
 
@@ -178,9 +182,6 @@ func (s *StaderNodeSuite) startAnvil(t *testing.T) string {
 			Env: []string{
 				"ANVIL_IP_ADDR=0.0.0.0",
 			},
-			// PortBindings: map[docker.Port][]docker.PortBinding{
-			// 	"8545/tcp": {{HostIP: "localhost", HostPort: "8545/tcp"}},
-			// },
 		}, func(hc *docker.HostConfig) {})
 
 	require.Nil(s.T(), err)
@@ -201,5 +202,6 @@ func (s *StaderNodeSuite) startAnvil(t *testing.T) string {
 	s.anvil = resource
 
 	// Get resource's published port for our imposter.
+	fmt.Printf("------------ ANVIL STARTED AT: %+v --------------- \n", elPort)
 	return elPort
 }
