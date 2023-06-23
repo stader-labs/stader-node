@@ -75,6 +75,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 // run daemon
 func run(c *cli.Context) error {
 
+	if preSignedCooldownEnv := os.Getenv("PRE_SIGN_COOL_DOWN"); len(preSignedCooldownEnv) != 0 {
+		preSignedCooldown, _ = time.ParseDuration(preSignedCooldownEnv)
+	}
+
 	// Handle the initial fee recipient file deployment
 	err := deployDefaultFeeRecipientFile(c)
 	if err != nil {

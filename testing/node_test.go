@@ -119,6 +119,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 	fmt.Println("Done SetupSuite()")
 
 	go func() {
+		os.Setenv("PRE_SIGN_COOL_DOWN", "10s")
 		a := os.Args
 		err := s.app.Run([]string{
 			a[0],
