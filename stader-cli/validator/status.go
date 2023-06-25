@@ -51,7 +51,7 @@ func getValidatorStatus(c *cli.Context) error {
 				"These rewards are sent to the claim vault periodically by Stader.\n"+
 				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim for all validators in one transaction\n", math.RoundDown(eth.WeiToEth(status.TotalValidatorClRewards), 6), log.ColorGreen, log.ColorReset)
 		fmt.Println("If the operator wishes to claim CL rewards by themselves, follow these steps:")
-		fmt.Printf("1. Use the %sstader-cli node send-cl-rewards --validator-pub-key%s command to claim the CL rewards\n", log.ColorGreen, log.ColorReset)
+		fmt.Printf("1. Use the %sstader-cli validator send-cl-rewards --validator-pub-key%s command to claim the CL rewards\n", log.ColorGreen, log.ColorReset)
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the CL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
 	}
 
@@ -69,15 +69,20 @@ func getValidatorStatus(c *cli.Context) error {
 		validatorInfo := status.ValidatorInfos[i]
 		validatorPubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
 		fmt.Printf("-Validator Pub Key: %s\n\n", validatorPubKey)
-		fmt.Printf("-Validator Status: %s\n\n", validatorInfo.StatusToDisplay)
-		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
+		fmt.Printf("-Validator Status: %s\n", validatorInfo.StatusToDisplay)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
+			fmt.Printf("\n")
 			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
 		} else if validatorInfo.CrossedRewardsThreshold {
-			fmt.Printf("If you have exited the validator, Please wait for Stader Oracles to settle your funds!\n\n")
+			fmt.Println("If you have exited the validator, Please wait for Stader Oracles to settle your funds!")
+			fmt.Println("If you have not exited the validator. Please reach out Stader Developers in discord for more information")
 		} else if validatorInfo.Status == 5 {
 			fmt.Printf("Your validator has been successfully settled by the oracles. Your funds will be available to claim in the claim vault.\n\n")
+		} else {
+			fmt.Printf("\n")
 		}
+
+		fmt.Printf("-Validator Withdraw Vault: %s\n\n", validatorInfo.WithdrawVaultAddress)
 
 		if validatorInfo.DepositBlock.Int64() > 0 {
 			fmt.Printf("-Deposit time: %s\n\n", validatorInfo.DepositTime.Format("2006-01-02 15:04:05"))

@@ -3,7 +3,7 @@
 # This work is licensed and released under GNU GPL v3 or any other later versions. 
 # The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +26,9 @@
 # =================
 # === Functions ===
 # =================
+
+DOCKER_ACCOUNT=staderlabs
+S3_BUCKET=stader-cli-permissionless/eth/stader-node-build/permissionless
 
 # Print a failure message to stderr and exit
 fail() {
@@ -53,7 +56,7 @@ build_install_packages() {
     tar cfJ stader-node-install.tar.xz install || fail "Error building installer package."
     mv stader-node-install.tar.xz build/$VERSION
     cp install.sh build/$VERSION
-    aws s3 cp build/$VERSION s3://stader-cli-beta/$VERSION --recursive
+    aws s3 cp build/$VERSION s3://$S3_BUCKET/$VERSION --recursive
     echo "done!"
 
 }
@@ -67,13 +70,13 @@ build_daemon() {
     echo "done!"
         # ensure support for arm64 is installed by  sudo apt install -y qemu-user-static binfmt-support
     echo "Building Docker Stader Daemon image..."
-    docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
-    docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
+    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 -f docker/stader-dockerfile --load . || fail "Error building amd64 Docker Stader Daemon image."
+    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 -f docker/stader-dockerfile --load . || fail "Error building arm64 Docker Stader Daemon image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker push staderdev/stader-node:$VERSION-amd64 || fail "Error pushing amd64 Docker Stader Daemon image to Docker Hub."
-    docker push staderdev/stader-node:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 || fail "Error pushing amd64 Docker Stader Daemon image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 || fail "Error pushing arm Docker Stader Daemon image to Docker Hub."
     rm -f stader/stader-daemon-*
     echo "done!"
 }
@@ -82,13 +85,13 @@ build_daemon() {
 # Builds the Docker prune provisioner image and pushes it to Docker Hub
 build_docker_prune_provision() {
     echo "Building Docker Prune Provisioner image..."
-    docker buildx build --platform=linux/amd64 -t staderdev/stader-node:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
-    docker buildx build --platform=linux/arm64 -t staderdev/stader-node:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
+    docker buildx build --platform=linux/amd64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 -f docker/stader-prune-provision --load . || fail "Error building amd64 Docker Prune Provision  image."
+    docker buildx build --platform=linux/arm64 -t $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64 -f docker/stader-prune-provision --load . || fail "Error building arm64 Docker Prune Provision  image."
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker push staderdev/eth1-prune-provision:$VERSION-amd64 || fail "Error pushing amd64 Docker Prune Provision image to Docker Hub."
-    docker push staderdev/eth1-prune-provision:$VERSION-arm64 || fail "Error pushing arm Docker Prune Provision image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION-amd64 || fail "Error pushing amd64 Docker Prune Provision image to Docker Hub."
+    docker push $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION-arm64 || fail "Error pushing arm Docker Prune Provision image to Docker Hub."
     echo "done!"
 }
 
@@ -96,12 +99,12 @@ build_docker_prune_provision() {
 # Builds the Docker Manifests and pushes them to Docker Hub
 build_docker_manifest() {
     echo -n "Building Docker manifest... "
-    rm -f ~/.docker/manifests/docker.io_staderdev_stader-node-$VERSION
-    docker manifest create staderdev/stader-node:$VERSION --amend staderdev/stader-node:$VERSION-amd64 --amend staderdev/stader-node:$VERSION-arm64
+    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-permissionless-$VERSION
+    docker manifest create $DOCKER_ACCOUNT/stader-permissionless:$VERSION --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge staderdev/stader-node:$VERSION
+    docker manifest push --purge $DOCKER_ACCOUNT/stader-permissionless:$VERSION
     echo "done!"
 }
 
@@ -109,12 +112,12 @@ build_docker_manifest() {
 # Builds the 'latest' Docker Manifests and pushes them to Docker Hub
 build_latest_docker_manifest() {
     echo -n "Building 'latest' Docker manifest... "
-    rm -f ~/.docker/manifests/docker.io_staderdev_stader-node-latest
-    docker manifest create staderdev/stader-node:latest --amend staderdev/stader-node:$VERSION-amd64 --amend staderdev/stader-node:$VERSION-arm64
+    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_stader-permissionless-latest
+    docker manifest create $DOCKER_ACCOUNT/stader-permissionless:latest --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-amd64 --amend $DOCKER_ACCOUNT/stader-permissionless:$VERSION-arm64
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge staderdev/stader-node:latest
+    docker manifest push --purge $DOCKER_ACCOUNT/stader-permissionless:latest
     echo "done!"
 }
 
@@ -122,12 +125,12 @@ build_latest_docker_manifest() {
 # Builds the Docker Manifest for the prune provisioner and pushes it to Docker Hub
 build_docker_prune_provision_manifest() {
     echo -n "Building Docker Prune Provision manifest... "
-    rm -f ~/.docker/manifests/docker.io_staderdev_eth1-prune-provision-$VERSION
-    docker manifest create staderdev/eth1-prune-provision:$VERSION --amend staderdev/eth1-prune-provision:$VERSION-amd64 --amend staderdev/eth1-prune-provision:$VERSION-arm64
+    rm -f ~/.docker/manifests/docker.io_$DOCKER_ACCOUNT_eth1-prune-provision-$VERSION
+    docker manifest create $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION --amend $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION-amd64 --amend $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION-arm64
     echo "done!"
 
     echo -n "Pushing to Docker Hub... "
-    docker manifest push --purge staderdev/eth1-prune-provision:$VERSION
+    docker manifest push --purge $DOCKER_ACCOUNT/eth1-prune-provision:$VERSION
     echo "done!"
 }
 

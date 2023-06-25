@@ -28,8 +28,8 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	if err != nil {
 		return err
 	}
-	if res.SocializingPoolContractPaused {
-		fmt.Println("The socializing pool contract is paused!")
+	if res.IsPermissionlessNodeRegistryPaused {
+		fmt.Println("Permissionless node registry is paused!")
 		return nil
 	}
 	if res.AlreadyOptedIn {
@@ -41,7 +41,7 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return nil
 	}
 	if res.InCooldown {
-		fmt.Println("You are in cooldown period!")
+		fmt.Printf("You are in cooldown period! You can opt in/out after %d block\n", res.NextUpdatableBlock)
 		return nil
 	}
 

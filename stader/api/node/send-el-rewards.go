@@ -26,10 +26,6 @@ func CanSendElRewards(c *cli.Context) (*api.CanSendElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	vf, err := services.GetVaultFactory(c)
-	if err != nil {
-		return nil, err
-	}
 	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
@@ -47,7 +43,7 @@ func CanSendElRewards(c *cli.Context) (*api.CanSendElRewardsResponse, error) {
 		return nil, err
 	}
 
-	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(pnr, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -88,10 +84,6 @@ func SendElRewards(c *cli.Context) (*api.SendElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	vf, err := services.GetVaultFactory(c)
-	if err != nil {
-		return nil, err
-	}
 	putils, err := services.GetPoolUtilsContract(c)
 	if err != nil {
 		return nil, err
@@ -115,7 +107,7 @@ func SendElRewards(c *cli.Context) (*api.SendElRewardsResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(pnr, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}

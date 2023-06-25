@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"crypto/rand"
 	"fmt"
 	"math/big"
 
@@ -34,22 +33,6 @@ func nodeDeposit(c *cli.Context) error {
 	baseAmountInEth := 4
 	baseAmount := eth.EthToWei(4.0)
 
-	var salt *big.Int
-	if c.String("salt") != "" {
-		var success bool
-		salt, success = big.NewInt(0).SetString(c.String("salt"), 0)
-		if !success {
-			return fmt.Errorf("Invalid validator salt: %s", c.String("salt"))
-		}
-	} else {
-		buffer := make([]byte, 32)
-		_, err = rand.Read(buffer)
-		if err != nil {
-			return fmt.Errorf("Error generating random salt: %w", err)
-		}
-		salt = big.NewInt(0).SetBytes(buffer)
-	}
-
 	// Check to see if eth2 is synced
 	syncResponse, err := staderClient.NodeSync()
 	if err != nil {
@@ -69,7 +52,7 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
@@ -112,7 +95,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(baseAmount, salt, big.NewInt(int64(numValidators)), true)
+	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
@@ -130,7 +113,7 @@ func nodeDeposit(c *cli.Context) error {
 
 	fmt.Println("Your validators are now in Initialized status.")
 	fmt.Println("Once the ETH deposits have been matched by the remaining 28ETH, it will move to Deposited status.")
-	fmt.Println("You can check the status of your validator with `stader-cli node status`.")
+	fmt.Println("You can check the status of your validator with `stader-cli validator status`.")
 
 	return nil
 

@@ -44,6 +44,10 @@ func canExitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		response.ValidatorNotRegistered = true
 		return &response, nil
 	}
+	if !eth2.IsValidatorActive(res) {
+		response.ValidatorNotActive = true
+		return &response, nil
+	}
 
 	if eth2.IsValidatorExiting(res) {
 		response.ValidatorExiting = true
@@ -101,6 +105,9 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 	}
 
 	validatorKey, err := w.GetValidatorKeyByPubkey(validatorPubKey)
+	if err != nil {
+		return nil, err
+	}
 
 	// Get signed voluntary exit message
 	signature, _, err := validator.GetSignedExitMessage(validatorKey, validatorIndex, head.Epoch, signatureDomain)

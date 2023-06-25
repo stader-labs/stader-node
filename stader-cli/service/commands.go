@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -408,6 +408,108 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run command
 					return stopService(c)
+
+				},
+			},
+
+			{
+				Name:      "prune-eth1",
+				Aliases:   []string{"n"},
+				Usage:     "Shuts down the main ETH1 client and prunes its database, freeing up disk space, then restarts it when it's done.",
+				UsageText: "stader-cli service prune-eth1",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run command
+					return pruneExecutionClient(c)
+
+				},
+			},
+
+			{
+				Name:      "export-eth1-data",
+				Usage:     "Exports the execution client (eth1) chain data to an external folder. Use this if you want to back up your chain data before switching execution clients.",
+				UsageText: "rocketpool service export-eth1-data target-folder",
+				Flags: []cli.Flag{
+					cli.BoolFlag{
+						Name:  "force",
+						Usage: "Bypass the free space check on the target folder",
+					},
+					cli.BoolFlag{
+						Name:  "dirty",
+						Usage: "Exports the execution (eth1) chain data without stopping the client. Requires a second pass (much faster) to sync the remaining files without the client running.",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					targetDir := c.Args().Get(0)
+
+					// Run command
+					return exportEcData(c, targetDir)
+
+				},
+			},
+
+			{
+				Name:      "import-eth1-data",
+				Usage:     "Imports execution client (eth1) chain data from an external folder. Use this if you want to restore the data from an execution client that you previously backed up.",
+				UsageText: "rocketpool service import-eth1-data source-folder",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					sourceDir := c.Args().Get(0)
+
+					// Run command
+					return importEcData(c, sourceDir)
+
+				},
+			},
+
+			{
+				Name:      "resync-eth1",
+				Usage:     fmt.Sprintf("%sDeletes the main ETH1 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
+				UsageText: "stader-cli service resync-eth1",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run command
+					return resyncEth1(c)
+
+				},
+			},
+
+			{
+				Name:      "resync-eth2",
+				Usage:     fmt.Sprintf("%sDeletes the ETH2 client's chain data and resyncs it from scratch. Only use this as a last resort!%s", colorRed, colorReset),
+				UsageText: "stader-cli service resync-eth2",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run command
+					return resyncEth2(c)
 
 				},
 			},

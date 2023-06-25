@@ -3,7 +3,7 @@
 # This work is licensed and released under GNU GPL v3 or any other later versions. 
 # The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+# (c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -129,12 +129,11 @@ if [ -z "$DATA_PATH" ]; then
     DATA_PATH="$STADER_PATH/data"
 fi
 
-
 # Get package files URL
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/latest/stader-node-install.tar.xz"
+    PACKAGE_URL="https://staderlabs.com/eth/stader-node-build/permissionless/latest/stader-node-install.tar.xz"
 else
-    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    PACKAGE_URL="https://staderlabs.com/eth/stader-node-build/permissionless/$PACKAGE_VERSION/stader-node-install.tar.xz"
 fi
 
 

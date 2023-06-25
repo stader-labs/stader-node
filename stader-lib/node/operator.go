@@ -98,8 +98,9 @@ func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, oper
 	return operatorInfo, nil
 }
 
-func GetNodeElRewardAddress(vf *stader.VaultFactoryContractManager, poolId uint8, operatorId *big.Int, opts *bind.CallOpts) (common.Address, error) {
-	return vf.VaultFactory.ComputeNodeELRewardVaultAddress(opts, poolId, operatorId)
+func GetNodeElRewardAddress(pnr *stader.PermissionlessNodeRegistryContractManager, poolId uint8, operatorId *big.Int, opts *bind.CallOpts) (common.Address, error) {
+	//return vf.VaultFactory.ComputeNodeELRewardVaultAddress(opts, poolId, operatorId)
+	return pnr.PermissionlessNodeRegistry.NodeELRewardVaultByOperatorId(opts, operatorId)
 }
 
 func GetSocializingPoolStateChangeBlock(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (*big.Int, error) {

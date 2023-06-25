@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,15 +37,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli node deposit [options]",
+				UsageText: "stader-cli validator deposit [options]",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm deposit",
-					},
-					cli.StringFlag{
-						Name:  "salt, l",
-						Usage: "An optional seed to use when generating the new validator address.",
 					},
 					cli.Uint64Flag{
 						Name:  "num-validators, nv",
@@ -57,11 +53,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					// Validate flags
 					if c.String("amount") != "" {
 						if _, err := cliutils.ValidateDepositEthAmount("deposit amount", c.String("amount")); err != nil {
-							return err
-						}
-					}
-					if c.String("salt") != "" {
-						if _, err := cliutils.ValidateBigInt("salt", c.String("salt")); err != nil {
 							return err
 						}
 					}
@@ -78,7 +69,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "exit-validator",
 				Aliases:   []string{"e"},
 				Usage:     "Exit validator",
-				UsageText: "stader-cli node exit-validator --validator-pub-key",
+				UsageText: "stader-cli validator exit-validator --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",
@@ -105,7 +96,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "send-cl-rewards",
 				Aliases:   []string{"wcr"},
 				Usage:     "Send all Consensus Layer rewards to the operator claim vault",
-				UsageText: "stader-cli node send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli validator send-cl-rewards --validator-pub-key",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "validator-pub-key, vpk",

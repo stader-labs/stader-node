@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -210,7 +210,7 @@ func ValidateDepositEthAmount(name, value string) (float64, error) {
 // Validate a node password
 func ValidateNodePassword(name, value string) (string, error) {
 	if len(value) < passwords.MinPasswordLength {
-		return "", fmt.Errorf("invalid %s '%s' - must be at least %d characters long", name, value, passwords.MinPasswordLength)
+		return "", fmt.Errorf("invalid password must be at least %d characters long", passwords.MinPasswordLength)
 	}
 	return value, nil
 }
@@ -218,7 +218,7 @@ func ValidateNodePassword(name, value string) (string, error) {
 // Validate a wallet mnemonic phrase
 func ValidateWalletMnemonic(name, value string) (string, error) {
 	if !bip39.IsMnemonicValid(value) {
-		return "", fmt.Errorf("invalid %s '%s'", name, value)
+		return "", fmt.Errorf("invalid mnemonic")
 	}
 	return value, nil
 }

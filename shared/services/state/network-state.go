@@ -152,6 +152,10 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
+	sdTokenAddress, err := services.GetSdTokenAddress(c)
+	if err != nil {
+		return nil, err
+	}
 	stakePoolManagerAddress, err := services.GetStakePoolManagerAddress(c)
 	if err != nil {
 		return nil, err
@@ -165,10 +169,6 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	vaultFactoryAddress, err := services.GetVaultFactoryAddress(c)
-	if err != nil {
-		return nil, err
-	}
 
 	prn, err := stader.NewPermissionlessNodeRegistry(ec, prnAddress)
 	if err != nil {
@@ -179,6 +179,10 @@ func CreateMetricsCache(
 		return nil, err
 	}
 	ethx, err := stader.NewErc20TokenContract(ec, ethxAddress)
+	if err != nil {
+		return nil, err
+	}
+	sdt, err := stader.NewErc20TokenContract(ec, sdTokenAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -199,10 +203,6 @@ func CreateMetricsCache(
 		return nil, err
 	}
 	sp, err := stader.NewSocializingPool(ec, socializingPoolAddress)
-	if err != nil {
-		return nil, err
-	}
-	vf, err := stader.NewVaultFactory(ec, vaultFactoryAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +236,7 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorElRewardAddress, err := node.GetNodeElRewardAddress(vf, 1, operatorId, nil)
+	operatorElRewardAddress, err := node.GetNodeElRewardAddress(prn, 1, operatorId, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -276,23 +276,6 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
-	//pubkeys := make([]types.ValidatorPubkey, 0, totalValidatorKeys.Int64())
-	//validatorInfoMap := map[types.ValidatorPubkey]contracts.Validator{}
-	//for i := 0; i < int(totalValidatorKeys.Int64()); i++ {
-	//	validatorId, err := node.GetValidatorIdByOperatorId(prn, operatorId, big.NewInt(int64(i)), nil)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	validatorInfo, err := node.GetValidatorInfo(prn, validatorId, nil)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	pubKey := types.BytesToValidatorPubkey(validatorInfo.Pubkey)
-	//	validatorInfoMap[pubKey] = validatorInfo
-	//
-	//	pubkeys = append(pubkeys, pubKey)
-	//}
 	validatorInfoMap, pubkeys, err := stdr.GetAllValidatorsRegisteredWithOperator(prn, operatorId, nodeAddress, nil)
 	if err != nil {
 		return nil, err
@@ -443,7 +426,7 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	totalSdCollateral, err := sd_collateral.GetTotalSdCollateral(sdc, nil)
+	totalSdCollateral, err := tokens.BalanceOf(sdt, sdcAddress, nil)
 	if err != nil {
 		return nil, err
 	}

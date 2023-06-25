@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-socialize-el",
 				Aliases:   []string{"y"},
 				Usage:     "Opt in or Opt out of socializing pool",
-				UsageText: "stader-cli node socialize-el [options]",
+				UsageText: "stader-cli node update-socialize-el [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "socialize-el, sel",
@@ -299,7 +299,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "claim-sp-rewards",
 				Aliases:   []string{"cspr"},
 				Usage:     "Claim Socializing Pool Rewards for given cycles",
-				UsageText: "stader-cli node claim-sp-rewards --yes",
+				UsageText: "stader-cli node claim-sp-rewards",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -320,7 +320,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-operator-name",
 				Aliases:   []string{"uon"},
 				Usage:     "Update Operator name",
-				UsageText: "stader-permissioned-cli node update-operator-name --operator-name",
+				UsageText: "stader-cli node update-operator-name --operator-name",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-name, on",
@@ -346,7 +346,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "update-operator-reward-address",
 				Aliases:   []string{"uod"},
 				Usage:     "Update Operator reward address",
-				UsageText: "stader-permissioned-cli node update-operator-reward-address --operator-reward-address",
+				UsageText: "stader-cli node update-operator-reward-address --operator-reward-address",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-reward-address, ora",

@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  BUILD_AND_DEPLOY_STADER_NODE:
+  BUILD_AND_PUBLISH_STADER_PERMISSIONLESS_CLI_NODE:
 
     runs-on: ubuntu-latest
 
@@ -33,11 +33,13 @@ jobs:
       - name: Docker meta
         id: meta
         uses: yuya-takeyama/docker-tag-from-github-ref-action@v1
+        with:
+          remove-version-tag-prefix: false
 
       - name: Prepare to upload binaries to s3
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets.ETHX_STADER_NODE_STAGE_DEPLOY_ROLE_ARN }}
+          role-to-assume: ${{ secrets.ETHX_STADER_NODE_PUBLISH_ROLE_ARN }}
           role-duration-seconds: 1200
           role-session-name: githubActionsSession
           aws-region: ${{ env.AWS_REGION }}

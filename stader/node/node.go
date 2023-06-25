@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,8 +47,8 @@ import (
 )
 
 // Config
-var preSignedCooldown, _ = time.ParseDuration("5s") // TODO: Config this
-var feeRecepientPollingInterval, _ = time.ParseDuration("10m")
+var preSignedCooldown, _ = time.ParseDuration("1h")
+var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
 
@@ -247,7 +247,7 @@ func run(c *cli.Context) error {
 					// check if validator has not yet been registered on beacon chain
 					validatorStatus, err := bc.GetValidatorStatus(validatorPubKey, nil)
 					if err != nil {
-						errorLog.Printf("Error finding validator status for validator: %s\n", validatorPubKey)
+						errorLog.Printf("Error finding validator status for validator: %s with err: %s\n", validatorPubKey, err.Error())
 						continue
 					}
 					if !validatorStatus.Exists {
@@ -265,21 +265,21 @@ func run(c *cli.Context) error {
 
 					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
 					if err != nil {
-						errorLog.Printf("Failed to get the signature domain from beacon chain\n")
+						errorLog.Printf("Failed to get the signature domain from beacon chain with err: %s\n", err.Error())
 						continue
 					}
 
 					// get the presigned msg
 					exitSignature, _, err := validator.GetSignedExitMessage(validatorKeyPair, validatorStatus.Index, exitEpoch, signatureDomain)
 					if err != nil {
-						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d\n", validatorStatus.Index)
+						errorLog.Printf("Failed to generate the SignedExitMessage for validator with beacon chain index: %d with err: %s\n", validatorStatus.Index, err.Error())
 						continue
 					}
 
 					// encrypt the signature and srHash
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
 					if err != nil {
-						errorLog.Printf("Failed to encrypt exit signature for validator: %s\n", validatorPubKey)
+						errorLog.Printf("Failed to encrypt exit signature for validator: %s with err: %s\n", validatorPubKey, err.Error())
 						continue
 					}
 					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
@@ -304,13 +304,13 @@ func run(c *cli.Context) error {
 				if len(preSignSendMessages) > 0 {
 					res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
 					if err != nil {
-						errorLog.Printf("Sending bulk presigned message failed with %v\n", err)
+						errorLog.Printf("Sending bulk presigned message failed with %v\n", err.Error())
 					} else {
 						for pubKey, response := range *res {
 							if response.Success {
 								infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
 							} else {
-								errorLog.Printf("Failed to send the presigned api: %s\n", response.Error)
+								errorLog.Printf("Failed to send the presigned api for validator: %s with err: %s\n", pubKey, response.Error)
 							}
 						}
 					}

@@ -43,7 +43,7 @@ func SendElRewards(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim El Rewards?"))) {
+		"Are you sure you want to send El Rewards to claim vault?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -53,13 +53,13 @@ func SendElRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Claiming %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sending %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successfully Claimed %.6f EL Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6), res.OperatorRewardAddress)
+	fmt.Printf("Sent %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
 	return nil
 }

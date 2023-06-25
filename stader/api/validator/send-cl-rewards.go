@@ -53,11 +53,7 @@ func CanSendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*a
 		return nil, err
 	}
 
-	vaultSettleStatus, err := node.GetValidatorWithdrawVaultSettleStatus(pnr.Client, validatorContractInfo.WithdrawVaultAddress, nil)
-	if err != nil {
-		return nil, err
-	}
-	if vaultSettleStatus {
+	if validatorContractInfo.Status == 5 {
 		response.VaultAlreadySettled = true
 		return &response, nil
 	}

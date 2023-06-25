@@ -33,11 +33,11 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
-	github.com/rivo/tview v0.0.0-20230530133550-8bd761dda819 // indirect
+	github.com/rivo/tview v0.0.0-20230615085408-bb9595ee0f4d // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230602142021-378099c5eca8
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230602142021-378099c5eca8
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230619122118-1d15353af546
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230619122118-1d15353af546
 	github.com/stretchr/testify v1.8.4
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/ulikunitz/xz v0.5.11 // indirect
@@ -50,6 +50,7 @@ require (
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.1.0
 	golang.org/x/term v0.8.0
+	golang.org/x/text v0.10.0 // indirect
 	google.golang.org/genproto v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc // indirect

@@ -36,6 +36,15 @@ func CanUpdateOperatorName(c *cli.Context, operatorName string) (*api.CanUpdateO
 
 	response := api.CanUpdateOperatorName{}
 
+	isPermissionlessRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(pnr, nil)
+	if err != nil {
+		return nil, err
+	}
+	if isPermissionlessRegistryPaused {
+		response.IsPermissionlessNodeRegistryPaused = true
+		return &response, nil
+	}
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err

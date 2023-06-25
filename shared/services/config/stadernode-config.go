@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,9 +36,9 @@ import (
 
 // Constants
 const (
-	stadernodeTag                      = "staderdev/stader-node:v" + shared.StaderVersion
-	pruneProvisionerTag         string = "staderdev/eth1-prune-provision:v0.0.1"
-	ecMigratorTag               string = "staderdev/ec-migrator:v1.0.0"
+	stadernodeTag                      = shared.DockerAccount + "/stader-permissionless:v" + shared.StaderVersion
+	pruneProvisionerTag                = shared.DockerAccount + "/eth1-prune-provision:v1.0.0"
+	ecMigratorTag                      = shared.DockerAccount + "/ec-migrator:v1.2.0"
 	NetworkID                   string = "network"
 	ProjectNameID               string = "projectName"
 	DaemonDataPath              string = "/.stader/data"
@@ -242,7 +242,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		ethxTokenAddress: map[config.Network]string{
 			config.Network_Prater:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
-			config.Network_Mainnet:  "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
+			config.Network_Mainnet:  "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 			config.Network_Local:    "0xA15BB66138824a1c7167f5E85b957d04Dd34E468",
 		},
@@ -250,15 +250,15 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		staderConfigAddress: map[config.Network]string{
 			config.Network_Prater:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
-			config.Network_Mainnet:  "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
+			config.Network_Mainnet:  "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 			config.Network_Local:    "0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
-			config.Network_Mainnet:  "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 			config.Network_Local:    "http://localhost:9989",
 		},

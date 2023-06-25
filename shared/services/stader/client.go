@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/stader-labs/stader-node/shared"
 	"io"
 	"io/ioutil"
 	"log"
@@ -53,7 +54,7 @@ import (
 
 // Config
 const (
-	InstallerURL string = "https://stader-cli-beta.s3.amazonaws.com/%s/install.sh"
+	InstallerURL = "https://staderlabs.com/" + shared.BinaryBucket + "/%s/install.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"

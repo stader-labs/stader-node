@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [0.4.0-beta]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.0.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,12 +37,12 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit to create a validator",
-				UsageText: "stader-cli api node can-deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator can-deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					//// Validate args
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
@@ -50,22 +50,17 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
-					if err != nil {
-						return err
-					}
-
-					api.PrintResponse(canNodeDeposit(c, amountWei, salt, numValidators, reloadKeys))
+					api.PrintResponse(canNodeDeposit(c, amountWei, numValidators, reloadKeys))
 
 					return nil
 
@@ -75,11 +70,11 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api node deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
@@ -87,23 +82,18 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					salt, err := cliutils.ValidateBigInt("salt", c.Args().Get(1))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
-					if err != nil {
-						return err
-					}
-
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, salt, numValidators, reloadKeys)
+					response, err := nodeDeposit(c, amountWei, numValidators, reloadKeys)
 					api.PrintResponse(response, err)
 
 					return nil
@@ -113,7 +103,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-exit-validator",
 				Usage:     "Can validator exit",
-				UsageText: "stader-cli api node can-exit-validator validator-pub-key",
+				UsageText: "stader-cli api validator can-exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -134,7 +124,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "exit-validator",
 				Usage:     "Exit validator",
-				UsageText: "stader-cli api node exit-validator validator-pub-key",
+				UsageText: "stader-cli api validator exit-validator validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -155,7 +145,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-send-cl-rewards",
 				Usage:     "Can send cl rewards of a validator to the operator claim vault",
-				UsageText: "stader-cli api node can-send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli api validator can-send-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
@@ -171,7 +161,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "send-cl-rewards",
 				Usage:     "Send cl rewards of a validator to the operator claim vault",
-				UsageText: "stader-cli api node send-cl-rewards --validator-pub-key",
+				UsageText: "stader-cli api validator send-cl-rewards --validator-pub-key",
 				Action: func(c *cli.Context) error {
 
 					validatorPubKey, err := cliutils.ValidatePubkey("validator-pub-key", c.Args().Get(0))
