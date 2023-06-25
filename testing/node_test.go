@@ -80,14 +80,26 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 			"api",
 			"validator",
 			"deposit",
-			eth.EthToWei(9).String(),
+			eth.EthToWei(4).String(),
 			"1",
 			"false",
 		})
 		assert.Nil(s.T(), err)
+
+		err = s.app.Run([]string{
+			a[0],
+			"api",
+			"validator",
+			"deposit",
+			eth.EthToWei(4).String(),
+			"1",
+			"false",
+		})
+		assert.Nil(s.T(), err)
+
 	}()
 
-	time.Sleep(time.Second * 30)
+	time.Sleep(time.Minute * 2)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {
