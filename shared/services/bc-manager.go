@@ -41,6 +41,8 @@ type BeaconClientManager struct {
 	primaryReady    bool
 	fallbackReady   bool
 	ignoreSyncCheck bool
+
+	localTestnet bool
 }
 
 // This is a signature for a wrapped Beacon client function that only returns an error
@@ -206,19 +208,20 @@ func (m *BeaconClientManager) GetValidatorStatus(
 	pubkey types.ValidatorPubkey,
 	opts *beacon.ValidatorStatusOptions,
 ) (beacon.ValidatorStatus, error) {
-	// TODO: CHECK
-	return beacon.ValidatorStatus{
-		Exists: true,
-		Status: beacon.ValidatorState_PendingInitialized,
-	}, nil
+	if m.localTestnet {
+		return beacon.ValidatorStatus{
+			Exists: true,
+			Status: beacon.ValidatorState_PendingInitialized,
+		}, nil
+	}
 
-	// result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
-	// 	return client.GetValidatorStatus(pubkey, opts)
-	// })
-	// if err != nil {
-	// 	return beacon.ValidatorStatus{}, err
-	// }
-	// return result.(beacon.ValidatorStatus), nil
+	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
+		return client.GetValidatorStatus(pubkey, opts)
+	})
+	if err != nil {
+		return beacon.ValidatorStatus{}, err
+	}
+	return result.(beacon.ValidatorStatus), nil
 }
 
 // Get the statuses of multiple validators by their pubkeys

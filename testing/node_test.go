@@ -113,7 +113,11 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	flagSet.StringVar(&maxFee, "maxFee", maxFee, "Gas fee cap to use for the 1559 transaction execution")
 	flagSet.StringVar(&maxPriorityFee, "maxPrioFee", maxPriorityFee, "Gas priority fee cap to use for the 1559 transaction execution")
+
 	flagSet.StringVar(&gasLimit, "gasLimit", gasLimit, "Gas priority fee cap to use for the 1559 transaction execution")
+
+	localTestnet := true
+	flagSet.BoolVar(&localTestnet, "local-testnet", localTestnet, "local-testnet")
 
 	c := cli.NewContext(s.app, flagSet, nil)
 

@@ -545,6 +545,10 @@ func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientMan
 			if c.GlobalBool("force-fallbacks") {
 				bcManager.primaryReady = false
 			}
+
+			if c.GlobalBool("local-testnet") {
+				bcManager.localTestnet = true
+			}
 		}
 	})
 	return bcManager, err

@@ -233,7 +233,7 @@ func (s *StaderNodeSuite) staderConfig(
 		// require.True(t, found)
 		// elPort := apiServiceHttpPortSpec.GetNumber()
 
-		_clUrl := fmt.Sprintf("http://localhost:%d", clPort)
+		_clUrl := fmt.Sprintf("http://127.0.0.1:%d", clPort)
 		clUrl = &_clUrl
 	}
 
