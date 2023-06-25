@@ -134,7 +134,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 		err := s.app.Run([]string{
 			a[0],
 			"--local-testnet=true",
-			"--presign-cooldown=1s",
+			"--presign-cooldown=5s",
 			"node",
 		})
 		require.Nil(s.T(), err)
