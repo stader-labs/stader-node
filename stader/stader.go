@@ -35,9 +35,6 @@ import (
 // Run
 
 func main() {
-	Run()
-}
-func Run() {
 	// Initialise application
 	app := cli.NewApp()
 

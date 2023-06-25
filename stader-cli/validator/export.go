@@ -54,7 +54,7 @@ func exportValidatorStatus(c *cli.Context) error {
 
 	file, err := os.Create("validator_info.csv")
 	if err != nil {
-		return err
+		panic(err)
 	}
 	defer file.Close()
 

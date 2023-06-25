@@ -40,37 +40,6 @@ func NewErc20TokenContract(client ExecutionClient, erc20TokenAddress common.Addr
 
 }
 
-type EthxContractManager struct {
-	Client       ExecutionClient
-	EthX         *contracts.ETHX
-	EthXContract *Contract
-}
-
-func NewEthxContractManager(client ExecutionClient, ethxAddress common.Address) (*EthxContractManager, error) {
-	ethxFactory, err := contracts.NewETHX(ethxAddress, client)
-	if err != nil {
-		return nil, err
-	}
-
-	ethxAbi, err := abi.JSON(strings.NewReader(contracts.ETHXABI))
-	if err != nil {
-		return nil, err
-	}
-	ethXContract := &Contract{
-		Contract: bind.NewBoundContract(ethxAddress, ethxAbi, client, client, client),
-		Address:  &ethxAddress,
-		ABI:      &ethxAbi,
-		Client:   client,
-	}
-
-	return &EthxContractManager{
-		Client:       client,
-		EthX:         ethxFactory,
-		EthXContract: ethXContract,
-	}, nil
-
-}
-
 type SdCollateralContractManager struct {
 	Client               ExecutionClient
 	SdCollateral         *contracts.SdCollateral

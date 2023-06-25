@@ -236,7 +236,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Prater:   5,       // Goerli
 			config.Network_Devnet:   5,       // Also goerli
 			config.Network_Zhejiang: 1337803, // Zhejiang
-			config.Network_Local:    31337,   // Zhejiang
+			config.Network_Local:    31337,   // Local testnet
 		},
 
 		ethxTokenAddress: map[config.Network]string{
@@ -435,12 +435,6 @@ func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) stri
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
-	// if cfg.parent != nil && cfg.parent.IsNativeMode {
-	// 	return filepath.Join(cfg.DataPath.Value.(string), "validators")
-	// }
-
-	// return filepath.Join(DaemonDataPath, "validators", NativeFeeRecipientFilename)
-
 	if cfg.parent != nil && !cfg.parent.IsNativeMode {
 		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
 	}

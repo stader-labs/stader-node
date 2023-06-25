@@ -124,7 +124,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					socializeMev, err := cliutils.ValidateBool("socialize-mev", c.Args().Get(2))
 
 					// Run
-					api.PrintResponse(RegisterNode(c, operatorName, operatorRewardAddress, socializeMev))
+					api.PrintResponse(registerNode(c, operatorName, operatorRewardAddress, socializeMev))
 					return nil
 
 				},

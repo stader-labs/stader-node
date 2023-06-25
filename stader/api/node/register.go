@@ -91,7 +91,7 @@ func canRegisterNode(c *cli.Context, operatorName string, operatorRewardAddress 
 
 }
 
-func RegisterNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, mevSocialize bool) (*api.RegisterNodeResponse, error) {
+func registerNode(c *cli.Context, operatorName string, operatorRewardAddress common.Address, mevSocialize bool) (*api.RegisterNodeResponse, error) {
 
 	// Get services
 	w, err := services.GetWallet(c)
