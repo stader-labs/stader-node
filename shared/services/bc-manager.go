@@ -34,6 +34,7 @@ import (
 )
 
 // This is a proxy for multiple Beacon clients, providing natural fallback support if one of them fails.
+
 type BeaconClientManager struct {
 	primaryBc       beacon.Client
 	fallbackBc      beacon.Client
@@ -204,7 +205,6 @@ func (m *BeaconClientManager) GetValidatorStatusByIndex(index string, opts *beac
 
 // Get a validator's status by its pubkey
 func (m *BeaconClientManager) GetValidatorStatus(
-	// c *cli.Context,
 	pubkey types.ValidatorPubkey,
 	opts *beacon.ValidatorStatusOptions,
 ) (beacon.ValidatorStatus, error) {
@@ -315,6 +315,10 @@ func (m *BeaconClientManager) GetCommitteesForEpoch(epoch *uint64) ([]beacon.Com
 		return nil, err
 	}
 	return result.([]beacon.Committee), nil
+}
+
+func (m *BeaconClientManager) IsLocalTestnet() bool {
+	return m.localTestnet
 }
 
 /// ==================

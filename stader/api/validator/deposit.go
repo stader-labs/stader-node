@@ -316,12 +316,14 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, rel
 			return nil, fmt.Errorf("Error checking for existing validator status: %w\nYour funds have not been deposited for your own safety.", err)
 		}
 		if status.Exists {
-			return nil, fmt.Errorf("**** ALERT ****\n"+
-				"Your validator %s has the following as a validator pubkey:\n\t%s\n"+
-				"This key is already in use by validator %d on the Beacon chain!\n"+
-				"Stader will not allow you to deposit this validator for your own safety so you do not get slashed.\n"+
-				"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
-				"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
+			if bc.IsLocalTestnet() == false {
+				return nil, fmt.Errorf("**** ALERT ****\n"+
+					"Your validator %s has the following as a validator pubkey:\n\t%s\n"+
+					"This key is already in use by validator %d on the Beacon chain!\n"+
+					"Stader will not allow you to deposit this validator for your own safety so you do not get slashed.\n"+
+					"PLEASE REPORT THIS TO THE STADER DEVELOPERS.\n"+
+					"***************\n", operatorRegistryInfo.OperatorName, pubKey.Hex(), status.Index)
+			}
 		}
 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
