@@ -88,7 +88,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 		assert.Nil(s.T(), err)
 	}()
 
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 30)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {

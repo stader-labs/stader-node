@@ -203,7 +203,7 @@ func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	_, err = node.OnboardNodeOperator(prn, true, "nodetesting", acc.Address, authOperator)
 	require.Nil(t, err)
 
-	exist, err := nrContact.IsExistingOperator(&bind.CallOpts{}, acc.Address)
+	exist, err := nrContact.IsExistingOperator(&bind.CallOpts{Pending: true}, acc.Address)
 	require.Nil(t, err)
 	require.True(t, exist)
 
