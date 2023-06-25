@@ -54,6 +54,7 @@ func TestNodeSuite(t *testing.T) {
 
 func (s *StaderNodeSuite) TestNodeDeposit() {
 	// eth.EthToWei(100000).
+	time.Sleep(time.Second)
 	go func() {
 		a := os.Args
 
@@ -87,7 +88,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 		assert.Nil(s.T(), err)
 	}()
 
-	time.Sleep(time.Minute)
+	time.Sleep(time.Second * 5)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {
@@ -116,23 +117,24 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	flagSet.StringVar(&gasLimit, "gasLimit", gasLimit, "Gas priority fee cap to use for the 1559 transaction execution")
 
-	localTestnet := true
-	flagSet.BoolVar(&localTestnet, "local-testnet", localTestnet, "local-testnet")
+	var localTestnet bool
+	flagSet.BoolVar(&localTestnet, "local-testnet", true, "local-testnet")
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
 	ePort := s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", ePort)
-	// cURL := "http://127.0.0.1:50336"
+	// cURL := "http://127.0.0.1:59541"
 	s.staderConfig(ctx, c, nil, elUrl)
 
 	fmt.Println("Done SetupSuite()")
 
 	go func() {
-		os.Setenv("PRE_SIGN_COOL_DOWN", "10s")
 		a := os.Args
 		err := s.app.Run([]string{
 			a[0],
+			"--local-testnet=true",
+			"--presign-cooldown=1s",
 			"node",
 		})
 		require.Nil(s.T(), err)
@@ -199,7 +201,6 @@ func (s *StaderNodeSuite) startAnvil(t *testing.T) string {
 		return err
 	})
 
-	time.Sleep(time.Second * 5)
 	require.Nil(s.T(), err)
 
 	s.pool = pool

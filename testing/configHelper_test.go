@@ -147,6 +147,12 @@ func newApp() *cli.App {
 			Name:  "force-fallbacks",
 			Usage: "Set this to true if you know the primary EC or CC is offline and want to bypass its health checks, and just use the fallback EC and CC instead",
 		},
+		cli.BoolFlag{
+			Name: "local-testnet",
+		},
+		cli.StringFlag{
+			Name: "presign-cooldown",
+		},
 	}
 
 	// Register commands
