@@ -27,6 +27,11 @@ const (
 	ethXPredefineAddr = "0xA15BB66138824a1c7167f5E85b957d04Dd34E468"
 )
 
+// const (
+// 	staderConfigAddr  = "0x74D95c6ACA207d8d60d793A1C7457AC1364A0Dd4"
+// 	ethXPredefineAddr = "0x954E1071d3F89f5D54F97f5Ccd82BB4D796AEB04"
+// )
+
 func deployContracts(t *testing.T, c *cli.Context, eth1URL string) {
 	client, err := ethclient.Dial(eth1URL)
 	require.Nil(t, err)
