@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/big"
 	"testing"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -253,6 +254,7 @@ func GetNextTransaction(client *ethclient.Client, fromAddress common.Address, pr
 	auth.GasLimit = uint64(10000000)        // in units
 	auth.GasPrice = big.NewInt(10000000000) // in wei
 
+	time.Sleep(time.Millisecond * 300)
 	return auth, nil
 }
 
