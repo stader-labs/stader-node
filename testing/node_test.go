@@ -74,14 +74,13 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 			eth.EthToWei(9000).String(),
 		})
 		assert.Nil(s.T(), err)
-
+		// stader-cli api validator deposit amount salt num-validators reload-keys"}
 		err = s.app.Run([]string{
 			a[0],
 			"api",
 			"validator",
 			"deposit",
 			eth.EthToWei(9).String(),
-			"0",
 			"1",
 			"false",
 		})
