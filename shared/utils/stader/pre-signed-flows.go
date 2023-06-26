@@ -99,20 +99,7 @@ func GetPublicKey(c *cli.Context) (*rsa.PublicKey, error) {
 		return nil, err
 	}
 
-	// get public key from api
-	res, err := net.MakeGetRequest(config.StaderNode.GetPresignPublicKeyApi(), struct{}{})
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	var publicKeyResponse stader_backend.PublicKeyApiResponse
-	err = json.NewDecoder(res.Body).Decode(&publicKeyResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	decodedPublicKey, err := crypto.DecodeBase64(publicKeyResponse.Value)
+	decodedPublicKey, err := crypto.DecodeBase64(config.StaderNode.GetPresignEncryptionKey())
 	if err != nil {
 		return nil, err
 	}
