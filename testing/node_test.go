@@ -48,10 +48,6 @@ func TestNodeSuite(t *testing.T) {
 	suite.Run(t, s)
 }
 
-// func (s *StaderNodeSuite) TestNodeDaemon() {
-// 	time.Sleep(time.Second * 10)
-// }
-
 func (s *StaderNodeSuite) TestNodeDeposit() {
 	// eth.EthToWei(100000).
 	time.Sleep(time.Second)
@@ -99,7 +95,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 
 	}()
 
-	time.Sleep(time.Minute * 2)
+	time.Sleep(time.Second * 10)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {
@@ -145,7 +141,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 		err := s.app.Run([]string{
 			a[0],
 			"--local-testnet=true",
-			"--presign-cooldown=5s",
+			"--presign-cooldown=3s",
 			"node",
 		})
 		require.Nil(s.T(), err)
