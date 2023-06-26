@@ -115,8 +115,7 @@ func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request
 func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var preSignedMessages []stader_backend.PreSignSendApiRequestType
-	var resp []stader_backend.PreSignSendApiResponseType
-
+	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err := json.NewDecoder(r.Body).Decode(&preSignedMessages)
 	require.Nil(s.t, err)
 
@@ -126,13 +125,13 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		_, err = crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
 
 		require.Nil(s.t, err)
-		resp = append(resp, stader_backend.PreSignSendApiResponseType{
+		preSignSendResponse[v.ValidatorPublicKey] = stader_backend.PreSignSendApiResponseType{
 			Success: true,
 			Error:   "",
-		})
+		}
 	}
 
-	json.NewEncoder(w).Encode(resp)
+	json.NewEncoder(w).Encode(preSignSendResponse)
 }
 
 func (s *StaderHandler) presign(w http.ResponseWriter, r *http.Request) {
