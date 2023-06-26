@@ -94,7 +94,8 @@ func (s *StaderHandler) msgSubmitted(w http.ResponseWriter, r *http.Request) {
 
 	var p map[string]bool
 	for _, v := range validatorPubKeys {
-		p[v.String()] = false
+		_, ok := s.data[v.String()]
+		p[v.String()] = ok
 	}
 	json.NewEncoder(w).Encode(p)
 }
@@ -107,7 +108,8 @@ func (s *StaderHandler) presignsSubmitted(w http.ResponseWriter, r *http.Request
 
 	p := make(map[string]bool)
 	for _, v := range validatorPubKeys.ValidatorPubKeys {
-		p[v.String()] = false
+		_, ok := s.data[v.String()]
+		p[v.String()] = ok
 	}
 	json.NewEncoder(w).Encode(p)
 }
@@ -125,6 +127,7 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		_, err = crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
 
 		require.Nil(s.t, err)
+		s.data[v.ValidatorPublicKey] = true
 		preSignSendResponse[v.ValidatorPublicKey] = stader_backend.PreSignSendApiResponseType{
 			Success: true,
 			Error:   "",
