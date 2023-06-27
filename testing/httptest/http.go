@@ -83,7 +83,7 @@ func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
 
 func SererHttp(t *testing.T, bc *services.BeaconClientManager) {
 	mux := http.NewServeMux()
-	s := makeHanlde(t, c)
+	s := makeHanlde(t, bc)
 	mux.HandleFunc("/presign", s.presign)
 	mux.HandleFunc("/presigns", s.presigns)
 	mux.HandleFunc("/msgSubmitted", s.msgSubmitted)
