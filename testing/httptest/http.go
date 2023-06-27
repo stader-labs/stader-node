@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
+	"fmt"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -159,6 +160,8 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		require.Nil(s.t, err)
 
 		require.True(s.t, sig.VerifyByte(&pub, rootHash[:]))
+
+		fmt.Printf("Success verify signature with pubkey: [%+v] \n", pub.GetHexString())
 
 		require.Nil(s.t, err)
 		s.data[v.ValidatorPublicKey] = true
