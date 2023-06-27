@@ -189,6 +189,10 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 
 	err = staderClient.SaveConfig(cfg)
 	require.Nil(s.T(), err)
+
+	bc, err := services.GetBeaconClient(c)
+	require.Nil(s.T(), err)
+	s.bc = bc
 }
 
 func (s *StaderNodeSuite) staderConfig(

@@ -17,6 +17,7 @@ import (
 
 	//stader/register.go
 
+	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	_ "github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/testing/httptest"
@@ -34,6 +35,7 @@ type StaderNodeSuite struct {
 	pool        *dockertest.Pool
 	anvil       *dockertest.Resource
 	client      *ethclient.Client
+	bc          *services.BeaconClientManager
 }
 
 var (
@@ -154,7 +156,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 			require.Nil(s.T(), r)
 		}()
 
-		httptest.SererHttp(s.T(), c)
+		httptest.SererHttp(s.T(), s.bc)
 	}()
 }
 

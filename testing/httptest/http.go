@@ -19,7 +19,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stretchr/testify/require"
-	"github.com/urfave/cli"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 )
 
@@ -47,14 +46,11 @@ func (s *StaderHandler) signatureDomain(t *testing.T, exitEpoch uint64) []byte {
 	return signatureDomain
 }
 
-func makeHanlde(t *testing.T, c *cli.Context) StaderHandler {
+func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
 	privatekey, err := rsa.GenerateKey(rand.Reader, 2048*2)
 	require.Nil(t, err)
 
 	publickey := &privatekey.PublicKey
-
-	bc, err := services.GetBeaconClient(c)
-	require.Nil(t, err)
 
 	// Encode private key to PKCS#1 ASN.1 PEM.
 	keyPEM := pem.EncodeToMemory(
@@ -85,7 +81,7 @@ func makeHanlde(t *testing.T, c *cli.Context) StaderHandler {
 	return s
 }
 
-func SererHttp(t *testing.T, c *cli.Context) {
+func SererHttp(t *testing.T, bc *services.BeaconClientManager) {
 	mux := http.NewServeMux()
 	s := makeHanlde(t, c)
 	mux.HandleFunc("/presign", s.presign)
