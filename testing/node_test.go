@@ -95,7 +95,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 
 	}()
 
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 20)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {

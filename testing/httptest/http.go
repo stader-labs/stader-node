@@ -7,12 +7,20 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"net/http"
+	"path/filepath"
+	"strconv"
 	"testing"
 
+	"github.com/herumi/bls-eth-go-binary/bls"
+	"github.com/mitchellh/go-homedir"
+	"github.com/stader-labs/stader-node/shared/services"
+	"github.com/stader-labs/stader-node/shared/services/config"
+	"github.com/stader-labs/stader-node/shared/types/eth2"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stretchr/testify/require"
+	eth2types "github.com/wealdtech/go-eth2-types/v2"
 )
 
 type StaderHandler struct {
@@ -22,6 +30,21 @@ type StaderHandler struct {
 	keyPEM     []byte
 	publickey  *rsa.PublicKey
 	privatekey *rsa.PrivateKey
+	bc         *services.BeaconClientManager
+}
+
+var (
+	UserSettingPath = filepath.Join(ConfigPath, "user-settings.yml")
+	ConfigPath, _   = homedir.Expand("~/.stader_testing")
+)
+
+func (s *StaderHandler) signatureDomain(t *testing.T, exitEpoch uint64) []byte {
+
+	signatureDomain, err := s.bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
+
+	require.Nil(t, err)
+
+	return signatureDomain
 }
 
 func makeHanlde(t *testing.T) StaderHandler {
@@ -29,6 +52,11 @@ func makeHanlde(t *testing.T) StaderHandler {
 	require.Nil(t, err)
 
 	publickey := &privatekey.PublicKey
+
+	cfg := config.NewStaderConfig(UserSettingPath, false)
+
+	bc, err := services.NewBeaconClientManager(cfg)
+	require.Nil(t, err)
 
 	// Encode private key to PKCS#1 ASN.1 PEM.
 	keyPEM := pem.EncodeToMemory(
@@ -53,6 +81,7 @@ func makeHanlde(t *testing.T) StaderHandler {
 		keyPEM:     keyPEM,
 		publickey:  publickey,
 		privatekey: privatekey,
+		bc:         bc,
 	}
 
 	return s
@@ -124,7 +153,18 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 	for _, v := range preSignedMessages {
 		decodeSig, err := crypto.DecodeBase64(v.Signature)
 		require.Nil(s.t, err)
-		_, err = crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
+
+		byteSig, err := crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
+		require.Nil(s.t, err)
+
+		sig := bls.HashAndMapToSignature(byteSig)
+		rootHash := s.srHash(s.t, v)
+
+		var pub bls.PublicKey
+		err = pub.Deserialize([]byte(v.ValidatorPublicKey))
+		require.Nil(s.t, err)
+
+		require.True(s.t, sig.VerifyByte(&pub, rootHash[:]))
 
 		require.Nil(s.t, err)
 		s.data[v.ValidatorPublicKey] = true
@@ -148,4 +188,32 @@ func (s *StaderHandler) publicKey(w http.ResponseWriter, r *http.Request) {
 		Value: crypto.EncodeBase64(s.pubPEM),
 	}
 	json.NewEncoder(w).Encode(p)
+}
+
+func (s *StaderHandler) srHash(t *testing.T, request stader_backend.PreSignSendApiRequestType) [32]byte {
+	epoch, err := strconv.ParseUint(request.Message.Epoch, 10, 64)
+	require.Nil(t, err)
+
+	validatorIndex, err := strconv.ParseUint(request.Message.ValidatorIndex, 10, 64)
+	require.Nil(t, err)
+
+	exitMessage := eth2.VoluntaryExit{
+		Epoch:          epoch,
+		ValidatorIndex: validatorIndex,
+	}
+
+	// Get object root
+	or, err := exitMessage.HashTreeRoot()
+	require.Nil(t, err)
+
+	// Get signing root
+	sr := eth2.SigningRoot{
+		ObjectRoot: or[:],
+		Domain:     s.signatureDomain(t, epoch),
+	}
+
+	srHash, err := sr.HashTreeRoot()
+	require.Nil(t, err)
+
+	return srHash
 }
