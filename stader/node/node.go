@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package node
 
 import (
+	_ "embed"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -125,7 +126,10 @@ func run(c *cli.Context) error {
 	errorLog := log.NewColorLogger(ErrorColor)
 	infoLog := log.NewColorLogger(InfoColor)
 
-	// get all registered validators with smart contracts
+	publicKey, err := stader.GetPublicKey(c)
+	if err != nil {
+		return err
+	}
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
@@ -146,12 +150,6 @@ func run(c *cli.Context) error {
 					errorLog.Println(err)
 					continue
 				}
-			}
-
-			publicKey, err := stader.GetPublicKey(c)
-			if err != nil {
-				errorLog.Printf("Failed to get public key: %s\n", err.Error())
-				continue
 			}
 
 			operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)

@@ -23,7 +23,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/stader-labs/stader-node/shared"
 	"io"
 	"io/ioutil"
 	"log"
@@ -54,7 +53,7 @@ import (
 
 // Config
 const (
-	InstallerURL = "https://staderlabs.com/" + shared.BinaryBucket + "/%s/install.sh"
+	InstallerURL = "https://stader-cli-beta.s3.amazonaws.com/%s/install.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"

@@ -27,8 +27,8 @@
 # === Functions ===
 # =================
 
-DOCKER_ACCOUNT=staderlabs
-S3_BUCKET=stader-cli-permissionless/eth/stader-node-build/permissionless
+DOCKER_ACCOUNT=staderdev
+S3_BUCKET=stader-cli-beta
 
 # Print a failure message to stderr and exit
 fail() {
