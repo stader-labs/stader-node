@@ -19,6 +19,7 @@ import (
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/stader-lib/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 )
@@ -152,16 +153,21 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		byteSig, err := crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
 		require.Nil(s.t, err)
 
-		sig := bls.HashAndMapToSignature(byteSig)
+		var sig bls.Sign
+		err = sig.DeserializeHexStr(string(byteSig))
+		require.Nil(s.t, err)
+
 		rootHash := s.srHash(s.t, v)
 
 		var pub bls.PublicKey
-		err = pub.Deserialize([]byte(v.ValidatorPublicKey))
+		err = pub.DeserializeHexStr(v.ValidatorPublicKey)
 		require.Nil(s.t, err)
 
-		require.True(s.t, sig.VerifyByte(&pub, rootHash[:]))
+		require.Nil(s.t, err)
+		verify := sig.VerifyHash(&pub, rootHash[:])
+		assert.True(s.t, verify)
 
-		fmt.Printf("Success verify signature with pubkey: [%+v] \n", pub.GetHexString())
+		fmt.Printf("Success verify signature with pubkey: [%+v] [%+v] [%+v]\n", pub, sig, rootHash)
 
 		require.Nil(s.t, err)
 		s.data[v.ValidatorPublicKey] = true
