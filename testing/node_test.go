@@ -154,7 +154,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 			require.Nil(s.T(), r)
 		}()
 
-		httptest.SererHttp(s.T())
+		httptest.SererHttp(s.T(), c)
 	}()
 }
 
