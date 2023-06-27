@@ -533,7 +533,7 @@ func getBeaconClient(c *cli.Context, cfg *config.StaderConfig) (*BeaconClientMan
 				bcManager.primaryReady = false
 			}
 
-			if c.GlobalIsSet("local-testnet") {
+			if c.GlobalBool("local-testnet") {
 				bcManager.localTestnet = true
 			}
 		}
