@@ -97,12 +97,8 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 
 	}()
 
-	time.Sleep(time.Minute * 1)
+	time.Sleep(time.Second * 30)
 }
-
-// func (s *StaderNodeSuite) TestNode2() {
-// 	time.Sleep(time.Second * 20)
-// }
 
 // run once, before test suite methods
 func (s *StaderNodeSuite) SetupSuite() {
@@ -133,7 +129,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	ePort := s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", ePort)
-	// cURL := "http://127.0.0.1:64562"
+	// cURL := "http://127.0.0.1:57965"
 	s.staderConfig(ctx, c, nil, elUrl)
 
 	fmt.Println("Done SetupSuite()")
@@ -144,16 +140,17 @@ func (s *StaderNodeSuite) SetupSuite() {
 		err := s.app.Run([]string{
 			a[0],
 			"--local-testnet=true",
-			"--presign-cooldown=3s",
+			"--presign-cooldown=10s",
 			"node",
 		})
 		require.Nil(s.T(), err)
 	}()
 
 	go func() {
-		httptest.SererHttp(s.T(), s.bc)
+		httptest.ServeHttpLocal(s.T(), s.bc)
 	}()
 
+	// Let node run for a while
 }
 
 // run once, after test suite methods

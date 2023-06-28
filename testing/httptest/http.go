@@ -82,16 +82,6 @@ func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
 		},
 	)
 
-	// // Write private key to file.
-	// if err := ioutil.WriteFile(filename+".rsa", keyPEM, 0700); err != nil {
-	// 	panic(err)
-	// }
-
-	// Write public key to file.
-	// if err := ioutil.WriteFile(filename+".rsa.pub", []byte(crypto.EncodeBase64(pubPEM)), 0755); err != nil {
-	// 	panic(err)
-	// }
-
 	s := StaderHandler{
 		data:       make(map[string]interface{}),
 		t:          t,
@@ -105,7 +95,7 @@ func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
 	return s
 }
 
-func SererHttp(t *testing.T, bc *services.BeaconClientManager) {
+func ServeHttpLocal(t *testing.T, bc *services.BeaconClientManager) {
 	mux := http.NewServeMux()
 	s := makeHanlde(t, bc)
 	mux.HandleFunc("/presign", s.presign)
@@ -189,7 +179,7 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		verify := sig.VerifyHash(&pub, rootHash[:])
 		assert.True(s.t, verify)
 
-		fmt.Printf("Success verify signature with pubkey: [%+v] [%+v] [%+v]\n", pub, sig, rootHash)
+		fmt.Printf("Success verify signature with pubkey: [%+v] hash: [%+v]\n", pub.GetHexString(), rootHash)
 
 		require.Nil(s.t, err)
 		s.data[v.ValidatorPublicKey] = true
