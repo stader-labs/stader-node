@@ -140,11 +140,7 @@ func run(c *cli.Context) error {
 	// validator presigned loop
 	go func() {
 		for {
-			w, err := services.GetWallet(c)
-			if err != nil {
-				errorLog.Println(err)
-				continue
-			}
+
 			// Check the EC status
 			err = services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
 			if err != nil {

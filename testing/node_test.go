@@ -97,7 +97,7 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 
 	}()
 
-	time.Sleep(time.Second * 20)
+	time.Sleep(time.Minute * 1)
 }
 
 // func (s *StaderNodeSuite) TestNode2() {
@@ -139,6 +139,7 @@ func (s *StaderNodeSuite) SetupSuite() {
 	fmt.Println("Done SetupSuite()")
 
 	go func() {
+		time.Sleep(time.Second * 5)
 		a := os.Args
 		err := s.app.Run([]string{
 			a[0],
