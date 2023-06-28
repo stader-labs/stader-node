@@ -139,17 +139,17 @@ func (s *StaderNodeSuite) SetupSuite() {
 	fmt.Println("Done SetupSuite()")
 
 	go func() {
-		go func() {
-			a := os.Args
-			err := s.app.Run([]string{
-				a[0],
-				"--local-testnet=true",
-				"--presign-cooldown=3s",
-				"node",
-			})
-			require.Nil(s.T(), err)
-		}()
+		a := os.Args
+		err := s.app.Run([]string{
+			a[0],
+			"--local-testnet=true",
+			"--presign-cooldown=3s",
+			"node",
+		})
+		require.Nil(s.T(), err)
+	}()
 
+	go func() {
 		httptest.SererHttp(s.T(), s.bc)
 	}()
 
