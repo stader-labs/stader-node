@@ -59,6 +59,9 @@ var stageEncryptionKey string
 //go:embed dev-presign-public-key.txt
 var devEncryptionKey string
 
+//go:embed local-testnet-presign-public-key.txt
+var localTestnetEncryptionKey string
+
 // --ignore-sync-check
 // Defaults
 const defaultProjectName string = "stader"
@@ -281,6 +284,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			config.Network_Devnet:   devEncryptionKey,
 			config.Network_Mainnet:  prodEncryptionKey,
 			config.Network_Zhejiang: stageEncryptionKey,
+			config.Network_Local:    localTestnetEncryptionKey,
 		},
 	}
 }

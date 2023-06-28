@@ -1,7 +1,6 @@
 package httptest
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
@@ -48,25 +47,85 @@ func (s *StaderHandler) signatureDomain(t *testing.T, exitEpoch uint64) []byte {
 	return signatureDomain
 }
 
-func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
-	privatekey, err := rsa.GenerateKey(rand.Reader, 2048*2)
-	require.Nil(t, err)
+var (
+	// filename  = "localocal-testnet-presign-public-key"
+	bitSize   = 4096
+	pemString = `-----BEGIN RSA PRIVATE KEY-----
+	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
+	-----END RSA PRIVATE KEY-----
+	`
+)
 
-	publickey := &privatekey.PublicKey
+func makeHanlde(t *testing.T, bc *services.BeaconClientManager) StaderHandler {
+	block, _ := pem.Decode([]byte(pemString))
+	privatekey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	require.Nil(t, err)
 
 	// Encode private key to PKCS#1 ASN.1 PEM.
 	keyPEM := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PRIVATE KEY",
-			Bytes: x509.MarshalPKCS1PrivateKey(privatekey),
+			Bytes: block.Bytes,
 		},
 	)
 
-	// Encode public key to PKCS#1 ASN.1 PEM.
+	publickey := &privatekey.PublicKey
+
+	pubkeyIX, err := x509.MarshalPKIXPublicKey(publickey)
+	require.Nil(t, err)
+
 	pubPEM := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PUBLIC KEY",
-			Bytes: x509.MarshalPKCS1PublicKey(publickey),
+			Bytes: pubkeyIX,
 		},
 	)
 
