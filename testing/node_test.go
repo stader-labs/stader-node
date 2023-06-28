@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"sync"
 	"testing"
 	"time"
 
@@ -139,11 +138,8 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	fmt.Println("Done SetupSuite()")
 
-	var wg sync.WaitGroup
-	wg.Add(1)
 	go func() {
 		go func() {
-			time.Sleep(time.Second * 4)
 			a := os.Args
 			err := s.app.Run([]string{
 				a[0],
@@ -152,13 +148,11 @@ func (s *StaderNodeSuite) SetupSuite() {
 				"node",
 			})
 			require.Nil(s.T(), err)
-			wg.Done()
 		}()
 
 		httptest.SererHttp(s.T(), s.bc)
 	}()
 
-	wg.Wait()
 }
 
 // run once, after test suite methods
