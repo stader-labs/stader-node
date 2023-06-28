@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 	"time"
 
@@ -131,33 +132,33 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	ePort := s.startAnvil(s.T())
+	ePort := "8545" //s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", ePort)
-	// cURL := "http://127.0.0.1:59541"
-	s.staderConfig(ctx, c, nil, elUrl)
+	cURL := "http://127.0.0.1:64562"
+	s.staderConfig(ctx, c, &cURL, elUrl)
 
 	fmt.Println("Done SetupSuite()")
 
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
-		a := os.Args
-		err := s.app.Run([]string{
-			a[0],
-			"--local-testnet=true",
-			"--presign-cooldown=3s",
-			"node",
-		})
-		require.Nil(s.T(), err)
-	}()
-
-	go func() {
-		defer func() {
-			r := recover()
-			fmt.Printf("RECOVER TEST SERVER %+v \n", r)
-			require.Nil(s.T(), r)
+		go func() {
+			time.Sleep(time.Second * 4)
+			a := os.Args
+			err := s.app.Run([]string{
+				a[0],
+				"--local-testnet=true",
+				"--presign-cooldown=3s",
+				"node",
+			})
+			require.Nil(s.T(), err)
+			wg.Done()
 		}()
 
 		httptest.SererHttp(s.T(), s.bc)
 	}()
+
+	wg.Wait()
 }
 
 // run once, after test suite methods
