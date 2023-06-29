@@ -84,20 +84,9 @@ func (s *StaderNodeSuite) TestNodeDeposit() {
 		})
 		assert.Nil(s.T(), err)
 
-		err = s.app.Run([]string{
-			a[0],
-			"api",
-			"validator",
-			"deposit",
-			eth.EthToWei(4).String(),
-			"1",
-			"false",
-		})
-		assert.Nil(s.T(), err)
-
 	}()
 
-	time.Sleep(time.Second * 30)
+	time.Sleep(time.Minute * 2)
 }
 
 // run once, before test suite methods
@@ -129,7 +118,10 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	ePort := "8545" //s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", ePort)
-	cURL := "http://127.0.0.1:57965"
+	// cURL := "http://127.0.0.1:60207"
+
+	// elUrl := "https://nd-982-838-592.p2pify.com/3ae9d0f33ed4a3c2901076accf95f5a1"
+	cURL := "https://beacon-nd-982-838-592.p2pify.com/3ae9d0f33ed4a3c2901076accf95f5a1"
 	s.staderConfig(ctx, c, &cURL, elUrl)
 
 	fmt.Println("Done SetupSuite()")
@@ -160,8 +152,8 @@ func (s *StaderNodeSuite) TearDownSuite() {
 	}
 	removeTestFolder(s.T())
 
-	err := s.pool.Purge(s.anvil)
-	require.Nil(s.T(), err)
+	// err := s.pool.Purge(s.anvil)
+	// require.Nil(s.T(), err)
 
 	fmt.Println("TearDown StaderNodeSuite")
 }

@@ -3,6 +3,7 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
