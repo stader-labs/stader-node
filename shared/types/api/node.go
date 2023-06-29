@@ -134,6 +134,7 @@ type ContractsInfoResponse struct {
 	Error                      string         `json:"error"`
 	Network                    uint64         `json:"network"`
 	BeaconDepositContract      common.Address `json:"beaconDepositContract"`
+	EncryptionKey              string         `json:"encryptionKey"`
 	BeaconNetwork              uint64         `json:"beaconNetwork"`
 	PermissionlessNodeRegistry common.Address `json:"permissionlessNodeRegistry"`
 	VaultFactory               common.Address `json:"vaultFactory"`

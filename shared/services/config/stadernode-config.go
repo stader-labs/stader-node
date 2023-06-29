@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	_ "embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -48,6 +49,15 @@ const (
 	FeeRecipientFilename        string = "stader-fee-recipient.txt"
 	NativeFeeRecipientFilename  string = "stader-fee-recipient-env.txt"
 )
+
+//go:embed prod-presign-public-key.txt
+var prodEncryptionKey string
+
+//go:embed stage-presign-public-key.txt
+var stageEncryptionKey string
+
+//go:embed dev-presign-public-key.txt
+var devEncryptionKey string
 
 // --ignore-sync-check
 // Defaults
@@ -112,6 +122,9 @@ type StaderNodeConfig struct {
 
 	// The base url of stader backend
 	baseStaderBackendUrl map[config.Network]string `yaml:"-"`
+
+	// the encryption keys to use for pre-sign
+	preSignEncryptionKey map[config.Network]string `yaml:"-"`
 }
 
 // Generates a new Stadernode configuration
@@ -238,24 +251,31 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
+			config.Network_Prater:   "0x3338eCd3ab3d3503c55c931d759fA6d78d287236",
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		staderConfigAddress: map[config.Network]string{
-			config.Network_Prater:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
+			config.Network_Prater:   "0x2aa6cEd8Cf0a93884216BaE5dbF4299932aB577B",
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Mainnet:  "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
-			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Prater:   "https://ethx-offchain-preprod.staderlabs.com",
+			config.Network_Devnet:   "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+		},
+
+		preSignEncryptionKey: map[config.Network]string{
+			config.Network_Prater:   stageEncryptionKey,
+			config.Network_Devnet:   devEncryptionKey,
+			config.Network_Mainnet:  prodEncryptionKey,
+			config.Network_Zhejiang: stageEncryptionKey,
 		},
 	}
 }
@@ -314,6 +334,10 @@ func (cfg *StaderNodeConfig) GetStakeUrl() string {
 
 func (cfg *StaderNodeConfig) GetChainID() uint {
 	return cfg.chainID[cfg.Network.Value.(config.Network)]
+}
+
+func (cfg *StaderNodeConfig) GetPresignEncryptionKey() string {
+	return cfg.preSignEncryptionKey[cfg.Network.Value.(config.Network)]
 }
 
 func (cfg *StaderNodeConfig) GetWalletPath() string {
