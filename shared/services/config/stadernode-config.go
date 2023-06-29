@@ -256,7 +256,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
+			config.Network_Prater:   "0x3338eCd3ab3d3503c55c931d759fA6d78d287236",
 			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
 			config.Network_Mainnet:  "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
@@ -264,7 +264,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		staderConfigAddress: map[config.Network]string{
-			config.Network_Prater:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
+			config.Network_Prater:   "0x2aa6cEd8Cf0a93884216BaE5dbF4299932aB577B",
 			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
 			config.Network_Mainnet:  "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
@@ -272,8 +272,8 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://stage-ethx-offchain.staderlabs.click",
-			config.Network_Devnet:   "https://1r6l0g1nkd.execute-api.us-east-1.amazonaws.com/prod",
+			config.Network_Prater:   "https://ethx-offchain-preprod.staderlabs.com",
+			config.Network_Devnet:   "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
 			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
 			// Only config for 1 time  revert it later

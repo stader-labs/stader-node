@@ -203,7 +203,7 @@ func run(c *cli.Context) error {
 			}
 
 			pageNumber := 0
-			pageSize := 7
+			pageSize := 40
 			for {
 				startIndex := pageNumber * pageSize
 				if startIndex > len(validatorPubKeys) {
