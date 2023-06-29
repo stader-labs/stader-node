@@ -127,10 +127,10 @@ func (s *StaderNodeSuite) SetupSuite() {
 
 	c := cli.NewContext(s.app, flagSet, nil)
 
-	ePort := s.startAnvil(s.T())
+	ePort := "8545" //s.startAnvil(s.T())
 	elUrl := fmt.Sprintf("http://127.0.0.1:%+v", ePort)
-	// cURL := "http://127.0.0.1:57965"
-	s.staderConfig(ctx, c, nil, elUrl)
+	cURL := "http://127.0.0.1:57965"
+	s.staderConfig(ctx, c, &cURL, elUrl)
 
 	fmt.Println("Done SetupSuite()")
 

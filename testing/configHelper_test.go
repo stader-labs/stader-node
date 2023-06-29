@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/kurtosis-tech/kurtosis/api/golang/core/kurtosis_core_rpc_api_bindings"
 	"github.com/kurtosis-tech/kurtosis/api/golang/engine/lib/kurtosis_context"
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
@@ -190,6 +191,7 @@ func (s *StaderNodeSuite) setConfig(c *cli.Context, elURL string, clURL string) 
 	err = staderClient.SaveConfig(cfg)
 	require.Nil(s.T(), err)
 
+	s.setupWallet(c)
 	bc, err := services.GetBeaconClient(c)
 	require.Nil(s.T(), err)
 	s.bc = bc
@@ -219,7 +221,16 @@ func (s *StaderNodeSuite) staderConfig(
 
 		fmt.Println("------------ EXECUTING PACKAGE ---------------")
 
-		starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(ctx, remotePackage, useDefaultMainFile, useDefaultFunctionName, emptyParams, defaultDryRun, defaultParallelism)
+		starlarkRunResult, err := enclaveCtx.RunStarlarkRemotePackageBlocking(
+			ctx,
+			remotePackage,
+			useDefaultMainFile,
+			useDefaultFunctionName,
+			emptyParams,
+			defaultDryRun,
+			defaultParallelism,
+			make([]kurtosis_core_rpc_api_bindings.KurtosisFeatureFlag, 0),
+		)
 
 		require.NoError(t, err, "An error executing loading the package")
 		require.Nil(t, starlarkRunResult.InterpretationError)
@@ -248,7 +259,6 @@ func (s *StaderNodeSuite) staderConfig(
 	}
 
 	s.setConfig(c, elUrl, *clUrl)
-	s.setupWallet(ctx, c)
 
 	fmt.Println("------------ DEPLOYING CONTRACT ---------------")
 	fmt.Println("CURL: ", *clUrl)
@@ -258,7 +268,7 @@ func (s *StaderNodeSuite) staderConfig(
 
 }
 
-func (s *StaderNodeSuite) setupWallet(ctx context.Context, c *cli.Context) {
+func (s *StaderNodeSuite) setupWallet(c *cli.Context) {
 
 	// Get services
 	pm := passwords.NewPasswordManager(PasswordPath)
@@ -275,5 +285,12 @@ func (s *StaderNodeSuite) setupWallet(ctx context.Context, c *cli.Context) {
 	require.Nil(s.T(), err)
 
 	err = w.Save()
+	require.Nil(s.T(), err)
+
+	w.CreateValidatorKey()
+	err = w.Reload()
+	w.CreateValidatorKey()
+	w.CreateValidatorKey()
+
 	require.Nil(s.T(), err)
 }
