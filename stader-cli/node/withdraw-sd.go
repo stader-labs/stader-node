@@ -36,7 +36,6 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 	if canWithdrawSdResponse.InsufficientWithdrawableSd {
-		// TODO - bchain - rework error messages
 		fmt.Println("Insufficient withdrawable SD!")
 		return nil
 	}
