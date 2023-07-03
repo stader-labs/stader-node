@@ -23,6 +23,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/docker/docker/api/types/container"
 	"os"
 	"os/exec"
 	"strings"
@@ -89,7 +90,8 @@ func RestartValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.Color
 		}
 
 		// Restart validator container
-		if err := d.ContainerRestart(context.Background(), validatorContainerId, &validatorRestartTimeout); err != nil {
+		timeout := int(validatorRestartTimeout.Seconds())
+		if err := d.ContainerRestart(context.Background(), validatorContainerId, container.StopOptions{Timeout: &timeout}); err != nil {
 			return fmt.Errorf("Could not restart validator container: %w", err)
 		}
 
