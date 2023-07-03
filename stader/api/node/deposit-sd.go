@@ -6,7 +6,6 @@ import (
 
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader-lib/utils"
@@ -227,10 +226,6 @@ func depositSdAsCollateral(c *cli.Context, amountWei *big.Int) (*api.NodeDeposit
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
-	acc, err := w.GetNodeAccount()
-
-	bl, err := sd_collateral.GetOperatorSdBalance(sdc, acc.Address, &bind.CallOpts{})
-	fmt.Printf("BL %+v amountWei %+v", bl.String(), amountWei.String())
 	tx, err := sd_collateral.DepositSdAsCollateral(sdc, amountWei, opts)
 	if err != nil {
 		return nil, err

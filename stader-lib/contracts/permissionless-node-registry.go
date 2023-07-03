@@ -1496,6 +1496,27 @@ func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) 
 	return _PermissionlessNodeRegistry.Contract.IncreaseTotalActiveValidatorCount(&_PermissionlessNodeRegistry.TransactOpts, _count)
 }
 
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.contract.Transact(opts, "initialize", _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistrySession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.Initialize(&_PermissionlessNodeRegistry.TransactOpts, _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessNodeRegistry *PermissionlessNodeRegistryTransactorSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessNodeRegistry.Contract.Initialize(&_PermissionlessNodeRegistry.TransactOpts, _admin, _staderConfig)
+}
+
 // MarkValidatorReadyToDeposit is a paid mutator transaction binding the contract method 0x13797bff.
 //
 // Solidity: function markValidatorReadyToDeposit(bytes[] _readyToDepositPubkey, bytes[] _frontRunPubkey, bytes[] _invalidSignaturePubkey) returns()

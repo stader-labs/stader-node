@@ -33,7 +33,6 @@ import (
 )
 
 // Run
-
 func main() {
 	// Initialise application
 	app := cli.NewApp()

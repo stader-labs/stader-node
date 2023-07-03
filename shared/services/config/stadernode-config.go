@@ -59,6 +59,8 @@ var stageEncryptionKey string
 //go:embed dev-presign-public-key.txt
 var devEncryptionKey string
 
+// SAFETY: This file using in local test only.
+//
 //go:embed local-testnet-presign-public-key.txt
 var localTestnetEncryptionKey string
 

@@ -181,11 +181,11 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			// err = w.Reload()
-			// if err != nil {
-			// 	errorLog.Printf("Could not reload wallet: %s\n", err.Error())
-			// 	continue
-			// }
+			err = w.Reload()
+			if err != nil {
+				errorLog.Printf("Could not reload wallet: %s\n", err.Error())
+				continue
+			}
 
 			preSignRegisteredMap, err := stader.BulkIsPresignedKeyRegistered(c, validatorPubKeys)
 			if err != nil {

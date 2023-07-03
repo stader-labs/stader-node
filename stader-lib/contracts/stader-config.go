@@ -3022,6 +3022,27 @@ func (_StaderConfig *StaderConfigTransactorSession) GrantRole(role [32]byte, acc
 	return _StaderConfig.Contract.GrantRole(&_StaderConfig.TransactOpts, role, account)
 }
 
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _ethDepositContract) returns()
+func (_StaderConfig *StaderConfigTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _ethDepositContract common.Address) (*types.Transaction, error) {
+	return _StaderConfig.contract.Transact(opts, "initialize", _admin, _ethDepositContract)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _ethDepositContract) returns()
+func (_StaderConfig *StaderConfigSession) Initialize(_admin common.Address, _ethDepositContract common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.Initialize(&_StaderConfig.TransactOpts, _admin, _ethDepositContract)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _ethDepositContract) returns()
+func (_StaderConfig *StaderConfigTransactorSession) Initialize(_admin common.Address, _ethDepositContract common.Address) (*types.Transaction, error) {
+	return _StaderConfig.Contract.Initialize(&_StaderConfig.TransactOpts, _admin, _ethDepositContract)
+}
+
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address account) returns()

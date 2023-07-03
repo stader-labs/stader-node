@@ -43,6 +43,7 @@ type BeaconClientManager struct {
 	fallbackReady   bool
 	ignoreSyncCheck bool
 
+	//SAFETY: This flag using in local test only, never set to true in prod
 	localTestnet bool
 }
 
@@ -208,6 +209,7 @@ func (m *BeaconClientManager) GetValidatorStatus(
 	pubkey types.ValidatorPubkey,
 	opts *beacon.ValidatorStatusOptions,
 ) (beacon.ValidatorStatus, error) {
+	//SAFETY: This flag is true in local test only
 	if m.localTestnet {
 		return beacon.ValidatorStatus{
 			Exists: true,

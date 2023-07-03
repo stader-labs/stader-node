@@ -759,6 +759,27 @@ func (_PermissionlessPool *PermissionlessPoolTransactorSession) GrantRole(role [
 	return _PermissionlessPool.Contract.GrantRole(&_PermissionlessPool.TransactOpts, role, account)
 }
 
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.contract.Transact(opts, "initialize", _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_PermissionlessPool *PermissionlessPoolTransactorSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _PermissionlessPool.Contract.Initialize(&_PermissionlessPool.TransactOpts, _admin, _staderConfig)
+}
+
 // PreDepositOnBeaconChain is a paid mutator transaction binding the contract method 0xeda0ae12.
 //
 // Solidity: function preDepositOnBeaconChain(bytes[] _pubkey, bytes[] _preDepositSignature, uint256 _operatorId, uint256 _operatorTotalKeys) payable returns()
