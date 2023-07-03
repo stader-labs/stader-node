@@ -208,13 +208,12 @@ func (m *BeaconClientManager) GetValidatorStatus(
 	pubkey types.ValidatorPubkey,
 	opts *beacon.ValidatorStatusOptions,
 ) (beacon.ValidatorStatus, error) {
-	// Only config for 1 time  revert it later
-	// if m.localTestnet {
-	// 	return beacon.ValidatorStatus{
-	// 		Exists: true,
-	// 		Status: beacon.ValidatorState_PendingInitialized,
-	// 	}, nil
-	// }
+	if m.localTestnet {
+		return beacon.ValidatorStatus{
+			Exists: true,
+			Status: beacon.ValidatorState_PendingInitialized,
+		}, nil
+	}
 
 	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
 		return client.GetValidatorStatus(pubkey, opts)

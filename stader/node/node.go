@@ -37,7 +37,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/node"
-	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 
 	"github.com/fatih/color"
@@ -53,8 +52,6 @@ var preSignedCooldown, _ = time.ParseDuration("1h")
 var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
-
-var prv []byte = []byte{}
 
 const (
 	MaxConcurrentEth1Requests   = 200
@@ -140,12 +137,6 @@ func run(c *cli.Context) error {
 	wg := new(sync.WaitGroup)
 	wg.Add(3)
 
-	private, err := eth2types.BLSPrivateKeyFromBytes(prv)
-
-	fmt.Printf("PUB: %+v", stadertypes.BytesToValidatorPubkey(private.PublicKey().Marshal()).String())
-	fmt.Printf("prv: %#v", private.Marshal())
-
-	// hackValidatorPubKey := private.PublicKey()
 	// validator presigned loop
 	go func() {
 		for {
@@ -222,32 +213,27 @@ func run(c *cli.Context) error {
 
 				for _, validatorPubKey := range validatorKeyBatch {
 					infoLog.Printf("Checking validator pubkey %s\n", validatorPubKey.String())
-					// validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
-					validatorKeyPair, err := eth2types.BLSPrivateKeyFromBytes(prv)
-					validatorPubKey = stadertypes.BytesToValidatorPubkey(validatorKeyPair.PublicKey().Marshal())
-					fmt.Printf("PUB: %+v", validatorPubKey.String())
-					// fmt.Printf("prv: %#v", validatorKeyPair.Marshal())
-
+					validatorKeyPair, err := w.GetValidatorKeyByPubkey(validatorPubKey)
 					// log the errors and continue. dont need to sleep post an error
 					if err != nil {
 						errorLog.Printf("Could not find validator private key for %s with err: %s\n", validatorPubKey, err.Error())
 						continue
 					}
 
-					// validatorInfo, ok := registeredValidators[validatorPubKey]
-					// if !ok {
-					// 	errorLog.Printf("Validator pub key: %s not found in stader contracts\n", validatorPubKey)
-					// 	continue
-					// }
-					// if stdr.IsValidatorTerminal(validatorInfo) {
-					// 	errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
-					// 	continue
-					// }
+					validatorInfo, ok := registeredValidators[validatorPubKey]
+					if !ok {
+						errorLog.Printf("Validator pub key: %s not found in stader contracts\n", validatorPubKey)
+						continue
+					}
+					if stdr.IsValidatorTerminal(validatorInfo) {
+						errorLog.Printf("Validator pub key: %s is in terminal state in the stader contracts\n", validatorPubKey)
+						continue
+					}
 
 					registeredPresign, ok := preSignRegisteredMap[validatorPubKey.String()]
 					if !ok {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
-						// continue
+						continue
 					}
 					if registeredPresign {
 						infoLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
