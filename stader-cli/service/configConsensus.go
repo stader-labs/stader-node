@@ -176,7 +176,6 @@ func updateLocalConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]
 	newCfg.Teku.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_beacon_node_flags_teku]
 	newCfg.Teku.AdditionalVcFlags.Value = settings[keys.E2cc_lc_additional_client_flags_teku]
 
-	// Nimbus TODO? check
 	newCfg.Nimbus.BnContainerTag.Value = settings[keys.E2cc_lc_container_tag_nimbus]
 	newCfg.Nimbus.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_flags_nimbus]
 
