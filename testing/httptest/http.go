@@ -1,7 +1,9 @@
 package httptest
 
 import (
+	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	_ "embed"
 	"encoding/json"
@@ -162,7 +164,7 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		decodeSig, err := crypto.DecodeBase64(v.Signature)
 		require.Nil(s.t, err)
 
-		byteSig, err := crypto.DecryptUsingPublicKey(decodeSig, s.privatekey)
+		byteSig, err := DecryptUsingPublicKey(decodeSig, s.privatekey)
 		require.Nil(s.t, err)
 
 		var sig bls.Sign
@@ -231,4 +233,13 @@ func (s *StaderHandler) srHash(t *testing.T, request stader_backend.PreSignSendA
 	require.Nil(t, err)
 
 	return srHash
+}
+
+func DecryptUsingPublicKey(data []byte, privateKey *rsa.PrivateKey) ([]byte, error) {
+	exitMsgEncrypted, err := rsa.DecryptOAEP(sha256.New(), rand.Reader, privateKey, data, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return exitMsgEncrypted, nil
 }
