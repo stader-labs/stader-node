@@ -164,7 +164,7 @@ func (s *StaderHandler) presigns(w http.ResponseWriter, r *http.Request) {
 		decodeSig, err := crypto.DecodeBase64(v.Signature)
 		require.Nil(s.t, err)
 
-		byteSig, err := DecryptUsingPublicKey(decodeSig, s.privatekey)
+		byteSig, err := DecryptUsingPrivateKey(decodeSig, s.privatekey)
 		require.Nil(s.t, err)
 
 		var sig bls.Sign
@@ -235,7 +235,7 @@ func (s *StaderHandler) srHash(t *testing.T, request stader_backend.PreSignSendA
 	return srHash
 }
 
-func DecryptUsingPublicKey(data []byte, privateKey *rsa.PrivateKey) ([]byte, error) {
+func DecryptUsingPrivateKey(data []byte, privateKey *rsa.PrivateKey) ([]byte, error) {
 	exitMsgEncrypted, err := rsa.DecryptOAEP(sha256.New(), rand.Reader, privateKey, data, nil)
 	if err != nil {
 		return nil, err
