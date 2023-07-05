@@ -168,7 +168,6 @@ func StopValidator(cfg *config.StaderConfig, bc beacon.Client, log *log.ColorLog
 			}
 		}
 		if validatorContainerId == "" {
-			// TODO: return here if the container doesn't exist? Is erroring out necessary?
 			return fmt.Errorf("Validator container %s not found", containerName)
 		}
 

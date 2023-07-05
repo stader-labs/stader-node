@@ -170,7 +170,6 @@ func (w *Wallet) getNodeDerivedKey(index uint) (*hdkeychain.ExtendedKey, string,
 	key := w.mk
 	for i, n := range path {
 		// Use the legacy implementation for Goerli
-		// TODO: remove this if Prater ever goes away!
 		if w.chainID.Cmp(big.NewInt(5)) == 0 {
 			key, err = key.DeriveNonStandard(n)
 		} else {

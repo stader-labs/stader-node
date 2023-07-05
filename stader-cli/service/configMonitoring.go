@@ -33,7 +33,6 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 	newSettings[keys.Nm_exporter_metrics_port] = format(cfg.ExporterMetricsPort.Value)
 	newSettings[keys.Nm_guardian_oracle_port] = "9104"
 
-	// TODO:
 	// Nm_guardian_oracle_port ??
 	// Nm_allow_root_filesystem_access ??
 	// Nm_enable_oracle_dao_metrics?
@@ -75,7 +74,6 @@ func updateMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{
 
 	// cfg.GuardianMetricsPort.Value =
 
-	// TODO:
 	// Nm_guardian_oracle_port ??
 	// Nm_allow_root_filesystem_access ??
 	// Nm_enable_oracle_dao_metrics?
