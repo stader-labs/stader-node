@@ -70,7 +70,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api validator deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator deposit amount num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
