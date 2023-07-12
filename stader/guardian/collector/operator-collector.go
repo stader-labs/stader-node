@@ -14,7 +14,8 @@ import (
 // Represents the collector for the stader network metrics
 type OperatorCollector struct {
 	ActiveValidators                     *prometheus.Desc
-	QueuedValidators                     *prometheus.Desc
+	BeaconChainQueuedValidators          *prometheus.Desc
+	StaderQueuedValidators               *prometheus.Desc
 	SlashedValidators                    *prometheus.Desc
 	ExitingValidators                    *prometheus.Desc
 	WithdrawnValidators                  *prometheus.Desc
@@ -60,8 +61,11 @@ func NewOperatorCollector(
 		ActiveValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, ActiveValidators), "", nil, nil,
 		),
-		QueuedValidators: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, OperatorSub, QueuedValidators), "", nil, nil,
+		BeaconChainQueuedValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, BeaconChainQueuedValidators), "", nil, nil,
+		),
+		StaderQueuedValidators: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, StaderQueuedValidators), "", nil, nil,
 		),
 		SlashedValidators: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, SlashedValidators), "", nil, nil,
@@ -119,7 +123,8 @@ func NewOperatorCollector(
 // Write metric descriptions to the Prometheus channel
 func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.ActiveValidators
-	channel <- collector.QueuedValidators
+	channel <- collector.BeaconChainQueuedValidators
+	channel <- collector.StaderQueuedValidators
 	channel <- collector.SlashedValidators
 	channel <- collector.ExitingValidators
 	channel <- collector.FrontRunValidators
@@ -145,7 +150,8 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	state := collector.stateLocker.GetMetricsContainer()
 
 	channel <- prometheus.MustNewConstMetric(collector.ActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ActiveValidators.Int64()))
-	channel <- prometheus.MustNewConstMetric(collector.QueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.QueuedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.BeaconChainQueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.BeaconChainQueuedValidators.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.StaderQueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.StaderQueuedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.SlashedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.SlashedValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.ExitingValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.ExitingValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(collector.WithdrawnValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.WithdrawnValidators.Int64()))

@@ -5,8 +5,9 @@ const namespace = "stader"
 // Validator rewards & performance => stader_validator_rewards_performance + key
 const OperatorSub = "operator"
 
-const ActiveValidators = "active_validators"                      //GetAllActiveValidators _PermissionlessNodeRegistry
-const QueuedValidators = "queued_validators"                      //QueuedValidators _PermissionlessNodeRegistry
+const ActiveValidators = "active_validators"                         //GetAllActiveValidators _PermissionlessNodeRegistry
+const BeaconChainQueuedValidators = "beacon_chain_queued_validators" //BeaconChainQueuedValidators _PermissionlessNodeRegistry
+const StaderQueuedValidators = "stader_queued_validators"
 const SlashedValidators = "slashed_validators"                    //GetValidatorStatus
 const ExitingValidators = "exiting_validators"                    //GetValidatorStatus
 const WithdrawnValidators = "withdrawn_validators"                //GetValidatorStatus

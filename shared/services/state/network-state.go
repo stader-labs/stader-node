@@ -64,7 +64,9 @@ type MetricDetails struct {
 	// done
 	ActiveValidators *big.Int
 	// done
-	QueuedValidators *big.Int
+	StaderQueuedValidators *big.Int
+	// done
+	BeaconChainQueuedValidators *big.Int
 	// done
 	SlashedValidators *big.Int
 	// done
@@ -283,7 +285,8 @@ func CreateMetricsCache(
 
 	activeValidators := big.NewInt(0)
 	slashedValidators := big.NewInt(0)
-	queuedValidators := big.NewInt(0)
+	staderQueuedValidators := big.NewInt(0)
+	beaconChainQueuedValidators := big.NewInt(0)
 	exitingValidators := big.NewInt(0)
 	withdrawnValidators := big.NewInt(0)
 	initializedValidators := big.NewInt(0)
@@ -332,11 +335,11 @@ func CreateMetricsCache(
 			continue
 		}
 		if !inBeaconChain && validatorContractInfo.Status == 3 {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
+			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
 			continue
 		}
 		if !inBeaconChain && validatorContractInfo.Status == 4 {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
+			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
 			continue
 		}
 		if validatorContractInfo.Status == 5 {
@@ -352,7 +355,7 @@ func CreateMetricsCache(
 			continue
 		}
 		if inBeaconChain && eth2.IsValidatorQueued(status) {
-			queuedValidators.Add(queuedValidators, big.NewInt(1))
+			beaconChainQueuedValidators.Add(beaconChainQueuedValidators, big.NewInt(1))
 		}
 		if inBeaconChain && eth2.IsValidatorSlashed(status) {
 			slashedValidators.Add(slashedValidators, big.NewInt(1))
@@ -468,7 +471,8 @@ func CreateMetricsCache(
 	metricsDetails.ValidatorStatusMap = statusMap
 	metricsDetails.ValidatorInfoMap = validatorInfoMap
 	metricsDetails.ActiveValidators = activeValidators
-	metricsDetails.QueuedValidators = queuedValidators
+	metricsDetails.BeaconChainQueuedValidators = beaconChainQueuedValidators
+	metricsDetails.StaderQueuedValidators = staderQueuedValidators
 	metricsDetails.ExitingValidators = exitingValidators
 	metricsDetails.SlashedValidators = slashedValidators
 	metricsDetails.WithdrawnValidators = withdrawnValidators
