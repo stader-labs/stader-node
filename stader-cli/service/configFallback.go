@@ -21,15 +21,24 @@ package service
 
 import (
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
+	"github.com/stader-labs/stader-node/shared/types/config"
 )
 
 func setUIFallbackClient(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	newSettings[keys.Fc_use_fallback_clients] = cfg.UseFallbackClients.Value.(bool)
 	newSettings[keys.Fc_true_reconnect_delay] = cfg.ReconnectDelay.Value
-	newSettings[keys.Fc_true_execution_client_url] = cfg.FallbackNormal.EcHttpUrl.Value
-	newSettings[keys.Fc_true_beacon_node_url] = cfg.FallbackNormal.CcHttpUrl.Value
-	newSettings[keys.Fc_true_beacon_node_json_rpc_url] = cfg.FallbackPrysm.JsonRpcUrl.Value
 
+	selectedCC, _ := cfg.GetSelectedConsensusClientConfig()
+	switch selectedCC.GetName() {
+	case string(config.ConsensusClient_Prysm):
+		newSettings[keys.Fc_true_execution_client_url] = cfg.FallbackPrysm.EcHttpUrl.Value
+		newSettings[keys.Fc_true_beacon_node_url] = cfg.FallbackPrysm.CcHttpUrl.Value
+	default:
+		newSettings[keys.Fc_true_execution_client_url] = cfg.FallbackNormal.EcHttpUrl.Value
+		newSettings[keys.Fc_true_beacon_node_url] = cfg.FallbackNormal.CcHttpUrl.Value
+	}
+
+	newSettings[keys.Fc_true_beacon_node_json_rpc_url] = cfg.FallbackPrysm.JsonRpcUrl.Value
 	return nil
 }
 
