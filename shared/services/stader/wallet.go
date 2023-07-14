@@ -121,31 +121,6 @@ func (c *Client) SearchAndRecoverWallet(mnemonic string, address common.Address,
 	return response, nil
 }
 
-// Recover wallet
-func (c *Client) TestRecoverWallet(mnemonic string, skipValidatorKeyRecovery bool, derivationPath string, walletIndex uint) (api.RecoverWalletResponse, error) {
-	command := "wallet test-recovery "
-	if skipValidatorKeyRecovery {
-		command += "--skip-validator-key-recovery "
-	}
-	if walletIndex != 0 {
-		command += fmt.Sprintf("--wallet-index %d ", walletIndex)
-	}
-	command += "--derivation-path"
-
-	responseBytes, err := c.callAPI(command, derivationPath, mnemonic)
-	if err != nil {
-		return api.RecoverWalletResponse{}, fmt.Errorf("Could not test recover wallet: %w", err)
-	}
-	var response api.RecoverWalletResponse
-	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.RecoverWalletResponse{}, fmt.Errorf("Could not decode test recover wallet response: %w", err)
-	}
-	if response.Error != "" {
-		return api.RecoverWalletResponse{}, fmt.Errorf("Could not test recover wallet: %s", response.Error)
-	}
-	return response, nil
-}
-
 // Search and recover wallet
 func (c *Client) TestSearchAndRecoverWallet(mnemonic string, address common.Address, skipValidatorKeyRecovery bool) (api.SearchAndRecoverWalletResponse, error) {
 	command := "wallet test-search-and-recover "
