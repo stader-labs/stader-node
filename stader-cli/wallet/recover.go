@@ -51,7 +51,7 @@ func recoverWallet(c *cli.Context) error {
 	}
 
 	// Prompt a notice about test recovery
-	fmt.Printf("%sNOTE:\nThis command will fully regenerate your node wallet's private key and (unless explicitly disabled) the validator keys for your validators.\nIf you just want to test recovery to ensure it works without actually regenerating the files, please use `stader-cli wallet test-recovery` instead.%s\n\n", log.ColorYellow, log.ColorReset)
+	fmt.Printf("%sNOTE:\nThis command will fully regenerate your node wallet's private key and (unless explicitly disabled) the validator keys for your validators.%s\n\n", log.ColorYellow, log.ColorReset)
 
 	// Set password if not set
 	if !status.PasswordSet {
@@ -108,6 +108,7 @@ func recoverWallet(c *cli.Context) error {
 		fmt.Printf("Derivation path: %s\n", response.DerivationPath)
 		fmt.Printf("Wallet index:    %d\n", response.Index)
 		fmt.Printf("Node account:    %s\n", response.AccountAddress.Hex())
+
 		if !skipValidatorKeyRecovery {
 			if len(response.ValidatorKeys) > 0 {
 				fmt.Println("Validator keys:")

@@ -29,7 +29,7 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 				TotalEthxSupply:                      0,
 				TotalStakedEthByUsers:                big.NewInt(0),
 				ActiveValidators:                     big.NewInt(0),
-				QueuedValidators:                     big.NewInt(0),
+				BeaconChainQueuedValidators:          big.NewInt(0),
 				SlashedValidators:                    big.NewInt(0),
 				ExitingValidators:                    big.NewInt(0),
 				WithdrawnValidators:                  big.NewInt(0),

@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
+	"math/big"
 )
 
 const (
@@ -16,9 +17,13 @@ const (
 )
 
 func RecoverStaderKeys(pnr *stader.PermissionlessNodeRegistryContractManager, address common.Address, w *wallet.Wallet, testOnly bool) ([]types.ValidatorPubkey, error) {
+	recoveredKeys := []types.ValidatorPubkey{}
 	operatorId, err := node.GetOperatorId(pnr, address, nil)
 	if err != nil {
 		return nil, err
+	}
+	if operatorId.Cmp(big.NewInt(0)) == 0 {
+		return recoveredKeys, nil
 	}
 	// Get node's validating pubkeys
 	allOperatorValidators, _, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, address, nil)
@@ -26,7 +31,6 @@ func RecoverStaderKeys(pnr *stader.PermissionlessNodeRegistryContractManager, ad
 		return nil, err
 	}
 
-	recoveredKeys := []types.ValidatorPubkey{}
 	// Recover conventionally generated keys
 	pageStart := uint(0)
 	for {
