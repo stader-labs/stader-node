@@ -2,13 +2,15 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+	"strings"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 )
 
 func EstimateOnboardNodeOperator(pnr *stader.PermissionlessNodeRegistryContractManager, mevSocialize bool, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
@@ -125,7 +127,9 @@ func GetAllValidatorsInfoByOperator(pnr *stader.PermissionlessNodeRegistryContra
 
 	for {
 		validators, err := pnr.PermissionlessNodeRegistry.GetValidatorsByOperator(opts, operatorAddress, pageNumber, pageSize)
-		if err != nil {
+
+		// Safety: we're calling view function, it's safe to ignore error and assume validators list is empty
+		if err != nil && !strings.Contains(err.Error(), "execution reverted") {
 			return nil, err
 		}
 		if len(validators) == 0 {
