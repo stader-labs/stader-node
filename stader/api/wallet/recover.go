@@ -86,9 +86,18 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 		if err != nil {
 			return nil, err
 		}
-		response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
+
+		operatorExist, err := pnr.PermissionlessNodeRegistry.IsExistingOperator(nil, nodeAccount.Address)
 		if err != nil {
 			return nil, err
+		}
+
+		response.OperatorExist = operatorExist
+		if operatorExist {
+			response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

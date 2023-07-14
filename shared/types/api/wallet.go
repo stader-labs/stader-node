@@ -20,11 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package api
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/google/uuid"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 )
 
 // Encrypted validator keystore following the EIP-2335 standard
@@ -64,6 +65,7 @@ type RecoverWalletResponse struct {
 	Error          string                  `json:"error"`
 	AccountAddress common.Address          `json:"accountAddress"`
 	ValidatorKeys  []types.ValidatorPubkey `json:"validatorKeys"`
+	OperatorExist  bool                    `json:"operatorExist"`
 }
 
 type SearchAndRecoverWalletResponse struct {
