@@ -3,7 +3,6 @@ package node
 import (
 	"fmt"
 	"math/big"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -124,12 +123,20 @@ func GetAllValidatorsInfoByOperator(pnr *stader.PermissionlessNodeRegistryContra
 	finalValidators := []contracts.Validator{}
 	pageNumber := big.NewInt(1)
 	pageSize := big.NewInt(100)
-
 	for {
+		exist, err := pnr.PermissionlessNodeRegistry.IsExistingOperator(opts, operatorAddress)
+		if err != nil {
+			return finalValidators, fmt.Errorf("Err view IsExistingOperator %+v", err)
+		}
+
+		if !exist {
+			fmt.Printf("Operator does not register with Stader, skip recover validators key: %+v \n", operatorAddress.Hex())
+			break
+		}
+
 		validators, err := pnr.PermissionlessNodeRegistry.GetValidatorsByOperator(opts, operatorAddress, pageNumber, pageSize)
 
-		// Safety: we're calling view function, it's safe to ignore error and assume validators list is empty
-		if err != nil && !strings.Contains(err.Error(), "execution reverted") {
+		if err != nil {
 			return nil, err
 		}
 		if len(validators) == 0 {
