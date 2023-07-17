@@ -160,7 +160,7 @@ func recoverWallet(c *cli.Context) error {
 		if !skipValidatorKeyRecovery {
 
 			if !response.OperatorExists {
-				fmt.Println("Operator does not register with Stader, no validator key will be recover")
+				fmt.Println("Operator not registered with Stader, no validator keys to recover")
 				return nil
 			}
 
