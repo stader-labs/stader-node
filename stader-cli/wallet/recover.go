@@ -158,6 +158,12 @@ func recoverWallet(c *cli.Context) error {
 		fmt.Println("The node wallet was successfully recovered.")
 		fmt.Printf("Node account: %s\n", response.AccountAddress.Hex())
 		if !skipValidatorKeyRecovery {
+
+			if !response.OperatorExists {
+				fmt.Println("Operator not registered with Stader, no validator keys to recover")
+				return nil
+			}
+
 			if len(response.ValidatorKeys) > 0 {
 				fmt.Println("Validator keys:")
 				for _, key := range response.ValidatorKeys {
@@ -170,5 +176,4 @@ func recoverWallet(c *cli.Context) error {
 	}
 
 	return nil
-
 }
