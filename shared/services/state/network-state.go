@@ -315,8 +315,6 @@ func CreateMetricsCache(
 			state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
 		}
 
-		state.logLine("validator status is %d\n", validatorContractInfo.Status)
-
 		status, inBeaconChain := statusMap[pubKey]
 		if !inBeaconChain {
 			state.logLine("pub key is not found in statusMap: %s\n", pubKey)
