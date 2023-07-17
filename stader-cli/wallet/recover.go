@@ -159,7 +159,7 @@ func recoverWallet(c *cli.Context) error {
 		fmt.Printf("Node account: %s\n", response.AccountAddress.Hex())
 		if !skipValidatorKeyRecovery {
 
-			if !response.OperatorExist {
+			if !response.OperatorExists {
 				fmt.Println("Operator does not register with Stader, no validator key will be recover")
 				return nil
 			}

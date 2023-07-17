@@ -65,7 +65,7 @@ type RecoverWalletResponse struct {
 	Error          string                  `json:"error"`
 	AccountAddress common.Address          `json:"accountAddress"`
 	ValidatorKeys  []types.ValidatorPubkey `json:"validatorKeys"`
-	OperatorExist  bool                    `json:"operatorExist"`
+	OperatorExists bool                    `json:"operatorExists"`
 }
 
 type SearchAndRecoverWalletResponse struct {
