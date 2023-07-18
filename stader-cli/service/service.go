@@ -223,7 +223,7 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings.ExecutionClient.SelectionOption))
 		cfg.ConsensusClient.Value = cfgtypes.ConsensusClient(newSettings.ConsensusClient.Selection)
 	} else if newSettings.EthClient == "external" {
-		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
+		cfg.ExternalConsensusClient.Value = cfgtypes.ConsensusClient(strings.ToLower(newSettings.ConsensusClient.ExternalSelection))
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
 		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
 		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
@@ -256,6 +256,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	case "teku":
 		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
 		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
+	case "nimbus":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Nimbus.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Nimbus.BeaconNodeHttpUrl
 	}
 
 	// update monitoring
