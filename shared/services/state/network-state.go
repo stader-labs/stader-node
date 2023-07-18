@@ -43,7 +43,7 @@ type MetricDetails struct {
 	// done
 	TotalActiveValidators *big.Int
 	// done
-	TotalQueuedValidators *big.Int
+	TotalQueuedValidators float64
 	// done
 	TotalOperators *big.Int
 	// done
@@ -423,10 +423,12 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	totalQueuedValidators, err := node.GetTotalQueuedValidators(prn, nil)
+	prnEthBalanceInWei, err := tokens.GetEthBalance(prn.Client, prnAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+	prnEthBalance := eth.WeiToEth(prnEthBalanceInWei)
+	totalQueuedValidators := prnEthBalance / 3
 	totalSdCollateral, err := tokens.BalanceOf(sdt, sdcAddress, nil)
 	if err != nil {
 		return nil, err

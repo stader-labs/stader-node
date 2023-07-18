@@ -181,7 +181,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalActiveValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalActiveValidators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
-		collector.TotalQueuedValidators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalQueuedValidators.Int64()))
+		collector.TotalQueuedValidators, prometheus.GaugeValue, state.StaderNetworkDetails.TotalQueuedValidators)
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalOperators, prometheus.GaugeValue, float64(state.StaderNetworkDetails.TotalOperators.Int64()))
 	channel <- prometheus.MustNewConstMetric(
