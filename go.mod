@@ -18,7 +18,7 @@ require (
 	github.com/ferranbt/fastssz v0.1.2
 	github.com/glendc/go-external-ip v0.1.0
 	github.com/google/uuid v1.3.0
-	github.com/hashicorp/go-version v1.6.0 // indirect
+	github.com/hashicorp/go-version v1.6.0
 	github.com/herumi/bls-eth-go-binary v1.28.1 // indirect
 	github.com/imdario/mergo v0.3.13
 	github.com/klauspost/cpuid/v2 v2.1.1
@@ -31,11 +31,11 @@ require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prysmaticlabs/go-bitfield v0.0.0-20210809151128-385d8c5e3fb7
 	github.com/prysmaticlabs/prysm/v3 v3.1.1
-	github.com/rivo/tview v0.0.0-20230615085408-bb9595ee0f4d // indirect
+	github.com/rivo/tview v0.0.0-20230621164836-6cc0565babaf // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230713110531-cdd7be57a0fa
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230713110531-cdd7be57a0fa
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230719142744-e879c6d42e80
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230719142744-e879c6d42e80
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0
@@ -44,8 +44,8 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.7.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/term v0.9.0
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/term v0.10.0
+	golang.org/x/text v0.11.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.3.0 // indirect
 )
