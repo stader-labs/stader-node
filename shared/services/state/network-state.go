@@ -332,7 +332,7 @@ func CreateMetricsCache(
 			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
 			continue
 		}
-		if !inBeaconChain && validatorContractInfo.Status == 3 {
+		if validatorContractInfo.Status == 3 {
 			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
 			continue
 		}
