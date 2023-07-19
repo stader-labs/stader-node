@@ -28,6 +28,8 @@ import (
 	"strings"
 	"time"
 
+	// "github.com/containernetworking/cni/pkg/version"
+	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
@@ -606,19 +608,35 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
+	isFirstRun, err := staderClient.IsFirstRun()
 	if err != nil {
 		return fmt.Errorf("error checking for first-run status: %w", err)
 	}
 
-	if isUpdate && !ignoreConfigSuggestion {
-		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
+	cfgVer, err := parseVersion(cfg.Version)
+	if err != nil {
+		return fmt.Errorf("error checking for config version: %w", err)
+	}
+
+	binaryVer, err := parseVersion(shared.StaderVersion)
+	if err != nil {
+		return fmt.Errorf("error checking for binary version: %w", err)
+	}
+
+	shouldUpdateDefaults := cfgVer.LessThan(binaryVer) || isFirstRun
+
+	if shouldUpdateDefaults && !ignoreConfigSuggestion {
+		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nWould you like to update to defaults?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 			}
 			staderClient.SaveConfig(cfg)
-			fmt.Printf("%sUpdated settings successfully.%s\n", colorGreen, colorReset)
+			fmt.Printf("%sUpdated settings successfully.%s\n You may want to run `service config` first to see what's changed\n", colorGreen, colorReset)
+
+			if !cliutils.Confirm("Would you like to continue starting the service?") {
+				return nil
+			}
 		} else {
 			fmt.Println("Cancelled.")
 			return nil
@@ -1694,4 +1712,13 @@ func checkCpuFeatures() error {
 
 	fmt.Println("Your CPU supports all required features for 'modern' images.")
 	return nil
+}
+
+// Parses a version string into a semantic version
+func parseVersion(versionString string) (*version.Version, error) {
+	parsedVersion, err := version.NewSemver(versionString)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing version %s: %w", versionString, err)
+	}
+	return parsedVersion, nil
 }
