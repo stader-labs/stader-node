@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
@@ -24,10 +25,12 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("cycles is %v\n", cycles)
 
 	response := api.CyclesDetailedInfo{}
 	merkleProofs := []api.DetailedMerkleProofInfo{}
 	for _, cycle := range cycles {
+		fmt.Printf("cycle is %v\n", cycle)
 		merkleCycleProof, exists, err := cfg.StaderNode.ReadCycleCache(cycle.Int64())
 		if err != nil {
 			return nil, err
