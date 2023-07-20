@@ -337,7 +337,7 @@ func CreateMetricsCache(
 			continue
 		}
 		if !inBeaconChain && validatorContractInfo.Status == 4 {
-			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
+			beaconChainQueuedValidators.Add(beaconChainQueuedValidators, big.NewInt(1))
 			continue
 		}
 		if validatorContractInfo.Status == 5 {
