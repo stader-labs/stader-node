@@ -33,6 +33,7 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_lc_consensus_client] = strings.Title(format(cfg.ConsensusClient.Value))
 	newSettings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
+	// External
 	// Teku:
 	newSettings[keys.E2cc_em_custom_graffiti_teku] = cfg.ExternalTeku.Graffiti.Value
 	newSettings[keys.E2cc_em_http_teku] = cfg.ExternalTeku.HttpUrl.Value
@@ -47,7 +48,14 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_em_additional_client_flags_lighthouse] = cfg.ExternalLighthouse.AdditionalVcFlags.Value
 	newSettings[keys.E2cc_em_doppelganger_detection_lighthouse] = cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool)
 
-	// rysm:
+	// Nimbus:
+	newSettings[keys.E2cc_em_custom_graffiti_nimbus] = cfg.ExternalNimbus.Graffiti.Value
+	newSettings[keys.E2cc_em_http_nimbus] = cfg.ExternalNimbus.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_nimbus] = cfg.ExternalNimbus.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_nimbus] = cfg.ExternalNimbus.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_nimbus] = cfg.ExternalNimbus.DoppelgangerDetection.Value.(bool)
+
+	// Prysm:
 	newSettings[keys.E2cc_em_custom_graffiti_prysm] = cfg.ExternalPrysm.Graffiti.Value
 	newSettings[keys.E2cc_em_http_prysm] = cfg.ExternalPrysm.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
@@ -125,6 +133,13 @@ func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalLighthouse.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lighthouse]
 	cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
 	cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]
+
+	// case cfgtypes.ConsensusClient_Nimbus:
+	cfg.ExternalNimbus.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_nimbus]
+	cfg.ExternalNimbus.HttpUrl.Value = newSettings[keys.E2cc_em_http_nimbus]
+	cfg.ExternalNimbus.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_nimbus]
+	cfg.ExternalNimbus.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_nimbus]
+	cfg.ExternalNimbus.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_nimbus]
 
 	// case cfgtypes.ConsensusClient_Prysm:
 	cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
