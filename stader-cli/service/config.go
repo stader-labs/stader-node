@@ -185,6 +185,11 @@ func isUpgradeBinary(c *cli.Context) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error loading user settings: %w", err)
 	}
+
+	if len(cfg.Version) == 0 {
+		return true, nil
+	}
+
 	cfgVer, err := parseVersion(cfg.Version)
 	if err != nil {
 		return false, fmt.Errorf("error checking for config version: %w", err)
