@@ -186,7 +186,8 @@ func isUpgradeBinary(c *cli.Context) (bool, error) {
 		return false, fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	if len(cfg.Version) == 0 {
+	// cfg nill or version empty in case fresh install
+	if cfg == nil || len(cfg.Version) == 0 {
 		return true, nil
 	}
 
