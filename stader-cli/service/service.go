@@ -235,6 +235,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
 		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
 		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+		cfg.ExternalNimbus.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalNimbus.HttpUrl.Value = newSettings.ConsensusClient.External.Nimbus.HTTPUrl
+		cfg.ExternalNimbus.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	}
 	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
@@ -316,6 +319,9 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				Teku: pages.ConsensusClientExternalSelectedTekuType{
 					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
 				},
+				Nimbus: pages.ConsensusClientExternalSelectedNimbusType{
+					HTTPUrl: cfg.ExternalNimbus.HttpUrl.Value.(string),
+				},
 			},
 		},
 		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
@@ -335,6 +341,10 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
 			},
 			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Nimbus: pages.FallbackClientsNimbusType{
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
 			},
