@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
@@ -25,12 +24,10 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("cycles is %v\n", cycles)
 
 	response := api.CyclesDetailedInfo{}
 	merkleProofs := []api.DetailedMerkleProofInfo{}
 	for _, cycle := range cycles {
-		fmt.Printf("cycle is %v\n", cycle)
 		merkleCycleProof, exists, err := cfg.StaderNode.ReadCycleCache(cycle.Int64())
 		if err != nil {
 			return nil, err
@@ -49,8 +46,18 @@ func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.Cycle
 		}
 
 		cycleStartBlock := currentBlock
-		if cycleDetails.StartBlock.Cmp(big.NewInt(int64(currentBlock))) < 0 {
-			cycleStartBlock = cycleDetails.StartBlock.Uint64()
+		// this is a special case for cycle 1, since in socializing pool contract cycle 1 has startBlock as 1
+		// which will not be available in the block history of primary eth1 clients
+		if merkleCycleProof.Cycle == 1 {
+			initialSocializingPoolBlock, err := socializing_pool.GetSocializingPoolInitialBlock(sp, nil)
+			if err != nil {
+				return nil, err
+			}
+			cycleStartBlock = initialSocializingPoolBlock.Uint64()
+		} else {
+			if cycleDetails.StartBlock.Cmp(big.NewInt(int64(currentBlock))) < 0 {
+				cycleStartBlock = cycleDetails.StartBlock.Uint64()
+			}
 		}
 		cycleStartTime, err := eth1.ConvertBlockToTimestamp(c, int64(cycleStartBlock))
 		if err != nil {

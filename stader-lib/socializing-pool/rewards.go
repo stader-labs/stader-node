@@ -30,6 +30,10 @@ func GetRewardCycleDetails(sp *stader.SocializingPoolContractManager, cycle *big
 	return sp.SocializingPool.GetRewardCycleDetails(opts, cycle)
 }
 
+func GetSocializingPoolInitialBlock(sp *stader.SocializingPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SocializingPool.InitialBlock(opts)
+}
+
 func HasClaimedRewards(sp *stader.SocializingPoolContractManager, address common.Address, index *big.Int, opts *bind.CallOpts) (bool, error) {
 	return sp.SocializingPool.ClaimedRewards(opts, address, index)
 }

@@ -523,7 +523,6 @@ func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big
 }
 
 func (cfg *StaderNodeConfig) ReadCycleCache(cycle int64) (stader_backend.CycleMerkleProofs, bool, error) {
-	//fmt.Printf("Reading cycle cache for cycle %d\n", cycle)
 	cycleMerkleProofFile := cfg.GetSpRewardCyclePath(cycle, true)
 	absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 	if err != nil {
