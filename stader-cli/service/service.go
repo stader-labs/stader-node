@@ -235,6 +235,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
 		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
 		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+		cfg.ExternalNimbus.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalNimbus.HttpUrl.Value = newSettings.ConsensusClient.External.Nimbus.HTTPUrl
+		cfg.ExternalNimbus.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	}
 	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
@@ -316,6 +319,9 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				Teku: pages.ConsensusClientExternalSelectedTekuType{
 					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
 				},
+				Nimbus: pages.ConsensusClientExternalSelectedNimbusType{
+					HTTPUrl: cfg.ExternalNimbus.HttpUrl.Value.(string),
+				},
 			},
 		},
 		Monitoring:               ConvertBoolToString(cfg.EnableMetrics.Value.(bool)),
@@ -335,6 +341,10 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
 			},
 			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Nimbus: pages.FallbackClientsNimbusType{
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
 			},
@@ -554,7 +564,11 @@ func changeNetworks(c *cli.Context, stader *stader.Client, apiContainerName stri
 }
 
 // Start the Stader service
-func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
+func startService(
+	c *cli.Context,
+	ignoreConfigSuggestion bool,
+	isUpgradeBinary bool,
+) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -613,17 +627,7 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 		return fmt.Errorf("error checking for first-run status: %w", err)
 	}
 
-	cfgVer, err := parseVersion(cfg.Version)
-	if err != nil {
-		return fmt.Errorf("error checking for config version: %w", err)
-	}
-
-	binaryVer, err := parseVersion(shared.StaderVersion)
-	if err != nil {
-		return fmt.Errorf("error checking for binary version: %w", err)
-	}
-
-	shouldUpdateDefaults := cfgVer.LessThan(binaryVer) || isFirstRun
+	shouldUpdateDefaults := isUpgradeBinary || isFirstRun
 
 	if shouldUpdateDefaults && !ignoreConfigSuggestion {
 		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nWould you like to update to defaults?") {
@@ -1287,7 +1291,7 @@ func resyncEth1(c *cli.Context) error {
 
 	// Restart Stader
 	fmt.Printf("Rebuilding %s and restarting Stader...\n", executionContainerName)
-	err = startService(c, true)
+	err = startService(c, true, false)
 	if err != nil {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}
@@ -1410,7 +1414,7 @@ func resyncEth2(c *cli.Context) error {
 
 	// Restart Stader
 	fmt.Printf("Rebuilding %s and restarting Stader...\n", beaconContainerName)
-	err = startService(c, true)
+	err = startService(c, true, false)
 	if err != nil {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}

@@ -228,7 +228,12 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					}
 
 					// Run command
-					return startService(c, false)
+					isUpgradeBinary, err := isUpgradeBinary(c)
+					if err != nil {
+						return fmt.Errorf("error checking for binary version: %w", err)
+					}
+
+					return startService(c, false, isUpgradeBinary)
 
 				},
 			},
