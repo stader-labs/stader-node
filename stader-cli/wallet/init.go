@@ -80,8 +80,9 @@ func initWallet(c *cli.Context) error {
 
 	// Print mnemonic
 	fmt.Println("Your mnemonic phrase to recover your wallet is printed below. It can be used to recover your node account and validator keys if they are lost.")
-	fmt.Println("Please be advised that due to security reasons, recovery of either the password or the mnemonic phrase is not possible once the wallet is created")
-	fmt.Println("It is therefore imperative that you safeguard these credentials to avoid any potential loss or unauthorized access to your node or validator.")
+	fmt.Println("We request that you take note of your password and mnemonic key phrase and store them in a secure location.")
+	fmt.Println("The recovery of either the password or the mnemonic phrase is not possible if you lose control of this device or if the node crashes")
+	fmt.Println("It is therefore imperative that you safeguard these credentials to avoid any potential loss of access to your node or validator.")
 	fmt.Println("==============================================================================================================================================")
 	fmt.Println("")
 	fmt.Println(response.Mnemonic)
