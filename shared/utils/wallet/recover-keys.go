@@ -50,7 +50,7 @@ func RecoverStaderKeys(pnr *stader.PermissionlessNodeRegistryContractManager, ad
 				// Found one!
 				delete(allOperatorValidators, validatorKey.PublicKey)
 				if !testOnly {
-					err := w.SaveValidatorKey(validatorKey)
+					_, err := w.RecoverValidatorKey(validatorKey.PublicKey, 0)
 					if err != nil {
 						return nil, fmt.Errorf("error recovering validator keys: %w", err)
 					}
