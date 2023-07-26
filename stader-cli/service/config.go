@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.0]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import (
 	"github.com/stader-labs/ethcli-ui/configuration/config"
 	"github.com/stader-labs/ethcli-ui/configuration/logger"
 	"github.com/stader-labs/ethcli-ui/wizard"
+	"github.com/stader-labs/stader-node/shared"
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -159,6 +160,10 @@ func configureService(c *cli.Context) error {
 		fmt.Printf("Your settings have not changed.\n")
 		return nil
 	}
+	isUpgradeBinary, err := isUpgradeBinary(c)
+	if err != nil {
+		return fmt.Errorf("error checking for binary version: %w", err)
+	}
 
 	err = staderClient.SaveConfig(newCg)
 	if err != nil {
@@ -166,13 +171,38 @@ func configureService(c *cli.Context) error {
 	}
 
 	// Restart the services
-	err = startService(c, true)
+	err = startService(c, false, isUpgradeBinary)
 	if err != nil {
 		return fmt.Errorf("error startService: %w", err)
 	}
 
 	// Remove the upgrade flag if it's there
 	return staderClient.RemoveUpgradeFlagFile()
+}
+
+func isUpgradeBinary(c *cli.Context) (bool, error) {
+	cfg, err := loadConfig(c)
+	if err != nil {
+		return false, fmt.Errorf("error loading user settings: %w", err)
+	}
+
+	// cfg nill or version empty in case fresh install
+	if cfg == nil || len(cfg.Version) == 0 {
+		return true, nil
+	}
+
+	cfgVer, err := parseVersion(cfg.Version)
+	if err != nil {
+		return false, fmt.Errorf("error checking for config version: %w", err)
+	}
+
+	binaryVer, err := parseVersion(shared.StaderVersion)
+	if err != nil {
+		return false, fmt.Errorf("error checking for binary version: %w", err)
+	}
+	isUpgradeBinary := cfgVer.LessThanOrEqual(binaryVer)
+
+	return isUpgradeBinary, nil
 }
 
 func handleUI(
