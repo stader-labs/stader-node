@@ -56,6 +56,6 @@ linters:
     - whitespace
     - wsl
 issues:
-  new-from-rev: 3d7d6788978de735134f0a8786c28d6618cfd735
+  new-from-rev: b123711816bd67e9995a6102d43c7ad72c896806
 run:
   issues-exit-code: 0
