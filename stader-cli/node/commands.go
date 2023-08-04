@@ -21,6 +21,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/urfave/cli"
 
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -109,10 +110,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-reward-address, ora",
 						Usage: "The address at which operator will get rewards (will default to the current node address)",
 					},
-					cli.StringFlag{
-						Name:  "socialize-el, sel",
-						Usage: "Should EL rewards be socialized (will default to true)",
-					},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm node registration",
@@ -132,19 +129,8 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					}
 
-					socializeElString := c.String("socialize-el")
-					socializeEl := true
-					if socializeElString != "" {
-						var err error
-						socializeEl, err = cliutils.ValidateBool("socialize-el", socializeElString)
-						if err != nil {
-							return err
-						}
-					}
-
 					// Run
-					return registerNode(c, operatorName, socializeEl)
-
+					return registerNode(c, operatorName)
 				},
 			},
 			{

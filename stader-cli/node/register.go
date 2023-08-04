@@ -11,7 +11,8 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 )
 
-func registerNode(c *cli.Context, operatorName string, socializeEl bool) error {
+func registerNode(c *cli.Context, operatorName string) error {
+	socializeEl := cliutils.Confirm("Should EL rewards be socialized?")
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
