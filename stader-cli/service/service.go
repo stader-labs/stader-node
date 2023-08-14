@@ -636,14 +636,11 @@ func startService(
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 			}
 			staderClient.SaveConfig(cfg)
-			fmt.Printf("%sUpdated settings successfully.%s\n You may want to run `service config` first to see what's changed\n", colorGreen, colorReset)
+			fmt.Printf("%sUpdated settings successfully.%s\n You can review the changes first by running the 'Service Config' command if you wish to, before approving the service start.\n", colorGreen, colorReset)
 
 			if !cliutils.Confirm("Would you like to continue starting the service?") {
 				return nil
 			}
-		} else {
-			fmt.Println("Cancelled.")
-			return nil
 		}
 	}
 
