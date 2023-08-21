@@ -641,9 +641,6 @@ func startService(
 			if !cliutils.Confirm("Would you like to continue starting the service?") {
 				return nil
 			}
-		} else {
-			fmt.Println("Cancelled.")
-			return nil
 		}
 	}
 

@@ -59,6 +59,9 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 
 	newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical] = cfg.MevBoost.BloxRouteEthicalRelay.Value.(bool)
 
+	v, _ := cfg.MevBoost.AestusRelay.Value.(bool)
+	newSettings[keys.Mev_boost_rm_enable_aestus] = v
+
 	newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated] = cfg.MevBoost.BloxRouteRegulatedRelay.Value.(bool)
 
 	return nil
@@ -87,6 +90,7 @@ func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{})
 
 	cfg.MevBoost.BloxRouteEthicalRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical]
 	cfg.MevBoost.BloxRouteRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated]
+	cfg.MevBoost.AestusRelay.Value = newSettings[keys.Mev_boost_rm_enable_aestus]
 
 	switch mevSelection {
 	case cfgtypes.MevSelectionMode_Profile:
