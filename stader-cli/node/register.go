@@ -12,8 +12,6 @@ import (
 )
 
 func registerNode(c *cli.Context, operatorName string) error {
-	socializeEl := cliutils.Confirm("Should EL rewards be socialized?")
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -30,6 +28,8 @@ func registerNode(c *cli.Context, operatorName string) error {
 	if err != nil {
 		return err
 	}
+
+	socializeEl := cliutils.Confirm("Should EL rewards be socialized?")
 
 	operatorRewardAddressString := c.String("operator-reward-address")
 	if operatorRewardAddressString == "" {
