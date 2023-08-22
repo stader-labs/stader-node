@@ -83,6 +83,9 @@ type MevBoostConfig struct {
 	// Ultra sound relay
 	UltrasoundRelay config.Parameter `yaml:"ultrasoundEnabled,omitempty"`
 
+	// Aestus relay
+	AestusRelay config.Parameter `yaml:"aestusEnabled,omitempty"`
+
 	// The RPC port
 	Port config.Parameter `yaml:"port,omitempty"`
 
@@ -176,6 +179,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		BlocknativeRelay:        generateRelayParameter("blocknativeEnabled", relayMap[config.MevRelayID_Blocknative]),
 		EdenRelay:               generateRelayParameter("edenEnabled", relayMap[config.MevRelayID_Eden]),
 		UltrasoundRelay:         generateRelayParameter("ultrasoundEnabled", relayMap[config.MevRelayID_Ultrasound]),
+		AestusRelay:             generateRelayParameter("aestusEnabled", relayMap[config.MevRelayID_Aestus]),
 
 		Port: config.Parameter{
 			ID:                   "port",
@@ -258,6 +262,7 @@ func (cfg *MevBoostConfig) GetParameters() []*config.Parameter {
 		&cfg.BlocknativeRelay,
 		&cfg.EdenRelay,
 		&cfg.UltrasoundRelay,
+		&cfg.AestusRelay,
 		&cfg.Port,
 		&cfg.OpenRpcPort,
 		&cfg.ContainerTag,
@@ -387,6 +392,13 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 				relays = append(relays, cfg.relayMap[config.MevRelayID_Ultrasound])
 			}
 		}
+
+		if cfg.AestusRelay.Value == true {
+			_, exists := cfg.relayMap[config.MevRelayID_Aestus].Urls[currentNetwork]
+			if exists {
+				relays = append(relays, cfg.relayMap[config.MevRelayID_Aestus])
+			}
+		}
 	}
 
 	return relays
@@ -497,6 +509,19 @@ func createDefaultRelays() []config.MevRelay {
 				config.Network_Mainnet: "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money?id=staderlabs",
 				config.Network_Prater:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=staderlabs",
 				config.Network_Devnet:  "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money?id=staderlabs",
+			},
+			Regulated:     false,
+			NoSandwiching: false,
+		},
+		// Aestus
+		{
+			ID:          config.MevRelayID_Aestus,
+			Name:        "Aestus",
+			Description: "The Aestus MEV-Boost Relay is an independent and non-censoring relay. It is committed to neutrality and the development of a healthy MEV-Boost ecosystem.",
+			Urls: map[config.Network]string{
+				config.Network_Mainnet: "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live?id=staderlabs",
+				config.Network_Prater:  "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live?id=staderlabs",
+				config.Network_Devnet:  "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live?id=staderlabs",
 			},
 			Regulated:     false,
 			NoSandwiching: false,

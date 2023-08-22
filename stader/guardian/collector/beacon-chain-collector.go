@@ -22,6 +22,7 @@ package collector
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/ethereum/go-ethereum/common"

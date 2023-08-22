@@ -182,6 +182,21 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
+					targetUpgrades, err := migrate(c)
+					if err != nil {
+						return fmt.Errorf("error migrate %w", err)
+					}
+					// We defer run migrate because we need stader-node api up and running first
+					defer func() {
+						for _, upgrader := range targetUpgrades {
+							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+							err = upgrader.upgradeFunc(c)
+							if err != nil {
+								fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
+							}
+						}
+					}()
+
 					// Run command
 					return configureService(c)
 
@@ -227,9 +242,28 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					// Run command
-					return startService(c, false)
+					targetUpgrades, err := migrate(c)
+					if err != nil {
+						return fmt.Errorf("error migrate %w", err)
+					}
+					// We defer run migrate because we need stader-node api up and running first
+					defer func() {
+						for _, upgrader := range targetUpgrades {
+							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+							err = upgrader.upgradeFunc(c)
+							if err != nil {
+								fmt.Printf("error applying upgrade for config version %s: %+v", upgrader.version.String(), err)
+							}
+						}
+					}()
 
+					isUpgradeBinary, err := isUpgradeBinary(c)
+					if err != nil {
+						return fmt.Errorf("error checking for binary version: %w", err)
+					}
+
+					// Run command
+					return startService(c, false, isUpgradeBinary)
 				},
 			},
 

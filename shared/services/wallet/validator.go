@@ -245,8 +245,8 @@ func (w *Wallet) GetValidatorKeys(startIndex uint, length uint) ([]ValidatorKey,
 func (w *Wallet) SaveValidatorKey(key ValidatorKey) error {
 
 	// Update account index
-	if key.WalletIndex > w.ws.NextAccount {
-		w.ws.NextAccount = key.WalletIndex
+	if key.WalletIndex >= w.ws.NextAccount {
+		w.ws.NextAccount = key.WalletIndex + 1
 	}
 
 	// Update keystores
@@ -336,6 +336,26 @@ func (w *Wallet) TestRecoverValidatorKey(pubkey stadertypes.ValidatorPubkey, sta
 	// Return
 	return index + startIndex, nil
 
+}
+
+// Create a new validator key
+func (w *Wallet) RebuildLodestarValidatorKeys() error {
+	keys, err := w.GetValidatorKeys(0, w.ws.NextAccount)
+	if err != nil {
+		return err
+	}
+
+	lodestarStore, ok := w.keystores["lodestar"]
+	if !ok {
+		return fmt.Errorf("could not find store to RebuildLodestarValidatorKeys lodestar")
+	}
+	for _, key := range keys {
+		if err := lodestarStore.StoreValidatorKey(key.PrivateKey, key.DerivationPath); err != nil {
+			return fmt.Errorf("could not store validator key %s in %s keystore: %w", key.PublicKey.Hex(), "lodestar", err)
+		}
+	}
+
+	return nil
 }
 
 // Get a validator private key by index

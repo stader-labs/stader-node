@@ -21,6 +21,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 
 	"github.com/ethereum/go-ethereum/common"

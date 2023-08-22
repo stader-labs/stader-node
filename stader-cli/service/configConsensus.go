@@ -33,6 +33,7 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_lc_consensus_client] = strings.Title(format(cfg.ConsensusClient.Value))
 	newSettings[keys.E2cc_em_consensus_client] = strings.Title(format(cfg.ExternalConsensusClient.Value))
 
+	// External
 	// Teku:
 	newSettings[keys.E2cc_em_custom_graffiti_teku] = cfg.ExternalTeku.Graffiti.Value
 	newSettings[keys.E2cc_em_http_teku] = cfg.ExternalTeku.HttpUrl.Value
@@ -47,13 +48,27 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_em_additional_client_flags_lighthouse] = cfg.ExternalLighthouse.AdditionalVcFlags.Value
 	newSettings[keys.E2cc_em_doppelganger_detection_lighthouse] = cfg.ExternalLighthouse.DoppelgangerDetection.Value.(bool)
 
-	// rysm:
+	// Nimbus:
+	newSettings[keys.E2cc_em_custom_graffiti_nimbus] = cfg.ExternalNimbus.Graffiti.Value
+	newSettings[keys.E2cc_em_http_nimbus] = cfg.ExternalNimbus.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_nimbus] = cfg.ExternalNimbus.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_nimbus] = cfg.ExternalNimbus.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_nimbus] = cfg.ExternalNimbus.DoppelgangerDetection.Value.(bool)
+
+	// Prysm:
 	newSettings[keys.E2cc_em_custom_graffiti_prysm] = cfg.ExternalPrysm.Graffiti.Value
 	newSettings[keys.E2cc_em_http_prysm] = cfg.ExternalPrysm.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_prysm] = cfg.ExternalPrysm.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_prysm] = cfg.ExternalPrysm.AdditionalVcFlags.Value
 	newSettings[keys.E2cc_em_doppelganger_detection_prysm] = cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool)
 	newSettings[keys.E2cc_em_json_rpc_prysm] = cfg.ExternalPrysm.JsonRpcUrl.Value
+
+	// Lodestar:
+	newSettings[keys.E2cc_em_custom_graffiti_lodestar] = cfg.ExternalLodestar.Graffiti.Value
+	newSettings[keys.E2cc_em_http_lodestar] = cfg.ExternalLodestar.HttpUrl.Value
+	newSettings[keys.E2cc_em_container_tag_lodestar] = cfg.ExternalLodestar.ContainerTag.Value
+	newSettings[keys.E2cc_em_additional_client_flags_lodestar] = cfg.ExternalLodestar.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_lodestar] = cfg.ExternalLodestar.DoppelgangerDetection.Value.(bool)
 
 	// Local
 	newSettings[keys.E2cc_lc_common_graffiti] = cfg.ConsensusCommon.Graffiti.Value
@@ -68,6 +83,7 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_lc_max_peer_nimbus] = format(cfg.Nimbus.MaxPeers.Value)
 	newSettings[keys.E2cc_lc_max_peer_prysm] = format(cfg.Prysm.MaxPeers.Value)
 	newSettings[keys.E2cc_lc_max_peer_teku] = format(cfg.Teku.MaxPeers.Value)
+	newSettings[keys.E2cc_lc_max_peer_lodestar] = format(cfg.Lodestar.MaxPeers.Value)
 
 	// Lighthouse
 	newSettings[keys.E2cc_lc_container_tag_lighthouse] = cfg.Lighthouse.ContainerTag.Value
@@ -83,6 +99,11 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	// Nimbus
 	newSettings[keys.E2cc_lc_container_tag_nimbus] = cfg.Nimbus.BnContainerTag.Value
 	newSettings[keys.E2cc_lc_additional_flags_nimbus] = cfg.Nimbus.AdditionalBnFlags.Value
+
+	// Lodestar
+	newSettings[keys.E2cc_lc_container_tag_lodestar] = cfg.Lodestar.ContainerTag.Value
+	newSettings[keys.E2cc_lc_additional_beacon_node_flags_lodestar] = cfg.Lodestar.AdditionalBnFlags.Value
+	newSettings[keys.E2cc_lc_additional_client_flags_lodestar] = cfg.Lodestar.AdditionalVcFlags.Value
 
 	// Prysm
 	newSettings[keys.E2cc_lc_rpc_port_prysm] = format(cfg.Prysm.RpcPort.Value)
@@ -126,6 +147,13 @@ func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalLighthouse.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lighthouse]
 	cfg.ExternalLighthouse.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lighthouse]
 
+	// case cfgtypes.ConsensusClient_Nimbus:
+	cfg.ExternalNimbus.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_nimbus]
+	cfg.ExternalNimbus.HttpUrl.Value = newSettings[keys.E2cc_em_http_nimbus]
+	cfg.ExternalNimbus.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_nimbus]
+	cfg.ExternalNimbus.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_nimbus]
+	cfg.ExternalNimbus.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_nimbus]
+
 	// case cfgtypes.ConsensusClient_Prysm:
 	cfg.ExternalPrysm.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_prysm]
 	cfg.ExternalPrysm.HttpUrl.Value = newSettings[keys.E2cc_em_http_prysm]
@@ -133,6 +161,14 @@ func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalPrysm.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_prysm]
 	cfg.ExternalPrysm.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_prysm]
 	cfg.ExternalPrysm.JsonRpcUrl.Value = newSettings[keys.E2cc_em_json_rpc_prysm]
+
+	// case cfgtypes.ConsensusClient_lodestar:
+	cfg.ExternalLodestar.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lodestar]
+	cfg.ExternalLodestar.HttpUrl.Value = newSettings[keys.E2cc_em_http_lodestar]
+
+	cfg.ExternalLodestar.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_lodestar]
+	cfg.ExternalLodestar.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_lodestar]
+	cfg.ExternalLodestar.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_lodestar]
 
 	return nil
 }
@@ -186,6 +222,11 @@ func updateLocalConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]
 	newCfg.Prysm.VcContainerTag.Value = settings[keys.E2cc_lc_validator_client_container_tag_prysm]
 	newCfg.Prysm.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_beacon_node_flags_prysm]
 	newCfg.Prysm.AdditionalVcFlags.Value = settings[keys.E2cc_lc_additional_client_flags_prysm]
+
+	// Lodestar
+	newCfg.Lodestar.ContainerTag.Value = settings[keys.E2cc_lc_container_tag_lodestar]
+	newCfg.Lodestar.AdditionalBnFlags.Value = settings[keys.E2cc_lc_additional_beacon_node_flags_lodestar]
+	newCfg.Lodestar.AdditionalVcFlags.Value = settings[keys.E2cc_lc_additional_client_flags_lodestar]
 
 	return nil
 }

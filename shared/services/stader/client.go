@@ -23,7 +23,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/stader-labs/stader-node/shared"
 	"io"
 	"io/ioutil"
 	"log"
@@ -36,6 +35,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/stader-labs/stader-node/shared"
 
 	"github.com/a8m/envsubst"
 	"github.com/fatih/color"
@@ -378,6 +379,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 		cfg.ExternalLighthouse.HttpUrl.Value = ccProvider
 		cfg.ExternalPrysm.HttpUrl.Value = ccProvider
 		cfg.ExternalTeku.HttpUrl.Value = ccProvider
+		cfg.ExternalLodestar.HttpUrl.Value = ccProvider
 	}
 
 	for _, param := range legacyCfg.Chains.Eth2.Client.Params {
@@ -387,6 +389,7 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			cfg.ExternalLighthouse.Graffiti.Value = param.Value
 			cfg.ExternalPrysm.Graffiti.Value = param.Value
 			cfg.ExternalTeku.Graffiti.Value = param.Value
+			cfg.ExternalLodestar.Graffiti.Value = param.Value
 		case "ETH2_MAX_PEERS":
 			switch cfg.ConsensusClient.Value.(cfgtypes.ConsensusClient) {
 			case cfgtypes.ConsensusClient_Lighthouse:
@@ -397,6 +400,8 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 				convertUintParam(param, &cfg.Prysm.MaxPeers, network, 16)
 			case cfgtypes.ConsensusClient_Teku:
 				convertUintParam(param, &cfg.Teku.MaxPeers, network, 16)
+			case cfgtypes.ConsensusClient_Lodestar:
+				convertUintParam(param, &cfg.Lodestar.MaxPeers, network, 16)
 			}
 		case "ETH2_P2P_PORT":
 			convertUintParam(param, &cfg.ConsensusCommon.P2pPort, network, 16)
@@ -406,11 +411,13 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 			if param.Value == "y" {
 				cfg.ConsensusCommon.DoppelgangerDetection.Value = true
 				cfg.ExternalLighthouse.DoppelgangerDetection.Value = true
+				cfg.ExternalLodestar.DoppelgangerDetection.Value = true
 				cfg.ExternalPrysm.DoppelgangerDetection.Value = true
 			} else {
 				cfg.ConsensusCommon.DoppelgangerDetection.Value = false
 				cfg.ExternalLighthouse.DoppelgangerDetection.Value = false
 				cfg.ExternalPrysm.DoppelgangerDetection.Value = false
+				cfg.ExternalLodestar.DoppelgangerDetection.Value = false
 			}
 		case "ETH2_RPC_PORT":
 			convertUintParam(param, &cfg.Prysm.RpcPort, network, 16)
@@ -471,6 +478,9 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 		case "teku":
 			cfg.Teku.ContainerTag.Value = option.Image
 			cfg.ExternalTeku.ContainerTag.Value = option.Image
+		case "lodestar":
+			cfg.Lodestar.ContainerTag.Value = option.Image
+			cfg.ExternalLodestar.ContainerTag.Value = option.Image
 		}
 	}
 

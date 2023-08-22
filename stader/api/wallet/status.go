@@ -21,8 +21,9 @@ package wallet
 
 import (
 	"context"
-	"github.com/urfave/cli"
 	"math/big"
+
+	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"

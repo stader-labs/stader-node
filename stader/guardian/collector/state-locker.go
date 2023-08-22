@@ -44,7 +44,7 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 				ClaimedSocializingPoolSdRewards:      0,
 				UnclaimedSocializingPoolElRewards:    0,
 				TotalActiveValidators:                big.NewInt(0),
-				TotalQueuedValidators:                big.NewInt(0),
+				TotalQueuedValidators:                0,
 				UnclaimedSocializingPoolSDRewards:    0,
 				OperatorStakedSd:                     0,
 				OperatorEthCollateral:                0,

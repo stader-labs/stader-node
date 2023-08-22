@@ -23,11 +23,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"log"
 	"math/big"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/stader-lib/node"

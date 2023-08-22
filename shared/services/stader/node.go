@@ -22,11 +22,12 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"math/big"
+	"strconv"
+
 	"github.com/ethereum/go-ethereum/common"
 	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )

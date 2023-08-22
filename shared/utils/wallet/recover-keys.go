@@ -2,13 +2,13 @@ package wallet
 
 import (
 	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 )
 
 const (
@@ -21,9 +21,6 @@ func RecoverStaderKeys(pnr *stader.PermissionlessNodeRegistryContractManager, ad
 	operatorId, err := node.GetOperatorId(pnr, address, nil)
 	if err != nil {
 		return nil, err
-	}
-	if operatorId.Cmp(big.NewInt(0)) == 0 {
-		return recoveredKeys, nil
 	}
 	// Get node's validating pubkeys
 	allOperatorValidators, _, err := stdr.GetAllValidatorsRegisteredWithOperator(pnr, operatorId, address, nil)

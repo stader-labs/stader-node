@@ -115,6 +115,25 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			},
 
 			{
+				Name:      "rebuild-validator-keys",
+				Aliases:   []string{"rvk"},
+				Usage:     "Rebuild a node wallet validator keys",
+				UsageText: "stader-cli api wallet rebuild-validator-keys",
+				Flags:     []cli.Flag{},
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(rebuildValidatorKeys(c))
+					return nil
+
+				},
+			},
+
+			{
 				Name:      "init",
 				Aliases:   []string{"i"},
 				Usage:     "Initialize the node wallet",

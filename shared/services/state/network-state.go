@@ -43,7 +43,7 @@ type MetricDetails struct {
 	// done
 	TotalActiveValidators *big.Int
 	// done
-	TotalQueuedValidators *big.Int
+	TotalQueuedValidators float64
 	// done
 	TotalOperators *big.Int
 	// done
@@ -315,8 +315,6 @@ func CreateMetricsCache(
 			state.logLine("pub key is not found in validatorInfoMap: %s\n", pubKey)
 		}
 
-		state.logLine("validator status is %d\n", validatorContractInfo.Status)
-
 		status, inBeaconChain := statusMap[pubKey]
 		if !inBeaconChain {
 			state.logLine("pub key is not found in statusMap: %s\n", pubKey)
@@ -334,12 +332,12 @@ func CreateMetricsCache(
 			frontRunValidators.Add(frontRunValidators, big.NewInt(1))
 			continue
 		}
-		if !inBeaconChain && validatorContractInfo.Status == 3 {
+		if validatorContractInfo.Status == 3 {
 			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
 			continue
 		}
 		if !inBeaconChain && validatorContractInfo.Status == 4 {
-			staderQueuedValidators.Add(staderQueuedValidators, big.NewInt(1))
+			beaconChainQueuedValidators.Add(beaconChainQueuedValidators, big.NewInt(1))
 			continue
 		}
 		if validatorContractInfo.Status == 5 {
@@ -425,10 +423,12 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	totalQueuedValidators, err := node.GetTotalQueuedValidators(prn, nil)
+	prnEthBalanceInWei, err := tokens.GetEthBalance(prn.Client, prnAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+	prnEthBalance := eth.WeiToEth(prnEthBalanceInWei)
+	totalQueuedValidators := prnEthBalance / 3
 	totalSdCollateral, err := tokens.BalanceOf(sdt, sdcAddress, nil)
 	if err != nil {
 		return nil, err

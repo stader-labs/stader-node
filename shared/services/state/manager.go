@@ -23,13 +23,14 @@ package state
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 )

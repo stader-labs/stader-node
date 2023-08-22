@@ -36,6 +36,21 @@ const (
 	findIterations uint = 100000
 )
 
+func rebuildValidatorKeys(c *cli.Context) (*api.RebuildWalletResponse, error) {
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the keys for this bucket
+	err = w.RebuildLodestarValidatorKeys()
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.RebuildWalletResponse{}, nil
+}
+
 func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse, error) {
 
 	// Get services
@@ -86,9 +101,18 @@ func recoverWallet(c *cli.Context, mnemonic string) (*api.RecoverWalletResponse,
 		if err != nil {
 			return nil, err
 		}
-		response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
+
+		operatorExists, err := pnr.PermissionlessNodeRegistry.IsExistingOperator(nil, nodeAccount.Address)
 		if err != nil {
 			return nil, err
+		}
+
+		response.OperatorExists = operatorExists
+		if operatorExists {
+			response.ValidatorKeys, err = walletutils.RecoverStaderKeys(pnr, nodeAccount.Address, w, false)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

@@ -112,10 +112,12 @@ type StaderConfig struct {
 	Nimbus             *NimbusConfig             `yaml:"nimbus,omitempty"`
 	Prysm              *PrysmConfig              `yaml:"prysm,omitempty"`
 	Teku               *TekuConfig               `yaml:"teku,omitempty"`
+	Lodestar           *LodestarConfig           `yaml:"lodestar,omitempty"`
 	ExternalLighthouse *ExternalLighthouseConfig `yaml:"externalLighthouse,omitempty"`
 	ExternalNimbus     *ExternalNimbusConfig     `yaml:"externalNimbus,omitempty"`
 	ExternalPrysm      *ExternalPrysmConfig      `yaml:"externalPrysm,omitempty"`
 	ExternalTeku       *ExternalTekuConfig       `yaml:"externalTeku,omitempty"`
+	ExternalLodestar   *ExternalLodestarConfig   `yaml:"externalLodestar,omitempty"`
 
 	// Fallback client configurations
 	FallbackNormal *FallbackNormalConfig `yaml:"fallbackNormal,omitempty"`
@@ -287,6 +289,10 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 				Name:        "Teku",
 				Description: "PegaSys Teku (formerly known as Artemis) is a Java-based Ethereum 2.0 client designed & built to meet institutional needs and security requirements. PegaSys is an arm of ConsenSys dedicated to building enterprise-ready clients and tools for interacting with the core Ethereum platform. Teku is Apache 2 licensed and written in Java, a language notable for its maturity & ubiquity.",
 				Value:       config.ConsensusClient_Teku,
+			}, {
+				Name:        "Lodestar",
+				Description: "Lodestar is the fifth open-source Ethereum consensus client.  It is written in Typescript maintained by ChainSafe Systems.  Lodestar, their flagship product, is a production-capable Beacon Chain and Validator Client uniquely situated as the go-to for researchers and developers for rapid prototyping and browser usage.",
+				Value:       config.ConsensusClient_Lodestar,
 			}},
 		},
 
@@ -316,6 +322,10 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 				Name:        "Teku",
 				Description: "Select this if you will use Teku as your Consensus client.",
 				Value:       config.ConsensusClient_Teku,
+			}, {
+				Name:        "Lodestar",
+				Description: "Select this if you will use Lodestar as your Consensus client.",
+				Value:       config.ConsensusClient_Lodestar,
 			}},
 		},
 
@@ -445,10 +455,12 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 	cfg.Nimbus = NewNimbusConfig(cfg)
 	cfg.Prysm = NewPrysmConfig(cfg)
 	cfg.Teku = NewTekuConfig(cfg)
+	cfg.Lodestar = NewLodestarConfig(cfg)
 	cfg.ExternalLighthouse = NewExternalLighthouseConfig(cfg)
 	cfg.ExternalNimbus = NewExternalNimbusConfig(cfg)
 	cfg.ExternalPrysm = NewExternalPrysmConfig(cfg)
 	cfg.ExternalTeku = NewExternalTekuConfig(cfg)
+	cfg.ExternalLodestar = NewExternalLodestarConfig(cfg)
 	cfg.Grafana = NewGrafanaConfig(cfg)
 	cfg.Prometheus = NewPrometheusConfig(cfg)
 	cfg.Exporter = NewExporterConfig(cfg)
@@ -541,7 +553,9 @@ func (cfg *StaderConfig) GetSubconfigs() map[string]config.Config {
 		"nimbus":             cfg.Nimbus,
 		"prysm":              cfg.Prysm,
 		"teku":               cfg.Teku,
+		"lodestar":           cfg.Lodestar,
 		"externalLighthouse": cfg.ExternalLighthouse,
+		"externalLodestar":   cfg.ExternalLodestar,
 		"externalPrysm":      cfg.ExternalPrysm,
 		"externalTeku":       cfg.ExternalTeku,
 		"fallbackNormal":     cfg.FallbackNormal,
@@ -644,6 +658,8 @@ func (cfg *StaderConfig) GetSelectedConsensusClientConfig() (config.ConsensusCon
 			return cfg.Prysm, nil
 		case config.ConsensusClient_Teku:
 			return cfg.Teku, nil
+		case config.ConsensusClient_Lodestar:
+			return cfg.Lodestar, nil
 		default:
 			return nil, fmt.Errorf("unknown consensus client [%v] selected", client)
 		}
@@ -659,6 +675,8 @@ func (cfg *StaderConfig) GetSelectedConsensusClientConfig() (config.ConsensusCon
 			return cfg.ExternalPrysm, nil
 		case config.ConsensusClient_Teku:
 			return cfg.ExternalTeku, nil
+		case config.ConsensusClient_Lodestar:
+			return cfg.ExternalLodestar, nil
 		default:
 			return nil, fmt.Errorf("unknown external consensus client [%v] selected", client)
 		}
@@ -679,7 +697,7 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 	case config.Mode_Local:
 		client := cfg.ConsensusClient.Value.(config.ConsensusClient)
 		switch client {
-		case config.ConsensusClient_Lighthouse, config.ConsensusClient_Nimbus, config.ConsensusClient_Prysm:
+		case config.ConsensusClient_Lighthouse, config.ConsensusClient_Lodestar, config.ConsensusClient_Nimbus, config.ConsensusClient_Prysm:
 			return cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Teku:
 			return false, nil
@@ -698,6 +716,8 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 			return cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Teku:
 			return false, nil
+		case config.ConsensusClient_Lodestar:
+			return cfg.ExternalLodestar.DoppelgangerDetection.Value.(bool), nil
 		default:
 			return false, fmt.Errorf("unknown external consensus client [%v] selected", client)
 		}
@@ -883,7 +903,10 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			envVars["CC_RPC_ENDPOINT"] = fmt.Sprintf("http://%s:%d", Eth2ContainerName, cfg.Prysm.RpcPort.Value)
 		case config.ConsensusClient_Teku:
 			config.AddParametersToEnvVars(cfg.Teku.GetParameters(), envVars)
+		case config.ConsensusClient_Lodestar:
+			config.AddParametersToEnvVars(cfg.Lodestar.GetParameters(), envVars)
 		}
+
 	} else {
 		consensusClient = cfg.ExternalConsensusClient.Value.(config.ConsensusClient)
 
@@ -896,6 +919,8 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			config.AddParametersToEnvVars(cfg.ExternalPrysm.GetParameters(), envVars)
 		case config.ConsensusClient_Teku:
 			config.AddParametersToEnvVars(cfg.ExternalTeku.GetParameters(), envVars)
+		case config.ConsensusClient_Lodestar:
+			config.AddParametersToEnvVars(cfg.ExternalLodestar.GetParameters(), envVars)
 		}
 	}
 	envVars["CC_CLIENT"] = fmt.Sprint(consensusClient)

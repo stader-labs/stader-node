@@ -21,11 +21,12 @@ package services
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
-	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"math/big"
 	"os"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/common"
+	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 
 	"github.com/docker/docker/client"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -36,6 +37,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
 	lhkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/lighthouse"
+
+	lokeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/lodestar"
 	nmkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/nimbus"
 	prkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/prysm"
 	tkkeystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore/teku"
@@ -487,10 +490,12 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
 		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
 		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
+		lodestarKeystore := lokeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
 		nodeWallet.AddKeystore("lighthouse", lighthouseKeystore)
 		nodeWallet.AddKeystore("nimbus", nimbusKeystore)
 		nodeWallet.AddKeystore("prysm", prysmKeystore)
 		nodeWallet.AddKeystore("teku", tekuKeystore)
+		nodeWallet.AddKeystore("lodestar", lodestarKeystore)
 	})
 	return nodeWallet, err
 }

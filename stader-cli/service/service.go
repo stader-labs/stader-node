@@ -28,6 +28,8 @@ import (
 	"strings"
 	"time"
 
+	// "github.com/containernetworking/cni/pkg/version"
+	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 	"gopkg.in/yaml.v2"
@@ -223,7 +225,7 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExecutionClient.Value = cfgtypes.ExecutionClient(strings.ToLower(newSettings.ExecutionClient.SelectionOption))
 		cfg.ConsensusClient.Value = cfgtypes.ConsensusClient(newSettings.ConsensusClient.Selection)
 	} else if newSettings.EthClient == "external" {
-		cfg.ExternalConsensusClient.Value = newSettings.ConsensusClient.ExternalSelection
+		cfg.ExternalConsensusClient.Value = cfgtypes.ConsensusClient(strings.ToLower(newSettings.ConsensusClient.ExternalSelection))
 		cfg.ExternalExecution.WsUrl.Value = newSettings.ExecutionClient.External.WebsocketBasedRpcApi
 		cfg.ExternalExecution.HttpUrl.Value = newSettings.ExecutionClient.External.HTTPBasedRpcApi
 		cfg.ExternalPrysm.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
@@ -233,6 +235,13 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExternalLighthouse.HttpUrl.Value = newSettings.ConsensusClient.External.Lighthouse.HTTPUrl
 		cfg.ExternalTeku.Graffiti.Value = newSettings.ConsensusClient.Graffit
 		cfg.ExternalTeku.HttpUrl.Value = newSettings.ConsensusClient.External.Teku.HTTPUrl
+		cfg.ExternalNimbus.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalNimbus.HttpUrl.Value = newSettings.ConsensusClient.External.Nimbus.HTTPUrl
+		cfg.ExternalNimbus.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+
+		cfg.ExternalLodestar.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalLodestar.HttpUrl.Value = newSettings.ConsensusClient.External.Lodestar.HTTPUrl
+		cfg.ExternalLodestar.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	}
 	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
@@ -256,6 +265,12 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	case "teku":
 		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Teku.ExecutionClientUrl
 		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Teku.BeaconNodeHttpUrl
+	case "nimbus":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Nimbus.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Nimbus.BeaconNodeHttpUrl
+	case "lodestar":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lodestar.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lodestar.BeaconNodeHttpUrl
 	}
 
 	// update monitoring
@@ -304,12 +319,18 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
 					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
 				},
+				Lodestar: pages.ConsensusClientExternalSelectedLodestarType{
+					HTTPUrl: cfg.ExternalLodestar.HttpUrl.Value.(string),
+				},
 				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
 					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
 					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
 				},
 				Teku: pages.ConsensusClientExternalSelectedTekuType{
 					HTTPUrl: cfg.ExternalTeku.HttpUrl.Value.(string),
+				},
+				Nimbus: pages.ConsensusClientExternalSelectedNimbusType{
+					HTTPUrl: cfg.ExternalNimbus.HttpUrl.Value.(string),
 				},
 			},
 		},
@@ -324,12 +345,20 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
 			},
+			Lodestar: pages.FallbackClientsLodestarType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
 			Prysm: pages.FallbackClientsPrysmType{
 				ExecutionClientUrl:    cfg.FallbackPrysm.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:     cfg.FallbackPrysm.CcHttpUrl.Value.(string),
 				BeaconNodeJsonRpcpUrl: cfg.FallbackPrysm.JsonRpcUrl.Value.(string),
 			},
 			Teku: pages.FallbackClientsTekuType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Nimbus: pages.FallbackClientsNimbusType{
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
 			},
@@ -549,7 +578,11 @@ func changeNetworks(c *cli.Context, stader *stader.Client, apiContainerName stri
 }
 
 // Start the Stader service
-func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
+func startService(
+	c *cli.Context,
+	ignoreConfigSuggestion bool,
+	isUpgradeBinary bool,
+) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
@@ -603,22 +636,25 @@ func startService(c *cli.Context, ignoreConfigSuggestion bool) error {
 	}
 
 	// Check if this is a new install
-	isUpdate, err := staderClient.IsFirstRun()
+	isFirstRun, err := staderClient.IsFirstRun()
 	if err != nil {
 		return fmt.Errorf("error checking for first-run status: %w", err)
 	}
 
-	if isUpdate && !ignoreConfigSuggestion {
-		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nYou may want to run `service config` first to see what's changed.\n\nWould you like to continue starting the service?") {
+	shouldUpdateDefaults := isUpgradeBinary || isFirstRun
+
+	if shouldUpdateDefaults && !ignoreConfigSuggestion {
+		if c.Bool("yes") || cliutils.Confirm("Stadernode upgrade detected - starting will overwrite certain settings with the latest defaults (such as container versions).\nWould you like to update to defaults?") {
 			err = cfg.UpdateDefaults()
 			if err != nil {
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 			}
 			staderClient.SaveConfig(cfg)
-			fmt.Printf("%sUpdated settings successfully.%s\n", colorGreen, colorReset)
-		} else {
-			fmt.Println("Cancelled.")
-			return nil
+			fmt.Printf("%sUpdated settings successfully.%s\n You can review the changes first by running the 'Service Config' command if you wish to, before approving the service start.\n", colorGreen, colorReset)
+
+			if !cliutils.Confirm("Would you like to continue starting the service?") {
+				return nil
+			}
 		}
 	}
 
@@ -1158,6 +1194,8 @@ func serviceVersion(c *cli.Context) error {
 			eth2ClientString = fmt.Sprintf(format+"\n\tVC image: %s", "Prysm", cfg.Prysm.BnContainerTag.Value.(string), cfg.Prysm.VcContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Teku:
 			eth2ClientString = fmt.Sprintf(format, "Teku", cfg.Teku.ContainerTag.Value.(string))
+		case cfgtypes.ConsensusClient_Lodestar:
+			eth2ClientString = fmt.Sprintf(format, "Lodestar", cfg.Lodestar.ContainerTag.Value.(string))
 		default:
 			return fmt.Errorf("unknown local consensus client [%v]", eth2Client)
 		}
@@ -1172,6 +1210,8 @@ func serviceVersion(c *cli.Context) error {
 			eth2ClientString = fmt.Sprintf(format, "Prysm", cfg.ExternalPrysm.ContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Teku:
 			eth2ClientString = fmt.Sprintf(format, "Teku", cfg.ExternalTeku.ContainerTag.Value.(string))
+		case cfgtypes.ConsensusClient_Lodestar:
+			eth2ClientString = fmt.Sprintf(format, "Lodestar", cfg.ExternalLodestar.ContainerTag.Value.(string))
 		default:
 			return fmt.Errorf("unknown external consensus client [%v]", eth2Client)
 		}
@@ -1266,7 +1306,7 @@ func resyncEth1(c *cli.Context) error {
 
 	// Restart Stader
 	fmt.Printf("Rebuilding %s and restarting Stader...\n", executionContainerName)
-	err = startService(c, true)
+	err = startService(c, true, false)
 	if err != nil {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}
@@ -1389,7 +1429,7 @@ func resyncEth2(c *cli.Context) error {
 
 	// Restart Stader
 	fmt.Printf("Rebuilding %s and restarting Stader...\n", beaconContainerName)
-	err = startService(c, true)
+	err = startService(c, true, false)
 	if err != nil {
 		return fmt.Errorf("Error starting Stader: %s", err)
 	}
@@ -1691,4 +1731,13 @@ func checkCpuFeatures() error {
 
 	fmt.Println("Your CPU supports all required features for 'modern' images.")
 	return nil
+}
+
+// Parses a version string into a semantic version
+func parseVersion(versionString string) (*version.Version, error) {
+	parsedVersion, err := version.NewSemver(versionString)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing version %s: %w", versionString, err)
+	}
+	return parsedVersion, nil
 }
