@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.0]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -80,7 +80,9 @@ func initWallet(c *cli.Context) error {
 
 	// Print mnemonic
 	fmt.Println("Your mnemonic phrase to recover your wallet is printed below. It can be used to recover your node account and validator keys if they are lost.")
-	fmt.Println("Record this phrase somewhere secure and private. Do not share it with anyone as it will give them control of your node account and validators.")
+	fmt.Println("We request that you take note of your password and mnemonic key phrase and store them in a secure location.")
+	fmt.Println("The recovery of either the password or the mnemonic phrase is not possible if you lose control of this device or if the node crashes")
+	fmt.Println("It is therefore imperative that you safeguard these credentials to avoid any potential loss of access to your node or validator.")
 	fmt.Println("==============================================================================================================================================")
 	fmt.Println("")
 	fmt.Println(response.Mnemonic)
