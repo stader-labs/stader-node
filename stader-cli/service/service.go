@@ -372,7 +372,6 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
-	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
 		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
@@ -652,12 +651,11 @@ func startService(
 			staderClient.SaveConfig(cfg)
 			fmt.Printf("%sUpdated settings successfully.%s\n You can review the changes first by running the 'Service Config' command if you wish to, before approving the service start.\n", colorGreen, colorReset)
 
-			if !cliutils.Confirm("Would you like to continue starting the service?") {
-				return nil
-			}
 		}
 	}
-
+	if !cliutils.Confirm("Would you like to continue starting the service?") {
+		return nil
+	}
 	// Update the Prometheus template with the assigned ports
 	metricsEnabled := cfg.EnableMetrics.Value.(bool)
 	if metricsEnabled {

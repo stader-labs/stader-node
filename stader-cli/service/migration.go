@@ -46,7 +46,9 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 	// Find the index of the provided config's version
 	var targetUpgrades []ConfigUpgrader
 	for _, upgrader := range upgraders {
-		if cfgVer.LessThan(upgrader.version) {
+		cfgVerCore := cfgVer.Core()
+		targetVerCore := upgrader.version.Core()
+		if cfgVerCore.LessThan(targetVerCore) {
 			targetUpgrades = append(targetUpgrades, upgrader)
 		}
 	}
