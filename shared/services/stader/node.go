@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,11 +22,12 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"math/big"
+	"strconv"
+
 	"github.com/ethereum/go-ethereum/common"
 	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/types/api"
 )

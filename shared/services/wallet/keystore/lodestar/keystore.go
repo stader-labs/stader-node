@@ -1,23 +1,4 @@
-/*
-This work is licensed and released under GNU GPL v3 or any other later versions.
-The full text of the license is below/ found at <http://www.gnu.org/licenses/>
-
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package lighthouse
+package lodestar
 
 import (
 	"encoding/json"
@@ -27,26 +8,26 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
-	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
-	eth2types "github.com/wealdtech/go-eth2-types/v2"
-	eth2ks "github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4"
-
 	"github.com/stader-labs/stader-node/shared/services/passwords"
 	keystore "github.com/stader-labs/stader-node/shared/services/wallet/keystore"
 	hexutil "github.com/stader-labs/stader-node/shared/utils/hex"
+	"github.com/stader-labs/stader-node/stader-lib/types"
+	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
+	eth2types "github.com/wealdtech/go-eth2-types/v2"
+	eth2ks "github.com/wealdtech/go-eth2-wallet-encryptor-keystorev4"
 )
 
 // Config
 const (
-	KeystoreDir   = "lighthouse"
+	KeystoreDir   = "lodestar"
 	SecretsDir    = "secrets"
 	ValidatorsDir = "validators"
 	KeyFileName   = "voting-keystore.json"
-	DirMode       = 0770
-	FileMode      = 0640
+	DirMode       = 0700
+	FileMode      = 0600
 )
 
-// Lighthouse keystore
+// Lodestar keystore
 type Keystore struct {
 	keystorePath string
 	pm           *passwords.PasswordManager
@@ -62,7 +43,7 @@ type validatorKey struct {
 	Pubkey  stadertypes.ValidatorPubkey `json:"pubkey"`
 }
 
-// Create new lighthouse keystore
+// Create new lodestar keystore
 func NewKeystore(keystorePath string, passwordManager *passwords.PasswordManager) *Keystore {
 	return &Keystore{
 		keystorePath: keystorePath,
@@ -137,5 +118,66 @@ func (ks *Keystore) StoreValidatorKey(key *eth2types.BLSPrivateKey, derivationPa
 
 	// Return
 	return nil
+
+}
+
+// Load a private key
+func (ks *Keystore) LoadValidatorKey(pubkey types.ValidatorPubkey) (*eth2types.BLSPrivateKey, error) {
+
+	// Get key file path
+	keyFilePath := filepath.Join(ks.keystorePath, KeystoreDir, ValidatorsDir, hexutil.AddPrefix(pubkey.Hex()), KeyFileName)
+
+	// Read the key file
+	_, err := os.Stat(keyFilePath)
+	if os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("couldn't open the Lodestar keystore for pubkey %s: %w", pubkey.Hex(), err)
+	}
+	bytes, err := os.ReadFile(keyFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't read the Lodestar keystore for pubkey %s: %w", pubkey.Hex(), err)
+	}
+
+	// Unmarshal the keystore
+	var keystore validatorKey
+	err = json.Unmarshal(bytes, &keystore)
+	if err != nil {
+		return nil, fmt.Errorf("error deserializing Lodestar keystore for pubkey %s: %w", pubkey.Hex(), err)
+	}
+
+	// Get secret file path
+	secretFilePath := filepath.Join(ks.keystorePath, KeystoreDir, SecretsDir, hexutil.AddPrefix(pubkey.Hex()))
+
+	// Read secret from disk
+	_, err = os.Stat(secretFilePath)
+	if os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("couldn't open the Lodestar secret for pubkey %s: %w", pubkey.Hex(), err)
+	}
+	bytes, err = os.ReadFile(secretFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't read the Lodestar secret for pubkey %s: %w", pubkey.Hex(), err)
+	}
+
+	// Decrypt key
+	password := string(bytes)
+	decryptedKey, err := ks.encryptor.Decrypt(keystore.Crypto, password)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't decrypt keystore for pubkey %s: %w", pubkey.Hex(), err)
+	}
+	privateKey, err := eth2types.BLSPrivateKeyFromBytes(decryptedKey)
+	if err != nil {
+		return nil, fmt.Errorf("error recreating private key for validator %s: %w", keystore.Pubkey.Hex(), err)
+	}
+
+	// Verify the private key matches the public key
+	reconstructedPubkey := types.BytesToValidatorPubkey(privateKey.PublicKey().Marshal())
+	if reconstructedPubkey != pubkey {
+		return nil, fmt.Errorf("private keystore file %s claims to be for validator %s but it's for validator %s", keyFilePath, pubkey.Hex(), reconstructedPubkey.Hex())
+	}
+
+	return privateKey, nil
 
 }

@@ -22,6 +22,7 @@ require (
 	github.com/herumi/bls-eth-go-binary v1.28.1 // indirect
 	github.com/imdario/mergo v0.3.13
 	github.com/klauspost/cpuid/v2 v2.1.1
+	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
@@ -34,8 +35,8 @@ require (
 	github.com/rivo/tview v0.0.0-20230621164836-6cc0565babaf // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230804044804-697d0c1bbde3
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230804044804-697d0c1bbde3
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20230821080927-b5c0048b35f8
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20230821080927-b5c0048b35f8
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0

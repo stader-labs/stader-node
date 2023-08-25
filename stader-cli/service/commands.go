@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -182,6 +182,21 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
+					targetUpgrades, err := migrate(c)
+					if err != nil {
+						return fmt.Errorf("error migrate %w", err)
+					}
+					// We defer run migrate because we need stader-node api up and running first
+					defer func() {
+						for _, upgrader := range targetUpgrades {
+							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+							err = upgrader.upgradeFunc(c)
+							if err != nil {
+								fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
+							}
+						}
+					}()
+
 					// Run command
 					return configureService(c)
 
@@ -227,14 +242,27 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					// Run command
+					targetUpgrades, err := migrate(c)
+					if err != nil {
+						return fmt.Errorf("error migrate %w", err)
+					}
+					// We defer run migrate because we need stader-node api up and running first
+					defer func() {
+						for _, upgrader := range targetUpgrades {
+							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+							err = upgrader.upgradeFunc(c)
+							if err != nil {
+								fmt.Printf("error applying upgrade for config version %s: %+v", upgrader.version.String(), err)
+							}
+						}
+					}()
 					isUpgradeBinary, err := isUpgradeBinary(c)
 					if err != nil {
 						return fmt.Errorf("error checking for binary version: %w", err)
 					}
 
+					// Run command
 					return startService(c, false, isUpgradeBinary)
-
 				},
 			},
 

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -169,7 +169,6 @@ func configureService(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error SaveConfig: %w", err)
 	}
-
 	// Restart the services
 	err = startService(c, false, isUpgradeBinary)
 	if err != nil {
@@ -200,7 +199,7 @@ func isUpgradeBinary(c *cli.Context) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error checking for binary version: %w", err)
 	}
-	isUpgradeBinary := cfgVer.LessThanOrEqual(binaryVer)
+	isUpgradeBinary := cfgVer.LessThan(binaryVer)
 
 	return isUpgradeBinary, nil
 }

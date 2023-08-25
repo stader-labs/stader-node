@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -238,6 +238,10 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 		cfg.ExternalNimbus.Graffiti.Value = newSettings.ConsensusClient.Graffit
 		cfg.ExternalNimbus.HttpUrl.Value = newSettings.ConsensusClient.External.Nimbus.HTTPUrl
 		cfg.ExternalNimbus.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
+
+		cfg.ExternalLodestar.Graffiti.Value = newSettings.ConsensusClient.Graffit
+		cfg.ExternalLodestar.HttpUrl.Value = newSettings.ConsensusClient.External.Lodestar.HTTPUrl
+		cfg.ExternalLodestar.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	}
 	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
@@ -264,6 +268,9 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	case "nimbus":
 		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Nimbus.ExecutionClientUrl
 		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Nimbus.BeaconNodeHttpUrl
+	case "lodestar":
+		cfg.FallbackNormal.EcHttpUrl.Value = newSettings.FallbackClients.Lodestar.ExecutionClientUrl
+		cfg.FallbackNormal.CcHttpUrl.Value = newSettings.FallbackClients.Lodestar.BeaconNodeHttpUrl
 	}
 
 	// update monitoring
@@ -312,6 +319,9 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{
 					HTTPUrl: cfg.ExternalLighthouse.HttpUrl.Value.(string),
 				},
+				Lodestar: pages.ConsensusClientExternalSelectedLodestarType{
+					HTTPUrl: cfg.ExternalLodestar.HttpUrl.Value.(string),
+				},
 				Prysm: pages.ConsensusClientExternalSelectedPrysmType{
 					HTTPUrl:    cfg.ExternalPrysm.HttpUrl.Value.(string),
 					JSONRpcUrl: cfg.ExternalPrysm.JsonRpcUrl.Value.(string),
@@ -332,6 +342,10 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 		FallbackClients: pages.FallbackClientsSettingsType{
 			SelectionOption: ConvertBoolToString(cfg.UseFallbackClients.Value.(bool)),
 			Lighthouse: pages.FallbackClientsLighthouseType{
+				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
+				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
+			},
+			Lodestar: pages.FallbackClientsLodestarType{
 				ExecutionClientUrl: cfg.FallbackNormal.EcHttpUrl.Value.(string),
 				BeaconNodeHttpUrl:  cfg.FallbackNormal.CcHttpUrl.Value.(string),
 			},
@@ -358,7 +372,6 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 func loadConfig(c *cli.Context) (*config.StaderConfig, error) {
 	// Make sure the config directory exists first
 	configPath := c.GlobalString("config-path")
-	fmt.Println("configPath", configPath)
 	path, err := homedir.Expand(configPath)
 	if err != nil {
 		return nil, fmt.Errorf("error expanding config path [%s]: %w", configPath, err)
@@ -636,14 +649,13 @@ func startService(
 				return fmt.Errorf("error upgrading configuration with the latest parameters: %w", err)
 			}
 			staderClient.SaveConfig(cfg)
-			fmt.Printf("%sUpdated settings successfully.%s\n You can review the changes first by running the 'Service Config' command if you wish to, before approving the service start.\n", colorGreen, colorReset)
+			fmt.Printf("%sUpdated settings successfully.%s\nYou can review the changes first by running the 'Service Config' command if you wish to, before approving the service start.\n", colorGreen, colorReset)
 
-			if !cliutils.Confirm("Would you like to continue starting the service?") {
-				return nil
-			}
 		}
 	}
-
+	if !cliutils.Confirm("Would you like to continue starting the service?") {
+		return nil
+	}
 	// Update the Prometheus template with the assigned ports
 	metricsEnabled := cfg.EnableMetrics.Value.(bool)
 	if metricsEnabled {
@@ -1180,6 +1192,8 @@ func serviceVersion(c *cli.Context) error {
 			eth2ClientString = fmt.Sprintf(format+"\n\tVC image: %s", "Prysm", cfg.Prysm.BnContainerTag.Value.(string), cfg.Prysm.VcContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Teku:
 			eth2ClientString = fmt.Sprintf(format, "Teku", cfg.Teku.ContainerTag.Value.(string))
+		case cfgtypes.ConsensusClient_Lodestar:
+			eth2ClientString = fmt.Sprintf(format, "Lodestar", cfg.Lodestar.ContainerTag.Value.(string))
 		default:
 			return fmt.Errorf("unknown local consensus client [%v]", eth2Client)
 		}
@@ -1194,6 +1208,8 @@ func serviceVersion(c *cli.Context) error {
 			eth2ClientString = fmt.Sprintf(format, "Prysm", cfg.ExternalPrysm.ContainerTag.Value.(string))
 		case cfgtypes.ConsensusClient_Teku:
 			eth2ClientString = fmt.Sprintf(format, "Teku", cfg.ExternalTeku.ContainerTag.Value.(string))
+		case cfgtypes.ConsensusClient_Lodestar:
+			eth2ClientString = fmt.Sprintf(format, "Lodestar", cfg.ExternalLodestar.ContainerTag.Value.(string))
 		default:
 			return fmt.Errorf("unknown external consensus client [%v]", eth2Client)
 		}

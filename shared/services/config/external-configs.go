@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,6 +108,25 @@ type ExternalTekuConfig struct {
 	Graffiti config.Parameter `yaml:"graffiti,omitempty"`
 
 	// The Docker Hub tag for Teku
+	ContainerTag config.Parameter `yaml:"containerTag,omitempty"`
+
+	// Custom command line flags for the VC
+	AdditionalVcFlags config.Parameter `yaml:"additionalVcFlags,omitempty"`
+}
+
+type ExternalLodestarConfig struct {
+	Title string `yaml:"-"`
+
+	// The URL of the HTTP endpoint
+	HttpUrl config.Parameter `yaml:"httpUrl,omitempty"`
+
+	// Custom proposal graffiti
+	Graffiti config.Parameter `yaml:"graffiti,omitempty"`
+
+	// Toggle for enabling doppelganger detection
+	DoppelgangerDetection config.Parameter `yaml:"doppelgangerDetection,omitempty"`
+
+	// The Docker Hub tag for Lighthouse
 	ContainerTag config.Parameter `yaml:"containerTag,omitempty"`
 
 	// Custom command line flags for the VC
@@ -438,6 +457,78 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 	}
 }
 
+// Generates a new ExternalLodestarClient configuration
+func NewExternalLodestarConfig(cfg *StaderConfig) *ExternalLodestarConfig {
+	return &ExternalLodestarConfig{
+		Title: "External Lodestar Settings",
+
+		HttpUrl: config.Parameter{
+			ID:                   "httpUrl",
+			Name:                 "HTTP URL",
+			Description:          "The URL of the HTTP Beacon API endpoint for your external client.\nNOTE: If you are running it on the same machine as the StaderNode, addresses like `localhost` and `127.0.0.1` will not work due to Docker limitations. Enter your machine's LAN IP address instead.",
+			Type:                 config.ParameterType_String,
+			Default:              map[config.Network]interface{}{config.Network_All: ""},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1, config.ContainerID_Api, config.ContainerID_Validator, config.ContainerID_Node},
+			EnvironmentVariables: []string{"CC_API_ENDPOINT"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
+
+		Graffiti: config.Parameter{
+			ID:                   GraffitiID,
+			Name:                 "Custom Graffiti",
+			Description:          "Add a short message to any blocks you propose, so the world can see what you have to say!\nIt has a 16 character limit.",
+			Type:                 config.ParameterType_String,
+			Default:              map[config.Network]interface{}{config.Network_All: defaultGraffiti},
+			MaxLength:            16,
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{CustomGraffitiEnvVar},
+			CanBeBlank:           true,
+			OverwriteOnUpgrade:   false,
+		},
+
+		DoppelgangerDetection: config.Parameter{
+			ID:                   DoppelgangerDetectionID,
+			Name:                 "Enable Doppelgänger Detection",
+			Description:          "If enabled, your client will *intentionally* miss 1 or 2 attestations on startup to check if validator keys are already running elsewhere. If they are, it will disable validation duties for them to prevent you from being slashed.",
+			Type:                 config.ParameterType_Bool,
+			Default:              map[config.Network]interface{}{config.Network_All: defaultDoppelgangerDetection},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"DOPPELGANGER_DETECTION"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
+
+		ContainerTag: config.Parameter{
+			ID:          "containerTag",
+			Name:        "Container Tag",
+			Description: "The tag name of the Lodestar container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
+			Type:        config.ParameterType_String,
+			Default: map[config.Network]interface{}{
+				config.Network_Mainnet: lodestarTagProd,
+				config.Network_Prater:  lodestarTagTest,
+				config.Network_Devnet:  lodestarTagTest,
+			},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   true,
+		},
+
+		AdditionalVcFlags: config.Parameter{
+			ID:                   "additionalVcFlags",
+			Name:                 "Additional Validator Client Flags",
+			Description:          "Additional custom command line flags you want to pass Lodestar's Validator Client, to take advantage of other settings that the StaderNode's configuration doesn't cover.",
+			Type:                 config.ParameterType_String,
+			Default:              map[config.Network]interface{}{config.Network_All: ""},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"VC_ADDITIONAL_FLAGS"},
+			CanBeBlank:           true,
+			OverwriteOnUpgrade:   false,
+		},
+	}
+}
+
 // Get the parameters for this config
 func (cfg *ExternalExecutionConfig) GetParameters() []*config.Parameter {
 	return []*config.Parameter{
@@ -490,6 +581,17 @@ func (cfg *ExternalTekuConfig) GetParameters() []*config.Parameter {
 	}
 }
 
+// Get the parameters for this config
+func (cfg *ExternalLodestarConfig) GetParameters() []*config.Parameter {
+	return []*config.Parameter{
+		&cfg.HttpUrl,
+		&cfg.Graffiti,
+		&cfg.DoppelgangerDetection,
+		&cfg.ContainerTag,
+		&cfg.AdditionalVcFlags,
+	}
+}
+
 // Get the Docker container name of the validator client
 func (cfg *ExternalLighthouseConfig) GetValidatorImage() string {
 	return cfg.ContainerTag.Value.(string)
@@ -507,6 +609,11 @@ func (cfg *ExternalPrysmConfig) GetValidatorImage() string {
 
 // Get the Docker container name of the validator client
 func (cfg *ExternalTekuConfig) GetValidatorImage() string {
+	return cfg.ContainerTag.Value.(string)
+}
+
+// Get the Docker container name of the validator client
+func (cfg *ExternalLodestarConfig) GetValidatorImage() string {
 	return cfg.ContainerTag.Value.(string)
 }
 
@@ -530,6 +637,10 @@ func (cfg *ExternalTekuConfig) GetApiUrl() string {
 	return cfg.HttpUrl.Value.(string)
 }
 
+func (cfg *ExternalLodestarConfig) GetApiUrl() string {
+	return cfg.HttpUrl.Value.(string)
+}
+
 // Get the name of the client
 func (cfg *ExternalLighthouseConfig) GetName() string {
 	return "Lighthouse"
@@ -548,6 +659,11 @@ func (cfg *ExternalPrysmConfig) GetName() string {
 // Get the name of the client
 func (cfg *ExternalTekuConfig) GetName() string {
 	return "Teku"
+}
+
+// Get the name of the client
+func (cfg *ExternalLodestarConfig) GetName() string {
+	return "Lodestar"
 }
 
 // The the title for the config
@@ -572,5 +688,10 @@ func (cfg *ExternalPrysmConfig) GetConfigTitle() string {
 
 // The the title for the config
 func (cfg *ExternalTekuConfig) GetConfigTitle() string {
+	return cfg.Title
+}
+
+// The the title for the config
+func (cfg *ExternalLodestarConfig) GetConfigTitle() string {
 	return cfg.Title
 }

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.2.1]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -336,6 +336,26 @@ func (w *Wallet) TestRecoverValidatorKey(pubkey stadertypes.ValidatorPubkey, sta
 	// Return
 	return index + startIndex, nil
 
+}
+
+// Create a new validator key
+func (w *Wallet) RebuildLodestarValidatorKeys() error {
+	keys, err := w.GetValidatorKeys(0, w.ws.NextAccount)
+	if err != nil {
+		return err
+	}
+
+	lodestarStore, ok := w.keystores["lodestar"]
+	if !ok {
+		return fmt.Errorf("could not find store to RebuildLodestarValidatorKeys lodestar")
+	}
+	for _, key := range keys {
+		if err := lodestarStore.StoreValidatorKey(key.PrivateKey, key.DerivationPath); err != nil {
+			return fmt.Errorf("could not store validator key %s in %s keystore: %w", key.PublicKey.Hex(), "lodestar", err)
+		}
+	}
+
+	return nil
 }
 
 // Get a validator private key by index
