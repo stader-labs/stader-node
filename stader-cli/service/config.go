@@ -199,6 +199,7 @@ func isUpgradeBinary(c *cli.Context) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("error checking for binary version: %w", err)
 	}
+
 	isUpgradeBinary := cfgVer.LessThan(binaryVer)
 
 	return isUpgradeBinary, nil

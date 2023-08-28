@@ -48,6 +48,7 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 	for _, upgrader := range upgraders {
 		cfgVerCore := cfgVer.Core()
 		targetVerCore := upgrader.version.Core()
+
 		if cfgVerCore.LessThan(targetVerCore) {
 			targetUpgrades = append(targetUpgrades, upgrader)
 		}
