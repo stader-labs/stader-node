@@ -21,6 +21,8 @@ linters-settings:
 
 linters:
   disable-all: true
+  enable:
+    - wsl
 issues:
   new-from-rev: 90ce51e5a97334c9170fcf6d1b8196d4bad794ac
 run:
