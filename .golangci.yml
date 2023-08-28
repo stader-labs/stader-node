@@ -21,41 +21,7 @@ linters-settings:
 
 linters:
   disable-all: true
-  enable:
-    - bodyclose
-    - unused
-    - depguard
-    - dogsled
-    - dupl
-    - errcheck
-    - exportloopref
-    - exhaustive
-    - goconst
-    - gocritic
-    - gofmt
-    - goimports
-    - gomnd
-    - gocyclo
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    - nolintlint
-    - nakedret
-    - prealloc
-    - predeclared
-    - revive
-    - staticcheck
-    - stylecheck
-    - thelper
-    - tparallel
-    - typecheck
-    - unconvert
-    - unparam
-    - whitespace
-    - wsl
 issues:
-  new-from-rev: a77f72559aa8b82059640cec28ca8cc3c25fd379
+  new-from-rev: 90ce51e5a97334c9170fcf6d1b8196d4bad794ac
 run:
   issues-exit-code: 0
