@@ -3,6 +3,7 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
@@ -82,6 +83,10 @@ func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.Valid
 	}
 
 	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), stader_backend.BulkPreSignCheckApiRequestType{ValidatorPubKeys: validatorPubKeys})
+
+	if res == nil || err != nil {
+		return nil, err
+	}
 
 	defer res.Body.Close()
 
