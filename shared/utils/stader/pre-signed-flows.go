@@ -3,6 +3,8 @@ package stader
 import (
 	"crypto/rsa"
 	"encoding/json"
+	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
@@ -19,14 +21,14 @@ func SendPresignedMessageToStaderBackend(c *cli.Context, preSignedMessage stader
 
 	res, err := net.MakePostRequest(config.StaderNode.GetPresignSendApi(), preSignedMessage)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request to getPresignCheckApi %w", err)
 	}
 	defer res.Body.Close()
 
 	var preSignSendResponse stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode preSignSendApiResponseType %w", err)
 	}
 
 	return &preSignSendResponse, nil
@@ -40,14 +42,14 @@ func SendBulkPresignedMessageToStaderBackend(c *cli.Context, preSignedMessages [
 
 	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignSendApi(), preSignedMessages)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request to getPresignCheckApi %w", err)
 	}
 	defer res.Body.Close()
 
 	var preSignSendResponse map[string]stader_backend.PreSignSendApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignSendResponse)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode preSignSendApiResponseType %w", err)
 	}
 
 	return &preSignSendResponse, nil
@@ -66,12 +68,17 @@ func IsPresignedKeyRegistered(c *cli.Context, validatorPubKey types.ValidatorPub
 
 	res, err := net.MakePostRequest(config.StaderNode.GetPresignCheckApi(), preSignCheckRequest)
 
+	if err != nil {
+		return false, fmt.Errorf("request to getPresignCheckApi %w", err)
+	}
+
 	defer res.Body.Close()
 	var preSignCheckResponse stader_backend.PreSignCheckApiResponseType
 	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("decode preSignCheckApiResponseType %w", err)
 	}
+
 	return preSignCheckResponse.Value, nil
 }
 
@@ -83,12 +90,16 @@ func BulkIsPresignedKeyRegistered(c *cli.Context, validatorPubKeys []types.Valid
 
 	res, err := net.MakePostRequest(config.StaderNode.GetBulkPresignCheckApi(), stader_backend.BulkPreSignCheckApiRequestType{ValidatorPubKeys: validatorPubKeys})
 
+	if err != nil {
+		return nil, fmt.Errorf("request to getBulkPresignCheckApi %w", err)
+	}
+
 	defer res.Body.Close()
 
 	var preSignCheckResponse map[string]bool
 	err = json.NewDecoder(res.Body).Decode(&preSignCheckResponse)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode preSignCheckResponse %w", err)
 	}
 	return preSignCheckResponse, nil
 }
