@@ -2,10 +2,10 @@ package node
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"math/big"
-	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -46,52 +46,11 @@ func nodeDepositSd(c *cli.Context) error {
 		return err
 	}
 
-	// Calculate max uint256 value
-	maxApproval := big.NewInt(2)
-	maxApproval = maxApproval.Exp(maxApproval, big.NewInt(256), nil)
-	maxApproval = maxApproval.Sub(maxApproval, big.NewInt(1))
-
-	if allowance.Allowance.Cmp(maxApproval) < 0 {
-		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD.")
-		fmt.Println("This only needs to be done once for your node.")
-
-		// If a custom nonce is set, print the multi-transaction warning
-		if c.GlobalUint64("nonce") != 0 {
-			cliutils.PrintMultiTransactionNonceWarning()
-		}
-
-		// Get approval gas
-		approvalGas, err := staderClient.NodeDepositSdApprovalGas(maxApproval)
+	if allowance.Allowance.Cmp(amountWei) < 0 {
+		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", amountWei)
+		err = nodeApproveSdWithAmount(c, staderClient, amountWei)
 		if err != nil {
 			return err
-		}
-		// Assign max fees
-		err = gas.AssignMaxFeeAndLimit(approvalGas.GasInfo, staderClient, c.Bool("yes"))
-		if err != nil {
-			return err
-		}
-
-		// Prompt for confirmation
-		if !(c.Bool("yes") || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
-			fmt.Println("Cancelled.")
-			return nil
-		}
-
-		response, err := staderClient.NodeDepositSdApprove(maxApproval)
-		if err != nil {
-			return err
-		}
-		hash := response.ApproveTxHash
-		fmt.Printf("Approving SD for depositing...\n")
-		cliutils.PrintTransactionHash(staderClient, hash)
-		if _, err = staderClient.WaitForTransaction(hash); err != nil {
-			return err
-		}
-		fmt.Println("Successfully approved SD to deposit.")
-
-		// If a custom nonce is set, increment it for the next transaction
-		if c.GlobalUint64("nonce") != 0 {
-			staderClient.IncrementCustomNonce()
 		}
 	}
 
@@ -99,10 +58,12 @@ func nodeDepositSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	if canDeposit.InsufficientBalance {
 		fmt.Println("The node's SD balance is insufficient.")
 		return nil
 	}
+
 	if canDeposit.CollateralContractPaused {
 		fmt.Println("The collateral contract is paused.")
 		return nil
@@ -127,12 +88,13 @@ func nodeDepositSd(c *cli.Context) error {
 
 	fmt.Printf("Depositing SD...\n")
 	cliutils.PrintTransactionHash(staderClient, depositSdResponse.DepositTxHash)
+
 	if _, err = staderClient.WaitForTransaction(depositSdResponse.DepositTxHash); err != nil {
 		return err
 	}
 
 	// Log & return
 	fmt.Printf("Successfully deposited %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-	return nil
 
+	return nil
 }
