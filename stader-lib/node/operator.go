@@ -55,8 +55,17 @@ func EstimateUpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContrac
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorDetails", operatorName, operatorRewarderAddress)
 }
 
-func UpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.UpdateOperatorDetails(opts, operatorName, operatorRewarderAddress)
+func UpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.UpdateOperatorName(opts, operatorName)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func InitiateRewardAddressChange(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress, rewardAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.InitiateRewardAddressChange(opts, operatorAddress, rewardAddress)
 	if err != nil {
 		return nil, err
 	}

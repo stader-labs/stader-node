@@ -39,7 +39,6 @@ func nodeApproveSd(c *cli.Context) error {
 }
 
 func nodeApproveSdWithClient(c *cli.Context, staderClient *stader.Client) error {
-
 	// Check allowance
 	allowance, err := staderClient.GetNodeDepositSdAllowance()
 	if err != nil {

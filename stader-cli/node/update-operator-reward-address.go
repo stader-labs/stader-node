@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -51,7 +52,7 @@ func updateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common.Ad
 	}
 
 	// update the socializing pool el
-	response, err := staderClient.UpdateOperatorRewardAddress(operatorRewardAddress)
+	response, err := staderClient.SetRewardAddress(operatorRewardAddress)
 	if err != nil {
 		return err
 	}

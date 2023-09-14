@@ -620,17 +620,17 @@ func (c *Client) CanUpdateOperatorRewardAddress(operatorRewardAddress common.Add
 	return response, nil
 }
 
-func (c *Client) UpdateOperatorRewardAddress(operatorRewardAddress common.Address) (api.UpdateOperatorRewardAddress, error) {
-	responseBytes, err := c.callAPI("node update-operator-reward-address", operatorRewardAddress.Hex())
+func (c *Client) SetRewardAddress(operatorRewardAddress common.Address) (api.SetRewardAddress, error) {
+	responseBytes, err := c.callAPI("node set-reward-address", operatorRewardAddress.Hex())
 	if err != nil {
-		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not get update-operator-reward-address response: %w", err)
+		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %w", err)
 	}
-	var response api.UpdateOperatorRewardAddress
+	var response api.SetRewardAddress
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not decode update-operator-reward-address response: %w", err)
+		return api.SetRewardAddress{}, fmt.Errorf("could not decode set-reward-address response: %w", err)
 	}
 	if response.Error != "" {
-		return api.UpdateOperatorRewardAddress{}, fmt.Errorf("could not get update-operator-reward-address response: %s", response.Error)
+		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %s", response.Error)
 	}
 	return response, nil
 }

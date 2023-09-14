@@ -691,7 +691,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "update-operator-reward-address",
 				Usage:     "Update the operator reward address",
-				UsageText: "stader-cli api node update-operator-reward-address operator-name",
+				UsageText: "stader-cli api node set-reward-address operator-name",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -705,7 +705,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					api.PrintResponse(UpdateOperatorRewardAddress(c, operatorRewardAddress))
+					api.PrintResponse(SetRewardAddress(c, operatorRewardAddress))
 					return nil
 
 				},
