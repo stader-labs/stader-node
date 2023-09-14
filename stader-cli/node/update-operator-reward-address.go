@@ -10,7 +10,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func updateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common.Address) error {
+func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
