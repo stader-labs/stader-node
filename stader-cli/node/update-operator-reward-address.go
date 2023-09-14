@@ -11,7 +11,6 @@ import (
 )
 
 func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) error {
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -40,6 +39,17 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 		return nil
 	}
 
+	infoResponse, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
+	if res.OperatorAddressAndRewardNotTheSame {
+		fmt.Printf("Please follow the given steps using this contract: %s to \nchange your reward address: \nStep1: Initiate the change using your existing reward address. \nStep2: Confirm the change using new reward address.\n", infoResponse.PermissionlessNodeRegistry)
+
+		return nil
+	}
+
 	err = gas.AssignMaxFeeAndLimit(res.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -65,7 +75,7 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 		return err
 	}
 
-	fmt.Println("Operator reward address updated!")
+	fmt.Printf("Your reward address changed in pending state. Please \nconfirm the request using this contract: %s and the reward address.", infoResponse.PermissionlessNodeRegistry)
 
 	return nil
 }

@@ -80,7 +80,7 @@ func CanUpdateOperatorName(c *cli.Context, operatorName string) (*api.CanUpdateO
 	}
 
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorInfo.OperatorRewardAddress, opts)
+	gasInfo, err := node.EstimateUpdateOperatorName(pnr, operatorName, opts)
 	if err != nil {
 		return nil, err
 	}

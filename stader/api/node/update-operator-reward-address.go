@@ -52,6 +52,12 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 	if err != nil {
 		return nil, err
 	}
+
+	if operatorInfo.OperatorAddress != operatorInfo.OperatorRewardAddress {
+		response.OperatorAddressAndRewardNotTheSame = true
+		return &response, nil
+	}
+
 	if !operatorInfo.Active {
 		response.OperatorNotActive = true
 		return &response, nil
@@ -73,7 +79,7 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 	}
 
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorInfo.OperatorName, operatorRewardAddress, opts)
+	gasInfo, err := node.EstimateSetOperatorRewardAddress(pnr, nodeAccount.Address, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

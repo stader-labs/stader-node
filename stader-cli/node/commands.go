@@ -106,10 +106,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-name, on",
 						Usage: "The name of the operator",
 					},
-					cli.StringFlag{
-						Name:  "operator-reward-address, ora",
-						Usage: "The address at which operator will get rewards (will default to the current node address)",
-					},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm node registration",
@@ -122,12 +118,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					}
 
 					operatorName := c.String("operator-name")
-
-					if c.String("operator-reward-address") != "" {
-						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
-							return err
-						}
-					}
 
 					// Run
 					return registerNode(c, operatorName)

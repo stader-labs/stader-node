@@ -51,8 +51,17 @@ func ChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractMa
 	return tx, nil
 }
 
-func EstimateUpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorDetails", operatorName, operatorRewarderAddress)
+func EstimateUpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorName", operatorName)
+}
+
+func EstimateSetOperatorRewardAddress(
+	pnr *stader.PermissionlessNodeRegistryContractManager,
+	operatorAddress common.Address,
+	operatorRewarderAddress common.Address,
+	opts *bind.TransactOpts,
+) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "initiateRewardAddressChange", operatorAddress, operatorRewarderAddress)
 }
 
 func UpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (*types.Transaction, error) {
