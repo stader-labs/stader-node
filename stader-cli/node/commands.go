@@ -343,31 +343,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return SetRewardAddress(c, operatorRewardAddress)
 				},
 			},
-			{
-				Name:      "approve-sd",
-				Aliases:   []string{"k"},
-				Usage:     "Approve SD against the node",
-				UsageText: "stader-cli node approve-sd [options]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of SD to approve",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm SD approve",
-					},
-				},
-				Action: func(c *cli.Context) error {
-
-					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
-						return err
-					}
-
-					// Run
-					return nodeApproveSd(c)
-				},
-			},
 		},
 	})
 }
