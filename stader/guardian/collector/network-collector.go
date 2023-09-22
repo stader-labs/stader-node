@@ -2,6 +2,7 @@ package collector
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/utils/math"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -172,6 +173,8 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 
 	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
 
+	nextRewardBlock := currentStartBlock + 7200*28
+
 	channel <- prometheus.MustNewConstMetric(
 		collector.SdPrice, prometheus.GaugeValue, state.StaderNetworkDetails.SdPrice)
 	channel <- prometheus.MustNewConstMetric(
@@ -193,7 +196,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, state.StaderNetworkDetails.TotalStakedSd)
 	channel <- prometheus.MustNewConstMetric(
-		collector.NextRewardBlock, prometheus.GaugeValue, currentStartBlock)
+		collector.NextRewardBlock, prometheus.GaugeValue, nextRewardBlock)
 	channel <- prometheus.MustNewConstMetric(
 		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
 	channel <- prometheus.MustNewConstMetric(
