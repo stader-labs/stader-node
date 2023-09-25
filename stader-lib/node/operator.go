@@ -73,8 +73,8 @@ func UpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, o
 	return tx, nil
 }
 
-func InitiateRewardAddressChange(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress, rewardAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.InitiateRewardAddressChange(opts, operatorAddress, rewardAddress)
+func ProposeRewardAddress(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress, rewardAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.ProposeRewardAddress(opts, operatorAddress, rewardAddress)
 	if err != nil {
 		return nil, err
 	}

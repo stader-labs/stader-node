@@ -114,7 +114,7 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) (*ap
 
 	response := api.SetRewardAddress{}
 
-	tx, err := node.InitiateRewardAddressChange(pnr, nodeAccount.Address, operatorRewardAddress, opts)
+	tx, err := node.ProposeRewardAddress(pnr, nodeAccount.Address, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
