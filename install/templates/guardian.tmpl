@@ -29,6 +29,7 @@ services:
     image: ${STADER_NODE_IMAGE}
     container_name: ${COMPOSE_PROJECT_NAME}_guardian
     restart: unless-stopped
+    ports: [${GUARDIAN_OPEN_PORTS}]
     volumes:
       - ${STADER_FOLDER}:/.stader
       - ${STADER_DATA_FOLDER}:/.stader/data
