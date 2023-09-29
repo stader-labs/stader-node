@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -51,6 +52,12 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 	if err != nil {
 		return nil, err
 	}
+
+	if operatorInfo.OperatorAddress != operatorInfo.OperatorRewardAddress {
+		response.OperatorAddressAndRewardNotTheSame = true
+		return &response, nil
+	}
+
 	if !operatorInfo.Active {
 		response.OperatorNotActive = true
 		return &response, nil
@@ -72,7 +79,7 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 	}
 
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorInfo.OperatorName, operatorRewardAddress, opts)
+	gasInfo, err := node.EstimateSetOperatorRewardAddress(pnr, nodeAccount.Address, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +89,7 @@ func CanUpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common
 	return &response, nil
 }
 
-func UpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common.Address) (*api.UpdateOperatorRewardAddress, error) {
+func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) (*api.SetRewardAddress, error) {
 	w, err := services.GetWallet(c)
 	if err != nil {
 		return nil, err
@@ -105,19 +112,9 @@ func UpdateOperatorRewardAddress(c *cli.Context, operatorRewardAddress common.Ad
 		return nil, err
 	}
 
-	response := api.UpdateOperatorRewardAddress{}
+	response := api.SetRewardAddress{}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := node.UpdateOperatorDetails(pnr, operatorInfo.OperatorName, operatorRewardAddress, opts)
+	tx, err := node.ProposeRewardAddress(pnr, nodeAccount.Address, operatorRewardAddress, opts)
 	if err != nil {
 		return nil, err
 	}

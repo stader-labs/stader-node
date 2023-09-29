@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
@@ -79,7 +80,7 @@ func CanUpdateOperatorName(c *cli.Context, operatorName string) (*api.CanUpdateO
 	}
 
 	// estimate gas
-	gasInfo, err := node.EstimateUpdateOperatorDetails(pnr, operatorName, operatorInfo.OperatorRewardAddress, opts)
+	gasInfo, err := node.EstimateUpdateOperatorName(pnr, operatorName, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -107,24 +108,9 @@ func UpdateOperatorName(c *cli.Context, operatorName string) (*api.UpdateOperato
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	nodeAccount, err := w.GetNodeAccount()
-	if err != nil {
-		return nil, err
-	}
-
 	response := api.UpdateOperatorName{}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := node.UpdateOperatorDetails(pnr, operatorName, operatorInfo.OperatorRewardAddress, opts)
+	tx, err := node.UpdateOperatorName(pnr, operatorName, opts)
 	if err != nil {
 		return nil, err
 	}
