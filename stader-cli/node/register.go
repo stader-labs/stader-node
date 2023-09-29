@@ -30,12 +30,9 @@ func registerNode(c *cli.Context, operatorName string) error {
 		return err
 	}
 
-	operatorRewardAddressString := c.String("operator-reward-address")
-	if operatorRewardAddressString == "" {
-		operatorRewardAddressString = walletStatus.AccountAddress.String()
-	}
+	operatorRewardAddressString := walletStatus.AccountAddress.String()
 
-	confirmText := "Would you wish to join the ETHx Socializing pool?\nType 'Yes' to Opt-in or 'No' to Opt-out. \nNote: The Opt-In and Opt-Out of socializing pool will have a cool-off period of 56 days.\ni.e you will have to wait for 56 days to Opt-Out of the Socializing pool once you Opt-In and vice versa.\nLearn more about the ETHx Socializing Pool here:\nhttps://staderlabs.gitbook.io/ethereum/node-operator/permissionless-node-operator/ethx-rewards-for-permissionless-node-operators/socializing-pool.\n"
+	confirmText := "Would you wish to join the ETHx Socializing pool?\nType 'Yes' to Opt-in or 'No' to Opt-out. \nNote: The Opt-In and Opt-Out of socializing pool will have a cool-off period of 56 days.\ni.e you will have to wait for 56 days to Opt-Out of the Socializing pool once you Opt-In and vice versa.\nLearn more about the ETHx Socializing Pool here:\nhttps://staderlabs.gitbook.io/ethereum/node-operator/permissionless-node-operator/ethx-rewards-for-permissionless-node-operators/socializing-pool\n"
 
 	socializeEl := cliutils.Confirm(confirmText)
 	// Check node can be registered
@@ -85,7 +82,7 @@ func registerNode(c *cli.Context, operatorName string) error {
 	}
 
 	// Log & return
-	fmt.Println("The node was successfully registered with Stader.")
+	fmt.Printf("Congratulation, your node is now registered on the stader \network. Your current Operator and Reward address is the same. We \nstrongly recommend changing your Reward address. To do so, run the \nfollowing command: 'stader-cli node set-reward-address -ora <new reward address>'.\n")
 	return nil
 
 }

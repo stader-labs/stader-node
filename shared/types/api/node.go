@@ -1,9 +1,10 @@
 package api
 
 import (
-	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"math/big"
 	"time"
+
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -375,10 +376,11 @@ type CanUpdateOperatorRewardAddress struct {
 	OperatorRewardAddressZero          bool           `json:"operatorRewardAddressZero"`
 	NothingToUpdate                    bool           `json:"nothingToUpdate"`
 	IsPermissionlessNodeRegistryPaused bool           `json:"isPermissionlessNodeRegistryPaused"`
+	OperatorAddressAndRewardNotTheSame bool           `json:operatorAddressAndRewardNotTheSame`
 	GasInfo                            stader.GasInfo `json:"gasInfo"`
 }
 
-type UpdateOperatorRewardAddress struct {
+type SetRewardAddress struct {
 	Status string      `json:"status"`
 	Error  string      `json:"error"`
 	TxHash common.Hash `json:"txHash"`

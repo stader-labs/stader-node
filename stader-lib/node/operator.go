@@ -51,12 +51,30 @@ func ChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractMa
 	return tx, nil
 }
 
-func EstimateUpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorDetails", operatorName, operatorRewarderAddress)
+func EstimateUpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "updateOperatorName", operatorName)
 }
 
-func UpdateOperatorDetails(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, operatorRewarderAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.UpdateOperatorDetails(opts, operatorName, operatorRewarderAddress)
+func EstimateSetOperatorRewardAddress(
+	pnr *stader.PermissionlessNodeRegistryContractManager,
+	operatorAddress common.Address,
+	operatorRewarderAddress common.Address,
+	opts *bind.TransactOpts,
+) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "proposeRewardAddress", operatorAddress, operatorRewarderAddress)
+}
+
+func UpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.UpdateOperatorName(opts, operatorName)
+	if err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func ProposeRewardAddress(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress, rewardAddress common.Address, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.ProposeRewardAddress(opts, operatorAddress, rewardAddress)
 	if err != nil {
 		return nil, err
 	}

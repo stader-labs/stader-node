@@ -106,10 +106,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "operator-name, on",
 						Usage: "The name of the operator",
 					},
-					cli.StringFlag{
-						Name:  "operator-reward-address, ora",
-						Usage: "The address at which operator will get rewards (will default to the current node address)",
-					},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm node registration",
@@ -122,12 +118,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					}
 
 					operatorName := c.String("operator-name")
-
-					if c.String("operator-reward-address") != "" {
-						if _, err := cliutils.ValidateAddress("operator-reward-address", c.String("operator-reward-address")); err != nil {
-							return err
-						}
-					}
 
 					// Run
 					return registerNode(c, operatorName)
@@ -159,7 +149,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 				},
 			},
-
 			{
 				Name:      "send",
 				Aliases:   []string{"n"},
@@ -329,10 +318,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "update-operator-reward-address",
-				Aliases:   []string{"uod"},
-				Usage:     "Update Operator reward address",
-				UsageText: "stader-cli node update-operator-reward-address --operator-reward-address",
+				Name:      "set-reward-address",
+				Aliases:   []string{"sra"},
+				Usage:     "Set operator reward address",
+				UsageText: "stader-cli node set-reward-address --operator-reward-address",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "operator-reward-address, ora",
@@ -351,7 +340,32 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					}
 
 					// Run
-					return updateOperatorRewardAddress(c, operatorRewardAddress)
+					return SetRewardAddress(c, operatorRewardAddress)
+				},
+			},
+			{
+				Name:      "approve-sd",
+				Aliases:   []string{"k"},
+				Usage:     "Approve SD against the node",
+				UsageText: "stader-cli node approve-sd [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to approve",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm SD approve",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return nodeApproveSd(c)
 				},
 			},
 		},
