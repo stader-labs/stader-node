@@ -171,9 +171,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	// Get the latest state
 	state := collector.stateLocker.GetMetricsContainer()
 
-	currentStartBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentStartBlock.Int64()), 0)
-
-	nextRewardBlock := currentStartBlock + 7200*28
+	currentEndBlock := math.RoundDown(float64(state.StaderNetworkDetails.NextSocializingPoolRewardCycle.CurrentEndBlock.Int64()), 0)
 
 	channel <- prometheus.MustNewConstMetric(
 		collector.SdPrice, prometheus.GaugeValue, state.StaderNetworkDetails.SdPrice)
@@ -196,7 +194,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.TotalStakedSd, prometheus.GaugeValue, state.StaderNetworkDetails.TotalStakedSd)
 	channel <- prometheus.MustNewConstMetric(
-		collector.NextRewardBlock, prometheus.GaugeValue, nextRewardBlock)
+		collector.NextRewardBlock, prometheus.GaugeValue, currentEndBlock)
 	channel <- prometheus.MustNewConstMetric(
 		collector.CollateralRatio, prometheus.GaugeValue, state.StaderNetworkDetails.CollateralRatio)
 	channel <- prometheus.MustNewConstMetric(
