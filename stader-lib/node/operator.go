@@ -61,7 +61,7 @@ func EstimateSetOperatorRewardAddress(
 	operatorRewarderAddress common.Address,
 	opts *bind.TransactOpts,
 ) (stader.GasInfo, error) {
-	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "initiateRewardAddressChange", operatorAddress, operatorRewarderAddress)
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "proposeRewardAddress", operatorAddress, operatorRewarderAddress)
 }
 
 func UpdateOperatorName(pnr *stader.PermissionlessNodeRegistryContractManager, operatorName string, opts *bind.TransactOpts) (*types.Transaction, error) {
