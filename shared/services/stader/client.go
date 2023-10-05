@@ -64,6 +64,8 @@ const (
 	LegacySettingsFile       string = "settings.yml"
 	PrometheusConfigTemplate string = "prometheus.tmpl"
 	PrometheusFile           string = "prometheus.yml"
+	GuardianFileTemplate     string = "guardian.tmpl"
+	GuardianFile             string = "guardian.yml"
 
 	APIContainerSuffix string = "_api"
 	APIBinPath         string = "/go/bin/stader"
@@ -781,6 +783,27 @@ func (c *Client) GetDockerContainerShutdownTime(container string) (time.Time, er
 
 	return finishTime, nil
 
+}
+
+func (c *Client) UpdateGuardianConfiguration(contents []byte) error {
+
+	guardianTemplatePath, err := homedir.Expand(fmt.Sprintf("%s/%s/%s", c.configPath, templatesDir, GuardianFileTemplate))
+	if err != nil {
+		return fmt.Errorf("Error expanding Guardian template path: %w", err)
+	}
+
+	guardianConfigPath, err := homedir.Expand(fmt.Sprintf("%s/%s", c.configPath, GuardianFile))
+	if err != nil {
+		return fmt.Errorf("Error expanding guardian config file path: %w", err)
+	}
+
+	// Write the actual Prometheus config file
+	err = os.WriteFile(guardianTemplatePath, contents, 0664)
+	if err != nil {
+		return fmt.Errorf("Could not write guardian config file to %s: %w", shellescape.Quote(guardianConfigPath), err)
+	}
+
+	return nil
 }
 
 // Shut down a container

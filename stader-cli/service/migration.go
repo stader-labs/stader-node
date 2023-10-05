@@ -1,6 +1,7 @@
 package service
 
 import (
+	_ "embed"
 	"fmt"
 
 	"github.com/hashicorp/go-version"
@@ -13,9 +14,18 @@ type ConfigUpgrader struct {
 	upgradeFunc func(c *cli.Context) error
 }
 
+//go:embed guardian.tmpl
+var guardian []byte
+
 func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 	// Create versions
 	v130, err := parseVersion("1.3.0")
+	if err != nil {
+		return nil, err
+	}
+
+	// Create versions
+	v131, err := parseVersion("1.3.1")
 	if err != nil {
 		return nil, err
 	}
@@ -25,6 +35,10 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 		{
 			version:     v130,
 			upgradeFunc: upgradeFuncV30,
+		},
+		{
+			version:     v131,
+			upgradeFunc: upgradeFuncV31,
 		},
 	}
 
@@ -68,6 +82,20 @@ func upgradeFuncV30(c *cli.Context) error {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
 	_, err = staderClient.RebuildWallet()
+
+	if err != nil {
+		return fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
+	return nil
+}
+
+func upgradeFuncV31(c *cli.Context) error {
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+	err = staderClient.UpdateGuardianConfiguration(guardian)
 
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)

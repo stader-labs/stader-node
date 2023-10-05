@@ -88,6 +88,7 @@ type StaderConfig struct {
 
 	// Metrics settings
 	EnableMetrics           config.Parameter `yaml:"enableMetrics,omitempty"`
+	ExposeGuardianPort      config.Parameter `yaml:"enableMetrics,omitempty"`
 	EnableGuardianMetrics   config.Parameter `yaml:"enableGuardianMetrics,omitempty"`
 	EcMetricsPort           config.Parameter `yaml:"ecMetricsPort,omitempty"`
 	BnMetricsPort           config.Parameter `yaml:"bnMetricsPort,omitempty"`
@@ -341,6 +342,18 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
+		ExposeGuardianPort: config.Parameter{
+			ID:                   "exposeGuardianPort",
+			Name:                 "Expose Guardian Port",
+			Description:          "ExposeGuardianPort",
+			Type:                 config.ParameterType_Bool,
+			Default:              map[config.Network]interface{}{config.Network_All: true},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Node, config.ContainerID_Guardian},
+			EnvironmentVariables: []string{"EXPOSE_GUARDIAN_PORT"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
+
 		EnableGuardianMetrics: config.Parameter{
 			ID:                   "enableGuardianMetrics",
 			Name:                 "Enable Guardian Metrics",
@@ -527,6 +540,7 @@ func (cfg *StaderConfig) GetParameters() []*config.Parameter {
 		&cfg.ConsensusClient,
 		&cfg.ExternalConsensusClient,
 		&cfg.EnableMetrics,
+		&cfg.ExposeGuardianPort,
 		&cfg.EnableGuardianMetrics,
 		&cfg.EnableBitflyNodeMetrics,
 		&cfg.EcMetricsPort,
@@ -973,6 +987,9 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 		if cfg.Prometheus.AdditionalFlags.Value.(string) != "" {
 			envVars["PROMETHEUS_ADDITIONAL_FLAGS"] = fmt.Sprintf(", \"%s\"", cfg.Prometheus.AdditionalFlags.Value.(string))
 		}
+	}
+	if cfg.ExposeGuardianPort.Value == true {
+		envVars["GUARDIAN_OPEN_PORTS"] = fmt.Sprintf("%d:%d/tcp", cfg.NodeMetricsPort.Value, cfg.NodeMetricsPort.Value)
 	}
 
 	// Bitfly Node Metrics

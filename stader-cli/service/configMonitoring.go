@@ -26,6 +26,12 @@ import (
 func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	newSettings[keys.Nm_enable_metrics] = cfg.EnableMetrics.Value.(bool)
 
+	exposeGuardianPort, ok := cfg.ExposeGuardianPort.Value.(bool)
+	if ok {
+		newSettings[keys.Nm_expose_guardian_port] = exposeGuardianPort
+	} else {
+		newSettings[keys.Nm_expose_guardian_port] = true
+	}
 	newSettings[keys.Nm_execution_client_metrics_port] = format(cfg.EcMetricsPort.Value)
 	newSettings[keys.Nm_beacon_node_metrics_port] = format(cfg.BnMetricsPort.Value)
 	newSettings[keys.Nm_validator_client_metrics_port] = format(cfg.VcMetricsPort.Value)
@@ -62,6 +68,7 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 
 func updateMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) error {
 	cfg.EnableMetrics.Value = newSettings[keys.Nm_enable_metrics]
+	cfg.ExposeGuardianPort.Value = newSettings[keys.Nm_expose_guardian_port]
 	if cfg.EnableMetrics.Value.(bool) == false {
 		return nil
 	}
