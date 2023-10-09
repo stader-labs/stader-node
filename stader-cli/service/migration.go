@@ -25,7 +25,7 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 	}
 
 	// Create versions
-	v131, err := parseVersion("1.3.1")
+	v140, err := parseVersion("1.4.0")
 	if err != nil {
 		return nil, err
 	}
@@ -37,8 +37,8 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 			upgradeFunc: upgradeFuncV30,
 		},
 		{
-			version:     v131,
-			upgradeFunc: upgradeFuncV31,
+			version:     v140,
+			upgradeFunc: upgradeFuncV140,
 		},
 	}
 
@@ -90,7 +90,7 @@ func upgradeFuncV30(c *cli.Context) error {
 	return nil
 }
 
-func upgradeFuncV31(c *cli.Context) error {
+func upgradeFuncV140(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
