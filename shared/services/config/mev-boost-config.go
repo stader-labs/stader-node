@@ -74,9 +74,6 @@ type MevBoostConfig struct {
 	// bloXroute regulated relay
 	BloxRouteRegulatedRelay config.Parameter `yaml:"bloxRouteRegulatedEnabled,omitempty"`
 
-	// Blocknative relay
-	BlocknativeRelay config.Parameter `yaml:"blocknativeEnabled,omitempty"`
-
 	// Eden relay
 	EdenRelay config.Parameter `yaml:"edenEnabled,omitempty"`
 
@@ -174,9 +171,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		// Explicit relay params
 		FlashbotsRelay:          generateRelayParameter("flashbotsEnabled", relayMap[config.MevRelayID_Flashbots]),
 		BloxRouteMaxProfitRelay: generateRelayParameter("bloxRouteMaxProfitEnabled", relayMap[config.MevRelayID_BloxrouteMaxProfit]),
-		BloxRouteEthicalRelay:   generateRelayParameter("bloxRouteEthicalEnabled", relayMap[config.MevRelayID_BloxrouteEthical]),
 		BloxRouteRegulatedRelay: generateRelayParameter("bloxRouteRegulatedEnabled", relayMap[config.MevRelayID_BloxrouteRegulated]),
-		BlocknativeRelay:        generateRelayParameter("blocknativeEnabled", relayMap[config.MevRelayID_Blocknative]),
 		EdenRelay:               generateRelayParameter("edenEnabled", relayMap[config.MevRelayID_Eden]),
 		UltrasoundRelay:         generateRelayParameter("ultrasoundEnabled", relayMap[config.MevRelayID_Ultrasound]),
 		AestusRelay:             generateRelayParameter("aestusEnabled", relayMap[config.MevRelayID_Aestus]),
@@ -259,7 +254,6 @@ func (cfg *MevBoostConfig) GetParameters() []*config.Parameter {
 		&cfg.BloxRouteEthicalRelay,
 		&cfg.BloxRouteMaxProfitRelay,
 		&cfg.BloxRouteRegulatedRelay,
-		&cfg.BlocknativeRelay,
 		&cfg.EdenRelay,
 		&cfg.UltrasoundRelay,
 		&cfg.AestusRelay,
@@ -356,12 +350,6 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 				relays = append(relays, cfg.relayMap[config.MevRelayID_Flashbots])
 			}
 		}
-		if cfg.BloxRouteEthicalRelay.Value == true {
-			_, exists := cfg.relayMap[config.MevRelayID_BloxrouteEthical].Urls[currentNetwork]
-			if exists {
-				relays = append(relays, cfg.relayMap[config.MevRelayID_BloxrouteEthical])
-			}
-		}
 		if cfg.BloxRouteMaxProfitRelay.Value == true {
 			_, exists := cfg.relayMap[config.MevRelayID_BloxrouteMaxProfit].Urls[currentNetwork]
 			if exists {
@@ -374,12 +362,7 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 				relays = append(relays, cfg.relayMap[config.MevRelayID_BloxrouteRegulated])
 			}
 		}
-		if cfg.BlocknativeRelay.Value == true {
-			_, exists := cfg.relayMap[config.MevRelayID_Blocknative].Urls[currentNetwork]
-			if exists {
-				relays = append(relays, cfg.relayMap[config.MevRelayID_Blocknative])
-			}
-		}
+
 		if cfg.EdenRelay.Value == true {
 			_, exists := cfg.relayMap[config.MevRelayID_Eden].Urls[currentNetwork]
 			if exists {
@@ -447,19 +430,6 @@ func createDefaultRelays() []config.MevRelay {
 			Regulated:     false,
 			NoSandwiching: false,
 		},
-
-		// bloXroute Ethical
-		{
-			ID:          config.MevRelayID_BloxrouteEthical,
-			Name:        "bloXroute Ethical",
-			Description: "Select this to enable the \"ethical\" relay from bloXroute.",
-			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0xad0a8bb54565c2211cee576363f3a347089d2f07cf72679d16911d740262694cadb62d7fd7483f27afd714ca0f1b9118@bloxroute.ethical.blxrbdn.com?id=staderlabs",
-			},
-			Regulated:     false,
-			NoSandwiching: true,
-		},
-
 		// bloXroute Regulated
 		{
 			ID:          config.MevRelayID_BloxrouteRegulated,
@@ -467,20 +437,6 @@ func createDefaultRelays() []config.MevRelay {
 			Description: "Select this to enable the \"regulated\" relay from bloXroute.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com?id=staderlabs",
-			},
-			Regulated:     true,
-			NoSandwiching: false,
-		},
-
-		// Blocknative
-		{
-			ID:          config.MevRelayID_Blocknative,
-			Name:        "Blocknative",
-			Description: "Blocknative is a large blockchain infrastructure company that provides a popular MEV relay.",
-			Urls: map[config.Network]string{
-				config.Network_Mainnet: "https://0x9000009807ed12c1f08bf4e81c6da3ba8e3fc3d953898ce0102433094e5f22f21102ec057841fcb81978ed1ea0fa8246@builder-relay-mainnet.blocknative.com?id=staderlabs",
-				config.Network_Prater:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=staderlabs",
-				config.Network_Devnet:  "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
