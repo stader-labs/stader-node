@@ -65,9 +65,6 @@ type MevBoostConfig struct {
 	// Flashbots relay
 	FlashbotsRelay config.Parameter `yaml:"flashbotsEnabled,omitempty"`
 
-	// bloXroute ethical relay
-	BloxRouteEthicalRelay config.Parameter `yaml:"bloxRouteEthicalEnabled,omitempty"`
-
 	// bloXroute max profit relay
 	BloxRouteMaxProfitRelay config.Parameter `yaml:"bloxRouteMaxProfitEnabled,omitempty"`
 
@@ -251,7 +248,6 @@ func (cfg *MevBoostConfig) GetParameters() []*config.Parameter {
 		&cfg.EnableUnregulatedAllMev,
 		&cfg.EnableUnregulatedNoSandwich,
 		&cfg.FlashbotsRelay,
-		&cfg.BloxRouteEthicalRelay,
 		&cfg.BloxRouteMaxProfitRelay,
 		&cfg.BloxRouteRegulatedRelay,
 		&cfg.EdenRelay,
