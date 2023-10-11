@@ -35,8 +35,8 @@ require (
 	github.com/rivo/tview v0.0.0-20230621164836-6cc0565babaf // indirect
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20231009034137-a4efd039beef
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20231009034137-a4efd039beef
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20231010150025-cdbbe61da8dc
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20231010150025-cdbbe61da8dc
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0

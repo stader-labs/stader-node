@@ -42,7 +42,6 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 	// Relay Mode
 	newSettings[keys.Mev_boost_rm_enable_flashbots] = cfg.MevBoost.FlashbotsRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_bloXroute_max_profit] = cfg.MevBoost.BloxRouteMaxProfitRelay.Value.(bool)
-	newSettings[keys.Mev_boost_rm_enable_blocknative] = cfg.MevBoost.BlocknativeRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_eden_network] = cfg.MevBoost.EdenRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_ultra_sound] = cfg.MevBoost.UltrasoundRelay.Value.(bool)
 
@@ -56,8 +55,6 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 	newSettings[keys.Mev_boost_rm_expose_api_port] = cfg.MevBoost.OpenRpcPort.Value.(bool)
 	newSettings[keys.Mev_boost_rm_container_tag] = cfg.MevBoost.ContainerTag.Value
 	newSettings[keys.Mev_boost_rm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
-
-	newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical] = cfg.MevBoost.BloxRouteEthicalRelay.Value.(bool)
 
 	v, _ := cfg.MevBoost.AestusRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_aestus] = v
@@ -84,11 +81,10 @@ func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{})
 	// Relay Mode
 	cfg.MevBoost.FlashbotsRelay.Value = newSettings[keys.Mev_boost_rm_enable_flashbots]
 	cfg.MevBoost.BloxRouteMaxProfitRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_max_profit]
-	cfg.MevBoost.BlocknativeRelay.Value = newSettings[keys.Mev_boost_rm_enable_blocknative]
+
 	cfg.MevBoost.EdenRelay.Value = newSettings[keys.Mev_boost_rm_enable_eden_network]
 	cfg.MevBoost.UltrasoundRelay.Value = newSettings[keys.Mev_boost_rm_enable_ultra_sound]
 
-	cfg.MevBoost.BloxRouteEthicalRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_ethical]
 	cfg.MevBoost.BloxRouteRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated]
 	cfg.MevBoost.AestusRelay.Value = newSettings[keys.Mev_boost_rm_enable_aestus]
 
