@@ -86,7 +86,7 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 		return err
 	}
 
-	fmt.Printf("%sYour reward address changed in pending state. Please \nconfirm the request using this contract: %s and the reward address.%s", infoResponse.PermissionlessNodeRegistry, colorLightBlue, colorReset)
+	fmt.Printf("%sYour reward address changed in pending state. Please \nconfirm the request using this contract: %s and the reward address.%s", colorLightBlue, infoResponse.PermissionlessNodeRegistry, colorReset)
 
 	return nil
 }

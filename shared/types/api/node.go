@@ -376,7 +376,7 @@ type CanUpdateOperatorRewardAddress struct {
 	OperatorRewardAddressZero          bool           `json:"operatorRewardAddressZero"`
 	NothingToUpdate                    bool           `json:"nothingToUpdate"`
 	IsPermissionlessNodeRegistryPaused bool           `json:"isPermissionlessNodeRegistryPaused"`
-	OperatorAddressAndRewardNotTheSame bool           `json:operatorAddressAndRewardNotTheSame`
+	OperatorAddressAndRewardNotTheSame bool           `json:"operatorAddressAndRewardNotTheSame"`
 	GasInfo                            stader.GasInfo `json:"gasInfo"`
 }
 
