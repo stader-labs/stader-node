@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	stdCf "github.com/stader-labs/stader-node/shared/services/config"
+	"github.com/stader-labs/stader-node/shared/types/config"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 )
 
@@ -72,7 +73,14 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 
 	// Local
 	newSettings[keys.E2cc_lc_common_graffiti] = cfg.ConsensusCommon.Graffiti.Value
-	newSettings[keys.E2cc_lc_common_checkpoint_sync_url] = cfg.ConsensusCommon.CheckpointSyncProvider.Value
+	network := newSettings[keys.Sn_node_network].(string)
+
+	if network == "Ethereum Mainnet" {
+		newSettings[keys.E2cc_lc_common_checkpoint_sync_url] = cfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value
+	} else {
+		newSettings[keys.E2cc_lc_common_checkpoint_sync_url] = cfg.ConsensusCommon.CheckpointSyncProviderPrater.Value
+	}
+
 	newSettings[keys.E2cc_lc_common_p2p_port] = format(cfg.ConsensusCommon.P2pPort.Value)
 	newSettings[keys.E2cc_lc_common_http_api_port] = format(cfg.ConsensusCommon.ApiPort.Value)
 	newSettings[keys.E2cc_lc_common_expose_api_port] = cfg.ConsensusCommon.OpenApiPort.Value.(bool)
@@ -181,6 +189,12 @@ func updateLocalConsensusClient(newCfg *stdCf.StaderConfig, settings map[string]
 	newCfg.ConsensusCommon.ApiPort.Value = settings[keys.E2cc_lc_common_http_api_port]
 	newCfg.ConsensusCommon.OpenApiPort.Value = settings[keys.E2cc_lc_common_expose_api_port]
 	newCfg.ConsensusCommon.DoppelgangerDetection.Value = settings[keys.E2cc_lc_common_doppelganger_detection]
+
+	if newCfg.StaderNode.Network.Value.(config.Network) == config.Network_Mainnet {
+		newCfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value = settings[keys.E2cc_lc_common_checkpoint_sync_url]
+	} else {
+		newCfg.ConsensusCommon.CheckpointSyncProviderPrater.Value = settings[keys.E2cc_lc_common_checkpoint_sync_url]
+	}
 
 	clientStr, ok := settings[keys.E2cc_lc_consensus_client].(string)
 	if !ok {
