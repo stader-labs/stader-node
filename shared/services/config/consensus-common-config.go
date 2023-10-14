@@ -93,7 +93,7 @@ func NewConsensusCommonConfig(cfg *StaderConfig) *ConsensusCommonConfig {
 		},
 
 		CheckpointSyncProvider: config.Parameter{
-			ID:   "checkpointSyncUrlID",
+			ID:   CheckpointSyncUrlID,
 			Name: "Checkpoint Sync URL",
 			Description: "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
 				"Example: https://<project ID>:<secret>@eth2-beacon-prater.infura.io\n" +
