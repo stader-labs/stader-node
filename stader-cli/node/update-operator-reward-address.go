@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -30,7 +29,7 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 	}
 	defer staderClient.Close()
 
-	cfg, err := services.GetConfig(c)
+	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
 		return err
 	}
