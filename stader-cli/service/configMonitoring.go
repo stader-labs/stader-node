@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.3.0]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.0]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 	newSettings[keys.Nm_validator_client_metrics_port] = format(cfg.VcMetricsPort.Value)
 	newSettings[keys.Nm_node_metrics_port] = format(cfg.NodeMetricsPort.Value)
 	newSettings[keys.Nm_exporter_metrics_port] = format(cfg.ExporterMetricsPort.Value)
-	newSettings[keys.Nm_guardian_oracle_port] = "9104"
 
 	// Nm_guardian_oracle_port ??
 	// Nm_allow_root_filesystem_access ??
