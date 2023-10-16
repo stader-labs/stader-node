@@ -55,8 +55,13 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 		return nil
 	}
 
+	infoResponse, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
 	if res.OperatorAddressAndRewardNotTheSame {
-		promptHowToChangeReward(cfg)
+		promptHowToChangeReward(cfg, infoResponse.PermissionlessNodeRegistry)
 		return nil
 	}
 
@@ -68,7 +73,10 @@ func SetRewardAddress(c *cli.Context, operatorRewardAddress common.Address) erro
 	confirmMessage := `
 This action will change your Reward Address. Once it's changed, all future SD and ETH rewards will be sent to the New Reward Address.
 
-After you propose the change, your New Reward Address will initially be in a 'Confirmation pending' state until you confirm the change using your New Reward Address on the PermissionlessNodeRegistry Smart Contract. Please make sure that your New Reward Address is linked to a web3-compatible wallet, such as MetaMask, to connect with the Smart Contract
+After you propose the change, your New Reward Address will initially be in a
+'Confirmation pending' state until you confirm the change using your New RewardAddress on the
+PermissionlessNodeRegistry Smart Contract. Please make sure that your New Reward Address
+is linked to a web3-compatible wallet, such as MetaMask, to connect with the Smart Contract
 
 Do you wish to proceed with the Reward Address change?`
 
@@ -92,64 +100,74 @@ Do you wish to proceed with the Reward Address change?`
 		return err
 	}
 
-	promptSuccessChangedRewardAndNextStep(cfg)
+	promptSuccessChangedRewardAndNextStep(cfg, infoResponse.PermissionlessNodeRegistry)
 	return nil
 }
 
-func promptSuccessChangedRewardAndNextStep(cfg *config.StaderConfig) {
+func promptSuccessChangedRewardAndNextStep(cfg *config.StaderConfig, contractAddr common.Address) {
 	switch cfg.StaderNode.Network.Value.(cfTypes.Network) {
 	case cfTypes.Network_Mainnet:
 		msg := `
 You have successfully raised a request to change your Reward Address.
 
 To confirm the Reward Address change please follow these steps:
-Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://etherscan.io/address/0x4f4Bfa0861F62309934a5551E0B2541Ee82fdcF1#writeProxyContract
+Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://etherscan.io/address/%s#writeProxyContract#F3
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function.
 
 Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Mainnet-Permissionless-8ef1137e9c2647c88db3911da1642ca2
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your new Reward Address.
 `
+		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n", colorLightBlue, msg, colorReset)
 	case cfTypes.Network_Prater:
 		msg := `
 You have successfully raised a request to change your Reward Address.
 
 To confirm the Reward Address change please follow these steps:
-Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/0x14F59038b249AA9f44bC3FB7DBfC291C5B21f7F8#writeProxyContract
+Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F3
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function.
 
 Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Testnet-Permissionless-db692621a305426bab2e3ad232acbc14
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your new Reward Address.`
+		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n", colorLightBlue, msg, colorReset)
 	default:
 		fmt.Println("Unsupported network")
 	}
 }
 
-func promptHowToChangeReward(cfg *config.StaderConfig) {
+func promptHowToChangeReward(cfg *config.StaderConfig, contractAddr common.Address) {
 	network := cfg.StaderNode.Network.Value.(cfTypes.Network)
 	switch network {
 	case cfTypes.Network_Mainnet:
 		msg := `
-For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://etherscan.io/address/0x4f4Bfa0861F62309934a5551E0B2541Ee82fdcF1#writeProxyContract
+For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://etherscan.io/address/%s#writeProxyContract#F10
+
 Follow these steps for your Reward address change:
 Step 1: Propose the Reward Address change by connecting your Existing Reward Address wallet with the Smart Contract and execute the "ProposeRewardAddress" function.
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function
+
 Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Mainnet-Permissionless-8ef1137e9c2647c88db3911da1642ca2
+
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your New Reward Address.
 `
+		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n\n", colorLightBlue, msg, colorReset)
 	case cfTypes.Network_Prater:
 		msg := `
-For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/0x14F59038b249AA9f44bC3FB7DBfC291C5B21f7F8#writeProxyContract
+For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F10
+
 Follow these steps for your Reward Address change:
 Step 1: Propose the Reward Address change by connecting your Existing Reward Address wallet with the Smart Contract and execute the "ProposeRewardAddress" function.
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function
+
 Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Testnet-Permissionless-db692621a305426bab2e3ad232acbc14
+
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your New Reward Address.
 `
+		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n\n", colorLightBlue, msg, colorReset)
 	default:
 		fmt.Println("Unsupported network")
