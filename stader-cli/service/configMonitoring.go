@@ -37,7 +37,6 @@ func setUIMonitoring(cfg *stdCf.StaderConfig, newSettings map[string]interface{}
 	newSettings[keys.Nm_validator_client_metrics_port] = format(cfg.VcMetricsPort.Value)
 	newSettings[keys.Nm_node_metrics_port] = format(cfg.NodeMetricsPort.Value)
 	newSettings[keys.Nm_exporter_metrics_port] = format(cfg.ExporterMetricsPort.Value)
-	newSettings[keys.Nm_guardian_oracle_port] = "9104"
 
 	// Nm_guardian_oracle_port ??
 	// Nm_allow_root_filesystem_access ??
