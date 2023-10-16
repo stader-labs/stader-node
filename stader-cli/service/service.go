@@ -245,17 +245,7 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 	}
 	cfg.ConsensusCommon.DoppelgangerDetection.Value = ConvertStringToBool(newSettings.ConsensusClient.DoppelgangerProtection)
 	cfg.ConsensusCommon.Graffiti.Value = newSettings.ConsensusClient.Graffit
-
-	switch cfgtypes.Network(newSettings.Network) {
-	case cfgtypes.Network_Mainnet:
-		cfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value = newSettings.ConsensusClient.CheckpointUrlMainnet
-		cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrlMainnet
-	case cfgtypes.Network_Prater:
-		cfg.ConsensusCommon.CheckpointSyncProviderPrater.Value = newSettings.ConsensusClient.CheckpointUrlPrater
-		cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrlPrater
-	default:
-		panic("UNSUPPORT NETWORK")
-	}
+	cfg.ConsensusCommon.CheckpointSyncProvider.Value = newSettings.ConsensusClient.CheckpointUrl
 
 	cfg.UseFallbackClients.Value = ConvertStringToBool(newSettings.FallbackClients.SelectionOption)
 	// get the consensus client we are using for fallback
@@ -308,19 +298,6 @@ func UpdateConfig(_cfg *config.StaderConfig, newSettings *pages.SettingsType) (c
 
 func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 
-	checkpointUrlPrater := cfg.ConsensusCommon.CheckpointSyncProviderPrater.Value.(string)
-	checkpointUrlMainnet := cfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value.(string)
-
-	// Set default for older version (< 1.4.0)
-	// After 1.4.0 w expected to mainnet or prater checkpoint is not empty
-	if checkpointUrlPrater == "" && checkpointUrlMainnet == "" {
-		if cfg.StaderNode.Network.Value.(cfgtypes.Network) == cfgtypes.Network_Mainnet {
-			cfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value = cfg.ConsensusCommon.CheckpointSyncProvider.Value
-		} else {
-			cfg.ConsensusCommon.CheckpointSyncProviderPrater.Value = cfg.ConsensusCommon.CheckpointSyncProvider.Value
-		}
-	}
-
 	currentSettings := pages.SettingsType{
 		Version:   shared.StaderVersion,
 		Network:   string(cfg.StaderNode.Network.Value.(cfgtypes.Network)),
@@ -337,8 +314,6 @@ func NewSettingsType(cfg *config.StaderConfig) pages.SettingsType {
 			ExternalSelection:      string(cfg.ExternalConsensusClient.Value.(cfgtypes.ConsensusClient)),
 			Graffit:                cfg.ConsensusCommon.Graffiti.Value.(string),
 			CheckpointUrl:          cfg.ConsensusCommon.CheckpointSyncProvider.Value.(string),
-			CheckpointUrlMainnet:   cfg.ConsensusCommon.CheckpointSyncProviderMainnet.Value.(string),
-			CheckpointUrlPrater:    cfg.ConsensusCommon.CheckpointSyncProviderPrater.Value.(string),
 			DoppelgangerProtection: ConvertBoolToString(cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool)),
 			External: pages.ConsensusClientExternalType{
 				Lighthouse: pages.ConsensusClientExternalSelectedLighthouseType{

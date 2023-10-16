@@ -25,10 +25,7 @@ import (
 
 // Param IDs
 const GraffitiID string = "graffiti"
-
 const CheckpointSyncUrlID string = "checkpointSyncUrl"
-const CheckpointSyncUrlMainnetID string = "checkpointSyncUrlMainnet"
-const CheckpointSyncUrlPraterID string = "checkpointSyncUrlPraters"
 const P2pPortID string = "p2pPort"
 const ApiPortID string = "apiPort"
 const OpenApiPortID string = "openApiPort"
@@ -54,12 +51,6 @@ type ConsensusCommonConfig struct {
 
 	// The checkpoint sync URL if used
 	CheckpointSyncProvider config.Parameter `yaml:"checkpointSyncProvider,omitempty"`
-
-	// The checkpoint sync URL if used for mainnet
-	CheckpointSyncProviderMainnet config.Parameter `yaml:"checkpointSyncProviderMainnet,omitempty"`
-
-	// The checkpoint sync URL if used for the prater
-	CheckpointSyncProviderPrater config.Parameter `yaml:"checkpointSyncProviderPrater,omitempty"`
 
 	// The port to use for gossip traffic
 	P2pPort config.Parameter `yaml:"p2pPort,omitempty"`
@@ -104,30 +95,6 @@ func NewConsensusCommonConfig(cfg *StaderConfig) *ConsensusCommonConfig {
 			EnvironmentVariables: []string{"CHECKPOINT_SYNC_URL"},
 			CanBeBlank:           true,
 			OverwriteOnUpgrade:   false,
-		},
-		CheckpointSyncProviderMainnet: config.Parameter{
-			ID:   CheckpointSyncUrlMainnetID,
-			Name: "Checkpoint Sync URL Mainnet",
-			Description: "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
-				"Example: https://<project ID>:<secret>@eth2-beacon-prater.infura.io\n" +
-				"Leave this blank if you want to sync normally from the start of the chain.",
-			Type:               config.ParameterType_String,
-			Default:            map[config.Network]interface{}{config.Network_All: defaultCheckpointSyncProvider},
-			AffectsContainers:  []config.ContainerID{config.ContainerID_Eth2},
-			CanBeBlank:         true,
-			OverwriteOnUpgrade: false,
-		},
-		CheckpointSyncProviderPrater: config.Parameter{
-			ID:   CheckpointSyncUrlPraterID,
-			Name: "Checkpoint Sync URL Prater",
-			Description: "If you would like to instantly sync using an existing Beacon node, enter its URL.\n" +
-				"Example: https://<project ID>:<secret>@eth2-beacon-prater.infura.io\n" +
-				"Leave this blank if you want to sync normally from the start of the chain.",
-			Type:               config.ParameterType_String,
-			Default:            map[config.Network]interface{}{config.Network_All: defaultCheckpointSyncProvider},
-			AffectsContainers:  []config.ContainerID{config.ContainerID_Eth2},
-			CanBeBlank:         true,
-			OverwriteOnUpgrade: false,
 		},
 
 		P2pPort: config.Parameter{
@@ -185,8 +152,6 @@ func (cfg *ConsensusCommonConfig) GetParameters() []*config.Parameter {
 	return []*config.Parameter{
 		&cfg.Graffiti,
 		&cfg.CheckpointSyncProvider,
-		&cfg.CheckpointSyncProviderMainnet,
-		&cfg.CheckpointSyncProviderPrater,
 		&cfg.P2pPort,
 		&cfg.ApiPort,
 		&cfg.OpenApiPort,
