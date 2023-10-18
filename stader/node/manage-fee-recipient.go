@@ -21,7 +21,9 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/docker/docker/client"
@@ -33,6 +35,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/config"
 	staderService "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
+	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
@@ -117,6 +120,33 @@ func (m *manageFeeRecipient) run() error {
 	nodeAccount, err := m.w.GetNodeAccount()
 	if err != nil {
 		return err
+	}
+
+	currentBlock, err := eth1.GetCurrentBlockNumber(m.c)
+	if err != nil {
+		return fmt.Errorf("error GetCurrentBlockNumber: %w", err)
+	}
+
+	pnr, err := services.GetPermissionlessNodeRegistry(m.c)
+	if err != nil {
+		return fmt.Errorf("error GetPermissionlessNodeRegistry: %w", err)
+	}
+
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return fmt.Errorf("error GetOperatorId: %w", err)
+	}
+
+	lastChangeBlock, err := node.GetSocializingPoolStateChangeBlock(pnr, operatorID, nil)
+	if err != nil {
+		return fmt.Errorf("error GetSocializingPoolStateChangeBlock: %w", err)
+	}
+
+	blockPerThreeEpoch := big.NewInt(96)
+	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, blockPerThreeEpoch).Uint64()
+	if currentBlock < nextUpdatableBlock {
+		m.log.Printlnf("We are need to wait at least 3 epoch to update fee recipient, we'll update file at %d block\n", nextUpdatableBlock)
+		return nil
 	}
 
 	// Get the fee recipient info for the node
