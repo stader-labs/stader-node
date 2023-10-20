@@ -141,12 +141,9 @@ func (m *manageFeeRecipient) run() error {
 		return fmt.Errorf("error GetSocializingPoolStateChangeBlock: %w", err)
 	}
 
-	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, blockPerThreeEpoch).Uint64()
+	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, blocksPerThreeEpoch).Uint64()
 
-	if currentBlock < nextUpdatableBlock {
-		m.log.Printlnf("We are need to wait at least 3 epoch to update fee recipient, we'll update file at %d block\n", nextUpdatableBlock)
-		return nil
-	}
+	m.log.Printlnf("CurrentBlock: %d, we'll update file at %d block if possible\n", nextUpdatableBlock)
 
 	// Get the fee recipient info for the node
 	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.sdcfg, nodeAccount.Address, nil)
@@ -154,12 +151,21 @@ func (m *manageFeeRecipient) run() error {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}
 
+	updatable := currentBlock > nextUpdatableBlock
 	// Get the correct fee recipient address
 	var correctFeeRecipient common.Address
 	if feeRecipientInfo.IsInSocializingPool {
-		correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		if updatable {
+			correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		} else {
+			correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		}
 	} else {
-		correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		if updatable {
+			correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		} else {
+			correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		}
 	}
 
 	// Check if the VC is using the correct fee recipient

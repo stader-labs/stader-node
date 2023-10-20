@@ -23,6 +23,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io/ioutil"
+	"math/big"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -52,6 +53,7 @@ var preSignedCooldown, _ = time.ParseDuration("1h")
 var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
+var blocksPerThreeEpoch = big.NewInt(96)
 
 const (
 	MaxConcurrentEth1Requests   = 200
