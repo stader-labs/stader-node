@@ -21,6 +21,7 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
@@ -141,7 +142,7 @@ func (m *manageFeeRecipient) run() error {
 		return fmt.Errorf("error GetSocializingPoolStateChangeBlock: %w", err)
 	}
 
-	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, blocksPerThreeEpoch).Uint64()
+	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, big.NewInt(blocksPerThreeEpoch)).Uint64()
 
 	m.log.Printlnf("CurrentBlock: %d, we'll update file at %d block if possible\n", nextUpdatableBlock)
 
