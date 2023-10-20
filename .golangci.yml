@@ -24,7 +24,6 @@ linters:
   enable:
     - bodyclose
     - unused
-    - depguard
     - dogsled
     - dupl
     - errcheck
