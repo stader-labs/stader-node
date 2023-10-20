@@ -59,6 +59,7 @@ const (
 	MerkleProofsDownloaderColor = color.FgHiBlue
 	ErrorColor                  = color.FgRed
 	InfoColor                   = color.FgHiGreen
+	blocksPerThreeEpoch         = 96
 )
 
 // Register node command

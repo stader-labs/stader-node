@@ -21,7 +21,9 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 
 	"github.com/docker/docker/client"
@@ -33,6 +35,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/config"
 	staderService "github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/services/wallet"
+	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	staderUtils "github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
@@ -119,18 +122,51 @@ func (m *manageFeeRecipient) run() error {
 		return err
 	}
 
+	currentBlock, err := eth1.GetCurrentBlockNumber(m.c)
+	if err != nil {
+		return fmt.Errorf("error GetCurrentBlockNumber: %w", err)
+	}
+
+	pnr, err := services.GetPermissionlessNodeRegistry(m.c)
+	if err != nil {
+		return fmt.Errorf("error GetPermissionlessNodeRegistry: %w", err)
+	}
+
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return fmt.Errorf("error GetOperatorId: %w", err)
+	}
+
+	lastChangeBlock, err := node.GetSocializingPoolStateChangeBlock(pnr, operatorID, nil)
+	if err != nil {
+		return fmt.Errorf("error GetSocializingPoolStateChangeBlock: %w", err)
+	}
+
+	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, big.NewInt(blocksPerThreeEpoch)).Uint64()
+
+	m.log.Printlnf("CurrentBlock: %d, we'll update file at %d block if possible\n", nextUpdatableBlock)
+
 	// Get the fee recipient info for the node
 	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.sdcfg, nodeAccount.Address, nil)
 	if err != nil {
 		return fmt.Errorf("error getting fee recipient info: %w", err)
 	}
 
+	updatable := currentBlock > nextUpdatableBlock
 	// Get the correct fee recipient address
 	var correctFeeRecipient common.Address
 	if feeRecipientInfo.IsInSocializingPool {
-		correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		if updatable {
+			correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		} else {
+			correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		}
 	} else {
-		correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		if updatable {
+			correctFeeRecipient = feeRecipientInfo.FeeDistributorAddress
+		} else {
+			correctFeeRecipient = feeRecipientInfo.SocializingPoolAddress
+		}
 	}
 
 	// Check if the VC is using the correct fee recipient
