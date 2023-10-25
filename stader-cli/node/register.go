@@ -32,9 +32,10 @@ func registerNode(c *cli.Context, operatorName string) error {
 
 	operatorRewardAddressString := walletStatus.AccountAddress.String()
 
-	confirmText := "Would you wish to join the ETHx Socializing pool?\nType 'Y' to Opt-in or 'N' to Opt-out. \nNote: The Opt-In and Opt-Out of socializing pool will have a cool-off period of 56 days.\ni.e you will have to wait for 56 days to Opt-Out of the Socializing pool once you Opt-In and vice versa.\nLearn more about the ETHx Socializing Pool here:\nhttps://staderlabs.gitbook.io/ethereum/node-operator/permissionless-node-operator/ethx-rewards-for-permissionless-node-operators/socializing-pool\n"
+	confirmText := "Would you wish to join the ETHx Socializing pool?\nType 'Y' to Opt-in or 'N' to Opt-out. \nNote: The Opt-In and Opt-Out of socializing pool will have a cool-off period of 56 days.\ni.e you will have to wait for 56 days to Opt-Out of the Socializing pool once you Opt-In and vice versa.\nLearn more about the ETHx Socializing Pool here:\nhttps://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/ethx-rewards-for-permissionless-node-operators/socializing-pool\n"
 
 	socializeEl := cliutils.Confirm(confirmText)
+
 	// Check node can be registered
 	canRegister, err := staderClient.CanRegisterNode(operatorName, common.HexToAddress(operatorRewardAddressString), socializeEl)
 	if err != nil {
