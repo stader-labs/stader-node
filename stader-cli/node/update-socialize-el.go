@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/urfave/cli"
 
@@ -50,8 +51,19 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 		return err
 	}
 
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to update socializing pool participation?"))) {
+	var confirmText string
+
+	if socializeEl {
+		confirmText = `
+Note: There is a 56-day cool-off period for both Opt-In and Opt-Out of the socializing pool. For example, once you Opt-In, you will have to wait for 56 days to Opt-Out of the Socializing pool, and vice versa.
+Are you sure you want to Opt-Into the socializing pool? `
+	} else {
+		confirmText = `
+Note: There is a 56-day cool-off period for both Opt-In and Opt-Out of the socializing pool. For example, once you Opt-Out, you will have to wait for 56 days to Opt Into the Socializing pool, and vice versa.
+Are you sure you want to Opt-Out of the socializing pool?`
+	}
+
+	if !(c.Bool("yes") || cliutils.Confirm(confirmText)) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -63,9 +75,9 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	}
 
 	if socializeEl {
-		fmt.Printf("Opting in for socializing pool...\n")
+		fmt.Printf("Opting into the socializing pool...\n")
 	} else {
-		fmt.Printf("Opting out for socializing pool...\n")
+		fmt.Printf("Opting out of the socializing pool...\n")
 	}
 	cliutils.PrintTransactionHash(staderClient, response.TxHash)
 	_, err = staderClient.WaitForTransaction(response.TxHash)
@@ -74,9 +86,9 @@ func UpdateSocializeEl(c *cli.Context, socializeEl bool) error {
 	}
 
 	if socializeEl {
-		fmt.Printf("Opted in of socializing pool...\n")
+		fmt.Printf("Your request to Opt-In to the socializing pool is successful and will take effect after 3 epochs, approximately 20 minutes. \n")
 	} else {
-		fmt.Printf("Opted out of socializing pool...\n")
+		fmt.Printf("Your request to Opt-Out of the socializing pool is successful and will take effect after 3 epochs, approximately 20 minutes. \n")
 	}
 
 	return nil
