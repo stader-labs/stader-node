@@ -176,7 +176,7 @@ func install(c *cli.Context) error {
 		return fmt.Errorf("error getting data path from old configuration: %w", err)
 	}
 
-	err = staderClient.InstallService(
+	err = staderClient.UpdateStaderPackage(
 		false,
 		true,
 		fmt.Sprintf("%s", cfg.StaderNode.Network.Value),
@@ -188,6 +188,5 @@ func install(c *cli.Context) error {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
 
-	// Remove the upgrade flag if it's there
-	return staderClient.RemoveUpgradeFlagFile()
+	return nil
 }

@@ -56,6 +56,7 @@ import (
 // Config
 const (
 	InstallerURL = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/install.sh"
+	UpdateURL    = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/update_package.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
@@ -499,6 +500,16 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 
 // Install the Stader service
 func (c *Client) InstallService(verbose, noDeps bool, network, version, path string, dataPath string) error {
+	return c.executeScript(verbose, noDeps, network, version, path, dataPath, InstallerURL)
+}
+
+// Install the Stader service
+func (c *Client) UpdateStaderPackage(verbose, noDeps bool, network, version, path string, dataPath string) error {
+	return c.executeScript(verbose, noDeps, network, version, path, dataPath, UpdateURL)
+}
+
+// Install the Stader service
+func (c *Client) executeScript(verbose, noDeps bool, network, version, path string, dataPath string, url string) error {
 
 	downloader, err := c.getDownloader()
 	if err != nil {
@@ -521,7 +532,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(url, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
