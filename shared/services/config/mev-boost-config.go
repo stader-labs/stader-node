@@ -80,6 +80,9 @@ type MevBoostConfig struct {
 	// Aestus relay
 	AestusRelay config.Parameter `yaml:"aestusEnabled,omitempty"`
 
+	// Agnostic relay
+	AgnosticRelay config.Parameter `yaml:"AgnoticEnabled,omitempty"`
+
 	// The RPC port
 	Port config.Parameter `yaml:"port,omitempty"`
 
@@ -172,6 +175,7 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		EdenRelay:               generateRelayParameter("edenEnabled", relayMap[config.MevRelayID_Eden]),
 		UltrasoundRelay:         generateRelayParameter("ultrasoundEnabled", relayMap[config.MevRelayID_Ultrasound]),
 		AestusRelay:             generateRelayParameter("aestusEnabled", relayMap[config.MevRelayID_Aestus]),
+		AgnosticRelay:           generateRelayParameter("agnosticEnabled", relayMap[config.MevRelayID_Agnostic]),
 
 		Port: config.Parameter{
 			ID:                   "port",
@@ -253,6 +257,7 @@ func (cfg *MevBoostConfig) GetParameters() []*config.Parameter {
 		&cfg.EdenRelay,
 		&cfg.UltrasoundRelay,
 		&cfg.AestusRelay,
+		&cfg.AgnosticRelay,
 		&cfg.Port,
 		&cfg.OpenRpcPort,
 		&cfg.ContainerTag,
@@ -378,6 +383,13 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 				relays = append(relays, cfg.relayMap[config.MevRelayID_Aestus])
 			}
 		}
+
+		if cfg.AgnosticRelay.Value == true {
+			_, exists := cfg.relayMap[config.MevRelayID_Agnostic].Urls[currentNetwork]
+			if exists {
+				relays = append(relays, cfg.relayMap[config.MevRelayID_Agnostic])
+			}
+		}
 	}
 
 	return relays
@@ -476,6 +488,19 @@ func createDefaultRelays() []config.MevRelay {
 				config.Network_Devnet:  "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live?id=staderlabs",
 			},
 			Regulated:     false,
+			NoSandwiching: false,
+		},
+		// Agnostic
+		{
+			ID:          config.MevRelayID_Agnostic,
+			Name:        "Aestus",
+			Description: "Agnostic Relay is an open-source MEV Boost relay available to anyone, anywhere in the world, without prejudice or privilege. It is an ideal relay for block producers and block builders trying to provide neutral features.",
+			Urls: map[config.Network]string{
+				config.Network_Mainnet: "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net?id=staderlabs",
+				config.Network_Prater:  "https://0xa6bcad37b5d647152a93c2807d8a56055f1e0d7480eb6505d46edc21593e400f0f13738bf2e892f85946234629a3036a@goerli.agnostic-relay.net?id=staderlabs",
+				config.Network_Devnet:  "https://0xa6bcad37b5d647152a93c2807d8a56055f1e0d7480eb6505d46edc21593e400f0f13738bf2e892f85946234629a3036a@goerli.agnostic-relay.net?id=staderlabs",
+			},
+			Regulated:     true,
 			NoSandwiching: false,
 		},
 	}

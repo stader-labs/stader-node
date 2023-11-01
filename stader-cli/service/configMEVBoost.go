@@ -56,8 +56,11 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 	newSettings[keys.Mev_boost_rm_container_tag] = cfg.MevBoost.ContainerTag.Value
 	newSettings[keys.Mev_boost_rm_additional_flags] = cfg.MevBoost.AdditionalFlags.Value
 
-	v, _ := cfg.MevBoost.AestusRelay.Value.(bool)
-	newSettings[keys.Mev_boost_rm_enable_aestus] = v
+	enableAestus, _ := cfg.MevBoost.AestusRelay.Value.(bool)
+	newSettings[keys.Mev_boost_rm_enable_aestus] = enableAestus
+
+	enableAgnostic, _ := cfg.MevBoost.AgnosticRelay.Value.(bool)
+	newSettings[keys.Mev_boost_rm_enable_agnostic] = enableAgnostic
 
 	newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated] = cfg.MevBoost.BloxRouteRegulatedRelay.Value.(bool)
 
@@ -87,6 +90,8 @@ func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{})
 
 	cfg.MevBoost.BloxRouteRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated]
 	cfg.MevBoost.AestusRelay.Value = newSettings[keys.Mev_boost_rm_enable_aestus]
+
+	cfg.MevBoost.AgnosticRelay.Value = newSettings[keys.Mev_boost_rm_enable_agnostic]
 
 	switch mevSelection {
 	case cfgtypes.MevSelectionMode_Profile:
