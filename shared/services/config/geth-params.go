@@ -28,8 +28,8 @@ import (
 
 // Constants
 const (
-	gethTagProd          string = "ethereum/client-go:v1.12.2"
-	gethTagTest          string = "ethereum/client-go:v1.12.2"
+	gethTagProd          string = "ethereum/client-go:v1.13.2"
+	gethTagTest          string = "ethereum/client-go:v1.13.2"
 	gethEventLogInterval int    = 1000
 	gethStopSignal       string = "SIGTERM"
 )
@@ -58,6 +58,9 @@ type GethConfig struct {
 
 	// The Docker Hub tag for Geth
 	ContainerTag config.Parameter `yaml:"containerTag,omitempty"`
+
+	// The flag for enabling PBSS
+	EnablePbss config.Parameter `yaml:"enablePbss,omitempty"`
 
 	// Custom command line flags
 	AdditionalFlags config.Parameter `yaml:"additionalFlags,omitempty"`
@@ -131,6 +134,18 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 			OverwriteOnUpgrade:   true,
 		},
 
+		EnablePbss: config.Parameter{
+			ID:                   "enablePbss",
+			Name:                 "Enable PBSS",
+			Description:          "Enable Geth's new path-based state scheme. With this enabled, you will no longer need to manually prune Geth; it will automatically prune its database in real-time.\n\n[orange]NOTE:\nEnabling this will require you to remove and resync your Geth DB using `stader-cli service resync-eth1`.\nYou will need a synced fallback node configured before doing this, or you will no longer be able to attest until it has finished resyncing!",
+			Type:                 config.ParameterType_Bool,
+			Default:              map[config.Network]interface{}{config.Network_All: false},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
+			EnvironmentVariables: []string{"GETH_ENABLE_PBSS"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
+
 		AdditionalFlags: config.Parameter{
 			ID:                   "additionalFlags",
 			Name:                 "Additional Flags",
@@ -181,6 +196,7 @@ func (cfg *GethConfig) GetParameters() []*config.Parameter {
 		&cfg.MaxPeers,
 		&cfg.UsePebble,
 		&cfg.ContainerTag,
+		&cfg.EnablePbss,
 		&cfg.AdditionalFlags,
 	}
 }

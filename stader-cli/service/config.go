@@ -180,9 +180,15 @@ func configureService(c *cli.Context) error {
 }
 
 func isUpgradeBinary(c *cli.Context) (bool, error) {
-	cfg, err := loadConfig(c)
+	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
-		return false, fmt.Errorf("error loading user settings: %w", err)
+		return false, fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+	defer staderClient.Close()
+
+	cfg, _, err := staderClient.LoadConfig()
+	if err != nil {
+		return false, fmt.Errorf("error LoadConfig: %w", err)
 	}
 
 	// cfg nill or version empty in case fresh install
