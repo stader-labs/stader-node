@@ -499,18 +499,16 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 }
 
 // Install the Stader service
-func (c *Client) InstallService(verbose, noDeps bool, network, version, path string, dataPath string) error {
+func (c *Client) InstallService(verbose, noDeps bool, network, version, path, dataPath string) error {
 	return c.executeScript(verbose, noDeps, network, version, path, dataPath, InstallerURL)
 }
 
-// Install the Stader service
+// Update the Stader package files
 func (c *Client) UpdateStaderPackage(verbose, noDeps bool, network, version, path, dataPath string) error {
 	return c.executeScript(verbose, noDeps, network, version, path, dataPath, UpdateURL)
 }
 
-// Install the Stader service
-func (c *Client) executeScript(verbose, noDeps bool, network, version, path, dataPath, url string) error {
-
+func (c *Client) executeScript(verbose, noDeps bool, network, version, path, dataPath, remoteURL string) error {
 	downloader, err := c.getDownloader()
 	if err != nil {
 		return err
@@ -532,7 +530,7 @@ func (c *Client) executeScript(verbose, noDeps bool, network, version, path, dat
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(url, version), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(remoteURL, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err

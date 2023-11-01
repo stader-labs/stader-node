@@ -483,7 +483,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "export-eth1-data",
 				Usage:     "Exports the execution client (eth1) chain data to an external folder. Use this if you want to back up your chain data before switching execution clients.",
-				UsageText: "rocketpool service export-eth1-data target-folder",
+				UsageText: "stader-cli service export-eth1-data target-folder",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "force",
@@ -515,7 +515,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "import-eth1-data",
 				Usage:     "Imports execution client (eth1) chain data from an external folder. Use this if you want to restore the data from an execution client that you previously backed up.",
-				UsageText: "rocketpool service import-eth1-data source-folder",
+				UsageText: "stader-cli service import-eth1-data source-folder",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
