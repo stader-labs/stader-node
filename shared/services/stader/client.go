@@ -504,12 +504,12 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 }
 
 // Install the Stader service
-func (c *Client) UpdateStaderPackage(verbose, noDeps bool, network, version, path string, dataPath string) error {
+func (c *Client) UpdateStaderPackage(verbose, noDeps bool, network, version, path, dataPath string) error {
 	return c.executeScript(verbose, noDeps, network, version, path, dataPath, UpdateURL)
 }
 
 // Install the Stader service
-func (c *Client) executeScript(verbose, noDeps bool, network, version, path string, dataPath string, url string) error {
+func (c *Client) executeScript(verbose, noDeps bool, network, version, path, dataPath, url string) error {
 
 	downloader, err := c.getDownloader()
 	if err != nil {
