@@ -493,7 +493,7 @@ func createDefaultRelays() []config.MevRelay {
 		// Agnostic
 		{
 			ID:          config.MevRelayID_Agnostic,
-			Name:        "Aestus",
+			Name:        "Agnostic",
 			Description: "Agnostic Relay is an open-source MEV Boost relay available to anyone, anywhere in the world, without prejudice or privilege. It is an ideal relay for block producers and block builders trying to provide neutral features.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net?id=staderlabs",
