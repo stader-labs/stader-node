@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/hashicorp/go-version"
-	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/urfave/cli"
 )
@@ -130,23 +129,12 @@ func upgradeFuncV142(c *cli.Context) error {
 
 	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, true)
 
-	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
-	if err != nil {
-		return fmt.Errorf("error expand cycleMerkleRewardFile: %w", err)
-	}
-
 	// Remove old cycle 5 proof
-	_, err = os.Stat(expandedCycleMerkleRewardFile)
+	_, err = os.Stat(cycleMerkleRewardFile)
 	if err == nil {
-		if err = os.Remove(expandedCycleMerkleRewardFile); err != nil {
+		if err = os.Remove(cycleMerkleRewardFile); err != nil {
 			return fmt.Errorf("error Remove old cycle 5: %w", err)
 		}
-	}
-
-	// Download new one
-	_, err = staderClient.DownloadSpMerkleProofs()
-	if err != nil {
-		return fmt.Errorf("error DownloadSpMerkleProofs: %w", err)
 	}
 
 	return nil
