@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	prysmBnTagTest string = "gcr.io/prylabs-dev/prysm/beacon-chain:v4.1.0"
-	prysmVcTagTest string = "gcr.io/prylabs-dev/prysm/validator:v4.1.0"
+	prysmBnTagTest string = "nethermindeth/prysm-beacon-chain:v4.0.7"
+	prysmVcTagTest string = "nethermindeth/prysm-validator:v4.0.7"
 
 	prysmBnTagProd string = "nethermindeth/prysm-beacon-chain:v4.0.7"
 	prysmVcTagProd string = "nethermindeth/prysm-validator:v4.0.7"
