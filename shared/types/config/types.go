@@ -30,10 +30,10 @@ type MevRelayID string
 type MevSelectionMode string
 type NimbusPruningMode string
 
-//revive:disable
-
 // Enum to describe which container(s) a parameter impacts, so the Stadernode knows which
 // ones to restart upon a settings change
+//
+//revive:disable
 const (
 	ContainerID_Unknown    ContainerID = ""
 	ContainerID_Api        ContainerID = "api"
@@ -118,6 +118,8 @@ const (
 )
 
 // Enum to describe MEV-Boost relay selection mode
+//
+//revive:enable
 const (
 	MevSelectionMode_Unknow  MevSelectionMode = ""
 	MevSelectionMode_Profile MevSelectionMode = "profile"
@@ -168,5 +170,3 @@ type MevRelay struct {
 	Regulated     bool
 	NoSandwiching bool
 }
-
-//revive:enable
