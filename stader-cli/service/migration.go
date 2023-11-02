@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/hashicorp/go-version"
+	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/urfave/cli"
 )
@@ -127,16 +128,27 @@ func upgradeFuncV142(c *cli.Context) error {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, true)
+	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, false)
+
+	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+	if err != nil {
+		return fmt.Errorf("error expand cycleMerkleRewardFile: %w", err)
+	}
 
 	// Remove old cycle 5 proof
-	_, err = os.Stat(cycleMerkleRewardFile)
+	_, err = os.Stat(expandedCycleMerkleRewardFile)
 	fmt.Printf("Stat err: %+v \n", err)
 	if err == nil {
-		if err = os.Remove(cycleMerkleRewardFile); err != nil {
+		if err = os.Remove(expandedCycleMerkleRewardFile); err != nil {
 			return fmt.Errorf("error Remove old cycle 5: %w", err)
 		}
 		fmt.Printf("Success remove %+v \n", cycleMerkleRewardFile)
+	}
+
+	// Download new one
+	_, err = staderClient.DownloadSpMerkleProofs()
+	if err != nil {
+		return fmt.Errorf("error DownloadSpMerkleProofs: %w", err)
 	}
 
 	return nil
