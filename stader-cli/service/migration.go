@@ -55,13 +55,19 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 		},
 	}
 
-	cfg, err := loadConfig(c)
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return nil, fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
+	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
+		fmt.Printf("Can not found config %+v\n", cfg)
 		return nil, nil
 	}
 
@@ -108,8 +114,8 @@ func upgradeFuncV140(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
-	err = staderClient.UpdateGuardianConfiguration(guardian)
 
+	err = staderClient.UpdateGuardianConfiguration(guardian)
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
@@ -128,7 +134,7 @@ func upgradeFuncV142(c *cli.Context) error {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, true)
+	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, false)
 
 	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
 	if err != nil {
@@ -141,6 +147,8 @@ func upgradeFuncV142(c *cli.Context) error {
 		if err = os.Remove(expandedCycleMerkleRewardFile); err != nil {
 			return fmt.Errorf("error Remove old cycle 5: %w", err)
 		}
+
+		fmt.Printf("Success remove %+v \n", cycleMerkleRewardFile)
 	}
 
 	// Download new one
