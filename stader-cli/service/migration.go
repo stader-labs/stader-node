@@ -11,6 +11,8 @@ import (
 	"github.com/urfave/cli"
 )
 
+const RefreshingCycle = 5
+
 type ConfigUpgrader struct {
 	version     *version.Version
 	upgradeFunc func(c *cli.Context) error
@@ -126,8 +128,12 @@ func upgradeFuncV142(c *cli.Context) error {
 		return fmt.Errorf("error loading user settings: %w", err)
 	}
 
-	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(5, true)
+	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, true)
+
 	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+	if err != nil {
+		return fmt.Errorf("error expand cycleMerkleRewardFile: %w", err)
+	}
 
 	// Remove old cycle 5 proof
 	_, err = os.Stat(expandedCycleMerkleRewardFile)
