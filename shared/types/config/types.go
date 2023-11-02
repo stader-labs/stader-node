@@ -30,6 +30,8 @@ type MevRelayID string
 type MevSelectionMode string
 type NimbusPruningMode string
 
+//revive:disable
+
 // Enum to describe which container(s) a parameter impacts, so the Stadernode knows which
 // ones to restart upon a settings change
 const (
@@ -166,3 +168,5 @@ type MevRelay struct {
 	Regulated     bool
 	NoSandwiching bool
 }
+
+//revive:enable
