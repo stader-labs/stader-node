@@ -56,6 +56,10 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 	}
 
 	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return nil, fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
 	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("error loading user settings: %w", err)
@@ -110,8 +114,8 @@ func upgradeFuncV140(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
-	err = staderClient.UpdateGuardianConfiguration(guardian)
 
+	err = staderClient.UpdateGuardianConfiguration(guardian)
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
