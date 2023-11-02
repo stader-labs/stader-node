@@ -55,13 +55,15 @@ func migrate(c *cli.Context) ([]ConfigUpgrader, error) {
 		},
 	}
 
-	cfg, err := loadConfig(c)
+	staderClient, err := stader.NewClientFromCtx(c)
+	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
 		return nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
+		fmt.Printf("Can not found config %+v\n", cfg)
 		return nil, nil
 	}
 
