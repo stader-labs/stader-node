@@ -3,6 +3,7 @@ package service
 import (
 	_ "embed"
 	"fmt"
+	"os"
 
 	"github.com/hashicorp/go-version"
 	"github.com/mitchellh/go-homedir"
@@ -10,6 +11,8 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/urfave/cli"
 )
+
+const RefreshingCycle = 5
 
 type ConfigUpgrader struct {
 	version                 *version.Version
@@ -30,14 +33,17 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
-	// Create versions
 	v140, err := parseVersion("1.4.0")
 	if err != nil {
 		return nil, nil, err
 	}
 
-	// Create versions
 	v142, err := parseVersion("1.4.2")
+	if err != nil {
+		return nil, nil, err
+	}
+
+	v143, err := parseVersion("1.4.3")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -55,6 +61,10 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		},
 		{
 			version:     v142,
+			upgradeFunc: upgradeFuncV142,
+		},
+		{
+			version:     v143,
 			upgradeFunc: func(c *cli.Context) error { return nil },
 			needInstall: true,
 		},
@@ -65,15 +75,21 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
 
+	cfg, _, err := staderClient.LoadConfig()
+	if err != nil {
+		return nil, nil, fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
 	defer staderClient.Close()
 
-	cfg, _, err := staderClient.LoadConfig()
+	cfg, _, err = staderClient.LoadConfig()
 	if err != nil {
 		return nil, nil, fmt.Errorf("error loading user settings: %w", err)
 	}
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
+		fmt.Printf("Can not found config %+v\n", cfg)
 		return nil, nil, nil
 	}
 
@@ -184,8 +200,46 @@ func updateStaderPackage(c *cli.Context) error {
 		path,
 		dataPath,
 	)
+
 	if err != nil {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
+	return nil
+}
+
+func upgradeFuncV142(c *cli.Context) error {
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
+	cfg, _, err := staderClient.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("error loading user settings: %w", err)
+	}
+
+	cycleMerkleRewardFile := cfg.StaderNode.GetSpRewardCyclePath(RefreshingCycle, false)
+
+	expandedCycleMerkleRewardFile, err := homedir.Expand(cycleMerkleRewardFile)
+	if err != nil {
+		return fmt.Errorf("error expand cycleMerkleRewardFile: %w", err)
+	}
+
+	// Remove old cycle 5 proof
+	_, err = os.Stat(expandedCycleMerkleRewardFile)
+	if err == nil {
+		if err = os.Remove(expandedCycleMerkleRewardFile); err != nil {
+			return fmt.Errorf("error Remove old cycle 5: %w", err)
+		}
+
+		fmt.Printf("Success remove %+v \n", cycleMerkleRewardFile)
+	}
+
+	// Download new one
+	_, err = staderClient.DownloadSpMerkleProofs()
+	if err != nil {
+		return fmt.Errorf("error DownloadSpMerkleProofs: %w", err)
 	}
 
 	return nil
