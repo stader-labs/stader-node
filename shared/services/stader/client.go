@@ -798,18 +798,18 @@ func (c *Client) UpdateGuardianConfiguration(contents []byte) error {
 
 	guardianTemplatePath, err := homedir.Expand(fmt.Sprintf("%s/%s/%s", c.configPath, templatesDir, GuardianFileTemplate))
 	if err != nil {
-		return fmt.Errorf("Error expanding Guardian template path: %w", err)
+		return fmt.Errorf("error expanding Guardian template path: %w", err)
 	}
 
 	guardianConfigPath, err := homedir.Expand(fmt.Sprintf("%s/%s", c.configPath, GuardianFile))
 	if err != nil {
-		return fmt.Errorf("Error expanding guardian config file path: %w", err)
+		return fmt.Errorf("error expanding guardian config file path: %w", err)
 	}
 
 	// Write the actual Prometheus config file
 	err = os.WriteFile(guardianTemplatePath, contents, 0664)
 	if err != nil {
-		return fmt.Errorf("Could not write guardian config file to %s: %w", shellescape.Quote(guardianConfigPath), err)
+		return fmt.Errorf("could not write guardian config file to %s: %w", shellescape.Quote(guardianConfigPath), err)
 	}
 
 	return nil

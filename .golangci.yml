@@ -45,7 +45,7 @@ linters:
     - prealloc
     - predeclared
     - revive
-    - stylecheck
+    - staticcheck
     - thelper
     - tparallel
     - typecheck
