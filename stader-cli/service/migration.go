@@ -77,15 +77,10 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 
 	cfg, _, err := staderClient.LoadConfig()
 	if err != nil {
-		return nil, nil, fmt.Errorf("error NewClientFromCtx: %w", err)
+		return nil, nil, fmt.Errorf("error LoadConfig: %w", err)
 	}
 
 	defer staderClient.Close()
-
-	cfg, _, err = staderClient.LoadConfig()
-	if err != nil {
-		return nil, nil, fmt.Errorf("error loading user settings: %w", err)
-	}
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
@@ -140,7 +135,7 @@ func upgradeFuncV30(c *cli.Context) error {
 
 	_, err = staderClient.RebuildWallet()
 	if err != nil {
-		return fmt.Errorf("error NewClientFromCtx: %w", err)
+		return fmt.Errorf("error RebuildWallet: %w", err)
 	}
 
 	return nil
@@ -154,7 +149,7 @@ func upgradeFuncV140(c *cli.Context) error {
 
 	err = staderClient.UpdateGuardianConfiguration(guardian)
 	if err != nil {
-		return fmt.Errorf("error NewClientFromCtx: %w", err)
+		return fmt.Errorf("error UpdateGuardianConfiguration: %w", err)
 	}
 
 	return nil
@@ -166,9 +161,6 @@ func updateStaderPackage(c *cli.Context) error {
 		return fmt.Errorf("error NewClientFromCtx: %w", err)
 	}
 
-	if err != nil {
-		return fmt.Errorf("error NewClientFromCtx: %w", err)
-	}
 	defer staderClient.Close()
 
 	cfg, _, err := staderClient.LoadConfig()
@@ -202,7 +194,7 @@ func updateStaderPackage(c *cli.Context) error {
 	)
 
 	if err != nil {
-		return fmt.Errorf("error NewClientFromCtx: %w", err)
+		return fmt.Errorf("error UpdateStaderPackage: %w", err)
 	}
 
 	return nil
