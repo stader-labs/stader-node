@@ -131,10 +131,12 @@ func upgradeFuncV142(c *cli.Context) error {
 
 	// Remove old cycle 5 proof
 	_, err = os.Stat(cycleMerkleRewardFile)
+	fmt.Printf("Stat err: %+v \n", err)
 	if err == nil {
 		if err = os.Remove(cycleMerkleRewardFile); err != nil {
 			return fmt.Errorf("error Remove old cycle 5: %w", err)
 		}
+		fmt.Printf("Success remove %+v \n", cycleMerkleRewardFile)
 	}
 
 	return nil
