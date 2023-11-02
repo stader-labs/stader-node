@@ -147,6 +147,7 @@ func upgradeFuncV142(c *cli.Context) error {
 		if err = os.Remove(expandedCycleMerkleRewardFile); err != nil {
 			return fmt.Errorf("error Remove old cycle 5: %w", err)
 		}
+
 		fmt.Printf("Success remove %+v \n", cycleMerkleRewardFile)
 	}
 
