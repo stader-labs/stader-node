@@ -60,8 +60,9 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 			upgradeFunc: upgradeFuncV140,
 		},
 		{
-			version:     v142,
-			upgradeFunc: upgradeFuncV142,
+			version:                 v142,
+			upgradeFunc:             upgradeFuncV142,
+			runAfterStaderNodeStart: true,
 		},
 		{
 			version:     v143,
