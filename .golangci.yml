@@ -46,7 +46,6 @@ linters:
     - predeclared
     - revive
     - staticcheck
-    - stylecheck
     - thelper
     - tparallel
     - typecheck

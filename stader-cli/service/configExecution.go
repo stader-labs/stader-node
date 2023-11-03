@@ -62,6 +62,7 @@ func updateLocalExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]
 	cfg.Geth.MaxPeers.Value = newSettings[keys.E1ec_lm_geth_max_peers]
 	cfg.Geth.ContainerTag.Value = newSettings[keys.E1ec_lm_geth_container_tag]
 	cfg.Geth.AdditionalFlags.Value = newSettings[keys.E1ec_lm_geth_additional_flags]
+	cfg.Geth.EnablePbss.Value = newSettings[keys.E1ec_lm_geth_enable_pbsm]
 
 	// Nethermind
 	cfg.Nethermind.CacheSize.Value = newSettings[keys.E1ec_lm_nethermind_cache_size]
@@ -104,6 +105,8 @@ func setUIExecutionClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E1ec_lm_geth_max_peers] = format(cfg.Geth.MaxPeers.Value)
 	newSettings[keys.E1ec_lm_geth_container_tag] = cfg.Geth.ContainerTag.Value
 	newSettings[keys.E1ec_lm_geth_additional_flags] = cfg.Geth.AdditionalFlags.Value
+	newSettings[keys.E1ec_lm_geth_enable_pbsm] =
+		cfg.Geth.EnablePbss.Value
 
 	// Nethermind
 	newSettings[keys.E1ec_lm_nethermind_cache_size] = format(cfg.Nethermind.CacheSize.Value)

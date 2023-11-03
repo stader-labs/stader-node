@@ -32,6 +32,8 @@ type NimbusPruningMode string
 
 // Enum to describe which container(s) a parameter impacts, so the Stadernode knows which
 // ones to restart upon a settings change
+//
+//revive:disable
 const (
 	ContainerID_Unknown    ContainerID = ""
 	ContainerID_Api        ContainerID = "api"
@@ -112,9 +114,12 @@ const (
 	MevRelayID_Eden               MevRelayID = "eden"
 	MevRelayID_Ultrasound         MevRelayID = "ultrasound"
 	MevRelayID_Aestus             MevRelayID = "aestus"
+	MevRelayID_Agnostic           MevRelayID = "agnostic"
 )
 
 // Enum to describe MEV-Boost relay selection mode
+//
+//revive:enable
 const (
 	MevSelectionMode_Unknow  MevSelectionMode = ""
 	MevSelectionMode_Profile MevSelectionMode = "profile"

@@ -56,6 +56,7 @@ import (
 // Config
 const (
 	InstallerURL = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/install.sh"
+	UpdateURL    = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/update_package.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
@@ -498,8 +499,16 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 }
 
 // Install the Stader service
-func (c *Client) InstallService(verbose, noDeps bool, network, version, path string, dataPath string) error {
+func (c *Client) InstallService(verbose, noDeps bool, network, version, path, dataPath string) error {
+	return c.executeScript(verbose, noDeps, network, version, path, dataPath, InstallerURL)
+}
 
+// Update the Stader package files
+func (c *Client) UpdateStaderPackage(verbose, noDeps bool, network, version, path, dataPath string) error {
+	return c.executeScript(verbose, noDeps, network, version, path, dataPath, UpdateURL)
+}
+
+func (c *Client) executeScript(verbose, noDeps bool, network, version, path, dataPath, remoteURL string) error {
 	downloader, err := c.getDownloader()
 	if err != nil {
 		return err
@@ -521,7 +530,7 @@ func (c *Client) InstallService(verbose, noDeps bool, network, version, path str
 	}
 
 	// Initialize installation command
-	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(InstallerURL, version), strings.Join(flags, " ")))
+	cmd, err := c.newCommand(fmt.Sprintf("%s %s | sh -s -- %s", downloader, fmt.Sprintf(remoteURL, version), strings.Join(flags, " ")))
 
 	if err != nil {
 		return err
@@ -789,18 +798,18 @@ func (c *Client) UpdateGuardianConfiguration(contents []byte) error {
 
 	guardianTemplatePath, err := homedir.Expand(fmt.Sprintf("%s/%s/%s", c.configPath, templatesDir, GuardianFileTemplate))
 	if err != nil {
-		return fmt.Errorf("Error expanding Guardian template path: %w", err)
+		return fmt.Errorf("error expanding Guardian template path: %w", err)
 	}
 
 	guardianConfigPath, err := homedir.Expand(fmt.Sprintf("%s/%s", c.configPath, GuardianFile))
 	if err != nil {
-		return fmt.Errorf("Error expanding guardian config file path: %w", err)
+		return fmt.Errorf("error expanding guardian config file path: %w", err)
 	}
 
 	// Write the actual Prometheus config file
 	err = os.WriteFile(guardianTemplatePath, contents, 0664)
 	if err != nil {
-		return fmt.Errorf("Could not write guardian config file to %s: %w", shellescape.Quote(guardianConfigPath), err)
+		return fmt.Errorf("could not write guardian config file to %s: %w", shellescape.Quote(guardianConfigPath), err)
 	}
 
 	return nil

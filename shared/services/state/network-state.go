@@ -2,12 +2,13 @@ package state
 
 import (
 	"fmt"
+	"math/big"
+	"time"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/urfave/cli"
-	"math/big"
-	"time"
 
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -30,6 +31,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 )
+
+const SixDecimalRound = 6
 
 type MetricDetails struct {
 	// Network details
@@ -480,14 +483,19 @@ func CreateMetricsCache(
 	metricsDetails.FrontRunValidators = frontRunValidators
 	metricsDetails.InvalidSignatureValidators = invalidSignatureValidators
 	metricsDetails.FundsSettledValidators = fundsSettledValidators
-	metricsDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), 2)
+	metricsDetails.CumulativePenalty = math.RoundDown(eth.WeiToEth(cumulativePenalty), SixDecimalRound)
 	metricsDetails.UnclaimedClRewards = math.RoundDown(eth.WeiToEth(totalClRewards), 18)
 	metricsDetails.NextSocializingPoolRewardCycle = nextRewardCycleDetails
-	metricsDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), 2)
-	metricsDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), 2)
-	metricsDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), 2)
-	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), 2)
-	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), 2)
+
+	// Claimed
+	metricsDetails.ClaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedEth), SixDecimalRound)
+	metricsDetails.ClaimedSocializingPoolSdRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.claimedSd), SixDecimalRound)
+
+	// Unclaimed
+	metricsDetails.UnclaimedNonSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(operatorElRewards.OperatorShare), SixDecimalRound)
+
+	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), SixDecimalRound)
+	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
 

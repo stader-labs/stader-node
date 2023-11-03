@@ -182,14 +182,22 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					targetUpgrades, err := migrate(c)
+					upgradesBeforeNodeStart, upgradesAftertNodeStart, err := migrate(c)
 					if err != nil {
 						return fmt.Errorf("error migrate %w", err)
 					}
+					for _, upgrader := range upgradesBeforeNodeStart {
+						fmt.Printf("Migrate before for: %s \n", upgrader.version.String())
+						err = upgrader.upgradeFunc(c)
+						if err != nil {
+							fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
+						}
+					}
+
 					// We defer run migrate because we need stader-node api up and running first
 					defer func() {
-						for _, upgrader := range targetUpgrades {
-							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+						for _, upgrader := range upgradesAftertNodeStart {
+							fmt.Printf("Migrate after for: %s \n", upgrader.version.String())
 							err = upgrader.upgradeFunc(c)
 							if err != nil {
 								fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
@@ -242,14 +250,23 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
-					targetUpgrades, err := migrate(c)
+					upgradesBeforeNodeStart, upgradesAftertNodeStart, err := migrate(c)
 					if err != nil {
 						return fmt.Errorf("error migrate %w", err)
 					}
+
+					for _, upgrader := range upgradesBeforeNodeStart {
+						fmt.Printf("Migrate before for: %s \n", upgrader.version.String())
+						err = upgrader.upgradeFunc(c)
+						if err != nil {
+							fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
+						}
+					}
+
 					// We defer run migrate because we need stader-node api up and running first
 					defer func() {
-						for _, upgrader := range targetUpgrades {
-							fmt.Printf("Migrate for: %s \n", upgrader.version.String())
+						for _, upgrader := range upgradesAftertNodeStart {
+							fmt.Printf("Migrate after for: %s \n", upgrader.version.String())
 							err = upgrader.upgradeFunc(c)
 							if err != nil {
 								fmt.Printf("error applying upgrade for config version %s: %+v", upgrader.version.String(), err)
@@ -466,7 +483,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "export-eth1-data",
 				Usage:     "Exports the execution client (eth1) chain data to an external folder. Use this if you want to back up your chain data before switching execution clients.",
-				UsageText: "rocketpool service export-eth1-data target-folder",
+				UsageText: "stader-cli service export-eth1-data target-folder",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "force",
@@ -498,7 +515,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			{
 				Name:      "import-eth1-data",
 				Usage:     "Imports execution client (eth1) chain data from an external folder. Use this if you want to restore the data from an execution client that you previously backed up.",
-				UsageText: "rocketpool service import-eth1-data source-folder",
+				UsageText: "stader-cli service import-eth1-data source-folder",
 				Action: func(c *cli.Context) error {
 
 					// Validate args

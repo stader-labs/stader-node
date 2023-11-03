@@ -65,6 +65,7 @@ services:
       - TX_FEE_CAP=${TX_FEE_CAP}
       - TX_FEE_CAP_IN_WEI=${TX_FEE_CAP_IN_WEI}
       - TX_FEE_CAP_IN_GWEI=${TX_FEE_CAP_IN_GWEI}
+      - STADER_GETH_ENABLE_PBSS=${GETH_ENABLE_PBSS}
     entrypoint: sh
     command: "/setup/start-ec.sh"
     cap_drop:

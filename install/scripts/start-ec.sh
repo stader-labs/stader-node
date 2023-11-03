@@ -90,6 +90,11 @@ if [ "$CLIENT" = "geth" ]; then
         DB_ENGINE="--db.engine=pebble"
     fi
 
+    # Use new state stoore scheme if requested
+    if [ "$STADER_GETH_ENABLE_PBSS" = "true" ]; then
+    CMD="$CMD --state.scheme=path"
+    fi
+
     # Init the zhejiang data if necessary
     if [ "$NETWORK" = "zhejiang" ]; then
         if [ ! -f "/ethclient/zhejiang.init" ]; then
