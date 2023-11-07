@@ -114,7 +114,7 @@ To confirm the Reward Address change please follow these steps:
 Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://etherscan.io/address/%s#writeProxyContract#F3
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function.
 
-Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Mainnet-Permissionless-8ef1137e9c2647c88db3911da1642ca2
+Please refer to the Reward Address change guide here - https://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/Update-reward-address/
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your new Reward Address.
 `
@@ -128,7 +128,7 @@ To confirm the Reward Address change please follow these steps:
 Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F3
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function.
 
-Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Testnet-Permissionless-db692621a305426bab2e3ad232acbc14
+Please refer to the Reward Address change guide here - https://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/Update-reward-address/
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your new Reward Address.`
 		msg = fmt.Sprintf(msg, contractAddr.String())
@@ -149,7 +149,7 @@ Follow these steps for your Reward address change:
 Step 1: Propose the Reward Address change by connecting your Existing Reward Address wallet with the Smart Contract and execute the "ProposeRewardAddress" function.
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function
 
-Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Mainnet-Permissionless-8ef1137e9c2647c88db3911da1642ca2
+Please refer to the Reward Address change guide here - https://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/Update-reward-address/
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your New Reward Address.
 `
@@ -163,7 +163,7 @@ Follow these steps for your Reward Address change:
 Step 1: Propose the Reward Address change by connecting your Existing Reward Address wallet with the Smart Contract and execute the "ProposeRewardAddress" function.
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function
 
-Please refer to the Reward Address change guide here - https://staderlabs.notion.site/staderlabs/Stader-ETHx-Reward-address-change-flow-Testnet-Permissionless-db692621a305426bab2e3ad232acbc14
+Please refer to the Reward Address change guide here - https://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/Update-reward-address/
 
 Note: Stader will continue to send rewards to your existing Reward Address until you confirm the change using your New Reward Address.
 `
