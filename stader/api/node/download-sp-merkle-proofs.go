@@ -3,13 +3,14 @@ package node
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	"github.com/urfave/cli"
-	"os"
 )
 
 func canDownloadSpMerkleProofs(c *cli.Context) (*api.CanDownloadSpMerkleProofsResponse, error) {
@@ -86,18 +87,25 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 	downloadedCycles := []int64{}
 
+	merkleFolder := cfg.StaderNode.GetSpRewardsMerkleProofFolder(true)
+	if _, err := os.Stat(merkleFolder); os.IsNotExist(err) {
+		if err := os.Mkdir(merkleFolder, os.ModePerm); err != nil {
+			return nil, fmt.Errorf("can not Mkdir merkleFolder %+v, %w", merkleFolder, err)
+		}
+	}
+
 	for _, cycleMerkleProof := range allMerkleProofs {
 
 		cycleMerkleProofFile := cfg.StaderNode.GetSpRewardCyclePath(cycleMerkleProof.Cycle, true)
 		absolutePathOfProofFile, err := homedir.Expand(cycleMerkleProofFile)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("can not expand %v: %w", cycleMerkleProofFile, err)
 		}
 
 		// proof has already been downloaded
 		_, err = os.Stat(cycleMerkleProofFile)
 		if !os.IsNotExist(err) && err != nil {
-			return nil, err
+			return nil, fmt.Errorf("stat %v: %w", cycleMerkleProofFile, err)
 		}
 		if !os.IsNotExist(err) {
 			continue
@@ -105,7 +113,7 @@ func downloadSpMerkleProofs(c *cli.Context) (*api.DownloadSpMerkleProofsResponse
 
 		file, err := os.Create(absolutePathOfProofFile)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("os create path %+v: %w", absolutePathOfProofFile, err)
 		}
 
 		encoder := json.NewEncoder(file)
