@@ -12,7 +12,6 @@ import (
 )
 
 func registerNode(c *cli.Context, operatorName string) error {
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -83,7 +82,12 @@ func registerNode(c *cli.Context, operatorName string) error {
 	}
 
 	// Log & return
-	fmt.Printf("Congratulation, your node is now registered on the Stader \nnetwork. Your current Operator and Reward address is the same. We \nstrongly recommend changing your Reward address. To do so, run the \nfollowing command: ~/bin/stader-cli node set-reward-address -ora <new reward address>.\n")
+	fmt.Println("Congratulation, your node is now registered on the Stader network. Your current Operator and Reward address is the same. We strongly recommend changing your Reward address. To do so, run the following command: ~/bin/stader-cli node set-reward-address -ora <new reward address>.")
+
+	fmt.Printf("%sNOTE: Make sure to replace <new reward address> with the New Reward Address you want to use.\n%s",
+		colorYellow,
+		colorReset)
+
 	return nil
 
 }
