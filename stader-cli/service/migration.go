@@ -126,6 +126,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 	}
 
 	cfg.Version = fmt.Sprintf("v%s", shared.StaderVersion)
+
 	err = staderClient.SaveConfig(cfg)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error SaveConfig: %w", err)
