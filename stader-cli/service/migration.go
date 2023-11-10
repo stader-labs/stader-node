@@ -26,6 +26,7 @@ var guardian []byte
 
 func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgrader, err error) {
 	v0, _ := parseVersion("1.0.0")
+	vbump, _ := parseVersion("1.0.0-bump-ver")
 
 	// Create versions
 	v130, err := parseVersion("1.3.0")
@@ -125,14 +126,31 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, nil
 	}
 
-	cfg.Version = fmt.Sprintf("v%s", shared.StaderVersion)
-
-	err = staderClient.SaveConfig(cfg)
-	if err != nil {
-		return nil, nil, fmt.Errorf("error SaveConfig: %w", err)
-	}
+	rundAfterUpgrades = append([]ConfigUpgrader{
+		{
+			upgradeFunc: bumpConfigVersion,
+			version:     vbump,
+		},
+	}, rundAfterUpgrades...)
 
 	return runBeforeUpgrades, rundAfterUpgrades, nil
+}
+
+func bumpConfigVersion(c *cli.Context) error {
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return fmt.Errorf("error NewClientFromCtx: %w", err)
+	}
+
+	cfg, _, err := staderClient.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("error LoadConfig: %w", err)
+	}
+
+	cfg.Version = fmt.Sprintf("v%s", shared.StaderVersion)
+	fmt.Println("Bump config version to: ", cfg.Version)
+
+	return staderClient.SaveConfig(cfg)
 }
 
 func upgradeFuncV30(c *cli.Context) error {
