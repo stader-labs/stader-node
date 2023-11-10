@@ -144,7 +144,7 @@ func (m *manageFeeRecipient) run() error {
 
 	nextUpdatableBlock := lastChangeBlock.Add(lastChangeBlock, big.NewInt(blocksPerThreeEpoch)).Uint64()
 
-	m.log.Printlnf("CurrentBlock: %d, we'll update file at %d block if possible\n", nextUpdatableBlock)
+	m.log.Printlnf("CurrentBlock: %d, we'll update file at %d block if possible\n", currentBlock, nextUpdatableBlock)
 
 	// Get the fee recipient info for the node
 	feeRecipientInfo, err := staderUtils.GetFeeRecipientInfo(m.prn, m.vf, m.sdcfg, nodeAccount.Address, nil)
