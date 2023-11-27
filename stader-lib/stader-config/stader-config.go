@@ -1,10 +1,11 @@
 package stader_config
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"math/big"
 )
 
 func GetRewardsThreshold(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (*big.Int, error) {
@@ -69,4 +70,8 @@ func GetSdCollateralAddress(sdConfig *stader.StaderConfigContractManager, opts *
 
 func GetOperatorRewardsCollectorAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return sdConfig.StaderConfig.GetOperatorRewardsCollector(opts)
+}
+
+func GetSDUtilityPool(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
+	return sdConfig.StaderConfig.GetSDUtilityPool(opts)
 }

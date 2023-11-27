@@ -2,8 +2,9 @@ package node
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"math/big"
+
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"

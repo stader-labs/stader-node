@@ -223,6 +223,15 @@ func GetStakePoolManagerAddress(c *cli.Context) (common.Address, error) {
 	return stader_config.GetStakePoolManagerAddress(sdcfg, nil)
 }
 
+func GetSdUtilityAddress(c *cli.Context) (common.Address, error) {
+	sdcfg, err := GetStaderConfigContract(c)
+	if err != nil {
+		return common.Address{}, err
+	}
+
+	return stader_config.GetSDUtilityPool(sdcfg, nil)
+}
+
 func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRegistryContractManager, error) {
 	cfg, err := getConfig(c)
 	if err != nil {
@@ -420,6 +429,24 @@ func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManage
 	}
 
 	return stader.NewStakePoolManager(ec, stakePoolManagerAddress)
+}
+
+func GetSdUtilityContract(c *cli.Context) (*stader.SDUtilityPoolContractManager, error) {
+	cfg, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	ec, err := getEthClient(c, cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	sdUtilityAddress, err := GetSdUtilityAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	return stader.NewSDUtilityPool(ec, sdUtilityAddress)
 }
 
 func GetBeaconClient(c *cli.Context) (*BeaconClientManager, error) {

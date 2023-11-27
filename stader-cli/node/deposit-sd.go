@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 	"strconv"
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -27,8 +28,9 @@ func nodeDepositSd(c *cli.Context) error {
 		return err
 	}
 
+	nounce := c.GlobalUint64("nonce")
 	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
+	if nounce != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
@@ -38,8 +40,14 @@ func nodeDepositSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	autoConfirm := c.Bool("yes")
+
 	amountWei := eth.EthToWei(amount)
 
+	return NodeDepositSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
+}
+
+func NodeDepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nounce uint64) error {
 	// Check allowance
 	allowance, err := staderClient.GetNodeDepositSdAllowance()
 	if err != nil {
@@ -48,7 +56,7 @@ func nodeDepositSd(c *cli.Context) error {
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveSdWithAmount(c, staderClient, amountWei)
+		err = nodeApproveSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
 		if err != nil {
 			return err
 		}
@@ -70,13 +78,13 @@ func nodeDepositSd(c *cli.Context) error {
 	}
 
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, autoConfirm)
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

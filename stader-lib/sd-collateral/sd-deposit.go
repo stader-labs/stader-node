@@ -2,12 +2,13 @@ package sd_collateral
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 )
 
 func EstimateDepositSdAsCollateral(sdc *stader.SdCollateralContractManager, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
@@ -43,6 +44,15 @@ func GetOperatorSdBalance(sdc *stader.SdCollateralContractManager, operatorAddre
 	}
 
 	return balance, err
+}
+
+func MinimumSDToBond(sdc *stader.SdCollateralContractManager, poolID uint8, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	minimumSDToBond, err := sdc.SdCollateral.GetMinimumSDToBond(opts, poolID, numValidators)
+	if err != nil {
+		return nil, err
+	}
+
+	return minimumSDToBond, nil
 }
 
 func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, poolType uint8, numValidators *big.Int, opts *bind.CallOpts) (bool, error) {

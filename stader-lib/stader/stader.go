@@ -1,11 +1,12 @@
 package stader
 
 import (
+	"strings"
+
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
-	"strings"
 )
 
 type Erc20TokenContractManager struct {
@@ -449,4 +450,34 @@ func NewOperatorRewardsCollector(client ExecutionClient, operatorRewardsCollecto
 		OperatorRewardsCollectorContract: operatorRewardsCollectorContract,
 	}, nil
 
+}
+
+type SDUtilityPoolContractManager struct {
+	Client                ExecutionClient
+	SDUtilityPool         *contracts.SDUtilityPool
+	SDUtilityPoolContract *Contract
+}
+
+func NewSDUtilityPool(client ExecutionClient, sdUtilizeAddress common.Address) (*SDUtilityPoolContractManager, error) {
+	sdUtilizeFactory, err := contracts.NewSDUtilityPool(sdUtilizeAddress, client)
+	if err != nil {
+		return nil, err
+	}
+
+	sdUtilizeAbi, err := abi.JSON(strings.NewReader(contracts.SDUtilityPoolMetaData.ABI))
+	if err != nil {
+		return nil, err
+	}
+	sdUtilizeContract := &Contract{
+		Contract: bind.NewBoundContract(sdUtilizeAddress, sdUtilizeAbi, client, client, client),
+		Address:  &sdUtilizeAddress,
+		ABI:      &sdUtilizeAbi,
+		Client:   client,
+	}
+
+	return &SDUtilityPoolContractManager{
+		Client:                client,
+		SDUtilityPool:         sdUtilizeFactory,
+		SDUtilityPoolContract: sdUtilizeContract,
+	}, nil
 }

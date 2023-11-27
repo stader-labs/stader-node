@@ -42,7 +42,11 @@ func nodeApproveSd(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	err = nodeApproveSdWithAmount(c, staderClient, amountWei)
+	autoConfirm := c.Bool("yes")
+
+	nonce := c.GlobalUint64("nonce")
+
+	err = nodeApproveSdWithAmount(staderClient, amountWei, autoConfirm, nonce)
 	if err != nil {
 		return err
 	}
@@ -50,9 +54,9 @@ func nodeApproveSd(c *cli.Context) error {
 	return nil
 }
 
-func nodeApproveSdWithAmount(c *cli.Context, staderClient *stader.Client, amountWei *big.Int) error {
+func nodeApproveSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nonce uint64) error {
 	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
+	if nonce != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
@@ -62,13 +66,13 @@ func nodeApproveSdWithAmount(c *cli.Context, staderClient *stader.Client, amount
 		return err
 	}
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(approvalGas.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(approvalGas.GasInfo, staderClient, autoConfirm)
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
+	if !(autoConfirm || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -90,7 +94,7 @@ func nodeApproveSdWithAmount(c *cli.Context, staderClient *stader.Client, amount
 	fmt.Println("Successfully approved SD.")
 
 	// If a custom nonce is set, increment it for the next transaction
-	if c.GlobalUint64("nonce") != 0 {
+	if nonce != 0 {
 		staderClient.IncrementCustomNonce()
 	}
 

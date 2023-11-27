@@ -2,9 +2,10 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	types2 "github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -16,10 +17,16 @@ func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractMana
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "addValidatorKeys", pubKeys, preDepositSignatures, depositSignatures)
 }
 
-func AddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeys(opts, pubKeys, preDepositSignatures, depositSignatures)
+func AddValidatorKeysWithAmount(
+	pnr *stader.PermissionlessNodeRegistryContractManager,
+	pubKeys [][]byte,
+	preDepositSignatures [][]byte,
+	depositSignatures [][]byte,
+	utilityAmount *big.Int,
+	opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeysWithUtilizeSD(opts, utilityAmount, pubKeys, preDepositSignatures, depositSignatures)
 	if err != nil {
-		return nil, fmt.Errorf("could not add validator keys: %w", err)
+		return nil, fmt.Errorf("could not add validator keys with utilize: %w", err)
 	}
 
 	return tx, nil

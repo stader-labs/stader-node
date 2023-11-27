@@ -268,8 +268,8 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 }
 
 // Make a node deposit
-func (c *Client) NodeDeposit(amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %t", amountWei.String(), numValidators, reloadKeys))
+func (c *Client) NodeDeposit(amountWei, numValidators, utilitySDAmount *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %s %t", amountWei.String(), utilitySDAmount.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.NodeDepositResponse{}, fmt.Errorf("could not make validator deposit as er: %w", err)
 	}

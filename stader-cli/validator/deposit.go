@@ -3,15 +3,17 @@ package validator
 import (
 	"fmt"
 	"math/big"
+	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
-	"github.com/urfave/cli"
+	"github.com/stader-labs/stader-node/shared/utils/math"
+	"github.com/stader-labs/stader-node/stader-cli/node"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/urfave/cli"
 )
 
 func nodeDeposit(c *cli.Context) error {
@@ -29,6 +31,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	numValidators := c.Uint64("num-validators")
+	autoConfirm := c.Bool("yes")
 
 	baseAmountInEth := 4
 	baseAmount := eth.EthToWei(4.0)
@@ -52,10 +55,24 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
+	// Get node status
+	status, err := staderClient.NodeStatus()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf(
+		"The node %s%s%s has a balance of %.6f SD.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
+
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
+
 	if canNodeDepositResponse.InsufficientBalance {
 		fmt.Printf("Account does not have enough balance!")
 		return nil
@@ -64,10 +81,89 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("Deposit is paused")
 		return nil
 	}
-	if canNodeDepositResponse.NotEnoughSdCollateral {
-		fmt.Printf("Not enough SD as collateral")
-		return nil
+
+	sdStatus := canNodeDepositResponse.SdStatus
+	amountToCollateral := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+
+	if amountToCollateral.Cmp(big.NewInt(0)) >= 1 {
+		fmt.Printf(
+			"The node %s%s%s need %.6f SD to meet collateral require.\n\n",
+			log.ColorBlue,
+			status.AccountAddress,
+			log.ColorReset,
+			math.RoundDown(eth.WeiToEth(amountToCollateral), 18))
 	}
+
+	utilityAmount := big.NewInt(0)
+
+	if sdStatus.NotEnoughSdCollateral {
+		// had SD but not in contract
+
+		// User had enough to deposit-sd
+		// 1. deposit-sd
+		// 2. call deposit again
+		if amountToCollateral.Cmp(sdStatus.SdBalance) <= 0 {
+			err = node.NodeDepositSdWithAmount(staderClient, amountToCollateral, autoConfirm, 0)
+			if err != nil {
+				return err
+			}
+
+			return nodeDeposit(c)
+		} else {
+			// User had not enough to deposit-sd
+			// Check if can borrow here
+			// ask utilize or deposit-sd
+
+			minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+
+			// Max
+			maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilityBalance)
+
+			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) >= 0 {
+				fmt.Printf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String())
+				return nil
+			}
+
+			// Set max to pool available
+			if sdStatus.PoolAvailableSDBalance.Cmp(maxUtility) <= 0 {
+				fmt.Printf("Pool available SD: %f, max utility : %f \n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.WeiToEth(maxUtility))
+				maxUtility = sdStatus.PoolAvailableSDBalance
+			}
+
+			min := eth.WeiToEth(minUtility)
+			max := eth.WeiToEth(maxUtility)
+
+			fmt.Printf("Min utility %+v max %+v \n", min, max)
+
+			var _utilityAmount int
+			msg := fmt.Sprintf("Please enter a valid number in range %f <> %f.", min, max)
+			for {
+				s := cliutils.Prompt(
+					msg,
+					"^[1-9][0-9]*$",
+					msg)
+				_utilityAmount, err = strconv.Atoi(s)
+				if err != nil {
+					fmt.Println("Please enter a valid number.")
+					continue
+				}
+
+				if _utilityAmount < int(min) || _utilityAmount > int(max) {
+					continue
+				}
+
+				break
+			}
+
+			utilityAmount = eth.EthToWei(float64(_utilityAmount))
+
+			if !cliutils.Confirm(fmt.Sprintf("You're about to utility %d SD: ", _utilityAmount)) {
+				fmt.Printf("Cancel \n")
+				return nil
+			}
+		}
+	}
+
 	if canNodeDepositResponse.MaxValidatorLimitReached {
 		fmt.Printf("Max validator limit reached")
 		return nil
@@ -85,6 +181,18 @@ func nodeDeposit(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"You are about to utility %f SD to create %d validators.\n"+
+			"%sARE YOU SURE YOU WANT TO DO THIS?!%s",
+		eth.WeiToEth(utilityAmount), numValidators,
+		log.ColorYellow,
+		log.ColorReset))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+	// 1 eth max per val0.8
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"You are about to deposit %d ETH to create %d validators.\n"+
 			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
 		uint64(baseAmountInEth)*numValidators, numValidators,
@@ -95,7 +203,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
+	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, true)
 	if err != nil {
 		return err
 	}

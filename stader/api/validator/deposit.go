@@ -2,13 +2,17 @@ package validator
 
 import (
 	"fmt"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
+	"github.com/stader-labs/stader-node/stader-lib/sd_utility"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/urfave/cli"
 	_ "golang.org/x/sync/errgroup"
-	"math/big"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -16,6 +20,59 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
+const MaxEthThresholdUtilize = 8
+
+func getSDStatus(
+	sdc *stader.SdCollateralContractManager,
+	sdu *stader.SDUtilityPoolContractManager,
+	sdt *stader.Erc20TokenContractManager,
+	operatorAddress common.Address,
+	totalValidatorsPostAddition *big.Int,
+) (*api.SdStatus, error) {
+
+	sdUtilityBalance, err := sd_utility.UtilizerBalanceStored(sdu, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	poolAvailableSDBalance, err := sd_utility.GetPoolAvailableSDBalance(sdu, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	minimumSDToBond, err := sd_collateral.MinimumSDToBond(sdc, 1, totalValidatorsPostAddition, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	sdCollateralCurrentAmount, err := sd_collateral.GetOperatorSdBalance(sdc, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check Sd balance
+	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, operatorAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	maxSDToBound := new(big.Int).Mul(minimumSDToBond, big.NewInt(2))
+
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, operatorAddress, 1, totalValidatorsPostAddition, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.SdStatus{
+		NotEnoughSdCollateral:     !hasEnoughSdCollateral,
+		SdUtilityBalance:          sdUtilityBalance,
+		SdBalance:                 sdBalance,
+		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
+		SdCollateralRequireAmount: minimumSDToBond,
+		SdMaxCollateralAmount:     maxSDToBound,
+		PoolAvailableSDBalance:    poolAvailableSDBalance,
+	}, nil
+}
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -42,6 +99,18 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 	if err != nil {
 		return nil, err
 	}
+
+	sdt, err := services.GetSdTokenContract(c)
+	if err != nil {
+		return nil, err
+	}
+
+	sdu, err := services.GetSdUtilityContract(c)
+	// TODO: enable this when contract ready
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return nil, err
@@ -107,12 +176,14 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 
 	totalValidatorsPostAddition := totalValidatorNonTerminalKeys + numValidators.Uint64()
 
-	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, big.NewInt(int64(totalValidatorsPostAddition)), nil)
+	sdStatus, err := getSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorsPostAddition)))
 	if err != nil {
 		return nil, err
 	}
-	if !hasEnoughSdCollateral {
-		canNodeDepositResponse.NotEnoughSdCollateral = true
+
+	canNodeDepositResponse.SdStatus = sdStatus
+
+	if canNodeDepositResponse.SdStatus.NotEnoughSdCollateral {
 		return &canNodeDepositResponse, nil
 	}
 
@@ -204,8 +275,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 	return &canNodeDepositResponse, nil
 }
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
-
+func nodeDeposit(c *cli.Context, amountWei *big.Int, amountUtility *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
@@ -345,7 +415,12 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, rel
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	tx, err := node.AddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
+	tx, err := node.AddValidatorKeysWithAmount(prn,
+		pubKeys,
+		preDepositSignatures,
+		depositSignatures,
+		amountUtility,
+		opts)
 	if err != nil {
 		return nil, err
 	}
