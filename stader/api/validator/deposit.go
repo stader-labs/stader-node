@@ -28,7 +28,7 @@ func GetSDStatus(
 	sdt *stader.Erc20TokenContractManager,
 	operatorAddress common.Address,
 	totalValidatorsPostAddition *big.Int,
-) (*api.SdStatus, error) {
+) (*api.SdStatusResponse, error) {
 
 	sdUtilityBalance, err := sd_utility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
 	if err != nil {
@@ -63,7 +63,7 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	return &api.SdStatus{
+	return &api.SdStatusResponse{
 		NotEnoughSdCollateral:     !hasEnoughSdCollateral,
 		SdUtilityBalance:          sdUtilityBalance,
 		SdBalance:                 sdBalance,
@@ -181,9 +181,9 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 		return nil, err
 	}
 
-	canNodeDepositResponse.SdStatus = sdStatus
+	canNodeDepositResponse.SdStatusResponse = sdStatus
 
-	if canNodeDepositResponse.SdStatus.NotEnoughSdCollateral {
+	if canNodeDepositResponse.SdStatusResponse.NotEnoughSdCollateral {
 		return &canNodeDepositResponse, nil
 	}
 

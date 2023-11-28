@@ -1,11 +1,12 @@
 package node
 
 import (
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
@@ -38,6 +39,13 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 		response.NoRewards = true
 		return &response, nil
 	}
+
+	sdStatus, err := getSDStatus(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.SdStatusResponse = sdStatus
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {

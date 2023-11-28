@@ -13,7 +13,6 @@ import (
 )
 
 func repaySD(c *cli.Context) error {
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -28,9 +27,13 @@ func repaySD(c *cli.Context) error {
 
 	// Print what network we're on
 	err = cliutils.PrintNetwork(staderClient)
+	if err != nil {
+		return err
+	}
 
 	// Get stake mount
 	amountInString := c.String("amount")
+
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {
 		return err
@@ -43,25 +46,36 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
+	// Check if repay more than need
+	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdUtilityBalance) >= 1 {
+		fmt.Printf("The amount is more than amount need to repay: %s \n", canClaimElRewardsResponse.SdStatusResponse.SdUtilityBalance.String())
+		return nil
+	}
+
+	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdBalance) >= 1 {
+		fmt.Printf("The node's SD balance is not enough: %s \n", canClaimElRewardsResponse.SdStatusResponse.SdBalance.String())
+		return nil
+	}
+
 	err = gas.AssignMaxFeeAndLimit(canClaimElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintln(
 		"Are you sure you want to repay SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	// Withdraw El Rewards
 	res, err := staderClient.NodeRepaySd(amountWei)
 	if err != nil {
 		return err
 	}
 
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}

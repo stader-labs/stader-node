@@ -13,7 +13,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
-func utilizeSD(c *cli.Context) error {
+func repayExcessSD(c *cli.Context) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -42,40 +42,40 @@ func utilizeSD(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
+	canRepayExcessSdResponse, err := staderClient.CanRepayExcessSD(amountWei)
 	if err != nil {
 		return err
 	}
 
-	sdStatus := canNodeUtilizeSdResponse.SdStatusResponse
+	sdStatus := canRepayExcessSdResponse.SdStatusResponse
 
-	// Max
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilityBalance)
-	// 1.
-	if sdStatus.PoolAvailableSDBalance.Cmp(amountWei) < 0 {
-		fmt.Printf("The amount in pool is not enough: %s \n", sdStatus.PoolAvailableSDBalance.String())
+	// Less than 200 %
+	if sdStatus.SdCollateralCurrentAmount.Cmp(sdStatus.SdMaxCollateralAmount) < 0 {
+		fmt.Printf("Not enough SD collateral to repay utilized SD %s \n", sdStatus.PoolAvailableSDBalance.String())
 		return nil
 	}
 
-	// 1.
-	if maxUtility.Cmp(amountWei) < 0 {
-		fmt.Printf("The max amount is : %s \n", maxUtility.String())
+	// Do not had position
+	if sdStatus.SdUtilityBalance.Cmp(big.NewInt(0)) <= 0 {
+		fmt.Printf("You don't have an existing utilization position. To withdraw excess SD to your wallet execute the following command stader-cli node withdraw-sd\n")
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	amountToRepayExcess := new(big.Int).Sub(sdStatus.SdUtilityBalance, sdStatus.SdMaxCollateralAmount)
+
+	err = gas.AssignMaxFeeAndLimit(canRepayExcessSdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintln(
-		"Are you sure you want to utilize SD?"))) {
+		"Are you sure you want to repay SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	res, err := staderClient.NodeUtilizeSd(amountWei)
+	res, err := staderClient.NodeRepaySd(amountToRepayExcess)
 	if err != nil {
 		return err
 	}

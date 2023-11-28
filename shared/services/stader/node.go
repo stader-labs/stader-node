@@ -635,7 +635,6 @@ func (c *Client) SetRewardAddress(operatorRewardAddress common.Address) (api.Set
 	return response, nil
 }
 
-// Approve SD for depositing as collateral
 func (c *Client) NodeRepaySd(amountWei *big.Int) (api.NodeRepaySDResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node repay-sd %s", amountWei.String()))
 	if err != nil {
@@ -667,7 +666,6 @@ func (c *Client) CanNodeRepaySd(amountWei *big.Int) (api.CanRepaySDResponse, err
 	return response, nil
 }
 
-// Approve SD for depositing as collateral
 func (c *Client) NodeUtilizeSd(amountWei *big.Int) (api.NodeUtilitySDResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node utilize-sd %s", amountWei.String()))
 	if err != nil {
@@ -683,7 +681,6 @@ func (c *Client) NodeUtilizeSd(amountWei *big.Int) (api.NodeUtilitySDResponse, e
 	return response, nil
 }
 
-// Approve SD for depositing as collateral
 func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-utilize-sd %s", amountWei.String()))
 	if err != nil {
@@ -695,6 +692,36 @@ func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse,
 	}
 	if response.Error != "" {
 		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) NodeRepayExcessSd(amountWei *big.Int) (api.NodeRepaySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("no repay-excess-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay excess SD: %w", err)
+	}
+	var response api.NodeRepaySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not decode repay excess response: %w", err)
+	}
+	if response.Error != "" {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay excess SD: %s", response.Error)
+	}
+	return response, nil
+}
+
+func (c *Client) CanRepayExcessSD(amountWei *big.Int) (api.CanRepayExcessSDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-repay-excess-sd %s", amountWei.String()))
+	if err != nil {
+		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not repay excess SD: %w", err)
+	}
+	var response api.CanRepayExcessSDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not decode node repay SD excess response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not repay excess SD: %s", response.Error)
 	}
 	return response, nil
 }

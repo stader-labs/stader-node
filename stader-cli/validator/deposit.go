@@ -82,7 +82,7 @@ func nodeDeposit(c *cli.Context) error {
 		return nil
 	}
 
-	sdStatus := canNodeDepositResponse.SdStatus
+	sdStatus := canNodeDepositResponse.SdStatusResponse
 	amountToCollateral := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 	if amountToCollateral.Cmp(big.NewInt(0)) >= 1 {
@@ -119,8 +119,13 @@ func nodeDeposit(c *cli.Context) error {
 			// Max
 			maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilityBalance)
 
-			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) >= 0 {
+			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 				fmt.Printf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String())
+				return nil
+			}
+
+			if minUtility.Cmp(maxUtility) > 0 {
+				fmt.Printf("Do not had enough ETH bond to utility : %s \n", minUtility.String())
 				return nil
 			}
 
@@ -136,7 +141,7 @@ func nodeDeposit(c *cli.Context) error {
 			fmt.Printf("Min utility %+v max %+v \n", min, max)
 
 			var _utilityAmount int
-			msg := fmt.Sprintf("Please enter a valid number in range %f <> %f.", min, max)
+			msg := fmt.Sprintf("Please enter a valid number in range %f and %f.", min, max)
 			for {
 				s := cliutils.Prompt(
 					msg,
@@ -149,6 +154,7 @@ func nodeDeposit(c *cli.Context) error {
 				}
 
 				if _utilityAmount < int(min) || _utilityAmount > int(max) {
+					fmt.Printf("Invalid input, please specify an amount within %f and %f range \n", min, max)
 					continue
 				}
 
@@ -189,6 +195,7 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Println("Cancelled.")
 		return nil
 	}
+
 	// 1 eth max per val0.8
 
 	// Prompt for confirmation

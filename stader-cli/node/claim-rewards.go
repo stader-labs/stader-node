@@ -2,6 +2,8 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -33,6 +35,12 @@ func ClaimRewards(c *cli.Context) error {
 	}
 	if canClaimRewardsResponse.NoRewards {
 		fmt.Println("No rewards to claim.")
+		return nil
+	}
+
+	// If there is an existing utilization position
+	if canClaimRewardsResponse.SdStatusResponse.SdUtilityBalance.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", canClaimRewardsResponse.SdStatusResponse.SdUtilityBalance.String())
 		return nil
 	}
 

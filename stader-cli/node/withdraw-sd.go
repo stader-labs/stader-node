@@ -2,13 +2,15 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+	"strconv"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"strconv"
 )
 
 func WithdrawSd(c *cli.Context) error {
@@ -41,6 +43,11 @@ func WithdrawSd(c *cli.Context) error {
 	}
 	if canWithdrawSdResponse.InsufficientSdCollateral {
 		fmt.Println("Insufficient SD collateral!")
+		return nil
+	}
+
+	if canWithdrawSdResponse.SdStatusResponse.SdUtilityBalance.Cmp(big.NewInt(0)) > 0 {
+		fmt.Println("You have an existing utilization position, please repay your utilized SD first by executing the following command <stader-cli  repay-sd --amount sd_amount> ")
 		return nil
 	}
 

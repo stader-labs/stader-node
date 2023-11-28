@@ -12,9 +12,6 @@ import (
 )
 
 func canRepaySD(c *cli.Context, amountWei *big.Int) (*api.CanRepaySDResponse, error) {
-
-	return &api.CanRepaySDResponse{}, nil
-
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -44,17 +41,19 @@ func canRepaySD(c *cli.Context, amountWei *big.Int) (*api.CanRepaySDResponse, er
 		return nil, err
 	}
 
+	sdStatus, err := getSDStatus(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.SdStatusResponse = sdStatus
+
 	response.GasInfo = gasInfo
 
 	return &response, nil
 }
 
 func repaySD(c *cli.Context, amountWei *big.Int) (*api.NodeRepaySDResponse, error) {
-
-	return &api.NodeRepaySDResponse{
-		Error: "Repay err",
-	}, nil
-
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err

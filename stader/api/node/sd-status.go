@@ -12,7 +12,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
-func getSDStatus(c *cli.Context, amountWei *big.Int) (*api.SdStatusResponse, error) {
+func getSDStatus(c *cli.Context) (*api.SdStatusResponse, error) {
 	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,6 @@ func getSDStatus(c *cli.Context, amountWei *big.Int) (*api.SdStatusResponse, err
 	}
 
 	sdu, err := services.GetSdUtilityContract(c)
-	// TODO: enable this when contract ready
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +63,5 @@ func getSDStatus(c *cli.Context, amountWei *big.Int) (*api.SdStatusResponse, err
 		return nil, err
 	}
 
-	return &api.SdStatusResponse{
-		SdStatus: sdStatus,
-	}, nil
+	return sdStatus, nil
 }

@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -48,7 +49,6 @@ func SendElRewards(c *cli.Context) error {
 		return nil
 	}
 
-	// Withdraw El Rewards
 	res, err := staderClient.SendElRewards()
 	if err != nil {
 		return err
