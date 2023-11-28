@@ -634,3 +634,67 @@ func (c *Client) SetRewardAddress(operatorRewardAddress common.Address) (api.Set
 	}
 	return response, nil
 }
+
+// Approve SD for depositing as collateral
+func (c *Client) NodeRepaySd(amountWei *big.Int) (api.NodeRepaySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node repay-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %w", err)
+	}
+	var response api.NodeRepaySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not decode repay node SD response: %w", err)
+	}
+	if response.Error != "" {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %s", response.Error)
+	}
+	return response, nil
+}
+
+// Approve SD for depositing as collateral
+func (c *Client) CanNodeRepaySd(amountWei *big.Int) (api.CanRepaySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-repay-sd %s", amountWei.String()))
+	if err != nil {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not repay SD: %w", err)
+	}
+	var response api.CanRepaySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not decode repay SD response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not repay SD: %s", response.Error)
+	}
+	return response, nil
+}
+
+// Approve SD for depositing as collateral
+func (c *Client) NodeUtilizeSd(amountWei *big.Int) (api.NodeUtilitySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node utilize-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
+	}
+	var response api.NodeUtilitySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not decode utilize response: %w", err)
+	}
+	if response.Error != "" {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
+	}
+	return response, nil
+}
+
+// Approve SD for depositing as collateral
+func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-utilize-sd %s", amountWei.String()))
+	if err != nil {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
+	}
+	var response api.CanUtilitySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not decode node SD utilize response: %w", err)
+	}
+	if response.Error != "" {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
+	}
+	return response, nil
+}

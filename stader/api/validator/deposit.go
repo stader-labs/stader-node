@@ -20,9 +20,9 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-const MaxEthThresholdUtilize = 8
+const MaxBondThreshold = 2
 
-func getSDStatus(
+func GetSDStatus(
 	sdc *stader.SdCollateralContractManager,
 	sdu *stader.SDUtilityPoolContractManager,
 	sdt *stader.Erc20TokenContractManager,
@@ -30,7 +30,7 @@ func getSDStatus(
 	totalValidatorsPostAddition *big.Int,
 ) (*api.SdStatus, error) {
 
-	sdUtilityBalance, err := sd_utility.UtilizerBalanceStored(sdu, operatorAddress, nil)
+	sdUtilityBalance, err := sd_utility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func getSDStatus(
 		return nil, err
 	}
 
-	maxSDToBound := new(big.Int).Mul(minimumSDToBond, big.NewInt(2))
+	maxSDToBound := new(big.Int).Mul(minimumSDToBond, big.NewInt(MaxBondThreshold))
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, operatorAddress, 1, totalValidatorsPostAddition, nil)
 	if err != nil {
@@ -73,6 +73,7 @@ func getSDStatus(
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 	}, nil
 }
+
 func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -106,10 +107,9 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 	}
 
 	sdu, err := services.GetSdUtilityContract(c)
-	// TODO: enable this when contract ready
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if err != nil {
+		return nil, err
+	}
 
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
@@ -176,7 +176,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 
 	totalValidatorsPostAddition := totalValidatorNonTerminalKeys + numValidators.Uint64()
 
-	sdStatus, err := getSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorsPostAddition)))
+	sdStatus, err := GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorsPostAddition)))
 	if err != nil {
 		return nil, err
 	}
@@ -264,7 +264,14 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	gasInfo, err := node.EstimateAddValidatorKeys(prn, pubKeys, preDepositSignatures, depositSignatures, opts)
+	gasInfo, err := node.EstimateAddValidatorKeys(
+		prn,
+		big.NewInt(0),
+		pubKeys,
+		preDepositSignatures,
+		depositSignatures,
+		opts,
+	)
 	if err != nil {
 		return nil, err
 	}

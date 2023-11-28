@@ -368,6 +368,56 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					return nodeApproveSd(c)
 				},
 			},
+			{
+				Name:      "utilization-sd",
+				Aliases:   []string{"us"},
+				Usage:     "Utilize from the Utility pool.",
+				UsageText: "stader-cli node utilization-sd [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to utilize",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm SD utilize",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd utilize amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return utilizeSD(c)
+				},
+			},
+			{
+				Name:      "repay-sd",
+				Aliases:   []string{"rs"},
+				Usage:     "Repay the amount to reduce their utilization position",
+				UsageText: "stader-cli node repay-sd [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to repay",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm SD repay",
+					},
+				},
+				Action: func(c *cli.Context) error {
+
+					if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					// Run
+					return repaySD(c)
+				},
+			},
 		},
 	})
 }

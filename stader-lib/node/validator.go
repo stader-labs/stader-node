@@ -13,8 +13,22 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 )
 
-func EstimateAddValidatorKeys(pnr *stader.PermissionlessNodeRegistryContractManager, pubKeys [][]byte, preDepositSignatures [][]byte, depositSignatures [][]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
-	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "addValidatorKeys", pubKeys, preDepositSignatures, depositSignatures)
+func EstimateAddValidatorKeys(
+	pnr *stader.PermissionlessNodeRegistryContractManager,
+	utilityAmount *big.Int,
+	pubKeys [][]byte,
+	preDepositSignatures [][]byte,
+	depositSignatures [][]byte,
+	opts *bind.TransactOpts,
+) (stader.GasInfo, error) {
+	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(
+		opts,
+		"addValidatorKeysWithUtilizeSD",
+		utilityAmount,
+		pubKeys,
+		preDepositSignatures,
+		depositSignatures,
+	)
 }
 
 func AddValidatorKeysWithAmount(

@@ -174,6 +174,91 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "utilize-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node utilize-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("utilize amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(utilitySd(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-utilize-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node can-utilize-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("can utilize amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canUtilitySd(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "repay-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node repay-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("repay amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(repaySD(c, amountWei))
+					return nil
+
+				},
+			},
+			{
+				Name:      "can-repay-sd",
+				Usage:     "Can repay SD",
+				UsageText: "stader-cli api node can-repay-sd amount",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("can repay amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canRepaySD(c, amountWei))
+					return nil
+
+				},
+			},
+
+			{
 				Name:      "wait-and-deposit-sd",
 				Aliases:   []string{"k2"},
 				Usage:     "Deposit SD against the node, waiting for approval tx-hash to be included in a block first",

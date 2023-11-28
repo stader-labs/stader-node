@@ -69,6 +69,7 @@ type CanNodeDepositSdResponse struct {
 	InsufficientBalance      bool           `json:"insufficientBalance"`
 	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
+
 type NodeDepositSdApproveGasResponse struct {
 	Status  string         `json:"status"`
 	Error   string         `json:"error"`
@@ -415,4 +416,31 @@ type ClaimRewards struct {
 	OperatorRewardsBalance *big.Int       `json:"operatorRewardsBalance"`
 	OperatorRewardAddress  common.Address `json:"operatorRewardAddress"`
 	TxHash                 common.Hash    `json:"txHash"`
+}
+type SdStatusResponse struct {
+	*SdStatus
+}
+
+type NodeRepaySDResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanRepaySDResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
+type NodeUtilitySDResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanUtilitySDResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
 }
