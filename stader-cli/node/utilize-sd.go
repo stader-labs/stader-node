@@ -50,7 +50,7 @@ func utilizeSD(c *cli.Context) error {
 	sdStatus := canNodeUtilizeSdResponse.SdStatusResponse
 
 	// Max
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilityBalance)
+	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
 	// 1.
 	if sdStatus.PoolAvailableSDBalance.Cmp(amountWei) < 0 {
 		fmt.Printf("The amount in pool is not enough: %s \n", sdStatus.PoolAvailableSDBalance.String())

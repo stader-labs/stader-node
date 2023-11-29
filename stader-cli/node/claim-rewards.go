@@ -39,8 +39,8 @@ func ClaimRewards(c *cli.Context) error {
 	}
 
 	// If there is an existing utilization position
-	if canClaimRewardsResponse.SdStatusResponse.SdUtilityBalance.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", canClaimRewardsResponse.SdStatusResponse.SdUtilityBalance.String())
+	if canClaimRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", canClaimRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance.String())
 		return nil
 	}
 

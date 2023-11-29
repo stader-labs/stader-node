@@ -16,6 +16,8 @@ import (
 	"github.com/urfave/cli"
 )
 
+const Decimal = 18
+
 func nodeDeposit(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
@@ -85,18 +87,53 @@ func nodeDeposit(c *cli.Context) error {
 	sdStatus := canNodeDepositResponse.SdStatusResponse
 	amountToCollateral := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
+	fmt.Printf(
+		"The node %s%s%s current had %.6f SD in collateral.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), Decimal))
+
+	fmt.Printf(
+		"The node %s%s%s need %.6f SD in collateral after deposit.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), Decimal))
+
+	fmt.Printf(
+		"The node %s%s%s can had max %.6f SD in collateral after deposit.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdMaxCollateralAmount), Decimal))
+
+	fmt.Printf(
+		"The node %s%s%s current utility %.6f SD.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), Decimal))
+
 	if amountToCollateral.Cmp(big.NewInt(0)) >= 1 {
 		fmt.Printf(
 			"The node %s%s%s need %.6f SD to meet collateral require.\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
-			math.RoundDown(eth.WeiToEth(amountToCollateral), 18))
+			math.RoundDown(eth.WeiToEth(amountToCollateral), Decimal))
 	}
 
 	utilityAmount := big.NewInt(0)
 
 	if sdStatus.NotEnoughSdCollateral {
+		fmt.Printf(
+			"The node %s%s%s had not enough SD in collateral.\n\n",
+			log.ColorBlue,
+			status.AccountAddress,
+			log.ColorReset,
+		)
+
 		// had SD but not in contract
 
 		// User had enough to deposit-sd
@@ -117,7 +154,7 @@ func nodeDeposit(c *cli.Context) error {
 			minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 			// Max
-			maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilityBalance)
+			maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
 
 			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 				fmt.Printf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String())
@@ -141,7 +178,7 @@ func nodeDeposit(c *cli.Context) error {
 			fmt.Printf("Min utility %+v max %+v \n", min, max)
 
 			var _utilityAmount int
-			msg := fmt.Sprintf("Please enter a valid number in range %f and %f.", min, max)
+			msg := fmt.Sprintf("Please enter a valid number in range %f and %f: ", min, max)
 			for {
 				s := cliutils.Prompt(
 					msg,
@@ -154,7 +191,7 @@ func nodeDeposit(c *cli.Context) error {
 				}
 
 				if _utilityAmount < int(min) || _utilityAmount > int(max) {
-					fmt.Printf("Invalid input, please specify an amount within %f and %f range \n", min, max)
+					fmt.Printf("Invalid input, please specify an amount within %f and %f range:\n", min, max)
 					continue
 				}
 
@@ -210,7 +247,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, true)
+	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, false)
 	if err != nil {
 		return err
 	}

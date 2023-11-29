@@ -438,7 +438,7 @@ type CanUtilitySDResponse struct {
 
 type SdStatusResponse struct {
 	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
-	SdUtilityBalance          *big.Int `json:"sdUtilityBalance"`
+	SdUtilizerLatestBalance   *big.Int `json:"sdUtilizerLatestBalance"`
 	SdCollateralCurrentAmount *big.Int `json:"sdCollateralCurrentAmount"`
 	SdCollateralRequireAmount *big.Int `json:"sdCollateralRequireAmount"`
 	SdBalance                 *big.Int `json:"sdBalance"`

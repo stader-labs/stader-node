@@ -65,7 +65,7 @@ func GetSDStatus(
 
 	return &api.SdStatusResponse{
 		NotEnoughSdCollateral:     !hasEnoughSdCollateral,
-		SdUtilityBalance:          sdUtilityBalance,
+		SdUtilizerLatestBalance:   sdUtilityBalance,
 		SdBalance:                 sdBalance,
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,

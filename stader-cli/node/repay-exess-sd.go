@@ -56,12 +56,12 @@ func repayExcessSD(c *cli.Context) error {
 	}
 
 	// Do not had position
-	if sdStatus.SdUtilityBalance.Cmp(big.NewInt(0)) <= 0 {
+	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) <= 0 {
 		fmt.Printf("You don't have an existing utilization position. To withdraw excess SD to your wallet execute the following command stader-cli node withdraw-sd\n")
 		return nil
 	}
 
-	amountToRepayExcess := new(big.Int).Sub(sdStatus.SdUtilityBalance, sdStatus.SdMaxCollateralAmount)
+	amountToRepayExcess := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdMaxCollateralAmount)
 
 	err = gas.AssignMaxFeeAndLimit(canRepayExcessSdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
