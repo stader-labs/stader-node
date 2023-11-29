@@ -151,18 +151,21 @@ func nodeDeposit(c *cli.Context) error {
 			// Check if can borrow here
 			// ask utilize or deposit-sd
 
-			minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+			minUtility := node.GetMinUtility(sdStatus)
 
 			// Max
-			maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
+			maxUtility := node.GetMaxUtility(sdStatus)
 
+			// 1. If the pool had enough SD
 			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-				fmt.Printf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String())
+				cliutils.PrintError(
+					fmt.Sprintf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String()))
 				return nil
 			}
 
+			// 2. If user had enough Eth
 			if minUtility.Cmp(maxUtility) > 0 {
-				fmt.Printf("Do not had enough ETH bond to utility : %s \n", minUtility.String())
+				cliutils.PrintError(fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String()))
 				return nil
 			}
 

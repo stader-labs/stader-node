@@ -9,6 +9,7 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
+	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
@@ -49,17 +50,25 @@ func utilizeSD(c *cli.Context) error {
 
 	sdStatus := canNodeUtilizeSdResponse.SdStatusResponse
 
+	// min
+	minUtility := GetMinUtility(sdStatus)
+
 	// Max
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
-	// 1.
+	maxUtility := GetMaxUtility(sdStatus)
+
+	if maxUtility.Cmp(minUtility) < 0 {
+		cliutils.PrintError("Insufficient ETH bonding")
+		return nil
+	}
+	// 1. If there's enough SD in pool
 	if sdStatus.PoolAvailableSDBalance.Cmp(amountWei) < 0 {
-		fmt.Printf("The amount in pool is not enough: %s \n", sdStatus.PoolAvailableSDBalance.String())
+		fmt.Printf("The amount in pool: %f is not enough\n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance))
 		return nil
 	}
 
-	// 1.
-	if maxUtility.Cmp(amountWei) < 0 {
-		fmt.Printf("The max amount is : %s \n", maxUtility.String())
+	// 2. If not utilize to max amount
+	if maxUtility.Cmp(amountWei) < 0 || minUtility.Cmp(amountWei) > 0 {
+		cliutils.PrintError(fmt.Sprintf("Invalid input, please specify an amount within %f and %f range \n", eth.WeiToEth(minUtility), eth.WeiToEth(maxUtility)))
 		return nil
 	}
 
@@ -69,8 +78,8 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintln(
-		"Are you sure you want to utilize SD?"))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to utilize %+v SD? ", amount))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -87,4 +96,28 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	return nil
+}
+
+func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
+	minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+
+	if minUtility.Cmp(big.NewInt(0)) < 0 {
+		cliutils.PrintWarning("Over collateral")
+
+		minUtility = big.NewInt(0)
+	}
+
+	return minUtility
+}
+
+func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
+	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
+
+	if maxUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
+		cliutils.PrintWarning("Pool not had enough SD")
+
+		maxUtility = sdStatus.PoolAvailableSDBalance
+	}
+
+	return maxUtility
 }

@@ -91,3 +91,11 @@ func ConfirmSecureSession(warning string) bool {
 
 	return true
 }
+
+func PrintError(msg string) {
+	fmt.Printf("%s%s%s\n", colorRed, msg, colorReset)
+}
+
+func PrintWarning(msg string) {
+	fmt.Printf("%s%s%s\n", colorYellow, msg, colorReset)
+}
