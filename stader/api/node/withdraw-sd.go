@@ -46,6 +46,13 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		return nil, err
 	}
 
+	sdStatus, err := getSDStatus(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.SdStatusResponse = sdStatus
+
 	// get current sd collateral
 	operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAccount.Address, nil)
 	if err != nil {
@@ -81,13 +88,6 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		response.InsufficientWithdrawableSd = true
 		return &response, nil
 	}
-
-	sdStatus, err := getSDStatus(c)
-	if err != nil {
-		return nil, err
-	}
-
-	response.SdStatusResponse = sdStatus
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {

@@ -2,15 +2,16 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+	"strconv"
+	"strings"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"math/big"
-	"strconv"
-	"strings"
 )
 
 func ClaimSpRewards(c *cli.Context) error {
@@ -65,7 +66,7 @@ func ClaimSpRewards(c *cli.Context) error {
 		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
 	}
 
-	fmt.Println("Following are the unclaimed cycles, Please enter in a comma seperated string the cycles you want to claim rewards for:\n")
+	fmt.Println("Following are the unclaimed cycles, Please enter in a comma separated string the cycles you want to claim rewards for:")
 
 	fmt.Printf("%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
 	cyclesToClaim := map[int64]bool{}
