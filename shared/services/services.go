@@ -432,12 +432,12 @@ func GetStakePoolManager(c *cli.Context) (*stader.StakePoolManagerContractManage
 }
 
 func GetSdUtilityContract(c *cli.Context) (*stader.SDUtilityPoolContractManager, error) {
-	cfg, err := getConfig(c)
+	_cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err
 	}
 
-	ec, err := getEthClient(c, cfg)
+	ec, err := getEthClient(c, _cfg)
 	if err != nil {
 		return nil, err
 	}

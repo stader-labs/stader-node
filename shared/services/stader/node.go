@@ -742,6 +742,7 @@ func (c *Client) CanRepayExcessSD(amountWei *big.Int) (api.CanRepayExcessSDRespo
 	if response.Error != "" {
 		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not repay excess SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
