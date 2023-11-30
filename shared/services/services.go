@@ -229,7 +229,7 @@ func GetSdUtilityAddress(c *cli.Context) (common.Address, error) {
 		return common.Address{}, err
 	}
 
-	return stader_config.GetSDUtilityPool(sdcfg, nil)
+	return stader_config.GetSDUtilityPoolAddress(sdcfg, nil)
 }
 
 func GetPermissionlessNodeRegistry(c *cli.Context) (*stader.PermissionlessNodeRegistryContractManager, error) {

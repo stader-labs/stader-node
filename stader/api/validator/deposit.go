@@ -35,7 +35,7 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	poolAvailableSDBalance, err := sd_utility.GetPoolAvailableSDBalance(sdu, operatorAddress, nil)
+	poolAvailableSDBalance, err := sd_utility.GetPoolAvailableSDBalance(sdu, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -282,7 +282,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 	return &canNodeDepositResponse, nil
 }
 
-func nodeDeposit(c *cli.Context, amountWei *big.Int, amountUtility *big.Int, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
@@ -340,7 +340,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, amountUtility *big.Int, num
 	preDepositSignatures := make([][]byte, numValidators.Int64())
 	depositSignatures := make([][]byte, numValidators.Int64())
 
-	amountToSend := amountWei.Mul(amountWei, numValidators)
+	amountToSend := baseAmountWei.Mul(baseAmountWei, numValidators)
 	opts.Value = amountToSend
 
 	validatorKeyCount, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
@@ -426,7 +426,7 @@ func nodeDeposit(c *cli.Context, amountWei *big.Int, amountUtility *big.Int, num
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
-		amountUtility,
+		utilityAmountWei,
 		opts)
 	if err != nil {
 		return nil, err

@@ -69,7 +69,7 @@ func nodeDeposit(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(0), big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
 	}
@@ -160,6 +160,11 @@ func nodeDeposit(c *cli.Context) error {
 		default:
 			return nil
 		}
+	}
+
+	canNodeDepositResponse, err = staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
+	if err != nil {
+		return err
 	}
 
 	if canNodeDepositResponse.MaxValidatorLimitReached {

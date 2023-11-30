@@ -32,7 +32,6 @@ func repayExcessSD(c *cli.Context) error {
 		return err
 	}
 
-	// Get stake mount
 	amountInString := c.String("amount")
 
 	amount, err := strconv.ParseFloat(amountInString, 64)
@@ -49,19 +48,13 @@ func repayExcessSD(c *cli.Context) error {
 
 	sdStatus := canRepayExcessSdResponse.SdStatusResponse
 
-	// Less than 200 %
-	if sdStatus.SdCollateralCurrentAmount.Cmp(sdStatus.SdMaxCollateralAmount) < 0 {
-		fmt.Printf("Not enough SD collateral to repay utilized SD %s \n", sdStatus.PoolAvailableSDBalance.String())
-		return nil
-	}
-
 	// Do not had position
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) <= 0 {
 		fmt.Printf("You don't have an existing utilization position. To withdraw excess SD to your wallet execute the following command: stader-cli node withdraw-sd --amount <SD amount>\n")
 		return nil
 	}
 
-	amountExcess := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdCollateralCurrentAmount)
+	amountExcess := new(big.Int).Sub(sdStatus.SdCollateralCurrentAmount, sdStatus.SdMaxCollateralAmount)
 
 	if amountExcess.Cmp(big.NewInt(0)) <= 0 {
 		fmt.Printf("You don't have excess SD collateral\n")
@@ -85,7 +78,7 @@ func repayExcessSD(c *cli.Context) error {
 		return err
 	}
 
-	res, err := staderClient.NodeRepaySd(amountExcess)
+	res, err := staderClient.NodeRepaySd(amountWei)
 	if err != nil {
 		return err
 	}

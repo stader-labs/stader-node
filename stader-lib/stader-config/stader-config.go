@@ -72,6 +72,6 @@ func GetOperatorRewardsCollectorAddress(sdConfig *stader.StaderConfigContractMan
 	return sdConfig.StaderConfig.GetOperatorRewardsCollector(opts)
 }
 
-func GetSDUtilityPool(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
+func GetSDUtilityPoolAddress(sdConfig *stader.StaderConfigContractManager, opts *bind.CallOpts) (common.Address, error) {
 	return sdConfig.StaderConfig.GetSDUtilityPool(opts)
 }

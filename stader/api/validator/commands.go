@@ -70,19 +70,19 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api validator deposit amount utility num-validators reload-keys",
+				UsageText: "stader-cli api validator deposit-amount utility-amount num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
 					if err := cliutils.ValidateArgCount(c, 4); err != nil {
 						return err
 					}
-					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
+					baseAmountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
 
-					utilityAmount, err := cliutils.ValidateWeiAmount("utility amount", c.Args().Get(1))
+					utilityAmountWei, err := cliutils.ValidateWeiAmount("utility amount", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
@@ -98,7 +98,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					// Run
-					response, err := nodeDeposit(c, amountWei, utilityAmount, numValidators, reloadKeys)
+					response, err := nodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys)
 					api.PrintResponse(response, err)
 
 					return nil

@@ -34,12 +34,13 @@ func nodeDepositSd(c *cli.Context) error {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
-	// Get stake mount
 	amountInString := c.String("amount")
+
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {
 		return err
 	}
+
 	autoConfirm := c.Bool("yes")
 
 	amountWei := eth.EthToWei(amount)

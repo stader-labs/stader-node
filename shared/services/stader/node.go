@@ -207,8 +207,8 @@ func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %t", amountWei.String(), numValidators, reloadKeys))
+func (c *Client) CanNodeDeposit(amountWei, amountUtilityWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can validator deposit status: %w", err)
 	}
@@ -650,18 +650,17 @@ func (c *Client) NodeRepaySd(amountWei *big.Int) (api.NodeRepaySDResponse, error
 	return response, nil
 }
 
-// Approve SD for depositing as collateral
 func (c *Client) CanNodeRepaySd(amountWei *big.Int) (api.CanRepaySDResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("node can-repay-sd %s", amountWei.String()))
 	if err != nil {
-		return api.CanRepaySDResponse{}, fmt.Errorf("could not repay SD: %w", err)
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not get CanNodeRepaySd SD: %w", err)
 	}
 	var response api.CanRepaySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.CanRepaySDResponse{}, fmt.Errorf("could not decode repay SD response: %w", err)
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not decode  CanNodeRepaySd response: %w", err)
 	}
 	if response.Error != "" {
-		return api.CanRepaySDResponse{}, fmt.Errorf("could not repay SD: %s", response.Error)
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not can-repay SD: %s", response.Error)
 	}
 	return response, nil
 }

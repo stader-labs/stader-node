@@ -7,17 +7,14 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
 func GetUtilizerLatestBalance(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	return big.NewInt(0), nil
 	return sp.SDUtilityPool.GetUtilizerLatestBalance(opts, address)
 }
 
-func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	return eth.EthToWei(1000), nil
-	// return sp.SDUtilityPool.GetPoolAvailableSDBalance(opts)
+func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SDUtilityPool.GetPoolAvailableSDBalance(opts)
 }
 
 // Estimate the gas of Utilize

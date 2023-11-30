@@ -32,7 +32,6 @@ func nodeApproveSd(c *cli.Context) error {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
-	// Get stake mount
 	amountInString := c.String("amount")
 
 	amount, err := strconv.ParseFloat(amountInString, 64)
