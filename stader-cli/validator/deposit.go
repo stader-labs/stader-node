@@ -3,7 +3,6 @@ package validator
 import (
 	"fmt"
 	"math/big"
-	"strconv"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -76,7 +75,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	if canNodeDepositResponse.InsufficientBalance {
-		fmt.Printf("Account does not have enough balance!")
+		fmt.Printf("Account does not have enough ETH balance!")
 		return nil
 	}
 	if canNodeDepositResponse.DepositPaused {
@@ -128,85 +127,38 @@ func nodeDeposit(c *cli.Context) error {
 
 	if sdStatus.NotEnoughSdCollateral {
 		fmt.Printf(
-			"The node %s%s%s had not enough SD in collateral.\n\n",
+			"The node %s%s%s had not enough SD in collateral please deposit SD.\n\n",
 			log.ColorBlue,
 			status.AccountAddress,
 			log.ColorReset,
 		)
 
-		// had SD but not in contract
+		ops := []string{"Deposit from node wallet", "Utility SD"}
+		i, _ := cliutils.Select("Choose option", ops)
 
-		// User had enough to deposit-sd
-		// 1. deposit-sd
-		// 2. call deposit again
-		if amountToCollateral.Cmp(sdStatus.SdBalance) <= 0 {
+		switch i {
+		case 0:
+			if status.AccountBalances.Sd.Cmp(amountToCollateral) < 0 {
+				cliutils.PrintError("You do not had enough SD in your wallet. Please deposit and try again")
+				return nil
+			}
+
 			err = node.NodeDepositSdWithAmount(staderClient, amountToCollateral, autoConfirm, 0)
 			if err != nil {
 				return err
 			}
 
 			return nodeDeposit(c)
-		} else {
-			// User had not enough to deposit-sd
-			// Check if can borrow here
-			// ask utilize or deposit-sd
 
-			minUtility := node.GetMinUtility(sdStatus)
+		case 1:
+			utilityAmount = node.PromChooseUtilityAmount(sdStatus)
 
-			// Max
-			maxUtility := node.GetMaxUtility(sdStatus)
-
-			// 1. If the pool had enough SD
-			if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-				cliutils.PrintError(
-					fmt.Sprintf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String()))
-				return nil
-			}
-
-			// 2. If user had enough Eth
-			if minUtility.Cmp(maxUtility) > 0 {
-				cliutils.PrintError(fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String()))
-				return nil
-			}
-
-			// Set max to pool available
-			if sdStatus.PoolAvailableSDBalance.Cmp(maxUtility) <= 0 {
-				fmt.Printf("Pool available SD: %f, max utility : %f \n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.WeiToEth(maxUtility))
-				maxUtility = sdStatus.PoolAvailableSDBalance
-			}
-
-			min := eth.WeiToEth(minUtility)
-			max := eth.WeiToEth(maxUtility)
-
-			fmt.Printf("Min utility %+v max %+v \n", min, max)
-
-			var _utilityAmount int
-			msg := fmt.Sprintf("Please enter a valid number in range %f and %f: ", min, max)
-			for {
-				s := cliutils.Prompt(
-					msg,
-					"^[1-9][0-9]*$",
-					msg)
-				_utilityAmount, err = strconv.Atoi(s)
-				if err != nil {
-					fmt.Println("Please enter a valid number.")
-					continue
-				}
-
-				if _utilityAmount < int(min) || _utilityAmount > int(max) {
-					fmt.Printf("Invalid input, please specify an amount within %f and %f range:\n", min, max)
-					continue
-				}
-
-				break
-			}
-
-			utilityAmount = eth.EthToWei(float64(_utilityAmount))
-
-			if !cliutils.Confirm(fmt.Sprintf("You're about to utility %d SD: ", _utilityAmount)) {
+			if !cliutils.Confirm(fmt.Sprintf("You're about to utility %f SD: ", eth.WeiToEth(utilityAmount))) {
 				fmt.Printf("Cancel \n")
 				return nil
 			}
+		default:
+			return nil
 		}
 	}
 
@@ -224,19 +176,6 @@ func nodeDeposit(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to utility %f SD to create %d validators.\n"+
-			"%sARE YOU SURE YOU WANT TO DO THIS?!%s",
-		eth.WeiToEth(utilityAmount), numValidators,
-		log.ColorYellow,
-		log.ColorReset))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
-	// 1 eth max per val0.8
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(

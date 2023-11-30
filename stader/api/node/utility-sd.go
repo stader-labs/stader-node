@@ -12,7 +12,6 @@ import (
 
 func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, error) {
 
-	return &api.NodeUtilitySDResponse{}, nil
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -65,13 +64,6 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 	if err != nil {
 		return nil, err
 	}
-
-	sdStatus, err := getSDStatus(c)
-	if err != nil {
-		return nil, err
-	}
-
-	response.SdStatusResponse = sdStatus
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()

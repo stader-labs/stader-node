@@ -42,12 +42,12 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 	if canWithdrawSdResponse.InsufficientSdCollateral {
-		fmt.Println("Insufficient SD collateral!")
+		fmt.Println("SD collateral less tha 200%")
 		return nil
 	}
 
 	if canWithdrawSdResponse.SdStatusResponse.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-		cliutils.PrintWarning("You have an existing utilization position, please repay your utilized SD first by executing the following command <stader-cli  repay-sd --amount sd_amount> ")
+		cliutils.PrintWarning("You have an existing utilization position, please repay your utilized SD first by executing the following command: stader-cli repay-sd --amount <SD amount>")
 		return nil
 	}
 

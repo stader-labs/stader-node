@@ -33,43 +33,16 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
-	// Get stake mount
-	amountInString := c.String("amount")
-
-	amount, err := strconv.ParseFloat(amountInString, 64)
+	sdStatusResponse, err := staderClient.GetSDStatus()
 	if err != nil {
 		return err
 	}
 
-	amountWei := eth.EthToWei(amount)
+	amountWei := PromChooseUtilityAmount(sdStatusResponse.SDStatus)
 
 	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
 	if err != nil {
 		return err
-	}
-
-	sdStatus := canNodeUtilizeSdResponse.SdStatusResponse
-
-	// min
-	minUtility := GetMinUtility(sdStatus)
-
-	// Max
-	maxUtility := GetMaxUtility(sdStatus)
-
-	if maxUtility.Cmp(minUtility) < 0 {
-		cliutils.PrintError("Insufficient ETH bonding")
-		return nil
-	}
-	// 1. If there's enough SD in pool
-	if sdStatus.PoolAvailableSDBalance.Cmp(amountWei) < 0 {
-		fmt.Printf("The amount in pool: %f is not enough\n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance))
-		return nil
-	}
-
-	// 2. If not utilize to max amount
-	if maxUtility.Cmp(amountWei) < 0 || minUtility.Cmp(amountWei) > 0 {
-		cliutils.PrintError(fmt.Sprintf("Invalid input, please specify an amount within %f and %f range \n", eth.WeiToEth(minUtility), eth.WeiToEth(maxUtility)))
-		return nil
 	}
 
 	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
@@ -79,7 +52,7 @@ func utilizeSD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to utilize %+v SD? ", amount))) {
+		"Are you sure you want to utilize %f SD? ", eth.WeiToEth(amountWei)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -102,8 +75,6 @@ func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
 	minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 	if minUtility.Cmp(big.NewInt(0)) < 0 {
-		cliutils.PrintWarning("Over collateral")
-
 		minUtility = big.NewInt(0)
 	}
 
@@ -114,10 +85,64 @@ func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
 	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
 
 	if maxUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-		cliutils.PrintWarning("Pool not had enough SD")
-
 		maxUtility = sdStatus.PoolAvailableSDBalance
 	}
 
 	return maxUtility
+}
+
+func PromChooseUtilityAmount(sdStatus *api.SdStatusResponse) *big.Int {
+	minUtility := GetMinUtility(sdStatus)
+	maxUtility := GetMaxUtility(sdStatus)
+
+	// 1. If the pool had enough SD
+	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
+		cliutils.PrintError(
+			fmt.Sprintf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String()))
+		return nil
+	}
+
+	// 2. If user had enough Eth
+	if minUtility.Cmp(maxUtility) > 0 {
+		cliutils.PrintError(fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String()))
+		return nil
+	}
+
+	// Set max to pool available
+	if sdStatus.PoolAvailableSDBalance.Cmp(maxUtility) <= 0 {
+		maxUtility = sdStatus.PoolAvailableSDBalance
+	}
+
+	min := eth.WeiToEth(minUtility)
+	max := eth.WeiToEth(maxUtility)
+
+	var _utilityAmount int
+
+	var err error
+
+	msg := fmt.Sprintf("Please enter a number of SD to utilize in range %f and %f: ", min, max)
+
+	for {
+		s := cliutils.Prompt(
+			msg,
+			"^[1-9][0-9]*$",
+			msg)
+
+		_utilityAmount, err = strconv.Atoi(s)
+		if err != nil {
+			fmt.Println("Please enter a valid number.")
+			continue
+		}
+
+		if _utilityAmount < int(min) || _utilityAmount > int(max) {
+			fmt.Printf("Invalid input, please specify an amount within %f and %f range:\n", min, max)
+			continue
+		}
+
+		break
+	}
+
+	utilityAmount := eth.EthToWei(float64(_utilityAmount))
+
+	return utilityAmount
 }

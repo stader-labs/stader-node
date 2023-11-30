@@ -40,7 +40,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	amountWei := eth.EthToWei(amount)
-	// Check if we can Withdraw El Rewards
+
 	canClaimElRewardsResponse, err := staderClient.CanNodeRepaySd(amountWei)
 	if err != nil {
 		return err
@@ -64,8 +64,8 @@ func repaySD(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintln(
-		"Are you sure you want to repay SD?"))) {
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to repay %f SD?", amount))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

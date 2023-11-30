@@ -46,7 +46,7 @@ func canRepaySD(c *cli.Context, amountWei *big.Int) (*api.CanRepaySDResponse, er
 		return nil, err
 	}
 
-	response.SdStatusResponse = sdStatus
+	response.SdStatusResponse = sdStatus.SDStatus
 
 	response.GasInfo = gasInfo
 

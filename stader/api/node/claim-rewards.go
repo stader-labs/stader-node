@@ -45,7 +45,7 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 		return nil, err
 	}
 
-	response.SdStatusResponse = sdStatus
+	response.SdStatusResponse = sdStatus.SDStatus
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {

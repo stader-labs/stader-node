@@ -725,3 +725,18 @@ func (c *Client) CanRepayExcessSD(amountWei *big.Int) (api.CanRepayExcessSDRespo
 	}
 	return response, nil
 }
+
+func (c *Client) GetSDStatus() (api.GetSdStatusResponse, error) {
+	responseBytes, err := c.callAPI("node get-sd-status")
+	if err != nil {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not get-sd-status: %w", err)
+	}
+	var response api.GetSdStatusResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not decode node get SD status response: %w", err)
+	}
+	if response.Error != "" {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not get SD status: %s", response.Error)
+	}
+	return response, nil
+}

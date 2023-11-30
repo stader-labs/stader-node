@@ -795,6 +795,23 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 				},
 			},
+
+			{
+				Name:      "get-sd-status",
+				Usage:     "Get SD Status",
+				UsageText: "stader-cli api node get-sd-status",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+					// Run
+					api.PrintResponse(getSDStatus(c))
+					return nil
+
+				},
+			},
 		},
 	})
 }
