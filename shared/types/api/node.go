@@ -430,10 +430,15 @@ type NodeUtilitySDResponse struct {
 }
 
 type CanUtilitySDResponse struct {
-	Status           string            `json:"status"`
-	Error            string            `json:"error"`
-	GasInfo          stader.GasInfo    `json:"gasInfo"`
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
+type GetSdStatusResponse struct {
+	Status   string            `json:"status"`
+	Error    string            `json:"error"`
+	SDStatus *SdStatusResponse `json:"sdStatusResponse"`
 }
 
 type SdStatusResponse struct {
