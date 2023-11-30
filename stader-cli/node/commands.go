@@ -359,7 +359,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 				},
 				Action: func(c *cli.Context) error {
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
 						return err
 					}
@@ -379,9 +378,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Usage: "Automatically confirm SD utilize",
 					},
 				},
-				Action: func(c *cli.Context) error {
-					return utilizeSD(c)
-				},
+				Action: utilizeSD,
 			},
 			{
 				Name:      "repay-sd",
@@ -399,7 +396,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 				},
 				Action: func(c *cli.Context) error {
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
 						return err
 					}
@@ -424,7 +420,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					},
 				},
 				Action: func(c *cli.Context) error {
-
 					if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
 						return err
 					}

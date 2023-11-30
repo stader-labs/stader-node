@@ -45,10 +45,10 @@ func nodeDepositSd(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	return NodeDepositSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
+	return DepositSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
 }
 
-func NodeDepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nounce uint64) error {
+func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nounce uint64) error {
 	// Check allowance
 	allowance, err := staderClient.GetNodeDepositSdAllowance()
 	if err != nil {

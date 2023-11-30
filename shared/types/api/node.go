@@ -417,10 +417,10 @@ type NodeRepaySDResponse struct {
 }
 
 type CanRepaySDResponse struct {
+	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
 	Status           string            `json:"status"`
 	Error            string            `json:"error"`
 	GasInfo          stader.GasInfo    `json:"gasInfo"`
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
 }
 
 type NodeUtilitySDResponse struct {
@@ -436,19 +436,19 @@ type CanUtilitySDResponse struct {
 }
 
 type GetSdStatusResponse struct {
+	SDStatus *SdStatusResponse `json:"sdStatusResponse"`
 	Status   string            `json:"status"`
 	Error    string            `json:"error"`
-	SDStatus *SdStatusResponse `json:"sdStatusResponse"`
 }
 
 type SdStatusResponse struct {
-	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
 	SdUtilizerLatestBalance   *big.Int `json:"sdUtilizerLatestBalance"`
 	SdCollateralCurrentAmount *big.Int `json:"sdCollateralCurrentAmount"`
 	SdCollateralRequireAmount *big.Int `json:"sdCollateralRequireAmount"`
 	SdBalance                 *big.Int `json:"sdBalance"`
 	SdMaxCollateralAmount     *big.Int `json:"sdMaxCollateralAmount"`
 	PoolAvailableSDBalance    *big.Int `json:"poolAvailableSDBalance"`
+	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
 }
 
 type NodeRepayExcessSDResponse struct {
@@ -458,8 +458,8 @@ type NodeRepayExcessSDResponse struct {
 }
 
 type CanRepayExcessSDResponse struct {
+	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
 	Status           string            `json:"status"`
 	Error            string            `json:"error"`
 	GasInfo          stader.GasInfo    `json:"gasInfo"`
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
 }

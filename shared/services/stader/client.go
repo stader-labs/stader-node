@@ -795,7 +795,6 @@ func (c *Client) GetDockerContainerShutdownTime(container string) (time.Time, er
 }
 
 func (c *Client) UpdateGuardianConfiguration(contents []byte) error {
-
 	guardianTemplatePath, err := homedir.Expand(fmt.Sprintf("%s/%s/%s", c.configPath, templatesDir, GuardianFileTemplate))
 	if err != nil {
 		return fmt.Errorf("error expanding Guardian template path: %w", err)

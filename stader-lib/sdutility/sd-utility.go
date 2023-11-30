@@ -1,4 +1,4 @@
-package sd_utility
+package sdutility
 
 import (
 	"math/big"

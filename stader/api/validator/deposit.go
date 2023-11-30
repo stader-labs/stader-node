@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
-	"github.com/stader-labs/stader-node/stader-lib/sd_utility"
+	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	stadertypes "github.com/stader-labs/stader-node/stader-lib/types"
@@ -29,13 +29,12 @@ func GetSDStatus(
 	operatorAddress common.Address,
 	totalValidatorsPostAddition *big.Int,
 ) (*api.SdStatusResponse, error) {
-
-	sdUtilityBalance, err := sd_utility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
+	sdUtilityBalance, err := sdutility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	poolAvailableSDBalance, err := sd_utility.GetPoolAvailableSDBalance(sdu, nil)
+	poolAvailableSDBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
 	if err != nil {
 		return nil, err
 	}

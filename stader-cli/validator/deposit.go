@@ -67,7 +67,7 @@ func nodeDeposit(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
+		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), Decimal))
 
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(0), big.NewInt(int64(numValidators)), true)
 	if err != nil {
@@ -143,7 +143,7 @@ func nodeDeposit(c *cli.Context) error {
 				return nil
 			}
 
-			err = node.NodeDepositSdWithAmount(staderClient, amountToCollateral, autoConfirm, 0)
+			err = node.DepositSdWithAmount(staderClient, amountToCollateral, autoConfirm, 0)
 			if err != nil {
 				return err
 			}

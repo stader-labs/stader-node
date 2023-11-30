@@ -436,6 +436,7 @@ func GetSdUtilityContract(c *cli.Context) (*stader.SDUtilityPoolContractManager,
 	if err != nil {
 		return nil, err
 	}
+
 	ec, err := getEthClient(c, cfg)
 	if err != nil {
 		return nil, err

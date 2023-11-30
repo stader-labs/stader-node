@@ -207,7 +207,7 @@ func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountWei, amountUtilityWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
+func (c *Client) CanNodeDeposit(amountWei, amountUtilityWei, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
 	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can validator deposit status: %w", err)
@@ -625,13 +625,16 @@ func (c *Client) SetRewardAddress(operatorRewardAddress common.Address) (api.Set
 	if err != nil {
 		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %w", err)
 	}
+
 	var response api.SetRewardAddress
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.SetRewardAddress{}, fmt.Errorf("could not decode set-reward-address response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -640,13 +643,16 @@ func (c *Client) NodeRepaySd(amountWei *big.Int) (api.NodeRepaySDResponse, error
 	if err != nil {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %w", err)
 	}
+
 	var response api.NodeRepaySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not decode repay node SD response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -655,13 +661,16 @@ func (c *Client) CanNodeRepaySd(amountWei *big.Int) (api.CanRepaySDResponse, err
 	if err != nil {
 		return api.CanRepaySDResponse{}, fmt.Errorf("could not get CanNodeRepaySd SD: %w", err)
 	}
+
 	var response api.CanRepaySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.CanRepaySDResponse{}, fmt.Errorf("could not decode  CanNodeRepaySd response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.CanRepaySDResponse{}, fmt.Errorf("could not can-repay SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -670,13 +679,16 @@ func (c *Client) NodeUtilizeSd(amountWei *big.Int) (api.NodeUtilitySDResponse, e
 	if err != nil {
 		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
 	}
+
 	var response api.NodeUtilitySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not decode utilize response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -685,13 +697,16 @@ func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse,
 	if err != nil {
 		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
 	}
+
 	var response api.CanUtilitySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.CanUtilitySDResponse{}, fmt.Errorf("could not decode node SD utilize response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -700,13 +715,16 @@ func (c *Client) NodeRepayExcessSd(amountWei *big.Int) (api.NodeRepaySDResponse,
 	if err != nil {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay excess SD: %w", err)
 	}
+
 	var response api.NodeRepaySDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not decode repay excess response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay excess SD: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -715,10 +733,12 @@ func (c *Client) CanRepayExcessSD(amountWei *big.Int) (api.CanRepayExcessSDRespo
 	if err != nil {
 		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not repay excess SD: %w", err)
 	}
+
 	var response api.CanRepayExcessSDResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not decode node repay SD excess response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.CanRepayExcessSDResponse{}, fmt.Errorf("could not repay excess SD: %s", response.Error)
 	}
@@ -730,12 +750,15 @@ func (c *Client) GetSDStatus() (api.GetSdStatusResponse, error) {
 	if err != nil {
 		return api.GetSdStatusResponse{}, fmt.Errorf("could not get-sd-status: %w", err)
 	}
+
 	var response api.GetSdStatusResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.GetSdStatusResponse{}, fmt.Errorf("could not decode node get SD status response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.GetSdStatusResponse{}, fmt.Errorf("could not get SD status: %s", response.Error)
 	}
+
 	return response, nil
 }

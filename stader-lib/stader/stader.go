@@ -468,6 +468,7 @@ func NewSDUtilityPool(client ExecutionClient, sdUtilizeAddress common.Address) (
 	if err != nil {
 		return nil, err
 	}
+
 	sdUtilizeContract := &Contract{
 		Contract: bind.NewBoundContract(sdUtilizeAddress, sdUtilizeAbi, client, client, client),
 		Address:  &sdUtilizeAddress,

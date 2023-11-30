@@ -7,11 +7,10 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
-	"github.com/stader-labs/stader-node/stader-lib/sd_utility"
+	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 )
 
 func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, error) {
-
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -36,7 +35,7 @@ func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, 
 	// Response
 	response := api.NodeUtilitySDResponse{}
 
-	tx, err := sd_utility.Utilize(sdu, amountWei, opts)
+	tx, err := sdutility.Utilize(sdu, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +43,6 @@ func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, 
 	response.TxHash = tx.Hash()
 
 	return &response, nil
-
 }
 
 func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse, error) {
@@ -71,7 +69,7 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 		return nil, err
 	}
 
-	gasInfo, err := sd_utility.EstimateUtilize(sdu, amountWei, opts)
+	gasInfo, err := sdutility.EstimateUtilize(sdu, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -79,5 +77,4 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 	response.GasInfo = gasInfo
 
 	return &response, nil
-
 }

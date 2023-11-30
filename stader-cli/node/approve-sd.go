@@ -14,7 +14,6 @@ import (
 )
 
 func nodeApproveSd(c *cli.Context) error {
-
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err

@@ -3,7 +3,7 @@ package node
 import (
 	"math/big"
 
-	"github.com/stader-labs/stader-node/stader-lib/sd_utility"
+	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 
 	"github.com/urfave/cli"
 
@@ -36,7 +36,7 @@ func canRepaySD(c *cli.Context, amountWei *big.Int) (*api.CanRepaySDResponse, er
 		return nil, err
 	}
 
-	gasInfo, err := sd_utility.EstimateRepay(sdu, amountWei, opts)
+	gasInfo, err := sdutility.EstimateRepay(sdu, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func repaySD(c *cli.Context, amountWei *big.Int) (*api.NodeRepaySDResponse, erro
 	// Response
 	response := api.NodeRepaySDResponse{}
 
-	tx, err := sd_utility.Repay(sdu, amountWei, opts)
+	tx, err := sdutility.Repay(sdu, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
