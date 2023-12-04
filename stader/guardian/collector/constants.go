@@ -29,6 +29,7 @@ const UnclaimedSocializingPoolELRewards = "unclaimed_socializing_pool_el_rewards
 const UnclaimedSocializingPoolSdRewards = "unclaimed_socializing_pool_sd_rewards"
 const UnclaimedCLRewards = "unclaimed_cl_rewards"
 const NextRewardCycleTime = "next_reward_cycle_time"
+const SDUtilized = "sd_utilized"
 
 // Node Health => stader_node_health+ key
 const NodeSub = "node_health"

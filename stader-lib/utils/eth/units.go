@@ -28,6 +28,7 @@ import (
 const (
 	WeiPerEth  float64 = 1e18
 	WeiPerGwei float64 = 1e9
+	Decimal            = 18
 )
 
 // Convert wei to eth
