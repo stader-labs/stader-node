@@ -151,7 +151,7 @@ func nodeDeposit(c *cli.Context) error {
 			return nodeDeposit(c)
 
 		case 1:
-			utilityAmount = node.PromChooseUtilityAmount(sdStatus)
+			utilityAmount = node.PromptChooseUtilityAmount(sdStatus)
 
 			if !cliutils.Confirm(fmt.Sprintf("You're about to utility %f SD: ", eth.WeiToEth(utilityAmount))) {
 				fmt.Printf("Cancel \n")

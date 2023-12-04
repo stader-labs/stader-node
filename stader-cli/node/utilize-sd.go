@@ -38,7 +38,7 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
-	amountWei := PromChooseUtilityAmount(sdStatusResponse.SDStatus)
+	amountWei := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
 
 	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
 	if err != nil {
@@ -82,7 +82,7 @@ func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
 }
 
 func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxCollateralAmount, sdStatus.SdUtilizerLatestBalance)
+	maxUtility := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 
 	if maxUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtility = sdStatus.PoolAvailableSDBalance
@@ -91,7 +91,7 @@ func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
 	return maxUtility
 }
 
-func PromChooseUtilityAmount(sdStatus *api.SdStatusResponse) *big.Int {
+func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) *big.Int {
 	minUtility := GetMinUtility(sdStatus)
 	maxUtility := GetMaxUtility(sdStatus)
 

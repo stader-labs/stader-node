@@ -445,8 +445,9 @@ type SdStatusResponse struct {
 	SdUtilizerLatestBalance   *big.Int `json:"sdUtilizerLatestBalance"`
 	SdCollateralCurrentAmount *big.Int `json:"sdCollateralCurrentAmount"`
 	SdCollateralRequireAmount *big.Int `json:"sdCollateralRequireAmount"`
-	SdBalance                 *big.Int `json:"sdBalance"`
+	SdMaxUtilizableAmount     *big.Int `json:"sdMaxUtilizableAmount"`
 	SdMaxCollateralAmount     *big.Int `json:"sdMaxCollateralAmount"`
+	SdBalance                 *big.Int `json:"sdBalance"`
 	PoolAvailableSDBalance    *big.Int `json:"poolAvailableSDBalance"`
 	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
 }

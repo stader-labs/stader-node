@@ -46,7 +46,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	// 1. Check if repay more than need
-	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance) >= 1 {
+	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance) > 0 {
 		cliutils.PrintError(fmt.Sprintf("Repayment amount greater than the Utilization position: %s \n", canClaimElRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance.String()))
 		return nil
 	}

@@ -20,7 +20,11 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 )
 
-const MaxBondThreshold = 2
+const (
+	MaxBondThreshold       = 20
+	MinToUtilizeRatioNum   = 5
+	MinToUtilizeRatioDenom = 2
+)
 
 func GetSDStatus(
 	sdc *stader.SdCollateralContractManager,
@@ -55,7 +59,10 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	maxSDToBound := new(big.Int).Mul(minimumSDToBond, big.NewInt(MaxBondThreshold))
+	sdMaxCollateralAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MaxBondThreshold))
+
+	maxSDToUtilize := new(big.Int).Mul(minimumSDToBond, big.NewInt(MinToUtilizeRatioNum))
+	maxSDToUtilize = maxSDToUtilize.Div(maxSDToUtilize, big.NewInt(MinToUtilizeRatioDenom))
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, operatorAddress, 1, totalValidatorsPostAddition, nil)
 	if err != nil {
@@ -68,7 +75,8 @@ func GetSDStatus(
 		SdBalance:                 sdBalance,
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,
-		SdMaxCollateralAmount:     maxSDToBound,
+		SdMaxUtilizableAmount:     sdMaxCollateralAmount,
+		SdMaxCollateralAmount:     maxSDToUtilize,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 	}, nil
 }
