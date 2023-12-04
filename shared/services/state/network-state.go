@@ -159,9 +159,9 @@ func CreateMetricsCache(
 	}
 
 	sduAddress, err := services.GetSdUtilityAddress(c)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if err != nil {
+		return nil, err
+	}
 	ethxAddress, err := services.GetEthxTokenAddress(c)
 	if err != nil {
 		return nil, err
