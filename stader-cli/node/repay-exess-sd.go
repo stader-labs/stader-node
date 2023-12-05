@@ -46,7 +46,12 @@ func repayExcessSD(c *cli.Context) error {
 		return err
 	}
 
-	sdStatus := canRepaySdResponse.SdStatusResponse
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	if err != nil {
+		return err
+	}
+
+	sdStatus := sdStatusResponse.SDStatus
 
 	// Do not had position
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) <= 0 {

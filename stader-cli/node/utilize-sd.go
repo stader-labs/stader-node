@@ -1,6 +1,7 @@
 package node
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -33,12 +34,15 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
-	sdStatusResponse, err := staderClient.GetSDStatus()
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
 	}
 
-	amountWei := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
+	amountWei, err := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
+	if err != nil {
+		return err
+	}
 
 	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
 	if err != nil {
@@ -91,21 +95,22 @@ func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
 	return maxUtility
 }
 
-func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) *big.Int {
+func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
 	minUtility := GetMinUtility(sdStatus)
 	maxUtility := GetMaxUtility(sdStatus)
 
 	// 1. If the pool had enough SD
 	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-		cliutils.PrintError(
-			fmt.Sprintf("Pool available SD: %s not enough to min utility : %s \n", sdStatus.PoolAvailableSDBalance.String(), minUtility.String()))
-		return nil
+		msg := fmt.Sprintf("Pool available SD: %f not enough to min utility : %f \n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.WeiToEth(minUtility))
+
+		return nil, errors.New(msg)
 	}
 
 	// 2. If user had enough Eth
 	if minUtility.Cmp(maxUtility) > 0 {
-		cliutils.PrintError(fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String()))
-		return nil
+		msg := fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String())
+
+		return nil, errors.New(msg)
 	}
 
 	// Set max to pool available
@@ -144,5 +149,5 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) *big.Int {
 
 	utilityAmount := eth.EthToWei(float64(_utilityAmount))
 
-	return utilityAmount
+	return utilityAmount, nil
 }

@@ -4,6 +4,7 @@ import (
 	"math/big"
 
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader/api/validator"
 
 	"github.com/urfave/cli"
@@ -12,7 +13,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
-func getSDStatus(c *cli.Context) (*api.GetSdStatusResponse, error) {
+func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusResponse, error) {
 	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
@@ -59,11 +60,22 @@ func getSDStatus(c *cli.Context) (*api.GetSdStatusResponse, error) {
 		return nil, err
 	}
 
-	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+	numValidators = numValidators.Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+
+	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidators)
 	if err != nil {
 		return nil, err
 	}
 
+	numValidators = numValidators.Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	sdStatus.NotEnoughSdCollateral = !hasEnoughSdCollateral
 	return &api.GetSdStatusResponse{
 		SDStatus: sdStatus,
 	}, nil

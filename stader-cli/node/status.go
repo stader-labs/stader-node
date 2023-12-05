@@ -162,7 +162,7 @@ func getNodeStatus(c *cli.Context) error {
 	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
 
 	// Get node SD status
-	sdStatusResp, err := staderClient.GetSDStatus()
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
 	}
@@ -193,6 +193,19 @@ func getNodeStatus(c *cli.Context) error {
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(selfBond), eth.Decimal))
+
+	fmt.Printf(
+		"The node %s%s%s can utilize max of %.6f SD.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdMaxUtilizableAmount), eth.Decimal))
+
+	fmt.Printf(
+		"The SD utility %s%s can provide max of %.6f SD.\n\n",
+		log.ColorBlue,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 
 	cur := eth.WeiToEth(sdStatus.SdCollateralCurrentAmount)
 	min := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)

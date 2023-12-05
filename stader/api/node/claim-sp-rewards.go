@@ -1,13 +1,16 @@
 package node
 
 import (
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	string_utils "github.com/stader-labs/stader-node/shared/utils/string-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func GetCyclesDetailedInfo(c *cli.Context, stringifiedCycles string) (*api.CyclesDetailedInfo, error) {
@@ -136,7 +139,7 @@ func canClaimSpRewards(c *cli.Context) (*api.CanClaimSpRewardsResponse, error) {
 	return &response, nil
 }
 
-func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.EstimateClaimSpRewardsGasResponse, error) {
+func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string, depositSd bool) (*api.EstimateClaimSpRewardsGasResponse, error) {
 	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
@@ -166,9 +169,17 @@ func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.Estima
 		return nil, err
 	}
 
-	gasInfo, err := socializing_pool.EstimateClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
-	if err != nil {
-		return nil, err
+	gasInfo := stader.GasInfo{}
+	if depositSd {
+		gasInfo, err = socializing_pool.EstimateClaimRewardsAndDepositSD(sp, cycles, amountSd, amountEth, merkleProofs, opts)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		gasInfo, err = socializing_pool.EstimateClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	response.GasInfo = gasInfo
@@ -176,7 +187,7 @@ func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string) (*api.Estima
 	return &response, nil
 }
 
-func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewardsResponse, error) {
+func claimSpRewards(c *cli.Context, stringifiedCycles string, depositSd bool) (*api.ClaimSpRewardsResponse, error) {
 	sp, err := services.GetSocializingPoolContract(c)
 	if err != nil {
 		return nil, err
@@ -207,9 +218,18 @@ func claimSpRewards(c *cli.Context, stringifiedCycles string) (*api.ClaimSpRewar
 		return nil, err
 	}
 
-	tx, err := socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
-	if err != nil {
-		return nil, err
+	tx := &types.Transaction{}
+
+	if depositSd {
+		tx, err = socializing_pool.ClaimRewardsAndDepositSD(sp, cycles, amountSd, amountEth, merkleProofs, opts)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		tx, err = socializing_pool.ClaimRewards(sp, cycles, amountSd, amountEth, merkleProofs, opts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	response.TxHash = tx.Hash()

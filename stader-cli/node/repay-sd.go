@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 	"strconv"
 
 	"github.com/urfave/cli"
@@ -45,15 +46,21 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	if err != nil {
+		return err
+	}
+
+	sdStatus := sdStatusResponse.SDStatus
 	// 1. Check if repay more than need
-	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance) > 0 {
-		cliutils.PrintError(fmt.Sprintf("Repayment amount greater than the Utilization position: %s \n", canClaimElRewardsResponse.SdStatusResponse.SdUtilizerLatestBalance.String()))
+	if amountWei.Cmp(sdStatus.SdUtilizerLatestBalance) > 0 {
+		cliutils.PrintError(fmt.Sprintf("Repayment amount greater than the Utilization position: %s \n", sdStatus.SdUtilizerLatestBalance.String()))
 		return nil
 	}
 
 	// 2. If user had enough to repay
-	if amountWei.Cmp(canClaimElRewardsResponse.SdStatusResponse.SdBalance) >= 1 {
-		cliutils.PrintError(fmt.Sprintf("The node's SD balance is not enough SD, current SD available: %f \n", eth.WeiToEth(canClaimElRewardsResponse.SdStatusResponse.SdBalance)))
+	if amountWei.Cmp(sdStatus.SdBalance) >= 1 {
+		cliutils.PrintError(fmt.Sprintf("The node's SD balance is not enough SD, current SD available: %f \n", eth.WeiToEth(sdStatus.SdBalance)))
 		return nil
 	}
 

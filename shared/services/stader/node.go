@@ -541,9 +541,9 @@ func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
 	return response, nil
 }
 
-func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
+func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int, depositSd bool) (api.EstimateClaimSpRewardsGasResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s %s", stringifiedCycleList, strconv.FormatBool(depositSd)))
 	if err != nil {
 		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)
 	}
@@ -558,9 +558,9 @@ func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaim
 	return response, nil
 }
 
-func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
+func (c *Client) ClaimSpRewards(cycles []*big.Int, depositSd bool) (api.ClaimSpRewardsResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s %s", stringifiedCycleList, strconv.FormatBool(depositSd)))
 	if err != nil {
 		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
 	}
@@ -710,8 +710,8 @@ func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse,
 	return response, nil
 }
 
-func (c *Client) GetSDStatus() (api.GetSdStatusResponse, error) {
-	responseBytes, err := c.callAPI("node get-sd-status")
+func (c *Client) GetSDStatus(numValidators *big.Int) (api.GetSdStatusResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-status %s", numValidators))
 	if err != nil {
 		return api.GetSdStatusResponse{}, fmt.Errorf("could not get-sd-status: %w", err)
 	}
