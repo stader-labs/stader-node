@@ -207,7 +207,7 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 
-	cur := eth.WeiToEth(sdStatus.SdCollateralCurrentAmount)
+	cur := eth.WeiToEth(new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance))
 	min := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
 
 	fmt.Printf(
