@@ -138,6 +138,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 			{
 				Name:      "can-node-deposit-sd",
+				Aliases:   []string{"cds"},
 				Usage:     "Check whether the node can stake SD",
 				UsageText: "stader-cli api node can-node-deposit-sd amount",
 				Action: func(c *cli.Context) error {
