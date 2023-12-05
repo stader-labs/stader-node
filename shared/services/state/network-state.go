@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
+	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/utils/math"
@@ -114,6 +115,9 @@ type MetricDetails struct {
 	OperatorStakedSdInEth float64
 	// done
 	OperatorEthCollateral float64
+
+	// done
+	OperatorSDUtilized float64
 }
 
 type MetricsCache struct {
@@ -150,6 +154,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 	sdcAddress, err := services.GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	sduAddress, err := services.GetSdUtilityAddress(c)
 	if err != nil {
 		return nil, err
 	}
@@ -208,6 +217,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 	sp, err := stader.NewSocializingPool(ec, socializingPoolAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	sdu, err := stader.NewSDUtilityPool(ec, sduAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -449,6 +463,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	sdUtilized, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
@@ -497,6 +516,7 @@ func CreateMetricsCache(
 	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), SixDecimalRound)
 	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), SixDecimalRound)
 
+	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilized), SixDecimalRound)
 	state.StaderNetworkDetails = metricsDetails
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))

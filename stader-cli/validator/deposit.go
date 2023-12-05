@@ -15,8 +15,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-const Decimal = 18
-
 func nodeDeposit(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
@@ -67,7 +65,7 @@ func nodeDeposit(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), Decimal))
+		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), eth.Decimal))
 
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(0), big.NewInt(int64(numValidators)), true)
 	if err != nil {
@@ -85,43 +83,6 @@ func nodeDeposit(c *cli.Context) error {
 
 	sdStatus := canNodeDepositResponse.SdStatusResponse
 	amountToCollateral := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
-
-	fmt.Printf(
-		"The node %s%s%s current had %.6f SD in collateral.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), Decimal))
-
-	fmt.Printf(
-		"The node %s%s%s need %.6f SD in collateral after deposit.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), Decimal))
-
-	fmt.Printf(
-		"The node %s%s%s can had max %.6f SD in collateral after deposit.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdMaxCollateralAmount), Decimal))
-
-	fmt.Printf(
-		"The node %s%s%s current utility %.6f SD.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), Decimal))
-
-	if amountToCollateral.Cmp(big.NewInt(0)) >= 1 {
-		fmt.Printf(
-			"The node %s%s%s need %.6f SD to meet collateral require.\n\n",
-			log.ColorBlue,
-			status.AccountAddress,
-			log.ColorReset,
-			math.RoundDown(eth.WeiToEth(amountToCollateral), Decimal))
-	}
 
 	utilityAmount := big.NewInt(0)
 

@@ -1,9 +1,10 @@
 package collector
 
 import (
-	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"math/big"
 	"sync"
+
+	"github.com/stader-labs/stader-node/stader-lib/contracts"
 
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 	"github.com/stader-labs/stader-node/shared/services/state"
@@ -53,10 +54,12 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 					CurrentStartBlock: big.NewInt(0),
 					CurrentEndBlock:   big.NewInt(0),
 				},
-				ValidatorStatusMap:  make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
-				ValidatorInfoMap:    make(map[types.ValidatorPubkey]contracts.Validator),
-				CollateralRatio:     0,
-				CollateralRatioInSd: 0,
+				ValidatorStatusMap:     make(map[types.ValidatorPubkey]beacon.ValidatorStatus),
+				ValidatorInfoMap:       make(map[types.ValidatorPubkey]contracts.Validator),
+				CollateralRatio:        0,
+				CollateralRatioInSd:    0,
+				OperatorSDUtilized:     0,
+				StaderQueuedValidators: big.NewInt(0),
 			},
 		},
 	}

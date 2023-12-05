@@ -2,13 +2,14 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func getNodeStatus(c *cli.Context) error {
@@ -159,6 +160,49 @@ func getNodeStatus(c *cli.Context) error {
 	fmt.Printf("%s=== Registered Validator Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
+
+	// Get node SD status
+	sdStatusResp, err := staderClient.GetSDStatus()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
+
+	sdStatus := sdStatusResp.SDStatus
+
+	fmt.Printf(
+		"The node %s%s%s current utilized %.6f SD.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
+
+	fmt.Printf(
+		"The node %s%s%s current had %.6f SD in collateral.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
+
+	selfBond := new(big.Int).Sub(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+
+	fmt.Printf(
+		"The node %s%s%s current had %.6f SD in self bond.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(selfBond), eth.Decimal))
+
+	cur := eth.WeiToEth(sdStatus.SdCollateralCurrentAmount)
+	min := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
+
+	fmt.Printf(
+		"The node %s%s%s current had %.6f%s Collateral.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		cur/min*100, "%")
 
 	return nil
 }
