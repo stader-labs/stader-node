@@ -91,6 +91,12 @@ type NodeDepositSdAllowanceResponse struct {
 	Allowance *big.Int `json:"allowance"`
 }
 
+type SDPoolUtilitySdAllowanceResponse struct {
+	Status    string   `json:"status"`
+	Error     string   `json:"error"`
+	Allowance *big.Int `json:"allowance"`
+}
+
 type CanNodeDepositResponse struct {
 	Status                   string         `json:"status"`
 	Error                    string         `json:"error"`

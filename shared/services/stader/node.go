@@ -727,3 +727,51 @@ func (c *Client) GetSDStatus(numValidators *big.Int) (api.GetSdStatusResponse, e
 
 	return response, nil
 }
+
+// Get the node's SD allowance
+func (c *Client) GetSDPoolUtilitySdAllowance() (api.SDPoolUtilitySdAllowanceResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node utility-sd-allowance"))
+	if err != nil {
+		return api.SDPoolUtilitySdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %w", err)
+	}
+	var response api.SDPoolUtilitySdAllowanceResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.SDPoolUtilitySdAllowanceResponse{}, fmt.Errorf("could not decode node deposit SD allowance response: %w", err)
+	}
+	if response.Error != "" {
+		return api.SDPoolUtilitySdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %s", response.Error)
+	}
+	return response, nil
+}
+
+// Approve SD for utility contract
+func (c *Client) SDPoolUtilitySdApprove(amountWei *big.Int) (api.NodeDepositSdApproveResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node utility-approve-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
+	}
+	var response api.NodeDepositSdApproveResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not decode deposit node SD approve response: %w", err)
+	}
+	if response.Error != "" {
+		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %s", response.Error)
+	}
+	return response, nil
+}
+
+// Get the gas estimate for approving new SD interaction
+func (c *Client) SDPoolUtilitySdApproveGas(amountWei *big.Int) (api.NodeDepositSdApproveGasResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node utility-approve-sd-gas %s", amountWei.String()))
+	if err != nil {
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
+	}
+	var response api.NodeDepositSdApproveGasResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not decode utility SD approve gas response: %w", err)
+	}
+	if response.Error != "" {
+		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get utility SD approval gas: %s", response.Error)
+	}
+	return response, nil
+}
