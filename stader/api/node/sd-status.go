@@ -60,7 +60,9 @@ func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusRespon
 		return nil, err
 	}
 
-	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+	numValidators = numValidators.Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+
+	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidators)
 	if err != nil {
 		return nil, err
 	}
