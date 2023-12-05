@@ -199,7 +199,13 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdMaxCollateralAmount), eth.Decimal))
+		math.RoundDown(eth.WeiToEth(sdStatus.SdMaxUtilizableAmount), eth.Decimal))
+
+	fmt.Printf(
+		"The SD utility %s%s can provide max of %.6f SD.\n\n",
+		log.ColorBlue,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 
 	cur := eth.WeiToEth(sdStatus.SdCollateralCurrentAmount)
 	min := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)

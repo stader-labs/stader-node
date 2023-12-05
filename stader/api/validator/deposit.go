@@ -248,7 +248,7 @@ func canNodeDeposit(c *cli.Context, amountBaseWei, amountUtilityWei, numValidato
 
 	gasInfo, err := node.EstimateAddValidatorKeys(
 		prn,
-		big.NewInt(0),
+		amountUtilityWei,
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
