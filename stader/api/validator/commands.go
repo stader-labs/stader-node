@@ -40,27 +40,31 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				UsageText: "stader-cli api validator can-deposit amount salt num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
-					//// Validate args
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 3); err != nil {
+					if err := cliutils.ValidateArgCount(c, 4); err != nil {
 						return err
 					}
-					amountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
+					baseAmountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
 
-					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(1))
+					utilityAmountWei, err := cliutils.ValidateWeiAmount("utility amount", c.Args().Get(1))
 					if err != nil {
 						return err
 					}
 
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(2))
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(2))
 					if err != nil {
 						return err
 					}
 
-					api.PrintResponse(canNodeDeposit(c, amountWei, numValidators, reloadKeys))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
+					if err != nil {
+						return err
+					}
+
+					api.PrintResponse(canNodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys))
 
 					return nil
 

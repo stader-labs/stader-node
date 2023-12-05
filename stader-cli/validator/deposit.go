@@ -67,21 +67,13 @@ func nodeDeposit(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), eth.Decimal))
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(0), big.NewInt(int64(numValidators)), true)
+	// Get node SD status
+	sdStatusResp, err := staderClient.GetSDStatus()
 	if err != nil {
 		return err
 	}
 
-	if canNodeDepositResponse.InsufficientBalance {
-		fmt.Printf("Account does not have enough ETH balance!")
-		return nil
-	}
-	if canNodeDepositResponse.DepositPaused {
-		fmt.Printf("Deposit is paused")
-		return nil
-	}
-
-	sdStatus := canNodeDepositResponse.SdStatusResponse
+	sdStatus := sdStatusResp.SDStatus
 	amountToCollateral := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 	utilityAmount := big.NewInt(0)
@@ -123,9 +115,19 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
-	canNodeDepositResponse, err = staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
+	}
+
+	if canNodeDepositResponse.InsufficientBalance {
+		fmt.Printf("Account does not have enough ETH balance!")
+		return nil
+	}
+
+	if canNodeDepositResponse.DepositPaused {
+		fmt.Printf("Deposit is paused")
+		return nil
 	}
 
 	if canNodeDepositResponse.MaxValidatorLimitReached {

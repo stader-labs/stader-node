@@ -207,8 +207,8 @@ func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountWei, amountUtilityWei, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
+func (c *Client) CanNodeDeposit(amountBasedWei, amountUtilityWei, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountBasedWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can validator deposit status: %w", err)
 	}

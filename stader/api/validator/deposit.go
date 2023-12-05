@@ -81,7 +81,7 @@ func GetSDStatus(
 	}, nil
 }
 
-func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
+func canNodeDeposit(c *cli.Context, amountBaseWei, amountUtilityWei *big.Int, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func canNodeDeposit(c *cli.Context, amountWei *big.Int, numValidators *big.Int, 
 		return nil, err
 	}
 
-	amountToSend := amountWei.Mul(amountWei, numValidators)
+	amountToSend := amountBaseWei.Mul(amountBaseWei, numValidators)
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
