@@ -40,7 +40,7 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 		return &response, nil
 	}
 
-	sdStatus, err := getSDStatus(c)
+	sdStatus, err := getSDStatus(c, big.NewInt(0))
 	if err != nil {
 		return nil, err
 	}

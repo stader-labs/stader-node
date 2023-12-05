@@ -800,14 +800,19 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "get-sd-status",
 				Usage:     "Get SD Status",
-				UsageText: "stader-cli api node get-sd-status",
+				Aliases:   []string{"gsd"},
+				UsageText: "stader-cli api node get-sd-status num-validators",
 				Action: func(c *cli.Context) error {
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(0))
+					if err != nil {
 						return err
 					}
 					// Run
-					api.PrintResponse(getSDStatus(c))
+					api.PrintResponse(getSDStatus(c, numValidators))
 					return nil
 				},
 			},

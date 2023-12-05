@@ -68,7 +68,7 @@ func nodeDeposit(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), eth.Decimal))
 
 	// Get node SD status
-	sdStatusResp, err := staderClient.GetSDStatus()
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)))
 	if err != nil {
 		return err
 	}

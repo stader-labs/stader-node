@@ -46,7 +46,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 		return nil, err
 	}
 
-	sdStatus, err := getSDStatus(c)
+	sdStatus, err := getSDStatus(c, big.NewInt(0))
 	if err != nil {
 		return nil, err
 	}
