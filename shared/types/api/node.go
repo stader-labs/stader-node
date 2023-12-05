@@ -265,12 +265,11 @@ type SendElRewardsResponse struct {
 }
 
 type CanWithdrawSdResponse struct {
-	Status                     string            `json:"status"`
-	Error                      string            `json:"error"`
-	InsufficientSdCollateral   bool              `json:"insufficientSdCollateral"`
-	InsufficientWithdrawableSd bool              `json:"insufficientWithdrawableSd"`
-	SdStatusResponse           *SdStatusResponse `json:"sdStatusResponse"`
-	GasInfo                    stader.GasInfo    `json:"gasInfo"`
+	Status                     string         `json:"status"`
+	Error                      string         `json:"error"`
+	InsufficientSdCollateral   bool           `json:"insufficientSdCollateral"`
+	InsufficientWithdrawableSd bool           `json:"insufficientWithdrawableSd"`
+	GasInfo                    stader.GasInfo `json:"gasInfo"`
 }
 
 type WithdrawSdResponse struct {
@@ -394,11 +393,10 @@ type NodeSignResponse struct {
 }
 
 type CanClaimRewards struct {
-	Status           string            `json:"status"`
-	Error            string            `json:"error"`
-	NoRewards        bool              `json:"noRewards"`
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
-	GasInfo          stader.GasInfo    `json:"gasInfo"`
+	Status    string         `json:"status"`
+	Error     string         `json:"error"`
+	NoRewards bool           `json:"noRewards"`
+	GasInfo   stader.GasInfo `json:"gasInfo"`
 }
 
 type ClaimRewards struct {
@@ -416,10 +414,9 @@ type NodeRepaySDResponse struct {
 }
 
 type CanRepaySDResponse struct {
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
-	Status           string            `json:"status"`
-	Error            string            `json:"error"`
-	GasInfo          stader.GasInfo    `json:"gasInfo"`
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
 }
 
 type NodeUtilitySDResponse struct {
@@ -458,8 +455,7 @@ type NodeRepayExcessSDResponse struct {
 }
 
 type CanRepayExcessSDResponse struct {
-	SdStatusResponse *SdStatusResponse `json:"sdStatusResponse"`
-	Status           string            `json:"status"`
-	Error            string            `json:"error"`
-	GasInfo          stader.GasInfo    `json:"gasInfo"`
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
 }

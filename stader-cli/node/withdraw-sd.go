@@ -46,7 +46,12 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
-	if canWithdrawSdResponse.SdStatusResponse.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	if err != nil {
+		return err
+	}
+
+	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 		cliutils.PrintWarning("You have an existing utilization position, please repay your utilized SD first by executing the following command: stader-cli repay-sd --amount <SD amount>")
 		return nil
 	}
