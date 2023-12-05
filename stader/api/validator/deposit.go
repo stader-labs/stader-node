@@ -103,20 +103,6 @@ func canNodeDeposit(c *cli.Context, amountBaseWei, amountUtilityWei *big.Int, nu
 	if err != nil {
 		return nil, err
 	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
-
-	sdt, err := services.GetSdTokenContract(c)
-	if err != nil {
-		return nil, err
-	}
-
-	sdu, err := services.GetSdUtilityContract(c)
-	if err != nil {
-		return nil, err
-	}
 
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
@@ -182,17 +168,6 @@ func canNodeDeposit(c *cli.Context, amountBaseWei, amountUtilityWei *big.Int, nu
 	}
 
 	totalValidatorsPostAddition := totalValidatorNonTerminalKeys + numValidators.Uint64()
-
-	sdStatus, err := GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, big.NewInt(int64(totalValidatorsPostAddition)))
-	if err != nil {
-		return nil, err
-	}
-
-	canNodeDepositResponse.SdStatusResponse = sdStatus
-
-	if canNodeDepositResponse.SdStatusResponse.NotEnoughSdCollateral {
-		return &canNodeDepositResponse, nil
-	}
 
 	inputKeyLimitCount, err := node.GetInputKeyLimitCount(prn, nil)
 	if err != nil {

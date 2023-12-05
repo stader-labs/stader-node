@@ -92,17 +92,16 @@ type NodeDepositSdAllowanceResponse struct {
 }
 
 type CanNodeDepositResponse struct {
-	Status                   string            `json:"status"`
-	Error                    string            `json:"error"`
-	CanDeposit               bool              `json:"CanDeposit"`
-	InsufficientBalance      bool              `json:"insufficientBalance"`
-	InvalidAmount            bool              `json:"invalidAmount"`
-	DepositPaused            bool              `json:"depositPaused"`
-	MaxValidatorLimitReached bool              `json:"maxValidatorLimitReached"`
-	InputKeyLimitReached     bool              `json:"inputKeyLimitReached"`
-	InputKeyLimit            uint16            `json:"inputKeyLimit"`
-	SdStatusResponse         *SdStatusResponse `json:"sdStatusResponse"`
-	GasInfo                  stader.GasInfo    `json:"gasInfo"`
+	Status                   string         `json:"status"`
+	Error                    string         `json:"error"`
+	CanDeposit               bool           `json:"CanDeposit"`
+	InsufficientBalance      bool           `json:"insufficientBalance"`
+	InvalidAmount            bool           `json:"invalidAmount"`
+	DepositPaused            bool           `json:"depositPaused"`
+	MaxValidatorLimitReached bool           `json:"maxValidatorLimitReached"`
+	InputKeyLimitReached     bool           `json:"inputKeyLimitReached"`
+	InputKeyLimit            uint16         `json:"inputKeyLimit"`
+	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 
 type NodeDepositResponse struct {
