@@ -40,7 +40,7 @@ func repaySD(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	canClaimElRewardsResponse, err := staderClient.CanNodeRepaySd(amountWei)
+	canClaimElRewardsResponse, err := staderClient.CanRepaySd(amountWei)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func repaySD(c *cli.Context) error {
 		return nil
 	}
 
-	res, err := staderClient.NodeRepaySd(amountWei)
+	res, err := staderClient.RepaySd(amountWei)
 	if err != nil {
 		return err
 	}

@@ -41,12 +41,12 @@ func repayExcessSD(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	canRepayExcessSdResponse, err := staderClient.CanRepayExcessSD(amountWei)
+	canRepaySdResponse, err := staderClient.CanRepaySd(amountWei)
 	if err != nil {
 		return err
 	}
 
-	sdStatus := canRepayExcessSdResponse.SdStatusResponse
+	sdStatus := canRepaySdResponse.SdStatusResponse
 
 	// Do not had position
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) <= 0 {
@@ -61,24 +61,19 @@ func repayExcessSD(c *cli.Context) error {
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canRepayExcessSdResponse.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(canRepaySdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintln(
-		"Are you sure you want to repay SD?"))) {
+		"Are you sure you want to repay excess SD?"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	_, err = staderClient.CanNodeRepaySd(amountWei)
-	if err != nil {
-		return err
-	}
-
-	res, err := staderClient.NodeRepaySd(amountWei)
+	res, err := staderClient.RepaySd(amountWei)
 	if err != nil {
 		return err
 	}
