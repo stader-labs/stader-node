@@ -60,16 +60,14 @@ func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusRespon
 		return nil, err
 	}
 
-	numValidators = numValidators.Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
+	numValidatorsPostAdd := new(big.Int).Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
 
-	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidators)
+	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidatorsPostAdd)
 	if err != nil {
 		return nil, err
 	}
 
-	numValidators = numValidators.Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
-
-	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidators, nil)
+	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidatorsPostAdd, nil)
 
 	if err != nil {
 		return nil, err
