@@ -223,8 +223,5 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		current/require*100, "%")
 
-	//
-	// 7059.0032462241525
-	// 2823.601298489661
 	return nil
 }
