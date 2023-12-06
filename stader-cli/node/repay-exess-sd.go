@@ -59,7 +59,9 @@ func repayExcessSD(c *cli.Context) error {
 		return nil
 	}
 
-	amountExcess := new(big.Int).Sub(sdStatus.SdCollateralCurrentAmount, sdStatus.SdMaxCollateralAmount)
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+
+	amountExcess := new(big.Int).Sub(totalCollateral, sdStatus.SdMaxCollateralAmount)
 
 	if amountExcess.Cmp(big.NewInt(0)) <= 0 {
 		fmt.Printf("You don't have excess SD collateral\n")
