@@ -371,7 +371,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Name:      "utilize-sd",
 				Aliases:   []string{"us"},
 				Usage:     "Utilize from the Utility pool.",
-				UsageText: "stader-cli node utilization-sd",
+				UsageText: "stader-cli node utilize-sd",
 				Flags: []cli.Flag{
 					cli.BoolFlag{
 						Name:  "yes, y",
