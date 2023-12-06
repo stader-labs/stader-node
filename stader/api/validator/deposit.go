@@ -61,8 +61,8 @@ func GetSDStatus(
 
 	sdMaxCollateralAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MaxBondThreshold))
 
-	maxSDToUtilize := new(big.Int).Mul(minimumSDToBond, big.NewInt(MinToUtilizeRatioNum))
-	maxSDToUtilize = maxSDToUtilize.Div(maxSDToUtilize, big.NewInt(MinToUtilizeRatioDenom))
+	sdMaxUtilizableAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MinToUtilizeRatioNum))
+	sdMaxUtilizableAmount = new(big.Int).Div(sdMaxUtilizableAmount, big.NewInt(MinToUtilizeRatioDenom))
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, operatorAddress, 1, totalValidatorsPostAddition, nil)
 	if err != nil {
@@ -75,8 +75,8 @@ func GetSDStatus(
 		SdBalance:                 sdBalance,
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,
-		SdMaxUtilizableAmount:     sdMaxCollateralAmount,
-		SdMaxCollateralAmount:     maxSDToUtilize,
+		SdMaxUtilizableAmount:     sdMaxUtilizableAmount,
+		SdMaxCollateralAmount:     sdMaxCollateralAmount,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 	}, nil
 }

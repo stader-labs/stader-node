@@ -185,21 +185,20 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal))
 
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
 	fmt.Printf(
 		"The node %s%s%s current had %.6f SD in collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
-
-	selfBond := new(big.Int).Sub(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+		math.RoundDown(eth.WeiToEth(totalCollateral), eth.Decimal))
 
 	fmt.Printf(
 		"The node %s%s%s current had %.6f SD in self bond.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(selfBond), eth.Decimal))
+		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 
@@ -208,23 +207,24 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(maxUtilizable), eth.Decimal))
+		(eth.WeiToEth(maxUtilizable)))
 
 	fmt.Printf(
-		"The SD utility %s%s can provide max of %.6f SD.\n\n",
-		log.ColorBlue,
-		log.ColorReset,
+		"The SD utility can provide max of %.6f SD.\n\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 
-	cur := eth.WeiToEth(new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance))
-	min := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
+	current := eth.WeiToEth(totalCollateral)
+	require := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
 
 	fmt.Printf(
 		"The node %s%s%s current had %.6f%s Collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		cur/min*100, "%")
+		current/require*100, "%")
 
+	//
+	// 7059.0032462241525
+	// 2823.601298489661
 	return nil
 }
