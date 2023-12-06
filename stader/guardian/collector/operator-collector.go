@@ -34,6 +34,7 @@ type OperatorCollector struct {
 	TotalSdCollateralInEth               *prometheus.Desc
 	TotalEthColateral                    *prometheus.Desc
 	TotalSDUtilized                      *prometheus.Desc
+	TotalSDUtilizedInterest              *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -115,6 +116,8 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, EthCollateral), "", nil, nil),
 		TotalSDUtilized: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, SDUtilized), "", nil, nil),
+		TotalSDUtilizedInterest: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, SDUtilizedInterest), "", nil, nil),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -146,6 +149,7 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalSdCollateralInEth
 	channel <- collector.TotalEthColateral
 	channel <- collector.TotalSDUtilized
+	channel <- collector.TotalSDUtilizedInterest
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -174,6 +178,7 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateralInEth, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSdInEth)
 	channel <- prometheus.MustNewConstMetric(collector.TotalEthColateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorEthCollateral)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilized, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilized)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizedInterest, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDInterest)
 }
 
 // Log error messages

@@ -33,7 +33,7 @@ func GetSDStatus(
 	operatorAddress common.Address,
 	totalValidatorsPostAddition *big.Int,
 ) (*api.SdStatusResponse, error) {
-	sdUtilityBalance, err := sdutility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
+	sdUtilityLatestBalance, err := sdutility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -49,6 +49,11 @@ func GetSDStatus(
 	}
 
 	sdCollateralCurrentAmount, err := sd_collateral.GetOperatorSdBalance(sdc, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	sdUtilizedBalance, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, operatorAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +76,13 @@ func GetSDStatus(
 
 	return &api.SdStatusResponse{
 		NotEnoughSdCollateral:     !hasEnoughSdCollateral,
-		SdUtilizerLatestBalance:   sdUtilityBalance,
+		SdUtilizerLatestBalance:   sdUtilityLatestBalance,
 		SdBalance:                 sdBalance,
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,
 		SdMaxUtilizableAmount:     sdMaxUtilizableAmount,
 		SdMaxCollateralAmount:     sdMaxCollateralAmount,
+		SdUtilizedBalance:         sdUtilizedBalance,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 	}, nil
 }

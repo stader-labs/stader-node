@@ -59,6 +59,7 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 				CollateralRatio:        0,
 				CollateralRatioInSd:    0,
 				OperatorSDUtilized:     0,
+				OperatorSDInterest:     0,
 				StaderQueuedValidators: big.NewInt(0),
 			},
 		},

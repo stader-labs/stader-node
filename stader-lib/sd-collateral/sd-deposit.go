@@ -46,6 +46,15 @@ func GetOperatorSdBalance(sdc *stader.SdCollateralContractManager, operatorAddre
 	return balance, err
 }
 
+func GetOperatorUtilizedSDBalance(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
+	balance, err := sdc.SdCollateral.OperatorUtilizedSDBalance(opts, operatorAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return balance, err
+}
+
 func MinimumSDToBond(sdc *stader.SdCollateralContractManager, poolID uint8, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	minimumSDToBond, err := sdc.SdCollateral.GetMinimumSDToBond(opts, poolID, numValidators)
 	if err != nil {

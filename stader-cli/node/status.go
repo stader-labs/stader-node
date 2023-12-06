@@ -178,6 +178,14 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
 
+	totalInterest := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
+	fmt.Printf(
+		"The node %s%s%s total interest %.6f SD.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		math.RoundDown(eth.WeiToEth(totalInterest), eth.Decimal))
+
 	fmt.Printf(
 		"The node %s%s%s require to had %.6f SD in collateral.\n\n",
 		log.ColorBlue,

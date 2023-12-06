@@ -6,7 +6,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-cli/node"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -59,13 +58,6 @@ func nodeDeposit(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Printf(
-		"The node %s%s%s has a balance of %.6f SD.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), eth.Decimal))
 
 	// Get node SD status
 	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)))

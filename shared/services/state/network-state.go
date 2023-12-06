@@ -118,6 +118,9 @@ type MetricDetails struct {
 
 	// done
 	OperatorSDUtilized float64
+
+	// done
+	OperatorSDInterest float64
 }
 
 type MetricsCache struct {
@@ -463,7 +466,12 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
-	sdUtilized, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
+	sdUtilizedLatest, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	sdUtilized, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -516,7 +524,10 @@ func CreateMetricsCache(
 	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), SixDecimalRound)
 	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), SixDecimalRound)
 
-	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilized), SixDecimalRound)
+	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilizedLatest), SixDecimalRound)
+	interest := new(big.Int).Sub(sdUtilizedLatest, sdUtilized)
+	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(interest), SixDecimalRound)
+
 	state.StaderNetworkDetails = metricsDetails
 
 	state.logLine("Retrieved Stader Network Details (total time: %s)", time.Since(start))
