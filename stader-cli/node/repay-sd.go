@@ -60,11 +60,6 @@ func repaySD(c *cli.Context) error {
 		}
 	}
 
-	canClaimElRewardsResponse, err := staderClient.CanRepaySd(amountWei)
-	if err != nil {
-		return err
-	}
-
 	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
@@ -83,7 +78,12 @@ func repaySD(c *cli.Context) error {
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canClaimElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	canRepaySdResponse, err := staderClient.CanRepaySd(amountWei)
+	if err != nil {
+		return err
+	}
+
+	err = gas.AssignMaxFeeAndLimit(canRepaySdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}
