@@ -14,7 +14,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
-func nodeApproveSd(c *cli.Context, addressInString string, amountInString string) error {
+func nodeApproveDepositSd(c *cli.Context, amountInString string) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -39,13 +39,16 @@ func nodeApproveSd(c *cli.Context, addressInString string, amountInString string
 
 	amountWei := eth.EthToWei(amount)
 
-	address := common.HexToAddress(addressInString)
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
 
 	autoConfirm := c.Bool("yes")
 
 	nonce := c.GlobalUint64("nonce")
 
-	err = nodeApproveSdWithAmount(staderClient, amountWei, address, autoConfirm, nonce)
+	err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
 	if err != nil {
 		return err
 	}
@@ -53,7 +56,49 @@ func nodeApproveSd(c *cli.Context, addressInString string, amountInString string
 	return nil
 }
 
-func nodeApproveSdWithAmount(staderClient *stader.Client, amountWei *big.Int, address common.Address, autoConfirm bool, nonce uint64) error {
+func nodeApproveUtilitySd(c *cli.Context, amountInString string) error {
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return err
+	}
+	defer staderClient.Close()
+
+	// Check and assign the EC status
+	err = cliutils.CheckClientStatus(staderClient)
+	if err != nil {
+		return err
+	}
+
+	// If a custom nonce is set, print the multi-transaction warning
+	if c.GlobalUint64("nonce") != 0 {
+		cliutils.PrintMultiTransactionNonceWarning()
+	}
+
+	amount, err := strconv.ParseFloat(amountInString, 64)
+	if err != nil {
+		return err
+	}
+
+	amountWei := eth.EthToWei(amount)
+
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
+	autoConfirm := c.Bool("yes")
+
+	nonce := c.GlobalUint64("nonce")
+
+	err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdUtilityContract, autoConfirm, nonce)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func nodeApproveSdWithAmountAndAddress(staderClient *stader.Client, amountWei *big.Int, address common.Address, autoConfirm bool, nonce uint64) error {
 	// If a custom nonce is set, print the multi-transaction warning
 	if nonce != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()

@@ -344,7 +344,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "approve-sd",
+				Name:      "deposit-approve-sd",
 				Aliases:   []string{"k"},
 				Usage:     "Approve SD against the node",
 				UsageText: "stader-cli node approve-sd [options]",
@@ -352,10 +352,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					cli.StringFlag{
 						Name:  "amount, a",
 						Usage: "The amount of SD to approve",
-					},
-					cli.StringFlag{
-						Name:  "address, c",
-						Usage: "The address to which we want to approve SD",
 					},
 					cli.BoolFlag{
 						Name:  "yes, y",
@@ -366,15 +362,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
 						return err
 					}
-					if _, err := cliutils.ValidateAddress("address", c.String("address")); err != nil {
-						return err
-					}
 
 					amount := c.String("amount")
-					address := c.String("address")
 
 					// Run
-					return nodeApproveSd(c, address, amount)
+					return nodeApproveDepositSd(c, amount)
 				},
 			},
 			{
@@ -412,6 +404,32 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return repaySD(c)
+				},
+			},
+			{
+				Name:      "approve-utility-sd",
+				Aliases:   []string{"aus"},
+				Usage:     "Approve SD for utility pool",
+				UsageText: "stader-cli node approve-utility-sd [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to approve",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm SD approve",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					if _, err := cliutils.ValidatePositiveEthAmount("sd amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					amountInString := c.String("amount")
+
+					// Run
+					return nodeApproveUtilitySd(c, amountInString)
 				},
 			},
 		},

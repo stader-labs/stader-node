@@ -48,7 +48,7 @@ func nodeDepositSd(c *cli.Context) error {
 	return DepositSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
 }
 
-func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nounce uint64) error {
+func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nonce uint64) error {
 	contracts, err := staderClient.GetContractsInfo()
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveSdWithAmount(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nounce)
+		err = nodeApproveSdWithAmount(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
 		if err != nil {
 			return err
 		}
