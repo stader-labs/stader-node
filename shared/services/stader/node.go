@@ -114,7 +114,7 @@ func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeDepositSdRespo
 
 // Get the gas estimate for approving new SD interaction
 func (c *Client) NodeSdApprovalGas(amountWei *big.Int, address common.Address) (api.SdApproveGasResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node get-deposit-sd-approval-gas %s %s", amountWei.String(), address))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-approval-gas %s %s", amountWei.String(), address))
 	if err != nil {
 		return api.SdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
 	}
@@ -130,7 +130,7 @@ func (c *Client) NodeSdApprovalGas(amountWei *big.Int, address common.Address) (
 
 // Approve SD for depositing as collateral
 func (c *Client) NodeSdApprove(amountWei *big.Int, address common.Address) (api.SdApproveResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-approve-sd %s %s", amountWei.String(), address))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node sd-approve-sd %s %s", amountWei.String(), address))
 	if err != nil {
 		return api.SdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
 	}
