@@ -72,6 +72,10 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	response.SdUtilityContract, err = services.GetSdUtilityAddress(c)
+	if err != nil {
+		return nil, err
+	}
 
 	// Return response
 	return &response, nil

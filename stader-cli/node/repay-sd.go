@@ -41,15 +41,20 @@ func repaySD(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
 	// Check allowance
-	allowance, err := staderClient.GetSDPoolUtilitySdAllowance()
+	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdUtilityContract)
 	if err != nil {
 		return err
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before repay SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveUtilitySd(c)
+		err = nodeApproveSd(c, contracts.SdUtilityContract.String())
 		if err != nil {
 			return err
 		}

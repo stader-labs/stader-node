@@ -353,6 +353,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "amount, a",
 						Usage: "The amount of SD to approve",
 					},
+					cli.StringFlag{
+						Name:  "address, c",
+						Usage: "The address to which we want to approve SD",
+					},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm SD approve",
@@ -362,9 +366,14 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
 						return err
 					}
+					if _, err := cliutils.ValidateAddress("address", c.String("address")); err != nil {
+						return err
+					}
+
+					address := c.String("address")
 
 					// Run
-					return nodeApproveSd(c)
+					return nodeApproveSd(c, address)
 				},
 			},
 			{
@@ -402,54 +411,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 					// Run
 					return repaySD(c)
-				},
-			},
-			{
-				Name:      "repay-excess-sd",
-				Aliases:   []string{"res"},
-				Usage:     "Repay utilized SD using the excess SD collateral",
-				UsageText: "stader-cli node repay-excess-sd [options]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of SD to repay excess",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm SD repay",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
-						return err
-					}
-
-					// Run
-					return repayExcessSD(c)
-				},
-			},
-			{
-				Name:      "approve-utility-sd",
-				Aliases:   []string{"aus"},
-				Usage:     "Approve SD for utility pool",
-				UsageText: "stader-cli node approve-utility-sd [options]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of SD to approve",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm SD approve",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					if _, err := cliutils.ValidatePositiveEthAmount("sd amount", c.String("amount")); err != nil {
-						return err
-					}
-
-					// Run
-					return nodeApproveUtilitySd(c)
 				},
 			},
 		},
