@@ -301,7 +301,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 					// Run
-					api.PrintResponse(getDepositSdApprovalGas(c, amountWei, contractAddress))
+					api.PrintResponse(getSdApprovalGas(c, amountWei, contractAddress))
 					return nil
 
 				},

@@ -69,7 +69,7 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSd
 
 }
 
-func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int, contractAddress common.Address) (*api.SdApproveGasResponse, error) {
+func getSdApprovalGas(c *cli.Context, amountWei *big.Int, contractAddress common.Address) (*api.SdApproveGasResponse, error) {
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
