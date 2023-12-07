@@ -107,6 +107,15 @@ func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAd
 	return operatorId, nil
 }
 
+func WithdrawableInEth(orc *stader.OperatorRewardsCollectorContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
+	withdrawableInEth, err := orc.OperatorRewardsCollector.WithdrawableInEth(opts, nodeAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return withdrawableInEth, nil
+}
+
 func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (types2.OperatorInfo, error) {
 	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(opts, operatorId)
 	if err != nil {

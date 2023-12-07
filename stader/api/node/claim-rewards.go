@@ -35,6 +35,14 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	withdrawableInEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response.WithdrawableInEth = withdrawableInEth
+
 	if operatorClaimVaultBalance.Cmp(big.NewInt(0)) == 0 {
 		response.NoRewards = true
 		return &response, nil

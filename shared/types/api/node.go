@@ -397,10 +397,11 @@ type NodeSignResponse struct {
 }
 
 type CanClaimRewards struct {
-	Status    string         `json:"status"`
-	Error     string         `json:"error"`
-	NoRewards bool           `json:"noRewards"`
-	GasInfo   stader.GasInfo `json:"gasInfo"`
+	Status            string         `json:"status"`
+	Error             string         `json:"error"`
+	NoRewards         bool           `json:"noRewards"`
+	WithdrawableInEth *big.Int       `json:"withdrawableInEth"`
+	GasInfo           stader.GasInfo `json:"gasInfo"`
 }
 
 type ClaimRewards struct {
@@ -447,9 +448,9 @@ type SdStatusResponse struct {
 	SdCollateralCurrentAmount *big.Int `json:"sdCollateralCurrentAmount"`
 	SdCollateralRequireAmount *big.Int `json:"sdCollateralRequireAmount"`
 	SdMaxUtilizableAmount     *big.Int `json:"sdMaxUtilizableAmount"`
-	SdMaxCollateralAmount     *big.Int `json:"sdMaxCollateralAmount"`
 	SdBalance                 *big.Int `json:"sdBalance"`
 	PoolAvailableSDBalance    *big.Int `json:"poolAvailableSDBalance"`
+	SdRewardEligible          *big.Int `json:"sdRewardEligible"`
 	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
 }
 

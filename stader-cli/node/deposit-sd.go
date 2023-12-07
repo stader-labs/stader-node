@@ -62,7 +62,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveSdWithAmount(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
+		err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
 		if err != nil {
 			return err
 		}

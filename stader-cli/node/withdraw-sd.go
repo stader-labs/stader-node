@@ -50,8 +50,15 @@ func WithdrawSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf("You currently have %f utilized SD. When you try to withdraw SD, the withdrawable SD will be paid back to the utility pool first.\n", eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance))
+
+		sdStatus := sdStatusResponse.SDStatus
+		totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
+
+		msg := fmt.Sprintf("You have an existing utilization position, please repay your utilized SD first by executing the following command: stader-cli repay-sd --amount %.6f", eth.WeiToEth(totalFee))
+		cliutils.PrintWarning(msg)
 	}
 
 	// Assign max fees
