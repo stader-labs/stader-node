@@ -29,7 +29,6 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	numValidators := c.Uint64("num-validators")
-	autoConfirm := c.Bool("yes")
 
 	baseAmountInEth := 4
 	baseAmount := eth.EthToWei(4.0)
@@ -84,16 +83,9 @@ func nodeDeposit(c *cli.Context) error {
 		switch i {
 		case 0:
 			if status.AccountBalances.Sd.Cmp(amountToCollateral) < 0 {
-				cliutils.PrintError("You do not had enough SD in your wallet. Please deposit and try again")
+				fmt.Printf("You need to deposit %f more SD to collateralize your node to create %d validators\n. Please use the stader-cli node deposit-sd command to deposit SD", eth.WeiToEth(amountToCollateral), numValidators)
 				return nil
 			}
-
-			err = node.DepositSdWithAmount(staderClient, amountToCollateral, autoConfirm, 0)
-			if err != nil {
-				return err
-			}
-
-			return nodeDeposit(c)
 
 		case 1:
 			utilityAmount, err = node.PromptChooseUtilityAmount(sdStatus)
@@ -101,7 +93,7 @@ func nodeDeposit(c *cli.Context) error {
 				return err
 			}
 
-			if !cliutils.Confirm(fmt.Sprintf("You're about to utility %f SD: ", eth.WeiToEth(utilityAmount))) {
+			if !cliutils.Confirm(fmt.Sprintf("You're about to utilize %f SD: ", eth.WeiToEth(utilityAmount))) {
 				fmt.Printf("Cancel \n")
 				return nil
 			}
