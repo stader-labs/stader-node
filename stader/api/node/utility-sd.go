@@ -10,6 +10,40 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 )
 
+func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
+
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Response
+	response := api.CanUtilitySDResponse{}
+
+	sdu, err := services.GetSdUtilityContract(c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get gas estimates
+	opts, err := w.GetNodeAccountTransactor()
+	if err != nil {
+		return nil, err
+	}
+
+	gasInfo, err := sdutility.EstimateUtilize(sdu, amountWei, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	response.GasInfo = gasInfo
+
+	return &response, nil
+}
+
 func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, error) {
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
@@ -41,40 +75,6 @@ func utilitySd(c *cli.Context, amountWei *big.Int) (*api.NodeUtilitySDResponse, 
 	}
 
 	response.TxHash = tx.Hash()
-
-	return &response, nil
-}
-
-func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse, error) {
-	if err := services.RequireNodeWallet(c); err != nil {
-		return nil, err
-	}
-
-	w, err := services.GetWallet(c)
-	if err != nil {
-		return nil, err
-	}
-
-	// Response
-	response := api.CanUtilitySDResponse{}
-
-	sdu, err := services.GetSdUtilityContract(c)
-	if err != nil {
-		return nil, err
-	}
-
-	// Get gas estimates
-	opts, err := w.GetNodeAccountTransactor()
-	if err != nil {
-		return nil, err
-	}
-
-	gasInfo, err := sdutility.EstimateUtilize(sdu, amountWei, opts)
-	if err != nil {
-		return nil, err
-	}
-
-	response.GasInfo = gasInfo
 
 	return &response, nil
 }

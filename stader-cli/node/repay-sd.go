@@ -73,7 +73,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	// 2. If user had enough to repay
-	if amountWei.Cmp(sdStatus.SdBalance) >= 1 {
+	if amountWei.Cmp(sdStatus.SdBalance) > 0 {
 		cliutils.PrintError(fmt.Sprintf("The node's SD balance is not enough SD, current SD available: %f \n", eth.WeiToEth(sdStatus.SdBalance)))
 		return nil
 	}
