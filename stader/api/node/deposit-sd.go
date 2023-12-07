@@ -100,7 +100,6 @@ func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int, contractAddress
 }
 
 func allowanceSd(c *cli.Context, contractAddress common.Address) (*api.SdAllowanceResponse, error) {
-
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
@@ -134,7 +133,6 @@ func allowanceSd(c *cli.Context, contractAddress common.Address) (*api.SdAllowan
 }
 
 func approveSd(c *cli.Context, amountWei *big.Int, contractAddress common.Address) (*api.SdApproveResponse, error) {
-
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err

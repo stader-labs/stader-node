@@ -264,7 +264,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Usage:     "Approve SD for staking against the node",
 				UsageText: "stader-cli api node deposit-sd-approve-sd amount contract-address",
 				Action: func(c *cli.Context) error {
-
 					// Validate args
 					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
@@ -281,7 +280,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					// Run
 					api.PrintResponse(approveSd(c, amountWei, contractAddress))
 					return nil
-
 				},
 			},
 			{

@@ -146,6 +146,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 	}
 	if userBalance.Cmp(amountToSend) < 0 {
 		canNodeDepositResponse.InsufficientBalance = true
+		return &canNodeDepositResponse, nil
 	}
 
 	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
