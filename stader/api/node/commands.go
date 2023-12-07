@@ -159,28 +159,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "deposit-sd-approve-sd",
-				Aliases:   []string{"k1"},
-				Usage:     "Approve SD for staking against the node",
-				UsageText: "stader-cli api node deposit-sd-approve-sd amount",
-				Action: func(c *cli.Context) error {
-
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(approveSd(c, amountWei))
-					return nil
-
-				},
-			},
-			{
 				Name:      "utilize-sd",
 				Usage:     "Utilize SD",
 				UsageText: "stader-cli api node utilize-sd amount",
@@ -281,39 +259,72 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "get-deposit-sd-approval-gas",
-				Usage:     "Estimate the gas cost of new SD interaction approval",
-				UsageText: "stader-cli api node get-deposit-sd-approval-gas",
+				Name:      "sd-approve-sd",
+				Aliases:   []string{"k1"},
+				Usage:     "Approve SD for staking against the node",
+				UsageText: "stader-cli api node deposit-sd-approve-sd amount contract-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(approveSd(c, amountWei, contractAddress))
+					return nil
+
+				},
+			},
+			{
+				Name:      "get-sd-approval-gas",
+				Usage:     "Estimate the gas cost of new SD interaction approval",
+				UsageText: "stader-cli api node get-deposit-sd-approval-gas contract-address",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidatePositiveWeiAmount("approve amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
-
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
 					// Run
-					api.PrintResponse(getDepositSdApprovalGas(c, amountWei))
+					api.PrintResponse(getDepositSdApprovalGas(c, amountWei, contractAddress))
 					return nil
 
 				},
 			},
 			{
-				Name:      "deposit-sd-allowance",
+				Name:      "sd-allowance",
 				Usage:     "Get the node's SD allowance for the collateral contract",
-				UsageText: "stader-cli api node deposit-sd-allowance",
+				UsageText: "stader-cli api node deposit-sd-allowance contract-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(0))
+					if err != nil {
 						return err
 					}
 
 					// Run
-					api.PrintResponse(allowanceSd(c))
+					api.PrintResponse(allowanceSd(c, contractAddress))
 					return nil
 
 				},
@@ -814,60 +825,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 					// Run
 					api.PrintResponse(getSDStatus(c, numValidators))
-					return nil
-				},
-			},
-			{
-				Name:      "utility-sd-allowance",
-				Usage:     "Get the node's SD allowance for the utility contract",
-				UsageText: "stader-cli api node utility-sd-allowance",
-				Action: func(c *cli.Context) error {
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(utilityAllowanceSd(c))
-					return nil
-
-				},
-			},
-			{
-				Name:      "utility-approve-sd",
-				Usage:     "Get the node's SD allowance for the utility contract",
-				UsageText: "stader-cli api node utility-approve-sd",
-				Action: func(c *cli.Context) error {
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					amountWei, err := cliutils.ValidatePositiveWeiAmount("amount", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(utilityApproveSd(c, amountWei))
-					return nil
-				},
-			},
-			{
-				Name:      "utility-approve-sd-gas",
-				Usage:     "Get the gas info of node approve SD for the utility contract",
-				UsageText: "stader-cli api node utility-approve-sd-gas",
-				Action: func(c *cli.Context) error {
-					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
-						return err
-					}
-					amountWei, err := cliutils.ValidatePositiveWeiAmount("amount", c.Args().Get(0))
-					if err != nil {
-						return err
-					}
-
-					// Run
-					api.PrintResponse(getUtilitySdApprovalGas(c, amountWei))
 					return nil
 				},
 			},

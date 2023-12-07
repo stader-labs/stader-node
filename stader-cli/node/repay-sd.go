@@ -41,23 +41,23 @@ func repaySD(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
 	// Check allowance
-	allowance, err := staderClient.GetSDPoolUtilitySdAllowance()
+	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdUtilityContract)
 	if err != nil {
 		return err
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before repay SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveUtilitySd(c)
+		err = nodeApproveSd(c, contracts.SdUtilityContract.String(), amountInString)
 		if err != nil {
 			return err
 		}
-	}
-
-	canClaimElRewardsResponse, err := staderClient.CanRepaySd(amountWei)
-	if err != nil {
-		return err
 	}
 
 	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
@@ -73,12 +73,17 @@ func repaySD(c *cli.Context) error {
 	}
 
 	// 2. If user had enough to repay
-	if amountWei.Cmp(sdStatus.SdBalance) >= 1 {
+	if amountWei.Cmp(sdStatus.SdBalance) > 0 {
 		cliutils.PrintError(fmt.Sprintf("The node's SD balance is not enough SD, current SD available: %f \n", eth.WeiToEth(sdStatus.SdBalance)))
 		return nil
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canClaimElRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
+	canRepaySdResponse, err := staderClient.CanRepaySd(amountWei)
+	if err != nil {
+		return err
+	}
+
+	err = gas.AssignMaxFeeAndLimit(canRepaySdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
 	}

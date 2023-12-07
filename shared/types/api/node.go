@@ -70,28 +70,25 @@ type CanNodeDepositSdResponse struct {
 	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
 
-type NodeDepositSdApproveGasResponse struct {
+type SdApproveGasResponse struct {
 	Status  string         `json:"status"`
 	Error   string         `json:"error"`
 	GasInfo stader.GasInfo `json:"gasInfo"`
 }
-type NodeDepositSdApproveResponse struct {
+
+type SdApproveResponse struct {
 	Status        string      `json:"status"`
 	Error         string      `json:"error"`
 	ApproveTxHash common.Hash `json:"approveTxHash"`
 }
+
 type NodeDepositSdResponse struct {
 	Status        string      `json:"status"`
 	Error         string      `json:"error"`
 	DepositTxHash common.Hash `json:"stakeTxHash"`
 }
-type NodeDepositSdAllowanceResponse struct {
-	Status    string   `json:"status"`
-	Error     string   `json:"error"`
-	Allowance *big.Int `json:"allowance"`
-}
 
-type SDPoolUtilitySdAllowanceResponse struct {
+type SdAllowanceResponse struct {
 	Status    string   `json:"status"`
 	Error     string   `json:"error"`
 	Allowance *big.Int `json:"allowance"`
@@ -154,6 +151,7 @@ type ContractsInfoResponse struct {
 	StaderOracle               common.Address `json:"staderOracle"`
 	PenaltyTracker             common.Address `json:"penaltyTracker"`
 	StakePoolManager           common.Address `json:"stakePoolManager"`
+	SdUtilityContract          common.Address `json:"sdUtilityContract"`
 }
 
 type DebugExitResponse struct {
