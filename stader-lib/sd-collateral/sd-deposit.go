@@ -64,6 +64,23 @@ func MinimumSDToBond(sdc *stader.SdCollateralContractManager, poolID uint8, numV
 	return minimumSDToBond, nil
 }
 
+func RewardEligibleSD(sdc *stader.SdCollateralContractManager, poolID uint8, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	poolThreshold, err := sdc.SdCollateral.PoolThresholdbyPoolId(opts, poolID)
+	if err != nil {
+		return nil, err
+	}
+
+	maxThreshold := poolThreshold.MaxThreshold
+	ethAmount := new(big.Int).Mul(maxThreshold, numValidators)
+
+	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return sdAmount, nil
+}
+
 func HasEnoughSdCollateral(sdc *stader.SdCollateralContractManager, operatorAddress common.Address, poolType uint8, numValidators *big.Int, opts *bind.CallOpts) (bool, error) {
 	hasEnoughSdCollateral, err := sdc.SdCollateral.HasEnoughSDCollateral(opts, operatorAddress, poolType, numValidators)
 	if err != nil {

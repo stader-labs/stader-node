@@ -54,7 +54,7 @@ func repaySD(c *cli.Context) error {
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before repay SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveSd(c, contracts.SdUtilityContract.String(), amountInString)
+		err = nodeApproveUtilitySd(c, amountInString)
 		if err != nil {
 			return err
 		}

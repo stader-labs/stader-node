@@ -231,5 +231,12 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		current/require*100, "%")
 
+	fmt.Printf(
+		"The node %s%s%s reward Eligible SD is %.6f.\n\n",
+		log.ColorBlue,
+		status.AccountAddress,
+		log.ColorReset,
+		eth.WeiToEth(sdStatus.SdRewardEligible))
+
 	return nil
 }
