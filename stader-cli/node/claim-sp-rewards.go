@@ -181,7 +181,6 @@ func ClaimSpRewards(c *cli.Context) error {
 			}
 			depositSd = true
 		}
-
 	} else {
 		if cliutils.Confirm(fmt.Sprintf(
 			"Are you sure you want to claim %s ETH for cycles %v to your reward address?", totalClaimableEth.String(), cyclesToClaimArray)) {

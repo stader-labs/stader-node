@@ -21,7 +21,6 @@ import (
 )
 
 const (
-	MaxBondThreshold       = 20
 	MinToUtilizeRatioNum   = 5
 	MinToUtilizeRatioDenom = 2
 )
@@ -58,13 +57,16 @@ func GetSDStatus(
 		return nil, err
 	}
 
+	rewardEligibleSD, err := sd_collateral.RewardEligibleSD(sdc, 1, totalValidatorsPostAddition, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	// Check Sd balance
 	sdBalance, err := sdt.Erc20Token.BalanceOf(nil, operatorAddress)
 	if err != nil {
 		return nil, err
 	}
-
-	sdMaxCollateralAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MaxBondThreshold))
 
 	sdMaxUtilizableAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MinToUtilizeRatioNum))
 	sdMaxUtilizableAmount = new(big.Int).Div(sdMaxUtilizableAmount, big.NewInt(MinToUtilizeRatioDenom))
@@ -81,9 +83,9 @@ func GetSDStatus(
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,
 		SdMaxUtilizableAmount:     sdMaxUtilizableAmount,
-		SdMaxCollateralAmount:     sdMaxCollateralAmount,
 		SdUtilizedBalance:         sdUtilizedBalance,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
+		SdRewardEligible:          rewardEligibleSD,
 	}, nil
 }
 
@@ -144,6 +146,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 	}
 	if userBalance.Cmp(amountToSend) < 0 {
 		canNodeDepositResponse.InsufficientBalance = true
+		return &canNodeDepositResponse, nil
 	}
 
 	isPermissionlessNodeRegistryPaused, err := node.IsPermissionlessNodeRegistryPaused(prn, nil)
