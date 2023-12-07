@@ -86,7 +86,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
-		fmt.Printf("Fresh install skip any migration.\n")
+		fmt.Printf("This is a fresh installation.\n")
 		return nil, nil, nil
 	}
 
