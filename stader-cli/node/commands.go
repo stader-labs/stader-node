@@ -370,10 +370,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						return err
 					}
 
+					amount := c.String("amount")
 					address := c.String("address")
 
 					// Run
-					return nodeApproveSd(c, address)
+					return nodeApproveSd(c, address, amount)
 				},
 			},
 			{

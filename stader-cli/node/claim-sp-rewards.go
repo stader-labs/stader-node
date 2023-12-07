@@ -164,7 +164,7 @@ func ClaimSpRewards(c *cli.Context) error {
 
 		fmt.Printf("Please select one of the following options:\n")
 		fmt.Printf("1. Claim all SD rewards to your Reward Address\n")
-		fmt.Printf("2. Redeposit all the SD rewards as SD collateral for additional earnings\n")
+		fmt.Printf("2. Redeposit all the SD rewards as SD collateral for additional earnings\n\n")
 
 		option := cliutils.Prompt("", "^(1|2)$", "Please enter a valid option")
 		if option == "1" {

@@ -14,7 +14,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
-func nodeApproveSd(c *cli.Context, addressInString string) error {
+func nodeApproveSd(c *cli.Context, addressInString string, amountInString string) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -31,8 +31,6 @@ func nodeApproveSd(c *cli.Context, addressInString string) error {
 	if c.GlobalUint64("nonce") != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
-
-	amountInString := c.String("amount")
 
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {
