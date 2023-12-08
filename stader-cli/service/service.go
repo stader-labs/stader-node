@@ -58,7 +58,7 @@ const (
 	PruneProvisionerContainerSuffix string = "_prune_provisioner"
 	EcMigratorContainerSuffix       string = "_ec_migrator"
 	clientDataVolumeName            string = "/ethclient"
-	dataFolderVolumeName            string = "/.stader/data"
+	dataFolderVolumeName            string = "/Users/batphonghan/.stader/data"
 
 	PruneFreeSpaceRequired uint64 = 50 * 1024 * 1024 * 1024
 	dockerImageRegex       string = ".*/(?P<image>.*):.*"
