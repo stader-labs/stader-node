@@ -118,6 +118,8 @@ type MetricDetails struct {
 
 	// done
 	OperatorSDUtilized float64
+	// done
+	SdUtilityPoolBalance float64
 
 	// done
 	OperatorSDInterest float64
@@ -476,6 +478,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	utilityPoolBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
@@ -527,6 +534,7 @@ func CreateMetricsCache(
 	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilizedLatest), SixDecimalRound)
 	interest := new(big.Int).Sub(sdUtilizedLatest, sdUtilized)
 	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(interest), SixDecimalRound)
+	metricsDetails.SdUtilityPoolBalance = math.RoundDown(eth.WeiToEth(utilityPoolBalance), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
 
