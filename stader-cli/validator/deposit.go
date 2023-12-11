@@ -63,13 +63,13 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	// userBalance := status.AccountBalances.ETH
-	// amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
+	userBalance := status.AccountBalances.ETH
+	amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
 
-	// if userBalance.Cmp(amountToSend) < 0 {
-	// 	fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
-	// 	return nil
-	// }
+	if userBalance.Cmp(amountToSend) < 0 {
+		fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
+		return nil
+	}
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
