@@ -821,6 +821,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					if err != nil {
 						return err
 					}
+
 					// Run
 					api.PrintResponse(getSDStatus(c, numValidators))
 					return nil

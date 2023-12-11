@@ -1,14 +1,82 @@
 [
-    { "inputs": [], "name": "AccrualBlockNumberNotLatest", "type": "error" },
-    { "inputs": [], "name": "CallerNotAuthorizedToRedeem", "type": "error" },
-    { "inputs": [], "name": "CannotFindRequestId", "type": "error" },
-    { "inputs": [], "name": "InsufficientPoolBalance", "type": "error" },
-    { "inputs": [], "name": "InvalidAmountOfWithdraw", "type": "error" },
-    { "inputs": [], "name": "InvalidInput", "type": "error" },
-    { "inputs": [], "name": "InvalidWithdrawAmount", "type": "error" },
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "AccrualBlockNumberNotLatest",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "AlreadyClaimed",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "AlreadyLiquidated",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "CallerNotAuthorizedToRedeem",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "CallerNotManager",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "CallerNotStaderContract",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "CannotFindRequestId",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InsufficientPoolBalance",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidAmountOfWithdraw",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidInput",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidWithdrawAmount",
+        "type": "error"
+    },
     {
         "inputs": [],
         "name": "MaxLimitOnWithdrawRequestCountReached",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotClaimable",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotLiquidatable",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotLiquidator",
         "type": "error"
     },
     {
@@ -22,9 +90,21 @@
         "name": "RequestIdNotFinalized",
         "type": "error"
     },
-    { "inputs": [], "name": "SDTransferFailed", "type": "error" },
-    { "inputs": [], "name": "SDUtilizeLimitReached", "type": "error" },
-    { "inputs": [], "name": "UndelegationPeriodNotPassed", "type": "error" },
+    {
+        "inputs": [],
+        "name": "SDTransferFailed",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "SDUtilizeLimitReached",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ZeroAddress",
+        "type": "error"
+    },
     {
         "anonymous": false,
         "inputs": [
@@ -55,24 +135,12 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "address",
-                "name": "liquidator",
-                "type": "address"
-            },
-            {
-                "indexed": false,
                 "internalType": "uint256",
-                "name": "liquidationBonusInEth",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "liquidationFeeInEth",
+                "name": "index",
                 "type": "uint256"
             }
         ],
-        "name": "ClaimedLiquidation",
+        "name": "CompleteLiquidation",
         "type": "event"
     },
     {
@@ -117,6 +185,19 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "version",
+                "type": "uint8"
+            }
+        ],
+        "name": "Initialized",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": true,
                 "internalType": "address",
                 "name": "account",
@@ -148,6 +229,19 @@
             }
         ],
         "name": "LiquidationCall",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "Paused",
         "type": "event"
     },
     {
@@ -231,6 +325,112 @@
         "inputs": [
             {
                 "indexed": false,
+                "internalType": "uint256",
+                "name": "liquidationThreshold",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "liquidationBonusPercent",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "liquidationFeePercent",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "ltv",
+                "type": "uint256"
+            }
+        ],
+        "name": "RiskConfigUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "previousAdminRole",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "newAdminRole",
+                "type": "bytes32"
+            }
+        ],
+        "name": "RoleAdminChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "name": "RoleGranted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "name": "RoleRevoked",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
                 "internalType": "address",
                 "name": "utilizer",
                 "type": "address"
@@ -243,6 +443,32 @@
             }
         ],
         "name": "SDUtilized",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "Unpaused",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "conservativeEthPerKey",
+                "type": "uint256"
+            }
+        ],
+        "name": "UpdatedConservativeEthPerKey",
         "type": "event"
     },
     {
@@ -316,19 +542,6 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "undelegationPeriodInBlocks",
-                "type": "uint256"
-            }
-        ],
-        "name": "UpdatedUndelegationPeriodInBlocks",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
                 "name": "utilizationRatePerBlock",
                 "type": "uint256"
             }
@@ -376,6 +589,71 @@
     },
     {
         "inputs": [],
+        "name": "DECIMAL",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "DEFAULT_ADMIN_ROLE",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "MAX_PROTOCOL_FEE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "MAX_UTILIZATION_RATE_PER_BLOCK",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "accrualBlockNumber",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "accrueFee",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -383,9 +661,26 @@
     },
     {
         "inputs": [],
+        "name": "accumulatedProtocolFee",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "cTokenTotalSupply",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -394,7 +689,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "requestId",
+                "name": "_requestId",
                 "type": "uint256"
             }
         ],
@@ -405,16 +700,37 @@
     },
     {
         "inputs": [
-            { "internalType": "uint256", "name": "index", "type": "uint256" }
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
         ],
-        "name": "claimLiquidation",
+        "name": "completeLiquidation",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "conservativeEthPerKey",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
-            { "internalType": "uint256", "name": "sdAmount", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "sdAmount",
+                "type": "uint256"
+            }
         ],
         "name": "delegate",
         "outputs": [],
@@ -423,33 +739,57 @@
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
         ],
         "name": "delegatorCTokenBalance",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
         ],
         "name": "delegatorWithdrawRequestedCTokenCount",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "name": "delegatorWithdrawRequests",
         "outputs": [
-            { "internalType": "address", "name": "owner", "type": "address" },
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
             {
                 "internalType": "uint256",
                 "name": "amountOfCToken",
@@ -478,7 +818,11 @@
         "inputs": [],
         "name": "exchangeRateCurrent",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -487,7 +831,24 @@
         "inputs": [],
         "name": "exchangeRateStored",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "finalizationBatchLimit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -501,9 +862,13 @@
     },
     {
         "inputs": [],
-        "name": "getDelegationRate",
+        "name": "getDelegationRatePerBlock",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -518,7 +883,11 @@
         ],
         "name": "getDelegatorLatestSDBalance",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -527,14 +896,35 @@
         "inputs": [],
         "name": "getLatestExchangeRate",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getLiquidationThreshold",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
         ],
         "name": "getOperatorLiquidation",
         "outputs": [
@@ -580,21 +970,112 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            }
+        ],
+        "name": "getOperatorTotalEth",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "getPoolAvailableSDBalance",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "_owner", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "_delegator",
+                "type": "address"
+            }
         ],
         "name": "getRequestIdsByDelegator",
         "outputs": [
-            { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getRoleAdmin",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "getUserData",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "totalInterestSD",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalCollateralInSD",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "healthFactor",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lockedEth",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct UserData",
+                "name": "",
+                "type": "tuple"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -609,18 +1090,130 @@
         ],
         "name": "getUtilizerLatestBalance",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "account", "type": "address" }
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "grantRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "hasRole",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_admin",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_staderConfig",
+                "type": "address"
+            }
+        ],
+        "name": "initialize",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
         ],
         "name": "liquidationCall",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "liquidations",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "totalAmountInEth",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalBonusInEth",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalFeeInEth",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "isRepaid",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "isClaimed",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "liquidator",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -632,11 +1225,131 @@
     },
     {
         "inputs": [],
-        "name": "poolUtilization",
+        "name": "maxETHWorthOfSDPerValidator",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "maxNonRedeemedDelegatorRequestCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "minBlockDelayToFinalizeRequest",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "nextRequestId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "nextRequestIdToFinalize",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "pause",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "paused",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "poolUtilization",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "protocolFee",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "renounceRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -649,17 +1362,17 @@
         ],
         "name": "repay",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "repaidAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "feePaid",
+                "type": "uint256"
+            }
         ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "address", "name": "account", "type": "address" }
-        ],
-        "name": "repayLiquidation",
-        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -678,19 +1391,40 @@
         ],
         "name": "repayOnBehalf",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "repaidAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "feePaid",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "", "type": "address" },
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "name": "requestIdsByDelegatorAddress",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -699,25 +1433,174 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "cTokenAmount",
+                "name": "_cTokenAmount",
                 "type": "uint256"
             }
         ],
         "name": "requestWithdraw",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "_requestId",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "uint256", "name": "sdAmount", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "_sdAmount",
+                "type": "uint256"
+            }
         ],
         "name": "requestWithdrawWithSDAmount",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "_requestId",
+                "type": "uint256"
+            }
         ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "revokeRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "riskConfig",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "liquidationThreshold",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "liquidationBonusPercent",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "liquidationFeePercent",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "ltv",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "sdRequestedForWithdraw",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "sdReservedForClaim",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "staderConfig",
+        "outputs": [
+            {
+                "internalType": "contract IStaderConfig",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+            }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalUtilizedSD",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "unpause",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_newEthPerKey",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateConservativeEthPerKey",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -749,7 +1632,11 @@
     },
     {
         "inputs": [
-            { "internalType": "uint256", "name": "_count", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "_count",
+                "type": "uint256"
+            }
         ],
         "name": "updateMaxNonRedeemedDelegatorRequestCount",
         "outputs": [],
@@ -773,11 +1660,39 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_protocolFeeFactor",
+                "name": "_protocolFee",
                 "type": "uint256"
             }
         ],
-        "name": "updateProtocolFeeFactor",
+        "name": "updateProtocolFee",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "liquidationThreshold",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "liquidationBonusPercent",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "liquidationFeePercent",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "ltv",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateRiskConfig",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -799,19 +1714,6 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_undelegationPeriodInBlocks",
-                "type": "uint256"
-            }
-        ],
-        "name": "updateUndelegationPeriodInBlocks",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "_utilizationRatePerBlock",
                 "type": "uint256"
             }
@@ -819,6 +1721,19 @@
         "name": "updateUtilizationRatePerBlock",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "utilizationRatePerBlock",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -832,6 +1747,19 @@
         "name": "utilize",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "utilizeIndex",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -859,29 +1787,49 @@
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "account", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
         ],
         "name": "utilizerBalanceCurrent",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "account", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
         ],
         "name": "utilizerBalanceStored",
         "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
         ],
         "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
-            { "internalType": "address", "name": "", "type": "address" }
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
         ],
         "name": "utilizerData",
         "outputs": [
@@ -901,7 +1849,11 @@
     },
     {
         "inputs": [
-            { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
         ],
         "name": "withdrawProtocolFee",
         "outputs": [],

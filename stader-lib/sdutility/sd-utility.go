@@ -33,3 +33,31 @@ func EstimateRepay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.I
 func Repay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
 	return sp.SDUtilityPool.Repay(opts, utilityAmount)
 }
+
+func SDMaxUtilizableAmount(sp *stader.SDUtilityPoolContractManager,
+	sdc *stader.SdCollateralContractManager, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
+	maxThreshold, err := sp.SDUtilityPool.MaxETHWorthOfSDPerValidator(opts)
+	ethAmount := new(big.Int).Mul(maxThreshold, numValidators)
+
+	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return sdAmount, nil
+}
+
+func GetUtilizationRate(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Float, error) {
+	utilizationRatePerBlockInWei, err := sp.SDUtilityPool.UtilizationRatePerBlock(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	utilizationRatePerYear := new(big.Int).Mul(utilizationRatePerBlockInWei, big.NewInt(2628000)) // 2628000 block per year
+
+	utilizationRatePerYearF := new(big.Float).SetInt(utilizationRatePerYear)
+
+	utilizationRateInPercent := new(big.Float).Quo(utilizationRatePerYearF, big.NewFloat(1e16))
+
+	return utilizationRateInPercent, nil
+}

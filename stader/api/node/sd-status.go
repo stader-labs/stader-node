@@ -68,12 +68,12 @@ func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusRespon
 	}
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidatorsPostAdd, nil)
-
 	if err != nil {
 		return nil, err
 	}
 
 	sdStatus.NotEnoughSdCollateral = !hasEnoughSdCollateral
+
 	return &api.GetSdStatusResponse{
 		SDStatus: sdStatus,
 	}, nil
