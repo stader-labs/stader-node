@@ -45,6 +45,7 @@ func ClaimRewards(c *cli.Context) error {
 
 	sdStatus := sdStatusResponse.SDStatus
 
+	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
 	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 			totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
