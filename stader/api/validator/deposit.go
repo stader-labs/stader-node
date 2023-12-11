@@ -42,6 +42,11 @@ func GetSDStatus(
 		return nil, err
 	}
 
+	utilizationRate, err := sdutility.GetUtilizationRate(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minimumSDToBond, err := sd_collateral.MinimumSDToBond(sdc, 1, totalValidatorsPostAddition, nil)
 	if err != nil {
 		return nil, err
@@ -83,6 +88,7 @@ func GetSDStatus(
 		SdCollateralCurrentAmount: sdCollateralCurrentAmount,
 		SdCollateralRequireAmount: minimumSDToBond,
 		SdMaxUtilizableAmount:     sdMaxUtilizableAmount,
+		UtilizationRate:           utilizationRate,
 		SdUtilizedBalance:         sdUtilizedBalance,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 		SdRewardEligible:          rewardEligibleSD,

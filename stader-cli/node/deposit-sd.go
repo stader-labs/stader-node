@@ -74,7 +74,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	if canDeposit.InsufficientBalance {
-		fmt.Println("The node's SD balance is insufficient.")
+		fmt.Println("You don't have sufficient SD in your Operator Address to add as collateral. Please deposit SD into your Operator Address and try again.")
 		return nil
 	}
 
@@ -90,7 +90,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	// Prompt for confirmation
-	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %f SD as collateral?", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

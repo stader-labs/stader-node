@@ -101,9 +101,7 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 
 	// 1. If the pool had enough SD
 	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-		msg := fmt.Sprintf("Pool available SD: %f not enough to min utility : %f \n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.WeiToEth(minUtility))
-
-		return nil, errors.New(msg)
+		return nil, errors.New("There is not sufficient free SD in the Utility Pool for utilization at the moment. Please try again later when there is enough free SD in the Utility Pool")
 	}
 
 	// 2. If user had enough Eth
@@ -125,22 +123,71 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 
 	var err error
 
-	msg := fmt.Sprintf("Please enter a number of SD to utilize in range %f and %f: ", min, max)
+	msg := fmt.Sprintf(`Please enter the amount of SD you wish to utilize from the SD Utility Pool:
+SD Utility Pool balance: %f SD
+Minimum utilization amount: %f SD 
+Maximum utilization amount: %f SD`, eth.WeiToEth(sdStatus.PoolAvailableSDBalance), min, max)
+
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
 
 	for {
 		s := cliutils.Prompt(
 			msg,
 			"^[1-9][0-9]*$",
-			msg)
+			errMsg)
 
 		_utilityAmount, err = strconv.Atoi(s)
 		if err != nil {
-			fmt.Println("Please enter a valid number.")
+			fmt.Println(errMsg)
 			continue
 		}
 
 		if _utilityAmount < int(min) || _utilityAmount > int(max) {
-			fmt.Printf("Invalid input, please specify an amount within %f and %f range:\n", min, max)
+			fmt.Println(errMsg)
+			continue
+		}
+
+		break
+	}
+
+	utilityAmount := eth.EthToWei(float64(_utilityAmount))
+
+	return utilityAmount, nil
+}
+
+func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
+
+	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+
+	sdRewardEligibleRemain := new(big.Int).Sub(sdStatus.SdRewardEligible, sdStatus.SdCollateralCurrentAmount)
+
+	min := eth.WeiToEth(amountToCollateralRemain)
+	max := eth.WeiToEth(sdRewardEligibleRemain)
+
+	var _utilityAmount int
+
+	var err error
+
+	msg := fmt.Sprintf(`Please enter the amount of SD you wish to deposit as collateral.
+Minimum bond: %f SD 
+Maximum bond: %f SD`, min, max)
+
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
+
+	for {
+		s := cliutils.Prompt(
+			msg,
+			"^[1-9][0-9]*$",
+			errMsg)
+
+		_utilityAmount, err = strconv.Atoi(s)
+		if err != nil {
+			fmt.Println(errMsg)
+			continue
+		}
+
+		if _utilityAmount < int(min) || _utilityAmount > int(max) {
+			fmt.Println(errMsg)
 			continue
 		}
 

@@ -26,9 +26,10 @@ import (
 
 // Conversion factors
 const (
-	WeiPerEth  float64 = 1e18
-	WeiPerGwei float64 = 1e9
-	Decimal            = 18
+	WeiPerEth       float64 = 1e18
+	WeiPerGwei      float64 = 1e9
+	Decimal                 = 18
+	BaseAmountInEth         = 4
 )
 
 // Convert wei to eth
