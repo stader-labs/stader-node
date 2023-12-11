@@ -59,12 +59,15 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Get node SD status
-	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)), true)
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)))
 	if err != nil {
 		return err
 	}
 
-	if sdStatusResp.SDStatus.InsufficientEthBalance {
+	userBalance := status.AccountBalances.ETH
+	amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
+
+	if userBalance.Cmp(amountToSend) < 0 {
 		fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
 		return nil
 	}

@@ -5,8 +5,6 @@ import (
 
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
-	"github.com/stader-labs/stader-node/stader-lib/tokens"
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/stader/api/validator"
 
 	"github.com/urfave/cli"
@@ -15,7 +13,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
-func getSDStatus(c *cli.Context, numValidators *big.Int, checkEth bool) (*api.GetSdStatusResponse, error) {
+func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusResponse, error) {
 	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
@@ -64,7 +62,7 @@ func getSDStatus(c *cli.Context, numValidators *big.Int, checkEth bool) (*api.Ge
 
 	numValidatorsPostAdd := new(big.Int).Add(numValidators, big.NewInt(int64(totalValidatorNonTerminalKeys)))
 
-	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidatorsPostAdd, checkEth)
+	sdStatus, err := validator.GetSDStatus(sdc, sdu, sdt, nodeAccount.Address, numValidatorsPostAdd)
 	if err != nil {
 		return nil, err
 	}
@@ -72,18 +70,6 @@ func getSDStatus(c *cli.Context, numValidators *big.Int, checkEth bool) (*api.Ge
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidatorsPostAdd, nil)
 	if err != nil {
 		return nil, err
-	}
-
-	if checkEth {
-		userBalance, err := tokens.GetEthBalance(prn.Client, nodeAccount.Address, nil)
-		if err != nil {
-			return nil, err
-		}
-
-		amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), numValidators)
-		if userBalance.Cmp(amountToSend) < 0 {
-			sdStatus.InsufficientEthBalance = true
-		}
 	}
 
 	sdStatus.NotEnoughSdCollateral = !hasEnoughSdCollateral

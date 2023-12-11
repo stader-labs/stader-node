@@ -710,8 +710,8 @@ func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse,
 	return response, nil
 }
 
-func (c *Client) GetSDStatus(numValidators *big.Int, checkEth bool) (api.GetSdStatusResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-status %s %s", numValidators, strconv.FormatBool(checkEth)))
+func (c *Client) GetSDStatus(numValidators *big.Int) (api.GetSdStatusResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-status %s", numValidators))
 	if err != nil {
 		return api.GetSdStatusResponse{}, fmt.Errorf("could not get-sd-status: %w", err)
 	}

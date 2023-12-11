@@ -34,7 +34,7 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
-	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0), false)
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
 	}

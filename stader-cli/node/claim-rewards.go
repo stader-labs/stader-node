@@ -38,7 +38,7 @@ func ClaimRewards(c *cli.Context) error {
 		return nil
 	}
 
-	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0), false)
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
 	}
