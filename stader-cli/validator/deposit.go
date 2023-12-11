@@ -6,7 +6,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-cli/node"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
@@ -113,27 +112,24 @@ func nodeDeposit(c *cli.Context) error {
 				return nil
 			}
 
-			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %f SD as collateral? [Y/N] ", eth.WeiToEth(selfBondAmount))) {
+			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %f SD as collateral?", eth.WeiToEth(selfBondAmount))) {
 				fmt.Printf("Cancelled\n")
 				return nil
 			}
 
-			depositSdResponse, err := staderClient.NodeDepositSd(selfBondAmount)
+			autoConfirm := c.Bool("yes")
+			nounce := c.GlobalUint64("nonce")
+
+			err = node.DepositSdWithAmount(staderClient, selfBondAmount, autoConfirm, nounce)
 			if err != nil {
 				return err
 			}
 
-			fmt.Printf("Depositing SD...\n")
-			cliutils.PrintTransactionHash(staderClient, depositSdResponse.DepositTxHash)
-
-			if _, err = staderClient.WaitForTransaction(depositSdResponse.DepositTxHash); err != nil {
-				return err
-			}
-
-			fmt.Printf("Successfully deposited %.6f SD.\n", math.RoundDown(eth.WeiToEth(selfBondAmount), 6))
 		default:
 			return nil
 		}
+
+		fmt.Println("Continue with create validator...")
 	}
 
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
