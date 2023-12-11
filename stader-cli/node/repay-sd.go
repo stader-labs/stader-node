@@ -46,20 +46,6 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
-	// Check allowance
-	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdUtilityContract)
-	if err != nil {
-		return err
-	}
-
-	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Println("Before repay SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveUtilitySd(c, amountInString)
-		if err != nil {
-			return err
-		}
-	}
-
 	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
 	if err != nil {
 		return err
@@ -81,6 +67,20 @@ func repaySD(c *cli.Context) error {
 	if amountWei.Cmp(sdStatus.SdBalance) > 0 {
 		fmt.Printf("You don't have sufficient SD in your Operator Address for the repayment. Please deposit SD into your Operator Address and try again.\n")
 		return nil
+	}
+
+	// Check allowance
+	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdUtilityContract)
+	if err != nil {
+		return err
+	}
+
+	if allowance.Allowance.Cmp(amountWei) < 0 {
+		fmt.Println("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
+		err = nodeApproveUtilitySd(c, amountInString)
+		if err != nil {
+			return err
+		}
 	}
 
 	canRepaySdResponse, err := staderClient.CanRepaySd(amountWei)

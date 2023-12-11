@@ -61,7 +61,7 @@ func utilizeSD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to utilize %f SD? ", eth.WeiToEth(amountWei)))) {
+		"Are you sure you want to use %f SD from the utility pool? (y/n). Note: A Utilization fee of %.6f APR will be applied to the utilized SD from the utility pool.\n", eth.WeiToEth(amountWei), 0.5))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
