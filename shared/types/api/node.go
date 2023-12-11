@@ -401,6 +401,7 @@ type CanClaimRewards struct {
 	Error             string         `json:"error"`
 	NoRewards         bool           `json:"noRewards"`
 	WithdrawableInEth *big.Int       `json:"withdrawableInEth"`
+	ClaimsBalance     *big.Int       `json:"claimsBalance"`
 	GasInfo           stader.GasInfo `json:"gasInfo"`
 }
 
@@ -431,9 +432,10 @@ type NodeUtilitySDResponse struct {
 }
 
 type CanUtilitySDResponse struct {
-	Status  string         `json:"status"`
-	Error   string         `json:"error"`
-	GasInfo stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	NonTerminalValidators uint64         `json:"nonTerminalValidators"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type GetSdStatusResponse struct {

@@ -41,9 +41,15 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 		return nil, err
 	}
 
-	response.WithdrawableInEth = withdrawableInEth
+	totalWithdrawableEth := operatorClaimVaultBalance
+	if operatorClaimVaultBalance.Cmp(withdrawableInEth) > 0 {
+		totalWithdrawableEth = withdrawableInEth
+	}
 
-	if operatorClaimVaultBalance.Cmp(big.NewInt(0)) == 0 {
+	response.WithdrawableInEth = totalWithdrawableEth
+	response.ClaimsBalance = operatorClaimVaultBalance
+
+	if totalWithdrawableEth.Cmp(big.NewInt(0)) == 0 {
 		response.NoRewards = true
 		return &response, nil
 	}

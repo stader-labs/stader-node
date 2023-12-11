@@ -49,6 +49,11 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	if canNodeUtilizeSdResponse.NonTerminalValidators == 0 {
+		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		return nil
+	}
+
 	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -56,7 +61,7 @@ func utilizeSD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to utilize %f SD? ", eth.WeiToEth(amountWei)))) {
+		"Are you sure you want to use %f SD from the utility pool? (y/n). Note: A Utilization fee of %.6f APR will be applied to the utilized SD from the utility pool.\n", eth.WeiToEth(amountWei), 0.5))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
