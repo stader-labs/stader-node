@@ -50,15 +50,18 @@ func WithdrawSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-
-	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("You currently have %f utilized SD. When you try to withdraw SD, the withdrawable SD will be paid back to the utility pool first.\n", eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance))
-
-		sdStatus := sdStatusResponse.SDStatus
-		totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
-
-		msg := fmt.Sprintf("You have an existing utilization position, please repay your utilized SD first by executing the following command: stader-cli repay-sd --amount %.6f", eth.WeiToEth(totalFee))
-		cliutils.PrintWarning(msg)
+	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(amountWei) <= 0 {
+		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed? [y/n]", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
+		if !confirm {
+			fmt.Println("Cancelled.")
+			return nil
+		}
+	} else {
+		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD and the remaining SD will be sent to your Reward Address.\n Do you wish to proceed? [y/n]", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
+		if !confirm {
+			fmt.Println("Cancelled.")
+			return nil
+		}
 	}
 
 	// Assign max fees
