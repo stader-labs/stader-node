@@ -46,6 +46,29 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	if err != nil {
+		return err
+	}
+
+	sdStatus := sdStatusResponse.SDStatus
+	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
+		fmt.Println("You do not have an existing Utilization Position.")
+		return nil
+	}
+
+	// 1. Check if repay more than need
+	if amountWei.Cmp(sdStatus.SdUtilizerLatestBalance) > 0 {
+		fmt.Printf("Repayment amount greater than the Utilization position. Your current Utilization Position is %0.6f \n", eth.WeiToEth(sdStatus.SdUtilizerLatestBalance))
+		return nil
+	}
+
+	// 2. If user had enough to repay
+	if amountWei.Cmp(sdStatus.SdBalance) > 0 {
+		fmt.Printf("You don't have sufficient SD in your Operator Address for the repayment. Please deposit SD into your Operator Address and try again.\n")
+		return nil
+	}
+
 	// Check allowance
 	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdUtilityContract)
 	if err != nil {
@@ -53,29 +76,11 @@ func repaySD(c *cli.Context) error {
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Println("Before repay SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
+		fmt.Println("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
 		err = nodeApproveUtilitySd(c, amountInString)
 		if err != nil {
 			return err
 		}
-	}
-
-	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
-	if err != nil {
-		return err
-	}
-
-	sdStatus := sdStatusResponse.SDStatus
-	// 1. Check if repay more than need
-	if amountWei.Cmp(sdStatus.SdUtilizerLatestBalance) > 0 {
-		cliutils.PrintError(fmt.Sprintf("Repayment amount greater than the Utilization position: %s \n", sdStatus.SdUtilizerLatestBalance.String()))
-		return nil
-	}
-
-	// 2. If user had enough to repay
-	if amountWei.Cmp(sdStatus.SdBalance) > 0 {
-		cliutils.PrintError(fmt.Sprintf("The node's SD balance is not enough SD, current SD available: %f \n", eth.WeiToEth(sdStatus.SdBalance)))
-		return nil
 	}
 
 	canRepaySdResponse, err := staderClient.CanRepaySd(amountWei)
@@ -90,7 +95,7 @@ func repaySD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to repay %f SD?", amount))) {
+		"Are you sure you want to repay %0.6f SD from your Operator Address and reduce or close your Utilization Position?", eth.WeiToEth(amountWei)))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}

@@ -59,6 +59,9 @@ type NetworkCollector struct {
 	// The min amount of sd value that can be staked to get rewards
 	MinEthThreshold *prometheus.Desc
 
+	// The current balance of the SD utility pool
+	SdUtilityPoolBalance *prometheus.Desc
+
 	// The beacon client
 	bc beacon.Client
 
@@ -139,6 +142,10 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The maximum amount of sd value that can be staked to get rewards",
 			nil, nil,
 		),
+		SdUtilityPoolBalance: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_utility_pool_balance"),
+			"The current balance of the SD utility pool",
+			nil, nil,
+		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -164,6 +171,7 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.CollateralRatioInSd
 	channel <- collector.MinEthThreshold
 	channel <- collector.MaxEthThreshold
+	channel <- collector.SdUtilityPoolBalance
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -203,6 +211,7 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 		collector.MinEthThreshold, prometheus.GaugeValue, state.StaderNetworkDetails.MinEthThreshold)
 	channel <- prometheus.MustNewConstMetric(
 		collector.MaxEthThreshold, prometheus.GaugeValue, state.StaderNetworkDetails.MaxEthThreshold)
+	channel <- prometheus.MustNewConstMetric(collector.SdUtilityPoolBalance, prometheus.GaugeValue, state.StaderNetworkDetails.SdUtilityPoolBalance)
 }
 
 // Log error messages
