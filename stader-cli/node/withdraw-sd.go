@@ -50,7 +50,7 @@ func WithdrawSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(amountWei) <= 0 {
+	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(amountWei) > 0 {
 		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed? [y/n]", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
 		if !confirm {
 			fmt.Println("Cancelled.")
