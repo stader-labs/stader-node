@@ -401,6 +401,7 @@ type CanClaimRewards struct {
 	Error             string         `json:"error"`
 	NoRewards         bool           `json:"noRewards"`
 	WithdrawableInEth *big.Int       `json:"withdrawableInEth"`
+	ClaimsBalance     *big.Int       `json:"claimsBalance"`
 	GasInfo           stader.GasInfo `json:"gasInfo"`
 }
 
