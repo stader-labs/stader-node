@@ -51,13 +51,13 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 	if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(amountWei) > 0 {
-		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed? [y/n]", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
+		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed?", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
 		if !confirm {
 			fmt.Println("Cancelled.")
 			return nil
 		}
 	} else {
-		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD and the remaining SD will be sent to your Reward Address.\n Do you wish to proceed? [y/n]", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
+		confirm := cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD and the remaining SD will be sent to your Reward Address.\n Do you wish to proceed?", math.RoundDown(eth.WeiToEth(sdStatusResponse.SDStatus.SdUtilizerLatestBalance), 6)))
 		if !confirm {
 			fmt.Println("Cancelled.")
 			return nil
