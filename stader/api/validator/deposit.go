@@ -31,6 +31,7 @@ func GetSDStatus(
 	sdt *stader.Erc20TokenContractManager,
 	operatorAddress common.Address,
 	totalValidatorsPostAddition *big.Int,
+	checkEth bool,
 ) (*api.SdStatusResponse, error) {
 	sdUtilityLatestBalance, err := sdutility.GetUtilizerLatestBalance(sdu, operatorAddress, nil)
 	if err != nil {
