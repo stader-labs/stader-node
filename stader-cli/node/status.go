@@ -162,7 +162,7 @@ func getNodeStatus(c *cli.Context) error {
 	fmt.Printf("To view details of each validator, please use the %sstader-cli validator status%s command\n\n", log.ColorGreen, log.ColorReset)
 
 	// Get node SD status
-	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(0))
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(0), false)
 	if err != nil {
 		return err
 	}

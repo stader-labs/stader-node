@@ -452,6 +452,7 @@ type SdStatusResponse struct {
 	PoolAvailableSDBalance    *big.Int `json:"poolAvailableSDBalance"`
 	SdRewardEligible          *big.Int `json:"sdRewardEligible"`
 	NotEnoughSdCollateral     bool     `json:"notEnoughSdCollateral"`
+	InsufficientEthBalance    bool     `json:"insufficientEthBalance"`
 }
 
 type NodeRepayExcessSDResponse struct {

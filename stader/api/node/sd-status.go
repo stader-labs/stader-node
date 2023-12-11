@@ -5,6 +5,7 @@ import (
 
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
+	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/stader-labs/stader-node/stader/api/validator"
 
 	"github.com/urfave/cli"
@@ -13,7 +14,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 )
 
-func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusResponse, error) {
+func getSDStatus(c *cli.Context, numValidators *big.Int, checkEth bool) (*api.GetSdStatusResponse, error) {
 	sdc, err := services.GetSdCollateralContract(c)
 	if err != nil {
 		return nil, err
@@ -68,12 +69,29 @@ func getSDStatus(c *cli.Context, numValidators *big.Int) (*api.GetSdStatusRespon
 	}
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, nodeAccount.Address, 1, numValidatorsPostAdd, nil)
-
 	if err != nil {
 		return nil, err
 	}
 
+	if checkEth {
+		userBalance, err := tokens.GetEthBalance(prn.Client, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		poolThreshold, err := sd_collateral.GetPoolThreshold(sdc, 1, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		amountToSend := new(big.Int).Mul(poolThreshold.MinThreshold, numValidators)
+		if userBalance.Cmp(amountToSend) < 0 {
+			sdStatus.InsufficientEthBalance = true
+		}
+	}
+
 	sdStatus.NotEnoughSdCollateral = !hasEnoughSdCollateral
+
 	return &api.GetSdStatusResponse{
 		SDStatus: sdStatus,
 	}, nil

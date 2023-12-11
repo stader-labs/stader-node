@@ -59,9 +59,14 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Get node SD status
-	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)))
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
+	}
+
+	if sdStatusResp.SDStatus.InsufficientEthBalance {
+		fmt.Printf("Account does not have enough ETH balance!")
+		return nil
 	}
 
 	sdStatus := sdStatusResp.SDStatus
@@ -105,11 +110,6 @@ func nodeDeposit(c *cli.Context) error {
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
 	if err != nil {
 		return err
-	}
-
-	if canNodeDepositResponse.InsufficientBalance {
-		fmt.Printf("Account does not have enough ETH balance!")
-		return nil
 	}
 
 	if canNodeDepositResponse.DepositPaused {

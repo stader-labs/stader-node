@@ -46,7 +46,7 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 
-	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0), false)
 	if err != nil {
 		return err
 	}

@@ -60,7 +60,7 @@ func repaySD(c *cli.Context) error {
 		}
 	}
 
-	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0), false)
 	if err != nil {
 		return err
 	}
