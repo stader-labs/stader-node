@@ -73,8 +73,10 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	sdMaxUtilizableAmount := new(big.Int).Mul(minimumSDToBond, big.NewInt(MinToUtilizeRatioNum))
-	sdMaxUtilizableAmount = new(big.Int).Div(sdMaxUtilizableAmount, big.NewInt(MinToUtilizeRatioDenom))
+	sdMaxUtilizableAmount, err := sdutility.SDMaxUtilizableAmount(sdu, sdc, totalValidatorsPostAddition, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	hasEnoughSdCollateral, err := sd_collateral.HasEnoughSdCollateral(sdc, operatorAddress, 1, totalValidatorsPostAddition, nil)
 	if err != nil {
