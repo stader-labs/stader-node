@@ -63,13 +63,13 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	userBalance := status.AccountBalances.ETH
-	amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
+	// userBalance := status.AccountBalances.ETH
+	// amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
 
-	if userBalance.Cmp(amountToSend) < 0 {
-		fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
-		return nil
-	}
+	// if userBalance.Cmp(amountToSend) < 0 {
+	// 	fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
+	// 	return nil
+	// }
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
@@ -97,7 +97,7 @@ func nodeDeposit(c *cli.Context) error {
 				return err
 			}
 
-			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to use %f SD from the Utility Pool? [Y/N] \nNote: A Utilization Fee of %s APR will be applied to the utilized SD from the Utility Pool. ", eth.WeiToEth(utilityAmount), sdStatus.UtilizationRate.String())) {
+			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to use %f SD from the Utility Pool? [Y/N] \nNote: A Utilization Fee of %s%s APR will be applied to the utilized SD from the Utility Pool. ", eth.WeiToEth(utilityAmount), sdStatus.UtilizationRate.String(), "%")) {
 				fmt.Printf("Cancelled\n")
 				return nil
 			}

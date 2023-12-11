@@ -35,6 +35,14 @@ func Repay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.Int, opts
 }
 
 func GetUtilizationRate(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
-	// TODO: fetch from contract
-	return big.NewInt(50), nil
+	utilizationRatePerBlockInWei, err := sp.SDUtilityPool.UtilizationRatePerBlock(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	utilizationRatePerYear := new(big.Int).Mul(utilizationRatePerBlockInWei, big.NewInt(2628000)) // 2628000 block per year
+
+	utilizationRateInPercent := new(big.Int).Div(utilizationRatePerYear, big.NewInt(1e16)) // Value in wei and show in %
+
+	return utilizationRateInPercent, nil
 }
