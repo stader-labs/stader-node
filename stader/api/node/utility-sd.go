@@ -3,6 +3,7 @@ package node
 import (
 	"math/big"
 
+	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services"
@@ -20,6 +21,16 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 		return nil, err
 	}
 
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	prn, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return nil, err
+	}
+
 	// Response
 	response := api.CanUtilitySDResponse{}
 
@@ -27,6 +38,22 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 	if err != nil {
 		return nil, err
 	}
+
+	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+	totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response.NonTerminalValidators = totalValidatorNonTerminalKeys
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()

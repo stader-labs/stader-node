@@ -431,9 +431,10 @@ type NodeUtilitySDResponse struct {
 }
 
 type CanUtilitySDResponse struct {
-	Status  string         `json:"status"`
-	Error   string         `json:"error"`
-	GasInfo stader.GasInfo `json:"gasInfo"`
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	NonTerminalValidators uint64         `json:"nonTerminalValidators"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
 }
 
 type GetSdStatusResponse struct {

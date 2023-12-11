@@ -49,6 +49,11 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	if canNodeUtilizeSdResponse.NonTerminalValidators == 0 {
+		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		return nil
+	}
+
 	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -101,7 +106,7 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 
 	// 1. If the pool had enough SD
 	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-		msg := fmt.Sprintf("Pool available SD: %f not enough to min utility : %f \n", eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.WeiToEth(minUtility))
+		msg := fmt.Sprintf("There is no sufficient free SD in the utility pool for utilization at the moment. Please try again later when there is enough free SD in the utility pool.")
 
 		return nil, errors.New(msg)
 	}
