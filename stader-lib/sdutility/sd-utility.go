@@ -33,3 +33,8 @@ func EstimateRepay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.I
 func Repay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
 	return sp.SDUtilityPool.Repay(opts, utilityAmount)
 }
+
+func GetUtilizationRate(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	// TODO: fetch from contract
+	return big.NewInt(50), nil
+}
