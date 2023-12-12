@@ -100,13 +100,10 @@ func WithdrawSd(c *cli.Context) error {
 	if remainUtilize.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf("Successfully withdrawn %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
 		fmt.Printf("Current Utilization Position: %.6f SD \nCurrent SD collateral:  %.6f SD\n", math.RoundDown(eth.WeiToEth(remainUtilize), 6), math.RoundDown(eth.WeiToEth(remainCollateral), 6))
-
-		return nil
+	} else {
+		// withdraw request amount greater than the Utilization Position
+		fmt.Printf("Repayment of %.6f SD successful using the excess SD Collateral.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+		fmt.Printf("The remaining %.6f SD has been sent to your Operator Reward Address\n", math.RoundDown(eth.WeiToEth(new(big.Int).Abs(remainUtilize)), 6))
 	}
-
-	// withdraw request amount greater than the Utilization Position
-	fmt.Printf("Repayment of %.6f SD successful using the excess SD Collateral.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-	fmt.Printf("The remaining %.6f SD has been sent to your Operator Reward Address\n", math.RoundDown(eth.WeiToEth(new(big.Int).Abs(remainUtilize)), 6))
-
 	return nil
 }
