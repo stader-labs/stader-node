@@ -12,6 +12,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
@@ -76,6 +77,9 @@ func utilizeSD(c *cli.Context) error {
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
+
+	// Log & return
+	fmt.Printf("Successfully deposited %.6f SD by utilizing SD from the Utility Pool.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
 
 	return nil
 }
