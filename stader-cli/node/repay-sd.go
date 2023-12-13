@@ -12,6 +12,7 @@ import (
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
 )
 
 func repaySD(c *cli.Context) error {
@@ -56,6 +57,11 @@ func repaySD(c *cli.Context) error {
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
 		fmt.Println("You do not have an existing Utilization Position.")
 		return nil
+	}
+
+	// If almost equal repay with all Utilize position to make sure the position is cleared
+	if sd.WeiAlmostEqual(amountWei, sdStatus.SdUtilizerLatestBalance) {
+		amountWei = sdStatus.SdUtilizerLatestBalance
 	}
 
 	// 1. Check if repay more than need
