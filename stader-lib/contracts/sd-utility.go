@@ -49,7 +49,7 @@ type UserData struct {
 
 // SDUtilityPoolMetaData contains all meta data concerning the SDUtilityPool contract.
 var SDUtilityPoolMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"AccrualBlockNumberNotLatest\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyClaimed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyLiquidated\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotAuthorizedToRedeem\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CannotFindRequestId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientPoolBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAmountOfWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInput\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWithdrawAmount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MaxLimitOnWithdrawRequestCountReached\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotClaimable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotLiquidatable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotLiquidator\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"requestId\",\"type\":\"uint256\"}],\"name\":\"RequestIdNotFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDUtilizeLimitReached\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeAccumulated\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalProtocolFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalUtilizedSD\",\"type\":\"uint256\"}],\"name\":\"AccruedFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"CompleteLiquidation\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"delegator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdXToMint\",\"type\":\"uint256\"}],\"name\":\"Delegated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nextRequestIdToFinalize\",\"type\":\"uint256\"}],\"name\":\"FinalizedWithdrawRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalLiquidationAmountInEth\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationBonusInEth\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationFeeInEth\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"liquidator\",\"type\":\"address\"}],\"name\":\"LiquidationCall\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFeeFactor\",\"type\":\"uint256\"}],\"name\":\"ProtocolFeeFactorUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"delegator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdXAmount\",\"type\":\"uint256\"}],\"name\":\"Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"Repaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdToTransfer\",\"type\":\"uint256\"}],\"name\":\"RequestRedeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationBonusPercent\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationFeePercent\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"}],\"name\":\"RiskConfigUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"}],\"name\":\"SDUtilized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"conservativeEthPerKey\",\"type\":\"uint256\"}],\"name\":\"UpdatedConservativeEthPerKey\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"finalizationBatchLimit\",\"type\":\"uint256\"}],\"name\":\"UpdatedFinalizationBatchLimit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxETHWorthOfSDPerValidator\",\"type\":\"uint256\"}],\"name\":\"UpdatedMaxETHWorthOfSDPerValidator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"UpdatedMaxNonRedeemedDelegatorRequestCount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minBlockDelayToFinalizeRequest\",\"type\":\"uint256\"}],\"name\":\"UpdatedMinBlockDelayToFinalizeRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"utilizationRatePerBlock\",\"type\":\"uint256\"}],\"name\":\"UtilizationRatePerBlockUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nextRequestId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmountToWithdraw\",\"type\":\"uint256\"}],\"name\":\"WithdrawRequestReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"WithdrawnProtocolFee\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"accrueFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cTokenTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"requestId\",\"type\":\"uint256\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"completeLiquidation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"delegate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"delegatorCTokenBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"delegatorWithdrawRequestedCTokenCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"delegatorWithdrawRequests\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountOfCToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sdExpected\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sdFinalized\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"requestBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateCurrent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"finalizeDelegatorWithdrawalRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDelegationRatePerBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_delegator\",\"type\":\"address\"}],\"name\":\"getDelegatorLatestSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLatestExchangeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLiquidationThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"getOperatorLiquidation\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"totalAmountInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBonusInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFeeInEth\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"isRepaid\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isClaimed\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"liquidator\",\"type\":\"address\"}],\"internalType\":\"structOperatorLiquidation\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolAvailableSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"getRequestIdsByDelegator\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"getUserData\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"totalInterestSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalCollateralInSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"healthFactor\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedEth\",\"type\":\"uint256\"}],\"internalType\":\"structUserData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_utilizer\",\"type\":\"address\"}],\"name\":\"getUtilizerLatestBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"liquidationCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxETHWorthOfSDPerValidator\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolUtilization\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"repay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"repayOnBehalf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"requestIdsByDelegatorAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"cTokenAmount\",\"type\":\"uint256\"}],\"name\":\"requestWithdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"requestWithdrawWithSDAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newEthPerKey\",\"type\":\"uint256\"}],\"name\":\"updateConservativeEthPerKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_finalizationBatchLimit\",\"type\":\"uint256\"}],\"name\":\"updateFinalizationBatchLimit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxETHWorthOfSDPerValidator\",\"type\":\"uint256\"}],\"name\":\"updateMaxETHWorthOfSDPerValidator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"updateMaxNonRedeemedDelegatorRequestCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minBlockDelayToFinalizeRequest\",\"type\":\"uint256\"}],\"name\":\"updateMinBlockDelayToFinalizeRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"updateProtocolFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_utilizationRatePerBlock\",\"type\":\"uint256\"}],\"name\":\"updateUtilizationRatePerBlock\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"utilizationRatePerBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"}],\"name\":\"utilize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nonTerminalKeyCount\",\"type\":\"uint256\"}],\"name\":\"utilizeWhileAddingKeys\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"utilizerBalanceCurrent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"utilizerBalanceStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"utilizerData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"principal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"utilizeIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawProtocolFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AccrualBlockNumberNotLatest\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyClaimed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AlreadyLiquidated\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotAuthorizedToRedeem\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CannotFindRequestId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientPoolBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAmountOfWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidInput\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidWithdrawAmount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MaxLimitOnWithdrawRequestCountReached\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotClaimable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotLiquidatable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NotLiquidator\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"requestId\",\"type\":\"uint256\"}],\"name\":\"RequestIdNotFinalized\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDUtilizeLimitReached\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeAccumulated\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalProtocolFee\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalUtilizedSD\",\"type\":\"uint256\"}],\"name\":\"AccruedFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"CompleteLiquidation\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"delegator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdXToMint\",\"type\":\"uint256\"}],\"name\":\"Delegated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nextRequestIdToFinalize\",\"type\":\"uint256\"}],\"name\":\"FinalizedWithdrawRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalLiquidationAmountInEth\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationBonusInEth\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationFeeInEth\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"liquidator\",\"type\":\"address\"}],\"name\":\"LiquidationCall\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFeeFactor\",\"type\":\"uint256\"}],\"name\":\"ProtocolFeeFactorUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"delegator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdXAmount\",\"type\":\"uint256\"}],\"name\":\"Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"Repaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdToTransfer\",\"type\":\"uint256\"}],\"name\":\"RequestRedeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationBonusPercent\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"liquidationFeePercent\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"}],\"name\":\"RiskConfigUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"}],\"name\":\"SDUtilized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"conservativeEthPerKey\",\"type\":\"uint256\"}],\"name\":\"UpdatedConservativeEthPerKey\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"finalizationBatchLimit\",\"type\":\"uint256\"}],\"name\":\"UpdatedFinalizationBatchLimit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxETHWorthOfSDPerValidator\",\"type\":\"uint256\"}],\"name\":\"UpdatedMaxETHWorthOfSDPerValidator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"UpdatedMaxNonRedeemedDelegatorRequestCount\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minBlockDelayToFinalizeRequest\",\"type\":\"uint256\"}],\"name\":\"UpdatedMinBlockDelayToFinalizeRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"utilizationRatePerBlock\",\"type\":\"uint256\"}],\"name\":\"UtilizationRatePerBlockUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nextRequestId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmountToWithdraw\",\"type\":\"uint256\"}],\"name\":\"WithdrawRequestReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"WithdrawnProtocolFee\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DECIMAL\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_PROTOCOL_FEE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_UTILIZATION_RATE_PER_BLOCK\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accrualBlockNumber\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accrueFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"accumulatedProtocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cTokenTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestId\",\"type\":\"uint256\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"completeLiquidation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"conservativeEthPerKey\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"delegate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"delegatorCTokenBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"delegatorWithdrawRequestedCTokenCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"delegatorWithdrawRequests\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amountOfCToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sdExpected\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"sdFinalized\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"requestBlock\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateCurrent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"exchangeRateStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"finalizationBatchLimit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"finalizeDelegatorWithdrawalRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDelegationRatePerBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_delegator\",\"type\":\"address\"}],\"name\":\"getDelegatorLatestSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLatestExchangeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getLiquidationThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"getOperatorLiquidation\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"totalAmountInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBonusInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFeeInEth\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"isRepaid\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isClaimed\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"liquidator\",\"type\":\"address\"}],\"internalType\":\"structOperatorLiquidation\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"getOperatorTotalEth\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPoolAvailableSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_delegator\",\"type\":\"address\"}],\"name\":\"getRequestIdsByDelegator\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"getUserData\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"totalInterestSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalCollateralInSD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"healthFactor\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lockedEth\",\"type\":\"uint256\"}],\"internalType\":\"structUserData\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_utilizer\",\"type\":\"address\"}],\"name\":\"getUtilizerLatestBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"liquidationCall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"liquidations\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalAmountInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalBonusInEth\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalFeeInEth\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"isRepaid\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"isClaimed\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"liquidator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxETHWorthOfSDPerValidator\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxNonRedeemedDelegatorRequestCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minBlockDelayToFinalizeRequest\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextRequestId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextRequestIdToFinalize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolUtilization\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"protocolFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"repay\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"repaidAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feePaid\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"utilizer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"repayOnBehalf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"repaidAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feePaid\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"requestIdsByDelegatorAddress\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cTokenAmount\",\"type\":\"uint256\"}],\"name\":\"requestWithdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"requestWithdrawWithSDAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"riskConfig\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationBonusPercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationFeePercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sdRequestedForWithdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sdReservedForClaim\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalUtilizedSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newEthPerKey\",\"type\":\"uint256\"}],\"name\":\"updateConservativeEthPerKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_finalizationBatchLimit\",\"type\":\"uint256\"}],\"name\":\"updateFinalizationBatchLimit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxETHWorthOfSDPerValidator\",\"type\":\"uint256\"}],\"name\":\"updateMaxETHWorthOfSDPerValidator\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"updateMaxNonRedeemedDelegatorRequestCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_minBlockDelayToFinalizeRequest\",\"type\":\"uint256\"}],\"name\":\"updateMinBlockDelayToFinalizeRequest\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFee\",\"type\":\"uint256\"}],\"name\":\"updateProtocolFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidationThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationBonusPercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"liquidationFeePercent\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"ltv\",\"type\":\"uint256\"}],\"name\":\"updateRiskConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_utilizationRatePerBlock\",\"type\":\"uint256\"}],\"name\":\"updateUtilizationRatePerBlock\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"utilizationRatePerBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"}],\"name\":\"utilize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"utilizeIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"utilizeAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nonTerminalKeyCount\",\"type\":\"uint256\"}],\"name\":\"utilizeWhileAddingKeys\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"utilizerBalanceCurrent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"utilizerBalanceStored\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"utilizerData\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"principal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"utilizeIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawProtocolFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SDUtilityPoolABI is the input ABI used to generate the binding from.
@@ -198,6 +198,192 @@ func (_SDUtilityPool *SDUtilityPoolTransactorRaw) Transact(opts *bind.TransactOp
 	return _SDUtilityPool.Contract.contract.Transact(opts, method, params...)
 }
 
+// DECIMAL is a free data retrieval call binding the contract method 0x6ab55fd9.
+//
+// Solidity: function DECIMAL() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) DECIMAL(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "DECIMAL")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// DECIMAL is a free data retrieval call binding the contract method 0x6ab55fd9.
+//
+// Solidity: function DECIMAL() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) DECIMAL() (*big.Int, error) {
+	return _SDUtilityPool.Contract.DECIMAL(&_SDUtilityPool.CallOpts)
+}
+
+// DECIMAL is a free data retrieval call binding the contract method 0x6ab55fd9.
+//
+// Solidity: function DECIMAL() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) DECIMAL() (*big.Int, error) {
+	return _SDUtilityPool.Contract.DECIMAL(&_SDUtilityPool.CallOpts)
+}
+
+// DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
+//
+// Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "DEFAULT_ADMIN_ROLE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
+//
+// Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _SDUtilityPool.Contract.DEFAULTADMINROLE(&_SDUtilityPool.CallOpts)
+}
+
+// DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
+//
+// Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _SDUtilityPool.Contract.DEFAULTADMINROLE(&_SDUtilityPool.CallOpts)
+}
+
+// MAXPROTOCOLFEE is a free data retrieval call binding the contract method 0xb8ca3b83.
+//
+// Solidity: function MAX_PROTOCOL_FEE() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) MAXPROTOCOLFEE(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "MAX_PROTOCOL_FEE")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MAXPROTOCOLFEE is a free data retrieval call binding the contract method 0xb8ca3b83.
+//
+// Solidity: function MAX_PROTOCOL_FEE() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) MAXPROTOCOLFEE() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MAXPROTOCOLFEE(&_SDUtilityPool.CallOpts)
+}
+
+// MAXPROTOCOLFEE is a free data retrieval call binding the contract method 0xb8ca3b83.
+//
+// Solidity: function MAX_PROTOCOL_FEE() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) MAXPROTOCOLFEE() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MAXPROTOCOLFEE(&_SDUtilityPool.CallOpts)
+}
+
+// MAXUTILIZATIONRATEPERBLOCK is a free data retrieval call binding the contract method 0x4e7878ee.
+//
+// Solidity: function MAX_UTILIZATION_RATE_PER_BLOCK() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) MAXUTILIZATIONRATEPERBLOCK(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "MAX_UTILIZATION_RATE_PER_BLOCK")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MAXUTILIZATIONRATEPERBLOCK is a free data retrieval call binding the contract method 0x4e7878ee.
+//
+// Solidity: function MAX_UTILIZATION_RATE_PER_BLOCK() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) MAXUTILIZATIONRATEPERBLOCK() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MAXUTILIZATIONRATEPERBLOCK(&_SDUtilityPool.CallOpts)
+}
+
+// MAXUTILIZATIONRATEPERBLOCK is a free data retrieval call binding the contract method 0x4e7878ee.
+//
+// Solidity: function MAX_UTILIZATION_RATE_PER_BLOCK() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) MAXUTILIZATIONRATEPERBLOCK() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MAXUTILIZATIONRATEPERBLOCK(&_SDUtilityPool.CallOpts)
+}
+
+// AccrualBlockNumber is a free data retrieval call binding the contract method 0x6c540baf.
+//
+// Solidity: function accrualBlockNumber() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) AccrualBlockNumber(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "accrualBlockNumber")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// AccrualBlockNumber is a free data retrieval call binding the contract method 0x6c540baf.
+//
+// Solidity: function accrualBlockNumber() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) AccrualBlockNumber() (*big.Int, error) {
+	return _SDUtilityPool.Contract.AccrualBlockNumber(&_SDUtilityPool.CallOpts)
+}
+
+// AccrualBlockNumber is a free data retrieval call binding the contract method 0x6c540baf.
+//
+// Solidity: function accrualBlockNumber() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) AccrualBlockNumber() (*big.Int, error) {
+	return _SDUtilityPool.Contract.AccrualBlockNumber(&_SDUtilityPool.CallOpts)
+}
+
+// AccumulatedProtocolFee is a free data retrieval call binding the contract method 0xa544a62c.
+//
+// Solidity: function accumulatedProtocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) AccumulatedProtocolFee(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "accumulatedProtocolFee")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// AccumulatedProtocolFee is a free data retrieval call binding the contract method 0xa544a62c.
+//
+// Solidity: function accumulatedProtocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) AccumulatedProtocolFee() (*big.Int, error) {
+	return _SDUtilityPool.Contract.AccumulatedProtocolFee(&_SDUtilityPool.CallOpts)
+}
+
+// AccumulatedProtocolFee is a free data retrieval call binding the contract method 0xa544a62c.
+//
+// Solidity: function accumulatedProtocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) AccumulatedProtocolFee() (*big.Int, error) {
+	return _SDUtilityPool.Contract.AccumulatedProtocolFee(&_SDUtilityPool.CallOpts)
+}
+
 // CTokenTotalSupply is a free data retrieval call binding the contract method 0x37a4adf7.
 //
 // Solidity: function cTokenTotalSupply() view returns(uint256)
@@ -227,6 +413,37 @@ func (_SDUtilityPool *SDUtilityPoolSession) CTokenTotalSupply() (*big.Int, error
 // Solidity: function cTokenTotalSupply() view returns(uint256)
 func (_SDUtilityPool *SDUtilityPoolCallerSession) CTokenTotalSupply() (*big.Int, error) {
 	return _SDUtilityPool.Contract.CTokenTotalSupply(&_SDUtilityPool.CallOpts)
+}
+
+// ConservativeEthPerKey is a free data retrieval call binding the contract method 0x232d70c3.
+//
+// Solidity: function conservativeEthPerKey() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) ConservativeEthPerKey(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "conservativeEthPerKey")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// ConservativeEthPerKey is a free data retrieval call binding the contract method 0x232d70c3.
+//
+// Solidity: function conservativeEthPerKey() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) ConservativeEthPerKey() (*big.Int, error) {
+	return _SDUtilityPool.Contract.ConservativeEthPerKey(&_SDUtilityPool.CallOpts)
+}
+
+// ConservativeEthPerKey is a free data retrieval call binding the contract method 0x232d70c3.
+//
+// Solidity: function conservativeEthPerKey() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) ConservativeEthPerKey() (*big.Int, error) {
+	return _SDUtilityPool.Contract.ConservativeEthPerKey(&_SDUtilityPool.CallOpts)
 }
 
 // DelegatorCTokenBalance is a free data retrieval call binding the contract method 0xabf9db02.
@@ -382,6 +599,37 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) ExchangeRateStored() (*big.Int
 	return _SDUtilityPool.Contract.ExchangeRateStored(&_SDUtilityPool.CallOpts)
 }
 
+// FinalizationBatchLimit is a free data retrieval call binding the contract method 0x6f2bd0b2.
+//
+// Solidity: function finalizationBatchLimit() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) FinalizationBatchLimit(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "finalizationBatchLimit")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// FinalizationBatchLimit is a free data retrieval call binding the contract method 0x6f2bd0b2.
+//
+// Solidity: function finalizationBatchLimit() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) FinalizationBatchLimit() (*big.Int, error) {
+	return _SDUtilityPool.Contract.FinalizationBatchLimit(&_SDUtilityPool.CallOpts)
+}
+
+// FinalizationBatchLimit is a free data retrieval call binding the contract method 0x6f2bd0b2.
+//
+// Solidity: function finalizationBatchLimit() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) FinalizationBatchLimit() (*big.Int, error) {
+	return _SDUtilityPool.Contract.FinalizationBatchLimit(&_SDUtilityPool.CallOpts)
+}
+
 // GetDelegationRatePerBlock is a free data retrieval call binding the contract method 0x6d00679c.
 //
 // Solidity: function getDelegationRatePerBlock() view returns(uint256)
@@ -508,10 +756,10 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) GetLiquidationThreshold() (*bi
 
 // GetOperatorLiquidation is a free data retrieval call binding the contract method 0x12372ffe.
 //
-// Solidity: function getOperatorLiquidation(address ) view returns((uint256,uint256,uint256,bool,bool,address))
-func (_SDUtilityPool *SDUtilityPoolCaller) GetOperatorLiquidation(opts *bind.CallOpts, arg0 common.Address) (OperatorLiquidation, error) {
+// Solidity: function getOperatorLiquidation(address account) view returns((uint256,uint256,uint256,bool,bool,address))
+func (_SDUtilityPool *SDUtilityPoolCaller) GetOperatorLiquidation(opts *bind.CallOpts, account common.Address) (OperatorLiquidation, error) {
 	var out []interface{}
-	err := _SDUtilityPool.contract.Call(opts, &out, "getOperatorLiquidation", arg0)
+	err := _SDUtilityPool.contract.Call(opts, &out, "getOperatorLiquidation", account)
 
 	if err != nil {
 		return *new(OperatorLiquidation), err
@@ -525,16 +773,47 @@ func (_SDUtilityPool *SDUtilityPoolCaller) GetOperatorLiquidation(opts *bind.Cal
 
 // GetOperatorLiquidation is a free data retrieval call binding the contract method 0x12372ffe.
 //
-// Solidity: function getOperatorLiquidation(address ) view returns((uint256,uint256,uint256,bool,bool,address))
-func (_SDUtilityPool *SDUtilityPoolSession) GetOperatorLiquidation(arg0 common.Address) (OperatorLiquidation, error) {
-	return _SDUtilityPool.Contract.GetOperatorLiquidation(&_SDUtilityPool.CallOpts, arg0)
+// Solidity: function getOperatorLiquidation(address account) view returns((uint256,uint256,uint256,bool,bool,address))
+func (_SDUtilityPool *SDUtilityPoolSession) GetOperatorLiquidation(account common.Address) (OperatorLiquidation, error) {
+	return _SDUtilityPool.Contract.GetOperatorLiquidation(&_SDUtilityPool.CallOpts, account)
 }
 
 // GetOperatorLiquidation is a free data retrieval call binding the contract method 0x12372ffe.
 //
-// Solidity: function getOperatorLiquidation(address ) view returns((uint256,uint256,uint256,bool,bool,address))
-func (_SDUtilityPool *SDUtilityPoolCallerSession) GetOperatorLiquidation(arg0 common.Address) (OperatorLiquidation, error) {
-	return _SDUtilityPool.Contract.GetOperatorLiquidation(&_SDUtilityPool.CallOpts, arg0)
+// Solidity: function getOperatorLiquidation(address account) view returns((uint256,uint256,uint256,bool,bool,address))
+func (_SDUtilityPool *SDUtilityPoolCallerSession) GetOperatorLiquidation(account common.Address) (OperatorLiquidation, error) {
+	return _SDUtilityPool.Contract.GetOperatorLiquidation(&_SDUtilityPool.CallOpts, account)
+}
+
+// GetOperatorTotalEth is a free data retrieval call binding the contract method 0x2170c14c.
+//
+// Solidity: function getOperatorTotalEth(address operator) view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) GetOperatorTotalEth(opts *bind.CallOpts, operator common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "getOperatorTotalEth", operator)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetOperatorTotalEth is a free data retrieval call binding the contract method 0x2170c14c.
+//
+// Solidity: function getOperatorTotalEth(address operator) view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) GetOperatorTotalEth(operator common.Address) (*big.Int, error) {
+	return _SDUtilityPool.Contract.GetOperatorTotalEth(&_SDUtilityPool.CallOpts, operator)
+}
+
+// GetOperatorTotalEth is a free data retrieval call binding the contract method 0x2170c14c.
+//
+// Solidity: function getOperatorTotalEth(address operator) view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) GetOperatorTotalEth(operator common.Address) (*big.Int, error) {
+	return _SDUtilityPool.Contract.GetOperatorTotalEth(&_SDUtilityPool.CallOpts, operator)
 }
 
 // GetPoolAvailableSDBalance is a free data retrieval call binding the contract method 0xda695857.
@@ -570,10 +849,10 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) GetPoolAvailableSDBalance() (*
 
 // GetRequestIdsByDelegator is a free data retrieval call binding the contract method 0x99775f40.
 //
-// Solidity: function getRequestIdsByDelegator(address _owner) view returns(uint256[])
-func (_SDUtilityPool *SDUtilityPoolCaller) GetRequestIdsByDelegator(opts *bind.CallOpts, _owner common.Address) ([]*big.Int, error) {
+// Solidity: function getRequestIdsByDelegator(address _delegator) view returns(uint256[])
+func (_SDUtilityPool *SDUtilityPoolCaller) GetRequestIdsByDelegator(opts *bind.CallOpts, _delegator common.Address) ([]*big.Int, error) {
 	var out []interface{}
-	err := _SDUtilityPool.contract.Call(opts, &out, "getRequestIdsByDelegator", _owner)
+	err := _SDUtilityPool.contract.Call(opts, &out, "getRequestIdsByDelegator", _delegator)
 
 	if err != nil {
 		return *new([]*big.Int), err
@@ -587,16 +866,47 @@ func (_SDUtilityPool *SDUtilityPoolCaller) GetRequestIdsByDelegator(opts *bind.C
 
 // GetRequestIdsByDelegator is a free data retrieval call binding the contract method 0x99775f40.
 //
-// Solidity: function getRequestIdsByDelegator(address _owner) view returns(uint256[])
-func (_SDUtilityPool *SDUtilityPoolSession) GetRequestIdsByDelegator(_owner common.Address) ([]*big.Int, error) {
-	return _SDUtilityPool.Contract.GetRequestIdsByDelegator(&_SDUtilityPool.CallOpts, _owner)
+// Solidity: function getRequestIdsByDelegator(address _delegator) view returns(uint256[])
+func (_SDUtilityPool *SDUtilityPoolSession) GetRequestIdsByDelegator(_delegator common.Address) ([]*big.Int, error) {
+	return _SDUtilityPool.Contract.GetRequestIdsByDelegator(&_SDUtilityPool.CallOpts, _delegator)
 }
 
 // GetRequestIdsByDelegator is a free data retrieval call binding the contract method 0x99775f40.
 //
-// Solidity: function getRequestIdsByDelegator(address _owner) view returns(uint256[])
-func (_SDUtilityPool *SDUtilityPoolCallerSession) GetRequestIdsByDelegator(_owner common.Address) ([]*big.Int, error) {
-	return _SDUtilityPool.Contract.GetRequestIdsByDelegator(&_SDUtilityPool.CallOpts, _owner)
+// Solidity: function getRequestIdsByDelegator(address _delegator) view returns(uint256[])
+func (_SDUtilityPool *SDUtilityPoolCallerSession) GetRequestIdsByDelegator(_delegator common.Address) ([]*big.Int, error) {
+	return _SDUtilityPool.Contract.GetRequestIdsByDelegator(&_SDUtilityPool.CallOpts, _delegator)
+}
+
+// GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
+//
+// Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([32]byte, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "getRoleAdmin", role)
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
+//
+// Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _SDUtilityPool.Contract.GetRoleAdmin(&_SDUtilityPool.CallOpts, role)
+}
+
+// GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
+//
+// Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _SDUtilityPool.Contract.GetRoleAdmin(&_SDUtilityPool.CallOpts, role)
 }
 
 // GetUserData is a free data retrieval call binding the contract method 0xffc9896b.
@@ -661,6 +971,102 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) GetUtilizerLatestBalance(_util
 	return _SDUtilityPool.Contract.GetUtilizerLatestBalance(&_SDUtilityPool.CallOpts, _utilizer)
 }
 
+// HasRole is a free data retrieval call binding the contract method 0x91d14854.
+//
+// Solidity: function hasRole(bytes32 role, address account) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCaller) HasRole(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "hasRole", role, account)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// HasRole is a free data retrieval call binding the contract method 0x91d14854.
+//
+// Solidity: function hasRole(bytes32 role, address account) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _SDUtilityPool.Contract.HasRole(&_SDUtilityPool.CallOpts, role, account)
+}
+
+// HasRole is a free data retrieval call binding the contract method 0x91d14854.
+//
+// Solidity: function hasRole(bytes32 role, address account) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _SDUtilityPool.Contract.HasRole(&_SDUtilityPool.CallOpts, role, account)
+}
+
+// Liquidations is a free data retrieval call binding the contract method 0xa66c84f4.
+//
+// Solidity: function liquidations(uint256 ) view returns(uint256 totalAmountInEth, uint256 totalBonusInEth, uint256 totalFeeInEth, bool isRepaid, bool isClaimed, address liquidator)
+func (_SDUtilityPool *SDUtilityPoolCaller) Liquidations(opts *bind.CallOpts, arg0 *big.Int) (struct {
+	TotalAmountInEth *big.Int
+	TotalBonusInEth  *big.Int
+	TotalFeeInEth    *big.Int
+	IsRepaid         bool
+	IsClaimed        bool
+	Liquidator       common.Address
+}, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "liquidations", arg0)
+
+	outstruct := new(struct {
+		TotalAmountInEth *big.Int
+		TotalBonusInEth  *big.Int
+		TotalFeeInEth    *big.Int
+		IsRepaid         bool
+		IsClaimed        bool
+		Liquidator       common.Address
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.TotalAmountInEth = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.TotalBonusInEth = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.TotalFeeInEth = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
+	outstruct.IsRepaid = *abi.ConvertType(out[3], new(bool)).(*bool)
+	outstruct.IsClaimed = *abi.ConvertType(out[4], new(bool)).(*bool)
+	outstruct.Liquidator = *abi.ConvertType(out[5], new(common.Address)).(*common.Address)
+
+	return *outstruct, err
+
+}
+
+// Liquidations is a free data retrieval call binding the contract method 0xa66c84f4.
+//
+// Solidity: function liquidations(uint256 ) view returns(uint256 totalAmountInEth, uint256 totalBonusInEth, uint256 totalFeeInEth, bool isRepaid, bool isClaimed, address liquidator)
+func (_SDUtilityPool *SDUtilityPoolSession) Liquidations(arg0 *big.Int) (struct {
+	TotalAmountInEth *big.Int
+	TotalBonusInEth  *big.Int
+	TotalFeeInEth    *big.Int
+	IsRepaid         bool
+	IsClaimed        bool
+	Liquidator       common.Address
+}, error) {
+	return _SDUtilityPool.Contract.Liquidations(&_SDUtilityPool.CallOpts, arg0)
+}
+
+// Liquidations is a free data retrieval call binding the contract method 0xa66c84f4.
+//
+// Solidity: function liquidations(uint256 ) view returns(uint256 totalAmountInEth, uint256 totalBonusInEth, uint256 totalFeeInEth, bool isRepaid, bool isClaimed, address liquidator)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) Liquidations(arg0 *big.Int) (struct {
+	TotalAmountInEth *big.Int
+	TotalBonusInEth  *big.Int
+	TotalFeeInEth    *big.Int
+	IsRepaid         bool
+	IsClaimed        bool
+	Liquidator       common.Address
+}, error) {
+	return _SDUtilityPool.Contract.Liquidations(&_SDUtilityPool.CallOpts, arg0)
+}
+
 // MaxETHWorthOfSDPerValidator is a free data retrieval call binding the contract method 0x2807c313.
 //
 // Solidity: function maxETHWorthOfSDPerValidator() view returns(uint256)
@@ -690,6 +1096,161 @@ func (_SDUtilityPool *SDUtilityPoolSession) MaxETHWorthOfSDPerValidator() (*big.
 // Solidity: function maxETHWorthOfSDPerValidator() view returns(uint256)
 func (_SDUtilityPool *SDUtilityPoolCallerSession) MaxETHWorthOfSDPerValidator() (*big.Int, error) {
 	return _SDUtilityPool.Contract.MaxETHWorthOfSDPerValidator(&_SDUtilityPool.CallOpts)
+}
+
+// MaxNonRedeemedDelegatorRequestCount is a free data retrieval call binding the contract method 0xc083f3e6.
+//
+// Solidity: function maxNonRedeemedDelegatorRequestCount() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) MaxNonRedeemedDelegatorRequestCount(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "maxNonRedeemedDelegatorRequestCount")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MaxNonRedeemedDelegatorRequestCount is a free data retrieval call binding the contract method 0xc083f3e6.
+//
+// Solidity: function maxNonRedeemedDelegatorRequestCount() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) MaxNonRedeemedDelegatorRequestCount() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MaxNonRedeemedDelegatorRequestCount(&_SDUtilityPool.CallOpts)
+}
+
+// MaxNonRedeemedDelegatorRequestCount is a free data retrieval call binding the contract method 0xc083f3e6.
+//
+// Solidity: function maxNonRedeemedDelegatorRequestCount() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) MaxNonRedeemedDelegatorRequestCount() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MaxNonRedeemedDelegatorRequestCount(&_SDUtilityPool.CallOpts)
+}
+
+// MinBlockDelayToFinalizeRequest is a free data retrieval call binding the contract method 0xbc1428f6.
+//
+// Solidity: function minBlockDelayToFinalizeRequest() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) MinBlockDelayToFinalizeRequest(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "minBlockDelayToFinalizeRequest")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MinBlockDelayToFinalizeRequest is a free data retrieval call binding the contract method 0xbc1428f6.
+//
+// Solidity: function minBlockDelayToFinalizeRequest() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) MinBlockDelayToFinalizeRequest() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MinBlockDelayToFinalizeRequest(&_SDUtilityPool.CallOpts)
+}
+
+// MinBlockDelayToFinalizeRequest is a free data retrieval call binding the contract method 0xbc1428f6.
+//
+// Solidity: function minBlockDelayToFinalizeRequest() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) MinBlockDelayToFinalizeRequest() (*big.Int, error) {
+	return _SDUtilityPool.Contract.MinBlockDelayToFinalizeRequest(&_SDUtilityPool.CallOpts)
+}
+
+// NextRequestId is a free data retrieval call binding the contract method 0x6a84a985.
+//
+// Solidity: function nextRequestId() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) NextRequestId(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "nextRequestId")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// NextRequestId is a free data retrieval call binding the contract method 0x6a84a985.
+//
+// Solidity: function nextRequestId() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) NextRequestId() (*big.Int, error) {
+	return _SDUtilityPool.Contract.NextRequestId(&_SDUtilityPool.CallOpts)
+}
+
+// NextRequestId is a free data retrieval call binding the contract method 0x6a84a985.
+//
+// Solidity: function nextRequestId() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) NextRequestId() (*big.Int, error) {
+	return _SDUtilityPool.Contract.NextRequestId(&_SDUtilityPool.CallOpts)
+}
+
+// NextRequestIdToFinalize is a free data retrieval call binding the contract method 0xbbb84362.
+//
+// Solidity: function nextRequestIdToFinalize() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) NextRequestIdToFinalize(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "nextRequestIdToFinalize")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// NextRequestIdToFinalize is a free data retrieval call binding the contract method 0xbbb84362.
+//
+// Solidity: function nextRequestIdToFinalize() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) NextRequestIdToFinalize() (*big.Int, error) {
+	return _SDUtilityPool.Contract.NextRequestIdToFinalize(&_SDUtilityPool.CallOpts)
+}
+
+// NextRequestIdToFinalize is a free data retrieval call binding the contract method 0xbbb84362.
+//
+// Solidity: function nextRequestIdToFinalize() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) NextRequestIdToFinalize() (*big.Int, error) {
+	return _SDUtilityPool.Contract.NextRequestIdToFinalize(&_SDUtilityPool.CallOpts)
+}
+
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
+//
+// Solidity: function paused() view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCaller) Paused(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "paused")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
+//
+// Solidity: function paused() view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolSession) Paused() (bool, error) {
+	return _SDUtilityPool.Contract.Paused(&_SDUtilityPool.CallOpts)
+}
+
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
+//
+// Solidity: function paused() view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) Paused() (bool, error) {
+	return _SDUtilityPool.Contract.Paused(&_SDUtilityPool.CallOpts)
 }
 
 // PoolUtilization is a free data retrieval call binding the contract method 0x9a3263ee.
@@ -723,6 +1284,37 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) PoolUtilization() (*big.Int, e
 	return _SDUtilityPool.Contract.PoolUtilization(&_SDUtilityPool.CallOpts)
 }
 
+// ProtocolFee is a free data retrieval call binding the contract method 0xb0e21e8a.
+//
+// Solidity: function protocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) ProtocolFee(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "protocolFee")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// ProtocolFee is a free data retrieval call binding the contract method 0xb0e21e8a.
+//
+// Solidity: function protocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) ProtocolFee() (*big.Int, error) {
+	return _SDUtilityPool.Contract.ProtocolFee(&_SDUtilityPool.CallOpts)
+}
+
+// ProtocolFee is a free data retrieval call binding the contract method 0xb0e21e8a.
+//
+// Solidity: function protocolFee() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) ProtocolFee() (*big.Int, error) {
+	return _SDUtilityPool.Contract.ProtocolFee(&_SDUtilityPool.CallOpts)
+}
+
 // RequestIdsByDelegatorAddress is a free data retrieval call binding the contract method 0x7844e3af.
 //
 // Solidity: function requestIdsByDelegatorAddress(address , uint256 ) view returns(uint256)
@@ -754,6 +1346,216 @@ func (_SDUtilityPool *SDUtilityPoolCallerSession) RequestIdsByDelegatorAddress(a
 	return _SDUtilityPool.Contract.RequestIdsByDelegatorAddress(&_SDUtilityPool.CallOpts, arg0, arg1)
 }
 
+// RiskConfig is a free data retrieval call binding the contract method 0x7c90a6ca.
+//
+// Solidity: function riskConfig() view returns(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv)
+func (_SDUtilityPool *SDUtilityPoolCaller) RiskConfig(opts *bind.CallOpts) (struct {
+	LiquidationThreshold    *big.Int
+	LiquidationBonusPercent *big.Int
+	LiquidationFeePercent   *big.Int
+	Ltv                     *big.Int
+}, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "riskConfig")
+
+	outstruct := new(struct {
+		LiquidationThreshold    *big.Int
+		LiquidationBonusPercent *big.Int
+		LiquidationFeePercent   *big.Int
+		Ltv                     *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.LiquidationThreshold = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	outstruct.LiquidationBonusPercent = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.LiquidationFeePercent = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
+	outstruct.Ltv = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// RiskConfig is a free data retrieval call binding the contract method 0x7c90a6ca.
+//
+// Solidity: function riskConfig() view returns(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv)
+func (_SDUtilityPool *SDUtilityPoolSession) RiskConfig() (struct {
+	LiquidationThreshold    *big.Int
+	LiquidationBonusPercent *big.Int
+	LiquidationFeePercent   *big.Int
+	Ltv                     *big.Int
+}, error) {
+	return _SDUtilityPool.Contract.RiskConfig(&_SDUtilityPool.CallOpts)
+}
+
+// RiskConfig is a free data retrieval call binding the contract method 0x7c90a6ca.
+//
+// Solidity: function riskConfig() view returns(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) RiskConfig() (struct {
+	LiquidationThreshold    *big.Int
+	LiquidationBonusPercent *big.Int
+	LiquidationFeePercent   *big.Int
+	Ltv                     *big.Int
+}, error) {
+	return _SDUtilityPool.Contract.RiskConfig(&_SDUtilityPool.CallOpts)
+}
+
+// SdRequestedForWithdraw is a free data retrieval call binding the contract method 0x3b92e3cf.
+//
+// Solidity: function sdRequestedForWithdraw() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) SdRequestedForWithdraw(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "sdRequestedForWithdraw")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// SdRequestedForWithdraw is a free data retrieval call binding the contract method 0x3b92e3cf.
+//
+// Solidity: function sdRequestedForWithdraw() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) SdRequestedForWithdraw() (*big.Int, error) {
+	return _SDUtilityPool.Contract.SdRequestedForWithdraw(&_SDUtilityPool.CallOpts)
+}
+
+// SdRequestedForWithdraw is a free data retrieval call binding the contract method 0x3b92e3cf.
+//
+// Solidity: function sdRequestedForWithdraw() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) SdRequestedForWithdraw() (*big.Int, error) {
+	return _SDUtilityPool.Contract.SdRequestedForWithdraw(&_SDUtilityPool.CallOpts)
+}
+
+// SdReservedForClaim is a free data retrieval call binding the contract method 0x2b886941.
+//
+// Solidity: function sdReservedForClaim() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) SdReservedForClaim(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "sdReservedForClaim")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// SdReservedForClaim is a free data retrieval call binding the contract method 0x2b886941.
+//
+// Solidity: function sdReservedForClaim() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) SdReservedForClaim() (*big.Int, error) {
+	return _SDUtilityPool.Contract.SdReservedForClaim(&_SDUtilityPool.CallOpts)
+}
+
+// SdReservedForClaim is a free data retrieval call binding the contract method 0x2b886941.
+//
+// Solidity: function sdReservedForClaim() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) SdReservedForClaim() (*big.Int, error) {
+	return _SDUtilityPool.Contract.SdReservedForClaim(&_SDUtilityPool.CallOpts)
+}
+
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
+//
+// Solidity: function staderConfig() view returns(address)
+func (_SDUtilityPool *SDUtilityPoolCaller) StaderConfig(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "staderConfig")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
+//
+// Solidity: function staderConfig() view returns(address)
+func (_SDUtilityPool *SDUtilityPoolSession) StaderConfig() (common.Address, error) {
+	return _SDUtilityPool.Contract.StaderConfig(&_SDUtilityPool.CallOpts)
+}
+
+// StaderConfig is a free data retrieval call binding the contract method 0x490ffa35.
+//
+// Solidity: function staderConfig() view returns(address)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) StaderConfig() (common.Address, error) {
+	return _SDUtilityPool.Contract.StaderConfig(&_SDUtilityPool.CallOpts)
+}
+
+// SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
+//
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "supportsInterface", interfaceId)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
+//
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _SDUtilityPool.Contract.SupportsInterface(&_SDUtilityPool.CallOpts, interfaceId)
+}
+
+// SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
+//
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _SDUtilityPool.Contract.SupportsInterface(&_SDUtilityPool.CallOpts, interfaceId)
+}
+
+// TotalUtilizedSD is a free data retrieval call binding the contract method 0x8763a328.
+//
+// Solidity: function totalUtilizedSD() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) TotalUtilizedSD(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "totalUtilizedSD")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// TotalUtilizedSD is a free data retrieval call binding the contract method 0x8763a328.
+//
+// Solidity: function totalUtilizedSD() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) TotalUtilizedSD() (*big.Int, error) {
+	return _SDUtilityPool.Contract.TotalUtilizedSD(&_SDUtilityPool.CallOpts)
+}
+
+// TotalUtilizedSD is a free data retrieval call binding the contract method 0x8763a328.
+//
+// Solidity: function totalUtilizedSD() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) TotalUtilizedSD() (*big.Int, error) {
+	return _SDUtilityPool.Contract.TotalUtilizedSD(&_SDUtilityPool.CallOpts)
+}
+
 // UtilizationRatePerBlock is a free data retrieval call binding the contract method 0x962c7070.
 //
 // Solidity: function utilizationRatePerBlock() view returns(uint256)
@@ -783,6 +1585,37 @@ func (_SDUtilityPool *SDUtilityPoolSession) UtilizationRatePerBlock() (*big.Int,
 // Solidity: function utilizationRatePerBlock() view returns(uint256)
 func (_SDUtilityPool *SDUtilityPoolCallerSession) UtilizationRatePerBlock() (*big.Int, error) {
 	return _SDUtilityPool.Contract.UtilizationRatePerBlock(&_SDUtilityPool.CallOpts)
+}
+
+// UtilizeIndex is a free data retrieval call binding the contract method 0x634c48c7.
+//
+// Solidity: function utilizeIndex() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCaller) UtilizeIndex(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _SDUtilityPool.contract.Call(opts, &out, "utilizeIndex")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// UtilizeIndex is a free data retrieval call binding the contract method 0x634c48c7.
+//
+// Solidity: function utilizeIndex() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolSession) UtilizeIndex() (*big.Int, error) {
+	return _SDUtilityPool.Contract.UtilizeIndex(&_SDUtilityPool.CallOpts)
+}
+
+// UtilizeIndex is a free data retrieval call binding the contract method 0x634c48c7.
+//
+// Solidity: function utilizeIndex() view returns(uint256)
+func (_SDUtilityPool *SDUtilityPoolCallerSession) UtilizeIndex() (*big.Int, error) {
+	return _SDUtilityPool.Contract.UtilizeIndex(&_SDUtilityPool.CallOpts)
 }
 
 // UtilizerBalanceStored is a free data retrieval call binding the contract method 0x6e236aee.
@@ -884,23 +1717,23 @@ func (_SDUtilityPool *SDUtilityPoolTransactorSession) AccrueFee() (*types.Transa
 
 // Claim is a paid mutator transaction binding the contract method 0x379607f5.
 //
-// Solidity: function claim(uint256 requestId) returns()
-func (_SDUtilityPool *SDUtilityPoolTransactor) Claim(opts *bind.TransactOpts, requestId *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.contract.Transact(opts, "claim", requestId)
+// Solidity: function claim(uint256 _requestId) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) Claim(opts *bind.TransactOpts, _requestId *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "claim", _requestId)
 }
 
 // Claim is a paid mutator transaction binding the contract method 0x379607f5.
 //
-// Solidity: function claim(uint256 requestId) returns()
-func (_SDUtilityPool *SDUtilityPoolSession) Claim(requestId *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.Claim(&_SDUtilityPool.TransactOpts, requestId)
+// Solidity: function claim(uint256 _requestId) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) Claim(_requestId *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Claim(&_SDUtilityPool.TransactOpts, _requestId)
 }
 
 // Claim is a paid mutator transaction binding the contract method 0x379607f5.
 //
-// Solidity: function claim(uint256 requestId) returns()
-func (_SDUtilityPool *SDUtilityPoolTransactorSession) Claim(requestId *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.Claim(&_SDUtilityPool.TransactOpts, requestId)
+// Solidity: function claim(uint256 _requestId) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) Claim(_requestId *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Claim(&_SDUtilityPool.TransactOpts, _requestId)
 }
 
 // CompleteLiquidation is a paid mutator transaction binding the contract method 0xd844cb6c.
@@ -987,6 +1820,48 @@ func (_SDUtilityPool *SDUtilityPoolTransactorSession) FinalizeDelegatorWithdrawa
 	return _SDUtilityPool.Contract.FinalizeDelegatorWithdrawalRequest(&_SDUtilityPool.TransactOpts)
 }
 
+// GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
+//
+// Solidity: function grantRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) GrantRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "grantRole", role, account)
+}
+
+// GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
+//
+// Solidity: function grantRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.GrantRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
+// GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
+//
+// Solidity: function grantRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.GrantRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) Initialize(opts *bind.TransactOpts, _admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "initialize", _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Initialize(&_SDUtilityPool.TransactOpts, _admin, _staderConfig)
+}
+
+// Initialize is a paid mutator transaction binding the contract method 0x485cc955.
+//
+// Solidity: function initialize(address _admin, address _staderConfig) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) Initialize(_admin common.Address, _staderConfig common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Initialize(&_SDUtilityPool.TransactOpts, _admin, _staderConfig)
+}
+
 // LiquidationCall is a paid mutator transaction binding the contract method 0xd2ac4a3d.
 //
 // Solidity: function liquidationCall(address account) returns()
@@ -1029,88 +1904,172 @@ func (_SDUtilityPool *SDUtilityPoolTransactorSession) MaxApproveSD() (*types.Tra
 	return _SDUtilityPool.Contract.MaxApproveSD(&_SDUtilityPool.TransactOpts)
 }
 
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
+//
+// Solidity: function pause() returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "pause")
+}
+
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
+//
+// Solidity: function pause() returns()
+func (_SDUtilityPool *SDUtilityPoolSession) Pause() (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Pause(&_SDUtilityPool.TransactOpts)
+}
+
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
+//
+// Solidity: function pause() returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) Pause() (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Pause(&_SDUtilityPool.TransactOpts)
+}
+
+// RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
+//
+// Solidity: function renounceRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) RenounceRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "renounceRole", role, account)
+}
+
+// RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
+//
+// Solidity: function renounceRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RenounceRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
+// RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
+//
+// Solidity: function renounceRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RenounceRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
 // Repay is a paid mutator transaction binding the contract method 0x371fd8e6.
 //
-// Solidity: function repay(uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repay(uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolTransactor) Repay(opts *bind.TransactOpts, repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.contract.Transact(opts, "repay", repayAmount)
 }
 
 // Repay is a paid mutator transaction binding the contract method 0x371fd8e6.
 //
-// Solidity: function repay(uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repay(uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolSession) Repay(repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.Contract.Repay(&_SDUtilityPool.TransactOpts, repayAmount)
 }
 
 // Repay is a paid mutator transaction binding the contract method 0x371fd8e6.
 //
-// Solidity: function repay(uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repay(uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolTransactorSession) Repay(repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.Contract.Repay(&_SDUtilityPool.TransactOpts, repayAmount)
 }
 
 // RepayOnBehalf is a paid mutator transaction binding the contract method 0x9f689e0b.
 //
-// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolTransactor) RepayOnBehalf(opts *bind.TransactOpts, utilizer common.Address, repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.contract.Transact(opts, "repayOnBehalf", utilizer, repayAmount)
 }
 
 // RepayOnBehalf is a paid mutator transaction binding the contract method 0x9f689e0b.
 //
-// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolSession) RepayOnBehalf(utilizer common.Address, repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.Contract.RepayOnBehalf(&_SDUtilityPool.TransactOpts, utilizer, repayAmount)
 }
 
 // RepayOnBehalf is a paid mutator transaction binding the contract method 0x9f689e0b.
 //
-// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256, uint256)
+// Solidity: function repayOnBehalf(address utilizer, uint256 repayAmount) returns(uint256 repaidAmount, uint256 feePaid)
 func (_SDUtilityPool *SDUtilityPoolTransactorSession) RepayOnBehalf(utilizer common.Address, repayAmount *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.Contract.RepayOnBehalf(&_SDUtilityPool.TransactOpts, utilizer, repayAmount)
 }
 
 // RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
 //
-// Solidity: function requestWithdraw(uint256 cTokenAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolTransactor) RequestWithdraw(opts *bind.TransactOpts, cTokenAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.contract.Transact(opts, "requestWithdraw", cTokenAmount)
+// Solidity: function requestWithdraw(uint256 _cTokenAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolTransactor) RequestWithdraw(opts *bind.TransactOpts, _cTokenAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "requestWithdraw", _cTokenAmount)
 }
 
 // RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
 //
-// Solidity: function requestWithdraw(uint256 cTokenAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolSession) RequestWithdraw(cTokenAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.RequestWithdraw(&_SDUtilityPool.TransactOpts, cTokenAmount)
+// Solidity: function requestWithdraw(uint256 _cTokenAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolSession) RequestWithdraw(_cTokenAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RequestWithdraw(&_SDUtilityPool.TransactOpts, _cTokenAmount)
 }
 
 // RequestWithdraw is a paid mutator transaction binding the contract method 0x745400c9.
 //
-// Solidity: function requestWithdraw(uint256 cTokenAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolTransactorSession) RequestWithdraw(cTokenAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.RequestWithdraw(&_SDUtilityPool.TransactOpts, cTokenAmount)
+// Solidity: function requestWithdraw(uint256 _cTokenAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) RequestWithdraw(_cTokenAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RequestWithdraw(&_SDUtilityPool.TransactOpts, _cTokenAmount)
 }
 
 // RequestWithdrawWithSDAmount is a paid mutator transaction binding the contract method 0xc51cd1cc.
 //
-// Solidity: function requestWithdrawWithSDAmount(uint256 sdAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolTransactor) RequestWithdrawWithSDAmount(opts *bind.TransactOpts, sdAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.contract.Transact(opts, "requestWithdrawWithSDAmount", sdAmount)
+// Solidity: function requestWithdrawWithSDAmount(uint256 _sdAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolTransactor) RequestWithdrawWithSDAmount(opts *bind.TransactOpts, _sdAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "requestWithdrawWithSDAmount", _sdAmount)
 }
 
 // RequestWithdrawWithSDAmount is a paid mutator transaction binding the contract method 0xc51cd1cc.
 //
-// Solidity: function requestWithdrawWithSDAmount(uint256 sdAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolSession) RequestWithdrawWithSDAmount(sdAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.RequestWithdrawWithSDAmount(&_SDUtilityPool.TransactOpts, sdAmount)
+// Solidity: function requestWithdrawWithSDAmount(uint256 _sdAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolSession) RequestWithdrawWithSDAmount(_sdAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RequestWithdrawWithSDAmount(&_SDUtilityPool.TransactOpts, _sdAmount)
 }
 
 // RequestWithdrawWithSDAmount is a paid mutator transaction binding the contract method 0xc51cd1cc.
 //
-// Solidity: function requestWithdrawWithSDAmount(uint256 sdAmount) returns(uint256)
-func (_SDUtilityPool *SDUtilityPoolTransactorSession) RequestWithdrawWithSDAmount(sdAmount *big.Int) (*types.Transaction, error) {
-	return _SDUtilityPool.Contract.RequestWithdrawWithSDAmount(&_SDUtilityPool.TransactOpts, sdAmount)
+// Solidity: function requestWithdrawWithSDAmount(uint256 _sdAmount) returns(uint256 _requestId)
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) RequestWithdrawWithSDAmount(_sdAmount *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RequestWithdrawWithSDAmount(&_SDUtilityPool.TransactOpts, _sdAmount)
+}
+
+// RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
+//
+// Solidity: function revokeRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) RevokeRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "revokeRole", role, account)
+}
+
+// RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
+//
+// Solidity: function revokeRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RevokeRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
+// RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
+//
+// Solidity: function revokeRole(bytes32 role, address account) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.RevokeRole(&_SDUtilityPool.TransactOpts, role, account)
+}
+
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
+//
+// Solidity: function unpause() returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "unpause")
+}
+
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
+//
+// Solidity: function unpause() returns()
+func (_SDUtilityPool *SDUtilityPoolSession) Unpause() (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Unpause(&_SDUtilityPool.TransactOpts)
+}
+
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
+//
+// Solidity: function unpause() returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) Unpause() (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.Unpause(&_SDUtilityPool.TransactOpts)
 }
 
 // UpdateConservativeEthPerKey is a paid mutator transaction binding the contract method 0x1c557f05.
@@ -1237,6 +2196,27 @@ func (_SDUtilityPool *SDUtilityPoolSession) UpdateProtocolFee(_protocolFee *big.
 // Solidity: function updateProtocolFee(uint256 _protocolFee) returns()
 func (_SDUtilityPool *SDUtilityPoolTransactorSession) UpdateProtocolFee(_protocolFee *big.Int) (*types.Transaction, error) {
 	return _SDUtilityPool.Contract.UpdateProtocolFee(&_SDUtilityPool.TransactOpts, _protocolFee)
+}
+
+// UpdateRiskConfig is a paid mutator transaction binding the contract method 0x62569a51.
+//
+// Solidity: function updateRiskConfig(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactor) UpdateRiskConfig(opts *bind.TransactOpts, liquidationThreshold *big.Int, liquidationBonusPercent *big.Int, liquidationFeePercent *big.Int, ltv *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.contract.Transact(opts, "updateRiskConfig", liquidationThreshold, liquidationBonusPercent, liquidationFeePercent, ltv)
+}
+
+// UpdateRiskConfig is a paid mutator transaction binding the contract method 0x62569a51.
+//
+// Solidity: function updateRiskConfig(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv) returns()
+func (_SDUtilityPool *SDUtilityPoolSession) UpdateRiskConfig(liquidationThreshold *big.Int, liquidationBonusPercent *big.Int, liquidationFeePercent *big.Int, ltv *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.UpdateRiskConfig(&_SDUtilityPool.TransactOpts, liquidationThreshold, liquidationBonusPercent, liquidationFeePercent, ltv)
+}
+
+// UpdateRiskConfig is a paid mutator transaction binding the contract method 0x62569a51.
+//
+// Solidity: function updateRiskConfig(uint256 liquidationThreshold, uint256 liquidationBonusPercent, uint256 liquidationFeePercent, uint256 ltv) returns()
+func (_SDUtilityPool *SDUtilityPoolTransactorSession) UpdateRiskConfig(liquidationThreshold *big.Int, liquidationBonusPercent *big.Int, liquidationFeePercent *big.Int, ltv *big.Int) (*types.Transaction, error) {
+	return _SDUtilityPool.Contract.UpdateRiskConfig(&_SDUtilityPool.TransactOpts, liquidationThreshold, liquidationBonusPercent, liquidationFeePercent, ltv)
 }
 
 // UpdateStaderConfig is a paid mutator transaction binding the contract method 0x9ee804cb.
@@ -1925,6 +2905,140 @@ func (_SDUtilityPool *SDUtilityPoolFilterer) ParseFinalizedWithdrawRequest(log t
 	return event, nil
 }
 
+// SDUtilityPoolInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the SDUtilityPool contract.
+type SDUtilityPoolInitializedIterator struct {
+	Event *SDUtilityPoolInitialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolInitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolInitialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolInitialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolInitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolInitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolInitialized represents a Initialized event raised by the SDUtilityPool contract.
+type SDUtilityPoolInitialized struct {
+	Version uint8
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterInitialized is a free log retrieval operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterInitialized(opts *bind.FilterOpts) (*SDUtilityPoolInitializedIterator, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolInitializedIterator{contract: _SDUtilityPool.contract, event: "Initialized", logs: logs, sub: sub}, nil
+}
+
+// WatchInitialized is a free log subscription operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchInitialized(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolInitialized) (event.Subscription, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolInitialized)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "Initialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseInitialized is a log parse operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParseInitialized(log types.Log) (*SDUtilityPoolInitialized, error) {
+	event := new(SDUtilityPoolInitialized)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "Initialized", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // SDUtilityPoolLiquidationCallIterator is returned from FilterLiquidationCall and is used to iterate over the raw logs and unpacked data for LiquidationCall events raised by the SDUtilityPool contract.
 type SDUtilityPoolLiquidationCallIterator struct {
 	Event *SDUtilityPoolLiquidationCall // Event containing the contract specifics and raw log
@@ -2077,6 +3191,140 @@ func (_SDUtilityPool *SDUtilityPoolFilterer) WatchLiquidationCall(opts *bind.Wat
 func (_SDUtilityPool *SDUtilityPoolFilterer) ParseLiquidationCall(log types.Log) (*SDUtilityPoolLiquidationCall, error) {
 	event := new(SDUtilityPoolLiquidationCall)
 	if err := _SDUtilityPool.contract.UnpackLog(event, "LiquidationCall", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// SDUtilityPoolPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the SDUtilityPool contract.
+type SDUtilityPoolPausedIterator struct {
+	Event *SDUtilityPoolPaused // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolPausedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolPaused)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolPaused)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolPausedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolPausedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolPaused represents a Paused event raised by the SDUtilityPool contract.
+type SDUtilityPoolPaused struct {
+	Account common.Address
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterPaused is a free log retrieval operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+//
+// Solidity: event Paused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterPaused(opts *bind.FilterOpts) (*SDUtilityPoolPausedIterator, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "Paused")
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolPausedIterator{contract: _SDUtilityPool.contract, event: "Paused", logs: logs, sub: sub}, nil
+}
+
+// WatchPaused is a free log subscription operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+//
+// Solidity: event Paused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolPaused) (event.Subscription, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "Paused")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolPaused)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "Paused", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+//
+// Solidity: event Paused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParsePaused(log types.Log) (*SDUtilityPoolPaused, error) {
+	event := new(SDUtilityPoolPaused)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "Paused", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2780,6 +4028,492 @@ func (_SDUtilityPool *SDUtilityPoolFilterer) ParseRiskConfigUpdated(log types.Lo
 	return event, nil
 }
 
+// SDUtilityPoolRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleAdminChangedIterator struct {
+	Event *SDUtilityPoolRoleAdminChanged // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolRoleAdminChangedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolRoleAdminChanged)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolRoleAdminChanged)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolRoleAdminChangedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolRoleAdminChangedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolRoleAdminChanged represents a RoleAdminChanged event raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleAdminChanged struct {
+	Role              [32]byte
+	PreviousAdminRole [32]byte
+	NewAdminRole      [32]byte
+	Raw               types.Log // Blockchain specific contextual infos
+}
+
+// FilterRoleAdminChanged is a free log retrieval operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
+//
+// Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (*SDUtilityPoolRoleAdminChangedIterator, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var previousAdminRoleRule []interface{}
+	for _, previousAdminRoleItem := range previousAdminRole {
+		previousAdminRoleRule = append(previousAdminRoleRule, previousAdminRoleItem)
+	}
+	var newAdminRoleRule []interface{}
+	for _, newAdminRoleItem := range newAdminRole {
+		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolRoleAdminChangedIterator{contract: _SDUtilityPool.contract, event: "RoleAdminChanged", logs: logs, sub: sub}, nil
+}
+
+// WatchRoleAdminChanged is a free log subscription operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
+//
+// Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolRoleAdminChanged, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (event.Subscription, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var previousAdminRoleRule []interface{}
+	for _, previousAdminRoleItem := range previousAdminRole {
+		previousAdminRoleRule = append(previousAdminRoleRule, previousAdminRoleItem)
+	}
+	var newAdminRoleRule []interface{}
+	for _, newAdminRoleItem := range newAdminRole {
+		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolRoleAdminChanged)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRoleAdminChanged is a log parse operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
+//
+// Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParseRoleAdminChanged(log types.Log) (*SDUtilityPoolRoleAdminChanged, error) {
+	event := new(SDUtilityPoolRoleAdminChanged)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// SDUtilityPoolRoleGrantedIterator is returned from FilterRoleGranted and is used to iterate over the raw logs and unpacked data for RoleGranted events raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleGrantedIterator struct {
+	Event *SDUtilityPoolRoleGranted // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolRoleGrantedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolRoleGranted)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolRoleGranted)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolRoleGrantedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolRoleGrantedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolRoleGranted represents a RoleGranted event raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleGranted struct {
+	Role    [32]byte
+	Account common.Address
+	Sender  common.Address
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterRoleGranted is a free log retrieval operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
+//
+// Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*SDUtilityPoolRoleGrantedIterator, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var accountRule []interface{}
+	for _, accountItem := range account {
+		accountRule = append(accountRule, accountItem)
+	}
+	var senderRule []interface{}
+	for _, senderItem := range sender {
+		senderRule = append(senderRule, senderItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolRoleGrantedIterator{contract: _SDUtilityPool.contract, event: "RoleGranted", logs: logs, sub: sub}, nil
+}
+
+// WatchRoleGranted is a free log subscription operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
+//
+// Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolRoleGranted, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var accountRule []interface{}
+	for _, accountItem := range account {
+		accountRule = append(accountRule, accountItem)
+	}
+	var senderRule []interface{}
+	for _, senderItem := range sender {
+		senderRule = append(senderRule, senderItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolRoleGranted)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRoleGranted is a log parse operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
+//
+// Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParseRoleGranted(log types.Log) (*SDUtilityPoolRoleGranted, error) {
+	event := new(SDUtilityPoolRoleGranted)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// SDUtilityPoolRoleRevokedIterator is returned from FilterRoleRevoked and is used to iterate over the raw logs and unpacked data for RoleRevoked events raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleRevokedIterator struct {
+	Event *SDUtilityPoolRoleRevoked // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolRoleRevokedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolRoleRevoked)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolRoleRevoked)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolRoleRevokedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolRoleRevokedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolRoleRevoked represents a RoleRevoked event raised by the SDUtilityPool contract.
+type SDUtilityPoolRoleRevoked struct {
+	Role    [32]byte
+	Account common.Address
+	Sender  common.Address
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterRoleRevoked is a free log retrieval operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
+//
+// Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*SDUtilityPoolRoleRevokedIterator, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var accountRule []interface{}
+	for _, accountItem := range account {
+		accountRule = append(accountRule, accountItem)
+	}
+	var senderRule []interface{}
+	for _, senderItem := range sender {
+		senderRule = append(senderRule, senderItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolRoleRevokedIterator{contract: _SDUtilityPool.contract, event: "RoleRevoked", logs: logs, sub: sub}, nil
+}
+
+// WatchRoleRevoked is a free log subscription operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
+//
+// Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolRoleRevoked, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+
+	var roleRule []interface{}
+	for _, roleItem := range role {
+		roleRule = append(roleRule, roleItem)
+	}
+	var accountRule []interface{}
+	for _, accountItem := range account {
+		accountRule = append(accountRule, accountItem)
+	}
+	var senderRule []interface{}
+	for _, senderItem := range sender {
+		senderRule = append(senderRule, senderItem)
+	}
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolRoleRevoked)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRoleRevoked is a log parse operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
+//
+// Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParseRoleRevoked(log types.Log) (*SDUtilityPoolRoleRevoked, error) {
+	event := new(SDUtilityPoolRoleRevoked)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // SDUtilityPoolSDUtilizedIterator is returned from FilterSDUtilized and is used to iterate over the raw logs and unpacked data for SDUtilized events raised by the SDUtilityPool contract.
 type SDUtilityPoolSDUtilizedIterator struct {
 	Event *SDUtilityPoolSDUtilized // Event containing the contract specifics and raw log
@@ -2909,6 +4643,140 @@ func (_SDUtilityPool *SDUtilityPoolFilterer) WatchSDUtilized(opts *bind.WatchOpt
 func (_SDUtilityPool *SDUtilityPoolFilterer) ParseSDUtilized(log types.Log) (*SDUtilityPoolSDUtilized, error) {
 	event := new(SDUtilityPoolSDUtilized)
 	if err := _SDUtilityPool.contract.UnpackLog(event, "SDUtilized", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// SDUtilityPoolUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the SDUtilityPool contract.
+type SDUtilityPoolUnpausedIterator struct {
+	Event *SDUtilityPoolUnpaused // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SDUtilityPoolUnpausedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SDUtilityPoolUnpaused)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SDUtilityPoolUnpaused)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SDUtilityPoolUnpausedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SDUtilityPoolUnpausedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SDUtilityPoolUnpaused represents a Unpaused event raised by the SDUtilityPool contract.
+type SDUtilityPoolUnpaused struct {
+	Account common.Address
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterUnpaused is a free log retrieval operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+//
+// Solidity: event Unpaused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) FilterUnpaused(opts *bind.FilterOpts) (*SDUtilityPoolUnpausedIterator, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.FilterLogs(opts, "Unpaused")
+	if err != nil {
+		return nil, err
+	}
+	return &SDUtilityPoolUnpausedIterator{contract: _SDUtilityPool.contract, event: "Unpaused", logs: logs, sub: sub}, nil
+}
+
+// WatchUnpaused is a free log subscription operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+//
+// Solidity: event Unpaused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *SDUtilityPoolUnpaused) (event.Subscription, error) {
+
+	logs, sub, err := _SDUtilityPool.contract.WatchLogs(opts, "Unpaused")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SDUtilityPoolUnpaused)
+				if err := _SDUtilityPool.contract.UnpackLog(event, "Unpaused", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+//
+// Solidity: event Unpaused(address account)
+func (_SDUtilityPool *SDUtilityPoolFilterer) ParseUnpaused(log types.Log) (*SDUtilityPoolUnpaused, error) {
+	event := new(SDUtilityPoolUnpaused)
+	if err := _SDUtilityPool.contract.UnpackLog(event, "Unpaused", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
