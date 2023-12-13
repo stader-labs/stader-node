@@ -531,9 +531,12 @@ func CreateMetricsCache(
 	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), SixDecimalRound)
 	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), SixDecimalRound)
 
-	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilizedLatest), SixDecimalRound)
-	interest := new(big.Int).Sub(sdUtilizedLatest, sdUtilized)
-	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(interest), SixDecimalRound)
+	// amount NO utilized, not include fee
+	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilized), SixDecimalRound)
+
+	fee := new(big.Int).Sub(sdUtilizedLatest, sdUtilized)
+	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(fee), SixDecimalRound)
+
 	metricsDetails.SdUtilityPoolBalance = math.RoundDown(eth.WeiToEth(utilityPoolBalance), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
