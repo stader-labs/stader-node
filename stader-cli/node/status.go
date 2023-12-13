@@ -172,21 +172,21 @@ func getNodeStatus(c *cli.Context) error {
 	sdStatus := sdStatusResp.SDStatus
 
 	fmt.Printf(
-		"The node %s%s%s current utilized %.6f SD.\n\n",
+		"The node %s%s%s currently utilizes %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
 	fmt.Printf(
-		"The node %s%s%s had SD Utilization Position (including the fee)  %.6f SD.\n\n",
+		"The node %s%s%s has SD Utilization Position (including the fee)  %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
 
 	fmt.Printf(
-		"The node %s%s%s require to had %.6f SD in collateral.\n\n",
+		"The node %s%s%s requires %.6f SD in collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
@@ -194,7 +194,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
 	fmt.Printf(
-		"The node %s%s%s current had %.6f SD in collateral.\n\n",
+		"The node %s%s%s current has %.6f SD in collateral.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
@@ -208,13 +208,16 @@ func getNodeStatus(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
+	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
+		maxUtilizable = sdStatus.PoolAvailableSDBalance
+	}
 
 	fmt.Printf(
 		"The node %s%s%s can utilize max of %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		(eth.WeiToEth(maxUtilizable)))
+		eth.WeiToEth(maxUtilizable))
 
 	fmt.Printf(
 		"The SD utility can provide max of %.6f SD.\n\n",
