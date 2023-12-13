@@ -15,6 +15,7 @@ abigen --abi ./../../abis/Penalty.abi.json --pkg contracts --type PenaltyTracker
 abigen --abi ./../../abis/NodeElRewardVault.abi.json --pkg contracts --type NodeElRewardVault --out node-el-reward-vault.go;
 abigen --abi ./../../abis/OperatorRewardsCollector.abi.json --pkg contracts --type OperatorRewardsCollector --out operator-rewards-collector.go;
 abigen --abi ./../../abis/SdCollateral.abi.json --pkg contracts --type SdCollateral --out sd-collateral.go;
+abigen --abi ./../../abis/SDUtilityPool.abi.json --pkg contracts --type SDUtilityPool --out sd-utility.go;
 
 cd ../..;
 
