@@ -216,15 +216,25 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorReset,
 		(eth.WeiToEth(maxUtilizable)))
 
+	fmt.Printf(
+		"The SD utility can provide max of %.6f SD.\n\n",
+		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
+
+	collateralPct := 0.0
+
 	current := eth.WeiToEth(totalCollateral)
 	require := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
+
+	if require > 0 {
+		collateralPct = current / require * 10
+	}
 
 	fmt.Printf(
 		"The node %s%s%s current had %.6f%s Collateral.\nPlease ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		current/require*10, "%", "10%", "10%")
+		collateralPct, "%", "10%", "10%")
 
 	fmt.Printf(
 		"The SD utility require %.6f SD.\n\n",
