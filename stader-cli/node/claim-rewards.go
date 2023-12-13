@@ -50,9 +50,11 @@ func ClaimRewards(c *cli.Context) error {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 			totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
 
-			fmt.Printf(fmt.Sprintf("You need to first pay %f and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.WeiToEth(totalFee)))
+			fmt.Printf("You need to first pay %f and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.WeiToEth(totalFee))
 
-			fmt.Printf(fmt.Sprintf("Based on the current Health Factor, you can claim upto %.6f ETH.", eth.WeiToEth(canClaimRewardsResponse.WithdrawableInEth)))
+			fmt.Printf("Based on the current Health Factor, you can claim upto %.6f ETH.\n", eth.WeiToEth(canClaimRewardsResponse.WithdrawableInEth))
+
+			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 		}
 	}
 
@@ -80,6 +82,6 @@ func ClaimRewards(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Withdrawn %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+	fmt.Printf("Successful withdrawal of %.6f ETH to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
 	return nil
 }

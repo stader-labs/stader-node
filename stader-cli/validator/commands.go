@@ -95,7 +95,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "send-cl-rewards",
-				Aliases:   []string{"wcr"},
+				Aliases:   []string{"scr"},
 				Usage:     "Send all Consensus Layer rewards to the operator claim vault",
 				UsageText: "stader-cli validator send-cl-rewards --validator-pub-key",
 				Flags: []cli.Flag{
