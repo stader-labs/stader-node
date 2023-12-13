@@ -14,7 +14,42 @@ func GetUtilizerLatestBalance(sp *stader.SDUtilityPoolContractManager, address c
 }
 
 func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	accumulatedProtocolFee, err := GetAccumulatedProtocolFee(sp, opts)
+	if err != nil {
+		return nil, err
+	}
+	sdRequestedForWithdraw, err := GetSdRequestedForWithdraw(sp, opts)
+	if err != nil {
+		return nil, err
+	}
+	utilityPoolBalance, err := GetUtilityPoolBalance(sp, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	utilityPoolBalanceMinusSdForWithdraw := new(big.Int).Sub(utilityPoolBalance, sdRequestedForWithdraw)
+	if utilityPoolBalanceMinusSdForWithdraw.Cmp(big.NewInt(0)) < 0 {
+		return big.NewInt(0), nil
+	}
+
+	availableSdBalance := new(big.Int).Sub(utilityPoolBalanceMinusSdForWithdraw, accumulatedProtocolFee)
+	if availableSdBalance.Cmp(big.NewInt(0)) < 0 {
+		return big.NewInt(0), nil
+	}
+
+	return availableSdBalance, nil
+}
+
+func GetUtilityPoolBalance(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
 	return sp.SDUtilityPool.GetPoolAvailableSDBalance(opts)
+}
+
+func GetAccumulatedProtocolFee(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SDUtilityPool.AccumulatedProtocolFee(opts)
+}
+
+func GetSdRequestedForWithdraw(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SDUtilityPool.SdRequestedForWithdraw(opts)
 }
 
 // Estimate the gas of Utilize

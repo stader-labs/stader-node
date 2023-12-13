@@ -70,7 +70,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "update-socialize-el",
-				Aliases:   []string{"y"},
+				Aliases:   []string{"use"},
 				Usage:     "Opt in or Opt out of socializing pool",
 				UsageText: "stader-cli node update-socialize-el [options]",
 				Flags: []cli.Flag{
@@ -125,7 +125,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "deposit-sd",
-				Aliases:   []string{"k"},
+				Aliases:   []string{"ds"},
 				Usage:     "Deposit SD against the node",
 				UsageText: "stader-cli node deposit-sd [options]",
 				Flags: []cli.Flag{
@@ -198,7 +198,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "send-el-rewards",
-				Aliases:   []string{"wer"},
+				Aliases:   []string{"ser"},
 				Usage:     "Send all Execution Layer rewards to the operator claim vault. This only includes non-socializing pool rewards",
 				UsageText: "stader-cli node send-el-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
@@ -212,7 +212,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "claim-rewards",
-				Aliases:   []string{"wer"},
+				Aliases:   []string{"cr"},
 				Usage:     "Claim rewards from claim vault to the operator reward address",
 				UsageText: "stader-cli node claim-rewards",
 				Flags: []cli.Flag{cli.BoolFlag{
@@ -226,7 +226,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 			},
 			{
 				Name:      "withdraw-sd-collateral",
-				Aliases:   []string{"sef"},
+				Aliases:   []string{"wsc"},
 				Usage:     "Withdraw Sd collateral",
 				UsageText: "stader-cli node withdraw-sd-collateral --amount",
 				Flags: []cli.Flag{
@@ -344,32 +344,6 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "deposit-approve-sd",
-				Aliases:   []string{"k"},
-				Usage:     "Approve SD against the node",
-				UsageText: "stader-cli node approve-sd [options]",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of SD to approve",
-					},
-					cli.BoolFlag{
-						Name:  "yes, y",
-						Usage: "Automatically confirm SD approve",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
-						return err
-					}
-
-					amount := c.String("amount")
-
-					// Run
-					return nodeApproveDepositSd(c, amount)
-				},
-			},
-			{
 				Name:      "utilize-sd",
 				Aliases:   []string{"us"},
 				Usage:     "Utilize from the Utility pool.",
@@ -407,9 +381,35 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "approve-deposit-sd",
+				Aliases:   []string{"ad"},
+				Usage:     "Approve SD for  SD collateral contract",
+				UsageText: "stader-cli node approve-sd [options]",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "amount, a",
+						Usage: "The amount of SD to approve",
+					},
+					cli.BoolFlag{
+						Name:  "yes, y",
+						Usage: "Automatically confirm SD approve",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					if _, err := cliutils.ValidatePositiveEthAmount("sd deposit amount", c.String("amount")); err != nil {
+						return err
+					}
+
+					amount := c.String("amount")
+
+					// Run
+					return nodeApproveDepositSd(c, amount)
+				},
+			},
+			{
 				Name:      "approve-utility-sd",
-				Aliases:   []string{"aus"},
-				Usage:     "Approve SD for utility pool",
+				Aliases:   []string{"au"},
+				Usage:     "Approve SD for SD utility pool contract",
 				UsageText: "stader-cli node approve-utility-sd [options]",
 				Flags: []cli.Flag{
 					cli.StringFlag{

@@ -10,7 +10,9 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
 )
 
 func repaySD(c *cli.Context) error {
@@ -55,6 +57,11 @@ func repaySD(c *cli.Context) error {
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
 		fmt.Println("You do not have an existing Utilization Position.")
 		return nil
+	}
+
+	// If almost equal repay with all Utilize position to make sure the position is cleared
+	if sd.WeiAlmostEqual(amountWei, sdStatus.SdUtilizerLatestBalance) {
+		amountWei = sdStatus.SdUtilizerLatestBalance
 	}
 
 	// 1. Check if repay more than need
@@ -110,6 +117,9 @@ func repaySD(c *cli.Context) error {
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
+
+	remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
+	fmt.Printf("Repayment of %.6f SD successful. Current Utilization Position: %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6), math.RoundDown(eth.WeiToEth(remainUtilize), 6))
 
 	return nil
 }

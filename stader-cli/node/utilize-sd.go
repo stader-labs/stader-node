@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
-	"strconv"
-
-	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
+	"github.com/urfave/cli"
 )
 
 func utilizeSD(c *cli.Context) error {
@@ -77,11 +77,16 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	// Log & return
+	fmt.Printf("Successfully deposited %.6f SD by utilizing SD from the Utility Pool.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+
 	return nil
 }
 
 func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
-	minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+	totalCollateral := new(big.Int).Add(sdStatus.SdUtilizedBalance, sdStatus.SdCollateralCurrentAmount)
+
+	minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, totalCollateral)
 
 	if minUtility.Cmp(big.NewInt(0)) < 0 {
 		minUtility = big.NewInt(0)
@@ -124,10 +129,6 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 	min := eth.WeiToEth(minUtility)
 	max := eth.WeiToEth(maxUtility)
 
-	var _utilityAmount int
-
-	var err error
-
 	msg := fmt.Sprintf(`Please enter the amount of SD you wish to utilize from the SD Utility Pool:
 SD Utility Pool balance: %f SD
 Minimum utilization amount: %f SD 
@@ -135,27 +136,12 @@ Maximum utilization amount: %f SD`, eth.WeiToEth(sdStatus.PoolAvailableSDBalance
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
 
-	for {
-		s := cliutils.Prompt(
-			msg,
-			"^[1-9][0-9]*$",
-			errMsg)
-
-		_utilityAmount, err = strconv.Atoi(s)
-		if err != nil {
-			fmt.Println(errMsg)
-			continue
-		}
-
-		if _utilityAmount < int(min) || _utilityAmount > int(max) {
-			fmt.Println(errMsg)
-			continue
-		}
-
-		break
+	utilityAmountFloat, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, min, max)
+	if err != nil {
+		return nil, err
 	}
 
-	utilityAmount := eth.EthToWei(float64(_utilityAmount))
+	utilityAmount := eth.EthToWei(utilityAmountFloat)
 
 	return utilityAmount, nil
 }
@@ -169,37 +155,18 @@ func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error
 	min := eth.WeiToEth(amountToCollateralRemain)
 	max := eth.WeiToEth(sdRewardEligibleRemain)
 
-	var _utilityAmount int
-
-	var err error
-
 	msg := fmt.Sprintf(`Please enter the amount of SD you wish to deposit as collateral.
 Minimum bond: %f SD 
 Maximum bond: %f SD`, min, max)
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
 
-	for {
-		s := cliutils.Prompt(
-			msg,
-			"^[1-9][0-9]*$",
-			errMsg)
-
-		_utilityAmount, err = strconv.Atoi(s)
-		if err != nil {
-			fmt.Println(errMsg)
-			continue
-		}
-
-		if _utilityAmount < int(min) || _utilityAmount > int(max) {
-			fmt.Println(errMsg)
-			continue
-		}
-
-		break
+	utilityAmountFloat, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, min, max)
+	if err != nil {
+		return nil, err
 	}
 
-	utilityAmount := eth.EthToWei(float64(_utilityAmount))
+	utilityAmount := eth.EthToWei(utilityAmountFloat)
 
 	return utilityAmount, nil
 }
