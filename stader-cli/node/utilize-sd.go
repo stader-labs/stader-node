@@ -84,7 +84,8 @@ func utilizeSD(c *cli.Context) error {
 }
 
 func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
-	totalCollateral := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdCollateralCurrentAmount)
+	totalCollateral := new(big.Int).Add(sdStatus.SdUtilizedBalance, sdStatus.SdCollateralCurrentAmount)
+
 	minUtility := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, totalCollateral)
 
 	if minUtility.Cmp(big.NewInt(0)) < 0 {
