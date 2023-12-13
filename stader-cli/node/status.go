@@ -176,15 +176,14 @@ func getNodeStatus(c *cli.Context) error {
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
+		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
-	totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
 	fmt.Printf(
-		"The node %s%s%s total fee %.6f SD.\n\n",
+		"The node %s%s%s had SD Utilization Position (including the fee)  %.6f SD.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(totalFee), eth.Decimal))
+		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
 
 	fmt.Printf(
 		"The node %s%s%s require to had %.6f SD in collateral.\n\n",
@@ -225,23 +224,23 @@ func getNodeStatus(c *cli.Context) error {
 
 	current := eth.WeiToEth(totalCollateral)
 	require := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
+
 	if require > 0 {
-		collateralPct = current / require * 100
+		collateralPct = current / require * 10
 	}
 
 	fmt.Printf(
-		"The node %s%s%s current had %.6f%s Collateral.\n\n",
+		"The node %s%s%s current had %.6f%s Collateral.\nPlease ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		collateralPct, "%")
+		collateralPct, "%", "10%", "10%")
 
 	fmt.Printf(
-		"The node %s%s%s reward Eligible SD is %.6f.\n\n",
-		log.ColorBlue,
-		status.AccountAddress,
-		log.ColorReset,
-		eth.WeiToEth(sdStatus.SdRewardEligible))
-
+		"The SD utility require %.6f SD.\n\n",
+		math.RoundDown(require, eth.Decimal))
+	fmt.Printf(
+		"The SD utility can provide max of %.6f SD.\n\n",
+		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 	return nil
 }
