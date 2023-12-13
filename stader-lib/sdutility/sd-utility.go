@@ -27,12 +27,12 @@ func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, opts *bi
 		return nil, err
 	}
 
-	utilityPoolBalanceMinusSdForWithdraw := new(big.Int).Sub(utilityPoolBalance, sdRequestedForWithdraw)
+	utilityPoolBalanceMinusSdForWithdraw := big.NewInt(0).Sub(utilityPoolBalance, sdRequestedForWithdraw)
 	if utilityPoolBalanceMinusSdForWithdraw.Cmp(big.NewInt(0)) < 0 {
 		return big.NewInt(0), nil
 	}
 
-	availableSdBalance := new(big.Int).Sub(utilityPoolBalanceMinusSdForWithdraw, accumulatedProtocolFee)
+	availableSdBalance := big.NewInt(0).Sub(utilityPoolBalanceMinusSdForWithdraw, accumulatedProtocolFee)
 	if availableSdBalance.Cmp(big.NewInt(0)) < 0 {
 		return big.NewInt(0), nil
 	}
