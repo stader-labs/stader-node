@@ -16,7 +16,7 @@ const (
 
 var SDWeiEqualityThreshold = eth.EthToWei(SDFloatStringEqualityThreshold)
 
-func AlmostEqual(lhs, rhs float64) bool {
+func almostEqual(lhs, rhs float64) bool {
 	return math.Abs(lhs-rhs) <= SDFloatStringEqualityThreshold
 }
 
@@ -43,11 +43,11 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max float64) (float64, er
 			continue
 		}
 
-		if AlmostEqual(utilityAmountFloat, min) {
+		if almostEqual(utilityAmountFloat, min) {
 			utilityAmountFloat = min
 		}
 
-		if AlmostEqual(utilityAmountFloat, max) {
+		if almostEqual(utilityAmountFloat, max) {
 			utilityAmountFloat = max
 		}
 

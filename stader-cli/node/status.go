@@ -234,16 +234,3 @@ func getNodeStatus(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
 	return nil
 }
-
-/*
-
-"800000000000000"
-
-
-call sdStatus.SdUtilizerLatestBalance.String()
-
-
-"799619761049383"
-
-
-*/
