@@ -130,9 +130,9 @@ if [ -z "$DATA_PATH" ]; then
 fi
 
 if [ "$PACKAGE_VERSION" = "latest" ]; then
-    PACKAGE_URL="https://staderlabs.com/eth/releases/stader-node-build/permissionless/latest/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/latest/stader-node-install.tar.xz"
 else
-    PACKAGE_URL="https://staderlabs.com/eth/releases/stader-node-build/permissionless/$PACKAGE_VERSION/stader-node-install.tar.xz"
+    PACKAGE_URL="https://stader-cli-beta.s3.amazonaws.com/$PACKAGE_VERSION/stader-node-install.tar.xz"
 fi
 
 # Create temporary data folder; clean up on exit
