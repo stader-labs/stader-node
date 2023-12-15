@@ -136,12 +136,10 @@ Maximum utilization amount: %f SD`, eth.WeiToEth(sdStatus.PoolAvailableSDBalance
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
 
-	utilityAmountFloat, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, min, max)
+	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, minUtility, maxUtility)
 	if err != nil {
 		return nil, err
 	}
-
-	utilityAmount := eth.EthToWei(utilityAmountFloat)
 
 	return utilityAmount, nil
 }
@@ -161,12 +159,10 @@ Maximum bond: %f SD`, min, max)
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
 
-	utilityAmountFloat, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, min, max)
+	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, amountToCollateralRemain, sdRewardEligibleRemain)
 	if err != nil {
 		return nil, err
 	}
-
-	utilityAmount := eth.EthToWei(utilityAmountFloat)
 
 	return utilityAmount, nil
 }
