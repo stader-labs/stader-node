@@ -62,6 +62,8 @@ func repaySD(c *cli.Context) error {
 	// If almost equal repay with all Utilize position to make sure the position is cleared
 	if sd.WeiAlmostEqual(amountWei, sdStatus.SdUtilizerLatestBalance) {
 		amountWei = sdStatus.SdUtilizerLatestBalance
+
+		amountInString = fmt.Sprintf("%.18f", eth.WeiToEth(sdStatus.SdUtilizerLatestBalance))
 	}
 
 	// 1. Check if repay more than need
@@ -84,6 +86,7 @@ func repaySD(c *cli.Context) error {
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
 		fmt.Println("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
+
 		err = nodeApproveUtilitySd(c, amountInString)
 		if err != nil {
 			return err
