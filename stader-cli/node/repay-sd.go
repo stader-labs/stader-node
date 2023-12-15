@@ -10,7 +10,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
 )
@@ -85,7 +84,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Println("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
+		fmt.Printf("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: %.6f\n", eth.WeiToEth(amountWei))
 
 		err = nodeApproveUtilitySd(c, amountInString)
 		if err != nil {
@@ -122,7 +121,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
-	fmt.Printf("Repayment of %.6f SD successful. Current Utilization Position: %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6), math.RoundDown(eth.WeiToEth(remainUtilize), 6))
+	fmt.Printf("Repayment of %.6f SD successful. Current Utilization Position: %.6f SD.\n", eth.WeiToEth(amountWei), eth.WeiToEth(remainUtilize))
 
 	return nil
 }
