@@ -82,12 +82,12 @@ func ClaimSpRewards(c *cli.Context) error {
 			if !ok {
 				return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
 			}
-			ethRewardsConverted := math.RoundDown(eth.WeiToEth(ethRewards), 2)
+			ethRewardsConverted := math.RoundDown(eth.WeiToEth(ethRewards), 5)
 			sdRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
 			if !ok {
 				return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.MerkleProofInfo.Sd)
 			}
-			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 2)
+			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 5)
 
 			if ethRewardsConverted == 0 && sdRewardsConverted == 0 {
 				continue

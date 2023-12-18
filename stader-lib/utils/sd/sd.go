@@ -26,8 +26,8 @@ func WeiAlmostEqual(lhs, rhs *big.Int) bool {
 	return diversity.CmpAbs(SDWeiEqualityThreshold) <= 0
 }
 
-func PromptChooseSDWithMaxMin(msg, errMsg string, min, max float64) (float64, error) {
-	var utilityAmountFloat float64
+func PromptChooseSDWithMaxMin(msg, errMsg string, min, max *big.Int) (*big.Int, error) {
+	var utilityAmountWei *big.Int
 
 	var errParse error
 
@@ -37,21 +37,23 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max float64) (float64, er
 			`^[0-9]\d*(\.\d+)?$`,
 			errMsg)
 
-		utilityAmountFloat, errParse = strconv.ParseFloat(s, 64)
+		utilityAmountFloat, errParse := strconv.ParseFloat(s, 64)
 		if errParse != nil {
 			fmt.Println(errMsg)
 			continue
 		}
 
-		if almostEqual(utilityAmountFloat, min) {
-			utilityAmountFloat = min
+		utilityAmountWei = eth.EthToWei(utilityAmountFloat)
+
+		if WeiAlmostEqual(utilityAmountWei, min) {
+			utilityAmountWei = min
 		}
 
-		if almostEqual(utilityAmountFloat, max) {
-			utilityAmountFloat = max
+		if WeiAlmostEqual(utilityAmountWei, max) {
+			utilityAmountWei = max
 		}
 
-		if utilityAmountFloat < min || utilityAmountFloat > max {
+		if utilityAmountWei.Cmp(min) < 0 || utilityAmountWei.Cmp(max) > 0 {
 			fmt.Println(errMsg)
 			continue
 		}
@@ -59,5 +61,5 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max float64) (float64, er
 		break
 	}
 
-	return utilityAmountFloat, errParse
+	return utilityAmountWei, errParse
 }
