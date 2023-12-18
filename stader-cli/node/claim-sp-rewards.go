@@ -164,25 +164,25 @@ func ClaimSpRewards(c *cli.Context) error {
 
 		fmt.Printf("Please select one of the following options:\n")
 		fmt.Printf("1. Claim all SD rewards to your Reward Address\n")
-		fmt.Printf("2. Redeposit all the SD rewards as SD collateral for additional earnings\n\n")
+		fmt.Printf("2. Redeposit all the SD rewards as SD collateral for additional earnings\n")
 
 		option := cliutils.Prompt("", "^(1|2)$", "Please enter a valid option")
 		if option == "1" {
-			if cliutils.Confirm(fmt.Sprintf(
+			if !cliutils.Confirm(fmt.Sprintf(
 				"Are you sure you want to claim %f ETH and %f SD for cycles %v to your reward address?", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd), cyclesToClaimArray)) {
 				fmt.Println("Claim Cancelled.")
 				return nil
 			}
 		} else if option == "2" {
-			if cliutils.Confirm(fmt.Sprintf(
-				"Your %f ETH rewards will be sent to your Reward Address.\n For your %f SD rewards, are you sure you want to re-deposit it as SD collateral for additional earnings?", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd))) {
+			if !cliutils.Confirm(fmt.Sprintf(
+				"Your %f ETH rewards will be sent to your Reward Address.\nFor your %f SD rewards, are you sure you want to re-deposit it as SD collateral for additional earnings?", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd))) {
 				fmt.Println("Claim Cancelled.")
 				return nil
 			}
 			depositSd = true
 		}
 	} else {
-		if cliutils.Confirm(fmt.Sprintf(
+		if !cliutils.Confirm(fmt.Sprintf(
 			"Are you sure you want to claim %s ETH for cycles %v to your reward address?", totalClaimableEth.String(), cyclesToClaimArray)) {
 			fmt.Println("Cancelled.")
 			return nil
