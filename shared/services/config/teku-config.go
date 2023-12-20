@@ -61,9 +61,7 @@ func NewTekuConfig(cfg *StaderConfig) *TekuConfig {
 	return &TekuConfig{
 		Title: "Teku Settings",
 
-		UnsupportedCommonParams: []string{
-			DoppelgangerDetectionID,
-		},
+		UnsupportedCommonParams: []string{},
 
 		JvmHeapSize: config.Parameter{
 			ID:                   "jvmHeapSize",

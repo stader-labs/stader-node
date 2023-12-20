@@ -112,6 +112,9 @@ type ExternalTekuConfig struct {
 
 	// Custom command line flags for the VC
 	AdditionalVcFlags config.Parameter `yaml:"additionalVcFlags,omitempty"`
+
+	// Toggle for enabling doppelganger detection
+	DoppelgangerDetection config.Parameter `yaml:"doppelgangerDetection,omitempty"`
 }
 
 type ExternalLodestarConfig struct {
@@ -454,6 +457,17 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 			CanBeBlank:           true,
 			OverwriteOnUpgrade:   false,
 		},
+		DoppelgangerDetection: config.Parameter{
+			ID:                   DoppelgangerDetectionID,
+			Name:                 "Enable Doppelgänger Detection",
+			Description:          "If enabled, your client will *intentionally* miss 1 or 2 attestations on startup to check if validator keys are already running elsewhere. If they are, it will disable validation duties for them to prevent you from being slashed.",
+			Type:                 config.ParameterType_Bool,
+			Default:              map[config.Network]interface{}{config.Network_All: defaultDoppelgangerDetection},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{"DOPPELGANGER_DETECTION"},
+			CanBeBlank:           false,
+			OverwriteOnUpgrade:   false,
+		},
 	}
 }
 
@@ -578,6 +592,7 @@ func (cfg *ExternalTekuConfig) GetParameters() []*config.Parameter {
 		&cfg.Graffiti,
 		&cfg.ContainerTag,
 		&cfg.AdditionalVcFlags,
+		&cfg.DoppelgangerDetection,
 	}
 }
 
