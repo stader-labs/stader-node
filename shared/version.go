@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package shared
 
-const BinaryBucket string = "/stader-node-build/permissionless"
-const DockerAccount string = "staderlabs"
+const BinaryBucket string = "stader-cli-beta"
+const DockerAccount string = "staderdev"
 const StaderVersion string = "1.4.4-dev"
 
 const Logo string = ` 

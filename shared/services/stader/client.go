@@ -36,8 +36,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stader-labs/stader-node/shared"
-
 	"github.com/a8m/envsubst"
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
@@ -55,8 +53,8 @@ import (
 
 // Config
 const (
-	InstallerURL = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/install.sh"
-	UpdateURL    = "https://staderlabs.com/eth/releases" + shared.BinaryBucket + "/%s/update_package.sh"
+	InstallerURL = "https://stader-cli-beta.s3.amazonaws.com" + "/%s/install.sh"
+	UpdateURL    = "https://stader-cli-beta.s3.amazonaws.com" + "/%s/update_package.sh"
 
 	LegacyBackupFolder       string = "old_config_backup"
 	SettingsFile             string = "user-settings.yml"
