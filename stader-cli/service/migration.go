@@ -49,7 +49,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
-	v144, err := parseVersion("1.4.4-dev")
+	v144, err := parseVersion("1.4.4")
 	if err != nil {
 		return nil, nil, err
 	}
