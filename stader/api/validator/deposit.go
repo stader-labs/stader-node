@@ -37,6 +37,11 @@ func GetSDStatus(
 		return nil, err
 	}
 
+	userData, err := sdutility.GetUserData(sdu, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	poolAvailableSDBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
 	if err != nil {
 		return nil, err
@@ -94,6 +99,7 @@ func GetSDStatus(
 		SdUtilizedBalance:         sdUtilizedBalance,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 		SdRewardEligible:          rewardEligibleSD,
+		HealthFactor:              userData.HealthFactor,
 	}, nil
 }
 
@@ -265,6 +271,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 
 	gasInfo, err := node.EstimateAddValidatorKeys(
 		prn,
+		"referralID",
 		utilityAmountWei,
 		pubKeys,
 		preDepositSignatures,
@@ -421,7 +428,9 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	tx, err := node.AddValidatorKeysWithAmount(prn,
+	tx, err := node.AddValidatorKeysWithAmount(
+		prn,
+		"han_local",
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
