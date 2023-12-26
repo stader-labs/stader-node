@@ -430,7 +430,7 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 
 	tx, err := node.AddValidatorKeysWithAmount(
 		prn,
-		"han_local",
+		"ref_id_encoded_here",
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
