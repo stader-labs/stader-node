@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,8 +28,8 @@ import (
 
 // Constants
 const (
-	gethTagProd          string = "ethereum/client-go:v1.13.7"
-	gethTagTest          string = "ethereum/client-go:v1.13.7"
+	gethTagProd          string = "ethereum/client-go:v1.13.8"
+	gethTagTest          string = "ethereum/client-go:v1.13.8"
 	gethEventLogInterval int    = 1000
 	gethStopSignal       string = "SIGTERM"
 )

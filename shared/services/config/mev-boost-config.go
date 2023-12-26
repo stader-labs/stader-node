@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -435,7 +435,7 @@ func createDefaultRelays() []config.MevRelay {
 				config.Network_Prater:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=staderlabs",
 				config.Network_Devnet:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=staderlabs",
 			},
-			Regulated:     false,
+			Regulated:     true,
 			NoSandwiching: false,
 		},
 		// bloXroute Regulated
