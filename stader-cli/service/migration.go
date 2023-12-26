@@ -49,6 +49,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
+	v144, err := parseVersion("1.4.4")
+	if err != nil {
+		return nil, nil, err
+	}
+
 	// Create the collection of upgraders
 	upgraders := []ConfigUpgrader{
 		{
@@ -70,6 +75,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 			upgradeFunc: func(c *cli.Context) error { return nil },
 			needInstall: true,
 		},
+		{
+			version:     v144,
+			upgradeFunc: func(c *cli.Context) error { return nil },
+			needInstall: true,
+		},
 	}
 
 	staderClient, err := stader.NewClientFromCtx(c)
@@ -86,7 +96,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 
 	// cfg nill or version empty in case fresh install
 	if cfg == nil || len(cfg.Version) == 0 {
-		fmt.Printf("Can not found config %+v\n", cfg)
+		fmt.Printf("This is a fresh installation.\n")
 		return nil, nil, nil
 	}
 

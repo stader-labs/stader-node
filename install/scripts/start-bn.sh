@@ -318,6 +318,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
         --eth1-deposit-contract-max-request-size=150 \
         --log-destination=CONSOLE \
         --ee-jwt-secret-file=/secrets/jwtsecret \
+        --beacon-liveness-tracking-enabled \
         $BN_ADDITIONAL_FLAGS"
 
     if [ "$TEKU_ARCHIVE_MODE" = "true" ]; then
@@ -337,7 +338,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
     fi
 
     if [ ! -z "$CHECKPOINT_SYNC_URL" ]; then
-        CMD="$CMD --initial-state=$CHECKPOINT_SYNC_URL/eth/v2/debug/beacon/states/finalized"
+        CMD="$CMD --checkpoint-sync-url=$CHECKPOINT_SYNC_URL"
     elif [ "$NETWORK" = "zhejiang" ]; then
         CMD="$CMD --initial-state=/zhejiang/genesis.ssz"
     fi
