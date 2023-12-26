@@ -6,7 +6,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/stader-labs/stader-node/stader-lib/contracts"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 )
 
@@ -96,13 +95,4 @@ func GetUtilizationRate(sp *stader.SDUtilityPoolContractManager, opts *bind.Call
 	utilizationRateInPercent := new(big.Float).Quo(utilizationRatePerYearF, big.NewFloat(1e16))
 
 	return utilizationRateInPercent, nil
-}
-
-func GetUserData(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (*contracts.UserData, error) {
-	userData, err := sp.SDUtilityPool.GetUserData(opts, address)
-	if err != nil {
-		return nil, err
-	}
-
-	return &userData, nil
 }
