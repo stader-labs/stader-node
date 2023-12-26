@@ -15,6 +15,7 @@ import (
 
 func EstimateAddValidatorKeys(
 	pnr *stader.PermissionlessNodeRegistryContractManager,
+	referralID string,
 	utilityAmount *big.Int,
 	pubKeys [][]byte,
 	preDepositSignatures [][]byte,
@@ -24,6 +25,7 @@ func EstimateAddValidatorKeys(
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(
 		opts,
 		"addValidatorKeysWithUtilizeSD",
+		referralID,
 		utilityAmount,
 		pubKeys,
 		preDepositSignatures,
@@ -33,12 +35,13 @@ func EstimateAddValidatorKeys(
 
 func AddValidatorKeysWithAmount(
 	pnr *stader.PermissionlessNodeRegistryContractManager,
+	referralID string,
 	pubKeys [][]byte,
 	preDepositSignatures [][]byte,
 	depositSignatures [][]byte,
 	utilityAmount *big.Int,
 	opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeysWithUtilizeSD(opts, utilityAmount, pubKeys, preDepositSignatures, depositSignatures)
+	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeysWithUtilizeSD(opts, referralID, utilityAmount, pubKeys, preDepositSignatures, depositSignatures)
 	if err != nil {
 		return nil, fmt.Errorf("could not add validator keys with utilize: %w", err)
 	}
