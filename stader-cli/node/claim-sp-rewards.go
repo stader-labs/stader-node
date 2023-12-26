@@ -89,7 +89,7 @@ func ClaimSpRewards(c *cli.Context) error {
 			}
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 5)
 
-			if ethRewardsConverted == 0 && sdRewardsConverted == 0 {
+			if ethRewards.Cmp(big.NewInt(0)) == 0 && sdRewards.Cmp(big.NewInt(0)) == 0 {
 				continue
 			}
 

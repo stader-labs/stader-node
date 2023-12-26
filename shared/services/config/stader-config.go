@@ -711,10 +711,8 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 	case config.Mode_Local:
 		client := cfg.ConsensusClient.Value.(config.ConsensusClient)
 		switch client {
-		case config.ConsensusClient_Lighthouse, config.ConsensusClient_Lodestar, config.ConsensusClient_Nimbus, config.ConsensusClient_Prysm:
+		case config.ConsensusClient_Lighthouse, config.ConsensusClient_Lodestar, config.ConsensusClient_Nimbus, config.ConsensusClient_Prysm, config.ConsensusClient_Teku:
 			return cfg.ConsensusCommon.DoppelgangerDetection.Value.(bool), nil
-		case config.ConsensusClient_Teku:
-			return false, nil
 		default:
 			return false, fmt.Errorf("unknown consensus client [%v] selected", client)
 		}
@@ -729,7 +727,7 @@ func (cfg *StaderConfig) IsDoppelgangerEnabled() (bool, error) {
 		case config.ConsensusClient_Prysm:
 			return cfg.ExternalPrysm.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Teku:
-			return false, nil
+			return cfg.ExternalTeku.DoppelgangerDetection.Value.(bool), nil
 		case config.ConsensusClient_Lodestar:
 			return cfg.ExternalLodestar.DoppelgangerDetection.Value.(bool), nil
 		default:
