@@ -265,6 +265,10 @@ if [ "$CC_CLIENT" = "teku" ]; then
         CMD="$CMD --metrics-publish-endpoint=$BITFLY_NODE_METRICS_ENDPOINT?apikey=$BITFLY_NODE_METRICS_SECRET&machine=$BITFLY_NODE_METRICS_MACHINE_NAME"
     fi
 
+    if [ "$DOPPELGANGER_DETECTION" = "true" ]; then
+        CMD="$CMD --doppelganger-detection-enabled"
+    fi
+
     exec ${CMD} --validators-graffiti="$GRAFFITI"
 
 fi

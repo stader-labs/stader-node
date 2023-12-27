@@ -39,6 +39,8 @@ func setUIConsensusClient(cfg *stdCf.StaderConfig, newSettings map[string]interf
 	newSettings[keys.E2cc_em_http_teku] = cfg.ExternalTeku.HttpUrl.Value
 	newSettings[keys.E2cc_em_container_tag_teku] = cfg.ExternalTeku.ContainerTag.Value
 	newSettings[keys.E2cc_em_additional_client_flags_teku] = cfg.ExternalTeku.AdditionalVcFlags.Value
+	newSettings[keys.E2cc_em_doppelganger_detection_teku] = cfg.ExternalTeku.DoppelgangerDetection.Value.(bool)
+
 	newSettings[keys.E2cc_lc_enable_archive_mode_teku] = cfg.Teku.ArchiveMode.Value.(bool)
 
 	// Lighthouse:
@@ -139,6 +141,7 @@ func updateExternalConsensusClient(cfg *stdCf.StaderConfig, newSettings map[stri
 	cfg.ExternalTeku.HttpUrl.Value = newSettings[keys.E2cc_em_http_teku]
 	cfg.ExternalTeku.ContainerTag.Value = newSettings[keys.E2cc_em_container_tag_teku]
 	cfg.ExternalTeku.AdditionalVcFlags.Value = newSettings[keys.E2cc_em_additional_client_flags_teku]
+	cfg.ExternalTeku.DoppelgangerDetection.Value = newSettings[keys.E2cc_em_doppelganger_detection_teku]
 
 	// case cfgtypes.ConsensusClient_Lighthouse:
 	cfg.ExternalLighthouse.Graffiti.Value = newSettings[keys.E2cc_em_custom_graffiti_lighthouse]
