@@ -132,7 +132,13 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Println("Continue with create validator...")
 	}
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
+	referralId := c.String("referral-id")
+	// default referral id is VANILLA which means its a regular stader-node setup unlike an avado or dappnodes
+	if referralId == "" {
+		referralId = "VANILLA"
+	}
+
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), referralId, true)
 	if err != nil {
 		return err
 	}
@@ -158,7 +164,7 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Make deposit
-	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, false)
+	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, referralId, false)
 	if err != nil {
 		return err
 	}
