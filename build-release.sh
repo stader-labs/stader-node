@@ -27,7 +27,7 @@
 # === Functions ===
 # =================
 
-DOCKER_ACCOUNT=stader-dev
+DOCKER_ACCOUNT=staderdev
 S3_BUCKET=stader-cli-beta
 
 # Print a failure message to stderr and exit
