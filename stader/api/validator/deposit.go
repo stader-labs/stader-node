@@ -38,6 +38,11 @@ func GetSDStatus(
 		return nil, err
 	}
 
+	userData, err := sdutility.GetUserData(sdu, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	poolAvailableSDBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
 	if err != nil {
 		return nil, err
@@ -95,6 +100,7 @@ func GetSDStatus(
 		SdUtilizedBalance:         sdUtilizedBalance,
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 		SdRewardEligible:          rewardEligibleSD,
+		HealthFactor:              userData.HealthFactor,
 	}, nil
 }
 
