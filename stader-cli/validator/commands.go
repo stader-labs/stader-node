@@ -48,6 +48,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "num-validators, nv",
 						Usage: "Number of validators you want to create (Required)",
 					},
+					cli.StringFlag{
+						Name:  "referral-id, ri",
+						Usage: "A string to identify the source where the validator was created (Optional)",
+					},
 				},
 				Action: func(c *cli.Context) error {
 

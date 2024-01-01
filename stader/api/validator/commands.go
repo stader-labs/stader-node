@@ -37,7 +37,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit to create a validator",
-				UsageText: "stader-cli api validator can-deposit amount salt num-validators reload-keys",
+				UsageText: "stader-cli api validator can-deposit amount num-validators referral-id reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -59,12 +59,14 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
+					referralId := c.String("referral-id")
+
 					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
-					api.PrintResponse(canNodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys))
+					api.PrintResponse(canNodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, referralId, reloadKeys))
 
 					return nil
 
@@ -74,7 +76,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api validator deposit-amount utility-amount num-validators reload-keys",
+				UsageText: "stader-cli api validator deposit-amount utility-amount num-validators referral-id reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
@@ -96,13 +98,15 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
+					referralId := c.String("referral-id")
+
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(4))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys)
+					response, err := nodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, referralId, reloadKeys)
 					api.PrintResponse(response, err)
 
 					return nil
