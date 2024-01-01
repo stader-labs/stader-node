@@ -88,7 +88,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("Operator Status: Not Active\n\n")
 	}
 
-	fmt.Printf("The Operator has registered a total of %d validators (To view details of each validator, please use the `stader-cli validator status` command)\n\n", len(status.ValidatorInfos))
+	fmt.Printf("The Operator has registered a total of %d validators (To view details of each validator, please use the `stader-cli validator status` command)\n\n", totalRegisteredValidators)
 
 	if !status.OptedInForSocializingPool {
 		fmt.Printf("The Operator has Opted Out for Socializing Pool\n\n")
@@ -166,7 +166,7 @@ func getNodeStatus(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18), collateralPct, "%")
 
 	fmt.Printf(
-		"Self-bonded:  %.6f SD \n\n",
+		"Self-bonded: %.6f SD \n\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
 
 	fmt.Printf(
@@ -174,8 +174,8 @@ func getNodeStatus(c *cli.Context) error {
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
 	fmt.Printf(
-		"Noted: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
-		len(status.ValidatorInfos),
+		"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
+		totalRegisteredValidators,
 		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal),
 		"10%", "10%", "10%")
 
@@ -190,6 +190,9 @@ func getNodeStatus(c *cli.Context) error {
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtilizable = sdStatus.PoolAvailableSDBalance
+	}
+	if maxUtilizable.Sign() < 0 {
+		maxUtilizable = big.NewInt(0)
 	}
 
 	fmt.Printf(
