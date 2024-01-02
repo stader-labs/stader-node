@@ -31,6 +31,9 @@ const UnclaimedCLRewards = "unclaimed_cl_rewards"
 const NextRewardCycleTime = "next_reward_cycle_time"
 const SDUtilized = "sd_utilized"
 const SDUtilizedInterest = "sd_utilized_interest"
+const SdCollateralPct = "sd_collateral_pct"
+const LockedEth = "eth_locked"
+const HeathFactor = "heath_factor"
 
 // Node Health => stader_node_health+ key
 const NodeSub = "node_health"
