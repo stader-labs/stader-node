@@ -200,7 +200,7 @@ func getNodeStatus(c *cli.Context) error {
 		eth.WeiToEth(maxUtilizable))
 
 	fmt.Printf(
-		"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.",
+		"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
 		sdStatus.HealthFactor.String())
 
 	fmt.Printf(
