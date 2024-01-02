@@ -162,15 +162,15 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The Operator has a deposited %.6f SD (%.6f%s) as collateral. Below is the break-up: \n\n",
+		"The Operator has a deposited %.6f SD (%.6f%s) as collateral. Below is the break-up: \n",
 		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18), collateralPct, "%")
 
 	fmt.Printf(
-		"Self-bonded: %.6f SD \n\n",
+		"Self-bonded: %.6f SD \n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
 
 	fmt.Printf(
-		"Utilized from the Utility Pool: %.6f SD.\n\n",
+		"Utilized from the Utility Pool: %.6f SD.\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
 	fmt.Printf(
@@ -200,7 +200,7 @@ func getNodeStatus(c *cli.Context) error {
 		eth.WeiToEth(maxUtilizable))
 
 	fmt.Printf(
-		"The Operator has a Health Factor of %s.  \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.",
+		"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.",
 		sdStatus.HealthFactor.String())
 
 	fmt.Printf(
