@@ -184,7 +184,7 @@ func getNodeStatus(c *cli.Context) error {
 	fmt.Printf("The Operator has utilized %.6f SD from the Utility Pool.\n\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
-	fmt.Printf("The Operator has a current Utilization Position of %.6f SD. (including the utilization fee) Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+	fmt.Printf("The Operator has a current Utilization Position of %.6f SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
