@@ -163,7 +163,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf(
 		"The Operator has a deposited %.6f SD (%.6f%s) as collateral. Below is the break-up: \n",
-		math.RoundDown(eth.WeiToEth(status.DepositedSdCollateral), 18), collateralPct, "%")
+		math.RoundDown(eth.WeiToEth(totalCollateral), 18), collateralPct, "%")
 
 	fmt.Printf(
 		"Self-bonded: %.6f SD \n",
