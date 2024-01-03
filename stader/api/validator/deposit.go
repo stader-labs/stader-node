@@ -5,7 +5,6 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/stader-labs/stader-node/stader-lib/sdutility"
@@ -105,7 +104,7 @@ func GetSDStatus(
 	}, nil
 }
 
-func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, referralId string, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
+func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}
@@ -265,7 +264,6 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 		newValidatorKey = operatorKeyCount.Add(operatorKeyCount, big.NewInt(1))
 	}
 
-	encodedReferralId := crypto.EncodeBase64([]byte(referralId))
 	// Override the provided pending TX if requested
 	err = eth1.CheckForNonceOverride(c, opts)
 	if err != nil {
@@ -278,7 +276,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
-		encodedReferralId,
+		"stader_labs",
 		opts,
 	)
 	if err != nil {
@@ -291,7 +289,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 	return &canNodeDepositResponse, nil
 }
 
-func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, referralId string, reloadKeys bool) (*api.NodeDepositResponse, error) {
+func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
@@ -431,14 +429,13 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 		return nil, fmt.Errorf("error checking for nonce override: %w", err)
 	}
 
-	encodedReferralId := crypto.EncodeBase64([]byte(referralId))
-
 	tx, err := node.AddValidatorKeysWithAmount(prn,
 		pubKeys,
 		preDepositSignatures,
 		depositSignatures,
 		utilityAmountWei,
-		encodedReferralId,
+		// TODO - this is a placeholder for now
+		"stader_labs",
 		opts)
 	if err != nil {
 		return nil, err
