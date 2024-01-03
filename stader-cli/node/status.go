@@ -118,7 +118,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
 	}
 
-	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(minEthBalanceForClaim)) > 0 {
+	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
 		val, denom := eth.WeiToEthWithValCheck(status.OperatorRewardCollectorBalance)
 		if denom == "eth" {
 			fmt.Printf(
