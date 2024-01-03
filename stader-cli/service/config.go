@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/stader-labs/ethcli-ui/configuration"
@@ -33,6 +34,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+var ErrSkipConfig = errors.New("Skipped config, early exit")
 var (
 	log = logger.Log
 )
@@ -158,7 +160,7 @@ func configureService(c *cli.Context) error {
 
 	if !saved {
 		fmt.Printf("Your settings have not changed.\n")
-		return nil
+		return ErrSkipConfig
 	}
 	isUpgradeBinary, err := isUpgradeBinary(c)
 	if err != nil {

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ func main() {
 	}
 	app.Description = ``
 
-	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3].\n   (c) 2023 Stakeinfra Technologies Inc."
+	app.Copyright = "(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4].\n   (c) 2023 Stakeinfra Technologies Inc."
 
 	const GPLv3 = `                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -838,7 +838,7 @@ Public License instead of this License. But first, please read
 		Aliases: []string{"c"},
 		Usage:   "Show the copyright",
 		Action: func(c *cli.Context) error {
-			fmt.Println("(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.3].\n(c) 2023 Stakeinfra Technologies Inc.")
+			fmt.Println("(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4].\n(c) 2023 Stakeinfra Technologies Inc.")
 			return nil
 		},
 	})
