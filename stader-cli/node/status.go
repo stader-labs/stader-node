@@ -127,7 +127,7 @@ func getNodeStatus(c *cli.Context) error {
 			fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 		} else {
 			fmt.Printf(
-				"The Operator has aggregated total claims of %.6f wei in the claim vault\n",
+				"The Operator has aggregated total claims of %.6f gwei in the claim vault\n",
 				math.RoundDown(val, 6))
 			fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 		}
@@ -195,7 +195,7 @@ func getNodeStatus(c *cli.Context) error {
 				"10%", "10%", "10%")
 		} else {
 			fmt.Printf(
-				"Note: For the %d validator, the minimum (wei) SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
+				"Note: For the %d validator, the minimum (gwei) SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
 				totalRegisteredValidators,
 				math.RoundDown(val, eth.Decimal),
 				"10%", "10%", "10%")
@@ -211,7 +211,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("The Operator has utilized %.6f SD from the Utility Pool.\n\n",
 			math.RoundDown(val, eth.Decimal))
 	} else {
-		fmt.Printf("The Operator has utilized %.6f wei SD from the Utility Pool.\n\n", math.RoundDown(val, eth.Decimal))
+		fmt.Printf("The Operator has utilized %.6f gwei SD from the Utility Pool.\n\n", math.RoundDown(val, eth.Decimal))
 	}
 
 	val, denom = eth.WeiToEthWithValCheck(sdStatus.SdUtilizedBalance)
@@ -219,7 +219,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("The Operator has a current Utilization Position of %.6f SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
 			math.RoundDown(val, eth.Decimal))
 	} else {
-		fmt.Printf("The Operator has a current Utilization Position of %.6f wei SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+		fmt.Printf("The Operator has a current Utilization Position of %.6f gwei SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
 			math.RoundDown(val, eth.Decimal))
 	}
 
