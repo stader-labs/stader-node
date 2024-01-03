@@ -28,7 +28,7 @@
 # =================
 
 DOCKER_ACCOUNT=staderdev
-S3_BUCKET=stader-cli-permissionless/eth/releases/stader-node-build/permissionless
+S3_BUCKET=stader-cli-beta
 
 # Print a failure message to stderr and exit
 fail() {
