@@ -183,6 +183,8 @@ func getNodeStatus(c *cli.Context) error {
 			totalRegisteredValidators,
 			math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal),
 			"10%", "10%", "10%")
+	} else {
+		fmt.Println("")
 	}
 
 	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
