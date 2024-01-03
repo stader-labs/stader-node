@@ -101,6 +101,7 @@ func GetSDStatus(
 		PoolAvailableSDBalance:    poolAvailableSDBalance,
 		SdRewardEligible:          rewardEligibleSD,
 		HealthFactor:              userData.HealthFactor,
+		AccumulatedInterest:       userData.TotalInterestSD,
 	}, nil
 }
 

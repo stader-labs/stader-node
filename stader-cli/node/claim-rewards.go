@@ -48,7 +48,7 @@ func ClaimRewards(c *cli.Context) error {
 	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
 	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-			totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
+			totalFee := sdStatus.AccumulatedInterest
 
 			fmt.Printf("You need to first pay %f and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.WeiToEth(totalFee))
 
