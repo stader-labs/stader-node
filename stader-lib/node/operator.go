@@ -38,6 +38,19 @@ func ClaimOperatorRewards(orc *stader.OperatorRewardsCollectorContractManager, o
 	return tx, nil
 }
 
+func ClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, operatorAddress common.Address, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := orc.OperatorRewardsCollector.ClaimFor(opts, operatorAddress, amount)
+	if err != nil {
+		return nil, fmt.Errorf("Could not claim operator rewards: %w", err)
+	}
+
+	return tx, nil
+}
+
+func EstimateClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, operatorAddress common.Address, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return orc.OperatorRewardsCollectorContract.GetTransactionGasInfo(opts, "claimFor", operatorAddress, amount)
+}
+
 func EstimateChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (stader.GasInfo, error) {
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "changeSocializingPoolState", socializeEl)
 }
