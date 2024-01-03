@@ -38,7 +38,7 @@ func WeiToEthWithValCheck(wei *big.Int) (float64, string) {
 		return 0, ""
 	}
 	if wei.Cmp(big.NewInt(Threshold)) < 0 {
-		return float64(wei.Int64()), "wei"
+		return WeiToGwei(wei), "gwei"
 	}
 	return WeiToEth(wei), "eth"
 }
