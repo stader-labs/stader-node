@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	SDFloatStringEqualityThreshold = 1e-5 // 0.00001
+	SDFloatStringEqualityThreshold = 0.1
 )
 
 var SDWeiEqualityThreshold = eth.EthToWei(SDFloatStringEqualityThreshold)

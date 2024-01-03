@@ -123,6 +123,15 @@ type MetricDetails struct {
 
 	// done
 	OperatorSDInterest float64
+
+	// done
+	SdCollateralPct float64
+
+	// done
+	LockedEth float64
+
+	// done
+	HealthFactor *big.Int
 }
 
 type MetricsCache struct {
@@ -468,11 +477,6 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
-	sdUtilizedLatest, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	sdUtilized, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
@@ -483,13 +487,18 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	userData, err := sdutility.GetUserData(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
 	metricsDetails.SdPrice = sdPriceFormatted
 	metricsDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
-	metricsDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+
 	metricsDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
 	metricsDetails.OperatorEthCollateral = operatorEthCollateral
 	metricsDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -502,6 +511,7 @@ func CreateMetricsCache(
 	metricsDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	metricsDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	metricsDetails.CollateralRatioInSd = collateralRatioInSd
+
 	metricsDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
 	metricsDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
 
@@ -534,10 +544,24 @@ func CreateMetricsCache(
 	// amount NO utilized, not include fee
 	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilized), SixDecimalRound)
 
-	fee := new(big.Int).Sub(sdUtilizedLatest, sdUtilized)
-	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(fee), SixDecimalRound)
+	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(userData.TotalInterestSD), SixDecimalRound)
 
 	metricsDetails.SdUtilityPoolBalance = math.RoundDown(eth.WeiToEth(utilityPoolBalance), SixDecimalRound)
+	//
+	operatorStakedSd := eth.WeiToEth(operatorSdColletaral) + metricsDetails.OperatorSDUtilized
+	requireCollateral := collateralRatioInSd * float64(operatorNonTerminalKeys)
+
+	collateralPct := 0.0
+	if requireCollateral > 0 {
+		collateralPct = (operatorStakedSd / requireCollateral) * 10
+	}
+
+	metricsDetails.OperatorStakedSd = math.RoundDown(operatorStakedSd, 10)
+
+	metricsDetails.SdCollateralPct = collateralPct
+
+	metricsDetails.LockedEth = math.RoundDown(eth.WeiToEth(userData.LockedEth), SixDecimalRound)
+	metricsDetails.HealthFactor = userData.HealthFactor
 
 	state.StaderNetworkDetails = metricsDetails
 

@@ -3,9 +3,11 @@ package node
 import (
 	"math/big"
 
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/urfave/cli"
 )
 
@@ -59,10 +61,18 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 		return nil, err
 	}
 
-	// estimate gas
-	gasInfo, err := node.EstimateClaimOperatorRewards(orc, opts)
-	if err != nil {
-		return nil, err
+	var gasInfo stader.GasInfo
+	if operatorClaimVaultBalance.Cmp(withdrawableInEth) != 0 {
+		gasInfo, err = node.EstimateClaimOperatorRewardsWithAmount(orc, nodeAccount.Address, totalWithdrawableEth, opts)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		// estimate gas
+		gasInfo, err = node.EstimateClaimOperatorRewards(orc, opts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	response.GasInfo = gasInfo
@@ -92,12 +102,12 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 
 	response := api.ClaimRewards{}
 
-	nodeAddress, err := w.GetNodeAccount()
+	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAddress.Address, nil)
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +116,12 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		return nil, err
 	}
 
-	operatorRewardsBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAddress.Address, nil)
+	operatorRewardsBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	withdrawableInEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -120,9 +135,21 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 	}
 
 	// estimate gas
-	tx, err := node.ClaimOperatorRewards(orc, opts)
-	if err != nil {
-		return nil, err
+	var tx *types.Transaction
+	if operatorRewardsBalance.Cmp(withdrawableInEth) == 0 {
+		tx, err = node.ClaimOperatorRewards(orc, opts)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		totalWithdrawableEth := operatorRewardsBalance
+		if operatorRewardsBalance.Cmp(withdrawableInEth) > 0 {
+			totalWithdrawableEth = withdrawableInEth
+		}
+		tx, err = node.ClaimOperatorRewardsWithAmount(orc, nodeAccount.Address, totalWithdrawableEth, opts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	response.TxHash = tx.Hash()
