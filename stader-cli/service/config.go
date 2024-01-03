@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/stader-labs/ethcli-ui/configuration"
@@ -33,6 +34,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+var ErrSkipConfig = errors.New("Skipped config, early exit")
 var (
 	log = logger.Log
 )
@@ -158,7 +160,7 @@ func configureService(c *cli.Context) error {
 
 	if !saved {
 		fmt.Printf("Your settings have not changed.\n")
-		return nil
+		return ErrSkipConfig
 	}
 	isUpgradeBinary, err := isUpgradeBinary(c)
 	if err != nil {
