@@ -538,6 +538,22 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
+				Name:      "claims-info",
+				Usage:     "Information regarding claims vault",
+				UsageText: "stader-cli api node claims-info",
+				Action: func(c *cli.Context) error {
+
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+						return err
+					}
+
+					api.PrintResponse(ClaimsInfo(c))
+					return nil
+
+				},
+			},
+			{
 				Name:      "can-claim-rewards",
 				Usage:     "Can claim rewards to operator reward address from claim vault",
 				UsageText: "stader-cli api node can-claim-rewards",

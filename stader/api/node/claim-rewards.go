@@ -9,6 +9,54 @@ import (
 	"github.com/urfave/cli"
 )
 
+func ClaimsInfo(c *cli.Context) (*api.ClaimsInfo, error) {
+	if err := services.RequireNodeWallet(c); err != nil {
+		return nil, err
+	}
+	if err := services.RequireNodeRegistered(c); err != nil {
+		return nil, err
+	}
+	w, err := services.GetWallet(c)
+	if err != nil {
+		return nil, err
+	}
+	orc, err := services.GetOperatorRewardsCollectorContract(c)
+	if err != nil {
+		return nil, err
+	}
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	response := api.ClaimsInfo{}
+
+	operatorClaimVaultBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	withdrawableInEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalWithdrawableEth := operatorClaimVaultBalance
+	if operatorClaimVaultBalance.Cmp(withdrawableInEth) > 0 {
+		totalWithdrawableEth = withdrawableInEth
+	}
+
+	response.WithdrawableInEth = totalWithdrawableEth
+	response.ClaimsBalance = operatorClaimVaultBalance
+
+	if totalWithdrawableEth.Cmp(big.NewInt(0)) == 0 {
+		response.NoRewards = true
+		return &response, nil
+	}
+
+	return &response, nil
+}
+
 func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err

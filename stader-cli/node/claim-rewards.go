@@ -29,11 +29,11 @@ func ClaimRewards(c *cli.Context) error {
 	err = cliutils.PrintNetwork(staderClient)
 
 	// Check if we can Withdraw El Rewards
-	canClaimRewardsResponse, err := staderClient.CanClaimRewards()
+	claimsInfoResponse, err := staderClient.ClaimsInfo()
 	if err != nil {
 		return err
 	}
-	if canClaimRewardsResponse.NoRewards {
+	if claimsInfoResponse.NoRewards {
 		fmt.Println("No rewards to claim.")
 		return nil
 	}
@@ -46,16 +46,21 @@ func ClaimRewards(c *cli.Context) error {
 	sdStatus := sdStatusResponse.SDStatus
 
 	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
-	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
+	if claimsInfoResponse.ClaimsBalance.Cmp(claimsInfoResponse.WithdrawableInEth) != 0 {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 			totalFee := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, sdStatus.SdUtilizedBalance)
 
 			fmt.Printf("You need to first pay %f and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.WeiToEth(totalFee))
 
-			fmt.Printf("Based on the current Health Factor, you can claim upto %.6f ETH.\n", eth.WeiToEth(canClaimRewardsResponse.WithdrawableInEth))
+			fmt.Printf("Based on the current Health Factor, you can claim upto %.6f ETH.\n", eth.WeiToEth(claimsInfoResponse.WithdrawableInEth))
 
 			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 		}
+	}
+
+	canClaimRewardsResponse, err := staderClient.CanClaimRewards()
+	if err != nil {
+		return err
 	}
 
 	err = gas.AssignMaxFeeAndLimit(canClaimRewardsResponse.GasInfo, staderClient, c.Bool("yes"))

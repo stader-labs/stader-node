@@ -396,6 +396,14 @@ type NodeSignResponse struct {
 	SignedData string `json:"signedData"`
 }
 
+type ClaimsInfo struct {
+	Status            string   `json:"status"`
+	Error             string   `json:"error"`
+	NoRewards         bool     `json:"noRewards"`
+	WithdrawableInEth *big.Int `json:"withdrawableInEth"`
+	ClaimsBalance     *big.Int `json:"claimsBalance"`
+}
+
 type CanClaimRewards struct {
 	Status            string         `json:"status"`
 	Error             string         `json:"error"`

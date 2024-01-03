@@ -380,6 +380,22 @@ func (c *Client) SendElRewards() (api.SendElRewardsResponse, error) {
 	return response, nil
 }
 
+func (c *Client) ClaimsInfo() (api.ClaimsInfo, error) {
+	responseBytes, err := c.callAPI("node claims-info")
+	if err != nil {
+		return api.ClaimsInfo{}, fmt.Errorf("could not get node claims-info response: %w", err)
+	}
+	var response api.ClaimsInfo
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.ClaimsInfo{}, fmt.Errorf("could not decode node claims-info response: %w", err)
+	}
+	if response.Error != "" {
+		return api.ClaimsInfo{}, fmt.Errorf("could not get node claims-info response: %s", response.Error)
+	}
+
+	return response, nil
+}
+
 func (c *Client) CanClaimRewards() (api.CanClaimRewards, error) {
 	responseBytes, err := c.callAPI("node can-claim-rewards")
 	if err != nil {
