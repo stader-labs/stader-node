@@ -12,10 +12,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-const (
-	minEthBalanceForClaim = 100000000000000 // 0.0001 ETH
-)
-
 func getNodeStatus(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)

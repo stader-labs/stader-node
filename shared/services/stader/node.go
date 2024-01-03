@@ -207,8 +207,8 @@ func (c *Client) GetNodeSdAllowance(contractAddress common.Address) (api.SdAllow
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountBasedWei, amountUtilityWei, numValidators *big.Int, referralId string, reloadKeys bool) (api.CanNodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %s %t", amountBasedWei.String(), amountUtilityWei.String(), numValidators, referralId, reloadKeys))
+func (c *Client) CanNodeDeposit(amountBasedWei, amountUtilityWei, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountBasedWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can validator deposit status: %w", err)
 	}
@@ -268,8 +268,8 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 }
 
 // Make a node deposit
-func (c *Client) NodeDeposit(amountWei, numValidators, utilitySDAmount *big.Int, referralId string, reloadKeys bool) (api.NodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %s %s %t", amountWei.String(), utilitySDAmount.String(), numValidators, referralId, reloadKeys))
+func (c *Client) NodeDeposit(amountWei, numValidators, utilitySDAmount *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %s %t", amountWei.String(), utilitySDAmount.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.NodeDepositResponse{}, fmt.Errorf("could not make validator deposit as er: %w", err)
 	}

@@ -59,14 +59,12 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					referralId := c.String("referral-id")
-
 					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
-					api.PrintResponse(canNodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, referralId, reloadKeys))
+					api.PrintResponse(canNodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys))
 
 					return nil
 
@@ -98,15 +96,13 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 						return err
 					}
 
-					referralId := c.String("referral-id")
-
-					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(4))
+					reloadKeys, err := cliutils.ValidateBool("reload-keys", c.Args().Get(3))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					response, err := nodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, referralId, reloadKeys)
+					response, err := nodeDeposit(c, baseAmountWei, utilityAmountWei, numValidators, reloadKeys)
 					api.PrintResponse(response, err)
 
 					return nil
