@@ -12,6 +12,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+const (
+	minEthBalanceForClaim = 100000000000000 // 0.0001 ETH
+)
+
 func getNodeStatus(c *cli.Context) error {
 
 	staderClient, err := stader.NewClientFromCtx(c)
@@ -114,10 +118,10 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
 	}
 
-	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
+	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(minEthBalanceForClaim)) > 0 {
 		fmt.Printf(
 			"The Operator has aggregated total claims of %.6f ETH in the claim vault\n",
-			math.RoundDown(eth.WeiToEth(status.OperatorRewardCollectorBalance), 6))
+			math.RoundDown(eth.WeiToEthWithValCheck(status.OperatorRewardCollectorBalance), 6))
 		fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
@@ -173,19 +177,23 @@ func getNodeStatus(c *cli.Context) error {
 		"Utilized from the Utility Pool: %.6f SD.\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
-	fmt.Printf(
-		"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
-		totalRegisteredValidators,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal),
-		"10%", "10%", "10%")
+	if totalRegisteredValidators.Cmp(big.NewInt(0)) != 0 {
+		fmt.Printf(
+			"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
+			totalRegisteredValidators,
+			math.RoundDown(eth.WeiToEthWithValCheck(sdStatus.SdCollateralRequireAmount), eth.Decimal),
+			"10%", "10%", "10%")
+	} else {
+		fmt.Println("")
+	}
 
 	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
 
 	fmt.Printf("The Operator has utilized %.6f SD from the Utility Pool.\n\n",
-		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
+		math.RoundDown(eth.WeiToEthWithValCheck(sdStatus.SdUtilizedBalance), eth.Decimal))
 
 	fmt.Printf("The Operator has a current Utilization Position of %.6f SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
-		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
+		math.RoundDown(eth.WeiToEthWithValCheck(sdStatus.SdUtilizerLatestBalance), eth.Decimal))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
