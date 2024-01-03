@@ -54,7 +54,7 @@ func ClaimRewards(c *cli.Context) error {
 
 			fmt.Printf("Based on the current Health Factor, you can claim upto %.6f ETH.\n", eth.WeiToEth(canClaimRewardsResponse.WithdrawableInEth))
 
-			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
+			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n\n")
 		}
 	}
 

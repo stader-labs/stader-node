@@ -173,11 +173,13 @@ func getNodeStatus(c *cli.Context) error {
 		"Utilized from the Utility Pool: %.6f SD.\n",
 		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
 
-	fmt.Printf(
-		"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
-		totalRegisteredValidators,
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal),
-		"10%", "10%", "10%")
+	if totalRegisteredValidators.Cmp(big.NewInt(0)) != 0 {
+		fmt.Printf(
+			"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
+			totalRegisteredValidators,
+			math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralRequireAmount), eth.Decimal),
+			"10%", "10%", "10%")
+	}
 
 	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
 
