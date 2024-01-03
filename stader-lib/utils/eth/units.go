@@ -30,17 +30,17 @@ const (
 	WeiPerGwei      float64 = 1e9
 	Decimal                 = 18
 	BaseAmountInEth         = 4
-	Threshold               = 1e6
+	Threshold               = 1e12
 )
 
-func WeiToEthWithValCheck(wei *big.Int) float64 {
+func WeiToEthWithValCheck(wei *big.Int) (float64, string) {
 	if wei == nil {
-		return 0
+		return 0, ""
 	}
 	if wei.Cmp(big.NewInt(Threshold)) < 0 {
-		return float64(wei.Int64())
+		return float64(wei.Int64()), "wei"
 	}
-	return WeiToEth(wei)
+	return WeiToEth(wei), "eth"
 }
 
 // Convert wei to eth
