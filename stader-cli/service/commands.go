@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package service
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -194,8 +195,11 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						}
 					}
 
-					// We defer run migrate because we need stader-node api up and running first
-					defer func() {
+					if err = configureService(c); err != nil {
+						if errors.Is(err, ErrSkipConfig) {
+							return err
+						}
+
 						for _, upgrader := range upgradesAftertNodeStart {
 							fmt.Printf("Migrate after for: %s \n", upgrader.version.String())
 							err = upgrader.upgradeFunc(c)
@@ -203,10 +207,10 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 								fmt.Printf("Applying upgrade for config version %s. Result: %+v", upgrader.version.String(), err.Error())
 							}
 						}
-					}()
+					}
 
 					// Run command
-					return configureService(c)
+					return err
 
 				},
 			},
