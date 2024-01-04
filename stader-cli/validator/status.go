@@ -2,6 +2,8 @@ package validator
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -9,7 +11,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func getValidatorStatus(c *cli.Context) error {
@@ -72,7 +73,7 @@ func getValidatorStatus(c *cli.Context) error {
 		fmt.Printf("-Validator Status: %s\n", validatorInfo.StatusToDisplay)
 		if validatorInfo.WithdrawVaultRewardBalance.Int64() > 0 && !validatorInfo.CrossedRewardsThreshold {
 			fmt.Printf("\n")
-			fmt.Printf("-Validator Consensus Layer Rewards: %.6f\n\n", math.RoundDown(eth.WeiToEth(validatorInfo.WithdrawVaultRewardBalance), 18))
+			fmt.Printf("-Validator Consensus Layer Rewards: %s\n\n", eth.DisplayAmountInUnits(validatorInfo.WithdrawVaultRewardBalance, "eth"))
 		} else if validatorInfo.CrossedRewardsThreshold {
 			fmt.Println("If you have exited the validator, Please wait for Stader Oracles to settle your funds!")
 			fmt.Println("If you have not exited the validator. Please reach out Stader Developers in discord for more information")
