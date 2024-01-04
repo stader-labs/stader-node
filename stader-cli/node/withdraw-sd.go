@@ -8,7 +8,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 )
@@ -54,14 +53,7 @@ func WithdrawSd(c *cli.Context) error {
 	hasUtilizePosition := sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) != 0
 
 	if hasUtilizePosition {
-		val, denom := eth.WeiToEthWithValCheck(sdStatusResponse.SDStatus.SdUtilizerLatestBalance)
-		confirm := false
-		if denom == "gwei" {
-			confirm = cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f gwei SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed?", math.RoundDown(val, 6)))
-		} else {
-			confirm = cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %.6f SD. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed?", math.RoundDown(val, 6)))
-		}
-		if !confirm {
+		if !cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %s. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD.\n Do you wish to proceed?", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"))) {
 			fmt.Println("Cancelled.")
 			return nil
 		}
@@ -75,7 +67,7 @@ func WithdrawSd(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to withdraw %.6f SD from the collateral contract?", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+		"Are you sure you want to withdraw %s from the collateral contract?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -85,7 +77,7 @@ func WithdrawSd(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Withdrawing %s SD from the collateral contract.\n", amountInString)
+	fmt.Printf("Withdrawing %s from the collateral contract.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
@@ -101,18 +93,18 @@ func WithdrawSd(c *cli.Context) error {
 	// withdraw request amount lesser than the Utilization Position
 
 	if !hasUtilizePosition {
-		fmt.Printf("Successfully withdrawn %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+		fmt.Printf("Successfully withdrawn %s Collateral. \n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 		return nil
 	}
 
 	if remainUtilize.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("Successfully withdrawn %.6f SD Collateral. \n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-		fmt.Printf("Current Utilization Position: %.6f SD \nCurrent SD collateral:  %.6f SD\n", math.RoundDown(eth.WeiToEth(remainUtilize), 6), math.RoundDown(eth.WeiToEth(remainCollateral), 6))
+		fmt.Printf("Successfully withdrawn %s Collateral. \n", eth.DisplayAmountInUnits(amountWei, "sd"))
+		fmt.Printf("Current Utilization Position: %s\nCurrent SD collateral:  %s\n", eth.DisplayAmountInUnits(remainUtilize, "sd"), eth.DisplayAmountInUnits(remainCollateral, "sd"))
 	} else {
 		// withdraw request amount greater than the Utilization Position
-		fmt.Printf("Repayment of %.6f SD successful using the excess SD Collateral.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
-		fmt.Printf("The remaining %.6f SD has been sent to your Operator Reward Address\n", math.RoundDown(eth.WeiToEth(new(big.Int).Abs(remainUtilize)), 6))
+		fmt.Printf("Repayment of %s successful using the excess SD Collateral.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
+		fmt.Printf("The remaining %s has been sent to your Operator Reward Address\n", eth.DisplayAmountInUnits(new(big.Int).Abs(remainUtilize), "sd"))
 	}
 
 	return nil
