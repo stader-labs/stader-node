@@ -141,6 +141,7 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		if err != nil {
 			return nil, err
 		}
+		response.RewardsClaimed = operatorRewardsBalance
 	} else {
 		totalWithdrawableEth := operatorRewardsBalance
 		if operatorRewardsBalance.Cmp(withdrawableInEth) > 0 {
@@ -150,6 +151,7 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		if err != nil {
 			return nil, err
 		}
+		response.RewardsClaimed = totalWithdrawableEth
 	}
 
 	response.TxHash = tx.Hash()

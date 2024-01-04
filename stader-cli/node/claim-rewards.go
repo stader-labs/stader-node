@@ -7,7 +7,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 )
@@ -50,9 +49,9 @@ func ClaimRewards(c *cli.Context) error {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
 			totalFee := sdStatus.AccumulatedInterest
 
-			fmt.Printf("You need to first pay %f and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.WeiToEth(totalFee))
+			fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.DisplayAmountInUnits(totalFee, "sd"))
 
-			fmt.Printf("Based on the current Health Factor, you can claim upto %.6f ETH.\n", eth.WeiToEth(canClaimRewardsResponse.WithdrawableInEth))
+			fmt.Printf("Based on the current Health Factor, you can claim upto %s.\n", eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
 
 			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n\n")
 		}
@@ -75,13 +74,13 @@ func ClaimRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Withdrawing %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+	fmt.Printf("Withdrawing %s Rewards to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Successful withdrawal of %.6f ETH to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+	fmt.Printf("Successful withdrawal of %s to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	return nil
 }

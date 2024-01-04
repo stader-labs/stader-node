@@ -43,6 +43,25 @@ func WeiToEthWithValCheck(wei *big.Int) (float64, string) {
 	return WeiToEth(wei), "eth"
 }
 
+func DisplayAmountInUnits(wei *big.Int, denom string) string {
+	gweiDenom := " gwei"
+	if denom == "SD" {
+		gweiDenom = " gwei SD"
+	}
+	regDenom := " ETH"
+	if denom == "SD" {
+		regDenom = " SD"
+	}
+
+	if wei == nil {
+		return ""
+	}
+	if wei.Cmp(big.NewInt(Threshold)) < 0 {
+		return strconv.FormatFloat(WeiToGwei(wei), 'f', -1, 64) + gweiDenom
+	}
+	return strconv.FormatFloat(WeiToEth(wei), 'f', -1, 64) + regDenom
+}
+
 // Convert wei to eth
 func WeiToEth(wei *big.Int) float64 {
 	var weiFloat big.Float
