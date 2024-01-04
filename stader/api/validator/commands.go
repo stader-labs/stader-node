@@ -37,11 +37,11 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-deposit",
 				Usage:     "Check whether the node can make a deposit to create a validator",
-				UsageText: "stader-cli api validator can-deposit amount num-validators referral-id reload-keys",
+				UsageText: "stader-cli api validator can-deposit amount num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					baseAmountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
@@ -74,11 +74,11 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Name:      "deposit",
 				Aliases:   []string{"d"},
 				Usage:     "Make a deposit and create a validator",
-				UsageText: "stader-cli api validator deposit-amount utility-amount num-validators referral-id reload-keys",
+				UsageText: "stader-cli api validator deposit-amount utility-amount num-validators reload-keys",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 4); err != nil {
+					if err := cliutils.ValidateArgCount(c, 3); err != nil {
 						return err
 					}
 					baseAmountWei, err := cliutils.ValidateWeiAmount("deposit amount", c.Args().Get(0))
