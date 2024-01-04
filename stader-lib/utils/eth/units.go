@@ -57,9 +57,9 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 		return ""
 	}
 	if wei.Cmp(big.NewInt(Threshold)) < 0 {
-		return strconv.FormatFloat(WeiToGwei(wei), 'f', -1, 64) + gweiDenom
+		return strconv.FormatFloat(WeiToGwei(wei), 'f', 2, 64) + gweiDenom
 	}
-	return strconv.FormatFloat(WeiToEth(wei), 'f', -1, 64) + regDenom
+	return strconv.FormatFloat(WeiToEth(wei), 'f', 2, 64) + regDenom
 }
 
 // Convert wei to eth
