@@ -9,7 +9,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
 	"github.com/urfave/cli"
@@ -61,7 +60,7 @@ func utilizeSD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to use %f SD from the utility pool? (y/n). Note: A Utilization fee of %.6f APR will be applied to the utilized SD from the utility pool.\n", eth.WeiToEth(amountWei), 0.5))) {
+		"Are you sure you want to use %s from the utility pool? (y/n). Note: A Utilization fee of %.6f APR will be applied to the utilized SD from the utility pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"), 0.5))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -78,7 +77,7 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Successfully deposited %.6f SD by utilizing SD from the Utility Pool.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully deposited %s to the collateral contract by utilizing SD from the Utility Pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 	return nil
 }
