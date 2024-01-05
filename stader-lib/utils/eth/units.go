@@ -33,16 +33,6 @@ const (
 	Threshold               = 1e12
 )
 
-func WeiToEthWithValCheck(wei *big.Int) (float64, string) {
-	if wei == nil {
-		return 0, ""
-	}
-	if wei.Cmp(big.NewInt(Threshold)) < 0 {
-		return WeiToGwei(wei), "gwei"
-	}
-	return WeiToEth(wei), "eth"
-}
-
 func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	gweiDenom := " gwei"
 	if denom == "sd" {
@@ -56,10 +46,10 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	if wei == nil {
 		return ""
 	}
-	if wei.Cmp(big.NewInt(Threshold)) < 0 {
-		return strconv.FormatFloat(WeiToGwei(wei), 'f', 2, 64) + gweiDenom
+	if wei.Cmp(big.NewInt(Threshold)) < 0 && wei.Cmp(big.NewInt(0)) != 0 {
+		return strconv.FormatFloat(WeiToGwei(wei), 'f', 6, 64) + gweiDenom
 	}
-	return strconv.FormatFloat(WeiToEth(wei), 'f', 2, 64) + regDenom
+	return strconv.FormatFloat(WeiToEth(wei), 'f', 6, 64) + regDenom
 }
 
 // Convert wei to eth
