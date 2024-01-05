@@ -187,7 +187,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf("The Operator has utilized %s from the Utility Pool.\n\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
 
-	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\nNote: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
 		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
@@ -199,7 +199,7 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The Operator can utilize upto %s more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
+		"Each Operator can utilize upto %s more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
 		eth.DisplayAmountInUnits(maxUtilizable, "sd"))
 
 	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) == 0 {
