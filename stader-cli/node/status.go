@@ -184,9 +184,7 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
-
 	fmt.Printf("The Operator has utilized %s from the Utility Pool.\n\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
-
 	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
 		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
 
