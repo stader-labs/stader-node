@@ -120,20 +120,20 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 		return nil, errors.New(msg)
 	}
 
-	// Set max to pool available
+	// Set maxSd to pool available
 	if sdStatus.PoolAvailableSDBalance.Cmp(maxUtility) <= 0 {
 		maxUtility = sdStatus.PoolAvailableSDBalance
 	}
 
-	min := eth.WeiToEth(minUtility)
-	max := eth.WeiToEth(maxUtility)
+	minSd := eth.DisplayAmountInUnits(minUtility, "sd")
+	maxSd := eth.DisplayAmountInUnits(maxUtility, "sd")
 
 	msg := fmt.Sprintf(`Please enter the amount of SD you wish to utilize from the SD Utility Pool:
-SD Utility Pool balance: %f SD
-Minimum utilization amount: %f SD 
-Maximum utilization amount: %f SD`, eth.WeiToEth(sdStatus.PoolAvailableSDBalance), min, max)
+SD Utility Pool balance: %s
+Minimum utilization amount: %s 
+Maximum utilization amount: %s`, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), minSd, maxSd)
 
-	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
 
 	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, minUtility, maxUtility)
 	if err != nil {
@@ -148,15 +148,18 @@ func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error
 	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 	sdRewardEligibleRemain := new(big.Int).Sub(sdStatus.SdRewardEligible, sdStatus.SdCollateralCurrentAmount)
+	if sdRewardEligibleRemain.Cmp(sdStatus.SdBalance) > 0 {
+		sdRewardEligibleRemain = sdStatus.SdBalance
+	}
 
-	min := eth.WeiToEth(amountToCollateralRemain)
-	max := eth.WeiToEth(sdRewardEligibleRemain)
+	minSd := eth.DisplayAmountInUnits(amountToCollateralRemain, "sd")
+	maxSd := eth.DisplayAmountInUnits(sdRewardEligibleRemain, "sd")
 
 	msg := fmt.Sprintf(`Please enter the amount of SD you wish to deposit as collateral.
-Minimum bond: %f SD 
-Maximum bond: %f SD`, min, max)
+Minimum bond: %s 
+Maximum bond: %s`, minSd, maxSd)
 
-	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", min, max)
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
 
 	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, amountToCollateralRemain, sdRewardEligibleRemain)
 	if err != nil {
