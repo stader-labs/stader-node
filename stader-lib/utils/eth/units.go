@@ -45,11 +45,11 @@ func WeiToEthWithValCheck(wei *big.Int) (float64, string) {
 
 func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	gweiDenom := " gwei"
-	if denom == "SD" {
+	if denom == "sd" {
 		gweiDenom = " gwei SD"
 	}
 	regDenom := " ETH"
-	if denom == "SD" {
+	if denom == "sd" {
 		regDenom = " SD"
 	}
 
