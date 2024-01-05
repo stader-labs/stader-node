@@ -158,7 +158,7 @@ func ClaimSpRewards(c *cli.Context) error {
 
 	depositSd := false
 	if totalClaimableSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("You will claim %f SD and %f ETH with the following selection - cycles %v\n\n", eth.WeiToEth(totalClaimableSd), eth.WeiToEth(totalClaimableEth), cyclesToClaimArray)
+		fmt.Printf("You will claim %s and %s with the following selection - cycles %v\n\n", eth.DisplayAmountInUnits(totalClaimableSd, "sd"), eth.DisplayAmountInUnits(totalClaimableEth, "eth"), cyclesToClaimArray)
 		fmt.Printf("Your ETH rewards will be sent to your Reward Address\n")
 		fmt.Printf("For SD rewards, you can claim all the rewards to your Reward Address or redeposit them as SD collateral to earn more rewards\n")
 
@@ -169,13 +169,13 @@ func ClaimSpRewards(c *cli.Context) error {
 		option := cliutils.Prompt("", "^(1|2)$", "Please enter a valid option")
 		if option == "1" {
 			if !cliutils.Confirm(fmt.Sprintf(
-				"Are you sure you want to claim %f ETH and %f SD for cycles %v to your reward address?", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd), cyclesToClaimArray)) {
+				"Are you sure you want to claim %s and %s for cycles %v to your reward address?", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"), cyclesToClaimArray)) {
 				fmt.Println("Claim Cancelled.")
 				return nil
 			}
 		} else if option == "2" {
 			if !cliutils.Confirm(fmt.Sprintf(
-				"Your %f ETH rewards will be sent to your Reward Address.\nFor your %f SD rewards, are you sure you want to re-deposit it as SD collateral for additional earnings?", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd))) {
+				"Your %s rewards will be sent to your Reward Address.\nFor your %s rewards, are you sure you want to re-deposit it as SD collateral for additional earnings?", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"))) {
 				fmt.Println("Claim Cancelled.")
 				return nil
 			}
@@ -216,12 +216,12 @@ func ClaimSpRewards(c *cli.Context) error {
 
 	fmt.Printf("Transaction Successful\n")
 	if depositSd {
-		fmt.Printf("%f ETH rewards have been sent to your Reward Address and %f SD rewards have been re-deposited as SD collateral\n", eth.WeiToEth(totalClaimableEth), eth.WeiToEth(totalClaimableSd))
+		fmt.Printf("%s rewards have been sent to your Reward Address and %s rewards have been re-deposited as SD collateral\n", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"))
 	} else {
 		if totalClaimableSd.Cmp(big.NewInt(0)) <= 0 {
-			fmt.Printf("%f ETH rewards have been sent to your Reward Address\n", eth.WeiToEth(totalClaimableEth))
+			fmt.Printf("%s rewards have been sent to your Reward Address\n", eth.DisplayAmountInUnits(totalClaimableEth, "eth"))
 		} else {
-			fmt.Printf("%f SD rewards and %f ETH rewards have been sent to your Reward Address\n", eth.WeiToEth(totalClaimableSd), eth.WeiToEth(totalClaimableEth))
+			fmt.Printf("%s rewards and %s rewards have been sent to your Reward Address\n", eth.DisplayAmountInUnits(totalClaimableSd, "sd"), eth.DisplayAmountInUnits(totalClaimableEth, "eth"))
 		}
 	}
 

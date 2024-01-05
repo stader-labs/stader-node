@@ -6,7 +6,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 )
@@ -53,13 +52,13 @@ func SendElRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Sending %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
+	fmt.Printf("Sending %s EL Rewards to Claim Vault\n\n", eth.DisplayAmountInUnits(res.ElRewardsAmount, "eth"))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Sent %.6f EL Rewards to Claim Vault\n\n", math.RoundDown(eth.WeiToEth(res.ElRewardsAmount), 6))
+	fmt.Printf("Sent %s EL Rewards to Claim Vault\n\n", eth.DisplayAmountInUnits(res.ElRewardsAmount, "eth"))
 	return nil
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 )
 
 func nodeDepositSd(c *cli.Context) error {
@@ -61,7 +60,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
+		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.DisplayAmountInUnits(amountWei, "sd"))
 		err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
 		if err != nil {
 			return err
@@ -90,7 +89,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	// Prompt for confirmation
-	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %f SD as collateral?", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %s as collateral?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -108,7 +107,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	// Log & return
-	fmt.Printf("Successfully deposited %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully deposited %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 	return nil
 }
