@@ -2,11 +2,11 @@ package validator
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
@@ -68,14 +68,14 @@ func SendClRewards(c *cli.Context, validatorPubKey types.ValidatorPubkey) error 
 		return err
 	}
 
-	fmt.Printf("Sending %.6f CL Rewards to Claim vault\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6))
+	fmt.Printf("Sending %s CL Rewards to Claim vault\n\n", eth.DisplayAmountInUnits(res.ClRewardsAmount, "eth"))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Sent %.6f CL Rewards to Claim vault\n\n", math.RoundDown(eth.WeiToEth(res.ClRewardsAmount), 6))
+	fmt.Printf("Sent %s CL Rewards to Claim vault\n\n", eth.DisplayAmountInUnits(res.ClRewardsAmount, "eth"))
 
 	return nil
 }

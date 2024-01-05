@@ -7,7 +7,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 )
@@ -97,36 +96,28 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	if totalUnclaimedSocializingPoolSd.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator has %.6f SD as unclaimed SD rewards. To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolSd), 18), log.ColorGreen, log.ColorReset)
+		fmt.Printf("The Operator has %s as unclaimed SD rewards. To claim SD rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", eth.DisplayAmountInUnits(totalUnclaimedSocializingPoolSd, "sd"), log.ColorGreen, log.ColorReset)
 	}
 
 	if totalUnclaimedSocializingPoolEth.Cmp(big.NewInt(0)) > 0 {
-		fmt.Printf("The Operator has %.6f ETH as unclaimed Socializing Pool EL rewards. To claim Socialized EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", math.RoundDown(eth.WeiToEth(totalUnclaimedSocializingPoolEth), 18), log.ColorGreen, log.ColorReset)
+		fmt.Printf("The Operator has %s as unclaimed Socializing Pool EL rewards. To claim Socialized EL rewards using the %sstader-cli node claim-sp-rewards%s command\n\n", eth.DisplayAmountInUnits(totalUnclaimedSocializingPoolEth, "eth"), log.ColorGreen, log.ColorReset)
 	}
 
 	if status.OperatorELRewardsAddressBalance.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
-			"The Operator has a total of %.6f ETH as EL rewards for all validators.\n"+
+			"The Operator has a total of %s as EL rewards for all validators.\n"+
 				"These rewards are sent to the claim vault periodically by Stader.\n"+
-				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim EL rewards to their operator reward address\n", math.RoundDown(eth.WeiToEth(status.OperatorELRewardsAddressBalance), 6), log.ColorGreen, log.ColorReset)
+				"Once it is sent to the claim vault, the operator can use the %sstader-cli node claim-rewards%s command to claim EL rewards to their operator reward address\n", eth.DisplayAmountInUnits(status.OperatorELRewardsAddressBalance, "eth"), log.ColorGreen, log.ColorReset)
 		fmt.Println("If the operator wishes to claim EL rewards by themselves, follow these steps:")
 		fmt.Printf("1. Use the %sstader-cli node send-el-rewards%s command to claim the EL rewards\n", log.ColorGreen, log.ColorReset)
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
 	}
 
 	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
-		val, denom := eth.WeiToEthWithValCheck(status.OperatorRewardCollectorBalance)
-		if denom == "eth" {
-			fmt.Printf(
-				"The Operator has aggregated total claims of %.6f ETH in the claim vault\n",
-				math.RoundDown(val, 6))
-			fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-		} else {
-			fmt.Printf(
-				"The Operator has aggregated total claims of %.6f gwei in the claim vault\n",
-				math.RoundDown(val, 6))
-			fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
-		}
+		fmt.Printf(
+			"The Operator has aggregated total claims of %s in the claim vault\n",
+			eth.DisplayAmountInUnits(status.OperatorRewardCollectorBalance, "eth"))
+		fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
 	fmt.Printf(
@@ -137,17 +128,17 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf("%s=== Account and Balances ===%s\n", log.ColorGreen, log.ColorReset)
 	fmt.Printf(
-		"The Operator %s%s%s has a balance of %.6f ETH.\n\n",
+		"The Operator %s%s%s has a balance of %s.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.ETH), 6))
+		eth.DisplayAmountInUnits(status.AccountBalances.ETH, "eth"))
 	fmt.Printf(
-		"The Operator %s%s%s has a balance of %.6f SD.\n\n",
+		"The Operator %s%s%s has a balance of %s.\n\n",
 		log.ColorBlue,
 		status.AccountAddress,
 		log.ColorReset,
-		math.RoundDown(eth.WeiToEth(status.AccountBalances.Sd), 18))
+		eth.DisplayAmountInUnits(status.AccountBalances.Sd, "sd"))
 
 	fmt.Printf(
 		"The Operator has a deposited %d ETH as collateral.\n\n",
@@ -170,54 +161,34 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The Operator has a deposited %.6f SD (%.6f%s) as collateral. Below is the break-up: \n",
-		math.RoundDown(eth.WeiToEth(totalCollateral), 18), collateralPct, "%")
+		"The Operator has a deposited %s (%.6f%s) as collateral. Below is the break-up: \n",
+		eth.DisplayAmountInUnits(totalCollateral, "sd"), collateralPct, "%")
 
 	fmt.Printf(
-		"Self-bonded: %.6f SD \n",
-		math.RoundDown(eth.WeiToEth(sdStatus.SdCollateralCurrentAmount), eth.Decimal))
+		"Self-bonded: %s \n",
+		eth.DisplayAmountInUnits(sdStatus.SdCollateralCurrentAmount, "sd"))
 
 	fmt.Printf(
-		"Utilized from the Utility Pool: %.6f SD.\n",
-		math.RoundDown(eth.WeiToEth(sdStatus.SdUtilizedBalance), eth.Decimal))
+		"Utilized from the Utility Pool: %s.\n",
+		eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
 
 	if totalRegisteredValidators.Cmp(big.NewInt(0)) != 0 {
-		val, denom := eth.WeiToEthWithValCheck(sdStatus.SdCollateralRequireAmount)
-		if denom == "eth" {
-			fmt.Printf(
-				"Note: For the %d validator, the minimum SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
-				totalRegisteredValidators,
-				math.RoundDown(val, eth.Decimal),
-				"10%", "10%", "10%")
-		} else {
-			fmt.Printf(
-				"Note: For the %d validator, the minimum (gwei) SD collateral should be %.6f SD (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
-				totalRegisteredValidators,
-				math.RoundDown(val, eth.Decimal),
-				"10%", "10%", "10%")
-		}
+		fmt.Printf(
+			"Note: For the %d validator, the minimum SD collateral should be %s (%s) to be eligible for the SD rewards. Please ensure that the SD collateral percentage is greater than %s. The SD collateral snapshots are taken daily at a random block, and if the SD collateral value falls below the %s limit, the node operator will not earn SD rewards for that day.\n\n",
+			totalRegisteredValidators,
+			eth.DisplayAmountInUnits(sdStatus.SdCollateralRequireAmount, "sd"),
+			"10%", "10%", "10%")
+
 	} else {
 		fmt.Println("")
 	}
 
 	fmt.Printf("%s=== SD utilization Details ===%s\n", log.ColorGreen, log.ColorReset)
 
-	val, denom := eth.WeiToEthWithValCheck(sdStatus.SdUtilizedBalance)
-	if denom == "eth" {
-		fmt.Printf("The Operator has utilized %.6f SD from the Utility Pool.\n\n",
-			math.RoundDown(val, eth.Decimal))
-	} else {
-		fmt.Printf("The Operator has utilized %.6f gwei SD from the Utility Pool.\n\n", math.RoundDown(val, eth.Decimal))
-	}
+	fmt.Printf("The Operator has utilized %s from the Utility Pool.\n\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
 
-	val, denom = eth.WeiToEthWithValCheck(sdStatus.SdUtilizedBalance)
-	if denom == "eth" {
-		fmt.Printf("The Operator has a current Utilization Position of %.6f SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
-			math.RoundDown(val, eth.Decimal))
-	} else {
-		fmt.Printf("The Operator has a current Utilization Position of %.6f gwei SD. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
-			math.RoundDown(val, eth.Decimal))
-	}
+	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
@@ -228,16 +199,18 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The Operator can utilize upto %.6f SD more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
-		eth.WeiToEth(maxUtilizable))
+		"The Operator can utilize upto %s more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
+		eth.DisplayAmountInUnits(maxUtilizable, "sd"))
+
+	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) == 0 {
+		fmt.Printf(
+			"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			sdStatus.HealthFactor.String())
+	}
 
 	fmt.Printf(
-		"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
-		sdStatus.HealthFactor.String())
-
-	fmt.Printf(
-		"The Utility Pool currently has a balance of %.6f SD.\n\n",
-		math.RoundDown(eth.WeiToEth(sdStatus.PoolAvailableSDBalance), eth.Decimal))
+		"The Utility Pool currently has a balance of %s.\n\n",
+		eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"))
 
 	return nil
 }

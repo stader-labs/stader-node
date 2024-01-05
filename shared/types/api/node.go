@@ -410,6 +410,7 @@ type ClaimRewards struct {
 	Error                  string         `json:"error"`
 	OperatorRewardsBalance *big.Int       `json:"operatorRewardsBalance"`
 	OperatorRewardAddress  common.Address `json:"operatorRewardAddress"`
+	RewardsClaimed         *big.Int       `json:"rewardsClaimed"`
 	TxHash                 common.Hash    `json:"txHash"`
 }
 
