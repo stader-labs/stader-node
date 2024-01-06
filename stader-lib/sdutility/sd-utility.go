@@ -83,7 +83,7 @@ func SDMaxUtilizableAmount(sp *stader.SDUtilityPoolContractManager,
 	return sdAmount, nil
 }
 
-func GetUtilizationRate(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Float, error) {
+func GetUtilizationRatePercent(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Float, error) {
 	utilizationRatePerBlockInWei, err := sp.SDUtilityPool.UtilizationRatePerBlock(opts)
 	if err != nil {
 		return nil, err

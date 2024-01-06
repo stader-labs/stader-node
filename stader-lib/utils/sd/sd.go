@@ -53,7 +53,7 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max *big.Int) (*big.Int, 
 			utilityAmountWei = max
 		}
 
-		if utilityAmountWei.Cmp(min) < 0 || utilityAmountWei.Cmp(max) > 0 {
+		if utilityAmountWei.Cmp(min) < 0 || utilityAmountWei.Cmp(max) > 0 || utilityAmountWei.Cmp(big.NewInt(0)) == 0 {
 			fmt.Println(errMsg)
 			continue
 		}

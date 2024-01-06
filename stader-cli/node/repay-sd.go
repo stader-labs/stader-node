@@ -67,7 +67,7 @@ func repaySD(c *cli.Context) error {
 
 	// 1. Check if repay more than need
 	if amountWei.Cmp(sdStatus.SdUtilizerLatestBalance) > 0 {
-		fmt.Printf("Repayment amount greater than the Utilization position. Your current Utilization Position is %0.6f \n", eth.WeiToEth(sdStatus.SdUtilizerLatestBalance))
+		fmt.Printf("Repayment amount greater than the Utilization position. Your current Utilization Position is %s \n", eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
 		return nil
 	}
 
@@ -84,7 +84,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Printf("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: %.6f\n", eth.WeiToEth(amountWei))
+		fmt.Printf("Before repaying the SD, you must first give the utility contract approval to interact with your SD. Amount to approve: %s\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 		err = nodeApproveUtilitySd(c, amountInString)
 		if err != nil {
@@ -104,7 +104,7 @@ func repaySD(c *cli.Context) error {
 
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to repay %0.6f SD from your Operator Address and reduce or close your Utilization Position?", eth.WeiToEth(amountWei)))) {
+		"Are you sure you want to repay %s from your Operator Address and reduce or close your Utilization Position?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -121,7 +121,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
-	fmt.Printf("Repayment of %.6f SD successful. Current Utilization Position: %.6f SD.\n", eth.WeiToEth(amountWei), eth.WeiToEth(remainUtilize))
+	fmt.Printf("Repayment of %s successful. Current Utilization Position: %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"), eth.DisplayAmountInUnits(remainUtilize, "sd"))
 
 	return nil
 }
