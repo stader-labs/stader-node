@@ -9,6 +9,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/stader-labs/stader-node/stader-lib/utils/sd"
 	"github.com/urfave/cli"
@@ -58,9 +59,10 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	rate := sdStatusResponse.SDStatus.UtilizationRate
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to use %s from the utility pool? (y/n). Note: A Utilization fee of %.6f APR will be applied to the utilized SD from the utility pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"), 0.5))) {
+		"Are you sure you want to use %s from the utility pool? (y/n). Note: A Utilization fee of %s%s will be applied to the utilized SD from the utility pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"), rate.String(), "%"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -132,7 +134,7 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 Minimum utilization amount: %s 
 Maximum utilization amount: %s
 
-Please enter the amount of SD you wish to utilize from the SD Utility Pool:`, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), eth.DisplayAmountInUnits(minUtility, "sd"), eth.DisplayAmountInUnits(maxUtility, "sd"))
+%sPlease enter the amount of SD you wish to utilize from the SD Utility Pool:%s`, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), eth.DisplayAmountInUnits(minUtility, "sd"), eth.DisplayAmountInUnits(maxUtility, "sd"), log.ColorYellow, log.ColorReset)
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
 

@@ -47,7 +47,7 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	utilizationRate, err := sdutility.GetUtilizationRate(sdu, nil)
+	utilizationRate, err := sdutility.GetUtilizationRatePercent(sdu, nil)
 	if err != nil {
 		return nil, err
 	}

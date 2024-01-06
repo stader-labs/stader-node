@@ -97,7 +97,7 @@ func nodeDeposit(c *cli.Context) error {
 				return err
 			}
 
-			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to use %s from the Utility Pool? [Y/N] \nNote: A Utilization Fee of %s%s APR will be applied to the utilized SD from the Utility Pool. ", eth.DisplayAmountInUnits(utilityAmount, "sd"), sdStatus.UtilizationRate.String(), "%")) {
+			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to use %s from the Utility Pool? [Y/N] \nNote: A Utilization Fee of %s%s will be applied to the utilized SD from the Utility Pool. ", eth.DisplayAmountInUnits(utilityAmount, "sd"), sdStatus.UtilizationRate.String(), "%")) {
 				fmt.Printf("Cancelled\n")
 				return nil
 			}
