@@ -148,9 +148,15 @@ Maximum utilization amount: %s
 
 func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
 
-	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
 
-	sdRewardEligibleRemain := new(big.Int).Sub(sdStatus.SdRewardEligible, sdStatus.SdCollateralCurrentAmount)
+	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, totalCollateral)
+
+	sdRewardEligibleRemain := new(big.Int).Sub(sdStatus.SdRewardEligible, totalCollateral)
+
+	if amountToCollateralRemain.Cmp(big.NewInt(0)) < 0 {
+		amountToCollateralRemain = big.NewInt(0)
+	}
 
 	minSd := eth.WeiToEth(amountToCollateralRemain)
 	maxSd := eth.WeiToEth(sdRewardEligibleRemain)
