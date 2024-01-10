@@ -45,14 +45,6 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max *big.Int) (*big.Int, 
 
 		utilityAmountWei = eth.EthToWei(utilityAmountFloat)
 
-		if WeiAlmostEqual(utilityAmountWei, min) {
-			utilityAmountWei = min
-		}
-
-		if WeiAlmostEqual(utilityAmountWei, max) {
-			utilityAmountWei = max
-		}
-
 		if utilityAmountWei.Cmp(min) < 0 || utilityAmountWei.Cmp(max) > 0 || utilityAmountWei.Cmp(big.NewInt(0)) == 0 {
 			fmt.Println(errMsg)
 			continue

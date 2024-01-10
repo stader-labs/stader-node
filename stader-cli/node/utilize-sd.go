@@ -151,9 +151,6 @@ func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error
 	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, sdStatus.SdCollateralCurrentAmount)
 
 	sdRewardEligibleRemain := new(big.Int).Sub(sdStatus.SdRewardEligible, sdStatus.SdCollateralCurrentAmount)
-	if sdRewardEligibleRemain.Cmp(sdStatus.SdBalance) > 0 {
-		sdRewardEligibleRemain = sdStatus.SdBalance
-	}
 
 	minSd := eth.WeiToEth(amountToCollateralRemain)
 	maxSd := eth.WeiToEth(sdRewardEligibleRemain)
