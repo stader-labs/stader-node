@@ -84,16 +84,16 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 		return nil
 	}
 
-	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, autoConfirm)
-	if err != nil {
-		return err
-	}
-
 	// Prompt for confirmation
 	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %s as collateral?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
+	}
+
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, autoConfirm)
+	if err != nil {
+		return err
 	}
 
 	depositSdResponse, err := staderClient.NodeDepositSd(amountWei)

@@ -41,7 +41,7 @@ func WithdrawSd(c *cli.Context) error {
 		return nil
 	}
 	if canWithdrawSdResponse.InsufficientSdCollateral {
-		fmt.Println("SD collateral less than 200%")
+		fmt.Println("Not enough excess SD collateral to withdraw")
 		return nil
 	}
 

@@ -101,16 +101,16 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
-	err = gas.AssignMaxFeeAndLimit(canRepaySdResponse.GasInfo, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
-	}
-
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
 		"Are you sure you want to repay %s from your Operator Address and reduce or close your Utilization Position?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
+	}
+
+	err = gas.AssignMaxFeeAndLimit(canRepaySdResponse.GasInfo, staderClient, c.Bool("yes"))
+	if err != nil {
+		return err
 	}
 
 	res, err := staderClient.RepaySd(amountWei)
