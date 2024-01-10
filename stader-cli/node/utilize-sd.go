@@ -159,7 +159,7 @@ func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error
 Minimum bond: %s 
 Maximum bond: %s
 
-Please enter the amount of SD you wish to deposit as collateral.`, eth.DisplayAmountInUnits(amountToCollateralRemain, "sd"), eth.DisplayAmountInUnits(sdRewardEligibleRemain, "sd"))
+%sPlease enter the amount of SD you wish to deposit as collateral:%s`, eth.DisplayAmountInUnits(amountToCollateralRemain, "sd"), eth.DisplayAmountInUnits(sdRewardEligibleRemain, "sd"), log.ColorYellow, log.ColorReset)
 
 	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
 
