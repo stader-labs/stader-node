@@ -33,15 +33,6 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
-	amountInString := c.String("amount")
-
-	amount, err := strconv.ParseFloat(amountInString, 64)
-	if err != nil {
-		return err
-	}
-
-	amountWei := eth.EthToWei(amount)
-
 	contracts, err := staderClient.GetContractsInfo()
 	if err != nil {
 		return err
@@ -53,16 +44,28 @@ func repaySD(c *cli.Context) error {
 	}
 
 	sdStatus := sdStatusResponse.SDStatus
+	var amountWei *big.Int
+
+	if c.Bool("full") {
+		amountWei = sdStatus.SdUtilizerLatestBalance
+	} else {
+		amountInString := c.String("amount")
+		amount, err := strconv.ParseFloat(amountInString, 64)
+		if err != nil {
+			return err
+		}
+
+		amountWei = eth.EthToWei(amount)
+
+		// If almost equal repay with all Utilize position to make sure the position is cleared
+		if sd.WeiAlmostEqual(amountWei, sdStatus.SdUtilizerLatestBalance) {
+			amountWei = sdStatus.SdUtilizerLatestBalance
+		}
+	}
+
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
 		fmt.Println("You do not have an existing Utilization Position.")
 		return nil
-	}
-
-	// If almost equal repay with all Utilize position to make sure the position is cleared
-	if sd.WeiAlmostEqual(amountWei, sdStatus.SdUtilizerLatestBalance) {
-		amountWei = sdStatus.SdUtilizerLatestBalance
-
-		amountInString = fmt.Sprintf("%.18f", eth.WeiToEth(sdStatus.SdUtilizerLatestBalance))
 	}
 
 	// 1. Check if repay more than need

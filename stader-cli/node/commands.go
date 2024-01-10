@@ -370,10 +370,16 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Name:  "yes, y",
 						Usage: "Automatically confirm SD repay",
 					},
+					cli.BoolFlag{
+						Name:  "full, f",
+						Usage: "Automatically repay all SD utilized",
+					},
 				},
 				Action: func(c *cli.Context) error {
-					if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
-						return err
+					if !c.Bool("full") {
+						if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
+							return err
+						}
 					}
 
 					// Run
