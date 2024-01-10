@@ -177,8 +177,8 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created by utilizing %.6f from the SD Utility Pool.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators, eth.WeiToEth(utilityAmount))
 	}
 
-	fmt.Println("Your validators are now in Initialized status. Once the ETH deposits have been matched by the remaining 28ETH, it will move to Deposited status.")
-	fmt.Println("You can check the status of your validator with `stader-cli validator status`.")
+	fmt.Println("Your validators are now in an Initialized state. Once the ETH deposits have been matched by the remaining 28 ETH, it will move to the Deposited state.")
+	fmt.Println("You can check the status of your validator by executing the following command: `~/bin/stader-cli validator status`")
 
 	return nil
 
