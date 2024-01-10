@@ -136,7 +136,7 @@ Maximum utilization amount: %s
 
 %sPlease enter the amount of SD you wish to utilize from the SD Utility Pool:%s`, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), eth.DisplayAmountInUnits(minUtility, "sd"), eth.DisplayAmountInUnits(maxUtility, "sd"), log.ColorYellow, log.ColorReset)
 
-	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range", minSd, maxSd)
 
 	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, minUtility, maxUtility)
 	if err != nil {
@@ -161,13 +161,12 @@ func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error
 	minSd := eth.WeiToEth(amountToCollateralRemain)
 	maxSd := eth.WeiToEth(sdRewardEligibleRemain)
 
-	msg := fmt.Sprintf(`
-Minimum bond: %s 
+	msg := fmt.Sprintf(`Minimum bond: %s 
 Maximum bond: %s
 
 %sPlease enter the amount of SD you wish to deposit as collateral:%s`, eth.DisplayAmountInUnits(amountToCollateralRemain, "sd"), eth.DisplayAmountInUnits(sdRewardEligibleRemain, "sd"), log.ColorYellow, log.ColorReset)
 
-	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range\n", minSd, maxSd)
+	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range", minSd, maxSd)
 
 	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, amountToCollateralRemain, sdRewardEligibleRemain)
 	if err != nil {

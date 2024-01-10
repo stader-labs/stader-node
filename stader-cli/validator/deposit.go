@@ -117,10 +117,9 @@ func nodeDeposit(c *cli.Context) error {
 				return nil
 			}
 
-			autoConfirm := c.Bool("yes")
 			nounce := c.GlobalUint64("nonce")
+			err = node.DepositSdWithAmount(staderClient, selfBondAmount, true, nounce)
 
-			err = node.DepositSdWithAmount(staderClient, selfBondAmount, autoConfirm, nounce)
 			if err != nil {
 				return err
 			}
