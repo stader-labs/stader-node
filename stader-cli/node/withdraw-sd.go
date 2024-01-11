@@ -36,8 +36,14 @@ func WithdrawSd(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	if canWithdrawSdResponse.InsufficientWithdrawableSd {
 		fmt.Println("Insufficient withdrawable SD!")
+		return nil
+	}
+
+	if canWithdrawSdResponse.InsufficientSdCollateral {
+		fmt.Println("Not enough excess SD collateral to withdraw")
 		return nil
 	}
 
