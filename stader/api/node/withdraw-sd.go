@@ -73,12 +73,19 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 
 	thresholdSdRequiredToWithdraw := withdrawThresholdInSd.Add(withdrawThresholdInSd, amountWei)
 
-	if operatorSdCollateral.Cmp(thresholdSdRequiredToWithdraw) < 0 {
+	utilizedBalance, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalOperatorSdCollateral := big.NewInt(0).Add(operatorSdCollateral, utilizedBalance)
+
+	if totalOperatorSdCollateral.Cmp(thresholdSdRequiredToWithdraw) < 0 {
 		response.InsufficientSdCollateral = true
 		return &response, nil
 	}
 
-	if operatorSdCollateral.Cmp(amountWei) < 0 {
+	if totalOperatorSdCollateral.Cmp(amountWei) < 0 {
 		response.InsufficientWithdrawableSd = true
 		return &response, nil
 	}

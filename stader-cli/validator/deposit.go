@@ -117,10 +117,9 @@ func nodeDeposit(c *cli.Context) error {
 				return nil
 			}
 
-			autoConfirm := c.Bool("yes")
 			nounce := c.GlobalUint64("nonce")
+			err = node.DepositSdWithAmount(staderClient, selfBondAmount, true, nounce)
 
-			err = node.DepositSdWithAmount(staderClient, selfBondAmount, autoConfirm, nounce)
 			if err != nil {
 				return err
 			}
@@ -174,7 +173,7 @@ func nodeDeposit(c *cli.Context) error {
 	if utilityAmount.Cmp(big.NewInt(0)) == 0 {
 		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators)
 	} else {
-		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created by utilizing %.6f from the SD Utility Pool.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators, eth.WeiToEth(utilityAmount))
+		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created by utilizing %s from the SD Utility Pool.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators, eth.DisplayAmountInUnits(utilityAmount, "sd"))
 	}
 
 	fmt.Println("Your validators are now in an Initialized state. Once the ETH deposits have been matched by the remaining 28 ETH, it will move to the Deposited state.")
