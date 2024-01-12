@@ -362,26 +362,12 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 				Usage:     "Repay the amount to reduce their utilization position",
 				UsageText: "stader-cli node repay-sd [options]",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "amount, a",
-						Usage: "The amount of SD to repay",
-					},
 					cli.BoolFlag{
 						Name:  "yes, y",
 						Usage: "Automatically confirm SD repay",
 					},
-					cli.BoolFlag{
-						Name:  "full, f",
-						Usage: "Automatically repay all SD utilized",
-					},
 				},
 				Action: func(c *cli.Context) error {
-					if !c.Bool("full") {
-						if _, err := cliutils.ValidatePositiveEthAmount("sd repay amount", c.String("amount")); err != nil {
-							return err
-						}
-					}
-
 					// Run
 					return repaySD(c)
 				},
