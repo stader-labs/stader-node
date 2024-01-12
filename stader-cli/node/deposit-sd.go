@@ -60,7 +60,7 @@ func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoCo
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		maxApproval := maxApprovalAmount()
+		maxApproval := maxUint256()
 
 		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD.")
 		err = nodeApproveSdWithAmountAndAddress(staderClient, maxApproval, contracts.SdCollateralContract, autoConfirm, nonce)

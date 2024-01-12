@@ -146,10 +146,10 @@ func nodeApproveSdWithAmountAndAddress(staderClient *stader.Client, amountWei *b
 }
 
 // Calculate max uint256 value
-func maxApprovalAmount() *big.Int {
-	maxApproval := big.NewInt(2)
-	maxApproval = maxApproval.Exp(maxApproval, big.NewInt(256), nil)
-	maxApproval = maxApproval.Sub(maxApproval, big.NewInt(1))
+func maxUint256() *big.Int {
+	maxUint256 := big.NewInt(2)
+	maxUint256 = maxUint256.Exp(maxUint256, big.NewInt(256), nil)
+	maxUint256 = maxUint256.Sub(maxUint256, big.NewInt(1))
 
-	return maxApproval
+	return maxUint256
 }
