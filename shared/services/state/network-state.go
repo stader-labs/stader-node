@@ -121,6 +121,12 @@ type MetricDetails struct {
 	// done
 	SdUtilityPoolBalance float64
 
+	// The utilize amount + fee
+	OperatorSDUtilizationPosition float64
+
+	// The amount SD self bond
+	OperatorSDSelfBond float64
+
 	// done
 	OperatorSDInterest float64
 
@@ -281,10 +287,12 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
+
+	operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -293,7 +301,8 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdColletaral, nil)
+
+	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdCollateral, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -482,6 +491,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	totalPosition, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	utilityPoolBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
 	if err != nil {
 		return nil, err
@@ -548,7 +562,7 @@ func CreateMetricsCache(
 
 	metricsDetails.SdUtilityPoolBalance = math.RoundDown(eth.WeiToEth(utilityPoolBalance), SixDecimalRound)
 	//
-	operatorStakedSd := eth.WeiToEth(operatorSdColletaral) + metricsDetails.OperatorSDUtilized
+	operatorStakedSd := eth.WeiToEth(operatorSdCollateral) + metricsDetails.OperatorSDUtilized
 	requireCollateral := collateralRatioInSd * float64(operatorNonTerminalKeys)
 
 	collateralPct := 0.0
@@ -562,6 +576,10 @@ func CreateMetricsCache(
 
 	metricsDetails.LockedEth = math.RoundDown(eth.WeiToEth(userData.LockedEth), SixDecimalRound)
 	metricsDetails.HealthFactor = userData.HealthFactor
+
+	metricsDetails.OperatorSDUtilizationPosition = math.RoundDown(eth.WeiToEth(totalPosition), SixDecimalRound)
+
+	metricsDetails.OperatorSDSelfBond = math.RoundDown(eth.WeiToEth(operatorSdCollateral), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
 
