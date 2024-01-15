@@ -33,6 +33,8 @@ type OperatorCollector struct {
 	TotalSdCollateral                    *prometheus.Desc
 	TotalSdCollateralInEth               *prometheus.Desc
 	TotalEthColateral                    *prometheus.Desc
+	TotalSDUtilizationPosition           *prometheus.Desc
+	TotalSDSelfBond                      *prometheus.Desc
 	TotalSDUtilized                      *prometheus.Desc
 	TotalSDUtilizedInterest              *prometheus.Desc
 	SdCollateralPct                      *prometheus.Desc
@@ -127,6 +129,10 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, LockedEth), "", nil, nil),
 		HealthFactor: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, HeathFactor), "", nil, nil),
+		TotalSDUtilizationPosition: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, TotalSDUtilizationPosition), "", nil, nil),
+		TotalSDSelfBond: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, TotalSDSelfBonded), "", nil, nil),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -162,6 +168,8 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.SdCollateralPct
 	channel <- collector.LockedEth
 	channel <- collector.HealthFactor
+	channel <- collector.TotalSDUtilizationPosition
+	channel <- collector.TotalSDSelfBond
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -194,6 +202,8 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.SdCollateralPct, prometheus.GaugeValue, state.StaderNetworkDetails.SdCollateralPct)
 	channel <- prometheus.MustNewConstMetric(collector.LockedEth, prometheus.GaugeValue, state.StaderNetworkDetails.LockedEth)
 	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, float64(state.StaderNetworkDetails.HealthFactor.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDUtilizationPosition))
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDSelfBond))
 }
 
 // Log error messages

@@ -212,5 +212,7 @@ func getNodeStatus(c *cli.Context) error {
 		"The Utility Pool currently has a balance of %s.\n\n",
 		eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"))
 
+	fmt.Printf("Current Utilization Rate %s%s.\n", sdStatus.UtilizationRate.String(), "%")
+
 	return nil
 }

@@ -34,6 +34,8 @@ const SDUtilizedInterest = "sd_utilized_interest"
 const SdCollateralPct = "sd_collateral_pct"
 const LockedEth = "eth_locked"
 const HeathFactor = "heath_factor"
+const TotalSDUtilizationPosition = "sd_utility_position"
+const TotalSDSelfBonded = "total_sd_self_bonded"
 
 // Node Health => stader_node_health+ key
 const NodeSub = "node_health"
