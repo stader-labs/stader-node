@@ -25,9 +25,9 @@ import (
 )
 
 const (
-	lighthouseTagPortableTest string = "sigp/lighthouse:v4.5.0"
+	lighthouseTagPortableTest string = "sigp/lighthouse:v4.6.0-rc.0"
 	lighthouseTagPortableProd string = "sigp/lighthouse:v4.5.0"
-	lighthouseTagModernTest   string = "sigp/lighthouse:v4.5.0-modern"
+	lighthouseTagModernTest   string = "sigp/lighthouse:v4.6.0-rc.0"
 	lighthouseTagModernProd   string = "sigp/lighthouse:v4.5.0-modern"
 	defaultLhMaxPeers         uint16 = 80
 )
