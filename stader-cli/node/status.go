@@ -187,8 +187,13 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf("The Operator has utilized %s from the Utility Pool.\n\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
 
-	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\nNote: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n",
 		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
+	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
+		fmt.Println("")
+	} else {
+		fmt.Printf("Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n")
+	}
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
