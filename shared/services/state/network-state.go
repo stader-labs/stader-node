@@ -137,7 +137,7 @@ type MetricDetails struct {
 	LockedEth float64
 
 	// done
-	HealthFactor *big.Int
+	HealthFactor float64
 }
 
 type MetricsCache struct {
@@ -575,7 +575,7 @@ func CreateMetricsCache(
 	metricsDetails.SdCollateralPct = collateralPct
 
 	metricsDetails.LockedEth = math.RoundDown(eth.WeiToEth(userData.LockedEth), SixDecimalRound)
-	metricsDetails.HealthFactor = userData.HealthFactor
+	metricsDetails.HealthFactor = math.RoundDown(eth.WeiToEth(userData.HealthFactor), SixDecimalRound)
 
 	metricsDetails.OperatorSDUtilizationPosition = math.RoundDown(eth.WeiToEth(totalPosition), SixDecimalRound)
 

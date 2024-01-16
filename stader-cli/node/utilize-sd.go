@@ -97,7 +97,7 @@ func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
 }
 
 func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
+	maxUtility := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizedBalance)
 
 	if maxUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtility = sdStatus.PoolAvailableSDBalance
@@ -117,8 +117,7 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 
 	// 2. If user had enough Eth
 	if minUtility.Cmp(maxUtility) >= 0 {
-		msg := fmt.Sprintf("Do not had enough ETH bond to utility\n")
-		return nil, errors.New(msg)
+		return nil, errors.New("Do not had enough ETH bond to utility")
 	}
 
 	// Set maxSd to pool available
@@ -147,7 +146,7 @@ Maximum utilization amount: %s
 
 func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
 
-	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizedBalance)
 
 	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, totalCollateral)
 

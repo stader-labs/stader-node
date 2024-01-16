@@ -201,7 +201,7 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizedInterest, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDInterest)
 	channel <- prometheus.MustNewConstMetric(collector.SdCollateralPct, prometheus.GaugeValue, state.StaderNetworkDetails.SdCollateralPct)
 	channel <- prometheus.MustNewConstMetric(collector.LockedEth, prometheus.GaugeValue, state.StaderNetworkDetails.LockedEth)
-	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, float64(state.StaderNetworkDetails.HealthFactor.Int64()))
+	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, state.StaderNetworkDetails.HealthFactor)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDUtilizationPosition))
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDSelfBond))
 }
