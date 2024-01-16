@@ -39,6 +39,11 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	if sdStatusResponse.SDStatus.SdCollateralRequireAmount.Cmp(big.NewInt(0)) == 0 {
+		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		return nil
+	}
+
 	amountWei, err := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
 	if err != nil {
 		return err
@@ -47,11 +52,6 @@ func utilizeSD(c *cli.Context) error {
 	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
 	if err != nil {
 		return err
-	}
-
-	if canNodeUtilizeSdResponse.NonTerminalValidators == 0 {
-		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
-		return nil
 	}
 
 	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
@@ -97,7 +97,7 @@ func GetMinUtility(sdStatus *api.SdStatusResponse) *big.Int {
 }
 
 func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
-	maxUtility := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
+	maxUtility := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizedBalance)
 
 	if maxUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtility = sdStatus.PoolAvailableSDBalance
@@ -116,10 +116,8 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 	}
 
 	// 2. If user had enough Eth
-	if minUtility.Cmp(maxUtility) > 0 {
-		msg := fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String())
-
-		return nil, errors.New(msg)
+	if minUtility.Cmp(maxUtility) >= 0 {
+		return nil, errors.New("Do not had enough ETH bond to utility")
 	}
 
 	// Set maxSd to pool available
@@ -148,7 +146,7 @@ Maximum utilization amount: %s
 
 func PromptChooseSelfBondAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
 
-	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizedBalance)
 
 	amountToCollateralRemain := new(big.Int).Sub(sdStatus.SdCollateralRequireAmount, totalCollateral)
 

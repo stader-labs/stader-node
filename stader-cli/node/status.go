@@ -151,7 +151,7 @@ func getNodeStatus(c *cli.Context) error {
 	}
 	collateralPct := 0.0
 	sdStatus := sdStatusResp.SDStatus
-	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizerLatestBalance)
+	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizedBalance)
 
 	current := eth.WeiToEth(totalCollateral)
 	require := eth.WeiToEth(sdStatus.SdCollateralRequireAmount)
@@ -209,8 +209,8 @@ func getNodeStatus(c *cli.Context) error {
 
 	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) != 0 {
 		fmt.Printf(
-			"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
-			sdStatus.HealthFactor.String())
+			"The Operator has a Health Factor of %.6f. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			eth.WeiToEth(sdStatus.HealthFactor))
 	}
 
 	fmt.Printf(
