@@ -187,8 +187,13 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf("The Operator has utilized %s from the Utility Pool.\n\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizedBalance, "sd"))
 
-	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\nNote: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n",
+	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n",
 		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
+	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
+		fmt.Println("")
+	} else {
+		fmt.Printf("Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n")
+	}
 
 	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
@@ -202,7 +207,7 @@ func getNodeStatus(c *cli.Context) error {
 		"Each Operator can utilize upto %s more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
 		eth.DisplayAmountInUnits(maxUtilizable, "sd"))
 
-	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) == 0 {
+	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) != 0 {
 		fmt.Printf(
 			"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
 			sdStatus.HealthFactor.String())
