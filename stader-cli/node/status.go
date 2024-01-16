@@ -202,7 +202,7 @@ func getNodeStatus(c *cli.Context) error {
 		"Each Operator can utilize upto %s more.\nNote: The Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
 		eth.DisplayAmountInUnits(maxUtilizable, "sd"))
 
-	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) == 0 {
+	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) != 0 {
 		fmt.Printf(
 			"The Operator has a Health Factor of %s. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
 			sdStatus.HealthFactor.String())

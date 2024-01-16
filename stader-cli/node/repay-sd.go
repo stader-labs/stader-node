@@ -125,9 +125,12 @@ func repaySD(c *cli.Context) error {
 		return err
 	}
 
-	remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
-	fmt.Printf("Repayment of %s successful. Current Utilization Position: %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"), eth.DisplayAmountInUnits(remainUtilize, "sd"))
-
+	if amountWei.Cmp(maxUint256()) == 0 {
+		fmt.Printf("Repayment of %s successful. Current Utilization Position: 0 SD.\n", eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
+	} else {
+		remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
+		fmt.Printf("Repayment of %s successful. Current Utilization Position: %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"), eth.DisplayAmountInUnits(remainUtilize, "sd"))
+	}
 	return nil
 }
 
