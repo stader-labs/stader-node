@@ -195,7 +195,7 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("Note: For repayment of your utilized SD, please use the `stader-cli node repay-sd <amount to repay>` command.\n\n")
 	}
 
-	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizerLatestBalance)
+	maxUtilizable := new(big.Int).Sub(sdStatus.SdMaxUtilizableAmount, sdStatus.SdUtilizedBalance)
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtilizable = sdStatus.PoolAvailableSDBalance
 	}
