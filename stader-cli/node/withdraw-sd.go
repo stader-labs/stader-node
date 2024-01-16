@@ -60,11 +60,6 @@ func WithdrawSd(c *cli.Context) error {
 			fmt.Println("Cancelled.")
 			return nil
 		}
-	} else {
-		if !cliutils.Confirm(fmt.Sprintf("You have an existing Utilization Position of %s. The excess SD collateral you are trying to withdraw will be used to repay the utilized SD and the remaining SD will be sent to your Reward Address.\n Do you wish to proceed?", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"))) {
-			fmt.Println("Cancelled.")
-			return nil
-		}
 	}
 
 	// Assign max fees
