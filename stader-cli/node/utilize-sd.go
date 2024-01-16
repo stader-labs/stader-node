@@ -39,6 +39,11 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	if sdStatusResponse.SDStatus.SdCollateralRequireAmount.Cmp(big.NewInt(0)) == 0 {
+		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		return nil
+	}
+
 	amountWei, err := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
 	if err != nil {
 		return err
@@ -47,11 +52,6 @@ func utilizeSD(c *cli.Context) error {
 	canNodeUtilizeSdResponse, err := staderClient.CanNodeUtilizeSd(amountWei)
 	if err != nil {
 		return err
-	}
-
-	if canNodeUtilizeSdResponse.NonTerminalValidators == 0 {
-		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
-		return nil
 	}
 
 	err = gas.AssignMaxFeeAndLimit(canNodeUtilizeSdResponse.GasInfo, staderClient, c.Bool("yes"))
@@ -116,9 +116,8 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error)
 	}
 
 	// 2. If user had enough Eth
-	if minUtility.Cmp(maxUtility) > 0 {
-		msg := fmt.Sprintf("Do not had enough ETH bond to utility : %s \n", minUtility.String())
-
+	if minUtility.Cmp(maxUtility) >= 0 {
+		msg := fmt.Sprintf("Do not had enough ETH bond to utility\n")
 		return nil, errors.New(msg)
 	}
 
