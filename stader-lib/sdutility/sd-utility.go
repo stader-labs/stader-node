@@ -106,3 +106,14 @@ func GetUserData(sp *stader.SDUtilityPoolContractManager, address common.Address
 
 	return &userData, nil
 }
+
+func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (bool, error) {
+	liquidationIndex, err := sp.SDUtilityPool.LiquidationIndexByOperator(opts, address)
+	if err != nil {
+		return false, err
+	}
+
+	isAlreadyLiquidated := liquidationIndex.Cmp(big.NewInt(0)) != 0
+
+	return isAlreadyLiquidated, nil
+}

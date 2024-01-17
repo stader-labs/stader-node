@@ -63,6 +63,20 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
+	if sdStatusResp.SDStatus.AlreadyLiquidated {
+		fmt.Printf("Your node is in liquidation process")
+		return nil
+	}
+
+	healthFactor := eth.WeiToEth(sdStatusResp.SDStatus.HealthFactor)
+	if healthFactor < 1 {
+		fmt.Printf(
+			"The Operator has a Health Factor of %.6f. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			healthFactor)
+
+		return nil
+	}
+
 	userBalance := status.AccountBalances.ETH
 	amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
 
