@@ -1,14 +1,15 @@
 package node
 
 import (
+	"math/big"
+	"time"
+
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	socializing_pool "github.com/stader-labs/stader-node/stader-lib/socializing-pool"
 	stader_config "github.com/stader-labs/stader-node/stader-lib/stader-config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"time"
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
@@ -186,6 +187,12 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 			return nil, err
 		}
 		response.OperatorRewardCollectorBalance = operatorRewardCollectorBalance
+
+		operatorWithdrawableEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+		response.OperatorWithdrawableEth = operatorWithdrawableEth
 
 		//fmt.Printf("Getting operator reward address balance\n")
 		operatorReward, err := tokens.GetEthBalance(pnr.Client, operatorRegistry.OperatorRewardAddress, nil)
