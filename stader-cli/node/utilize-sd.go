@@ -39,6 +39,20 @@ func utilizeSD(c *cli.Context) error {
 		return err
 	}
 
+	if sdStatusResponse.SDStatus.AlreadyLiquidated {
+		fmt.Printf("Your node is in liquidation process")
+		return nil
+	}
+
+	healthFactor := eth.WeiToEth(sdStatusResponse.SDStatus.HealthFactor)
+	if healthFactor < 1 {
+		fmt.Printf(
+			"The Operator has a Health Factor of %.6f. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			healthFactor)
+
+		return nil
+	}
+
 	if sdStatusResponse.SDStatus.SdCollateralRequireAmount.Cmp(big.NewInt(0)) == 0 {
 		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
 		return nil

@@ -88,6 +88,11 @@ func GetSDStatus(
 		return nil, err
 	}
 
+	alreadyLiquidated, err := sdutility.AlreadyLiquidated(sdu, operatorAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return &api.SdStatusResponse{
 		NotEnoughSdCollateral:     !hasEnoughSdCollateral,
 		SdUtilizerLatestBalance:   sdUtilityLatestBalance,
@@ -101,6 +106,7 @@ func GetSDStatus(
 		SdRewardEligible:          rewardEligibleSD,
 		HealthFactor:              userData.HealthFactor,
 		AccumulatedInterest:       userData.TotalInterestSD,
+		AlreadyLiquidated:         alreadyLiquidated,
 	}, nil
 }
 

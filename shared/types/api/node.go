@@ -459,6 +459,7 @@ type SdStatusResponse struct {
 	HealthFactor              *big.Int   `json:"healthFactor"`
 	AccumulatedInterest       *big.Int   `json:"accumulatedInterest"`
 	NotEnoughSdCollateral     bool       `json:"notEnoughSdCollateral"`
+	AlreadyLiquidated         bool       `json:"alreadyLiquidated"`
 }
 
 type NodeRepayExcessSDResponse struct {
