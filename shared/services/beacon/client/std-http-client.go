@@ -414,7 +414,6 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	// Data
 	var wg errgroup.Group
 	var genesis GenesisResponse
-	var fork ForkResponse
 
 	// Get genesis
 	wg.Go(func() error {
