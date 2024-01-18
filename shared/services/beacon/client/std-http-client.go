@@ -465,6 +465,7 @@ func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useG
 		return []byte{}, err
 	}
 
+	fmt.Printf("GetDomainData: ForkData is %v\n", fork.Data)
 	// Get fork version
 	var forkVersion []byte
 	if useGenesisFork {
