@@ -266,6 +266,17 @@ func (m *BeaconClientManager) GetDomainData(domainType []byte, epoch uint64, use
 	return result.([]byte), nil
 }
 
+// Get the Beacon chain's domain data
+func (m *BeaconClientManager) GetExitDomainData(domainType []byte) ([]byte, error) {
+	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
+		return client.GetExitDomainData(domainType)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.([]byte), nil
+}
+
 // Voluntarily exit a validator
 func (m *BeaconClientManager) ExitValidator(validatorIndex, epoch uint64, signature types.ValidatorSignature) error {
 	err := m.runFunction0(func(client beacon.Client) error {
