@@ -22,6 +22,7 @@ package beacon
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/prysmaticlabs/go-bitfield"
+	"github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 )
 
@@ -143,7 +144,7 @@ type Client interface {
 	GetValidatorIndex(pubkey types.ValidatorPubkey) (uint64, error)
 	GetValidatorSyncDuties(indices []uint64, epoch uint64) (map[uint64]bool, error)
 	GetValidatorProposerDuties(indices []uint64, epoch uint64) (map[uint64]uint64, error)
-	GetExitDomainData(domainType []byte) ([]byte, error)
+	GetExitDomainData(domainType []byte, network config.Network) ([]byte, error)
 	ExitValidator(validatorIndex, epoch uint64, signature types.ValidatorSignature) error
 	Close() error
 	GetEth1DataForEth2Block(blockId string) (Eth1Data, bool, error)
