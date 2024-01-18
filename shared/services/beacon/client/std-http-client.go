@@ -62,6 +62,8 @@ const (
 
 	MaxRequestValidatorsCount     = 600
 	threadLimit               int = 6
+
+	CapellaForkVersion = "0x03001020"
 )
 
 // Beacon client using the standard Beacon HTTP REST API (https://ethereum.github.io/beacon-APIs/)
@@ -409,40 +411,16 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 }
 
 // Get domain data for a domain type at a given epoch
-func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error) {
+func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error) {
 
-	// Data
-	var wg errgroup.Group
 	var genesis GenesisResponse
-	var fork ForkResponse
 
-	// Get genesis
-	wg.Go(func() error {
-		var err error
-		genesis, err = c.getGenesis()
-		return err
-	})
-
-	// Get fork
-	wg.Go(func() error {
-		var err error
-		fork, err = c.getFork("head")
-		return err
-	})
-
-	// Wait for data
-	if err := wg.Wait(); err != nil {
-		return []byte{}, err
-	}
+	genesis, err := c.getGenesis()
 
 	// Get fork version
-	var forkVersion []byte
-	if useGenesisFork {
-		forkVersion = genesis.Data.GenesisForkVersion
-	} else if epoch < uint64(fork.Data.Epoch) {
-		forkVersion = fork.Data.PreviousVersion
-	} else {
-		forkVersion = fork.Data.CurrentVersion
+	forkVersion, err := hexutil.Decode(CapellaForkVersion)
+	if err != nil {
+		return []byte{}, err
 	}
 
 	// Compute & return domain

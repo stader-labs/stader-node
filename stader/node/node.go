@@ -257,7 +257,7 @@ func run(c *cli.Context) error {
 
 					exitEpoch := currentHead.Epoch
 
-					signatureDomain, err := bc.GetDomainData(eth2types.DomainVoluntaryExit[:], exitEpoch, false)
+					signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:])
 					if err != nil {
 						errorLog.Printf("Failed to get the signature domain from beacon chain with err: %s\n", err.Error())
 						continue
