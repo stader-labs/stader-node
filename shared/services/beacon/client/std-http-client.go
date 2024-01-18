@@ -62,7 +62,7 @@ const (
 
 	MaxRequestValidatorsCount     = 600
 	threadLimit               int = 6
-	CapellaSlot                   = 7402106
+	CapellaSlot                   = "7402106"
 )
 
 // Beacon client using the standard Beacon HTTP REST API (https://ethereum.github.io/beacon-APIs/)
@@ -427,7 +427,7 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	// Get fork
 	wg.Go(func() error {
 		var err error
-		fork, err = c.getFork(string(CapellaSlot))
+		fork, err = c.getFork(CapellaSlot)
 		return err
 	})
 
