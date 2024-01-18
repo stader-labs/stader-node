@@ -429,6 +429,7 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 
 	// Get fork version
 	forkVersion := []byte("0x03001020")
+	fmt.Printf("GetExitDomainData: fork version: %s\n", forkVersion)
 
 	// Compute & return domain
 	var dt [4]byte
@@ -473,6 +474,8 @@ func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useG
 	} else {
 		forkVersion = fork.Data.CurrentVersion
 	}
+
+	fmt.Printf("GetDomainData: Fork version: %s\n", forkVersion)
 
 	// Compute & return domain
 	var dt [4]byte

@@ -92,6 +92,11 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 		return nil, err
 	}
 
+	_, err = bc.GetDomainData(eth2types.DomainVoluntaryExit[:], head.Epoch, false)
+	if err != nil {
+		return nil, err
+	}
+
 	// Get voluntary exit signature domain
 	signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:])
 	if err != nil {
