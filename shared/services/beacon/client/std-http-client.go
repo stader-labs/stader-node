@@ -62,6 +62,7 @@ const (
 
 	MaxRequestValidatorsCount     = 600
 	threadLimit               int = 6
+	CapellaSlot                   = 7402106
 )
 
 // Beacon client using the standard Beacon HTTP REST API (https://ethereum.github.io/beacon-APIs/)
@@ -414,11 +415,19 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	// Data
 	var wg errgroup.Group
 	var genesis GenesisResponse
+	var fork ForkResponse
 
 	// Get genesis
 	wg.Go(func() error {
 		var err error
 		genesis, err = c.getGenesis()
+		return err
+	})
+
+	// Get fork
+	wg.Go(func() error {
+		var err error
+		fork, err = c.getFork(string(CapellaSlot))
 		return err
 	})
 
@@ -428,13 +437,12 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	}
 
 	// Get fork version
-	forkVersion := []byte("0x03001020")
-	fmt.Printf("GetExitDomainData: fork version: %s\n", forkVersion)
+	fmt.Printf("GetExitDomainData: fork version: %s\n", fork.Data.CurrentVersion)
 
 	// Compute & return domain
 	var dt [4]byte
 	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, forkVersion, genesis.Data.GenesisValidatorsRoot), nil
+	return eth2types.Domain(dt, fork.Data.CurrentVersion, genesis.Data.GenesisValidatorsRoot), nil
 
 }
 
@@ -465,7 +473,7 @@ func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useG
 		return []byte{}, err
 	}
 
-	fmt.Printf("GetDomainData: ForkData is %v\n", fork.Data)
+	fmt.Printf("GetDomainData: ForkData is %v\n", fork.Data.PreviousVersion)
 	// Get fork version
 	var forkVersion []byte
 	if useGenesisFork {
