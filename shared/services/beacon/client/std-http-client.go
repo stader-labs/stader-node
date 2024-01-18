@@ -418,6 +418,7 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config
 
 	// Get fork version
 	var capellaForkVersion string
+	// TODO - we currently only support mainnet and testnet envs. We will have to update this as we change n/ws
 	if network == config.Network_Mainnet {
 		capellaForkVersion = eth2.MainnetCapellaForkVersion
 	} else {
