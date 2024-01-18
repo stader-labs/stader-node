@@ -409,6 +409,35 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 }
 
 // Get domain data for a domain type at a given epoch
+func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error) {
+
+	// Data
+	var wg errgroup.Group
+	var genesis GenesisResponse
+
+	// Get genesis
+	wg.Go(func() error {
+		var err error
+		genesis, err = c.getGenesis()
+		return err
+	})
+
+	// Wait for data
+	if err := wg.Wait(); err != nil {
+		return []byte{}, err
+	}
+
+	// Get fork version
+	forkVersion := []byte("0x03000000")
+
+	// Compute & return domain
+	var dt [4]byte
+	copy(dt[:], domainType[:])
+	return eth2types.Domain(dt, forkVersion, genesis.Data.GenesisValidatorsRoot), nil
+
+}
+
+// Get domain data for a domain type at a given epoch
 func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error) {
 
 	// Data
