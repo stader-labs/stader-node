@@ -144,7 +144,6 @@ type Client interface {
 	GetValidatorSyncDuties(indices []uint64, epoch uint64) (map[uint64]bool, error)
 	GetValidatorProposerDuties(indices []uint64, epoch uint64) (map[uint64]uint64, error)
 	GetExitDomainData(domainType []byte) ([]byte, error)
-	GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error)
 	ExitValidator(validatorIndex, epoch uint64, signature types.ValidatorSignature) error
 	Close() error
 	GetEth1DataForEth2Block(blockId string) (Eth1Data, bool, error)

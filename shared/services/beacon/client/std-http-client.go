@@ -413,70 +413,14 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 // Get domain data for a domain type at a given epoch
 func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error) {
 
-	// Data
-	var wg errgroup.Group
 	var genesis GenesisResponse
 
-	// Get genesis
-	wg.Go(func() error {
-		var err error
-		genesis, err = c.getGenesis()
-		return err
-	})
-
-	// Wait for data
-	if err := wg.Wait(); err != nil {
-		return []byte{}, err
-	}
+	genesis, err := c.getGenesis()
 
 	// Get fork version
 	forkVersion, err := hexutil.Decode(CapellaForkVersion)
 	if err != nil {
 		return []byte{}, err
-	}
-
-	// Compute & return domain
-	var dt [4]byte
-	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, forkVersion, genesis.Data.GenesisValidatorsRoot), nil
-
-}
-
-// Get domain data for a domain type at a given epoch
-func (c *StandardHttpClient) GetDomainData(domainType []byte, epoch uint64, useGenesisFork bool) ([]byte, error) {
-
-	// Data
-	var wg errgroup.Group
-	var genesis GenesisResponse
-	var fork ForkResponse
-
-	// Get genesis
-	wg.Go(func() error {
-		var err error
-		genesis, err = c.getGenesis()
-		return err
-	})
-
-	// Get fork
-	wg.Go(func() error {
-		var err error
-		fork, err = c.getFork("head")
-		return err
-	})
-
-	// Wait for data
-	if err := wg.Wait(); err != nil {
-		return []byte{}, err
-	}
-
-	// Get fork version
-	var forkVersion []byte
-	if useGenesisFork {
-		forkVersion = genesis.Data.GenesisForkVersion
-	} else if epoch < uint64(fork.Data.Epoch) {
-		forkVersion = fork.Data.PreviousVersion
-	} else {
-		forkVersion = fork.Data.CurrentVersion
 	}
 
 	// Compute & return domain
