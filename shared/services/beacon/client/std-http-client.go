@@ -423,12 +423,17 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 		return err
 	})
 
-	// Get fork
-	wg.Go(func() error {
-		var err error
-		fork, err = c.getFork("head")
-		return err
-	})
+	//// Get fork
+	//wg.Go(func() error {
+	//	var err error
+	//	fork, err = c.getFork("head")
+	//	return err
+	//})
+
+	capellaForkVersion, err := hexutil.Decode("0x03001020")
+	if err != nil {
+		return []byte{}, err
+	}
 
 	// Wait for data
 	if err := wg.Wait(); err != nil {
@@ -438,7 +443,8 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	// Compute & return domain
 	var dt [4]byte
 	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, fork.Data.PreviousVersion, genesis.Data.GenesisValidatorsRoot), nil
+	// TODO - this is a temp fix for the current version. Ideally we need to hardcode the fork version here
+	return eth2types.Domain(dt, capellaForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 
 }
 

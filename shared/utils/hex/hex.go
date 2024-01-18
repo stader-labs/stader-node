@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package hex
 
+import "github.com/ethereum/go-ethereum/common/hexutil"
+
 // Add a prefix to a hex string if not present
 func AddPrefix(value string) string {
 	if len(value) < 2 || value[0:2] != "0x" {
@@ -33,4 +35,8 @@ func RemovePrefix(value string) string {
 		return value[2:]
 	}
 	return value
+}
+
+func Decode(value string) ([]byte, error) {
+	return hexutil.Decode(value)
 }
