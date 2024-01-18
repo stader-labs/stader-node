@@ -428,7 +428,7 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	}
 
 	// Get fork version
-	forkVersion := []byte("0x03000000")
+	forkVersion := []byte("0x03001020")
 
 	// Compute & return domain
 	var dt [4]byte
