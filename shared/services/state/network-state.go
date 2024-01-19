@@ -511,6 +511,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	liquidIndex, err := sdutility.LiquidationIndexByOperator(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	orc, err := services.GetOperatorRewardsCollectorContract(c)
 	if err != nil {
 		return nil, err
@@ -596,7 +601,7 @@ func CreateMetricsCache(
 
 	metricsDetails.OperatorSDSelfBond = math.RoundDown(eth.WeiToEth(operatorSdCollateral), SixDecimalRound)
 
-	metricsDetails.LiquidationStatus = 0
+	metricsDetails.LiquidationStatus = float64(liquidIndex.Int64())
 	metricsDetails.ClaimVaultBalance = math.RoundDown(eth.WeiToEth(operatorClaimVaultBalance), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
