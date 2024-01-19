@@ -138,6 +138,11 @@ type MetricDetails struct {
 
 	// done
 	HealthFactor float64
+
+	// done
+	LiquidationStatus float64
+
+	ClaimVaultBalance float64
 }
 
 type MetricsCache struct {
@@ -506,6 +511,16 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	orc, err := services.GetOperatorRewardsCollectorContract(c)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorClaimVaultBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
@@ -580,6 +595,9 @@ func CreateMetricsCache(
 	metricsDetails.OperatorSDUtilizationPosition = math.RoundDown(eth.WeiToEth(totalPosition), SixDecimalRound)
 
 	metricsDetails.OperatorSDSelfBond = math.RoundDown(eth.WeiToEth(operatorSdCollateral), SixDecimalRound)
+
+	metricsDetails.LiquidationStatus = 0
+	metricsDetails.ClaimVaultBalance = math.RoundDown(eth.WeiToEth(operatorClaimVaultBalance), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
 

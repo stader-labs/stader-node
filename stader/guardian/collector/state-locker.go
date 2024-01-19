@@ -66,6 +66,7 @@ func NewMetricsCacheContainer() *MetricsCacheContainer {
 				SdCollateralPct:               0,
 				LockedEth:                     0,
 				HealthFactor:                  0,
+				LiquidationStatus:             0,
 				StaderQueuedValidators:        big.NewInt(0),
 			},
 		},
