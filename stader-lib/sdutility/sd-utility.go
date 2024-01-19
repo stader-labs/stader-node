@@ -108,7 +108,7 @@ func GetUserData(sp *stader.SDUtilityPoolContractManager, address common.Address
 }
 
 func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (bool, error) {
-	liquidationIndex, err := sp.SDUtilityPool.LiquidationIndexByOperator(opts, address)
+	liquidationIndex, err := LiquidationIndexByOperator(sp, address, nil)
 	if err != nil {
 		return false, err
 	}
@@ -116,4 +116,8 @@ func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.A
 	isAlreadyLiquidated := liquidationIndex.Cmp(big.NewInt(0)) != 0
 
 	return isAlreadyLiquidated, nil
+}
+
+func LiquidationIndexByOperator(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SDUtilityPool.LiquidationIndexByOperator(opts, address)
 }
