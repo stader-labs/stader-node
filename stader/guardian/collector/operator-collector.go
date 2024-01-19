@@ -40,6 +40,8 @@ type OperatorCollector struct {
 	SdCollateralPct                      *prometheus.Desc
 	LockedEth                            *prometheus.Desc
 	HealthFactor                         *prometheus.Desc
+	LiquidationStatus                    *prometheus.Desc
+	ClaimVaultBalance                    *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -133,6 +135,10 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, TotalSDUtilizationPosition), "", nil, nil),
 		TotalSDSelfBond: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, TotalSDSelfBonded), "", nil, nil),
+		LiquidationStatus: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, LiquidationStatus), "", nil, nil),
+		ClaimVaultBalance: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, ClaimVaultBalance), "", nil, nil),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -170,6 +176,8 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.HealthFactor
 	channel <- collector.TotalSDUtilizationPosition
 	channel <- collector.TotalSDSelfBond
+	channel <- collector.LiquidationStatus
+	channel <- collector.ClaimVaultBalance
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -204,6 +212,8 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, state.StaderNetworkDetails.HealthFactor)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDUtilizationPosition))
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDSelfBond))
+	channel <- prometheus.MustNewConstMetric(collector.LiquidationStatus, prometheus.GaugeValue, state.StaderNetworkDetails.LiquidationStatus)
+	channel <- prometheus.MustNewConstMetric(collector.ClaimVaultBalance, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimVaultBalance)
 }
 
 // Log error messages
