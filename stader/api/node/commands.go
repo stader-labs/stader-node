@@ -75,7 +75,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-register",
 				Usage:     "Check whether the node can be registered with Stader",
-				UsageText: "stader-cli api node can-register timezone-location",
+				UsageText: "stader-cli api node can-register operator-name operator-reward-address socialize-mev",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
