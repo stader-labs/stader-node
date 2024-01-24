@@ -27,11 +27,11 @@ import (
 )
 
 const (
-	prysmBnTagTest string = "prysmaticlabs/prysm-beacon-chain:v4.2.0"
-	prysmVcTagTest string = "prysmaticlabs/prysm-validator:v4.2.0"
+	prysmBnTagTest string = "staderdev/prysm:v4.2.1-rc.0"
+	prysmVcTagTest string = "staderdev/prysm:v4.2.1-rc.0"
 
-	prysmBnTagProd string = "prysmaticlabs/prysm-beacon-chain:v4.2.0"
-	prysmVcTagProd string = "prysmaticlabs/prysm-validator:v4.2.0"
+	prysmBnTagProd string = "staderdev/prysm:v4.2.0"
+	prysmVcTagProd string = "staderdev/prysm:v4.2.0"
 
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
