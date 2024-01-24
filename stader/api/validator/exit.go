@@ -1,8 +1,11 @@
 package validator
 
 import (
+	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
+	"github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/types"
@@ -83,6 +86,11 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 		return nil, err
 	}
 
+	network, ok := cfg.StaderNode.Network.Value.(config.Network)
+	if !ok {
+		return nil, fmt.Errorf("invalid network configuration: %s", cfg.StaderNode.Network.Value)
+	}
+
 	// Response
 	response := api.ExitValidatorResponse{}
 
@@ -93,7 +101,7 @@ func exitValidator(c *cli.Context, validatorPubKey types.ValidatorPubkey) (*api.
 	}
 
 	// Get voluntary exit signature domain
-	signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:])
+	signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:], network)
 	if err != nil {
 		return nil, err
 	}

@@ -32,6 +32,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/prysmaticlabs/prysm/v3/crypto/bls"
+	"github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 	"golang.org/x/sync/errgroup"
@@ -62,8 +63,6 @@ const (
 
 	MaxRequestValidatorsCount     = 600
 	threadLimit               int = 6
-
-	CapellaForkVersion = "0x03001020"
 )
 
 // Beacon client using the standard Beacon HTTP REST API (https://ethereum.github.io/beacon-APIs/)
@@ -411,14 +410,22 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 }
 
 // Get domain data for a domain type at a given epoch
-func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error) {
+func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config.Network) ([]byte, error) {
 
 	var genesis GenesisResponse
 
 	genesis, err := c.getGenesis()
 
 	// Get fork version
-	forkVersion, err := hexutil.Decode(CapellaForkVersion)
+	var capellaForkVersion string
+	// TODO - we currently only support mainnet and testnet envs. We will have to update this as we change n/ws
+	if network == config.Network_Mainnet {
+		capellaForkVersion = eth2.MainnetCapellaForkVersion
+	} else {
+		capellaForkVersion = eth2.GoerliCapellaForkVersion
+	}
+
+	decodedForkVersion, err := hexutil.Decode(capellaForkVersion)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -426,7 +433,7 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte) ([]byte, error
 	// Compute & return domain
 	var dt [4]byte
 	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, forkVersion, genesis.Data.GenesisValidatorsRoot), nil
+	return eth2types.Domain(dt, decodedForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 
 }
 

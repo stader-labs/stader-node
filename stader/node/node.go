@@ -30,6 +30,7 @@ import (
 	"sync"
 	"time"
 
+	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
@@ -153,6 +154,18 @@ func run(c *cli.Context) error {
 				}
 			}
 
+			cfg, err := services.GetConfig(c)
+			if err != nil {
+				errorLog.Printf("Failed to get config with error %s\n", err.Error())
+				continue
+			}
+
+			network, ok := cfg.StaderNode.Network.Value.(cfgtypes.Network)
+			if !ok {
+				errorLog.Printf("Failed to get network from config: %s\n", cfg.StaderNode.Network.Value)
+				continue
+			}
+
 			operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Failed to get operator id: %s\n", err.Error())
@@ -257,7 +270,7 @@ func run(c *cli.Context) error {
 
 					exitEpoch := currentHead.Epoch
 
-					signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:])
+					signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:], network)
 					if err != nil {
 						errorLog.Printf("Failed to get the signature domain from beacon chain with err: %s\n", err.Error())
 						continue

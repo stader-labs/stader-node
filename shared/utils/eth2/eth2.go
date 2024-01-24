@@ -23,6 +23,11 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/beacon"
 )
 
+const (
+	GoerliCapellaForkVersion  = "0x03001020"
+	MainnetCapellaForkVersion = "0x03000000"
+)
+
 // Get an eth2 epoch number by time
 func EpochAt(config beacon.Eth2Config, time uint64) uint64 {
 	return config.GenesisEpoch + (time-config.GenesisTime)/config.SecondsPerEpoch
