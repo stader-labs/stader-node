@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,11 @@ package eth2
 
 import (
 	"github.com/stader-labs/stader-node/shared/services/beacon"
+)
+
+const (
+	GoerliCapellaForkVersion  = "0x03001020"
+	MainnetCapellaForkVersion = "0x03000000"
 )
 
 // Get an eth2 epoch number by time
