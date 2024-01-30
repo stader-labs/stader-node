@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import (
 	"sync"
 	"time"
 
+	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/crypto"
 	"github.com/stader-labs/stader-node/shared/utils/eth2"
@@ -153,6 +154,18 @@ func run(c *cli.Context) error {
 				}
 			}
 
+			cfg, err := services.GetConfig(c)
+			if err != nil {
+				errorLog.Printf("Failed to get config with error %s\n", err.Error())
+				continue
+			}
+
+			network, ok := cfg.StaderNode.Network.Value.(cfgtypes.Network)
+			if !ok {
+				errorLog.Printf("Failed to get network from config: %s\n", cfg.StaderNode.Network.Value)
+				continue
+			}
+
 			operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 			if err != nil {
 				errorLog.Printf("Failed to get operator id: %s\n", err.Error())
@@ -257,7 +270,7 @@ func run(c *cli.Context) error {
 
 					exitEpoch := currentHead.Epoch
 
-					signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:])
+					signatureDomain, err := bc.GetExitDomainData(eth2types.DomainVoluntaryExit[:], network)
 					if err != nil {
 						errorLog.Printf("Failed to get the signature domain from beacon chain with err: %s\n", err.Error())
 						continue

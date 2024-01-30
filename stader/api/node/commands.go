@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.4]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "can-register",
 				Usage:     "Check whether the node can be registered with Stader",
-				UsageText: "stader-cli api node can-register timezone-location",
+				UsageText: "stader-cli api node can-register operator-name operator-reward-address socialize-mev",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
