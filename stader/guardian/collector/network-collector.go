@@ -62,9 +62,10 @@ type NetworkCollector struct {
 	// The utilize amount + fee
 	SdUtilityPoolBalance *prometheus.Desc
 
+	//Total amount of outstanding SD utilized
 	TotalSDUtilized *prometheus.Desc
 
-	TotalTVLSDUtilization *prometheus.Desc
+	TotalValueLocledSDUtilization *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -150,11 +151,12 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The current balance of the SD utility pool",
 			nil, nil,
 		),
-		TotalSDUtilized: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_sd_utilized"),
+		//Total amount of outstanding SD utilized
+		TotalSDUtilized: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_outstanding_sd_utilized"),
 			"The total the SD utilized in network",
 			nil, nil,
 		),
-		TotalTVLSDUtilization: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_utilization_tvl"),
+		TotalValueLocledSDUtilization: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "sd_utilization_tvl"),
 			"The total value locked for SD utilization in network",
 			nil, nil,
 		),
@@ -185,7 +187,7 @@ func (collector *NetworkCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.MaxEthThreshold
 	channel <- collector.SdUtilityPoolBalance
 	channel <- collector.TotalSDUtilized
-	channel <- collector.TotalTVLSDUtilization
+	channel <- collector.TotalValueLocledSDUtilization
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -226,8 +228,10 @@ func (collector *NetworkCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(
 		collector.MaxEthThreshold, prometheus.GaugeValue, state.StaderNetworkDetails.MaxEthThreshold)
 	channel <- prometheus.MustNewConstMetric(collector.SdUtilityPoolBalance, prometheus.GaugeValue, state.StaderNetworkDetails.SdUtilityPoolBalance)
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilized, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilized, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
+
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilized, prometheus.GaugeValue, state.StaderNetworkDetails.TotalSDUtilized)
+
+	channel <- prometheus.MustNewConstMetric(collector.TotalValueLocledSDUtilization, prometheus.GaugeValue, state.StaderNetworkDetails.SDUtilizationTVL)
 }
 
 // Log error messages
