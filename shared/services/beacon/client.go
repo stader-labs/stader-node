@@ -97,6 +97,10 @@ type AttestationInfo struct {
 	CommitteeIndex  uint64
 }
 
+type NodeVersion struct {
+	Version string
+}
+
 // Beacon client type
 type BeaconClientType int
 
@@ -133,6 +137,7 @@ const (
 type Client interface {
 	GetClientType() (BeaconClientType, error)
 	GetSyncStatus() (SyncStatus, error)
+	GetNodeVersion() (NodeVersion, error)
 	GetEth2Config() (Eth2Config, error)
 	GetEth2DepositContract() (Eth2DepositContract, error)
 	GetAttestations(blockId string) ([]AttestationInfo, bool, error)
