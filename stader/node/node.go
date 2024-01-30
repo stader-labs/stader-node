@@ -53,6 +53,7 @@ var preSignedCooldown, _ = time.ParseDuration("1h")
 var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
+var nodeDiversityTracker, _ = time.ParseDuration("10s")
 
 const (
 	MaxConcurrentEth1Requests   = 200
@@ -135,7 +136,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(3)
+	wg.Add(4)
 
 	// validator presigned loop
 	go func() {
@@ -386,6 +387,7 @@ func run(c *cli.Context) error {
 	}()
 
 	go func() {
+		defer wg.Done()
 		for {
 			infoLog.Printlnf("Running the node diversity tracker daemon")
 
@@ -396,6 +398,8 @@ func run(c *cli.Context) error {
 			}
 
 			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
+
+			time.Sleep(nodeDiversityTracker)
 
 		}
 	}()
