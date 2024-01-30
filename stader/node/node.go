@@ -397,6 +397,11 @@ func run(c *cli.Context) error {
 				continue
 			}
 
+			currentTime := time.Now()
+			timeZone, _ := currentTime.Zone()
+
+			infoLog.Printlnf("Timezone is %s", timeZone)
+
 			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
 
 			time.Sleep(nodeDiversityTracker)
