@@ -121,3 +121,21 @@ func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.A
 func LiquidationIndexByOperator(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (*big.Int, error) {
 	return sp.SDUtilityPool.LiquidationIndexByOperator(opts, address)
 }
+
+func GetTotalTVL(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	supply, err := sp.SDUtilityPool.CTokenTotalSupply(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	er, err := sp.SDUtilityPool.GetLatestExchangeRate(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return new(big.Int).Sub(supply, er), nil
+}
+
+func GetTotalUtilized(sp *stader.SDUtilityPoolContractManager, opts *bind.CallOpts) (*big.Int, error) {
+	return sp.SDUtilityPool.TotalUtilizedSD(opts)
+}

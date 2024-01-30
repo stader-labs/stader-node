@@ -63,6 +63,12 @@ type MetricDetails struct {
 	// done
 	MaxEthThreshold float64
 
+	// done
+	TotalSDUtilized float64
+
+	// done
+	TotalSDUtilizationTVL float64
+
 	// Validator specific info
 
 	// done
@@ -506,6 +512,16 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	totalSDUtilized, err := sdutility.GetTotalTVL(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalSDUtilizationTVL, err := sdutility.GetTotalTVL(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	userData, err := sdutility.GetUserData(sdu, nodeAddress, nil)
 	if err != nil {
 		return nil, err
@@ -603,6 +619,9 @@ func CreateMetricsCache(
 
 	metricsDetails.LiquidationStatus = float64(liquidIndex.Int64())
 	metricsDetails.ClaimVaultBalance = math.RoundDown(eth.WeiToEth(operatorClaimVaultBalance), SixDecimalRound)
+
+	metricsDetails.TotalSDUtilized = float64(totalSDUtilized.Int64())
+	metricsDetails.TotalSDUtilizationTVL = float64(totalSDUtilizationTVL.Int64())
 
 	state.StaderNetworkDetails = metricsDetails
 
