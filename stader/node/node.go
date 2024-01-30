@@ -385,6 +385,21 @@ func run(c *cli.Context) error {
 		wg.Done()
 	}()
 
+	go func() {
+		for {
+			infoLog.Printlnf("Running the node diversity tracker daemon")
+
+			nodeVersion, err := bc.GetNodeVersion()
+			if err != nil {
+				errorLog.Println(err)
+				continue
+			}
+
+			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
+
+		}
+	}()
+
 	// Wait for both threads to stop
 	wg.Wait()
 	return nil

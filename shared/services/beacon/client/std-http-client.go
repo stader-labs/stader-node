@@ -48,6 +48,7 @@ const (
 	RequestContentType = "application/json"
 
 	RequestSyncStatusPath            = "/eth/v1/node/syncing"
+	RequestNodeVersionPath           = "/eth/v1/node/version"
 	RequestEth2ConfigPath            = "/eth/v1/config/spec"
 	RequestEth2DepositContractMethod = "/eth/v1/config/deposit_contract"
 	RequestGenesisPath               = "/eth/v1/beacon/genesis"
@@ -105,6 +106,17 @@ func (c *StandardHttpClient) GetSyncStatus() (beacon.SyncStatus, error) {
 		Progress: progress,
 	}, nil
 
+}
+
+func (c *StandardHttpClient) GetNodeVersion() (beacon.NodeVersion, error) {
+	nodeVersion, err := c.getNodeVersion()
+	if err != nil {
+		return beacon.NodeVersion{}, err
+	}
+
+	return beacon.NodeVersion{
+		Version: nodeVersion.Data.Version,
+	}, nil
 }
 
 // Get the eth2 config
@@ -570,6 +582,21 @@ func (c *StandardHttpClient) getSyncStatus() (SyncStatusResponse, error) {
 		return SyncStatusResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
 	}
 	return syncStatus, nil
+}
+
+func (c *StandardHttpClient) getNodeVersion() (NodeVersionResponse, error) {
+	responseBody, status, err := c.getRequest(RequestNodeVersionPath)
+	if err != nil {
+		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: %w", err)
+	}
+	if status != http.StatusOK {
+		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: HTTP status %d; response body: '%s'", status, string(responseBody))
+	}
+	var nodeVersion NodeVersionResponse
+	if err := json.Unmarshal(responseBody, &nodeVersion); err != nil {
+		return NodeVersionResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
+	}
+	return nodeVersion, nil
 }
 
 // Get the eth2 config
