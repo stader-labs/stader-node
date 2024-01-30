@@ -24,12 +24,33 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err != nil {
 		return nil, err
 	}
+	pnr, err := services.GetPermissionlessNodeRegistry(c)
+	if err != nil {
+		return nil, err
+	}
 	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
 
 	response := api.CanClaimRewards{}
+
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	nonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	response.NonTerminalValidators = nonTerminalValidatorKeys
 
 	operatorClaimVaultBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
 	if err != nil {
@@ -124,8 +145,18 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		return nil, err
 	}
 
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	nonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	totalWithdrawableEth := operatorRewardsBalance
-	if operatorRewardsBalance.Cmp(withdrawableInEth) > 0 {
+	if operatorRewardsBalance.Cmp(withdrawableInEth) > 0 && nonTerminalValidatorKeys != 0 {
 		totalWithdrawableEth = withdrawableInEth
 	}
 

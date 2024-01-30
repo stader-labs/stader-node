@@ -44,20 +44,27 @@ func ClaimRewards(c *cli.Context) error {
 
 	sdStatus := sdStatusResponse.SDStatus
 
-	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
-	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
-		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-			totalFee := sdStatus.AccumulatedInterest
+	totalFee := sdStatus.AccumulatedInterest
 
-			fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.DisplayAmountInUnits(totalFee, "sd"))
+	if canClaimRewardsResponse.NonTerminalValidators == 0 {
+		if sdStatus.SdCollateralCurrentAmount.Cmp(totalFee) < 0 {
+			fmt.Printf("Since you exited all your validators, you require to have at least %s SD in your self bonded position to claim your rewards.", eth.DisplayAmountInUnits(totalFee, "sd"))
+			return nil
+		}
+	} else {
+		// if withdrawableInEth < claimsBalance, then there is an existing utilization position
+		if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
+			if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
+				fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.DisplayAmountInUnits(totalFee, "sd"))
 
-			fmt.Printf("Based on the current Health Factor, you can claim upto %s.\n", eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
+				fmt.Printf("Based on the current Health Factor, you can claim upto %s.\n", eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
 
-			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
+				fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 
-			if !cliutils.Confirm("Are you sure you want to proceed?\n\n") {
-				fmt.Println("Cancelled.")
-				return nil
+				if !cliutils.Confirm("Are you sure you want to proceed?\n\n") {
+					fmt.Println("Cancelled.")
+					return nil
+				}
 			}
 		}
 	}
