@@ -21,7 +21,9 @@ package node
 
 import (
 	_ "embed"
+	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -397,10 +399,32 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			currentTime := time.Now()
-			timeZone, _ := currentTime.Zone()
+			resp, err := http.Get("https://ipinfo.io/json/")
+			if err != nil {
+				continue
+			}
 
-			infoLog.Printlnf("Timezone is %s", timeZone)
+			defer func() {
+				_ = resp.Body.Close()
+			}()
+
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				continue
+			}
+
+			response := struct {
+				Timezone string `json:"timezone"`
+				City     string `json:"city"`
+				Region   string `json:"region"`
+			}{}
+
+			err = json.Unmarshal(body, &response)
+			if err != nil {
+				continue
+			}
+
+			infoLog.Printlnf("Timezone is %+v", response)
 
 			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
 
