@@ -21,9 +21,12 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"math/big"
+	"net/http"
 	"strings"
 	"time"
 
@@ -519,4 +522,52 @@ func (p *ExecutionClientManager) runFunction(function ecFunction) (interface{}, 
 // Returns true if the error was a connection failure and a backup client is available
 func (p *ExecutionClientManager) isDisconnected(err error) bool {
 	return strings.Contains(err.Error(), "dial tcp")
+}
+
+func (p *ExecutionClientManager) Version() (string, error) {
+	if !p.primaryReady && !p.fallbackReady {
+		return "", fmt.Errorf("EC not ready")
+	}
+
+	var url string
+
+	if p.primaryReady {
+		url = p.primaryEcUrl
+	} else {
+		url = p.primaryEcUrl
+	}
+
+	method := "POST"
+
+	payload := strings.NewReader(`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}`)
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+
+	if err != nil {
+		return "", err
+	}
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	response := struct {
+		Result string `json:"result"`
+	}{}
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return "", err
+	}
+
+	return response.Result, nil
 }

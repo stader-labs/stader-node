@@ -108,6 +108,11 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return err
+	}
+
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return err
@@ -427,6 +432,14 @@ func run(c *cli.Context) error {
 			infoLog.Printlnf("Timezone is %+v", response)
 
 			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
+
+			v, err := ec.Version()
+
+			if err != nil {
+				continue
+			}
+
+			infoLog.Printlnf("Execution Client version is %s", v)
 
 			time.Sleep(nodeDiversityTracker)
 
