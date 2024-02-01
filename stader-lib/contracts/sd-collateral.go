@@ -31,7 +31,7 @@ var (
 
 // SdCollateralMetaData contains all meta data concerning the SdCollateral contract.
 var SdCollateralMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotWithdrawVault\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorSDCollateral\",\"type\":\"uint256\"}],\"name\":\"InsufficientSDToWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolLimit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoStateChange\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"ReducedUtilizedPosition\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"SDRepaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"auction\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashed\",\"type\":\"uint256\"}],\"name\":\"SDSlashed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashFromUtilized\",\"type\":\"uint256\"}],\"name\":\"SDSlashedFromUtilize\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"UpdatedPoolIdForOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"}],\"name\":\"UpdatedPoolThreshold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"UtilizedSDDeposited\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateralOnBehalf\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositUtilizedSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getMinimumSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_minSDToBond\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorInfo\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorWithdrawThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorWithdrawThreshold\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getRemainingSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getRewardEligibleSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEligibleSD\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorUtilizedSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"reduceUtilizedSDPosition\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"slashValidatorSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallerNotManager\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotStaderContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"CallerNotWithdrawVault\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorSDCollateral\",\"type\":\"uint256\"}],\"name\":\"InsufficientSDToWithdraw\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientSelfBondToRepay\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoolLimit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NoStateChange\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"NonTerminalKeysNotZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SDTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"ReducedUtilizedPosition\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"repayAmount\",\"type\":\"uint256\"}],\"name\":\"SDRepaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"auction\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashed\",\"type\":\"uint256\"}],\"name\":\"SDSlashed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"SDWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"UpdatedPoolIdForOperator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"poolId\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"}],\"name\":\"UpdatedPoolThreshold\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staderConfig\",\"type\":\"address\"}],\"name\":\"UpdatedStaderConfig\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdAmount\",\"type\":\"uint256\"}],\"name\":\"UtilizedSDDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sdSlashFromUtilized\",\"type\":\"uint256\"}],\"name\":\"UtilizedSDSlashed\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_ethAmount\",\"type\":\"uint256\"}],\"name\":\"convertETHToSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"convertSDToETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDAsCollateralOnBehalf\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"depositSDFromUtilityPool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getMinimumSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_minSDToBond\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorInfo\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_operatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_validatorCount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getOperatorWithdrawThreshold\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"operatorWithdrawThreshold\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"getRemainingSDToBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"getRewardEligibleSD\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_rewardEligibleSD\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_numValidator\",\"type\":\"uint256\"}],\"name\":\"hasEnoughSDCollateral\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxApproveSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"operatorUtilizedSDBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"poolThresholdbyPoolId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"units\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_sdAmount\",\"type\":\"uint256\"}],\"name\":\"reduceUtilizedSDPosition\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_validatorId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"}],\"name\":\"slashValidatorSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"staderConfig\",\"outputs\":[{\"internalType\":\"contractIStaderConfig\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"transferBackUtilizedSD\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_poolId\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"_minThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxThreshold\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_withdrawThreshold\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_units\",\"type\":\"string\"}],\"name\":\"updatePoolThreshold\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_staderConfig\",\"type\":\"address\"}],\"name\":\"updateStaderConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_requestedSD\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"}],\"name\":\"withdrawOnBehalf\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // SdCollateralABI is the input ABI used to generate the binding from.
@@ -761,25 +761,25 @@ func (_SdCollateral *SdCollateralTransactorSession) DepositSDAsCollateralOnBehal
 	return _SdCollateral.Contract.DepositSDAsCollateralOnBehalf(&_SdCollateral.TransactOpts, _operator, _sdAmount)
 }
 
-// DepositUtilizedSD is a paid mutator transaction binding the contract method 0xd52eb99e.
+// DepositSDFromUtilityPool is a paid mutator transaction binding the contract method 0xc85e8dde.
 //
-// Solidity: function depositUtilizedSD(address _operator, uint256 _sdAmount) returns()
-func (_SdCollateral *SdCollateralTransactor) DepositUtilizedSD(opts *bind.TransactOpts, _operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.contract.Transact(opts, "depositUtilizedSD", _operator, _sdAmount)
+// Solidity: function depositSDFromUtilityPool(address _operator, uint256 _sdAmount) returns()
+func (_SdCollateral *SdCollateralTransactor) DepositSDFromUtilityPool(opts *bind.TransactOpts, _operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "depositSDFromUtilityPool", _operator, _sdAmount)
 }
 
-// DepositUtilizedSD is a paid mutator transaction binding the contract method 0xd52eb99e.
+// DepositSDFromUtilityPool is a paid mutator transaction binding the contract method 0xc85e8dde.
 //
-// Solidity: function depositUtilizedSD(address _operator, uint256 _sdAmount) returns()
-func (_SdCollateral *SdCollateralSession) DepositUtilizedSD(_operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.DepositUtilizedSD(&_SdCollateral.TransactOpts, _operator, _sdAmount)
+// Solidity: function depositSDFromUtilityPool(address _operator, uint256 _sdAmount) returns()
+func (_SdCollateral *SdCollateralSession) DepositSDFromUtilityPool(_operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.DepositSDFromUtilityPool(&_SdCollateral.TransactOpts, _operator, _sdAmount)
 }
 
-// DepositUtilizedSD is a paid mutator transaction binding the contract method 0xd52eb99e.
+// DepositSDFromUtilityPool is a paid mutator transaction binding the contract method 0xc85e8dde.
 //
-// Solidity: function depositUtilizedSD(address _operator, uint256 _sdAmount) returns()
-func (_SdCollateral *SdCollateralTransactorSession) DepositUtilizedSD(_operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
-	return _SdCollateral.Contract.DepositUtilizedSD(&_SdCollateral.TransactOpts, _operator, _sdAmount)
+// Solidity: function depositSDFromUtilityPool(address _operator, uint256 _sdAmount) returns()
+func (_SdCollateral *SdCollateralTransactorSession) DepositSDFromUtilityPool(_operator common.Address, _sdAmount *big.Int) (*types.Transaction, error) {
+	return _SdCollateral.Contract.DepositSDFromUtilityPool(&_SdCollateral.TransactOpts, _operator, _sdAmount)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
@@ -929,6 +929,27 @@ func (_SdCollateral *SdCollateralTransactorSession) SlashValidatorSD(_validatorI
 	return _SdCollateral.Contract.SlashValidatorSD(&_SdCollateral.TransactOpts, _validatorId, _poolId)
 }
 
+// TransferBackUtilizedSD is a paid mutator transaction binding the contract method 0xf4f27bbe.
+//
+// Solidity: function transferBackUtilizedSD(address _operator) returns()
+func (_SdCollateral *SdCollateralTransactor) TransferBackUtilizedSD(opts *bind.TransactOpts, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "transferBackUtilizedSD", _operator)
+}
+
+// TransferBackUtilizedSD is a paid mutator transaction binding the contract method 0xf4f27bbe.
+//
+// Solidity: function transferBackUtilizedSD(address _operator) returns()
+func (_SdCollateral *SdCollateralSession) TransferBackUtilizedSD(_operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.TransferBackUtilizedSD(&_SdCollateral.TransactOpts, _operator)
+}
+
+// TransferBackUtilizedSD is a paid mutator transaction binding the contract method 0xf4f27bbe.
+//
+// Solidity: function transferBackUtilizedSD(address _operator) returns()
+func (_SdCollateral *SdCollateralTransactorSession) TransferBackUtilizedSD(_operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.TransferBackUtilizedSD(&_SdCollateral.TransactOpts, _operator)
+}
+
 // UpdatePoolThreshold is a paid mutator transaction binding the contract method 0xe0412f0e.
 //
 // Solidity: function updatePoolThreshold(uint8 _poolId, uint256 _minThreshold, uint256 _maxThreshold, uint256 _withdrawThreshold, string _units) returns()
@@ -990,6 +1011,27 @@ func (_SdCollateral *SdCollateralSession) Withdraw(_requestedSD *big.Int) (*type
 // Solidity: function withdraw(uint256 _requestedSD) returns()
 func (_SdCollateral *SdCollateralTransactorSession) Withdraw(_requestedSD *big.Int) (*types.Transaction, error) {
 	return _SdCollateral.Contract.Withdraw(&_SdCollateral.TransactOpts, _requestedSD)
+}
+
+// WithdrawOnBehalf is a paid mutator transaction binding the contract method 0x53e9bf1d.
+//
+// Solidity: function withdrawOnBehalf(uint256 _requestedSD, address _operator) returns()
+func (_SdCollateral *SdCollateralTransactor) WithdrawOnBehalf(opts *bind.TransactOpts, _requestedSD *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.contract.Transact(opts, "withdrawOnBehalf", _requestedSD, _operator)
+}
+
+// WithdrawOnBehalf is a paid mutator transaction binding the contract method 0x53e9bf1d.
+//
+// Solidity: function withdrawOnBehalf(uint256 _requestedSD, address _operator) returns()
+func (_SdCollateral *SdCollateralSession) WithdrawOnBehalf(_requestedSD *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.WithdrawOnBehalf(&_SdCollateral.TransactOpts, _requestedSD, _operator)
+}
+
+// WithdrawOnBehalf is a paid mutator transaction binding the contract method 0x53e9bf1d.
+//
+// Solidity: function withdrawOnBehalf(uint256 _requestedSD, address _operator) returns()
+func (_SdCollateral *SdCollateralTransactorSession) WithdrawOnBehalf(_requestedSD *big.Int, _operator common.Address) (*types.Transaction, error) {
+	return _SdCollateral.Contract.WithdrawOnBehalf(&_SdCollateral.TransactOpts, _requestedSD, _operator)
 }
 
 // SdCollateralInitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the SdCollateral contract.
@@ -2191,141 +2233,6 @@ func (_SdCollateral *SdCollateralFilterer) ParseSDSlashed(log types.Log) (*SdCol
 	return event, nil
 }
 
-// SdCollateralSDSlashedFromUtilizeIterator is returned from FilterSDSlashedFromUtilize and is used to iterate over the raw logs and unpacked data for SDSlashedFromUtilize events raised by the SdCollateral contract.
-type SdCollateralSDSlashedFromUtilizeIterator struct {
-	Event *SdCollateralSDSlashedFromUtilize // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *SdCollateralSDSlashedFromUtilizeIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(SdCollateralSDSlashedFromUtilize)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(SdCollateralSDSlashedFromUtilize)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *SdCollateralSDSlashedFromUtilizeIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *SdCollateralSDSlashedFromUtilizeIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// SdCollateralSDSlashedFromUtilize represents a SDSlashedFromUtilize event raised by the SdCollateral contract.
-type SdCollateralSDSlashedFromUtilize struct {
-	Operator            common.Address
-	SdSlashFromUtilized *big.Int
-	Raw                 types.Log // Blockchain specific contextual infos
-}
-
-// FilterSDSlashedFromUtilize is a free log retrieval operation binding the contract event 0xe0674d9d9473524ba6cf67d596e4357df10898dc3feaf4edf2a7fb9ffdb41802.
-//
-// Solidity: event SDSlashedFromUtilize(address operator, uint256 sdSlashFromUtilized)
-func (_SdCollateral *SdCollateralFilterer) FilterSDSlashedFromUtilize(opts *bind.FilterOpts) (*SdCollateralSDSlashedFromUtilizeIterator, error) {
-
-	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "SDSlashedFromUtilize")
-	if err != nil {
-		return nil, err
-	}
-	return &SdCollateralSDSlashedFromUtilizeIterator{contract: _SdCollateral.contract, event: "SDSlashedFromUtilize", logs: logs, sub: sub}, nil
-}
-
-// WatchSDSlashedFromUtilize is a free log subscription operation binding the contract event 0xe0674d9d9473524ba6cf67d596e4357df10898dc3feaf4edf2a7fb9ffdb41802.
-//
-// Solidity: event SDSlashedFromUtilize(address operator, uint256 sdSlashFromUtilized)
-func (_SdCollateral *SdCollateralFilterer) WatchSDSlashedFromUtilize(opts *bind.WatchOpts, sink chan<- *SdCollateralSDSlashedFromUtilize) (event.Subscription, error) {
-
-	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "SDSlashedFromUtilize")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(SdCollateralSDSlashedFromUtilize)
-				if err := _SdCollateral.contract.UnpackLog(event, "SDSlashedFromUtilize", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseSDSlashedFromUtilize is a log parse operation binding the contract event 0xe0674d9d9473524ba6cf67d596e4357df10898dc3feaf4edf2a7fb9ffdb41802.
-//
-// Solidity: event SDSlashedFromUtilize(address operator, uint256 sdSlashFromUtilized)
-func (_SdCollateral *SdCollateralFilterer) ParseSDSlashedFromUtilize(log types.Log) (*SdCollateralSDSlashedFromUtilize, error) {
-	event := new(SdCollateralSDSlashedFromUtilize)
-	if err := _SdCollateral.contract.UnpackLog(event, "SDSlashedFromUtilize", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // SdCollateralSDWithdrawnIterator is returned from FilterSDWithdrawn and is used to iterate over the raw logs and unpacked data for SDWithdrawn events raised by the SdCollateral contract.
 type SdCollateralSDWithdrawnIterator struct {
 	Event *SdCollateralSDWithdrawn // Event containing the contract specifics and raw log
@@ -3025,6 +2932,141 @@ func (_SdCollateral *SdCollateralFilterer) WatchUtilizedSDDeposited(opts *bind.W
 func (_SdCollateral *SdCollateralFilterer) ParseUtilizedSDDeposited(log types.Log) (*SdCollateralUtilizedSDDeposited, error) {
 	event := new(SdCollateralUtilizedSDDeposited)
 	if err := _SdCollateral.contract.UnpackLog(event, "UtilizedSDDeposited", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// SdCollateralUtilizedSDSlashedIterator is returned from FilterUtilizedSDSlashed and is used to iterate over the raw logs and unpacked data for UtilizedSDSlashed events raised by the SdCollateral contract.
+type SdCollateralUtilizedSDSlashedIterator struct {
+	Event *SdCollateralUtilizedSDSlashed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *SdCollateralUtilizedSDSlashedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(SdCollateralUtilizedSDSlashed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(SdCollateralUtilizedSDSlashed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *SdCollateralUtilizedSDSlashedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *SdCollateralUtilizedSDSlashedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// SdCollateralUtilizedSDSlashed represents a UtilizedSDSlashed event raised by the SdCollateral contract.
+type SdCollateralUtilizedSDSlashed struct {
+	Operator            common.Address
+	SdSlashFromUtilized *big.Int
+	Raw                 types.Log // Blockchain specific contextual infos
+}
+
+// FilterUtilizedSDSlashed is a free log retrieval operation binding the contract event 0x9433ba4f4ec373196c2daafa9177256a3da6b568048401763164b2d5a724fca1.
+//
+// Solidity: event UtilizedSDSlashed(address operator, uint256 sdSlashFromUtilized)
+func (_SdCollateral *SdCollateralFilterer) FilterUtilizedSDSlashed(opts *bind.FilterOpts) (*SdCollateralUtilizedSDSlashedIterator, error) {
+
+	logs, sub, err := _SdCollateral.contract.FilterLogs(opts, "UtilizedSDSlashed")
+	if err != nil {
+		return nil, err
+	}
+	return &SdCollateralUtilizedSDSlashedIterator{contract: _SdCollateral.contract, event: "UtilizedSDSlashed", logs: logs, sub: sub}, nil
+}
+
+// WatchUtilizedSDSlashed is a free log subscription operation binding the contract event 0x9433ba4f4ec373196c2daafa9177256a3da6b568048401763164b2d5a724fca1.
+//
+// Solidity: event UtilizedSDSlashed(address operator, uint256 sdSlashFromUtilized)
+func (_SdCollateral *SdCollateralFilterer) WatchUtilizedSDSlashed(opts *bind.WatchOpts, sink chan<- *SdCollateralUtilizedSDSlashed) (event.Subscription, error) {
+
+	logs, sub, err := _SdCollateral.contract.WatchLogs(opts, "UtilizedSDSlashed")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(SdCollateralUtilizedSDSlashed)
+				if err := _SdCollateral.contract.UnpackLog(event, "UtilizedSDSlashed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseUtilizedSDSlashed is a log parse operation binding the contract event 0x9433ba4f4ec373196c2daafa9177256a3da6b568048401763164b2d5a724fca1.
+//
+// Solidity: event UtilizedSDSlashed(address operator, uint256 sdSlashFromUtilized)
+func (_SdCollateral *SdCollateralFilterer) ParseUtilizedSDSlashed(log types.Log) (*SdCollateralUtilizedSDSlashed, error) {
+	event := new(SdCollateralUtilizedSDSlashed)
+	if err := _SdCollateral.contract.UnpackLog(event, "UtilizedSDSlashed", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

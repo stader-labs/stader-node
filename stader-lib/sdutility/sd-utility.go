@@ -66,8 +66,16 @@ func EstimateRepay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.I
 	return sp.SDUtilityPoolContract.GetTransactionGasInfo(opts, "repay", utilityAmount)
 }
 
+func EstimateRepayFullAmount(sp *stader.SDUtilityPoolContractManager, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sp.SDUtilityPoolContract.GetTransactionGasInfo(opts, "repayFullAmount")
+}
+
 func Repay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
 	return sp.SDUtilityPool.Repay(opts, utilityAmount)
+}
+
+func RepayFullAmount(sp *stader.SDUtilityPoolContractManager, opts *bind.TransactOpts) (*types.Transaction, error) {
+	return sp.SDUtilityPool.RepayFullAmount(opts)
 }
 
 func SDMaxUtilizableAmount(sp *stader.SDUtilityPoolContractManager,

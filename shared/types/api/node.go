@@ -398,13 +398,12 @@ type NodeSignResponse struct {
 }
 
 type CanClaimRewards struct {
-	Status                string         `json:"status"`
-	Error                 string         `json:"error"`
-	NoRewards             bool           `json:"noRewards"`
-	WithdrawableInEth     *big.Int       `json:"withdrawableInEth"`
-	ClaimsBalance         *big.Int       `json:"claimsBalance"`
-	NonTerminalValidators uint64         `json:"nonTerminalValidators"`
-	GasInfo               stader.GasInfo `json:"gasInfo"`
+	Status            string         `json:"status"`
+	Error             string         `json:"error"`
+	NoRewards         bool           `json:"noRewards"`
+	WithdrawableInEth *big.Int       `json:"withdrawableInEth"`
+	ClaimsBalance     *big.Int       `json:"claimsBalance"`
+	GasInfo           stader.GasInfo `json:"gasInfo"`
 }
 
 type ClaimRewards struct {

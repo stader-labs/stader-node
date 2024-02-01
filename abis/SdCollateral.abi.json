@@ -32,6 +32,11 @@
     },
     {
         "inputs": [],
+        "name": "InsufficientSelfBondToRepay",
+        "type": "error"
+    },
+    {
+        "inputs": [],
         "name": "InvalidPoolId",
         "type": "error"
     },
@@ -43,6 +48,11 @@
     {
         "inputs": [],
         "name": "NoStateChange",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NonTerminalKeysNotZero",
         "type": "error"
     },
     {
@@ -229,25 +239,6 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "sdSlashFromUtilized",
-                "type": "uint256"
-            }
-        ],
-        "name": "SDSlashedFromUtilize",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
                 "indexed": true,
                 "internalType": "address",
                 "name": "operator",
@@ -337,6 +328,25 @@
             }
         ],
         "name": "UtilizedSDDeposited",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "sdSlashFromUtilized",
+                "type": "uint256"
+            }
+        ],
+        "name": "UtilizedSDSlashed",
         "type": "event"
     },
     {
@@ -434,7 +444,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "depositUtilizedSD",
+        "name": "depositSDFromUtilityPool",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -853,6 +863,19 @@
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "_operator",
+                "type": "address"
+            }
+        ],
+        "name": "transferBackUtilizedSD",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint8",
                 "name": "_poolId",
                 "type": "uint8"
@@ -905,6 +928,24 @@
             }
         ],
         "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_requestedSD",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "_operator",
+                "type": "address"
+            }
+        ],
+        "name": "withdrawOnBehalf",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
