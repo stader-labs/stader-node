@@ -283,6 +283,7 @@ func run(c *cli.Context) error {
 						continue
 					}
 
+					fmt.Printf("DEBUG: Exit signature for validator: %s is %s\n", validatorPubKey, exitSignature.String())
 					// encrypt the signature and srHash
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
 					if err != nil {
@@ -290,6 +291,7 @@ func run(c *cli.Context) error {
 						continue
 					}
 					exitSignatureEncryptedString := crypto.EncodeBase64(exitSignatureEncrypted)
+					infoLog.Printf("DEBUG: Encrypted exit signature for validator: %s is %s\n", validatorPubKey, exitSignatureEncryptedString)
 
 					// send it to the presigned api
 					preSignSendMessages = append(preSignSendMessages, stader_backend.PreSignSendApiRequestType{
