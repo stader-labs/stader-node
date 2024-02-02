@@ -283,7 +283,7 @@ func run(c *cli.Context) error {
 						continue
 					}
 
-					fmt.Printf("DEBUG: Exit signature for validator: %s is %s\n", validatorPubKey, exitSignature.String())
+					infoLog.Printf("DEBUG: Exit signature for validator: %s is %s\n", validatorPubKey, exitSignature.String())
 					// encrypt the signature and srHash
 					exitSignatureEncrypted, err := crypto.EncryptUsingPublicKey([]byte(exitSignature.String()), publicKey)
 					if err != nil {
@@ -307,23 +307,25 @@ func run(c *cli.Context) error {
 					})
 				}
 
+				infoLog.Printf("Sending %v presigned messages to stader backend\n", preSignSendMessages)
+
 				//fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
-				fmt.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
+				infoLog.Printf("Sending %d presigned messages to stader backend\n", len(preSignSendMessages))
 				//fmt.Printf("Pre-sign messages being sent are %v\n", preSignSendMessages)
-				if len(preSignSendMessages) > 0 {
-					res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
-					if err != nil {
-						errorLog.Printf("Sending bulk presigned message failed with %v\n", err.Error())
-					} else {
-						for pubKey, response := range *res {
-							if response.Success {
-								infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
-							} else {
-								errorLog.Printf("Failed to send the presigned api for validator: %s with err: %s\n", pubKey, response.Error)
-							}
-						}
-					}
-				}
+				//if len(preSignSendMessages) > 0 {
+				//	res, err := stader.SendBulkPresignedMessageToStaderBackend(c, preSignSendMessages)
+				//	if err != nil {
+				//		errorLog.Printf("Sending bulk presigned message failed with %v\n", err.Error())
+				//	} else {
+				//		for pubKey, response := range *res {
+				//			if response.Success {
+				//				infoLog.Printf("Successfully sent the presigned message for validator: %s\n", pubKey)
+				//			} else {
+				//				errorLog.Printf("Failed to send the presigned api for validator: %s with err: %s\n", pubKey, response.Error)
+				//			}
+				//		}
+				//	}
+				//}
 
 				pageNumber += 1
 			}
