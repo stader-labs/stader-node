@@ -3,11 +3,11 @@ package node
 import (
 	"crypto/ecdsa"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/crypto"
 	eCryto "github.com/ethereum/go-ethereum/crypto"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -30,12 +30,12 @@ func TestVerifySignature(t *testing.T) {
 		t.Error(err)
 	}
 
-	publickeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
+	pubkeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
 	req, err := makesNodeDiversityRequest(&stader_backend.NodeDiversity{
 		ExecutionClient: ExecutionClient,
 		ConsensusClient: ConsensusClient,
 		NodeAddress:     crypto.PubkeyToAddress(*publicKeyECDSA).String(),
-		NodePublicKey:   hex.EncodeToString(publickeyBytes),
+		NodePublicKey:   hex.EncodeToString(pubkeyBytes),
 	}, privateKey)
 	if err != nil {
 		t.Error(err)
@@ -68,39 +68,26 @@ func TestVerifySignatureFailed(t *testing.T) {
 		t.Error(err)
 	}
 
-	req, err := makesNodeDiversityRequest(&stader_backend.NodeDiversity{
+	msg := stader_backend.NodeDiversity{
 		ExecutionClient: ExecutionClient,
 		ConsensusClient: ConsensusClient,
 		NodeAddress:     crypto.PubkeyToAddress(*publicKeyECDSA).String(),
 		NodePublicKey:   hex.EncodeToString(publickeyBytes),
-	}, privateKeyFake)
+	}
+	req, err := makesNodeDiversityRequest(&msg, privateKeyFake)
 	if err != nil {
 		t.Error(err)
 	}
 
-	msgStr := req.Message
-	verified := verifySignature(t, msgStr, req.Signature)
+	verified := verifySignature(t, req.Message, req.Signature)
 
 	if verified {
 		t.Error("verified should failed")
 	}
 }
 
-func verifySignature(t *testing.T, msgStr string, sig string) bool {
-	// 1. Decode Hex
-	msgBytes, err := hex.DecodeString(msgStr)
-	if err != nil {
-		t.Error(err)
-	}
-
-	sign, err := hex.DecodeString(sig)
-	if err != nil {
-		t.Error(err)
-	}
-
-	// 2. Unmarshal to get message
-	var msg stader_backend.NodeDiversity
-	err = json.Unmarshal(msgBytes, &msg)
+func verifySignature(t *testing.T, msg *stader_backend.NodeDiversity, signEncoded string) bool {
+	sign, err := hex.DecodeString(signEncoded)
 	if err != nil {
 		t.Error(err)
 	}
@@ -113,8 +100,15 @@ func verifySignature(t *testing.T, msgStr string, sig string) bool {
 		t.Error(err)
 	}
 
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		t.Error(err)
+	}
+
 	// 3. Calculate hash
-	messageHash := accounts.TextHash(msgBytes)
+	h := sha256.New()
+	h.Write(msgBytes)
+	msgHashed := h.Sum(nil)
 
 	decodePubkey, err := hex.DecodeString(msg.NodePublicKey)
 	if err != nil {
@@ -122,5 +116,5 @@ func verifySignature(t *testing.T, msgStr string, sig string) bool {
 	}
 
 	// 4. Verify
-	return eCryto.VerifySignature(decodePubkey, messageHash, sign)
+	return eCryto.VerifySignature(decodePubkey, msgHashed, sign)
 }

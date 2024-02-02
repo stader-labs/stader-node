@@ -324,6 +324,10 @@ func (cfg *StaderNodeConfig) GetMerkleProofApi() string {
 	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/merklesForElRewards/proofs/%s"
 }
 
+func (cfg *StaderNodeConfig) GetNodeDiversityApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/nodeDiversity"
+}
+
 func (cfg *StaderNodeConfig) GetTxWatchUrl() string {
 	return cfg.txWatchUrl[cfg.Network.Value.(config.Network)]
 }

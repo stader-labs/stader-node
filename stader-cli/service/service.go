@@ -684,8 +684,8 @@ func startService(
 			fmt.Printf("%sWarning: couldn't verify that the validator container can be safely restarted:\n\t%s\n", colorYellow, err.Error())
 			fmt.Println("If you are changing to a different ETH2 client, it may resubmit an attestation you have already submitted.")
 			fmt.Println("This will slash your validator!")
-			fmt.Println("To prevent slashing, you must wait 15 minutes from the time you stopped the clients before starting them again.\n")
-			fmt.Println("**If you did NOT change clients, you can safely ignore this warning.**\n")
+			fmt.Println("To prevent slashing, you must wait 15 minutes from the time you stopped the clients before starting them again.")
+			fmt.Println("**If you did NOT change clients, you can safely ignore this warning.**")
 			if !cliutils.Confirm(fmt.Sprintf("Press y when you understand the above warning, have waited, and are ready to start Stader:%s", colorReset)) {
 				fmt.Println("Cancelled.")
 				return nil
