@@ -20,17 +20,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package node
 
 import (
+	"crypto/ecdsa"
 	_ "embed"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/accounts"
+	eCryto "github.com/ethereum/go-ethereum/crypto"
 
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -47,6 +52,7 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
+	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
@@ -395,52 +401,31 @@ func run(c *cli.Context) error {
 
 	go func() {
 		defer wg.Done()
+		privateKey, err := w.GetNodePrivateKey()
+
+		if err != nil {
+			errorLog.Printlnf("Error GetNodePrivateKey %+v", err)
+			return
+		}
+
+		cfg, err := services.GetConfig(c)
+
 		for {
 			infoLog.Printlnf("Running the node diversity tracker daemon")
 
-			nodeVersion, err := bc.GetNodeVersion()
+			message, err := makesNodeDiversityMessage(ec, bc, w, cfg)
 			if err != nil {
-				errorLog.Println(err)
+				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
 				continue
 			}
 
-			resp, err := http.Get("https://ipinfo.io/json/")
+			request, err := makesNodeDiversityRequest(message, privateKey)
 			if err != nil {
+				errorLog.Printlnf("Error makesNodeDiversityRequest %+v", err)
 				continue
 			}
 
-			defer func() {
-				_ = resp.Body.Close()
-			}()
-
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				continue
-			}
-
-			response := struct {
-				Timezone string `json:"timezone"`
-				City     string `json:"city"`
-				Region   string `json:"region"`
-			}{}
-
-			err = json.Unmarshal(body, &response)
-			if err != nil {
-				continue
-			}
-
-			infoLog.Printlnf("Timezone is %+v", response)
-
-			infoLog.Printlnf("Consensus Client version is %s", nodeVersion.Version)
-
-			v, err := ec.Version()
-
-			if err != nil {
-				continue
-			}
-
-			infoLog.Printlnf("Execution Client version is %s", v)
-
+			fmt.Printf("%+v", request)
 			time.Sleep(nodeDiversityTracker)
 
 		}
@@ -449,6 +434,83 @@ func run(c *cli.Context) error {
 	// Wait for both threads to stop
 	wg.Wait()
 	return nil
+
+}
+
+func makesNodeDiversityMessage(
+	ec *services.ExecutionClientManager,
+	bc *services.BeaconClientManager,
+	w *wallet.Wallet,
+	cfg *config.StaderConfig,
+) (*stader_backend.NodeDiversity, error) {
+	bcNodeVersion, err := bc.GetNodeVersion()
+	if err != nil {
+		return nil, err
+	}
+
+	ecVersion, err := ec.Version()
+	if err != nil {
+		return nil, err
+	}
+
+	nodePublicKey, err := w.GetNodePubkey()
+	if err != nil {
+		return nil, err
+	}
+
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	var relayString string
+
+	if cfg.EnableMevBoost.Value == true {
+		var relays []cfgtypes.MevRelay
+		relayNames := []string{}
+		switch cfg.MevBoost.Mode.Value.(cfgtypes.Mode) {
+		case cfgtypes.Mode_Local:
+			relays = cfg.MevBoost.GetEnabledMevRelays()
+
+			for _, relay := range relays {
+				relayNames = append(relayNames, string(relay.ID))
+			}
+		}
+
+		relayString = strings.Join(relayNames, ",")
+	}
+
+	message := stader_backend.NodeDiversity{
+		ExecutionClient: ecVersion,
+		ConsensusClient: bcNodeVersion.Version,
+		NodeAddress:     nodeAccount.Address.String(),
+		NodePublicKey:   nodePublicKey,
+		Relays:          relayString,
+	}
+
+	fmt.Printf("\n{%+v}\n", message)
+	return &message, nil
+}
+
+func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+
+	messageHash := accounts.TextHash(msgBytes)
+
+	rawSign, err := eCryto.Sign(messageHash, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	request := stader_backend.NodeDiversityRequest{
+		Signature: hex.EncodeToString(rawSign[:64]),
+		Message:   hex.EncodeToString(msgBytes),
+	}
+
+	return &request, nil
 
 }
 
