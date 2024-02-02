@@ -87,6 +87,7 @@ func TestVerifySignatureFailed(t *testing.T) {
 }
 
 func verifySignature(t *testing.T, msgStr string, sig string) bool {
+	// 1. Decode Hex
 	msgBytes, err := hex.DecodeString(msgStr)
 	if err != nil {
 		t.Error(err)
@@ -97,8 +98,8 @@ func verifySignature(t *testing.T, msgStr string, sig string) bool {
 		t.Error(err)
 	}
 
+	// 2. Unmarshal to get message
 	var msg stader_backend.NodeDiversity
-
 	err = json.Unmarshal(msgBytes, &msg)
 	if err != nil {
 		t.Error(err)
@@ -112,6 +113,7 @@ func verifySignature(t *testing.T, msgStr string, sig string) bool {
 		t.Error(err)
 	}
 
+	// 3. Calculate hash
 	messageHash := accounts.TextHash(msgBytes)
 
 	decodePubkey, err := hex.DecodeString(msg.NodePublicKey)
@@ -119,5 +121,6 @@ func verifySignature(t *testing.T, msgStr string, sig string) bool {
 		t.Error(err)
 	}
 
+	// 4. Verify
 	return eCryto.VerifySignature(decodePubkey, messageHash, sign)
 }
