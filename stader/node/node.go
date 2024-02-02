@@ -242,11 +242,11 @@ func run(c *cli.Context) error {
 					registeredPresign, ok := preSignRegisteredMap[validatorPubKey.String()]
 					if !ok {
 						errorLog.Printf("Could not query presign api to check if validator: %s is registered\n", validatorPubKey)
-						continue
+						//continue
 					}
 					if registeredPresign {
 						infoLog.Printf("Validator pub key: %s pre signed key already registered\n", validatorPubKey)
-						continue
+						//continue
 					} else {
 						infoLog.Printf("Validator pub key: %s pre signed key not registered. Creating presigned message\n", validatorPubKey)
 					}
