@@ -1,8 +1,8 @@
 package stader_backend
 
 type NodeDiversityRequest struct {
-	Signature string `json:"signature"`
-	Message   string `json:"message"`
+	Signature string         `json:"signature"`
+	Message   *NodeDiversity `json:"message"`
 }
 
 type NodeDiversity struct {
@@ -11,4 +11,9 @@ type NodeDiversity struct {
 	NodeAddress     string `json:"nodeAddress"`
 	NodePublicKey   string `json:"nodePublicKey"`
 	Relays          string `json:"relays"`
+}
+
+type NodeDiversityResponseType struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
 }
