@@ -21,7 +21,6 @@ package node
 
 import (
 	"crypto/ecdsa"
-	"crypto/sha256"
 	_ "embed"
 	"encoding/hex"
 	"encoding/json"
@@ -35,6 +34,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	eCryto "github.com/ethereum/go-ethereum/crypto"
 
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
@@ -508,17 +508,15 @@ func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ec
 		return nil, err
 	}
 
-	h := sha256.New()
-	h.Write(msgBytes)
-	msgHashed := h.Sum(nil)
+	msgHashed := accounts.TextHash(msgBytes)
 
-	rawSign, err := eCryto.Sign(msgHashed, privateKey)
+	signedMessage, err := eCryto.Sign(msgHashed, privateKey)
 	if err != nil {
 		return nil, err
 	}
 
 	request := stader_backend.NodeDiversityRequest{
-		Signature: hex.EncodeToString(rawSign[:64]),
+		Signature: hex.EncodeToString(signedMessage[:64]),
 		Message:   msg,
 	}
 
