@@ -325,7 +325,7 @@ func (cfg *StaderNodeConfig) GetMerkleProofApi() string {
 }
 
 func (cfg *StaderNodeConfig) GetNodeDiversityApi() string {
-	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/nodeDiversity"
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/saveNodeDiversity"
 }
 
 func (cfg *StaderNodeConfig) GetTxWatchUrl() string {

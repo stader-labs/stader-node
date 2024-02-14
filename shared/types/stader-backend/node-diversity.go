@@ -6,11 +6,13 @@ type NodeDiversityRequest struct {
 }
 
 type NodeDiversity struct {
-	ExecutionClient string `json:"executionClient"`
-	ConsensusClient string `json:"consensusClient"`
-	NodeAddress     string `json:"nodeAddress"`
-	NodePublicKey   string `json:"nodePublicKey"`
-	Relays          string `json:"relays"`
+	ExecutionClient      string `json:"executionClient"`
+	ConsensusClient      string `json:"consensusClient"`
+	ValidatorClient      string `json:"validatorClient"`
+	TotalNonTerminalKeys uint64 `json:"totalNonTerminalKeys"`
+	NodeAddress          string `json:"nodeAddress"`
+	NodePublicKey        string `json:"nodePublicKey"`
+	Relays               string `json:"relays"`
 }
 
 type NodeDiversityResponseType struct {

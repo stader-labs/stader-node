@@ -26,7 +26,6 @@ import (
 	"io"
 	"math"
 	"math/big"
-	"net/http"
 	"strings"
 	"time"
 
@@ -39,6 +38,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/shared/utils/net"
 )
 
 // This is a proxy for multiple ETH clients, providing natural fallback support if one of them fails.
@@ -537,19 +537,19 @@ func (p *ExecutionClientManager) Version() (string, error) {
 		url = p.primaryEcUrl
 	}
 
-	method := "POST"
-
-	payload := strings.NewReader(`{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}`)
-
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, payload)
-
-	if err != nil {
-		return "", err
+	payload := struct {
+		Jsonrpc string   `json:"jsonrpc"`
+		Method  string   `json:"method"`
+		Params  []string `json:"params"`
+		Id      int64    `json:"id"`
+	}{
+		Jsonrpc: "2.0",
+		Method:  "web3_clientVersion",
+		Params:  []string{},
+		Id:      1,
 	}
-	req.Header.Add("Content-Type", "application/json")
 
-	res, err := client.Do(req)
+	res, err := net.MakePostRequest(url, payload)
 	if err != nil {
 		return "", err
 	}

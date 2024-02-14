@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/accounts"
@@ -14,8 +15,9 @@ import (
 )
 
 var (
-	ExecutionClient = "Nethermind/v1.25.2+78c7bf5f/linux-x64/dotnet8.0.1"
-	ConsensusClient = "Lighthouse/v4.6.0-rc.0-2e8e160/x86_64-linux"
+	ExecutionClient = "besu/v1.25.2+78c7bf5f/linux-x64/dotnet8.0.1"
+	ConsensusClient = "teku/v4.6.0-rc.0-2e8e160/x86_64-linux"
+	ValidatorClient = "prysm"
 
 	PrvFake = "f7d400ec4062274059f531413e03a938fd837e3a07692338ab78dfd93d1e21e1"
 )
@@ -35,11 +37,13 @@ func TestVerifySignature(t *testing.T) {
 
 	pubkeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
 	req, err := makesNodeDiversityRequest(&stader_backend.NodeDiversity{
-		ExecutionClient: ExecutionClient,
-		ConsensusClient: ConsensusClient,
-		NodeAddress:     crypto.PubkeyToAddress(*publicKeyECDSA).String(),
-		NodePublicKey:   hex.EncodeToString(pubkeyBytes),
-		Relays:          "ultrasound,aestus",
+		ExecutionClient:      ExecutionClient,
+		ConsensusClient:      ConsensusClient,
+		ValidatorClient:      ValidatorClient,
+		TotalNonTerminalKeys: 1,
+		NodeAddress:          crypto.PubkeyToAddress(*publicKeyECDSA).String(),
+		NodePublicKey:        hex.EncodeToString(pubkeyBytes),
+		Relays:               "ultrasound,aestus",
 	}, privateKey)
 	if err != nil {
 		t.Error(err)
@@ -73,10 +77,13 @@ func TestVerifySignatureFailed(t *testing.T) {
 	}
 
 	msg := stader_backend.NodeDiversity{
-		ExecutionClient: ExecutionClient,
-		ConsensusClient: ConsensusClient,
-		NodeAddress:     crypto.PubkeyToAddress(*publicKeyECDSA).String(),
-		NodePublicKey:   hex.EncodeToString(publickeyBytes),
+		ExecutionClient:      ExecutionClient,
+		ConsensusClient:      ConsensusClient,
+		ValidatorClient:      ValidatorClient,
+		TotalNonTerminalKeys: 10,
+		Relays:               "ultrasound,aestus",
+		NodeAddress:          crypto.PubkeyToAddress(*publicKeyECDSA).String(),
+		NodePublicKey:        hex.EncodeToString(publickeyBytes),
 	}
 	req, err := makesNodeDiversityRequest(&msg, privateKeyFake)
 	if err != nil {
@@ -104,11 +111,21 @@ func verifySignature(t *testing.T, msg *stader_backend.NodeDiversity, signEncode
 		t.Error(err)
 	}
 
+	if msg.ValidatorClient != ValidatorClient {
+		t.Error(err)
+	}
+
+	if msg.TotalNonTerminalKeys != 10 {
+		t.Error(err)
+	}
+
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
 		t.Error(err)
 	}
 
+	fmt.Printf("[%s]", msgBytes)
+	fmt.Printf("[%s]", signEncoded)
 	msgHashed := accounts.TextHash(msgBytes)
 
 	decodePubkey, err := hex.DecodeString(msg.NodePublicKey)

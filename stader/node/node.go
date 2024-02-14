@@ -45,6 +45,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	stader_lib "github.com/stader-labs/stader-node/stader-lib/stader"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 
 	"github.com/fatih/color"
@@ -413,7 +414,7 @@ func run(c *cli.Context) error {
 		for {
 			infoLog.Printlnf("Running the node diversity tracker daemon")
 
-			message, err := makesNodeDiversityMessage(ec, bc, w, cfg)
+			message, err := makesNodeDiversityMessage(ec, bc, pnr, w, cfg)
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
 				continue
@@ -451,6 +452,7 @@ func run(c *cli.Context) error {
 func makesNodeDiversityMessage(
 	ec *services.ExecutionClientManager,
 	bc *services.BeaconClientManager,
+	pnr *stader_lib.PermissionlessNodeRegistryContractManager,
 	w *wallet.Wallet,
 	cfg *config.StaderConfig,
 ) (*stader_backend.NodeDiversity, error) {
@@ -491,18 +493,43 @@ func makesNodeDiversityMessage(
 		relayString = strings.Join(relayNames, ",")
 	}
 
+	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Printf("Get total non terminal validator keys\n")
+	totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the new validator client according to the settings file
+	selectedConsensusClientConfig, err := cfg.GetSelectedConsensusClientConfig()
+	if err != nil {
+		return nil, err
+	}
+
 	message := stader_backend.NodeDiversity{
-		ExecutionClient: ecVersion,
-		ConsensusClient: bcNodeVersion.Version,
-		NodeAddress:     nodeAccount.Address.String(),
-		NodePublicKey:   nodePublicKey,
-		Relays:          relayString,
+		ExecutionClient:      ecVersion,
+		ConsensusClient:      bcNodeVersion.Version,
+		ValidatorClient:      selectedConsensusClientConfig.GetName(),
+		NodeAddress:          nodeAccount.Address.String(),
+		TotalNonTerminalKeys: totalNonTerminalValidatorKeys,
+		NodePublicKey:        nodePublicKey,
+		Relays:               relayString,
 	}
 
 	return &message, nil
 }
 
 func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
+	msg.TotalNonTerminalKeys = 1
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
