@@ -62,7 +62,8 @@ var preSignedCooldown, _ = time.ParseDuration("1h")
 var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
-var nodeDiversityTracker, _ = time.ParseDuration("1h")
+var nodeDiversityTracker, _ = time.ParseDuration("24h")
+var nodeDiversityTrackerCooldown, _ = time.ParseDuration("10m")
 
 const (
 	MaxConcurrentEth1Requests   = 200
@@ -417,12 +418,14 @@ func run(c *cli.Context) error {
 			message, err := makesNodeDiversityMessage(ec, bc, pnr, w, cfg)
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
 				continue
 			}
 
 			request, err := makesNodeDiversityRequest(message, privateKey)
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityRequest %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
 				continue
 			}
 
@@ -430,6 +433,7 @@ func run(c *cli.Context) error {
 
 			if err != nil {
 				errorLog.Printlnf("Error SendNodeDiversityResponseType %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
 				continue
 			}
 
