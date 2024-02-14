@@ -529,7 +529,6 @@ func makesNodeDiversityMessage(
 }
 
 func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
-	msg.TotalNonTerminalKeys = 1
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
