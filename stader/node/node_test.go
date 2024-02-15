@@ -10,7 +10,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/crypto"
-	eCryto "github.com/ethereum/go-ethereum/crypto"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 )
 
@@ -36,11 +35,12 @@ func TestVerifySignature(t *testing.T) {
 	}
 
 	pubkeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
+
 	req, err := makesNodeDiversityRequest(&stader_backend.NodeDiversity{
 		ExecutionClient:      ExecutionClient,
 		ConsensusClient:      ConsensusClient,
 		ValidatorClient:      ValidatorClient,
-		TotalNonTerminalKeys: 1,
+		TotalNonTerminalKeys: 10,
 		NodeAddress:          crypto.PubkeyToAddress(*publicKeyECDSA).String(),
 		NodePublicKey:        hex.EncodeToString(pubkeyBytes),
 		Relays:               "ultrasound,aestus",
@@ -58,12 +58,13 @@ func TestVerifySignature(t *testing.T) {
 }
 
 func TestVerifySignatureFailed(t *testing.T) {
-	privateKey, err := ecdsa.GenerateKey(eCryto.S256(), rand.Reader)
+	privateKey, err := ecdsa.GenerateKey(crypto.S256(), rand.Reader)
 	if err != nil {
 		t.Error(err)
 	}
 
 	publicKey := privateKey.Public()
+
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
 		t.Error(err)
@@ -71,7 +72,7 @@ func TestVerifySignatureFailed(t *testing.T) {
 
 	publickeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
 
-	privateKeyFake, err := ecdsa.GenerateKey(eCryto.S256(), rand.Reader)
+	privateKeyFake, err := ecdsa.GenerateKey(crypto.S256(), rand.Reader)
 	if err != nil {
 		t.Error(err)
 	}
@@ -85,6 +86,7 @@ func TestVerifySignatureFailed(t *testing.T) {
 		NodeAddress:          crypto.PubkeyToAddress(*publicKeyECDSA).String(),
 		NodePublicKey:        hex.EncodeToString(publickeyBytes),
 	}
+
 	req, err := makesNodeDiversityRequest(&msg, privateKeyFake)
 	if err != nil {
 		t.Error(err)
@@ -98,6 +100,8 @@ func TestVerifySignatureFailed(t *testing.T) {
 }
 
 func verifySignature(t *testing.T, msg *stader_backend.NodeDiversity, signEncoded string) bool {
+	t.Helper()
+
 	signRaw, err := hex.DecodeString(signEncoded)
 	if err != nil {
 		t.Error(err)
@@ -126,6 +130,7 @@ func verifySignature(t *testing.T, msg *stader_backend.NodeDiversity, signEncode
 
 	fmt.Printf("[%s]", msgBytes)
 	fmt.Printf("[%s]", signEncoded)
+
 	msgHashed := accounts.TextHash(msgBytes)
 
 	decodePubkey, err := hex.DecodeString(msg.NodePublicKey)
@@ -134,5 +139,5 @@ func verifySignature(t *testing.T, msg *stader_backend.NodeDiversity, signEncode
 	}
 
 	// 4. Verify
-	return eCryto.VerifySignature(decodePubkey, msgHashed, signRaw)
+	return crypto.VerifySignature(decodePubkey, msgHashed, signRaw)
 }

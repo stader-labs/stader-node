@@ -403,14 +403,18 @@ func run(c *cli.Context) error {
 
 	go func() {
 		defer wg.Done()
-		privateKey, err := w.GetNodePrivateKey()
 
+		privateKey, err := w.GetNodePrivateKey()
 		if err != nil {
 			errorLog.Printlnf("Error GetNodePrivateKey %+v", err)
 			return
 		}
 
 		cfg, err := services.GetConfig(c)
+		if err != nil {
+			errorLog.Printlnf("Error getconfig %+v", err)
+			return
+		}
 
 		for {
 			infoLog.Printlnf("Running the node diversity tracker daemon")
@@ -419,6 +423,7 @@ func run(c *cli.Context) error {
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
 				time.Sleep(nodeDiversityTrackerCooldown)
+
 				continue
 			}
 
@@ -426,6 +431,7 @@ func run(c *cli.Context) error {
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityRequest %+v", err)
 				time.Sleep(nodeDiversityTrackerCooldown)
+
 				continue
 			}
 
@@ -434,6 +440,7 @@ func run(c *cli.Context) error {
 			if err != nil {
 				errorLog.Printlnf("Error SendNodeDiversityResponseType %+v", err)
 				time.Sleep(nodeDiversityTrackerCooldown)
+
 				continue
 			}
 
@@ -484,6 +491,7 @@ func makesNodeDiversityMessage(
 
 	if cfg.EnableMevBoost.Value == true {
 		var relays []cfgtypes.MevRelay
+
 		relayNames := []string{}
 		switch cfg.MevBoost.Mode.Value.(cfgtypes.Mode) {
 		case cfgtypes.Mode_Local:
@@ -497,12 +505,12 @@ func makesNodeDiversityMessage(
 		relayString = strings.Join(relayNames, ",")
 	}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorId, nil)
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorID, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -551,7 +559,6 @@ func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ec
 	}
 
 	return &request, nil
-
 }
 
 // Configure HTTP transport settings
