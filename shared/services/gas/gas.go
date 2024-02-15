@@ -184,7 +184,7 @@ func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, priority
 
 		desiredPriceFloat, err := strconv.ParseFloat(desiredPrice, 64)
 		if err != nil {
-			fmt.Printf("Not a valid gas price (%s), try again.\n", err.Error())
+			fmt.Println("Not a valid gas price (%s), try again.", err.Error())
 			continue
 		}
 		if desiredPriceFloat <= 0 {

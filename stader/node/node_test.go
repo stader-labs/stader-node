@@ -40,7 +40,7 @@ func TestVerifySignature(t *testing.T) {
 		ExecutionClient:      ExecutionClient,
 		ConsensusClient:      ConsensusClient,
 		ValidatorClient:      ValidatorClient,
-		TotalNonTerminalKeys: 10,
+		TotalNonTerminalKeys: 1,
 		NodeAddress:          crypto.PubkeyToAddress(*publicKeyECDSA).String(),
 		NodePublicKey:        hex.EncodeToString(pubkeyBytes),
 		Relays:               "ultrasound,aestus",

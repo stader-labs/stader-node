@@ -592,12 +592,10 @@ func (c *StandardHttpClient) getNodeVersion() (NodeVersionResponse, error) {
 	if status != http.StatusOK {
 		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: HTTP status %d; response body: '%s'", status, string(responseBody))
 	}
-
 	var nodeVersion NodeVersionResponse
 	if err := json.Unmarshal(responseBody, &nodeVersion); err != nil {
 		return NodeVersionResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
 	}
-
 	return nodeVersion, nil
 }
 

@@ -914,7 +914,7 @@ func pruneExecutionClient(c *cli.Context) error {
 	}
 
 	fmt.Println("This will shut down your main execution client and prune its database, freeing up disk space.")
-	fmt.Println("Once pruning is complete, your execution client will restart automatically.")
+	fmt.Println("Once pruning is complete, your execution client will restart automatically.\n")
 
 	if selectedEc == cfgtypes.ExecutionClient_Geth {
 		if cfg.UseFallbackClients.Value == false {
@@ -1488,7 +1488,7 @@ func exportEcData(c *cli.Context, targetDir string) error {
 
 	fmt.Println("This will export your execution client's chain data to an external directory, such as a portable hard drive.")
 	fmt.Println("If your execution client is running, it will be shut down.")
-	fmt.Println("Once the export is complete, your execution client will restart automatically.")
+	fmt.Println("Once the export is complete, your execution client will restart automatically.\n")
 
 	// Get the container prefix
 	prefix, err := getContainerPrefix(staderClient)
@@ -1606,7 +1606,7 @@ func importEcData(c *cli.Context, sourceDir string) error {
 
 	fmt.Println("This will import execution layer chain data that you previously exported into your execution client.")
 	fmt.Println("If your execution client is running, it will be shut down.")
-	fmt.Println("Once the import is complete, your execution client will restart automatically.")
+	fmt.Println("Once the import is complete, your execution client will restart automatically.\n")
 
 	// Get the volume to import into
 	executionContainerName := prefix + ExecutionContainerSuffix
