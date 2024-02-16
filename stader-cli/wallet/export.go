@@ -51,8 +51,8 @@ func exportWallet(c *cli.Context) error {
 		// Check if stdout is interactive
 		stat, err := os.Stdout.Stat()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "An error occured while determining whether or not the output is a tty: %w\n"+
-				"Use \"stader-cli --secure-session wallet export\" to bypass.\n", err)
+			fmt.Fprintf(os.Stderr, "An error occured while determining whether or not the output is a tty: %s\n"+
+				"Use \"stader-cli --secure-session wallet export\" to bypass.\n", err.Error())
 			os.Exit(1)
 		}
 

@@ -20,15 +20,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package node
 
 import (
+	"crypto/ecdsa"
 	_ "embed"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/accounts"
+	eCryto "github.com/ethereum/go-ethereum/crypto"
 
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
@@ -38,6 +45,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/shared/utils/validator"
 	"github.com/stader-labs/stader-node/stader-lib/node"
+	stader_lib "github.com/stader-labs/stader-node/stader-lib/stader"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
 
 	"github.com/fatih/color"
@@ -45,6 +53,7 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
+	"github.com/stader-labs/stader-node/shared/services/wallet"
 	"github.com/stader-labs/stader-node/shared/utils/log"
 )
 
@@ -53,6 +62,8 @@ var preSignedCooldown, _ = time.ParseDuration("1h")
 var feeRecepientPollingInterval, _ = time.ParseDuration("5m")
 var taskCooldown, _ = time.ParseDuration("10s")
 var merkleProofsDownloadInterval, _ = time.ParseDuration("3h")
+var nodeDiversityTracker, _ = time.ParseDuration("24h")
+var nodeDiversityTrackerCooldown, _ = time.ParseDuration("10m")
 
 const (
 	MaxConcurrentEth1Requests   = 200
@@ -105,6 +116,11 @@ func run(c *cli.Context) error {
 		return err
 	}
 
+	ec, err := services.GetEthClient(c)
+	if err != nil {
+		return err
+	}
+
 	bc, err := services.GetBeaconClient(c)
 	if err != nil {
 		return err
@@ -135,7 +151,7 @@ func run(c *cli.Context) error {
 
 	// Wait group to handle the various threads
 	wg := new(sync.WaitGroup)
-	wg.Add(3)
+	wg.Add(4)
 
 	// validator presigned loop
 	go func() {
@@ -385,10 +401,164 @@ func run(c *cli.Context) error {
 		wg.Done()
 	}()
 
+	go func() {
+		defer wg.Done()
+
+		privateKey, err := w.GetNodePrivateKey()
+		if err != nil {
+			errorLog.Printlnf("Error GetNodePrivateKey %+v", err)
+			return
+		}
+
+		cfg, err := services.GetConfig(c)
+		if err != nil {
+			errorLog.Printlnf("Error getconfig %+v", err)
+			return
+		}
+
+		for {
+			infoLog.Printlnf("Running the node diversity tracker daemon")
+
+			message, err := makeNodeDiversityMessage(ec, bc, pnr, w, cfg)
+			if err != nil {
+				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			request, err := makeNodeDiversityRequest(message, privateKey)
+			if err != nil {
+				errorLog.Printlnf("Error makesNodeDiversityRequest %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			response, err := stader.SendNodeDiversityResponseType(c, request)
+
+			if err != nil {
+				errorLog.Printlnf("Error SendNodeDiversityResponseType %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			if response.Success {
+				infoLog.Println("Successfully sent the NodeDiversity message")
+			} else {
+				errorLog.Println("Failed to send the NodeDiversity message with err: %s\n", response.Error)
+			}
+
+			time.Sleep(nodeDiversityTracker)
+		}
+	}()
+
 	// Wait for both threads to stop
 	wg.Wait()
 	return nil
 
+}
+
+func makeNodeDiversityMessage(
+	ec *services.ExecutionClientManager,
+	bc *services.BeaconClientManager,
+	pnr *stader_lib.PermissionlessNodeRegistryContractManager,
+	w *wallet.Wallet,
+	cfg *config.StaderConfig,
+) (*stader_backend.NodeDiversity, error) {
+	bcNodeVersion, err := bc.GetNodeVersion()
+	if err != nil {
+		return nil, err
+	}
+
+	ecVersion, err := ec.Version()
+	if err != nil {
+		return nil, err
+	}
+
+	nodePublicKey, err := w.GetNodePubkey()
+	if err != nil {
+		return nil, err
+	}
+
+	nodeAccount, err := w.GetNodeAccount()
+	if err != nil {
+		return nil, err
+	}
+
+	var relayString string
+
+	if cfg.EnableMevBoost.Value == true {
+		var relays []cfgtypes.MevRelay
+
+		relayNames := []string{}
+		switch cfg.MevBoost.Mode.Value.(cfgtypes.Mode) {
+		case cfgtypes.Mode_Local:
+			relays = cfg.MevBoost.GetEnabledMevRelays()
+
+			for _, relay := range relays {
+				relayNames = append(relayNames, string(relay.ID))
+			}
+		}
+
+		relayString = strings.Join(relayNames, ",")
+	}
+
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(pnr, operatorID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Printf("Get total non terminal validator keys\n")
+	totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get the new validator client according to the settings file
+	selectedConsensusClientConfig, err := cfg.GetSelectedConsensusClientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	message := stader_backend.NodeDiversity{
+		ExecutionClient:      ecVersion,
+		ConsensusClient:      bcNodeVersion.Version,
+		ValidatorClient:      selectedConsensusClientConfig.GetName(),
+		NodeAddress:          nodeAccount.Address.String(),
+		TotalNonTerminalKeys: totalNonTerminalValidatorKeys,
+		NodePublicKey:        nodePublicKey,
+		Relays:               relayString,
+	}
+
+	return &message, nil
+}
+
+func makeNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
+	msgBytes, err := json.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+
+	msgHashed := accounts.TextHash(msgBytes)
+
+	signedMessage, err := eCryto.Sign(msgHashed, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	request := stader_backend.NodeDiversityRequest{
+		Signature: hex.EncodeToString(signedMessage[:64]),
+		Message:   msg,
+	}
+
+	return &request, nil
 }
 
 // Configure HTTP transport settings
