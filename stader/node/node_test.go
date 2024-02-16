@@ -36,7 +36,7 @@ func TestVerifySignature(t *testing.T) {
 
 	pubkeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
 
-	req, err := makesNodeDiversityRequest(&stader_backend.NodeDiversity{
+	req, err := makeNodeDiversityRequest(&stader_backend.NodeDiversity{
 		ExecutionClient:      ExecutionClient,
 		ConsensusClient:      ConsensusClient,
 		ValidatorClient:      ValidatorClient,
@@ -87,7 +87,7 @@ func TestVerifySignatureFailed(t *testing.T) {
 		NodePublicKey:        hex.EncodeToString(publickeyBytes),
 	}
 
-	req, err := makesNodeDiversityRequest(&msg, privateKeyFake)
+	req, err := makeNodeDiversityRequest(&msg, privateKeyFake)
 	if err != nil {
 		t.Error(err)
 	}

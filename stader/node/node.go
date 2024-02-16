@@ -427,7 +427,7 @@ func run(c *cli.Context) error {
 				continue
 			}
 
-			request, err := makesNodeDiversityRequest(message, privateKey)
+			request, err := makeNodeDiversityRequest(message, privateKey)
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityRequest %+v", err)
 				time.Sleep(nodeDiversityTrackerCooldown)
@@ -540,7 +540,7 @@ func makeNodeDiversityMessage(
 	return &message, nil
 }
 
-func makesNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
+func makeNodeDiversityRequest(msg *stader_backend.NodeDiversity, privateKey *ecdsa.PrivateKey) (*stader_backend.NodeDiversityRequest, error) {
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
