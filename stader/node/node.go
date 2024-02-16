@@ -419,7 +419,7 @@ func run(c *cli.Context) error {
 		for {
 			infoLog.Printlnf("Running the node diversity tracker daemon")
 
-			message, err := makesNodeDiversityMessage(ec, bc, pnr, w, cfg)
+			message, err := makeNodeDiversityMessage(ec, bc, pnr, w, cfg)
 			if err != nil {
 				errorLog.Printlnf("Error makesNodeDiversityMessage %+v", err)
 				time.Sleep(nodeDiversityTrackerCooldown)
@@ -460,7 +460,7 @@ func run(c *cli.Context) error {
 
 }
 
-func makesNodeDiversityMessage(
+func makeNodeDiversityMessage(
 	ec *services.ExecutionClientManager,
 	bc *services.BeaconClientManager,
 	pnr *stader_lib.PermissionlessNodeRegistryContractManager,

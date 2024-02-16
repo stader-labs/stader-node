@@ -534,7 +534,7 @@ func (p *ExecutionClientManager) Version() (string, error) {
 	if p.primaryReady {
 		url = p.primaryEcUrl
 	} else {
-		url = p.primaryEcUrl
+		url = p.fallbackEcUrl
 	}
 
 	payload := struct {
