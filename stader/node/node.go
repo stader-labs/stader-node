@@ -404,19 +404,41 @@ func run(c *cli.Context) error {
 	go func() {
 		defer wg.Done()
 
-		privateKey, err := w.GetNodePrivateKey()
-		if err != nil {
-			errorLog.Printlnf("Error GetNodePrivateKey %+v", err)
-			return
-		}
-
-		cfg, err := services.GetConfig(c)
-		if err != nil {
-			errorLog.Printlnf("Error getconfig %+v", err)
-			return
-		}
-
 		for {
+			// Check the EC status
+			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
+			if err != nil {
+				errorLog.Println(err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			// Check the BC status
+			err = services.WaitBeaconClientSynced(c, false) // Force refresh the primary / fallback BC status
+			if err != nil {
+				errorLog.Println(err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			privateKey, err := w.GetNodePrivateKey()
+			if err != nil {
+				errorLog.Printlnf("Error GetNodePrivateKey %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
+			cfg, err := services.GetConfig(c)
+			if err != nil {
+				errorLog.Printlnf("Error getconfig %+v", err)
+				time.Sleep(nodeDiversityTrackerCooldown)
+
+				continue
+			}
+
 			infoLog.Printlnf("Running the node diversity tracker daemon")
 
 			message, err := makeNodeDiversityMessage(ec, bc, pnr, w, cfg)
