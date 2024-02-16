@@ -405,6 +405,8 @@ func run(c *cli.Context) error {
 		defer wg.Done()
 
 		for {
+
+			infoLog.Println("Start checking node diversity metrics")
 			// Check the EC status
 			err := services.WaitEthClientSynced(c, false) // Force refresh the primary / fallback EC status
 			if err != nil {
@@ -472,6 +474,7 @@ func run(c *cli.Context) error {
 				errorLog.Println("Failed to send the NodeDiversity message with err: %s\n", response.Error)
 			}
 
+			infoLog.Println("Done checking node diversity metrics")
 			time.Sleep(nodeDiversityTracker)
 		}
 	}()
