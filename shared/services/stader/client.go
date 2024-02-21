@@ -298,7 +298,7 @@ func (c *Client) UpdatePrometheusConfiguration(settings map[string]string) error
 	}
 	err = os.Chmod(prometheusConfigPath, 0664)
 	if err != nil {
-		return fmt.Errorf("Could not set Prometheus config file permissions: %w", shellescape.Quote(prometheusConfigPath), err)
+		return fmt.Errorf("Could not set Prometheus config file permissions: %s:  %w", shellescape.Quote(prometheusConfigPath), err)
 	}
 
 	return nil

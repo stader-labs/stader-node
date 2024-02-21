@@ -74,7 +74,7 @@ func ClaimSpRewards(c *cli.Context) error {
 
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma separated string the cycles you want to claim rewards for:")
 
-	fmt.Printf("%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
+	fmt.Printf("\n%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
 	cyclesToClaim := map[int64]bool{}
 	for {
 		for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {

@@ -134,6 +134,16 @@ func (m *BeaconClientManager) GetSyncStatus() (beacon.SyncStatus, error) {
 	return result.(beacon.SyncStatus), nil
 }
 
+func (m *BeaconClientManager) GetNodeVersion() (beacon.NodeVersion, error) {
+	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
+		return client.GetNodeVersion()
+	})
+	if err != nil {
+		return beacon.NodeVersion{}, err
+	}
+	return result.(beacon.NodeVersion), nil
+}
+
 // Get the Beacon configuration
 func (m *BeaconClientManager) GetEth2Config() (beacon.Eth2Config, error) {
 	result, err := m.runFunction1(func(client beacon.Client) (interface{}, error) {
