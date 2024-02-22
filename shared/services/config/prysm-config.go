@@ -27,11 +27,11 @@ import (
 )
 
 const (
-	prysmBnTagTest string = "staderdev/prysm:v4.2.1"
-	prysmVcTagTest string = "staderdev/prysm:v4.2.1"
+	prysmBnTagTest string = "staderlabs/prysm:v4.2.1"
+	prysmVcTagTest string = "staderlabs/prysm:v4.2.1"
 
-	prysmBnTagProd string = "staderdev/prysm:v4.2.1"
-	prysmVcTagProd string = "staderdev/prysm:v4.2.1"
+	prysmBnTagProd string = "staderlabs/prysm:v4.2.1"
+	prysmVcTagProd string = "staderlabs/prysm:v4.2.1"
 
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
