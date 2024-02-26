@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	prysmBnTagTest string = "staderlabs/prysm:v4.2.1"
-	prysmVcTagTest string = "staderlabs/prysm:v4.2.1"
+	prysmBnTagTest string = "staderlabs/prysm:v5.0.0"
+	prysmVcTagTest string = "staderlabs/prysm:v5.0.0"
 
 	prysmBnTagProd string = "staderlabs/prysm:v4.2.1"
 	prysmVcTagProd string = "staderlabs/prysm:v4.2.1"
