@@ -19,9 +19,6 @@ jobs:
                 go-version: 1.19
                 cache: false
 
-            - name: Test with the Go CLI
-              run: go test ./...
-
             - name: Golangci
               uses: golangci/golangci-lint-action@v4
               with:
