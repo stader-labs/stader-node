@@ -52,8 +52,10 @@ func SendElRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	fmt.Printf("Sending %s EL Rewards to Claim Vault\n\n", eth.DisplayAmountInUnits(res.ElRewardsAmount, "eth"))
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}

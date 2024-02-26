@@ -540,7 +540,6 @@ func makeNodeDiversityMessage(
 		return nil, err
 	}
 
-	//fmt.Printf("Get total non terminal validator keys\n")
 	totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err

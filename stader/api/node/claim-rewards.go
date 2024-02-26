@@ -97,11 +97,12 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		return nil, err
 	}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorID, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -134,8 +135,8 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 	if err != nil {
 		return nil, err
 	}
-	response.RewardsClaimed = totalWithdrawableEth
 
+	response.RewardsClaimed = totalWithdrawableEth
 	response.TxHash = tx.Hash()
 
 	return &response, nil

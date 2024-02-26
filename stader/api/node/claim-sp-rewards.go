@@ -169,7 +169,7 @@ func estimateSpRewardsGas(c *cli.Context, stringifiedCycles string, depositSd bo
 		return nil, err
 	}
 
-	gasInfo := stader.GasInfo{}
+	var gasInfo stader.GasInfo
 	if depositSd {
 		gasInfo, err = socializing_pool.EstimateClaimRewardsAndDepositSD(sp, cycles, amountSd, amountEth, merkleProofs, opts)
 		if err != nil {

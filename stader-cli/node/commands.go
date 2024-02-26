@@ -367,10 +367,7 @@ func RegisterCommands(app *cli.App, name string, aliases []string) {
 						Usage: "Automatically confirm SD repay",
 					},
 				},
-				Action: func(c *cli.Context) error {
-					// Run
-					return repaySD(c)
-				},
+				Action: repaySD,
 			},
 			{
 				Name:      "approve-deposit-sd",

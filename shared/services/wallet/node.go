@@ -190,7 +190,6 @@ func (w *Wallet) getNodeDerivedKey(index uint) (*hdkeychain.ExtendedKey, string,
 
 // Get the node hex encoding public key
 func (w *Wallet) GetNodePubkey() (string, error) {
-
 	// Check wallet is initialized
 	if !w.IsInitialized() {
 		return "", errors.New("Wallet is not initialized")
@@ -204,6 +203,7 @@ func (w *Wallet) GetNodePubkey() (string, error) {
 
 	// Get public key
 	publicKey := privateKey.Public()
+
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
 		return "", errors.New("Could not get node public key")

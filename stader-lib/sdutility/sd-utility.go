@@ -19,10 +19,12 @@ func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, opts *bi
 	if err != nil {
 		return nil, err
 	}
+
 	sdRequestedForWithdraw, err := GetSdRequestedForWithdraw(sp, opts)
 	if err != nil {
 		return nil, err
 	}
+
 	utilityPoolBalance, err := GetUtilityPoolBalance(sp, opts)
 	if err != nil {
 		return nil, err
@@ -81,6 +83,10 @@ func RepayFullAmount(sp *stader.SDUtilityPoolContractManager, opts *bind.Transac
 func SDMaxUtilizableAmount(sp *stader.SDUtilityPoolContractManager,
 	sdc *stader.SdCollateralContractManager, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	maxThreshold, err := sp.SDUtilityPool.MaxETHWorthOfSDPerValidator(opts)
+	if err != nil {
+		return nil, err
+	}
+
 	ethAmount := new(big.Int).Mul(maxThreshold, numValidators)
 
 	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
@@ -115,7 +121,7 @@ func GetUserData(sp *stader.SDUtilityPoolContractManager, address common.Address
 	return &userData, nil
 }
 
-func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (bool, error) {
+func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address) (bool, error) {
 	liquidationIndex, err := LiquidationIndexByOperator(sp, address, nil)
 	if err != nil {
 		return false, err

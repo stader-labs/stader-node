@@ -79,8 +79,10 @@ func ClaimRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	fmt.Printf("Withdrawing %s Rewards to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}

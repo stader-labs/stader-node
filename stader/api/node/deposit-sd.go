@@ -91,6 +91,7 @@ func getSdApprovalGas(c *cli.Context, amountWei *big.Int, contractAddress common
 	if err != nil {
 		return nil, err
 	}
+
 	gasInfo, err := tokens.EstimateApproveGas(sdt, contractAddress, amountWei, opts)
 	if err != nil {
 		return nil, err
@@ -153,10 +154,12 @@ func approveSd(c *cli.Context, amountWei *big.Int, contractAddress common.Addres
 	if err != nil {
 		return nil, err
 	}
+
 	err = eth1.CheckForNonceOverride(c, opts)
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
+
 	hash, err := tokens.Approve(sdt, contractAddress, amountWei, opts)
 	if err != nil {
 		return nil, err

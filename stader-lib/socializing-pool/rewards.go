@@ -23,11 +23,11 @@ func ClaimRewards(sp *stader.SocializingPoolContractManager, index []*big.Int, a
 	return tx, nil
 }
 
-func EstimateClaimRewardsAndDepositSD(sp *stader.SocializingPoolContractManager, index []*big.Int, amountSd []*big.Int, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
+func EstimateClaimRewardsAndDepositSD(sp *stader.SocializingPoolContractManager, index, amountSd, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (stader.GasInfo, error) {
 	return sp.SocializingPoolContract.GetTransactionGasInfo(opts, "claimAndDepositSD", index, amountSd, amountEth, merkleProof)
 }
 
-func ClaimRewardsAndDepositSD(sp *stader.SocializingPoolContractManager, index []*big.Int, amountSd []*big.Int, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
+func ClaimRewardsAndDepositSD(sp *stader.SocializingPoolContractManager, index, amountSd, amountEth []*big.Int, merkleProof [][][32]byte, opts *bind.TransactOpts) (*types.Transaction, error) {
 	tx, err := sp.SocializingPool.ClaimAndDepositSD(opts, index, amountSd, amountEth, merkleProof)
 	if err != nil {
 		return nil, err

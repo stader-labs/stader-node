@@ -38,6 +38,7 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	if denom == "sd" {
 		gweiDenom = " gwei SD"
 	}
+
 	regDenom := " ETH"
 	if denom == "sd" {
 		regDenom = " SD"
@@ -46,9 +47,11 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	if wei == nil {
 		return ""
 	}
+
 	if wei.Cmp(big.NewInt(Threshold)) < 0 && wei.Cmp(big.NewInt(0)) != 0 {
 		return strconv.FormatFloat(WeiToGwei(wei), 'f', 6, 64) + gweiDenom
 	}
+
 	return strconv.FormatFloat(WeiToEth(wei), 'f', 6, 64) + regDenom
 }
 

@@ -39,15 +39,16 @@ func canUtilitySd(c *cli.Context, amountWei *big.Int) (*api.CanUtilitySDResponse
 		return nil, err
 	}
 
-	operatorId, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
+	operatorID, err := node.GetOperatorId(prn, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
+	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorID, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	totalValidatorNonTerminalKeys, err := node.GetTotalNonTerminalValidatorKeys(prn, nodeAccount.Address, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err

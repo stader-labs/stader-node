@@ -116,9 +116,9 @@ func nodeDeposit(c *cli.Context) error {
 				return nil
 			}
 		case 1:
-			selfBondAmount, err := node.PromptChooseSelfBondAmount(sdStatus)
-			if err != nil {
-				return err
+			selfBondAmount, errSelfBond := node.PromptChooseSelfBondAmount(sdStatus)
+			if errSelfBond != nil {
+				return errSelfBond
 			}
 
 			if status.AccountBalances.Sd.Cmp(selfBondAmount) < 0 {
@@ -132,10 +132,10 @@ func nodeDeposit(c *cli.Context) error {
 			}
 
 			nounce := c.GlobalUint64("nonce")
-			err = node.DepositSdWithAmount(staderClient, selfBondAmount, true, nounce)
+			errSelfBond = node.DepositSdWithAmount(staderClient, selfBondAmount, true, nounce)
 
-			if err != nil {
-				return err
+			if errSelfBond != nil {
+				return errSelfBond
 			}
 
 		default:
