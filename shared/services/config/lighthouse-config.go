@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ import (
 )
 
 const (
-	lighthouseTagPortableTest string = "sigp/lighthouse:v4.6.0-rc.0"
-	lighthouseTagPortableProd string = "sigp/lighthouse:v4.5.0"
-	lighthouseTagModernTest   string = "sigp/lighthouse:v4.6.0-rc.0"
-	lighthouseTagModernProd   string = "sigp/lighthouse:v4.5.0-modern"
+	lighthouseTagPortableTest string = "sigp/lighthouse:v4.6.0"
+	lighthouseTagPortableProd string = "sigp/lighthouse:v4.6.0"
+	lighthouseTagModernTest   string = "sigp/lighthouse:v4.6.0-modern"
+	lighthouseTagModernProd   string = "sigp/lighthouse:v4.6.0-modern"
 	defaultLhMaxPeers         uint16 = 80
 )
 

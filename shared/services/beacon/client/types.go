@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,6 +46,13 @@ type SyncStatusResponse struct {
 		SyncDistance uinteger `json:"sync_distance"`
 	} `json:"data"`
 }
+
+type NodeVersionResponse struct {
+	Data struct {
+		Version string `json:"version"`
+	} `json:"data"`
+}
+
 type Eth2ConfigResponse struct {
 	Data struct {
 		SecondsPerSlot               uinteger `json:"SECONDS_PER_SLOT"`

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -499,7 +499,7 @@ func waitBeaconClientSynced(c *cli.Context, verbose bool, timeout int64) (bool, 
 		// Check sync status
 		if syncStatus.Syncing {
 			if verbose {
-				log.Println("Eth 2.0 node syncing: %.2f%%\n", syncStatus.Progress*100)
+				log.Printf("Eth 2.0 node syncing: %.2f%%\n", syncStatus.Progress*100)
 			}
 		} else {
 			return true, nil

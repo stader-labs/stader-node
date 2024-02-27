@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -322,6 +322,10 @@ func (cfg *StaderNodeConfig) GetPresignPublicKeyApi() string {
 
 func (cfg *StaderNodeConfig) GetMerkleProofApi() string {
 	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/merklesForElRewards/proofs/%s"
+}
+
+func (cfg *StaderNodeConfig) GetNodeDiversityApi() string {
+	return cfg.baseStaderBackendUrl[cfg.Network.Value.(config.Network)] + "/saveNodeDiversity"
 }
 
 func (cfg *StaderNodeConfig) GetTxWatchUrl() string {

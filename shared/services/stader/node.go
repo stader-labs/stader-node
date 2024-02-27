@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -118,10 +118,12 @@ func (c *Client) NodeSdApprovalGas(amountWei *big.Int, address common.Address) (
 	if err != nil {
 		return api.SdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
 	}
+
 	var response api.SdApproveGasResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.SdApproveGasResponse{}, fmt.Errorf("could not decode node deposit S approve gas response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.SdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %s", response.Error)
 	}
@@ -134,13 +136,16 @@ func (c *Client) NodeSdApprove(amountWei *big.Int, address common.Address) (api.
 	if err != nil {
 		return api.SdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
 	}
+
 	var response api.SdApproveResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.SdApproveResponse{}, fmt.Errorf("could not decode deposit node SD approve response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.SdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -196,13 +201,16 @@ func (c *Client) GetNodeSdAllowance(contractAddress common.Address) (api.SdAllow
 	if err != nil {
 		return api.SdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %w", err)
 	}
+
 	var response api.SdAllowanceResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.SdAllowanceResponse{}, fmt.Errorf("could not decode node deposit SD allowance response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.SdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %s", response.Error)
 	}
+
 	return response, nil
 }
 

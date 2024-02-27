@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -184,7 +184,7 @@ func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, priority
 
 		desiredPriceFloat, err := strconv.ParseFloat(desiredPrice, 64)
 		if err != nil {
-			fmt.Println("Not a valid gas price (%s), try again.", err.Error())
+			fmt.Printf("Not a valid gas price (%s), try again.\n", err.Error())
 			continue
 		}
 		if desiredPriceFloat <= 0 {

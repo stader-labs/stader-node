@@ -2,7 +2,6 @@ package sd
 
 import (
 	"fmt"
-	"math"
 	"math/big"
 	"strconv"
 
@@ -15,10 +14,6 @@ const (
 )
 
 var SDWeiEqualityThreshold = eth.EthToWei(SDFloatStringEqualityThreshold)
-
-func almostEqual(lhs, rhs float64) bool {
-	return math.Abs(lhs-rhs) <= SDFloatStringEqualityThreshold
-}
 
 func WeiAlmostEqual(lhs, rhs *big.Int) bool {
 	diversity := new(big.Int).Sub(lhs, rhs)
@@ -37,7 +32,9 @@ func PromptChooseSDWithMaxMin(msg, errMsg string, min, max *big.Int) (*big.Int, 
 			`^[0-9]\d*(\.\d+)?$`,
 			errMsg)
 
-		utilityAmountFloat, errParse := strconv.ParseFloat(s, 64)
+		var utilityAmountFloat float64
+		utilityAmountFloat, errParse = strconv.ParseFloat(s, 64)
+
 		if errParse != nil {
 			fmt.Println(errMsg)
 			continue

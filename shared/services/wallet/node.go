@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ package wallet
 import (
 	"context"
 	"crypto/ecdsa"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/big"
@@ -185,4 +186,30 @@ func (w *Wallet) getNodeDerivedKey(index uint) (*hdkeychain.ExtendedKey, string,
 	// Return
 	return key, derivationPath, nil
 
+}
+
+// Get the node hex encoding public key
+func (w *Wallet) GetNodePubkey() (string, error) {
+	// Check wallet is initialized
+	if !w.IsInitialized() {
+		return "", errors.New("Wallet is not initialized")
+	}
+
+	// Get private key
+	privateKey, _, err := w.getNodePrivateKey()
+	if err != nil {
+		return "", err
+	}
+
+	// Get public key
+	publicKey := privateKey.Public()
+
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return "", errors.New("Could not get node public key")
+	}
+
+	publickeyBytes := crypto.FromECDSAPub(publicKeyECDSA)
+
+	return hex.EncodeToString(publickeyBytes), nil
 }

@@ -62,7 +62,7 @@ type NetworkCollector struct {
 	// The utilize amount + fee
 	SdUtilityPoolBalance *prometheus.Desc
 
-	//Total amount of outstanding SD utilized
+	// Total amount of outstanding SD utilized
 	TotalSDUtilized *prometheus.Desc
 
 	TotalValueLocledSDUtilization *prometheus.Desc
@@ -151,7 +151,6 @@ func NewNetworkCollector(bc beacon.Client, ec stader.ExecutionClient, nodeAddres
 			"The current balance of the SD utility pool",
 			nil, nil,
 		),
-		//Total amount of outstanding SD utilized
 		TotalSDUtilized: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "total_outstanding_sd_utilized"),
 			"The total the SD utilized in network",
 			nil, nil,

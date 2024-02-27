@@ -44,11 +44,11 @@ func ClaimRewards(c *cli.Context) error {
 
 	sdStatus := sdStatusResponse.SDStatus
 
+	totalFee := sdStatus.AccumulatedInterest
+
 	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
 	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
 		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-			totalFee := sdStatus.AccumulatedInterest
-
 			fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.DisplayAmountInUnits(totalFee, "sd"))
 
 			fmt.Printf("Based on the current Health Factor, you can claim upto %s.\n", eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
@@ -79,8 +79,10 @@ func ClaimRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	fmt.Printf("Withdrawing %s Rewards to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}

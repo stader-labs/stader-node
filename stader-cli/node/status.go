@@ -113,10 +113,15 @@ func getNodeStatus(c *cli.Context) error {
 		fmt.Printf("2. Use the %sstader-cli node claim-rewards%s command to claim the EL rewards from the claim vault to your operator reward address\n\n", log.ColorGreen, log.ColorReset)
 	}
 
-	if status.OperatorRewardCollectorBalance.Cmp(big.NewInt(0)) > 0 {
+	operatorWithdrawableAmount := status.OperatorRewardCollectorBalance
+	if status.OperatorWithdrawableEth.Cmp(operatorWithdrawableAmount) < 0 {
+		operatorWithdrawableAmount = status.OperatorWithdrawableEth
+	}
+
+	if operatorWithdrawableAmount.Cmp(big.NewInt(0)) > 0 {
 		fmt.Printf(
 			"The Operator has aggregated total claims of %s in the claim vault\n",
-			eth.DisplayAmountInUnits(status.OperatorWithdrawableEth, "eth"))
+			eth.DisplayAmountInUnits(operatorWithdrawableAmount, "eth"))
 		fmt.Printf("To transfer the claims to your operator reward address use the %sstader-cli node claim-rewards%s command\n\n", log.ColorGreen, log.ColorReset)
 	}
 
@@ -149,6 +154,7 @@ func getNodeStatus(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	collateralPct := 0.0
 	sdStatus := sdStatusResp.SDStatus
 	totalCollateral := new(big.Int).Add(sdStatus.SdCollateralCurrentAmount, sdStatus.SdUtilizedBalance)
@@ -178,7 +184,6 @@ func getNodeStatus(c *cli.Context) error {
 			totalRegisteredValidators,
 			eth.DisplayAmountInUnits(sdStatus.SdCollateralRequireAmount, "sd"),
 			"10%", "10%", "10%")
-
 	} else {
 		fmt.Println("")
 	}
@@ -189,6 +194,7 @@ func getNodeStatus(c *cli.Context) error {
 
 	fmt.Printf("The Operator has a current Utilization Position of %s. (including the utilization fee)\n",
 		eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"))
+
 	if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) == 0 {
 		fmt.Println("")
 	} else {
@@ -199,6 +205,7 @@ func getNodeStatus(c *cli.Context) error {
 	if maxUtilizable.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		maxUtilizable = sdStatus.PoolAvailableSDBalance
 	}
+
 	if maxUtilizable.Sign() < 0 {
 		maxUtilizable = big.NewInt(0)
 	}

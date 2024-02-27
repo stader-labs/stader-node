@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ const (
 	RequestContentType = "application/json"
 
 	RequestSyncStatusPath            = "/eth/v1/node/syncing"
+	RequestNodeVersionPath           = "/eth/v1/node/version"
 	RequestEth2ConfigPath            = "/eth/v1/config/spec"
 	RequestEth2DepositContractMethod = "/eth/v1/config/deposit_contract"
 	RequestGenesisPath               = "/eth/v1/beacon/genesis"
@@ -105,6 +106,17 @@ func (c *StandardHttpClient) GetSyncStatus() (beacon.SyncStatus, error) {
 		Progress: progress,
 	}, nil
 
+}
+
+func (c *StandardHttpClient) GetNodeVersion() (beacon.NodeVersion, error) {
+	nodeVersion, err := c.getNodeVersion()
+	if err != nil {
+		return beacon.NodeVersion{}, err
+	}
+
+	return beacon.NodeVersion{
+		Version: nodeVersion.Data.Version,
+	}, nil
 }
 
 // Get the eth2 config
@@ -411,10 +423,12 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 
 // Get domain data for a domain type at a given epoch
 func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config.Network) ([]byte, error) {
-
 	var genesis GenesisResponse
 
 	genesis, err := c.getGenesis()
+	if err != nil {
+		return []byte{}, fmt.Errorf("GetGenesis %w", err)
+	}
 
 	// Get fork version
 	var capellaForkVersion string
@@ -433,8 +447,8 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config
 	// Compute & return domain
 	var dt [4]byte
 	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, decodedForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 
+	return eth2types.Domain(dt, decodedForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 }
 
 // Perform a voluntary exit on a validator
@@ -570,6 +584,24 @@ func (c *StandardHttpClient) getSyncStatus() (SyncStatusResponse, error) {
 		return SyncStatusResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
 	}
 	return syncStatus, nil
+}
+
+func (c *StandardHttpClient) getNodeVersion() (NodeVersionResponse, error) {
+	responseBody, status, err := c.getRequest(RequestNodeVersionPath)
+	if err != nil {
+		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: %w", err)
+	}
+
+	if status != http.StatusOK {
+		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: HTTP status %d; response body: '%s'", status, string(responseBody))
+	}
+
+	var nodeVersion NodeVersionResponse
+	if err := json.Unmarshal(responseBody, &nodeVersion); err != nil {
+		return NodeVersionResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
+	}
+
+	return nodeVersion, nil
 }
 
 // Get the eth2 config

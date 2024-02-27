@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	if denom == "sd" {
 		gweiDenom = " gwei SD"
 	}
+
 	regDenom := " ETH"
 	if denom == "sd" {
 		regDenom = " SD"
@@ -46,9 +47,11 @@ func DisplayAmountInUnits(wei *big.Int, denom string) string {
 	if wei == nil {
 		return ""
 	}
+
 	if wei.Cmp(big.NewInt(Threshold)) < 0 && wei.Cmp(big.NewInt(0)) != 0 {
 		return strconv.FormatFloat(WeiToGwei(wei), 'f', 6, 64) + gweiDenom
 	}
+
 	return strconv.FormatFloat(WeiToEth(wei), 'f', 6, 64) + regDenom
 }
 

@@ -61,6 +61,7 @@ func repaySD(c *cli.Context) error {
 	i, _ := cliutils.Select("Please choose one of the following options for repayment. Enter 1 or 2:", ops)
 
 	fullRepay := false
+
 	var amountWei *big.Int
 
 	switch i {
@@ -86,6 +87,7 @@ func repaySD(c *cli.Context) error {
 
 	if allowance.Allowance.Cmp(sdStatus.SdUtilizerLatestBalance) < 0 {
 		fmt.Println("Before repaying the SD, you must first give the utility contract approval to interact with your SD.")
+
 		maxApproval := maxUint256()
 
 		err = nodeApproveUtilitySd(c, maxApproval.String())
@@ -131,11 +133,11 @@ func repaySD(c *cli.Context) error {
 		remainUtilize := new(big.Int).Sub(sdStatus.SdUtilizerLatestBalance, amountWei)
 		fmt.Printf("Repayment of %s successful. Current Utilization Position: %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"), eth.DisplayAmountInUnits(remainUtilize, "sd"))
 	}
+
 	return nil
 }
 
 func PromptChooseRepayAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
-
 	msg := fmt.Sprintf(`%sPlease enter the amount of SD you wish to repay. Your current Utilization Position is %s%s`, log.ColorYellow, eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"), log.ColorReset)
 
 	errMsg := fmt.Sprintf("%sInvalid input, please specify a valid amount of SD you wish to repay. Your current Utilization Position is %s SD%s", log.ColorRed, eth.DisplayAmountInUnits(sdStatus.SdUtilizerLatestBalance, "sd"), log.ColorReset)

@@ -2,7 +2,7 @@
 This work is licensed and released under GNU GPL v3 or any other later versions.
 The full text of the license is below/ found at <http://www.gnu.org/licenses/>
 
-(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.7]
+(c) 2023 Rocket Pool Pty Ltd. Modified under GNU GPL v3. [1.4.9]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"math/big"
 	"strings"
@@ -36,6 +38,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/types/api"
 	cfgtypes "github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/shared/utils/log"
+	"github.com/stader-labs/stader-node/shared/utils/net"
 )
 
 // This is a proxy for multiple ETH clients, providing natural fallback support if one of them fails.
@@ -519,4 +522,52 @@ func (p *ExecutionClientManager) runFunction(function ecFunction) (interface{}, 
 // Returns true if the error was a connection failure and a backup client is available
 func (p *ExecutionClientManager) isDisconnected(err error) bool {
 	return strings.Contains(err.Error(), "dial tcp")
+}
+
+func (p *ExecutionClientManager) Version() (string, error) {
+	if !p.primaryReady && !p.fallbackReady {
+		return "", fmt.Errorf("EC not ready")
+	}
+
+	var url string
+
+	if p.primaryReady {
+		url = p.primaryEcUrl
+	} else {
+		url = p.fallbackEcUrl
+	}
+
+	payload := struct {
+		Jsonrpc string   `json:"jsonrpc"`
+		Method  string   `json:"method"`
+		Params  []string `json:"params"`
+		ID      int64    `json:"id"`
+	}{
+		Jsonrpc: "2.0",
+		Method:  "web3_clientVersion",
+		Params:  []string{},
+		ID:      1,
+	}
+
+	res, err := net.MakePostRequest(url, payload)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	response := struct {
+		Result string `json:"result"`
+	}{}
+
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return "", err
+	}
+
+	return response.Result, nil
 }

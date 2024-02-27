@@ -88,7 +88,7 @@ func GetSDStatus(
 		return nil, err
 	}
 
-	alreadyLiquidated, err := sdutility.AlreadyLiquidated(sdu, operatorAddress, nil)
+	alreadyLiquidated, err := sdutility.AlreadyLiquidated(sdu, operatorAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func GetSDStatus(
 	}, nil
 }
 
-func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, reloadKeys bool) (*api.CanNodeDepositResponse, error) {
+func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, _ bool) (*api.CanNodeDepositResponse, error) {
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
 	}

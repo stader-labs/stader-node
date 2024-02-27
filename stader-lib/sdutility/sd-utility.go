@@ -19,10 +19,12 @@ func GetPoolAvailableSDBalance(sp *stader.SDUtilityPoolContractManager, opts *bi
 	if err != nil {
 		return nil, err
 	}
+
 	sdRequestedForWithdraw, err := GetSdRequestedForWithdraw(sp, opts)
 	if err != nil {
 		return nil, err
 	}
+
 	utilityPoolBalance, err := GetUtilityPoolBalance(sp, opts)
 	if err != nil {
 		return nil, err
@@ -66,13 +68,25 @@ func EstimateRepay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.I
 	return sp.SDUtilityPoolContract.GetTransactionGasInfo(opts, "repay", utilityAmount)
 }
 
+func EstimateRepayFullAmount(sp *stader.SDUtilityPoolContractManager, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return sp.SDUtilityPoolContract.GetTransactionGasInfo(opts, "repayFullAmount")
+}
+
 func Repay(sp *stader.SDUtilityPoolContractManager, utilityAmount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
 	return sp.SDUtilityPool.Repay(opts, utilityAmount)
+}
+
+func RepayFullAmount(sp *stader.SDUtilityPoolContractManager, opts *bind.TransactOpts) (*types.Transaction, error) {
+	return sp.SDUtilityPool.RepayFullAmount(opts)
 }
 
 func SDMaxUtilizableAmount(sp *stader.SDUtilityPoolContractManager,
 	sdc *stader.SdCollateralContractManager, numValidators *big.Int, opts *bind.CallOpts) (*big.Int, error) {
 	maxThreshold, err := sp.SDUtilityPool.MaxETHWorthOfSDPerValidator(opts)
+	if err != nil {
+		return nil, err
+	}
+
 	ethAmount := new(big.Int).Mul(maxThreshold, numValidators)
 
 	sdAmount, err := sdc.SdCollateral.ConvertETHToSD(opts, ethAmount)
@@ -107,7 +121,7 @@ func GetUserData(sp *stader.SDUtilityPoolContractManager, address common.Address
 	return &userData, nil
 }
 
-func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address, opts *bind.CallOpts) (bool, error) {
+func AlreadyLiquidated(sp *stader.SDUtilityPoolContractManager, address common.Address) (bool, error) {
 	liquidationIndex, err := LiquidationIndexByOperator(sp, address, nil)
 	if err != nil {
 		return false, err

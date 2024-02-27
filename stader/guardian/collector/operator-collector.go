@@ -143,7 +143,7 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, LiquidationStatus), "", nil, nil),
 		ClaimVaultBalance: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimVaultBalance), "", nil, nil),
-		SDUtilizationPosition: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_utility_positon"),
+		SDUtilizationPosition: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_utility_position"),
 			"The current balance of the SD utility pool",
 			nil, nil,
 		),
@@ -224,8 +224,8 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.SdCollateralPct, prometheus.GaugeValue, state.StaderNetworkDetails.SdCollateralPct)
 	channel <- prometheus.MustNewConstMetric(collector.LockedEth, prometheus.GaugeValue, state.StaderNetworkDetails.LockedEth)
 	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, state.StaderNetworkDetails.HealthFactor)
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDUtilizationPosition))
-	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, float64(state.StaderNetworkDetails.OperatorSDSelfBond))
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
 	channel <- prometheus.MustNewConstMetric(collector.LiquidationStatus, prometheus.GaugeValue, state.StaderNetworkDetails.LiquidationStatus)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimVaultBalance, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimVaultBalance)
 	channel <- prometheus.MustNewConstMetric(collector.SDUtilizationPosition, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
