@@ -106,7 +106,10 @@ func nodeDeposit(c *cli.Context) error {
 
 		switch i {
 		case 0:
-			utilityAmount, err = node.PromptChooseUtilityAmount(sdStatus)
+			minUtility := node.GetMinUtility(sdStatus)
+			maxUtility := node.GetMaxUtility(sdStatus)
+
+			utilityAmount, err = node.PromptChooseUtilityAmount(sdStatus, minUtility, maxUtility)
 			if err != nil {
 				return err
 			}

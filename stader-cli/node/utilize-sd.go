@@ -58,7 +58,10 @@ func utilizeSD(c *cli.Context) error {
 		return nil
 	}
 
-	amountWei, err := PromptChooseUtilityAmount(sdStatusResponse.SDStatus)
+	minUtility := eth.EthToWei(1)
+	maxUtility := GetMaxUtility(sdStatusResponse.SDStatus)
+
+	amountWei, err := PromptChooseUtilityAmount(sdStatusResponse.SDStatus, minUtility, maxUtility)
 	if err != nil {
 		return err
 	}
@@ -120,10 +123,7 @@ func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
 	return maxUtility
 }
 
-func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse) (*big.Int, error) {
-	minUtility := GetMinUtility(sdStatus)
-	maxUtility := GetMaxUtility(sdStatus)
-
+func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse, minUtility, maxUtility *big.Int) (*big.Int, error) {
 	// 1. If the pool had enough SD
 	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
 		return nil, errors.New("There is not sufficient free SD in the Utility Pool for utilization at the moment. Please try again later when there is enough free SD in the Utility Pool")

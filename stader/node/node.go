@@ -471,7 +471,7 @@ func run(c *cli.Context) error {
 			if response.Success {
 				infoLog.Println("Successfully sent the NodeDiversity message")
 			} else {
-				errorLog.Println("Failed to send the NodeDiversity message with err: %s\n", response.Error)
+				errorLog.Printf("Failed to send the NodeDiversity message with err: %s\n", response.Error)
 			}
 
 			infoLog.Println("Done checking node diversity metrics")
