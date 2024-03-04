@@ -38,8 +38,8 @@ func ClaimOperatorRewards(orc *stader.OperatorRewardsCollectorContractManager, o
 	return tx, nil
 }
 
-func ClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, operatorAddress common.Address, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
-	tx, err := orc.OperatorRewardsCollector.ClaimFor(opts, operatorAddress, amount)
+func ClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := orc.OperatorRewardsCollector.ClaimWithAmount(opts, amount)
 	if err != nil {
 		return nil, fmt.Errorf("Could not claim operator rewards: %w", err)
 	}
@@ -152,7 +152,7 @@ func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, op
 }
 
 func GetOperatorRewardsCollectorBalance(orc *stader.OperatorRewardsCollectorContractManager, operatorRewardAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	return orc.OperatorRewardsCollector.Balances(opts, operatorRewardAddress)
+	return orc.OperatorRewardsCollector.GetBalance(opts, operatorRewardAddress)
 }
 
 func GetValidatorInfosByOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, pageNumber *big.Int, pageSize *big.Int, opts *bind.CallOpts) ([]contracts.Validator, error) {
