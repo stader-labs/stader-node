@@ -54,7 +54,7 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	if sdStatusResponse.SDStatus.SdCollateralRequireAmount.Cmp(big.NewInt(0)) == 0 {
-		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: ~/bin/stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
 		return nil
 	}
 
@@ -142,13 +142,14 @@ func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse, minUtility, maxUt
 	minSd := eth.WeiToEth(minUtility)
 	maxSd := eth.WeiToEth(maxUtility)
 
-	msg := fmt.Sprintf(`SD Utility Pool balance: %s
+	msg := fmt.Sprintf(`
+%sPlease enter the amount of SD you wish to utilize from the SD Utility Pool:%s
+SD Utility Pool balance: %s
 Minimum utilization amount: %s 
 Maximum utilization amount: %s
+`, log.ColorYellow, log.ColorReset, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), eth.DisplayAmountInUnits(minUtility, "sd"), eth.DisplayAmountInUnits(maxUtility, "sd"))
 
-%sPlease enter the amount of SD you wish to utilize from the SD Utility Pool:%s`, eth.DisplayAmountInUnits(sdStatus.PoolAvailableSDBalance, "sd"), eth.DisplayAmountInUnits(minUtility, "sd"), eth.DisplayAmountInUnits(maxUtility, "sd"), log.ColorYellow, log.ColorReset)
-
-	errMsg := fmt.Sprintf("Invalid input, please specify an amount within %f and %f SD range", minSd, maxSd)
+	errMsg := fmt.Sprintf("%sInvalid input, please specify an amount within %f and %f SD range%s", log.ColorRed, minSd, maxSd, log.ColorReset)
 
 	utilityAmount, err := sd.PromptChooseSDWithMaxMin(msg, errMsg, minUtility, maxUtility)
 	if err != nil {

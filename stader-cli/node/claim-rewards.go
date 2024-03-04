@@ -44,18 +44,15 @@ func ClaimRewards(c *cli.Context) error {
 
 	sdStatus := sdStatusResponse.SDStatus
 
-	totalFee := sdStatus.AccumulatedInterest
-
+	// totalFee := sdStatus.AccumulatedInterest
 	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
 	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
-		if sdStatusResponse.SDStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-			fmt.Printf("You need to first pay %s and close the utilization position to get back your funds. Execute the following command to repay your utilized SD stader-cli repay-sd --amount <SD amount> \n", eth.DisplayAmountInUnits(totalFee, "sd"))
-
-			fmt.Printf("Based on the current Health Factor, you can claim upto %s.\n", eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
+		if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
+			fmt.Printf("You currently have an existing SD Utilization Position of %s. Based on the current Health Factor, you can claim upto %s", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"), eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
 
 			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 
-			if !cliutils.Confirm("Are you sure you want to proceed?\n\n") {
+			if !cliutils.Confirm("Do you wish to proceed?\n\n") {
 				fmt.Println("Cancelled.")
 				return nil
 			}
