@@ -38,6 +38,7 @@ func WithdrawSd(c *cli.Context) error {
 	}
 
 	if canWithdrawSdResponse.InsufficientSdCollateral {
+		//TODO: show 200% in SD
 		fmt.Println("Not enough excess SD collateral to withdraw")
 		return nil
 	}
@@ -95,7 +96,7 @@ func WithdrawSd(c *cli.Context) error {
 	// withdraw request amount lesser than the Utilization Position
 
 	if !hasUtilizePosition {
-		fmt.Printf("Successfully withdrawn %s Collateral. \n", eth.DisplayAmountInUnits(amountWei, "sd"))
+		fmt.Printf("Successfully withdrawn %s collateral. \n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 		return nil
 	}

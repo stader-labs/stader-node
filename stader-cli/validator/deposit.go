@@ -145,7 +145,7 @@ func nodeDeposit(c *cli.Context) error {
 			return nil
 		}
 
-		fmt.Println("Continue with create validator...")
+		fmt.Println("Validator creation process initiate, please wait...")
 	}
 
 	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)

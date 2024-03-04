@@ -97,7 +97,7 @@ func repaySD(c *cli.Context) error {
 	}
 
 	// Prompt for confirmation
-	if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to repay %s from your Operator Address and close your Utilization Position? ", eth.DisplayAmountInUnits(amountWei, "sd"))) {
+	if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to repay %s from your Operator Address?", eth.DisplayAmountInUnits(amountWei, "sd"))) {
 		fmt.Printf("Cancelled\n")
 		return nil
 	}

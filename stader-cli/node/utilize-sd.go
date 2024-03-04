@@ -40,21 +40,23 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	if sdStatusResponse.SDStatus.AlreadyLiquidated {
-		fmt.Printf("Your node is in liquidation process")
+		fmt.Printf("Your node is under the liquidation process and you can not utilize SD at the moment.")
 		return nil
 	}
 
 	healthFactor := eth.WeiToEth(sdStatusResponse.SDStatus.HealthFactor)
 	if healthFactor < 1 {
 		fmt.Printf(
-			"The Operator has a Health Factor of %.6f. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			"Your node has a Health Factor of %.6f which is less than 1 and you can not utilize SD at the moment. Please repay your utilize SD and ensure your Health Factor is greater than 1 to avoid liquidation.\n\n",
 			healthFactor)
+
+		fmt.Printf("Note: Please repay your utilized SD by using the following command: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 
 		return nil
 	}
 
 	if sdStatusResponse.SDStatus.SdCollateralRequireAmount.Cmp(big.NewInt(0)) == 0 {
-		fmt.Printf("Please add a validator to your node first before utilizing SD from a Utility Pool. Execute the following command to add a validator to your node: ~/bin/stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
+		fmt.Printf("Please add a validator to your node first before utilizing SD from the SD Utility Pool. Execute the following command to add a validator to your node: ~/bin/stader-cli validator deposit --num-validators <number of validators you wish to add> \n")
 		return nil
 	}
 
@@ -79,7 +81,7 @@ func utilizeSD(c *cli.Context) error {
 	rate := sdStatusResponse.SDStatus.UtilizationRate
 	// Prompt for confirmation
 	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to use %s from the utility pool?.\nNote: A Utilization fee of %s%s will be applied to the utilized SD from the utility pool.", eth.DisplayAmountInUnits(amountWei, "sd"), rate.String(), "%"))) {
+		"Are you sure you want to use %s from the SD Utility Pool?.\nNote: A Utilization fee of %s%s will be applied to the utilized SD from the SD Utility Pool.", eth.DisplayAmountInUnits(amountWei, "sd"), rate.String(), "%"))) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
@@ -96,7 +98,7 @@ func utilizeSD(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Successfully deposited %s to the collateral contract by utilizing SD from the Utility Pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
+	fmt.Printf("Successfully deposited %s to the collateral contract by utilizing SD from the SD Utility Pool.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 	return nil
 }
@@ -126,7 +128,7 @@ func GetMaxUtility(sdStatus *api.SdStatusResponse) *big.Int {
 func PromptChooseUtilityAmount(sdStatus *api.SdStatusResponse, minUtility, maxUtility *big.Int) (*big.Int, error) {
 	// 1. If the pool had enough SD
 	if minUtility.Cmp(sdStatus.PoolAvailableSDBalance) > 0 {
-		return nil, errors.New("There is not sufficient free SD in the Utility Pool for utilization at the moment. Please try again later when there is enough free SD in the Utility Pool")
+		return nil, errors.New("There is not sufficient free SD in the SD Utility Pool for utilization at the moment. Please try again later when there is enough free SD in the SD Utility Pool")
 	}
 
 	// 2. If user had enough Eth

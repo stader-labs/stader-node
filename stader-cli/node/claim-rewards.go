@@ -48,14 +48,14 @@ func ClaimRewards(c *cli.Context) error {
 	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
 	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
 		if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
-			fmt.Printf("You currently have an existing SD Utilization Position of %s. Based on the current Health Factor, you can claim upto %s", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"), eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
-
-			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
+			fmt.Printf("You currently have an existing SD Utilization Position of %s. Based on the current Health Factor, you can claim %s at the moment, and the remaining ETH can be claimed after closing the Utilization Position", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"), eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
 
 			if !cliutils.Confirm("Do you wish to proceed?\n\n") {
 				fmt.Println("Cancelled.")
 				return nil
 			}
+
+			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
 		}
 	}
 
