@@ -43,8 +43,6 @@ type OperatorCollector struct {
 	LiquidationStatus                    *prometheus.Desc
 	ClaimVaultBalance                    *prometheus.Desc
 
-	SDUtilizationPosition *prometheus.Desc
-
 	SDSelfBond *prometheus.Desc
 
 	// The beacon client
@@ -143,10 +141,6 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, LiquidationStatus), "", nil, nil),
 		ClaimVaultBalance: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, ClaimVaultBalance), "", nil, nil),
-		SDUtilizationPosition: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_utility_position"),
-			"The current balance of the SD utility pool",
-			nil, nil,
-		),
 		SDSelfBond: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_self_bond"),
 			"The current balance of the SD utility pool",
 			nil, nil,
@@ -190,7 +184,6 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalSDSelfBond
 	channel <- collector.LiquidationStatus
 	channel <- collector.ClaimVaultBalance
-	channel <- collector.SDUtilizationPosition
 	channel <- collector.SDSelfBond
 }
 
@@ -228,7 +221,6 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
 	channel <- prometheus.MustNewConstMetric(collector.LiquidationStatus, prometheus.GaugeValue, state.StaderNetworkDetails.LiquidationStatus)
 	channel <- prometheus.MustNewConstMetric(collector.ClaimVaultBalance, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimVaultBalance)
-	channel <- prometheus.MustNewConstMetric(collector.SDUtilizationPosition, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
 	channel <- prometheus.MustNewConstMetric(collector.SDSelfBond, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
 }
 
