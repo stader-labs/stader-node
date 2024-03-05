@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+	"math/big"
 	"strconv"
 
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -10,7 +11,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 )
 
 func nodeDepositSd(c *cli.Context) error {
@@ -27,28 +27,44 @@ func nodeDepositSd(c *cli.Context) error {
 		return err
 	}
 
+	nounce := c.GlobalUint64("nonce")
 	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
+	if nounce != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
-	// Get stake mount
 	amountInString := c.String("amount")
+
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {
 		return err
 	}
+
+	autoConfirm := c.Bool("yes")
+
 	amountWei := eth.EthToWei(amount)
 
+	return DepositSdWithAmount(staderClient, amountWei, autoConfirm, nounce)
+}
+
+func DepositSdWithAmount(staderClient *stader.Client, amountWei *big.Int, autoConfirm bool, nonce uint64) error {
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
 	// Check allowance
-	allowance, err := staderClient.GetNodeDepositSdAllowance()
+	allowance, err := staderClient.GetNodeSdAllowance(contracts.SdCollateralContract)
 	if err != nil {
 		return err
 	}
 
 	if allowance.Allowance.Cmp(amountWei) < 0 {
-		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD. Amount to approve: ", eth.WeiToEth(amountWei))
-		err = nodeApproveSdWithAmount(c, staderClient, amountWei)
+		maxApproval := maxUint256()
+
+		fmt.Println("Before depositing SD, you must first give the collateral contract approval to interact with your SD.")
+
+		err = nodeApproveSdWithAmountAndAddress(staderClient, maxApproval, contracts.SdCollateralContract, autoConfirm, nonce)
 		if err != nil {
 			return err
 		}
@@ -60,7 +76,7 @@ func nodeDepositSd(c *cli.Context) error {
 	}
 
 	if canDeposit.InsufficientBalance {
-		fmt.Println("The node's SD balance is insufficient.")
+		fmt.Println("You don't have sufficient SD in your Operator Address to add as collateral. Please deposit SD into your Operator Address and try again.")
 		return nil
 	}
 
@@ -69,16 +85,16 @@ func nodeDepositSd(c *cli.Context) error {
 		return nil
 	}
 
-	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, c.Bool("yes"))
-	if err != nil {
-		return err
-	}
-
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %.6f SD? You will not be able to withdraw this SD until you exit your validators", math.RoundDown(eth.WeiToEth(amountWei), 6)))) {
+	if !(autoConfirm || cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %s as collateral?", eth.DisplayAmountInUnits(amountWei, "sd")))) {
 		fmt.Println("Cancelled.")
 		return nil
+	}
+
+	// Assign max fees
+	err = gas.AssignMaxFeeAndLimit(canDeposit.GasInfo, staderClient, autoConfirm)
+	if err != nil {
+		return err
 	}
 
 	depositSdResponse, err := staderClient.NodeDepositSd(amountWei)
@@ -94,7 +110,7 @@ func nodeDepositSd(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("Successfully deposited %.6f SD.\n", math.RoundDown(eth.WeiToEth(amountWei), 6))
+	fmt.Printf("Successfully deposited %s.\n", eth.DisplayAmountInUnits(amountWei, "sd"))
 
 	return nil
 }

@@ -541,12 +541,12 @@ func (p *ExecutionClientManager) Version() (string, error) {
 		Jsonrpc string   `json:"jsonrpc"`
 		Method  string   `json:"method"`
 		Params  []string `json:"params"`
-		Id      int64    `json:"id"`
+		ID      int64    `json:"id"`
 	}{
 		Jsonrpc: "2.0",
 		Method:  "web3_clientVersion",
 		Params:  []string{},
-		Id:      1,
+		ID:      1,
 	}
 
 	res, err := net.MakePostRequest(url, payload)

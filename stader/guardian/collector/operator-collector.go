@@ -33,6 +33,19 @@ type OperatorCollector struct {
 	TotalSdCollateral                    *prometheus.Desc
 	TotalSdCollateralInEth               *prometheus.Desc
 	TotalEthColateral                    *prometheus.Desc
+	TotalSDUtilizationPosition           *prometheus.Desc
+	TotalSDSelfBond                      *prometheus.Desc
+	TotalSDUtilized                      *prometheus.Desc
+	TotalSDUtilizedInterest              *prometheus.Desc
+	SdCollateralPct                      *prometheus.Desc
+	LockedEth                            *prometheus.Desc
+	HealthFactor                         *prometheus.Desc
+	LiquidationStatus                    *prometheus.Desc
+	ClaimVaultBalance                    *prometheus.Desc
+
+	SDUtilizationPosition *prometheus.Desc
+
+	SDSelfBond *prometheus.Desc
 
 	// The beacon client
 	bc beacon.Client
@@ -112,6 +125,32 @@ func NewOperatorCollector(
 			prometheus.BuildFQName(namespace, OperatorSub, SdCollateralInEth), "", nil, nil),
 		TotalEthColateral: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, OperatorSub, EthCollateral), "", nil, nil),
+		TotalSDUtilized: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, SDUtilized), "", nil, nil),
+		TotalSDUtilizedInterest: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, SDUtilizedInterest), "", nil, nil),
+		SdCollateralPct: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, SdCollateralPct), "", nil, nil),
+		LockedEth: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, LockedEth), "", nil, nil),
+		HealthFactor: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, HeathFactor), "", nil, nil),
+		TotalSDUtilizationPosition: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, TotalSDUtilizationPosition), "", nil, nil),
+		TotalSDSelfBond: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, TotalSDSelfBonded), "", nil, nil),
+		LiquidationStatus: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, LiquidationStatus), "", nil, nil),
+		ClaimVaultBalance: prometheus.NewDesc(
+			prometheus.BuildFQName(namespace, OperatorSub, ClaimVaultBalance), "", nil, nil),
+		SDUtilizationPosition: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_utility_position"),
+			"The current balance of the SD utility pool",
+			nil, nil,
+		),
+		SDSelfBond: prometheus.NewDesc(prometheus.BuildFQName(namespace, OperatorSub, "sd_self_bond"),
+			"The current balance of the SD utility pool",
+			nil, nil,
+		),
 		bc:          bc,
 		ec:          ec,
 		nodeAddress: nodeAddress,
@@ -142,6 +181,17 @@ func (collector *OperatorCollector) Describe(channel chan<- *prometheus.Desc) {
 	channel <- collector.TotalSdCollateral
 	channel <- collector.TotalSdCollateralInEth
 	channel <- collector.TotalEthColateral
+	channel <- collector.TotalSDUtilized
+	channel <- collector.TotalSDUtilizedInterest
+	channel <- collector.SdCollateralPct
+	channel <- collector.LockedEth
+	channel <- collector.HealthFactor
+	channel <- collector.TotalSDUtilizationPosition
+	channel <- collector.TotalSDSelfBond
+	channel <- collector.LiquidationStatus
+	channel <- collector.ClaimVaultBalance
+	channel <- collector.SDUtilizationPosition
+	channel <- collector.SDSelfBond
 }
 
 // Collect the latest metric values and pass them to Prometheus
@@ -169,7 +219,17 @@ func (collector *OperatorCollector) Collect(channel chan<- prometheus.Metric) {
 	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSd)
 	channel <- prometheus.MustNewConstMetric(collector.TotalSdCollateralInEth, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorStakedSdInEth)
 	channel <- prometheus.MustNewConstMetric(collector.TotalEthColateral, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorEthCollateral)
-
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilized, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilized)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizedInterest, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDInterest)
+	channel <- prometheus.MustNewConstMetric(collector.SdCollateralPct, prometheus.GaugeValue, state.StaderNetworkDetails.SdCollateralPct)
+	channel <- prometheus.MustNewConstMetric(collector.LockedEth, prometheus.GaugeValue, state.StaderNetworkDetails.LockedEth)
+	channel <- prometheus.MustNewConstMetric(collector.HealthFactor, prometheus.GaugeValue, state.StaderNetworkDetails.HealthFactor)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDUtilizationPosition, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
+	channel <- prometheus.MustNewConstMetric(collector.TotalSDSelfBond, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
+	channel <- prometheus.MustNewConstMetric(collector.LiquidationStatus, prometheus.GaugeValue, state.StaderNetworkDetails.LiquidationStatus)
+	channel <- prometheus.MustNewConstMetric(collector.ClaimVaultBalance, prometheus.GaugeValue, state.StaderNetworkDetails.ClaimVaultBalance)
+	channel <- prometheus.MustNewConstMetric(collector.SDUtilizationPosition, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDUtilizationPosition)
+	channel <- prometheus.MustNewConstMetric(collector.SDSelfBond, prometheus.GaugeValue, state.StaderNetworkDetails.OperatorSDSelfBond)
 }
 
 // Log error messages

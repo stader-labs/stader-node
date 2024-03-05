@@ -38,6 +38,19 @@ func ClaimOperatorRewards(orc *stader.OperatorRewardsCollectorContractManager, o
 	return tx, nil
 }
 
+func ClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, amount *big.Int, opts *bind.TransactOpts) (*types.Transaction, error) {
+	tx, err := orc.OperatorRewardsCollector.ClaimWithAmount(opts, amount)
+	if err != nil {
+		return nil, fmt.Errorf("Could not claim operator rewards: %w", err)
+	}
+
+	return tx, nil
+}
+
+func EstimateClaimOperatorRewardsWithAmount(orc *stader.OperatorRewardsCollectorContractManager, operatorAddress common.Address, amount *big.Int, opts *bind.TransactOpts) (stader.GasInfo, error) {
+	return orc.OperatorRewardsCollectorContract.GetTransactionGasInfo(opts, "claimFor", operatorAddress, amount)
+}
+
 func EstimateChangeSocializingPoolState(pnr *stader.PermissionlessNodeRegistryContractManager, socializeEl bool, opts *bind.TransactOpts) (stader.GasInfo, error) {
 	return pnr.PermissionlessNodeRegistryContract.GetTransactionGasInfo(opts, "changeSocializingPoolState", socializeEl)
 }
@@ -107,6 +120,15 @@ func GetOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, nodeAd
 	return operatorId, nil
 }
 
+func WithdrawableInEth(orc *stader.OperatorRewardsCollectorContractManager, nodeAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
+	withdrawableInEth, err := orc.OperatorRewardsCollector.WithdrawableInEth(opts, nodeAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return withdrawableInEth, nil
+}
+
 func GetOperatorInfo(pnr *stader.PermissionlessNodeRegistryContractManager, operatorId *big.Int, opts *bind.CallOpts) (types2.OperatorInfo, error) {
 	operatorInfo, err := pnr.PermissionlessNodeRegistry.OperatorStructById(opts, operatorId)
 	if err != nil {
@@ -130,7 +152,7 @@ func GetNextOperatorId(pnr *stader.PermissionlessNodeRegistryContractManager, op
 }
 
 func GetOperatorRewardsCollectorBalance(orc *stader.OperatorRewardsCollectorContractManager, operatorRewardAddress common.Address, opts *bind.CallOpts) (*big.Int, error) {
-	return orc.OperatorRewardsCollector.Balances(opts, operatorRewardAddress)
+	return orc.OperatorRewardsCollector.GetBalance(opts, operatorRewardAddress)
 }
 
 func GetValidatorInfosByOperator(pnr *stader.PermissionlessNodeRegistryContractManager, operatorAddress common.Address, pageNumber *big.Int, pageSize *big.Int, opts *bind.CallOpts) ([]contracts.Validator, error) {

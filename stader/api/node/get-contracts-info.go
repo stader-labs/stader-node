@@ -18,6 +18,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error getting configuration: %w", err)
 	}
+
 	response.Network = uint64(config.StaderNode.GetChainID())
 	response.EncryptionKey = config.StaderNode.GetPresignEncryptionKey()
 
@@ -34,6 +35,7 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 
 	response.BeaconNetwork = eth2DepositContract.ChainID
 	response.BeaconDepositContract = eth2DepositContract.Address
+
 	response.SdCollateralContract, err = services.GetSdCollateralAddress(c)
 	if err != nil {
 		return nil, err
@@ -44,31 +46,43 @@ func getContractsInfo(c *cli.Context) (*api.ContractsInfoResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	response.SdToken, err = services.GetSdTokenAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.PermissionlessNodeRegistry, err = services.GetPermissionlessNodeRegistryAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.VaultFactory, err = services.GetVaultFactoryAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.SocializingPoolContract, err = services.GetSocializingPoolAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.PermisionlessPool, err = services.GetPermissionlessPoolAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.StaderOracle, err = services.GetStaderOracleAddress(c)
 	if err != nil {
 		return nil, err
 	}
+
 	response.StakePoolManager, err = services.GetStakePoolManagerAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	response.SdUtilityContract, err = services.GetSdUtilityAddress(c)
 	if err != nil {
 		return nil, err
 	}

@@ -29,6 +29,15 @@ const UnclaimedSocializingPoolELRewards = "unclaimed_socializing_pool_el_rewards
 const UnclaimedSocializingPoolSdRewards = "unclaimed_socializing_pool_sd_rewards"
 const UnclaimedCLRewards = "unclaimed_cl_rewards"
 const NextRewardCycleTime = "next_reward_cycle_time"
+const SDUtilized = "sd_utilized"
+const SDUtilizedInterest = "sd_utilized_interest"
+const SdCollateralPct = "sd_collateral_pct"
+const LockedEth = "eth_locked"
+const HeathFactor = "heath_factor"
+const TotalSDUtilizationPosition = "sd_utility_position"
+const TotalSDSelfBonded = "total_sd_self_bonded"
+const LiquidationStatus = "liquidation_status"
+const ClaimVaultBalance = "claim_vault_balance"
 
 // Node Health => stader_node_health+ key
 const NodeSub = "node_health"

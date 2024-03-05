@@ -1,11 +1,12 @@
 package node
 
 import (
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
@@ -34,7 +35,21 @@ func CanClaimRewards(c *cli.Context) (*api.CanClaimRewards, error) {
 	if err != nil {
 		return nil, err
 	}
-	if operatorClaimVaultBalance.Cmp(big.NewInt(0)) == 0 {
+
+	withdrawableInEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalWithdrawableEth := operatorClaimVaultBalance
+	if operatorClaimVaultBalance.Cmp(withdrawableInEth) > 0 {
+		totalWithdrawableEth = withdrawableInEth
+	}
+
+	response.WithdrawableInEth = totalWithdrawableEth
+	response.ClaimsBalance = operatorClaimVaultBalance
+
+	if totalWithdrawableEth.Cmp(big.NewInt(0)) == 0 {
 		response.NoRewards = true
 		return &response, nil
 	}
@@ -77,21 +92,27 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 
 	response := api.ClaimRewards{}
 
-	nodeAddress, err := w.GetNodeAccount()
+	nodeAccount, err := w.GetNodeAccount()
 	if err != nil {
 		return nil, err
 	}
 
-	operatorId, err := node.GetOperatorId(pnr, nodeAddress.Address, nil)
-	if err != nil {
-		return nil, err
-	}
-	operatorInfo, err := node.GetOperatorInfo(pnr, operatorId, nil)
+	operatorID, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	operatorRewardsBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAddress.Address, nil)
+	operatorInfo, err := node.GetOperatorInfo(pnr, operatorID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorRewardsBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	withdrawableInEth, err := node.WithdrawableInEth(orc, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -104,12 +125,18 @@ func ClaimRewards(c *cli.Context) (*api.ClaimRewards, error) {
 		return nil, err
 	}
 
+	totalWithdrawableEth := operatorRewardsBalance
+	if operatorRewardsBalance.Cmp(withdrawableInEth) > 0 {
+		totalWithdrawableEth = withdrawableInEth
+	}
+
 	// estimate gas
 	tx, err := node.ClaimOperatorRewards(orc, opts)
 	if err != nil {
 		return nil, err
 	}
 
+	response.RewardsClaimed = totalWithdrawableEth
 	response.TxHash = tx.Hash()
 
 	return &response, nil

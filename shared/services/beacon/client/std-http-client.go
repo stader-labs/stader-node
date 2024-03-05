@@ -423,10 +423,12 @@ func (c *StandardHttpClient) GetValidatorIndex(pubkey types.ValidatorPubkey) (ui
 
 // Get domain data for a domain type at a given epoch
 func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config.Network) ([]byte, error) {
-
 	var genesis GenesisResponse
 
 	genesis, err := c.getGenesis()
+	if err != nil {
+		return []byte{}, fmt.Errorf("GetGenesis %w", err)
+	}
 
 	// Get fork version
 	var capellaForkVersion string
@@ -445,8 +447,8 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config
 	// Compute & return domain
 	var dt [4]byte
 	copy(dt[:], domainType[:])
-	return eth2types.Domain(dt, decodedForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 
+	return eth2types.Domain(dt, decodedForkVersion, genesis.Data.GenesisValidatorsRoot), nil
 }
 
 // Perform a voluntary exit on a validator
@@ -589,13 +591,16 @@ func (c *StandardHttpClient) getNodeVersion() (NodeVersionResponse, error) {
 	if err != nil {
 		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: %w", err)
 	}
+
 	if status != http.StatusOK {
 		return NodeVersionResponse{}, fmt.Errorf("Could not get node sync status: HTTP status %d; response body: '%s'", status, string(responseBody))
 	}
+
 	var nodeVersion NodeVersionResponse
 	if err := json.Unmarshal(responseBody, &nodeVersion); err != nil {
 		return NodeVersionResponse{}, fmt.Errorf("Could not decode node sync status: %w", err)
 	}
+
 	return nodeVersion, nil
 }
 

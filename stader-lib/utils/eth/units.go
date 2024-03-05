@@ -26,9 +26,34 @@ import (
 
 // Conversion factors
 const (
-	WeiPerEth  float64 = 1e18
-	WeiPerGwei float64 = 1e9
+	WeiPerEth       float64 = 1e18
+	WeiPerGwei      float64 = 1e9
+	Decimal                 = 18
+	BaseAmountInEth         = 4
+	Threshold               = 1e12
 )
+
+func DisplayAmountInUnits(wei *big.Int, denom string) string {
+	gweiDenom := " gwei"
+	if denom == "sd" {
+		gweiDenom = " gwei SD"
+	}
+
+	regDenom := " ETH"
+	if denom == "sd" {
+		regDenom = " SD"
+	}
+
+	if wei == nil {
+		return ""
+	}
+
+	if wei.Cmp(big.NewInt(Threshold)) < 0 && wei.Cmp(big.NewInt(0)) != 0 {
+		return strconv.FormatFloat(WeiToGwei(wei), 'f', 6, 64) + gweiDenom
+	}
+
+	return strconv.FormatFloat(WeiToEth(wei), 'f', 6, 64) + regDenom
+}
 
 // Convert wei to eth
 func WeiToEth(wei *big.Int) float64 {

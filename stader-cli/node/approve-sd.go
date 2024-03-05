@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"strconv"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
@@ -13,8 +14,7 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 )
 
-func nodeApproveSd(c *cli.Context) error {
-
+func nodeApproveDepositSd(c *cli.Context, amountInString string) error {
 	staderClient, err := stader.NewClientFromCtx(c)
 	if err != nil {
 		return err
@@ -32,8 +32,47 @@ func nodeApproveSd(c *cli.Context) error {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
-	// Get stake mount
-	amountInString := c.String("amount")
+	amount, err := strconv.ParseFloat(amountInString, 64)
+	if err != nil {
+		return err
+	}
+
+	amountWei := eth.EthToWei(amount)
+
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
+	autoConfirm := c.Bool("yes")
+
+	nonce := c.GlobalUint64("nonce")
+
+	err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdCollateralContract, autoConfirm, nonce)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func nodeApproveUtilitySd(c *cli.Context, amountInString string) error {
+	staderClient, err := stader.NewClientFromCtx(c)
+	if err != nil {
+		return err
+	}
+	defer staderClient.Close()
+
+	// Check and assign the EC status
+	err = cliutils.CheckClientStatus(staderClient)
+	if err != nil {
+		return err
+	}
+
+	// If a custom nonce is set, print the multi-transaction warning
+	if c.GlobalUint64("nonce") != 0 {
+		cliutils.PrintMultiTransactionNonceWarning()
+	}
 
 	amount, err := strconv.ParseFloat(amountInString, 64)
 	if err != nil {
@@ -42,7 +81,16 @@ func nodeApproveSd(c *cli.Context) error {
 
 	amountWei := eth.EthToWei(amount)
 
-	err = nodeApproveSdWithAmount(c, staderClient, amountWei)
+	contracts, err := staderClient.GetContractsInfo()
+	if err != nil {
+		return err
+	}
+
+	autoConfirm := c.Bool("yes")
+
+	nonce := c.GlobalUint64("nonce")
+
+	err = nodeApproveSdWithAmountAndAddress(staderClient, amountWei, contracts.SdUtilityContract, autoConfirm, nonce)
 	if err != nil {
 		return err
 	}
@@ -50,30 +98,30 @@ func nodeApproveSd(c *cli.Context) error {
 	return nil
 }
 
-func nodeApproveSdWithAmount(c *cli.Context, staderClient *stader.Client, amountWei *big.Int) error {
+func nodeApproveSdWithAmountAndAddress(staderClient *stader.Client, amountWei *big.Int, address common.Address, autoConfirm bool, nonce uint64) error {
 	// If a custom nonce is set, print the multi-transaction warning
-	if c.GlobalUint64("nonce") != 0 {
+	if nonce != 0 {
 		cliutils.PrintMultiTransactionNonceWarning()
 	}
 
 	// Get approval gas
-	approvalGas, err := staderClient.NodeDepositSdApprovalGas(amountWei)
+	approvalGas, err := staderClient.NodeSdApprovalGas(amountWei, address)
 	if err != nil {
 		return err
 	}
 	// Assign max fees
-	err = gas.AssignMaxFeeAndLimit(approvalGas.GasInfo, staderClient, c.Bool("yes"))
+	err = gas.AssignMaxFeeAndLimit(approvalGas.GasInfo, staderClient, autoConfirm)
 	if err != nil {
 		return err
 	}
 
 	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
+	if !(autoConfirm || cliutils.Confirm("Do you want to approve SD to be spent by the Collateral Contract?")) {
 		fmt.Println("Cancelled.")
 		return nil
 	}
 
-	response, err := staderClient.NodeDepositSdApprove(amountWei)
+	response, err := staderClient.NodeSdApprove(amountWei, address)
 	if err != nil {
 		return err
 	}
@@ -90,9 +138,18 @@ func nodeApproveSdWithAmount(c *cli.Context, staderClient *stader.Client, amount
 	fmt.Println("Successfully approved SD.")
 
 	// If a custom nonce is set, increment it for the next transaction
-	if c.GlobalUint64("nonce") != 0 {
+	if nonce != 0 {
 		staderClient.IncrementCustomNonce()
 	}
 
 	return nil
+}
+
+// Calculate max uint256 value
+func maxUint256() *big.Int {
+	maxUint256 := big.NewInt(2)
+	maxUint256 = maxUint256.Exp(maxUint256, big.NewInt(256), nil)
+	maxUint256 = maxUint256.Sub(maxUint256, big.NewInt(1))
+
+	return maxUint256
 }

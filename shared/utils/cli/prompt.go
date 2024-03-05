@@ -58,8 +58,11 @@ func Select(initialPrompt string, options []string) (int, string) {
 
 	// Get prompt
 	prompt := initialPrompt
+	errPromptMsg := "Please enter a number corresponding to an option"
+
 	for i, option := range options {
 		prompt += fmt.Sprintf("\n%d: %s", (i + 1), option)
+		errPromptMsg += fmt.Sprintf("\n%d: %s", (i + 1), option)
 	}
 
 	// Get expected response format
@@ -70,7 +73,7 @@ func Select(initialPrompt string, options []string) (int, string) {
 	expectedFormat := fmt.Sprintf("^(%s)$", strings.Join(optionNumbers, "|"))
 
 	// Prompt user
-	response := Prompt(prompt, expectedFormat, "Please enter a number corresponding to an option")
+	response := Prompt(prompt, expectedFormat, errPromptMsg)
 
 	// Get selected option
 	index, _ := strconv.Atoi(response)
@@ -90,4 +93,12 @@ func ConfirmSecureSession(warning string) bool {
 	}
 
 	return true
+}
+
+func PrintError(msg string) {
+	fmt.Printf("%s%s%s\n", colorRed, msg, colorReset)
+}
+
+func PrintWarning(msg string) {
+	fmt.Printf("%s%s%s\n", colorYellow, msg, colorReset)
 }

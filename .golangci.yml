@@ -13,8 +13,6 @@ linters-settings:
       - style
   govet:
     check-shadowing: true
-    enable:
-      - fieldalignment
   nolintlint:
     require-explanation: true
     require-specific: true
@@ -33,8 +31,7 @@ linters:
     - gocritic
     - gofmt
     - goimports
-    - gomnd
-    - gocyclo
+    # - gocyclo 
     - gosec
     - gosimple
     - govet

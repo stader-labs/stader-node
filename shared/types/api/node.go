@@ -35,6 +35,7 @@ type NodeStatusResponse struct {
 	OperatorELRewardsAddress          common.Address                     `json:"operatorELRewardsAddress"`
 	OperatorELRewardsAddressBalance   *big.Int                           `json:"operatorELRewardsAddressBalance"`
 	OperatorRewardCollectorBalance    *big.Int                           `json:"operatorRewardCollectorBalance"`
+	OperatorWithdrawableEth           *big.Int                           `json:"operatorWithdrawableEth"`
 	DepositedSdCollateral             *big.Int                           `json:"depositedSdCollateral"`
 	SdCollateralWorthValidators       *big.Int                           `json:"sdCollateralWorthValidators"`
 	Registered                        bool                               `json:"registered"`
@@ -69,22 +70,26 @@ type CanNodeDepositSdResponse struct {
 	InsufficientBalance      bool           `json:"insufficientBalance"`
 	GasInfo                  stader.GasInfo `json:"gasInfo"`
 }
-type NodeDepositSdApproveGasResponse struct {
+
+type SdApproveGasResponse struct {
 	Status  string         `json:"status"`
 	Error   string         `json:"error"`
 	GasInfo stader.GasInfo `json:"gasInfo"`
 }
-type NodeDepositSdApproveResponse struct {
+
+type SdApproveResponse struct {
 	Status        string      `json:"status"`
 	Error         string      `json:"error"`
 	ApproveTxHash common.Hash `json:"approveTxHash"`
 }
+
 type NodeDepositSdResponse struct {
 	Status        string      `json:"status"`
 	Error         string      `json:"error"`
 	DepositTxHash common.Hash `json:"stakeTxHash"`
 }
-type NodeDepositSdAllowanceResponse struct {
+
+type SdAllowanceResponse struct {
 	Status    string   `json:"status"`
 	Error     string   `json:"error"`
 	Allowance *big.Int `json:"allowance"`
@@ -97,7 +102,6 @@ type CanNodeDepositResponse struct {
 	InsufficientBalance      bool           `json:"insufficientBalance"`
 	InvalidAmount            bool           `json:"invalidAmount"`
 	DepositPaused            bool           `json:"depositPaused"`
-	NotEnoughSdCollateral    bool           `json:"notEnoughSdCollateral"`
 	MaxValidatorLimitReached bool           `json:"maxValidatorLimitReached"`
 	InputKeyLimitReached     bool           `json:"inputKeyLimitReached"`
 	InputKeyLimit            uint16         `json:"inputKeyLimit"`
@@ -148,6 +152,7 @@ type ContractsInfoResponse struct {
 	StaderOracle               common.Address `json:"staderOracle"`
 	PenaltyTracker             common.Address `json:"penaltyTracker"`
 	StakePoolManager           common.Address `json:"stakePoolManager"`
+	SdUtilityContract          common.Address `json:"sdUtilityContract"`
 }
 
 type DebugExitResponse struct {
@@ -393,10 +398,12 @@ type NodeSignResponse struct {
 }
 
 type CanClaimRewards struct {
-	Status    string         `json:"status"`
-	Error     string         `json:"error"`
-	NoRewards bool           `json:"noRewards"`
-	GasInfo   stader.GasInfo `json:"gasInfo"`
+	Status            string         `json:"status"`
+	Error             string         `json:"error"`
+	NoRewards         bool           `json:"noRewards"`
+	WithdrawableInEth *big.Int       `json:"withdrawableInEth"`
+	ClaimsBalance     *big.Int       `json:"claimsBalance"`
+	GasInfo           stader.GasInfo `json:"gasInfo"`
 }
 
 type ClaimRewards struct {
@@ -404,5 +411,65 @@ type ClaimRewards struct {
 	Error                  string         `json:"error"`
 	OperatorRewardsBalance *big.Int       `json:"operatorRewardsBalance"`
 	OperatorRewardAddress  common.Address `json:"operatorRewardAddress"`
+	RewardsClaimed         *big.Int       `json:"rewardsClaimed"`
 	TxHash                 common.Hash    `json:"txHash"`
+}
+
+type NodeRepaySDResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanRepaySDResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
+}
+
+type NodeUtilitySDResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanUtilitySDResponse struct {
+	Status                string         `json:"status"`
+	Error                 string         `json:"error"`
+	NonTerminalValidators uint64         `json:"nonTerminalValidators"`
+	GasInfo               stader.GasInfo `json:"gasInfo"`
+}
+
+type GetSdStatusResponse struct {
+	SDStatus *SdStatusResponse `json:"sdStatusResponse"`
+	Status   string            `json:"status"`
+	Error    string            `json:"error"`
+}
+
+type SdStatusResponse struct {
+	SdUtilizerLatestBalance   *big.Int   `json:"sdUtilizerLatestBalance"`
+	SdUtilizedBalance         *big.Int   `json:"sdUtilizedBalance"`
+	SdCollateralCurrentAmount *big.Int   `json:"sdCollateralCurrentAmount"`
+	SdCollateralRequireAmount *big.Int   `json:"sdCollateralRequireAmount"`
+	SdMaxUtilizableAmount     *big.Int   `json:"sdMaxUtilizableAmount"`
+	UtilizationRate           *big.Float `json:"utilizationRate"`
+	SdBalance                 *big.Int   `json:"sdBalance"`
+	PoolAvailableSDBalance    *big.Int   `json:"poolAvailableSDBalance"`
+	SdRewardEligible          *big.Int   `json:"sdRewardEligible"`
+	HealthFactor              *big.Int   `json:"healthFactor"`
+	AccumulatedInterest       *big.Int   `json:"accumulatedInterest"`
+	NotEnoughSdCollateral     bool       `json:"notEnoughSdCollateral"`
+	AlreadyLiquidated         bool       `json:"alreadyLiquidated"`
+}
+
+type NodeRepayExcessSDResponse struct {
+	Status string      `json:"status"`
+	Error  string      `json:"error"`
+	TxHash common.Hash `json:"txHash"`
+}
+
+type CanRepayExcessSDResponse struct {
+	Status  string         `json:"status"`
+	Error   string         `json:"error"`
+	GasInfo stader.GasInfo `json:"gasInfo"`
 }

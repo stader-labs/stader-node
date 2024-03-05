@@ -141,6 +141,7 @@ func (m *BeaconClientManager) GetNodeVersion() (beacon.NodeVersion, error) {
 	if err != nil {
 		return beacon.NodeVersion{}, err
 	}
+
 	return result.(beacon.NodeVersion), nil
 }
 

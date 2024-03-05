@@ -6,12 +6,12 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/utils/log"
-
-	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
-	"github.com/urfave/cli"
+	"github.com/stader-labs/stader-node/stader-cli/node"
 
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
+	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
+	"github.com/urfave/cli"
 )
 
 func nodeDeposit(c *cli.Context) error {
@@ -30,8 +30,7 @@ func nodeDeposit(c *cli.Context) error {
 
 	numValidators := c.Uint64("num-validators")
 
-	baseAmountInEth := 4
-	baseAmount := eth.EthToWei(4.0)
+	baseAmount := eth.EthToWei(eth.BaseAmountInEth)
 
 	// Check to see if eth2 is synced
 	syncResponse, err := staderClient.NodeSync()
@@ -52,22 +51,113 @@ func nodeDeposit(c *cli.Context) error {
 		}
 	}
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
+	// Get node status
+	status, err := staderClient.NodeStatus()
 	if err != nil {
 		return err
 	}
-	if canNodeDepositResponse.InsufficientBalance {
-		fmt.Printf("Account does not have enough balance!")
+
+	// Get node SD status
+	sdStatusResp, err := staderClient.GetSDStatus(big.NewInt(int64(numValidators)))
+	if err != nil {
+		return err
+	}
+
+	if sdStatusResp.SDStatus.AlreadyLiquidated {
+		fmt.Printf("Your node is in liquidation process")
 		return nil
 	}
+
+	healthFactor := eth.WeiToEth(sdStatusResp.SDStatus.HealthFactor)
+	if healthFactor < 1 {
+		fmt.Printf(
+			"The Operator has a Health Factor of %.6f. \nNote: Please ensure your Health Factor is greater than 1 to avoid liquidations.\n\n",
+			healthFactor)
+
+		return nil
+	}
+
+	userBalance := status.AccountBalances.ETH
+	amountToSend := new(big.Int).Mul(eth.EthToWei(eth.BaseAmountInEth), big.NewInt(int64(numValidators)))
+
+	if userBalance.Cmp(amountToSend) < 0 {
+		fmt.Printf("You don't have sufficient ETH in your Operator Address to add validators. Please deposit ETH into your Operator Address and try again to add validators to your node.")
+		return nil
+	}
+
+	// Prompt for confirmation
+	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
+		"You are about to deposit %d ETH to create %d validators.\n"+
+			"%sAre you sure you want to do this? Running a validator is a long-term commitment, and this action cannot be undone!%s",
+		uint64(eth.BaseAmountInEth)*numValidators, numValidators,
+		log.ColorYellow,
+		log.ColorReset))) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
+	sdStatus := sdStatusResp.SDStatus
+
+	utilityAmount := big.NewInt(0)
+
+	if sdStatus.NotEnoughSdCollateral {
+		ops := []string{"Utilize SD from the SD Utility Pool", "Use your own SD (Self Bond)"}
+		i, _ := cliutils.Select("You do not have sufficient SD collateral to add validators. Please choose one of the following options to add SD collateral. Enter 1 or 2:", ops)
+
+		switch i {
+		case 0:
+			minUtility := node.GetMinUtility(sdStatus)
+			maxUtility := node.GetMaxUtility(sdStatus)
+
+			utilityAmount, err = node.PromptChooseUtilityAmount(sdStatus, minUtility, maxUtility)
+			if err != nil {
+				return err
+			}
+
+			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to use %s from the Utility Pool? [Y/N] \nNote: A Utilization Fee of %s%s will be applied to the utilized SD from the Utility Pool. ", eth.DisplayAmountInUnits(utilityAmount, "sd"), sdStatus.UtilizationRate.String(), "%")) {
+				fmt.Printf("Cancelled\n")
+				return nil
+			}
+		case 1:
+			selfBondAmount, errSelfBond := node.PromptChooseSelfBondAmount(sdStatus)
+			if errSelfBond != nil {
+				return errSelfBond
+			}
+
+			if status.AccountBalances.Sd.Cmp(selfBondAmount) < 0 {
+				fmt.Printf("You don't have sufficient SD in your Operator Address to add as collateral. Please deposit SD into your Operator Address and try again.\n")
+				return nil
+			}
+
+			if !cliutils.Confirm(fmt.Sprintf("Are you sure you want to deposit %s as collateral?", eth.DisplayAmountInUnits(selfBondAmount, "sd"))) {
+				fmt.Printf("Cancelled\n")
+				return nil
+			}
+
+			nounce := c.GlobalUint64("nonce")
+			errSelfBond = node.DepositSdWithAmount(staderClient, selfBondAmount, true, nounce)
+
+			if errSelfBond != nil {
+				return errSelfBond
+			}
+
+		default:
+			return nil
+		}
+
+		fmt.Println("Validator creation process initiate, please wait...")
+	}
+
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), true)
+	if err != nil {
+		return err
+	}
+
 	if canNodeDepositResponse.DepositPaused {
 		fmt.Printf("Deposit is paused")
 		return nil
 	}
-	if canNodeDepositResponse.NotEnoughSdCollateral {
-		fmt.Printf("Not enough SD as collateral")
-		return nil
-	}
+
 	if canNodeDepositResponse.MaxValidatorLimitReached {
 		fmt.Printf("Max validator limit reached")
 		return nil
@@ -83,19 +173,8 @@ func nodeDeposit(c *cli.Context) error {
 		return err
 	}
 
-	// Prompt for confirmation
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"You are about to deposit %d ETH to create %d validators.\n"+
-			"%sARE YOU SURE YOU WANT TO DO THIS? Running a validator is a long-term commitment, and this action cannot be undone!%s",
-		uint64(baseAmountInEth)*numValidators, numValidators,
-		log.ColorYellow,
-		log.ColorReset))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	// Make deposit
-	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), true)
+	response, err := staderClient.NodeDeposit(baseAmount, big.NewInt(int64(numValidators)), utilityAmount, true)
 	if err != nil {
 		return err
 	}
@@ -108,12 +187,14 @@ func nodeDeposit(c *cli.Context) error {
 	}
 
 	// Log & return
-	fmt.Printf("The node deposit of %d ETH was made successfully!\n", uint64(baseAmountInEth)*numValidators)
-	fmt.Printf("Total %d validators were created\n", numValidators)
+	if utilityAmount.Cmp(big.NewInt(0)) == 0 {
+		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators)
+	} else {
+		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created by utilizing %s from the SD Utility Pool.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators, eth.DisplayAmountInUnits(utilityAmount, "sd"))
+	}
 
-	fmt.Println("Your validators are now in Initialized status.")
-	fmt.Println("Once the ETH deposits have been matched by the remaining 28ETH, it will move to Deposited status.")
-	fmt.Println("You can check the status of your validator with `stader-cli validator status`.")
+	fmt.Println("Your validators are now in an Initialized state. Once the ETH deposits have been matched by the remaining 28 ETH, it will move to the Deposited state.")
+	fmt.Println("You can check the status of your validator by executing the following command: `~/bin/stader-cli validator status`")
 
 	return nil
 

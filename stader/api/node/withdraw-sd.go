@@ -2,13 +2,14 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdResponse, error) {
@@ -40,6 +41,7 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 	if err != nil {
 		return nil, err
 	}
+
 	operatorId, err := node.GetOperatorId(pnr, nodeAccount.Address, nil)
 	if err != nil {
 		return nil, err
@@ -71,12 +73,19 @@ func canWithdrawSd(c *cli.Context, amountWei *big.Int) (*api.CanWithdrawSdRespon
 
 	thresholdSdRequiredToWithdraw := withdrawThresholdInSd.Add(withdrawThresholdInSd, amountWei)
 
-	if operatorSdCollateral.Cmp(thresholdSdRequiredToWithdraw) < 0 {
+	utilizedBalance, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAccount.Address, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalOperatorSdCollateral := big.NewInt(0).Add(operatorSdCollateral, utilizedBalance)
+
+	if totalOperatorSdCollateral.Cmp(thresholdSdRequiredToWithdraw) < 0 {
 		response.InsufficientSdCollateral = true
 		return &response, nil
 	}
 
-	if operatorSdCollateral.Cmp(amountWei) < 0 {
+	if totalOperatorSdCollateral.Cmp(amountWei) < 0 {
 		response.InsufficientWithdrawableSd = true
 		return &response, nil
 	}

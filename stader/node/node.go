@@ -471,7 +471,7 @@ func run(c *cli.Context) error {
 			if response.Success {
 				infoLog.Println("Successfully sent the NodeDiversity message")
 			} else {
-				errorLog.Println("Failed to send the NodeDiversity message with err: %s\n", response.Error)
+				errorLog.Printf("Failed to send the NodeDiversity message with err: %s\n", response.Error)
 			}
 
 			infoLog.Println("Done checking node diversity metrics")
@@ -540,7 +540,6 @@ func makeNodeDiversityMessage(
 		return nil, err
 	}
 
-	//fmt.Printf("Get total non terminal validator keys\n")
 	totalNonTerminalValidatorKeys, err := node.GetTotalNonTerminalValidatorKeys(pnr, nodeAccount.Address, totalValidatorKeys, nil)
 	if err != nil {
 		return nil, err

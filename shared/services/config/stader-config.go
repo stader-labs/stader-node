@@ -986,6 +986,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			envVars["PROMETHEUS_ADDITIONAL_FLAGS"] = fmt.Sprintf(", \"%s\"", cfg.Prometheus.AdditionalFlags.Value.(string))
 		}
 	}
+
 	if cfg.ExposeGuardianPort.Value == true {
 		envVars["GUARDIAN_OPEN_PORTS"] = fmt.Sprintf("%d:%d/tcp", cfg.NodeMetricsPort.Value, cfg.NodeMetricsPort.Value)
 	}

@@ -2,8 +2,9 @@ package node
 
 import (
 	"fmt"
-	"github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 	"math/big"
+
+	sd_collateral "github.com/stader-labs/stader-node/stader-lib/sd-collateral"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
@@ -68,7 +69,7 @@ func canNodeDepositSd(c *cli.Context, amountWei *big.Int) (*api.CanNodeDepositSd
 
 }
 
-func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdApproveGasResponse, error) {
+func getSdApprovalGas(c *cli.Context, amountWei *big.Int, contractAddress common.Address) (*api.SdApproveGasResponse, error) {
 	// Get services
 	if err := services.RequireNodeWallet(c); err != nil {
 		return nil, err
@@ -81,20 +82,17 @@ func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeDepos
 	if err != nil {
 		return nil, err
 	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
 
 	// Response
-	response := api.NodeDepositSdApproveGasResponse{}
+	response := api.SdApproveGasResponse{}
 
 	// Get gas estimates
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
-	gasInfo, err := tokens.EstimateApproveGas(sdt, *sdc.SdCollateralContract.Address, amountWei, opts)
+
+	gasInfo, err := tokens.EstimateApproveGas(sdt, contractAddress, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -102,8 +100,7 @@ func getDepositSdApprovalGas(c *cli.Context, amountWei *big.Int) (*api.NodeDepos
 	return &response, nil
 }
 
-func allowanceSd(c *cli.Context) (*api.NodeDepositSdAllowanceResponse, error) {
-
+func allowanceSd(c *cli.Context, contractAddress common.Address) (*api.SdAllowanceResponse, error) {
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
@@ -116,13 +113,9 @@ func allowanceSd(c *cli.Context) (*api.NodeDepositSdAllowanceResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
 
 	// Response
-	response := api.NodeDepositSdAllowanceResponse{}
+	response := api.SdAllowanceResponse{}
 
 	// Get node account
 	account, err := w.GetNodeAccount()
@@ -130,7 +123,7 @@ func allowanceSd(c *cli.Context) (*api.NodeDepositSdAllowanceResponse, error) {
 		return nil, err
 	}
 
-	allowance, err := tokens.Allowance(sdt, account.Address, *sdc.SdCollateralContract.Address, nil)
+	allowance, err := tokens.Allowance(sdt, account.Address, contractAddress, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -140,8 +133,7 @@ func allowanceSd(c *cli.Context) (*api.NodeDepositSdAllowanceResponse, error) {
 	return &response, nil
 }
 
-func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdApproveResponse, error) {
-
+func approveSd(c *cli.Context, amountWei *big.Int, contractAddress common.Address) (*api.SdApproveResponse, error) {
 	// Get services
 	if err := services.RequireNodeRegistered(c); err != nil {
 		return nil, err
@@ -154,22 +146,21 @@ func approveSd(c *cli.Context, amountWei *big.Int) (*api.NodeDepositSdApproveRes
 	if err != nil {
 		return nil, err
 	}
-	sdc, err := services.GetSdCollateralContract(c)
-	if err != nil {
-		return nil, err
-	}
+
 	// Response
-	response := api.NodeDepositSdApproveResponse{}
+	response := api.SdApproveResponse{}
 
 	opts, err := w.GetNodeAccountTransactor()
 	if err != nil {
 		return nil, err
 	}
+
 	err = eth1.CheckForNonceOverride(c, opts)
 	if err != nil {
 		return nil, fmt.Errorf("Error checking for nonce override: %w", err)
 	}
-	hash, err := tokens.Approve(sdt, *sdc.SdCollateralContract.Address, amountWei, opts)
+
+	hash, err := tokens.Approve(sdt, contractAddress, amountWei, opts)
 	if err != nil {
 		return nil, err
 	}

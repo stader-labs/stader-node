@@ -8,6 +8,7 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
+	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
@@ -61,6 +62,11 @@ func ClaimSpRewards(c *cli.Context) error {
 		return nil
 	}
 
+	indexedDetailedCyclesInfo := map[int64]stader_backend.CycleMerkleProofs{}
+	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
+		indexedDetailedCyclesInfo[cycleInfo.MerkleProofInfo.Cycle] = cycleInfo.MerkleProofInfo
+	}
+
 	cycleIndexes := []*big.Int{}
 	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
 		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
@@ -76,11 +82,14 @@ func ClaimSpRewards(c *cli.Context) error {
 			if !ok {
 				return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
 			}
+
 			ethRewardsConverted := math.RoundDown(eth.WeiToEth(ethRewards), 5)
+
 			sdRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
 			if !ok {
 				return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.MerkleProofInfo.Sd)
 			}
+
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 5)
 
 			if ethRewards.Cmp(big.NewInt(0)) == 0 && sdRewards.Cmp(big.NewInt(0)) == 0 {
@@ -134,9 +143,64 @@ func ClaimSpRewards(c *cli.Context) error {
 		cyclesToClaimArray = append(cyclesToClaimArray, big.NewInt(cycle))
 	}
 
+	totalClaimableEth := big.NewInt(0)
+	totalClaimableSd := big.NewInt(0)
+
+	for _, cycle := range cyclesToClaimArray {
+		cycleInfo := indexedDetailedCyclesInfo[cycle.Int64()]
+
+		ethRewards, ok := big.NewInt(0).SetString(cycleInfo.Eth, 10)
+		if !ok {
+			return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.Eth)
+		}
+
+		totalClaimableEth = totalClaimableEth.Add(totalClaimableEth, ethRewards)
+
+		sdRewards, ok := big.NewInt(0).SetString(cycleInfo.Sd, 10)
+		if !ok {
+			return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.Sd)
+		}
+
+		totalClaimableSd = totalClaimableSd.Add(totalClaimableSd, sdRewards)
+	}
+
+	depositSd := false
+
+	if totalClaimableSd.Cmp(big.NewInt(0)) > 0 {
+		fmt.Printf("You will claim %s and %s with the following selection - cycles %v\n\n", eth.DisplayAmountInUnits(totalClaimableSd, "sd"), eth.DisplayAmountInUnits(totalClaimableEth, "eth"), cyclesToClaimArray)
+		fmt.Printf("Your ETH rewards will be sent to your Reward Address\n")
+		fmt.Printf("For SD rewards, you can claim all the rewards to your Reward Address or redeposit them as SD collateral to earn more rewards\n")
+
+		fmt.Printf("Please select one of the following options:\n")
+		fmt.Printf("1. Claim all SD rewards to your Reward Address\n")
+		fmt.Printf("2. Redeposit all the SD rewards as SD collateral for additional earnings\n")
+
+		option := cliutils.Prompt("", "^(1|2)$", "Please enter a valid option")
+		if option == "1" {
+			if !cliutils.Confirm(fmt.Sprintf(
+				"Are you sure you want to claim %s and %s for cycles %v to your reward address?", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"), cyclesToClaimArray)) {
+				fmt.Println("Claim Cancelled.")
+				return nil
+			}
+		} else if option == "2" {
+			if !cliutils.Confirm(fmt.Sprintf(
+				"Your %s rewards will be sent to your Reward Address.\nFor your %s rewards, are you sure you want to re-deposit it as SD collateral for additional earnings?", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"))) {
+				fmt.Println("Claim Cancelled.")
+				return nil
+			}
+
+			depositSd = true
+		}
+	} else if !cliutils.Confirm(fmt.Sprintf(
+		"Are you sure you want to claim %s ETH for cycles %v to your reward address?", totalClaimableEth.String(), cyclesToClaimArray)) {
+		fmt.Println("Cancelled.")
+		return nil
+	}
+
 	// estimate gas
 	fmt.Println("Estimating gas...")
-	estimateGasResponse, err := staderClient.EstimateClaimSpRewardsGas(cyclesToClaimArray)
+
+	estimateGasResponse, err := staderClient.EstimateClaimSpRewardsGas(cyclesToClaimArray, depositSd)
 	if err != nil {
 		return err
 	}
@@ -147,14 +211,8 @@ func ClaimSpRewards(c *cli.Context) error {
 		return err
 	}
 
-	if !(c.Bool("yes") || cliutils.Confirm(fmt.Sprintf(
-		"Are you sure you want to claim the rewards for cycles %v?", cyclesToClaimArray))) {
-		fmt.Println("Cancelled.")
-		return nil
-	}
-
 	fmt.Printf("Claiming rewards for cycles %v\n", cyclesToClaimArray)
-	res, err := staderClient.ClaimSpRewards(cyclesToClaimArray)
+	res, err := staderClient.ClaimSpRewards(cyclesToClaimArray, depositSd)
 	if err != nil {
 		return err
 	}
@@ -165,8 +223,17 @@ func ClaimSpRewards(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("Rewards Claim successful for cycles: %v\n", cyclesToClaimArray)
-	fmt.Printf("Please check your Operator Reward Address for the claimed rewards\n")
+	fmt.Printf("Transaction Successful\n")
+
+	if depositSd {
+		fmt.Printf("%s rewards have been sent to your Reward Address and %s rewards have been re-deposited as SD collateral\n", eth.DisplayAmountInUnits(totalClaimableEth, "eth"), eth.DisplayAmountInUnits(totalClaimableSd, "sd"))
+	} else {
+		if totalClaimableSd.Cmp(big.NewInt(0)) <= 0 {
+			fmt.Printf("%s rewards have been sent to your Reward Address\n", eth.DisplayAmountInUnits(totalClaimableEth, "eth"))
+		} else {
+			fmt.Printf("%s rewards and %s rewards have been sent to your Reward Address\n", eth.DisplayAmountInUnits(totalClaimableSd, "sd"), eth.DisplayAmountInUnits(totalClaimableEth, "eth"))
+		}
+	}
 
 	return nil
 }

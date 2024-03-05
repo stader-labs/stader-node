@@ -95,6 +95,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					socializeMev, err := cliutils.ValidateBool("socialize-mev", c.Args().Get(2))
+					if err != nil {
+						return err
+					}
 
 					// Run
 					api.PrintResponse(canRegisterNode(c, operatorName, operatorRewardAddress, socializeMev))
@@ -122,6 +125,9 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					}
 
 					socializeMev, err := cliutils.ValidateBool("socialize-mev", c.Args().Get(2))
+					if err != nil {
+						return err
+					}
 
 					// Run
 					api.PrintResponse(registerNode(c, operatorName, operatorRewardAddress, socializeMev))
@@ -132,6 +138,7 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 
 			{
 				Name:      "can-node-deposit-sd",
+				Aliases:   []string{"cds"},
 				Usage:     "Check whether the node can stake SD",
 				UsageText: "stader-cli api node can-node-deposit-sd amount",
 				Action: func(c *cli.Context) error {
@@ -152,25 +159,78 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "deposit-sd-approve-sd",
-				Aliases:   []string{"k1"},
-				Usage:     "Approve SD for staking against the node",
-				UsageText: "stader-cli api node deposit-sd-approve-sd amount",
+				Name:      "utilize-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node utilize-sd amount",
 				Action: func(c *cli.Context) error {
-
 					// Validate args
 					if err := cliutils.ValidateArgCount(c, 1); err != nil {
 						return err
 					}
-					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("utilize amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
 
 					// Run
-					api.PrintResponse(approveSd(c, amountWei))
+					api.PrintResponse(utilitySd(c, amountWei))
 					return nil
+				},
+			},
+			{
+				Name:      "can-utilize-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node can-utilize-sd amount",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("can utilize amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+					// Run
+					api.PrintResponse(canUtilitySd(c, amountWei))
+					return nil
+				},
+			},
+			{
+				Name:      "repay-sd",
+				Usage:     "Utilize SD",
+				UsageText: "stader-cli api node repay-sd amount",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("repay amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
 
+					// Run
+					api.PrintResponse(repaySD(c, amountWei))
+					return nil
+				},
+			},
+			{
+				Name:      "can-repay-sd",
+				Usage:     "Can repay SD",
+				UsageText: "stader-cli api node can-repay-sd amount",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("can repay amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(canRepaySD(c, amountWei))
+					return nil
 				},
 			},
 			{
@@ -179,7 +239,6 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Usage:     "Deposit SD against the node, waiting for approval tx-hash to be included in a block first",
 				UsageText: "stader-cli api node wait-and-deposit-sd amount tx-hash",
 				Action: func(c *cli.Context) error {
-
 					// Validate args
 					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
@@ -200,39 +259,70 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				},
 			},
 			{
-				Name:      "get-deposit-sd-approval-gas",
+				Name:      "sd-approve-sd",
+				Aliases:   []string{"k1"},
+				Usage:     "Approve SD for staking against the node",
+				UsageText: "stader-cli api node deposit-sd-approve-sd amount contract-address",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
+						return err
+					}
+					amountWei, err := cliutils.ValidatePositiveWeiAmount("stake amount", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(approveSd(c, amountWei, contractAddress))
+					return nil
+				},
+			},
+			{
+				Name:      "get-sd-approval-gas",
 				Usage:     "Estimate the gas cost of new SD interaction approval",
-				UsageText: "stader-cli api node get-deposit-sd-approval-gas",
+				UsageText: "stader-cli api node get-deposit-sd-approval-gas contract-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
 					}
 					amountWei, err := cliutils.ValidatePositiveWeiAmount("approve amount", c.Args().Get(0))
 					if err != nil {
 						return err
 					}
-
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
 					// Run
-					api.PrintResponse(getDepositSdApprovalGas(c, amountWei))
+					api.PrintResponse(getSdApprovalGas(c, amountWei, contractAddress))
 					return nil
 
 				},
 			},
 			{
-				Name:      "deposit-sd-allowance",
+				Name:      "sd-allowance",
 				Usage:     "Get the node's SD allowance for the collateral contract",
-				UsageText: "stader-cli api node deposit-sd-allowance",
+				UsageText: "stader-cli api node deposit-sd-allowance contract-address",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 0); err != nil {
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					contractAddress, err := cliutils.ValidateAddress("contract-address", c.Args().Get(0))
+					if err != nil {
 						return err
 					}
 
 					// Run
-					api.PrintResponse(allowanceSd(c))
+					api.PrintResponse(allowanceSd(c, contractAddress))
 					return nil
 
 				},
@@ -594,18 +684,21 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 			{
 				Name:      "claim-sp-rewards",
 				Usage:     "Claim the SP rewards",
-				UsageText: "stader-cli api node claim-sp-rewards cycles",
+				UsageText: "stader-cli api node claim-sp-rewards cycles deposit-sd",
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
 					}
 
 					cycles := c.Args().Get(0)
-					//fmt.Printf("cycles is %s\n", cycles)
+					depositSd, err := cliutils.ValidateBool("deposit-sd", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
 					// Run
-					api.PrintResponse(claimSpRewards(c, cycles))
+					api.PrintResponse(claimSpRewards(c, cycles, depositSd))
 					return nil
 
 				},
@@ -617,13 +710,17 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 				Action: func(c *cli.Context) error {
 
 					// Validate args
-					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+					if err := cliutils.ValidateArgCount(c, 2); err != nil {
 						return err
 					}
 
 					cycles := c.Args().Get(0)
+					depositSd, err := cliutils.ValidateBool("deposit-sd", c.Args().Get(1))
+					if err != nil {
+						return err
+					}
 					// Run
-					api.PrintResponse(estimateSpRewardsGas(c, cycles))
+					api.PrintResponse(estimateSpRewardsGas(c, cycles, depositSd))
 					return nil
 
 				},
@@ -707,7 +804,27 @@ func RegisterSubcommands(command *cli.Command, name string, aliases []string) {
 					// Run
 					api.PrintResponse(SetRewardAddress(c, operatorRewardAddress))
 					return nil
+				},
+			},
 
+			{
+				Name:      "get-sd-status",
+				Usage:     "Get SD Status",
+				Aliases:   []string{"gsd"},
+				UsageText: "stader-cli api node get-sd-status num-validators",
+				Action: func(c *cli.Context) error {
+					// Validate args
+					if err := cliutils.ValidateArgCount(c, 1); err != nil {
+						return err
+					}
+					numValidators, err := cliutils.ValidateBigInt("num-validators", c.Args().Get(0))
+					if err != nil {
+						return err
+					}
+
+					// Run
+					api.PrintResponse(getSDStatus(c, numValidators))
+					return nil
 				},
 			},
 		},

@@ -8,6 +8,7 @@ import (
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/utils/stdr"
 	"github.com/stader-labs/stader-node/stader-lib/contracts"
+	"github.com/stader-labs/stader-node/stader-lib/sdutility"
 	"github.com/urfave/cli"
 
 	"github.com/stader-labs/stader-node/shared/utils/math"
@@ -62,6 +63,12 @@ type MetricDetails struct {
 	// done
 	MaxEthThreshold float64
 
+	// done
+	TotalSDUtilized float64
+
+	// done
+	SDUtilizationTVL float64
+
 	// Validator specific info
 
 	// done
@@ -114,6 +121,34 @@ type MetricDetails struct {
 	OperatorStakedSdInEth float64
 	// done
 	OperatorEthCollateral float64
+
+	// done
+	OperatorSDUtilized float64
+	// done
+	SdUtilityPoolBalance float64
+
+	// The utilize amount + fee
+	OperatorSDUtilizationPosition float64
+
+	// The amount SD self bond
+	OperatorSDSelfBond float64
+
+	// done
+	OperatorSDInterest float64
+
+	// done
+	SdCollateralPct float64
+
+	// done
+	LockedEth float64
+
+	// done
+	HealthFactor float64
+
+	// done
+	LiquidationStatus float64
+
+	ClaimVaultBalance float64
 }
 
 type MetricsCache struct {
@@ -150,6 +185,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 	sdcAddress, err := services.GetSdCollateralAddress(c)
+	if err != nil {
+		return nil, err
+	}
+
+	sduAddress, err := services.GetSdUtilityAddress(c)
 	if err != nil {
 		return nil, err
 	}
@@ -212,6 +252,11 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	sdu, err := stader.NewSDUtilityPool(ec, sduAddress)
+	if err != nil {
+		return nil, err
+	}
+
 	// Get the execution block for the given slot
 	beaconBlock, exists, err := bc.GetBeaconBlock(fmt.Sprintf("%d", slotNumber))
 	if err != nil {
@@ -253,10 +298,12 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorSdColletaral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
+
+	operatorSdCollateral, err := sd_collateral.GetOperatorSdBalance(sdc, nodeAddress, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	totalValidatorKeys, err := node.GetTotalValidatorKeys(prn, operatorId, nil)
 	if err != nil {
 		return nil, err
@@ -265,7 +312,8 @@ func CreateMetricsCache(
 	if err != nil {
 		return nil, err
 	}
-	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdColletaral, nil)
+
+	operatorSdCollateralInEth, err := sd_collateral.ConvertSdToEth(sdc, operatorSdCollateral, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -449,13 +497,58 @@ func CreateMetricsCache(
 		return nil, err
 	}
 
+	sdUtilized, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalPosition, err := sdutility.GetUtilizerLatestBalance(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	utilityPoolBalance, err := sdutility.GetPoolAvailableSDBalance(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	totalSDUtilized, err := sdutility.GetTotalUtilized(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	sDUtilizationTVL, err := sdutility.GetTotalTVL(sdu, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	userData, err := sdutility.GetUserData(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	liquidIndex, err := sdutility.LiquidationIndexByOperator(sdu, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	orc, err := services.GetOperatorRewardsCollectorContract(c)
+	if err != nil {
+		return nil, err
+	}
+
+	operatorClaimVaultBalance, err := node.GetOperatorRewardsCollectorBalance(orc, nodeAddress, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	minThreshold := math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	sdPriceFormatted := math.RoundDown(eth.WeiToEth(sdPrice), 2)
 	collateralRatioInSd := minThreshold * sdPriceFormatted
 
 	metricsDetails.SdPrice = sdPriceFormatted
 	metricsDetails.EthPrice = math.RoundDown(eth.WeiToEth(ethPrice), 10)
-	metricsDetails.OperatorStakedSd = math.RoundDown(eth.WeiToEth(operatorSdColletaral), 10)
+
 	metricsDetails.OperatorStakedSdInEth = math.RoundDown(eth.WeiToEth(operatorSdCollateralInEth), 10)
 	metricsDetails.OperatorEthCollateral = operatorEthCollateral
 	metricsDetails.TotalOperators = totalOperators.Sub(totalOperators, big.NewInt(1))
@@ -468,6 +561,7 @@ func CreateMetricsCache(
 	metricsDetails.TotalStakedEthByNos = big.NewInt(0).Mul(totalValidators, big.NewInt(4))
 	metricsDetails.CollateralRatio = math.RoundDown(eth.WeiToEth(permissionlessPoolThreshold.MinThreshold), 2)
 	metricsDetails.CollateralRatioInSd = collateralRatioInSd
+
 	metricsDetails.MinEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MinThreshold), 4)
 	metricsDetails.MaxEthThreshold = math.RoundDown(eth.WeiToEth(poolThreshold.MaxThreshold), 4)
 
@@ -496,6 +590,39 @@ func CreateMetricsCache(
 
 	metricsDetails.UnclaimedSocializingPoolElRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedEth), SixDecimalRound)
 	metricsDetails.UnclaimedSocializingPoolSDRewards = math.RoundDown(eth.WeiToEth(rewardClaimData.unclaimedSd), SixDecimalRound)
+
+	// amount NO utilized, not include fee
+	metricsDetails.OperatorSDUtilized = math.RoundDown(eth.WeiToEth(sdUtilized), SixDecimalRound)
+
+	metricsDetails.OperatorSDInterest = math.RoundDown(eth.WeiToEth(userData.TotalInterestSD), SixDecimalRound)
+
+	metricsDetails.SdUtilityPoolBalance = math.RoundDown(eth.WeiToEth(utilityPoolBalance), SixDecimalRound)
+	//
+	operatorStakedSd := eth.WeiToEth(operatorSdCollateral) + metricsDetails.OperatorSDUtilized
+	requireCollateral := collateralRatioInSd * float64(operatorNonTerminalKeys)
+
+	collateralPct := 0.0
+	if requireCollateral > 0 {
+		collateralPct = (operatorStakedSd / requireCollateral) * 10
+	}
+
+	metricsDetails.OperatorStakedSd = math.RoundDown(operatorStakedSd, 10)
+
+	metricsDetails.SdCollateralPct = collateralPct
+
+	metricsDetails.LockedEth = math.RoundDown(eth.WeiToEth(userData.LockedEth), SixDecimalRound)
+	metricsDetails.HealthFactor = math.RoundDown(eth.WeiToEth(userData.HealthFactor), SixDecimalRound)
+
+	metricsDetails.OperatorSDUtilizationPosition = math.RoundDown(eth.WeiToEth(totalPosition), SixDecimalRound)
+
+	metricsDetails.OperatorSDSelfBond = math.RoundDown(eth.WeiToEth(operatorSdCollateral), SixDecimalRound)
+
+	metricsDetails.LiquidationStatus = float64(liquidIndex.Int64())
+	metricsDetails.ClaimVaultBalance = math.RoundDown(eth.WeiToEth(operatorClaimVaultBalance), SixDecimalRound)
+
+	metricsDetails.TotalSDUtilized = math.RoundDown(eth.WeiToEth(totalSDUtilized), SixDecimalRound)
+
+	metricsDetails.SDUtilizationTVL = math.RoundDown(eth.WeiToEth(sDUtilizationTVL), SixDecimalRound)
 
 	state.StaderNetworkDetails = metricsDetails
 

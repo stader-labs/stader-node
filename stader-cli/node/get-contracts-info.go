@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -42,6 +43,7 @@ func getContractsInfo(c *cli.Context) error {
 	fmt.Printf("Socializing Pool: %s\n\n", response.SocializingPoolContract)
 	fmt.Printf("Permissionless Pool: %s\n\n", response.PermisionlessPool)
 	fmt.Printf("Stader Oracle: %s\n\n", response.StaderOracle)
+	fmt.Printf("Sd Utility Pool: %s\n\n", response.SdUtilityContract)
 	fmt.Printf("Pre-sign encryption key is %s\n\n", response.EncryptionKey)
 
 	return nil

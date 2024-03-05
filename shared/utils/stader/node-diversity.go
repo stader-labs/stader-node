@@ -33,5 +33,4 @@ func SendNodeDiversityResponseType(
 	}
 
 	return &resp, nil
-
 }

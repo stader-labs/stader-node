@@ -2,10 +2,11 @@ package node
 
 import (
 	"fmt"
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
-	"github.com/stader-labs/stader-node/shared/utils/math"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
 )
@@ -36,6 +37,28 @@ func ClaimRewards(c *cli.Context) error {
 		return nil
 	}
 
+	sdStatusResponse, err := staderClient.GetSDStatus(big.NewInt(0))
+	if err != nil {
+		return err
+	}
+
+	sdStatus := sdStatusResponse.SDStatus
+
+	// totalFee := sdStatus.AccumulatedInterest
+	// if withdrawableInEth < claimsBalance, then there is an existing utilization position
+	if canClaimRewardsResponse.ClaimsBalance.Cmp(canClaimRewardsResponse.WithdrawableInEth) != 0 {
+		if sdStatus.SdUtilizerLatestBalance.Cmp(big.NewInt(0)) > 0 {
+			fmt.Printf("You currently have an existing SD Utilization Position of %s. Based on the current Health Factor, you can claim %s at the moment, and the remaining ETH can be claimed after closing the Utilization Position", eth.DisplayAmountInUnits(sdStatusResponse.SDStatus.SdUtilizerLatestBalance, "sd"), eth.DisplayAmountInUnits(canClaimRewardsResponse.WithdrawableInEth, "eth"))
+
+			if !cliutils.Confirm("Do you wish to proceed?\n\n") {
+				fmt.Println("Cancelled.")
+				return nil
+			}
+
+			fmt.Printf("Note: Please repay your utilized SD by using the following command to claim the remaining ETH: stader-cli sd repay --amount <amount of SD to be repaid>.\n")
+		}
+	}
+
 	err = gas.AssignMaxFeeAndLimit(canClaimRewardsResponse.GasInfo, staderClient, c.Bool("yes"))
 	if err != nil {
 		return err
@@ -53,13 +76,15 @@ func ClaimRewards(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Withdrawing %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+
+	fmt.Printf("Withdrawing %s Rewards to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	cliutils.PrintTransactionHash(staderClient, res.TxHash)
+
 	if _, err = staderClient.WaitForTransaction(res.TxHash); err != nil {
 		return err
 	}
 
 	// Log & return
-	fmt.Printf("Withdrawn %.6f ETH Rewards to Operator Reward Address: %s\n\n", math.RoundDown(eth.WeiToEth(res.OperatorRewardsBalance), 6), res.OperatorRewardAddress)
+	fmt.Printf("Successful withdrawal of %s to Operator Reward Address: %s\n\n", eth.DisplayAmountInUnits(res.RewardsClaimed, "eth"), res.OperatorRewardAddress)
 	return nil
 }

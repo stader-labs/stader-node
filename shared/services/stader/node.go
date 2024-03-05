@@ -113,34 +113,39 @@ func (c *Client) CanNodeDepositSd(amountWei *big.Int) (api.CanNodeDepositSdRespo
 }
 
 // Get the gas estimate for approving new SD interaction
-func (c *Client) NodeDepositSdApprovalGas(amountWei *big.Int) (api.NodeDepositSdApproveGasResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node get-deposit-sd-approval-gas %s", amountWei.String()))
+func (c *Client) NodeSdApprovalGas(amountWei *big.Int, address common.Address) (api.SdApproveGasResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-approval-gas %s %s", amountWei.String(), address))
 	if err != nil {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
+		return api.SdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %w", err)
 	}
-	var response api.NodeDepositSdApproveGasResponse
+
+	var response api.SdApproveGasResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not decode node deposit S approve gas response: %w", err)
+		return api.SdApproveGasResponse{}, fmt.Errorf("could not decode node deposit S approve gas response: %w", err)
 	}
+
 	if response.Error != "" {
-		return api.NodeDepositSdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %s", response.Error)
+		return api.SdApproveGasResponse{}, fmt.Errorf("could not get new SD approval gas: %s", response.Error)
 	}
 	return response, nil
 }
 
 // Approve SD for depositing as collateral
-func (c *Client) NodeDepositSdApprove(amountWei *big.Int) (api.NodeDepositSdApproveResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-approve-sd %s", amountWei.String()))
+func (c *Client) NodeSdApprove(amountWei *big.Int, address common.Address) (api.SdApproveResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node sd-approve-sd %s %s", amountWei.String(), address))
 	if err != nil {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
+		return api.SdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %w", err)
 	}
-	var response api.NodeDepositSdApproveResponse
+
+	var response api.SdApproveResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not decode deposit node SD approve response: %w", err)
+		return api.SdApproveResponse{}, fmt.Errorf("could not decode deposit node SD approve response: %w", err)
 	}
+
 	if response.Error != "" {
-		return api.NodeDepositSdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %s", response.Error)
+		return api.SdApproveResponse{}, fmt.Errorf("could not approve SD for staking: %s", response.Error)
 	}
+
 	return response, nil
 }
 
@@ -191,24 +196,27 @@ func (c *Client) UpdateSocializeEl(socializeEl bool) (api.UpdateSocializeElRespo
 }
 
 // Get the node's SD allowance
-func (c *Client) GetNodeDepositSdAllowance() (api.NodeDepositSdAllowanceResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("node deposit-sd-allowance"))
+func (c *Client) GetNodeSdAllowance(contractAddress common.Address) (api.SdAllowanceResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node sd-allowance %s", contractAddress.String()))
 	if err != nil {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %w", err)
+		return api.SdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %w", err)
 	}
-	var response api.NodeDepositSdAllowanceResponse
+
+	var response api.SdAllowanceResponse
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not decode node deposit SD allowance response: %w", err)
+		return api.SdAllowanceResponse{}, fmt.Errorf("could not decode node deposit SD allowance response: %w", err)
 	}
+
 	if response.Error != "" {
-		return api.NodeDepositSdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %s", response.Error)
+		return api.SdAllowanceResponse{}, fmt.Errorf("could not get node deposit SD allowance: %s", response.Error)
 	}
+
 	return response, nil
 }
 
 // Check whether the node can make a deposit
-func (c *Client) CanNodeDeposit(amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %t", amountWei.String(), numValidators, reloadKeys))
+func (c *Client) CanNodeDeposit(amountBasedWei, amountUtilityWei, numValidators *big.Int, reloadKeys bool) (api.CanNodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator can-deposit %s %s %s %t", amountBasedWei.String(), amountUtilityWei.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.CanNodeDepositResponse{}, fmt.Errorf("could not get can validator deposit status: %w", err)
 	}
@@ -268,8 +276,8 @@ func (c *Client) GetContractsInfo() (api.ContractsInfoResponse, error) {
 }
 
 // Make a node deposit
-func (c *Client) NodeDeposit(amountWei *big.Int, numValidators *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
-	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %t", amountWei.String(), numValidators, reloadKeys))
+func (c *Client) NodeDeposit(amountWei, numValidators, utilitySDAmount *big.Int, reloadKeys bool) (api.NodeDepositResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("validator deposit %s %s %s %t", amountWei.String(), utilitySDAmount.String(), numValidators, reloadKeys))
 	if err != nil {
 		return api.NodeDepositResponse{}, fmt.Errorf("could not make validator deposit as er: %w", err)
 	}
@@ -541,9 +549,9 @@ func (c *Client) CanClaimSpRewards() (api.CanClaimSpRewardsResponse, error) {
 	return response, nil
 }
 
-func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaimSpRewardsGasResponse, error) {
+func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int, depositSd bool) (api.EstimateClaimSpRewardsGasResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s", stringifiedCycleList))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node estimate-claim-sp-rewards-gas %s %s", stringifiedCycleList, strconv.FormatBool(depositSd)))
 	if err != nil {
 		return api.EstimateClaimSpRewardsGasResponse{}, fmt.Errorf("could not get node estimate-claim-sp-rewards-gas response: %w", err)
 	}
@@ -558,9 +566,9 @@ func (c *Client) EstimateClaimSpRewardsGas(cycles []*big.Int) (api.EstimateClaim
 	return response, nil
 }
 
-func (c *Client) ClaimSpRewards(cycles []*big.Int) (api.ClaimSpRewardsResponse, error) {
+func (c *Client) ClaimSpRewards(cycles []*big.Int, depositSd bool) (api.ClaimSpRewardsResponse, error) {
 	stringifiedCycleList := string_utils.StringifyArray(cycles)
-	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s", stringifiedCycleList))
+	responseBytes, err := c.callAPI(fmt.Sprintf("node claim-sp-rewards %s %s", stringifiedCycleList, strconv.FormatBool(depositSd)))
 	if err != nil {
 		return api.ClaimSpRewardsResponse{}, fmt.Errorf("could not get node claim-sp-rewards response: %w", err)
 	}
@@ -625,12 +633,105 @@ func (c *Client) SetRewardAddress(operatorRewardAddress common.Address) (api.Set
 	if err != nil {
 		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %w", err)
 	}
+
 	var response api.SetRewardAddress
 	if err := json.Unmarshal(responseBytes, &response); err != nil {
 		return api.SetRewardAddress{}, fmt.Errorf("could not decode set-reward-address response: %w", err)
 	}
+
 	if response.Error != "" {
 		return api.SetRewardAddress{}, fmt.Errorf("could not get set-reward-address response: %s", response.Error)
 	}
+
+	return response, nil
+}
+
+func (c *Client) RepaySd(amountWei *big.Int) (api.NodeRepaySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node repay-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %w", err)
+	}
+
+	var response api.NodeRepaySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not decode repay node SD response: %w", err)
+	}
+
+	if response.Error != "" {
+		return api.NodeRepaySDResponse{}, fmt.Errorf("could not repay SD: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanRepaySd(amountWei *big.Int) (api.CanRepaySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-repay-sd %s", amountWei.String()))
+	if err != nil {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not get CanNodeRepaySd SD: %w", err)
+	}
+
+	var response api.CanRepaySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not decode  CanNodeRepaySd response: %w", err)
+	}
+
+	if response.Error != "" {
+		return api.CanRepaySDResponse{}, fmt.Errorf("could not can-repay SD: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) NodeUtilizeSd(amountWei *big.Int) (api.NodeUtilitySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node utilize-sd %s", amountWei.String()))
+	if err != nil {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
+	}
+
+	var response api.NodeUtilitySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not decode utilize response: %w", err)
+	}
+
+	if response.Error != "" {
+		return api.NodeUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) CanNodeUtilizeSd(amountWei *big.Int) (api.CanUtilitySDResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node can-utilize-sd %s", amountWei.String()))
+	if err != nil {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %w", err)
+	}
+
+	var response api.CanUtilitySDResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not decode node SD utilize response: %w", err)
+	}
+
+	if response.Error != "" {
+		return api.CanUtilitySDResponse{}, fmt.Errorf("could not utilize SD: %s", response.Error)
+	}
+
+	return response, nil
+}
+
+func (c *Client) GetSDStatus(numValidators *big.Int) (api.GetSdStatusResponse, error) {
+	responseBytes, err := c.callAPI(fmt.Sprintf("node get-sd-status %s", numValidators))
+	if err != nil {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not get-sd-status: %w", err)
+	}
+
+	var response api.GetSdStatusResponse
+	if err := json.Unmarshal(responseBytes, &response); err != nil {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not decode node get SD status response: %w", err)
+	}
+
+	if response.Error != "" {
+		return api.GetSdStatusResponse{}, fmt.Errorf("could not get SD status: %s", response.Error)
+	}
+
 	return response, nil
 }
