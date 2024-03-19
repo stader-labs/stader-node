@@ -123,10 +123,9 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 			Description: "The tag name of the Geth container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet:  gethTagProd,
-				config.Network_Prater:   gethTagTest,
-				config.Network_Devnet:   gethTagTest,
-				config.Network_Zhejiang: gethTagTest,
+				config.Network_Mainnet: gethTagProd,
+				config.Network_Prater:  gethTagTest,
+				config.Network_Holesky: gethTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},
 			EnvironmentVariables: []string{"EC_CONTAINER_TAG"},

@@ -234,48 +234,43 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		beaconChainUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://beaconcha.in",
 			config.Network_Prater:  "https://prater.beaconcha.in",
-			config.Network_Devnet:  "https://prater.beaconcha.in",
+			config.Network_Holesky: "https://holesky.beaconcha.in",
 		},
 
 		txWatchUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://etherscan.io/tx",
 			config.Network_Prater:  "https://goerli.etherscan.io/tx",
-			config.Network_Devnet:  "https://goerli.etherscan.io/tx",
+			config.Network_Holesky: "https://holesky.etherscan.io/tx",
 		},
 
 		chainID: map[config.Network]uint{
-			config.Network_Mainnet:  1,       // Mainnet
-			config.Network_Prater:   5,       // Goerli
-			config.Network_Devnet:   5,       // Also goerli
-			config.Network_Zhejiang: 1337803, // Zhejiang
+			config.Network_Mainnet: 1,     // Mainnet
+			config.Network_Prater:  5,     // Goerli
+			config.Network_Holesky: 17000, // Holesky
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:   "0x3338eCd3ab3d3503c55c931d759fA6d78d287236",
-			config.Network_Devnet:   "0x38DE8Df722B4032Cc6987F00bCA0d9B37d9F9438",
-			config.Network_Mainnet:  "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Prater:  "0x3338eCd3ab3d3503c55c931d759fA6d78d287236",
+			config.Network_Holesky: "0xB4F5fc289a778B80392b86fa70A7111E5bE0F859",
+			config.Network_Mainnet: "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 		},
 
 		staderConfigAddress: map[config.Network]string{
-			config.Network_Prater:   "0x2aa6cEd8Cf0a93884216BaE5dbF4299932aB577B",
-			config.Network_Devnet:   "0x749Ed651c4F41E0D705960e815A58815ffFd3afe",
-			config.Network_Mainnet:  "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Prater:  "0x2aa6cEd8Cf0a93884216BaE5dbF4299932aB577B",
+			config.Network_Holesky: "0x50FD3384783EE49011E7b57d7A3430a762b3f3F2",
+			config.Network_Mainnet: "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:   "https://ethx-offchain-preprod.staderlabs.com",
-			config.Network_Devnet:   "https://stage-ethx-offchain.staderlabs.click",
-			config.Network_Mainnet:  "https://ethx-offchain.staderlabs.com",
-			config.Network_Zhejiang: "0x90Da3CA75532A17ca38440a32595F036ecE46E85",
+			config.Network_Prater:  "https://ethx-offchain-preprod.staderlabs.com",
+			config.Network_Holesky: "https://stage-ethx-offchain.staderlabs.click",
+			config.Network_Mainnet: "https://ethx-offchain.staderlabs.com",
 		},
 
 		preSignEncryptionKey: map[config.Network]string{
-			config.Network_Prater:   stageEncryptionKey,
-			config.Network_Devnet:   devEncryptionKey,
-			config.Network_Mainnet:  prodEncryptionKey,
-			config.Network_Zhejiang: stageEncryptionKey,
+			config.Network_Prater:  stageEncryptionKey,
+			config.Network_Holesky: devEncryptionKey,
+			config.Network_Mainnet: prodEncryptionKey,
 		},
 	}
 }
@@ -567,11 +562,10 @@ func getNetworkOptions() []config.ParameterOption {
 			Name:        "Goerli Testnet",
 			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Stadernode in a free, safe environment before moving to Mainnet.",
 			Value:       config.Network_Prater,
-		},
-		{
-			Name:        "Zhejiang Testnet",
-			Description: "This is the Zhejiang test network, using free fake ETH and free fake SD to make fake validators.\nUse this if you want to test the ZHejiang network, along with the Shanghai and Capella upgrades to Ethereum that enable validator withdrawals.",
-			Value:       config.Network_Zhejiang,
+		}, {
+			Name:        "Holesky Testnet",
+			Description: "This is the Holesky test network, using Holesky ETH to make demo validators.\nUse this if you want to practice running the Stadernode in a free, safe environment before moving to Mainnet.",
+			Value:       config.Network_Prater,
 		},
 	}
 

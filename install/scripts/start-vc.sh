@@ -32,16 +32,11 @@ elif [ "$NETWORK" = "prater" ]; then
     LODESTAR_NETWORK="goerli"
     PRYSM_NETWORK="--prater"
     TEKU_NETWORK="prater"
-elif [ "$NETWORK" = "devnet" ]; then
-    LH_NETWORK="prater"
-    LODESTAR_NETWORK="goerli"
-    PRYSM_NETWORK="--prater"
-    TEKU_NETWORK="prater"
-elif [ "$NETWORK" = "zhejiang" ]; then
-    LH_NETWORK=""
-    LODESTAR_NETWORK=""
-    PRYSM_NETWORK="--chain-config-file=/zhejiang/config.yaml"
-    TEKU_NETWORK="/zhejiang/config.yaml"
+elif [ "$NETWORK" = "holesky" ]; then
+    LH_NETWORK="holesky"
+    LODESTAR_NETWORK="holesky"
+    PRYSM_NETWORK="--holesky"
+    TEKU_NETWORK="holesky"
 else
     echo "Unknown network [$NETWORK]"
     exit 1
@@ -56,13 +51,6 @@ fi
 
 # Lighthouse startup
 if [ "$CC_CLIENT" = "lighthouse" ]; then
-
-    if [ "$NETWORK" = "zhejiang" ]; then
-        LH_NETWORK_ARG="--testnet-dir=/zhejiang"
-    else
-        LH_NETWORK_ARG="--network $LH_NETWORK" 
-    fi
-
     # Set up the CC + fallback string
     CC_URL_STRING=$CC_API_ENDPOINT
     if [ ! -z "$FALLBACK_CC_API_ENDPOINT" ]; then
@@ -70,7 +58,7 @@ if [ "$CC_CLIENT" = "lighthouse" ]; then
     fi
 
     CMD="/usr/local/bin/lighthouse validator \
-        $LH_NETWORK_ARG \
+        --network $LH_NETWORK \
         --datadir /validators/lighthouse \
         --init-slashing-protection \
         --logfile-max-number 0 \
@@ -101,12 +89,6 @@ fi
 # Lodestar startup
 if [ "$CC_CLIENT" = "lodestar" ]; then
 
-    if [ "$NETWORK" = "zhejiang" ]; then
-        LODESTAR_NETWORK_ARG="--paramsFile=/zhejiang/config.yaml"
-    else
-        LODESTAR_NETWORK_ARG="--network $LODESTAR_NETWORK" 
-    fi
-
     # Remove any lock files that were left over accidentally after an unclean shutdown
     find /validators/lodestar/validators -name voting-keystore.json.lock -delete
 
@@ -117,7 +99,7 @@ if [ "$CC_CLIENT" = "lodestar" ]; then
     fi
 
     CMD="/usr/app/node_modules/.bin/lodestar validator \
-        $LODESTAR_NETWORK_ARG \
+        --network $LODESTAR_NETWORK \
         --dataDir /validators/lodestar \
         --beacon-nodes $CC_URL_STRING \
         $FALLBACK_CC_STRING \
@@ -127,7 +109,7 @@ if [ "$CC_CLIENT" = "lodestar" ]; then
         $VC_ADDITIONAL_FLAGS"
 
     if [ "$DOPPELGANGER_DETECTION" = "true" ]; then
-        CMD="$CMD --doppelgangerProtectionEnabled"
+        CMD="$CMD --doppelgangerProtection"
     fi
 
     if [ ! -z "$MEV_BOOST_URL" ]; then

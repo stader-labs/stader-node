@@ -56,10 +56,12 @@ func updateConfigFromUISetting(oldCfg *stdCf.StaderConfig, settings map[string]i
 	newCfg := *oldCfg
 	// update the network
 	network := settings[keys.Sn_node_network].(string)
-	if network == "Goerli Testnet" {
+	if network == config.GoerliTestnet {
 		newCfg.ChangeNetwork(cfgtypes.Network_Prater)
-	} else if network == "Ethereum Mainnet" {
+	} else if network == config.EthereumMainnet {
 		newCfg.ChangeNetwork(cfgtypes.Network_Mainnet)
+	} else if network == config.HoleskyTestnet {
+		newCfg.ChangeNetwork(cfgtypes.Network_Holesky)
 	}
 
 	// Stader node config
@@ -116,9 +118,11 @@ func setUIStaderNode(cfg *stdCf.StaderConfig, settings map[string]interface{}) e
 
 	switch staderNode.Network.Value.(cfgtypes.Network) {
 	case cfgtypes.Network_Prater:
-		settings[keys.Sn_node_network] = "Goerli Testnet"
+		settings[keys.Sn_node_network] = config.GoerliTestnet
 	case cfgtypes.Network_Mainnet:
-		settings[keys.Sn_node_network] = "Ethereum Mainnet"
+		settings[keys.Sn_node_network] = config.EthereumMainnet
+	case cfgtypes.Network_Holesky:
+		settings[keys.Sn_node_network] = config.HoleskyTestnet
 	}
 
 	settings[keys.Sn_project_title] = staderNode.ProjectName.Value
