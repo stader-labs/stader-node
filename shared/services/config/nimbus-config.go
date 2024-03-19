@@ -105,6 +105,7 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: nimbusVcTagProd,
 				config.Network_Prater:  nimbusVcTagTest,
+				config.Network_Holesky: nimbusVcTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},
