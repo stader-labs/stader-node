@@ -8,6 +8,7 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/services/gas"
 	"github.com/stader-labs/stader-node/shared/services/stader"
+	"github.com/stader-labs/stader-node/shared/types/api"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/math"
@@ -68,38 +69,49 @@ func ClaimSpRewards(c *cli.Context) error {
 	}
 
 	cycleIndexes := []*big.Int{}
-	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
-		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
-	}
 
 	fmt.Println("Following are the unclaimed cycles, Please enter in a comma separated string the cycles you want to claim rewards for:")
 
 	fmt.Printf("\n%-18s%-14.30s%-14.10s%-10s\n", "Cycle Number", "Cycle Date", "ETH Rewards", "SD Rewards")
 	cyclesToClaim := map[int64]bool{}
+
+	nonZeroCycleInfo := make([]api.DetailedMerkleProofInfo, 0)
+
+	for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
+		ethRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Eth, 10)
+		if !ok {
+			return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
+		}
+
+		sdRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
+		if !ok {
+			return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.MerkleProofInfo.Sd)
+		}
+
+		if ethRewards.Cmp(big.NewInt(0)) == 0 && sdRewards.Cmp(big.NewInt(0)) == 0 {
+			continue
+		}
+
+		nonZeroCycleInfo = append(nonZeroCycleInfo, cycleInfo)
+	}
+
+	for _, cycleInfo := range nonZeroCycleInfo {
+		cycleIndexes = append(cycleIndexes, big.NewInt(cycleInfo.MerkleProofInfo.Cycle))
+	}
+
 	for {
-		for _, cycleInfo := range detailedCyclesInfo.DetailedCyclesInfo {
-			ethRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Eth, 10)
-			if !ok {
-				return fmt.Errorf("Unable to parse eth rewards: %s", cycleInfo.MerkleProofInfo.Eth)
-			}
+		for _, cycleInfo := range nonZeroCycleInfo {
+			ethRewards, _ := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Eth, 10)
 
 			ethRewardsConverted := math.RoundDown(eth.WeiToEth(ethRewards), 5)
 
-			sdRewards, ok := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
-			if !ok {
-				return fmt.Errorf("Unable to parse sd rewards: %s", cycleInfo.MerkleProofInfo.Sd)
-			}
-
+			sdRewards, _ := big.NewInt(0).SetString(cycleInfo.MerkleProofInfo.Sd, 10)
 			sdRewardsConverted := math.RoundDown(eth.WeiToEth(sdRewards), 5)
-
-			if ethRewards.Cmp(big.NewInt(0)) == 0 && sdRewards.Cmp(big.NewInt(0)) == 0 {
-				continue
-			}
 
 			fmt.Printf("%-18d%-14.30s%-14.4f%-.4f\n", cycleInfo.MerkleProofInfo.Cycle, cycleInfo.CycleTime.Format("2006-01-02"), ethRewardsConverted, sdRewardsConverted)
 		}
-
 		cycleSelection := cliutils.Prompt("Select the cycles for which you wish to claim the rewards. Enter the cycles numbers in a comma separate format without any space (e.g. 1,2,3,4) or leave it blank to claim all cycles at once.", "^$|^\\d+(,\\d+)*$", "Unexpected input. Please enter a comma separated list of cycle numbers or leave it blank to claim all cycles at once.")
+
 		if cycleSelection == "" {
 			for _, cycle := range cycleIndexes {
 				cyclesToClaim[cycle.Int64()] = true
@@ -196,7 +208,6 @@ func ClaimSpRewards(c *cli.Context) error {
 		fmt.Println("Cancelled.")
 		return nil
 	}
-
 	// estimate gas
 	fmt.Println("Estimating gas...")
 
