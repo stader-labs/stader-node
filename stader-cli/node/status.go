@@ -211,7 +211,7 @@ func getNodeStatus(c *cli.Context) error {
 	}
 
 	fmt.Printf(
-		"The Operator can utilize upto %s more.\nNote: Each Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
+		"The Operator can utilize up to %s more.\nNote: Each Operator can utilize a maximum of 1 ETH worth SD per validator.\n\n",
 		eth.DisplayAmountInUnits(maxUtilizable, "sd"))
 
 	if sdStatus.SdUtilizedBalance.Cmp(big.NewInt(0)) != 0 {
