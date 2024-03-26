@@ -136,7 +136,7 @@ func PrintNetwork(staderClient *stader.Client) error {
 	case cfgtypes.Network_Prater:
 		fmt.Printf("Your Stader Node is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
 	case cfgtypes.Network_Holesky:
-		fmt.Printf("Your Smartnode is currently using the %sHolesky Test Network.%s\n\n", colorYellow, colorReset)
+		fmt.Printf("Your Stader Node is currently using the %sHolesky Test Network.%s\n\n", colorLightBlue, colorReset)
 	default:
 		fmt.Printf("%sYou are on an unexpected network [%v].%s\n\n", colorYellow, currentNetwork, colorReset)
 	}
