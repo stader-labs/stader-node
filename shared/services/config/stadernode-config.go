@@ -268,8 +268,8 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		preSignEncryptionKey: map[config.Network]string{
-			config.Network_Prater:  stageEncryptionKey,
-			config.Network_Holesky: devEncryptionKey,
+			config.Network_Prater:  devEncryptionKey,
+			config.Network_Holesky: stageEncryptionKey,
 			config.Network_Mainnet: prodEncryptionKey,
 		},
 	}
