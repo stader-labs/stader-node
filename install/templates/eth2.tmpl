@@ -37,7 +37,6 @@ services:
       - ${STADER_DATA_FOLDER}/secrets:/secrets:ro
       - eth2clientdata:/ethclient
       - ${STADER_FOLDER}/scripts:/setup:ro
-      - ${STADER_FOLDER}/zhejiang:/zhejiang
     networks:
       - net
     environment:

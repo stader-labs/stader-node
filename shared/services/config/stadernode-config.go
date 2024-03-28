@@ -262,9 +262,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		},
 
 		baseStaderBackendUrl: map[config.Network]string{
-			config.Network_Prater:  "https://ethx-offchain-preprod.staderlabs.com",
-			config.Network_Holesky: "https://stage-ethx-offchain.staderlabs.click",
 			config.Network_Mainnet: "https://ethx-offchain.staderlabs.com",
+			config.Network_Holesky: "https://ethx-offchain-preprod.staderlabs.com",
+			config.Network_Prater:  "https://stage-ethx-offchain.staderlabs.click",
 		},
 
 		preSignEncryptionKey: map[config.Network]string{

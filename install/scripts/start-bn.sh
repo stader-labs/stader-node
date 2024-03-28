@@ -89,7 +89,6 @@ if [ "$CC_CLIENT" = "lighthouse" ]; then
         --staking \
         --http-allow-sync-stalled \
         --execution-jwt=/secrets/jwtsecret \
-        --always-prefer-builder-payload \
         --historic-state-cache-size 2 \
         $BN_ADDITIONAL_FLAGS"
 
