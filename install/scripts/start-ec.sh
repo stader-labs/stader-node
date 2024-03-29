@@ -81,12 +81,6 @@ if [ "$CLIENT" = "geth" ]; then
 
     fi
 
-    # Use Pebble if requested
-    if [ "$GETH_USE_PEBBLE" = "true" ]; then
-        DB_ENGINE="--db.engine=pebble"
-    fi
-
-
 
     # Check for the prune flag and run that first if requested
     if [ -f "/ethclient/prune.lock" ]; then
