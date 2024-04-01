@@ -88,7 +88,6 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: nimbusBnTagProd,
-				config.Network_Prater:  nimbusBnTagTest,
 				config.Network_Holesky: nimbusBnTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
@@ -104,7 +103,6 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: nimbusVcTagProd,
-				config.Network_Prater:  nimbusVcTagTest,
 				config.Network_Holesky: nimbusVcTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},

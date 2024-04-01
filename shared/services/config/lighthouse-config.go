@@ -76,7 +76,6 @@ func NewLighthouseConfig(cfg *StaderConfig) *LighthouseConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: getLighthouseTagProd(),
-				config.Network_Prater:  getLighthouseTagTest(),
 				config.Network_Holesky: getLighthouseTagTest(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},

@@ -133,8 +133,6 @@ func PrintNetwork(staderClient *stader.Client) error {
 	switch currentNetwork {
 	case cfgtypes.Network_Mainnet:
 		fmt.Printf("Your Stader Node is currently using the %sEthereum Mainnet.%s\n\n", colorGreen, colorReset)
-	case cfgtypes.Network_Prater:
-		fmt.Printf("Your Stader Node is currently using the %sGoerli Test Network.%s\n\n", colorLightBlue, colorReset)
 	case cfgtypes.Network_Holesky:
 		fmt.Printf("Your Stader Node is currently using the %sHolesky Test Network.%s\n\n", colorLightBlue, colorReset)
 	default:

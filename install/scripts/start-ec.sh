@@ -52,10 +52,6 @@ if [ "$NETWORK" = "mainnet" ]; then
     GETH_NETWORK=""
     STADER_NETHERMIND_NETWORK="mainnet"
     BESU_NETWORK="--network=mainnet"
-elif [ "$NETWORK" = "prater" ]; then
-    GETH_NETWORK="--goerli"
-    STADER_NETHERMIND_NETWORK="goerli"
-    BESU_NETWORK="--network=goerli"
 elif [ "$NETWORK" = "holesky" ]; then
     GETH_NETWORK="--holesky"
     STADER_NETHERMIND_NETWORK="holesky"

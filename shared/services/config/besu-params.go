@@ -120,7 +120,6 @@ func NewBesuConfig(cfg *StaderConfig) *BesuConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: besuTagProd,
-				config.Network_Prater:  besuTagTest,
 				config.Network_Holesky: besuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

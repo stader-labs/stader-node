@@ -216,7 +216,6 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: getLighthouseTagProd(),
-				config.Network_Prater:  getLighthouseTagTest(),
 				config.Network_Holesky: getLighthouseTagTest(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -300,7 +299,6 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Prater:  getPrysmVcTestTag(),
 				config.Network_Holesky: getPrysmVcTestTag(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -373,7 +371,6 @@ func NewExternalNimbusConfig(cfg *StaderConfig) *ExternalNimbusConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: nimbusVcTagProd,
-				config.Network_Prater:  nimbusVcTagTest,
 				config.Network_Holesky: nimbusVcTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -433,7 +430,6 @@ func NewExternalTekuConfig(cfg *StaderConfig) *ExternalTekuConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: tekuTagProd,
-				config.Network_Prater:  tekuTagTest,
 				config.Network_Holesky: tekuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
@@ -516,7 +512,6 @@ func NewExternalLodestarConfig(cfg *StaderConfig) *ExternalLodestarConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: lodestarTagProd,
-				config.Network_Prater:  lodestarTagTest,
 				config.Network_Holesky: lodestarTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
