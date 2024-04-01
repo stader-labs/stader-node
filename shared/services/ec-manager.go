@@ -399,6 +399,8 @@ func getNetworkNameFromId(networkId uint) string {
 		return "Ethereum Mainnet"
 	case 5:
 		return "Goerli Testnet"
+	case 17000:
+		return "Holesky Testnet"
 	default:
 		return "Unknown Network"
 	}

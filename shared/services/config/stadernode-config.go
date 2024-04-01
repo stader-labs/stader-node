@@ -173,7 +173,7 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		Network: config.Parameter{
 			ID:                   NetworkID,
 			Name:                 "Network",
-			Description:          "The Ethereum network you want to use - select Goerli Testnet to practice with Goerli ETH, or Mainnet to stake on the real network using real ETH.",
+			Description:          "The Ethereum network you want to use - select Holesky Testnet to practice with Holesky ETH, or Mainnet to stake on the real network using real ETH.",
 			Type:                 config.ParameterType_Choice,
 			Default:              map[config.Network]interface{}{config.Network_All: config.Network_Mainnet},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Api, config.ContainerID_Node, config.ContainerID_Guardian, config.ContainerID_Eth1, config.ContainerID_Eth2, config.ContainerID_Validator},
