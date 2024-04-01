@@ -73,7 +73,6 @@ func NewLodestarConfig(cfg *StaderConfig) *LodestarConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: lodestarTagProd,
-				config.Network_Prater:  lodestarTagTest,
 				config.Network_Holesky: lodestarTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},

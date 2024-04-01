@@ -120,7 +120,7 @@ Note: Stader will continue to send rewards to your existing Reward Address until
 `
 		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n", colorLightBlue, msg, colorReset)
-	case cfTypes.Network_Prater:
+	case cfTypes.Network_Holesky:
 		msg := `
 You have successfully raised a request to change your Reward Address.
 
@@ -155,7 +155,7 @@ Note: Stader will continue to send rewards to your existing Reward Address until
 `
 		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n\n", colorLightBlue, msg, colorReset)
-	case cfTypes.Network_Prater:
+	case cfTypes.Network_Holesky:
 		msg := `
 For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F10
 

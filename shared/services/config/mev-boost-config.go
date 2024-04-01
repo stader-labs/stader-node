@@ -418,7 +418,6 @@ func createDefaultRelays() []config.MevRelay {
 			Description: "Flashbots is the developer of MEV-Boost, and one of the best-known and most trusted relays in the space.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net?id=staderlabs",
-				config.Network_Prater:  "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net?id=staderlabs",
 				config.Network_Holesky: "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net?id=staderlabs",
 			},
 			Regulated:     true,
@@ -432,7 +431,6 @@ func createDefaultRelays() []config.MevRelay {
 			Description: "Select this to enable the \"max profit\" relay from bloXroute.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com?id=staderlabs",
-				config.Network_Prater:  "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.max-profit.builder.goerli.blxrbdn.com?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -457,7 +455,6 @@ func createDefaultRelays() []config.MevRelay {
 			Description: "Eden Network is the home of Eden Relay, a block building hub focused on optimising block rewards for validators.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io?id=staderlabs",
-				config.Network_Prater:  "https://0xaa1488eae4b06a1fff840a2b6db167afc520758dc2c8af0dfb57037954df3431b747e2f900fe8805f05d635e9a29717b@relay-goerli.edennetwork.io?id=staderlabs",
 				config.Network_Holesky: "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-holesky.edennetwork.io?id=staderlabs",
 			},
 			Regulated:     true,
@@ -495,7 +492,6 @@ func createDefaultRelays() []config.MevRelay {
 			Description: "Agnostic Relay is an open-source MEV Boost relay available to anyone, anywhere in the world, without prejudice or privilege. It is an ideal relay for block producers and block builders trying to provide neutral features.",
 			Urls: map[config.Network]string{
 				config.Network_Mainnet: "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net?id=staderlabs",
-				config.Network_Prater:  "https://0xa6bcad37b5d647152a93c2807d8a56055f1e0d7480eb6505d46edc21593e400f0f13738bf2e892f85946234629a3036a@goerli.agnostic-relay.net?id=staderlabs",
 			},
 			Regulated:     true,
 			NoSandwiching: false,
@@ -541,18 +537,18 @@ func generateProfileParameter(id string, relays []config.MevRelay, regulated boo
 	mainnetDescription += strings.Join(mainnetRelays, ", ")
 
 	// Generate the Prater description
-	praterRelays := []string{}
-	praterDescription := description + "\n\nRelays:\n"
+	holeskyRelays := []string{}
+	holeskyDescription := description + "\n\nRelays:\n"
 	for _, relay := range relays {
-		_, exists := relay.Urls[config.Network_Prater]
+		_, exists := relay.Urls[config.Network_Holesky]
 		if !exists {
 			continue
 		}
 		if relay.Regulated == regulated && relay.NoSandwiching == noSandwiching {
-			praterRelays = append(praterRelays, relay.Name)
+			holeskyRelays = append(holeskyRelays, relay.Name)
 		}
 	}
-	praterDescription += strings.Join(praterRelays, ", ")
+	holeskyDescription += strings.Join(holeskyRelays, ", ")
 
 	return config.Parameter{
 		ID:                   id,
@@ -566,7 +562,7 @@ func generateProfileParameter(id string, relays []config.MevRelay, regulated boo
 		OverwriteOnUpgrade:   false,
 		DescriptionsByNetwork: map[config.Network]string{
 			config.Network_Mainnet: mainnetDescription,
-			config.Network_Prater:  praterDescription,
+			config.Network_Holesky: holeskyDescription,
 		},
 	}
 }

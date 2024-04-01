@@ -124,7 +124,6 @@ func NewGethConfig(cfg *StaderConfig) *GethConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: gethTagProd,
-				config.Network_Prater:  gethTagTest,
 				config.Network_Holesky: gethTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

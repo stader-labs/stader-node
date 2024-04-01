@@ -106,7 +106,6 @@ func NewTekuConfig(cfg *StaderConfig) *TekuConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: tekuTagProd,
-				config.Network_Prater:  tekuTagTest,
 				config.Network_Holesky: tekuTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2, config.ContainerID_Validator},

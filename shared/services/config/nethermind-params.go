@@ -152,7 +152,6 @@ func NewNethermindConfig(cfg *StaderConfig) *NethermindConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: nethermindTagProd,
-				config.Network_Prater:  nethermindTagTest,
 				config.Network_Holesky: nethermindTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth1},

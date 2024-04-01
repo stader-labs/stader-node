@@ -117,7 +117,6 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: getPrysmBnProdTag(),
-				config.Network_Prater:  getPrysmBnTestTag(),
 				config.Network_Holesky: getPrysmBnTestTag(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
@@ -133,7 +132,6 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
 				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Prater:  getPrysmVcTestTag(),
 				config.Network_Holesky: getPrysmVcTestTag(),
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},

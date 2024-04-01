@@ -233,30 +233,25 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 
 		beaconChainUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://beaconcha.in",
-			config.Network_Prater:  "https://prater.beaconcha.in",
 			config.Network_Holesky: "https://holesky.beaconcha.in",
 		},
 
 		txWatchUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://etherscan.io/tx",
-			config.Network_Prater:  "https://goerli.etherscan.io/tx",
 			config.Network_Holesky: "https://holesky.etherscan.io/tx",
 		},
 
 		chainID: map[config.Network]uint{
 			config.Network_Mainnet: 1,     // Mainnet
-			config.Network_Prater:  5,     // Goerli
 			config.Network_Holesky: 17000, // Holesky
 		},
 
 		ethxTokenAddress: map[config.Network]string{
-			config.Network_Prater:  "0x3338eCd3ab3d3503c55c931d759fA6d78d287236",
 			config.Network_Holesky: "0xB4F5fc289a778B80392b86fa70A7111E5bE0F859",
 			config.Network_Mainnet: "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
 		},
 
 		staderConfigAddress: map[config.Network]string{
-			config.Network_Prater:  "0x2aa6cEd8Cf0a93884216BaE5dbF4299932aB577B",
 			config.Network_Holesky: "0x50FD3384783EE49011E7b57d7A3430a762b3f3F2",
 			config.Network_Mainnet: "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
 		},
@@ -264,11 +259,9 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 		baseStaderBackendUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://ethx-offchain.staderlabs.com",
 			config.Network_Holesky: "https://ethx-offchain-preprod.staderlabs.com",
-			config.Network_Prater:  "https://stage-ethx-offchain.staderlabs.click",
 		},
 
 		preSignEncryptionKey: map[config.Network]string{
-			config.Network_Prater:  devEncryptionKey,
 			config.Network_Holesky: stageEncryptionKey,
 			config.Network_Mainnet: prodEncryptionKey,
 		},
@@ -559,13 +552,9 @@ func getNetworkOptions() []config.ParameterOption {
 			Description: "This is the real Ethereum main network, using real ETH to make real validators.",
 			Value:       config.Network_Mainnet,
 		}, {
-			Name:        "Goerli Testnet",
-			Description: "This is the Goerli test network, using Goerli ETH to make demo validators.\nUse this if you want to practice running the Stadernode in a free, safe environment before moving to Mainnet.",
-			Value:       config.Network_Prater,
-		}, {
 			Name:        "Holesky Testnet",
 			Description: "This is the Holesky test network, using Holesky ETH to make demo validators.\nUse this if you want to practice running the Stadernode in a free, safe environment before moving to Mainnet.",
-			Value:       config.Network_Prater,
+			Value:       config.Network_Holesky,
 		},
 	}
 
