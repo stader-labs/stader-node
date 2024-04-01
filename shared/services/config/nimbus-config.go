@@ -27,12 +27,12 @@ import (
 
 const (
 	// Testnet
-	nimbusBnTagTest string = "statusim/nimbus-eth2:multiarch-v24.2.2"
-	nimbusVcTagTest string = "statusim/nimbus-validator-client:multiarch-v24.2.2"
+	nimbusBnTagTest string = "statusim/nimbus-eth2:multiarch-v24.3.2"
+	nimbusVcTagTest string = "statusim/nimbus-validator-client:multiarch-v24.3.2"
 
 	// Mainnet
-	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v24.2.2"
-	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v24.2.2"
+	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v24.3.2"
+	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v24.3.2"
 
 	defaultNimbusMaxPeersArm uint16 = 100
 	defaultNimbusMaxPeersAmd uint16 = 160
