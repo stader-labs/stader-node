@@ -548,6 +548,7 @@ func generateProfileParameter(id string, relays []config.MevRelay, regulated boo
 			holeskyRelays = append(holeskyRelays, relay.Name)
 		}
 	}
+
 	holeskyDescription += strings.Join(holeskyRelays, ", ")
 
 	return config.Parameter{

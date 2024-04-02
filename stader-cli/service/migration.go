@@ -97,7 +97,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		},
 		{
 			version:     v160,
-			upgradeFunc: func(c *cli.Context) error { return nil },
+			upgradeFunc: func(_ *cli.Context) error { return nil },
 			needInstall: true,
 		},
 	}
