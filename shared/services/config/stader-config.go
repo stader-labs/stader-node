@@ -1112,7 +1112,7 @@ func (cfg *StaderConfig) Validate() []string {
 			if cfg.MevBoost.ExternalUrl.Value.(string) == "" {
 				errors = append(errors, "You have MEV-boost enabled in external mode but don't have a URL set. Please enter the external MEV-boost server URL to use it.")
 			}
-		default:
+		case config.Mode_Unknown:
 			errors = append(errors, "You do not have a MEV-Boost mode configured. You must select a mode in the `stader-cli service config` UI.\nNote that MEV-Boost will be required in a future update, at which point you can no longer disable it.")
 		}
 	}
