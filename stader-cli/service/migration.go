@@ -59,7 +59,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
-	v152, err := parseVersion("1.5.2")
+	v160, err := parseVersion("1.6.0")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -96,7 +96,7 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 			needInstall: true,
 		},
 		{
-			version:     v152,
+			version:     v160,
 			upgradeFunc: func(c *cli.Context) error { return nil },
 			needInstall: true,
 		},

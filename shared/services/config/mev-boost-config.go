@@ -536,7 +536,7 @@ func generateProfileParameter(id string, relays []config.MevRelay, regulated boo
 	}
 	mainnetDescription += strings.Join(mainnetRelays, ", ")
 
-	// Generate the Prater description
+	// Generate the holesky description
 	holeskyRelays := []string{}
 	holeskyDescription := description + "\n\nRelays:\n"
 	for _, relay := range relays {

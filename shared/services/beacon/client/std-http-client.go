@@ -435,10 +435,8 @@ func (c *StandardHttpClient) GetExitDomainData(domainType []byte, network config
 	// TODO - we currently only support mainnet and testnet envs. We will have to update this as we change n/ws
 	if network == config.Network_Mainnet {
 		capellaForkVersion = eth2.MainnetCapellaForkVersion
-	} else if network == config.Network_Holesky {
-		capellaForkVersion = eth2.HoleskyCapellaForkVersion
 	} else {
-		capellaForkVersion = eth2.GoerliCapellaForkVersion
+		capellaForkVersion = eth2.HoleskyCapellaForkVersion
 	}
 
 	decodedForkVersion, err := hexutil.Decode(capellaForkVersion)
