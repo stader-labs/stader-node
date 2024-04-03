@@ -27,12 +27,12 @@ import (
 
 const (
 	// Testnet
-	nimbusBnTagTest string = "statusim/nimbus-eth2:multiarch-v24.2.2"
-	nimbusVcTagTest string = "statusim/nimbus-validator-client:multiarch-v24.2.2"
+	nimbusBnTagTest string = "statusim/nimbus-eth2:multiarch-v24.3.2"
+	nimbusVcTagTest string = "statusim/nimbus-validator-client:multiarch-v24.3.2"
 
 	// Mainnet
-	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v24.2.2"
-	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v24.2.2"
+	nimbusBnTagProd string = "statusim/nimbus-eth2:multiarch-v24.3.2"
+	nimbusVcTagProd string = "statusim/nimbus-validator-client:multiarch-v24.3.2"
 
 	defaultNimbusMaxPeersArm uint16 = 100
 	defaultNimbusMaxPeersAmd uint16 = 160
@@ -87,10 +87,8 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			Description: "The tag name of the Nimbus Beacon Node container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet:  nimbusBnTagProd,
-				config.Network_Prater:   nimbusBnTagTest,
-				config.Network_Devnet:   nimbusBnTagTest,
-				config.Network_Zhejiang: nimbusBnTagTest,
+				config.Network_Mainnet: nimbusBnTagProd,
+				config.Network_Holesky: nimbusBnTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG"},
@@ -104,10 +102,8 @@ func NewNimbusConfig(cfg *StaderConfig) *NimbusConfig {
 			Description: "The tag name of the Nimbus Validator Client container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet:  nimbusVcTagProd,
-				config.Network_Prater:   nimbusVcTagTest,
-				config.Network_Devnet:   nimbusVcTagTest,
-				config.Network_Zhejiang: nimbusVcTagTest,
+				config.Network_Mainnet: nimbusVcTagProd,
+				config.Network_Holesky: nimbusVcTagTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},

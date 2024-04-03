@@ -120,12 +120,12 @@ Note: Stader will continue to send rewards to your existing Reward Address until
 `
 		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n", colorLightBlue, msg, colorReset)
-	case cfTypes.Network_Prater:
+	case cfTypes.Network_Holesky:
 		msg := `
 You have successfully raised a request to change your Reward Address.
 
 To confirm the Reward Address change please follow these steps:
-Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F3
+Step 1: Visit the PermissionlessNodeRegistry Smart Contract: https://holesky.etherscan.io/address/%s#writeProxyContract#F3
 Step 2: Confirm the Reward Address change by connecting your New Reward Address wallet with the Smart Contract and execute the "ConfirmRewardAddressChange" function.
 
 Please refer to the Reward Address change guide here - https://www.staderlabs.com/docs-v1/Ethereum/Node-operator/permissionless-node-operator/Update-reward-address/
@@ -155,9 +155,9 @@ Note: Stader will continue to send rewards to your existing Reward Address until
 `
 		msg = fmt.Sprintf(msg, contractAddr.String())
 		fmt.Printf("%s %s %s\n\n", colorLightBlue, msg, colorReset)
-	case cfTypes.Network_Prater:
+	case cfTypes.Network_Holesky:
 		msg := `
-For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://goerli.etherscan.io/address/%s#writeProxyContract#F10
+For node security, only your existing Reward Address can propose a change. To propose and confirm a Reward Address change, please use the PermissionlessNodeRegistry Smart Contract: https://holesky.etherscan.io/address/%s#writeProxyContract#F10
 
 Follow these steps for your Reward Address change:
 Step 1: Propose the Reward Address change by connecting your Existing Reward Address wallet with the Smart Contract and execute the "ProposeRewardAddress" function.
