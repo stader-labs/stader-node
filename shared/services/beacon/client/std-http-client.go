@@ -31,7 +31,6 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/prysmaticlabs/prysm/v3/crypto/bls"
 	"github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
@@ -270,8 +269,7 @@ func (c *StandardHttpClient) GetValidatorStatuses(pubkeys []types.ValidatorPubke
 	for _, pubkey := range pubkeys {
 		if !bytes.Equal(pubkey.Bytes(), nullPubkey.Bytes()) {
 			// Teku doesn't like invalid pubkeys, so filter them out to make it consistent with other clients
-			_, err := bls.PublicKeyFromBytes(pubkey.Bytes())
-
+			_, err := eth2types.BLSPublicKeyFromBytes(pubkey.Bytes())
 			if err == nil {
 				realPubkeys = append(realPubkeys, pubkey)
 			}
