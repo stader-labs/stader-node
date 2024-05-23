@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 ARG TARGETARCH
 COPY ./stader/stader-daemon-linux-${TARGETARCH} /go/bin/stader
