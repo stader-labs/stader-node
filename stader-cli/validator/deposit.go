@@ -193,7 +193,7 @@ func nodeDeposit(c *cli.Context) error {
 		fmt.Printf("The node deposit of %d ETH was made successfully and total %d validators were created by utilizing %s from the SD Utility Pool.\n", uint64(eth.BaseAmountInEth)*numValidators, numValidators, eth.DisplayAmountInUnits(utilityAmount, "sd"))
 	}
 
-	fmt.Println("Your validators are now in an Initialized state. Once the ETH deposits have been matched by the remaining 28 ETH, it will move to the Deposited state. Please note that Stader will add the remaining 28 ETH to your validator based on the existing validators in the queue and the available ETH in the deposit pool.")
+	fmt.Println("Your validators are now in an Initialized state. Once the ETH deposits have been matched by the remaining 28 ETH, it will move to the Deposited state. Please note that your validators will receive the remaining 28 ETH based on their position in the validator queue and the amount of ETH currently available in the Stader deposit pool.")
 	fmt.Println("You can check the status of your validator by executing the following command: `~/bin/stader-cli validator status`")
 
 	return nil
