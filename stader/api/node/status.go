@@ -199,8 +199,16 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		}
 		response.DepositedSdCollateral = operatorSdCollateral
 
+		// get operator deposited sd collateral
+		utilizedSDBalance, err := sd_collateral.GetOperatorUtilizedSDBalance(sdc, nodeAccount.Address, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		totalSDPosition := utilizedSDBalance.Add(utilizedSDBalance, operatorSdCollateral)
+
 		// total registerable validators
-		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, operatorSdCollateral, 1, nil)
+		totalSdWorthValidators, err := sd_collateral.GetMaxValidatorSpawnable(sdc, totalSDPosition, 1, nil)
 		if err != nil {
 			return nil, err
 		}
