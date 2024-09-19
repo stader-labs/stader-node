@@ -47,9 +47,6 @@ type LighthouseConfig struct {
 
 	// Custom command line flags for the VC
 	AdditionalVcFlags config.Parameter `yaml:"additionalVcFlags,omitempty"`
-
-	// The archive mode flag
-	ArchiveMode config.Parameter `yaml:"archiveMode,omitempty"`
 }
 
 // Generates a new Lighthouse configuration
