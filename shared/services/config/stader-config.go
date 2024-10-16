@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/url"
@@ -72,6 +73,7 @@ type StaderConfig struct {
 	StaderDirectory string `yaml:"-"`
 
 	IsNativeMode bool `yaml:"-"`
+	IsSSVMode    bool `yaml:"-"`
 
 	// Execution client settings
 	ExecutionClientMode config.Parameter `yaml:"executionClientMode,omitempty"`
@@ -88,7 +90,7 @@ type StaderConfig struct {
 
 	// Metrics settings
 	EnableMetrics           config.Parameter `yaml:"enableMetrics,omitempty"`
-	ExposeGuardianPort      config.Parameter `yaml:"enableMetrics,omitempty"`
+	ExposeGuardianPort      config.Parameter `yaml:"exposeGuardianPort,omitempty"`
 	EnableGuardianMetrics   config.Parameter `yaml:"enableGuardianMetrics,omitempty"`
 	EcMetricsPort           config.Parameter `yaml:"ecMetricsPort,omitempty"`
 	BnMetricsPort           config.Parameter `yaml:"bnMetricsPort,omitempty"`
@@ -159,6 +161,14 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	if err := yaml.Unmarshal(configBytes, &settings); err != nil {
 		return nil, fmt.Errorf("could not parse settings file: %w", err)
 	}
+	// to be removed : start
+	// - remove encoding/json dependency
+	b, err := json.MarshalIndent(settings, "", "  ")
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	fmt.Print(string(b))
+	// to be removed : end
 
 	// Deserialize it into a config object
 	cfg := NewStaderConfig(filepath.Dir(path), false)
@@ -172,7 +182,7 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 }
 
 // Creates a new Stader configuration instance
-func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
+func NewStaderConfig(staderDir string, isNativeMode bool, isSSVMode bool) *StaderConfig {
 
 	clientModes := []config.ParameterOption{{
 		Name:        "Locally Managed",
@@ -188,6 +198,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 		Title:           "Top-level Settings",
 		StaderDirectory: staderDir,
 		IsNativeMode:    isNativeMode,
+		IsSSVMode:       isSSVMode,
 
 		ExecutionClientMode: config.Parameter{
 			ID:                   "executionClientMode",
@@ -752,6 +763,7 @@ func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 	masterMap[rootConfigName] = rootParams
 	masterMap[rootConfigName]["sdDir"] = cfg.StaderDirectory
 	masterMap[rootConfigName]["isNative"] = fmt.Sprint(cfg.IsNativeMode)
+	masterMap[rootConfigName]["isSSVMode"] = fmt.Sprint(cfg.IsSSVMode)              // this will be false for user if the it was not set in settings file(handled in deserialize operation)
 	masterMap[rootConfigName]["version"] = fmt.Sprintf("v%s", shared.StaderVersion) // Update the version with the current Stadernode version
 
 	// Serialize the subconfigs
@@ -805,6 +817,11 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 	cfg.IsNativeMode, err = strconv.ParseBool(masterMap[rootConfigName]["isNative"])
 	if err != nil {
 		return fmt.Errorf("error parsing isNative: %w", err)
+	}
+	cfg.IsSSVMode, err = strconv.ParseBool(masterMap[rootConfigName]["isSSVMode"])
+	if err != nil {
+		// if the old user have not set ssv flag, it should not effect that user.
+		cfg.IsSSVMode = false
 	}
 	cfg.Version = masterMap[rootConfigName]["version"]
 
