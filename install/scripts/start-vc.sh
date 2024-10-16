@@ -21,6 +21,12 @@
 
 GWW_GRAFFITI_FILE="/addons/gww/graffiti.txt"
 
+# IF SSV Mode is enabled, VC wont run
+if [ "$SSV_MODE" = "true" ]; then
+    echo "Validator can't be started with SSV Mode Enabled"
+    exit 0 # setting SSV Mode is not mandatory.
+fi
+
 # Set up the network-based flags
 if [ "$NETWORK" = "mainnet" ]; then
     LH_NETWORK="mainnet"
