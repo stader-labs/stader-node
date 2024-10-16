@@ -850,6 +850,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars["TX_FEE_CAP_IN_WEI"] = txFeeCapInWei.String()
 	envVars["TX_FEE_CAP"] = fmt.Sprintf("%d", int64(txFeeCap))
 	envVars["TX_FEE_CAP_IN_GWEI"] = fmt.Sprintf("%d", int64(txFeeCapInGwei))
+	envVars["SSV_MODE"] = fmt.Sprintf("%v", cfg.IsSSVMode)
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 
