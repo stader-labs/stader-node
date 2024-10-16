@@ -103,7 +103,7 @@ func createFlagsFromConfigParams(sectionName string, params []*cfgtypes.Paramete
 func RegisterCommands(app *cli.App, name string, aliases []string) {
 
 	configFlags := []cli.Flag{}
-	cfgTemplate := config.NewStaderConfig("", false)
+	cfgTemplate := config.NewStaderConfig("", false, false)
 	network := cfgTemplate.StaderNode.Network.Value.(cfgtypes.Network)
 
 	// Root params

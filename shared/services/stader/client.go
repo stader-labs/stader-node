@@ -186,7 +186,7 @@ func (c *Client) LoadConfig() (*config.StaderConfig, bool, error) {
 
 	isNew := false
 	if cfg == nil {
-		cfg = config.NewStaderConfig(c.configPath, c.daemonPath != "")
+		cfg = config.NewStaderConfig(c.configPath, c.daemonPath != "", false)
 		isNew = true
 	}
 	return cfg, isNew, nil
@@ -323,7 +323,8 @@ func (c *Client) MigrateLegacyConfig(legacyConfigFilePath string, legacySettings
 	if err != nil {
 		return nil, fmt.Errorf("error loading legacy configuration: %w", err)
 	}
-	cfg := config.NewStaderConfig(c.configPath, isNative)
+	isSSVModeInLegacy := false
+	cfg := config.NewStaderConfig(c.configPath, isNative, isSSVModeInLegacy)
 
 	// Do the conversion
 

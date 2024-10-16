@@ -161,7 +161,7 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	if err := yaml.Unmarshal(configBytes, &settings); err != nil {
 		return nil, fmt.Errorf("could not parse settings file: %w", err)
 	}
-	// to be removed : start
+	// to be removed : start-01
 	// - remove encoding/json dependency
 	b, err := json.MarshalIndent(settings, "", "  ")
 	if err != nil {
@@ -171,12 +171,14 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	// to be removed : end
 
 	// Deserialize it into a config object
-	cfg := NewStaderConfig(filepath.Dir(path), false)
+	cfg := NewStaderConfig(filepath.Dir(path), false, false)
 	err = cfg.Deserialize(settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not deserialize settings file: %w", err)
 	}
-
+	// to be removed : start-02
+	fmt.Println("isSSVMode : ", cfg.IsSSVMode)
+	// to be removed : end
 	return cfg, nil
 
 }
@@ -516,7 +518,7 @@ func getAugmentedEcDescription(client config.ExecutionClient, originalDescriptio
 
 // Create a copy of this configuration.
 func (cfg *StaderConfig) CreateCopy() *StaderConfig {
-	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode)
+	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode, cfg.IsSSVMode)
 
 	// Set the network
 	network := cfg.StaderNode.Network.Value.(config.Network)
