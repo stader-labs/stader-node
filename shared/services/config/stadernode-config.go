@@ -446,11 +446,15 @@ func (cfg *StaderNodeConfig) GetSpRewardCyclePath(cycle int64, daemon bool) stri
 }
 
 func (cfg *StaderNodeConfig) GetFeeRecipientFilePath() string {
+	validatorDirName := "validators"
+	if cfg.parent.IsSSVMode {
+		validatorDirName = "presign"
+	}
 	if !cfg.parent.IsNativeMode {
-		return filepath.Join(DaemonDataPath, "validators", FeeRecipientFilename)
+		return filepath.Join(DaemonDataPath, validatorDirName, FeeRecipientFilename)
 	}
 
-	return filepath.Join(cfg.DataPath.Value.(string), "validators", NativeFeeRecipientFilename)
+	return filepath.Join(cfg.DataPath.Value.(string), validatorDirName, NativeFeeRecipientFilename)
 }
 
 func (cfg *StaderNodeConfig) GetClaimData(cycles []*big.Int) ([]*big.Int, []*big.Int, [][][32]byte, error) {
