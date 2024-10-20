@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
     stop_grace_period: 3m
     volumes:
-      - ${STADER_DATA_FOLDER}/validators:/validators
+      - ${STADER_DATA_FOLDER}/${VALIDATORS_DIR_NAME}:/validators
       - ${STADER_FOLDER}/scripts:/setup:ro
       - ${STADER_FOLDER}/addons:/addons
     networks:
