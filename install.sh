@@ -417,8 +417,9 @@ fi
 
 
 # Create ~/.stader dir & files
+# //ssv-flag
 progress 6 "Creating Stader user data directory..."
-{ mkdir -p "$DATA_PATH/validators" || fail "Could not create the Stader user data directory."; } >&2
+{ mkdir -p "$DATA_PATH/$HOST_VALIDATORS_DIR_NAME" || fail "Could not create the Stader user data directory."; } >&2
 { mkdir -p "$STADER_PATH/runtime" || fail "Could not create the Stader runtime directory."; } >&2
 { mkdir -p "$DATA_PATH/secrets" || fail "Could not create the Stader secrets directory."; } >&2
 { mkdir -p "$DATA_PATH/sp-rewards-merkle-proofs" || fail "Could not create the Stader socializing pool rewards merkle proofs directory."; } >&2
