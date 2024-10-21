@@ -32,6 +32,7 @@ services:
     ports: [${MEV_BOOST_OPEN_API_PORT}]
     volumes:
       - ${STADER_FOLDER}/scripts:/setup:ro
+      - ${STADER_DATA_FOLDER}/${HOST_VALIDATORS_DIR_NAME}:/.stader/data/validators
     networks:
       - net
     environment:

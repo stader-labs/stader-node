@@ -33,6 +33,7 @@ services:
     volumes:
       - ${STADER_FOLDER}:/.stader
       - ${STADER_DATA_FOLDER}:/.stader/data
+      - ${STADER_DATA_FOLDER}/${HOST_VALIDATORS_DIR_NAME}:/.stader/data/validators
     networks:
       - net
     command: "-m 0.0.0.0 -r ${NODE_METRICS_PORT:-9104} guardian"
