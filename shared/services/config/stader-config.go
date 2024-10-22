@@ -90,7 +90,7 @@ type StaderConfig struct {
 
 	// Metrics settings
 	EnableMetrics           config.Parameter `yaml:"enableMetrics,omitempty"`
-	ExposeGuardianPort      config.Parameter `yaml:"exposeGuardianPort,omitempty"`
+	ExposeGuardianPort      config.Parameter `yaml:"enableMetrics,omitempty"`
 	EnableGuardianMetrics   config.Parameter `yaml:"enableGuardianMetrics,omitempty"`
 	EcMetricsPort           config.Parameter `yaml:"ecMetricsPort,omitempty"`
 	BnMetricsPort           config.Parameter `yaml:"bnMetricsPort,omitempty"`
