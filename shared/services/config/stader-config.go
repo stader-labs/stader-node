@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/url"
@@ -161,14 +160,6 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	if err := yaml.Unmarshal(configBytes, &settings); err != nil {
 		return nil, fmt.Errorf("could not parse settings file: %w", err)
 	}
-	// to be removed : start-01
-	// - remove encoding/json dependency
-	b, err := json.MarshalIndent(settings, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	fmt.Print(string(b))
-	// to be removed : end
 
 	// Deserialize it into a config object
 	cfg := NewStaderConfig(filepath.Dir(path), false, false)
