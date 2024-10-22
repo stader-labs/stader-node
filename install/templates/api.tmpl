@@ -35,6 +35,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${STADER_FOLDER}:/.stader
       - ${STADER_DATA_FOLDER}:/.stader/data
+      - ${STADER_DATA_FOLDER}/${HOST_VALIDATORS_DIR_NAME}:/.stader/data/validators
     networks:
       - net
     entrypoint: /bin/sleep
