@@ -72,6 +72,7 @@ type StaderConfig struct {
 	StaderDirectory string `yaml:"-"`
 
 	IsNativeMode bool `yaml:"-"`
+	IsSSVMode    bool `yaml:"-"`
 
 	// Execution client settings
 	ExecutionClientMode config.Parameter `yaml:"executionClientMode,omitempty"`
@@ -161,18 +162,20 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	}
 
 	// Deserialize it into a config object
-	cfg := NewStaderConfig(filepath.Dir(path), false)
+	cfg := NewStaderConfig(filepath.Dir(path), false, false)
 	err = cfg.Deserialize(settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not deserialize settings file: %w", err)
 	}
-
+	// to be removed : start-02
+	fmt.Println("isSSVMode : ", cfg.IsSSVMode)
+	// to be removed : end
 	return cfg, nil
 
 }
 
 // Creates a new Stader configuration instance
-func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
+func NewStaderConfig(staderDir string, isNativeMode bool, isSSVMode bool) *StaderConfig {
 
 	clientModes := []config.ParameterOption{{
 		Name:        "Locally Managed",
@@ -188,6 +191,7 @@ func NewStaderConfig(staderDir string, isNativeMode bool) *StaderConfig {
 		Title:           "Top-level Settings",
 		StaderDirectory: staderDir,
 		IsNativeMode:    isNativeMode,
+		IsSSVMode:       isSSVMode,
 
 		ExecutionClientMode: config.Parameter{
 			ID:                   "executionClientMode",
@@ -505,7 +509,7 @@ func getAugmentedEcDescription(client config.ExecutionClient, originalDescriptio
 
 // Create a copy of this configuration.
 func (cfg *StaderConfig) CreateCopy() *StaderConfig {
-	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode)
+	newConfig := NewStaderConfig(cfg.StaderDirectory, cfg.IsNativeMode, cfg.IsSSVMode)
 
 	// Set the network
 	network := cfg.StaderNode.Network.Value.(config.Network)
@@ -752,6 +756,7 @@ func (cfg *StaderConfig) Serialize() map[string]map[string]string {
 	masterMap[rootConfigName] = rootParams
 	masterMap[rootConfigName]["sdDir"] = cfg.StaderDirectory
 	masterMap[rootConfigName]["isNative"] = fmt.Sprint(cfg.IsNativeMode)
+	masterMap[rootConfigName]["isSSVMode"] = fmt.Sprint(cfg.IsSSVMode)              // this will be false for user if the it was not set in settings file(handled in deserialize operation)
 	masterMap[rootConfigName]["version"] = fmt.Sprintf("v%s", shared.StaderVersion) // Update the version with the current Stadernode version
 
 	// Serialize the subconfigs
@@ -806,6 +811,11 @@ func (cfg *StaderConfig) Deserialize(masterMap map[string]map[string]string) err
 	if err != nil {
 		return fmt.Errorf("error parsing isNative: %w", err)
 	}
+	cfg.IsSSVMode, err = strconv.ParseBool(masterMap[rootConfigName]["isSSVMode"])
+	if err != nil {
+		// if the old user have not set ssv flag, it should not effect that user.
+		cfg.IsSSVMode = false
+	}
 	cfg.Version = masterMap[rootConfigName]["version"]
 
 	// Deserialize the subconfigs
@@ -840,6 +850,11 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 	envVars["TX_FEE_CAP_IN_WEI"] = txFeeCapInWei.String()
 	envVars["TX_FEE_CAP"] = fmt.Sprintf("%d", int64(txFeeCap))
 	envVars["TX_FEE_CAP_IN_GWEI"] = fmt.Sprintf("%d", int64(txFeeCapInGwei))
+	envVars["SSV_MODE"] = fmt.Sprintf("%v", cfg.IsSSVMode)
+	envVars["HOST_VALIDATORS_DIR_NAME"] = "validators" // default validators dir name
+	if cfg.IsSSVMode {
+		envVars["HOST_VALIDATORS_DIR_NAME"] = "presign" // sets the directory name for validator info in case of ssv mode is set to true.
+	}
 	config.AddParametersToEnvVars(cfg.StaderNode.GetParameters(), envVars)
 	config.AddParametersToEnvVars(cfg.GetParameters(), envVars)
 
