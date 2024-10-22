@@ -152,15 +152,13 @@ func nodeDeposit(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	canNodeDepositReloadKeysFlag := true
 	nodeDepositReloadKeysFlag := true
 
 	if !cfg.IsSSVMode {
-		canNodeDepositReloadKeysFlag = false
 		nodeDepositReloadKeysFlag = false
 	}
 
-	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), canNodeDepositReloadKeysFlag)
+	canNodeDepositResponse, err := staderClient.CanNodeDeposit(baseAmount, utilityAmount, big.NewInt(int64(numValidators)), nodeDepositReloadKeysFlag)
 	if err != nil {
 		return err
 	}
