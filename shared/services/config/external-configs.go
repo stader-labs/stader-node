@@ -215,8 +215,8 @@ func NewExternalLighthouseConfig(cfg *StaderConfig) *ExternalLighthouseConfig {
 			Description: "The tag name of the Lighthouse container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getLighthouseTagProd(),
-				config.Network_Holesky: getLighthouseTagTest(),
+				config.Network_Mainnet: lighthouseTagPortableProd,
+				config.Network_Holesky: lighthouseTagPortableTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},

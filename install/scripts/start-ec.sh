@@ -298,7 +298,7 @@ if [ "$CLIENT" = "besu" ]; then
     fi
 
     
-    CMD="$CMD --fast-sync-min-peers=3 --sync-mode=X_CHECKPOINT"
+    CMD="$CMD --sync-mode=SNAP --data-storage-format=BONSAI"
 
     if [ "$BESU_JVM_HEAP_SIZE" -gt "0" ]; then
         CMD="env JAVA_OPTS=\"-Xmx${BESU_JVM_HEAP_SIZE}m\" $CMD"

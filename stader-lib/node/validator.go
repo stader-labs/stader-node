@@ -43,7 +43,7 @@ func AddValidatorKeysWithAmount(
 	opts *bind.TransactOpts) (*types.Transaction, error) {
 	tx, err := pnr.PermissionlessNodeRegistry.AddValidatorKeysWithUtilizeSD(opts, referralID, utilityAmount, pubKeys, preDepositSignatures, depositSignatures)
 	if err != nil {
-		return nil, fmt.Errorf("could not add validator keys with utilize: %w", err)
+		return nil, fmt.Errorf("could not add validator keys with utilized SD: %w", err)
 	}
 
 	return tx, nil
