@@ -24,7 +24,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"math/big"
 	"net"
@@ -292,7 +291,7 @@ func (c *Client) UpdatePrometheusConfiguration(settings map[string]string) error
 	}
 
 	// Write the actual Prometheus config file
-	err = ioutil.WriteFile(prometheusConfigPath, contents, 0664)
+	err = os.WriteFile(prometheusConfigPath, contents, 0664)
 	if err != nil {
 		return fmt.Errorf("Could not write Prometheus config file to %s: %w", shellescape.Quote(prometheusConfigPath), err)
 	}
@@ -1421,7 +1420,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		return []string{}, fmt.Errorf("error reading and substituting API container template: %w", err)
 	}
 	apiComposePath := filepath.Join(runtimeFolder, config.ApiContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(apiComposePath, contents, 0664)
+	err = os.WriteFile(apiComposePath, contents, 0664)
 	if err != nil {
 		return []string{}, fmt.Errorf("could not write API container file to %s: %w", apiComposePath, err)
 	}
@@ -1434,7 +1433,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		return []string{}, fmt.Errorf("error reading and substituting node container template: %w", err)
 	}
 	nodeComposePath := filepath.Join(runtimeFolder, config.NodeContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(nodeComposePath, contents, 0664)
+	err = os.WriteFile(nodeComposePath, contents, 0664)
 	if err != nil {
 		return []string{}, fmt.Errorf("could not write node container file to %s: %w", nodeComposePath, err)
 	}
@@ -1447,7 +1446,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 		return []string{}, fmt.Errorf("error reading and substituting guardian container template: %w", err)
 	}
 	guardianComposePath := filepath.Join(runtimeFolder, config.GuardianContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(guardianComposePath, contents, 0664)
+	err = os.WriteFile(guardianComposePath, contents, 0664)
 	if err != nil {
 		return []string{}, fmt.Errorf("could not write guardian container file to %s: %w", guardianComposePath, err)
 	}
@@ -1455,17 +1454,21 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.GuardianContainerName+composeFileSuffix))
 
 	// Validator
-	contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ValidatorContainerName+templateSuffix))
-	if err != nil {
-		return []string{}, fmt.Errorf("error reading and substituting validator container template: %w", err)
+
+	ssvMigration, _ := cfg.StaderNode.SsvMigration.Value.(bool)
+	if !ssvMigration {
+		contents, err = envsubst.ReadFile(filepath.Join(templatesFolder, config.ValidatorContainerName+templateSuffix))
+		if err != nil {
+			return []string{}, fmt.Errorf("error reading and substituting validator container template: %w", err)
+		}
+		validatorComposePath := filepath.Join(runtimeFolder, config.ValidatorContainerName+composeFileSuffix)
+		err = os.WriteFile(validatorComposePath, contents, 0664)
+		if err != nil {
+			return []string{}, fmt.Errorf("could not write validator container file to %s: %w", validatorComposePath, err)
+		}
+		deployedContainers = append(deployedContainers, validatorComposePath)
+		deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.ValidatorContainerName+composeFileSuffix))
 	}
-	validatorComposePath := filepath.Join(runtimeFolder, config.ValidatorContainerName+composeFileSuffix)
-	err = ioutil.WriteFile(validatorComposePath, contents, 0664)
-	if err != nil {
-		return []string{}, fmt.Errorf("could not write validator container file to %s: %w", validatorComposePath, err)
-	}
-	deployedContainers = append(deployedContainers, validatorComposePath)
-	deployedContainers = append(deployedContainers, filepath.Join(overrideFolder, config.ValidatorContainerName+composeFileSuffix))
 
 	// Check the EC mode to see if it needs to be deployed
 	if cfg.ExecutionClientMode.Value.(cfgtypes.Mode) == cfgtypes.Mode_Local {
@@ -1474,7 +1477,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting execution client container template: %w", err)
 		}
 		eth1ComposePath := filepath.Join(runtimeFolder, config.Eth1ContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(eth1ComposePath, contents, 0664)
+		err = os.WriteFile(eth1ComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write execution client container file to %s: %w", eth1ComposePath, err)
 		}
@@ -1489,7 +1492,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting consensus client container template: %w", err)
 		}
 		eth2ComposePath := filepath.Join(runtimeFolder, config.Eth2ContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(eth2ComposePath, contents, 0664)
+		err = os.WriteFile(eth2ComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write consensus client container file to %s: %w", eth2ComposePath, err)
 		}
@@ -1505,7 +1508,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting Grafana container template: %w", err)
 		}
 		grafanaComposePath := filepath.Join(runtimeFolder, config.GrafanaContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(grafanaComposePath, contents, 0664)
+		err = os.WriteFile(grafanaComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write Grafana container file to %s: %w", grafanaComposePath, err)
 		}
@@ -1517,7 +1520,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting Node Exporter container template: %w", err)
 		}
 		exporterComposePath := filepath.Join(runtimeFolder, config.ExporterContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(exporterComposePath, contents, 0664)
+		err = os.WriteFile(exporterComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write Node Exporter container file to %s: %w", exporterComposePath, err)
 		}
@@ -1530,7 +1533,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting Prometheus container template: %w", err)
 		}
 		prometheusComposePath := filepath.Join(runtimeFolder, config.PrometheusContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(prometheusComposePath, contents, 0664)
+		err = os.WriteFile(prometheusComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write Prometheus container file to %s: %w", prometheusComposePath, err)
 		}
@@ -1545,7 +1548,7 @@ func (c *Client) deployTemplates(cfg *config.StaderConfig, staderDir string, set
 			return []string{}, fmt.Errorf("error reading and substituting MEV-Boost container template: %w", err)
 		}
 		mevBoostComposePath := filepath.Join(runtimeFolder, config.MevBoostContainerName+composeFileSuffix)
-		err = ioutil.WriteFile(mevBoostComposePath, contents, 0664)
+		err = os.WriteFile(mevBoostComposePath, contents, 0664)
 		if err != nil {
 			return []string{}, fmt.Errorf("could not write MEV-Boost container file to %s: %w", mevBoostComposePath, err)
 		}

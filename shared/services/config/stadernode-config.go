@@ -98,6 +98,9 @@ type StaderNodeConfig struct {
 	// URL for an EC with archive mode, for manual rewards tree generation
 	ArchiveECUrl config.Parameter `yaml:"archiveEcUrl,omitempty"`
 
+	// The path of the data folder where everything is stored
+	SsvMigration config.Parameter `yaml:"ssvMigration,omitempty"`
+
 	///////////////////////////
 	// Non-editable settings //
 	///////////////////////////
@@ -231,6 +234,18 @@ func NewStadernodeConfig(cfg *StaderConfig) *StaderNodeConfig {
 			OverwriteOnUpgrade:   false,
 		},
 
+		SsvMigration: config.Parameter{
+			ID:                   "ssvMigration",
+			Name:                 "Enable Ssv migration mode",
+			Description:          "Enable this for failsafe mechanisms during Migration to SSV",
+			Type:                 config.ParameterType_Bool,
+			Default:              map[config.Network]interface{}{config.Network_All: false},
+			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
+			EnvironmentVariables: []string{},
+			CanBeBlank:           true,
+			OverwriteOnUpgrade:   false,
+		},
+
 		beaconChainUrl: map[config.Network]string{
 			config.Network_Mainnet: "https://beaconcha.in",
 			config.Network_Holesky: "https://holesky.beaconcha.in",
@@ -278,6 +293,7 @@ func (cfg *StaderNodeConfig) GetParameters() []*config.Parameter {
 		&cfg.PriorityFee,
 		&cfg.TxFeeCap,
 		&cfg.ArchiveECUrl,
+		&cfg.SsvMigration,
 	}
 }
 
@@ -354,6 +370,14 @@ func (cfg *StaderNodeConfig) GetValidatorKeychainPath() string {
 	}
 
 	return filepath.Join(DaemonDataPath, "validators")
+}
+
+func (cfg *StaderNodeConfig) GetPresignKeychainPath() string {
+	if cfg.parent.IsNativeMode {
+		return filepath.Join(cfg.DataPath.Value.(string), "presign")
+	}
+
+	return filepath.Join(DaemonDataPath, "presign")
 }
 
 func (cfg *StaderNodeConfig) GetWalletPathInCLI() string {

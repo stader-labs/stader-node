@@ -21,7 +21,7 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
+
 	"net/url"
 	"os"
 	"path/filepath"
@@ -149,7 +149,7 @@ func LoadFromFile(path string) (*StaderConfig, error) {
 	}
 
 	// Read the file
-	configBytes, err := ioutil.ReadFile(path)
+	configBytes, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("could not read Stader settings file at %s: %w", shellescape.Quote(path), err)
 	}

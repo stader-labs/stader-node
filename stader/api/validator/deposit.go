@@ -296,6 +296,7 @@ func canNodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidato
 }
 
 func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators *big.Int, reloadKeys bool) (*api.NodeDepositResponse, error) {
+
 	cfg, err := services.GetConfig(c)
 	if err != nil {
 		return nil, err
@@ -304,6 +305,8 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 	if err != nil {
 		return nil, err
 	}
+
+	ssvMigration, _ := cfg.StaderNode.SsvMigration.Value.(bool)
 	prn, err := services.GetPermissionlessNodeRegistry(c)
 	if err != nil {
 		return nil, err
@@ -365,7 +368,7 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 
 	for i := int64(0); i < numValidators.Int64(); i++ {
 		// Create and save a new validator key
-		validatorKey, err := w.CreateValidatorKey()
+		validatorKey, err := w.CreateValidatorKey(ssvMigration)
 		if err != nil {
 			return nil, err
 		}
@@ -416,7 +419,7 @@ func nodeDeposit(c *cli.Context, baseAmountWei, utilityAmountWei, numValidators 
 		newValidatorKey = validatorKeyCount.Add(validatorKeyCount, big.NewInt(1))
 	}
 
-	if reloadKeys {
+	if reloadKeys && !ssvMigration {
 		d, err := services.GetDocker(c)
 		if err != nil {
 			return nil, err

@@ -21,7 +21,7 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
+
 	"math/big"
 	"os"
 	"strconv"
@@ -301,7 +301,7 @@ func Load(c *cli.Context) (LegacyStaderConfig, error) {
 func loadFile(path string, required bool) (LegacyStaderConfig, error) {
 
 	// Read file; squelch not found errors if file is optional
-	bytes, err := ioutil.ReadFile(path)
+	bytes, err := os.ReadFile(path)
 	if err != nil {
 		if required {
 			return LegacyStaderConfig{}, fmt.Errorf("Could not find config file at %s: %w", path, err)

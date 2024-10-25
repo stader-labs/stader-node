@@ -21,7 +21,6 @@ package stdr
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -58,7 +57,7 @@ func SaveConfig(cfg *config.StaderConfig, path string) error {
 		return fmt.Errorf("could not serialize settings file: %w", err)
 	}
 
-	if err := ioutil.WriteFile(path, configBytes, 0664); err != nil {
+	if err := os.WriteFile(path, configBytes, 0664); err != nil {
 		return fmt.Errorf("could not write Stader config to %s: %w", shellescape.Quote(path), err)
 	}
 
