@@ -21,7 +21,7 @@ package stader
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/alessio/shellescape"
 	"github.com/mitchellh/go-homedir"
@@ -66,7 +66,7 @@ func (c *Client) loadConfig_Legacy(path string) (config.LegacyStaderConfig, erro
 	if err != nil {
 		return config.LegacyStaderConfig{}, err
 	}
-	configBytes, err := ioutil.ReadFile(expandedPath)
+	configBytes, err := os.ReadFile(expandedPath)
 	if err != nil {
 		return config.LegacyStaderConfig{}, fmt.Errorf("Could not read Stader config at %s: %w", shellescape.Quote(path), err)
 	}

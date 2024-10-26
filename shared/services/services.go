@@ -513,17 +513,35 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 			return
 		}
 
-		// Keystores
-		lighthouseKeystore := lhkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
-		nimbusKeystore := nmkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
-		prysmKeystore := prkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
-		tekuKeystore := tkkeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
-		lodestarKeystore := lokeystore.NewKeystore(os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath()), pm)
+		validatorPath := os.ExpandEnv(cfg.StaderNode.GetValidatorKeychainPath())
+
+		// Keystores in validator
+		lighthouseKeystore := lhkeystore.NewKeystore(validatorPath, pm)
+		nimbusKeystore := nmkeystore.NewKeystore(validatorPath, pm)
+		prysmKeystore := prkeystore.NewKeystore(validatorPath, pm)
+		tekuKeystore := tkkeystore.NewKeystore(validatorPath, pm)
+		lodestarKeystore := lokeystore.NewKeystore(validatorPath, pm)
+
 		nodeWallet.AddKeystore("lighthouse", lighthouseKeystore)
 		nodeWallet.AddKeystore("nimbus", nimbusKeystore)
 		nodeWallet.AddKeystore("prysm", prysmKeystore)
 		nodeWallet.AddKeystore("teku", tekuKeystore)
 		nodeWallet.AddKeystore("lodestar", lodestarKeystore)
+
+		presignPath := os.ExpandEnv(cfg.StaderNode.GetPresignKeychainPath())
+
+		// Keystores in presign
+		lighthousePresignKeystore := lhkeystore.NewKeystore(presignPath, pm)
+		nimbusPresignKeystore := nmkeystore.NewKeystore(presignPath, pm)
+		prysmPresignKeystore := prkeystore.NewKeystore(presignPath, pm)
+		tekuPresignKeystore := tkkeystore.NewKeystore(presignPath, pm)
+		lodestarPresignKeystore := lokeystore.NewKeystore(presignPath, pm)
+
+		nodeWallet.AddPresignKeystore("lighthouse", lighthousePresignKeystore)
+		nodeWallet.AddPresignKeystore("nimbus", nimbusPresignKeystore)
+		nodeWallet.AddPresignKeystore("prysm", prysmPresignKeystore)
+		nodeWallet.AddPresignKeystore("teku", tekuPresignKeystore)
+		nodeWallet.AddPresignKeystore("lodestar", lodestarPresignKeystore)
 	})
 	return nodeWallet, err
 }

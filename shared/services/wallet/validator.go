@@ -135,7 +135,7 @@ func (w *Wallet) CreateValidatorKeyFromIndex(index uint) (*eth2types.BLSPrivateK
 }
 
 // Create a new validator key
-func (w *Wallet) CreateValidatorKey() (*eth2types.BLSPrivateKey, error) {
+func (w *Wallet) CreateValidatorKey(ssvMigrate bool) (*eth2types.BLSPrivateKey, error) {
 
 	// Check wallet is initialized
 	if !w.IsInitialized() {
@@ -153,9 +153,17 @@ func (w *Wallet) CreateValidatorKey() (*eth2types.BLSPrivateKey, error) {
 	}
 
 	// Update keystores
-	err = w.StoreValidatorKey(key, path)
-	if err != nil {
-		return nil, err
+
+	if ssvMigrate {
+		err = w.StoreValidatorPresignKey(key, path)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = w.StoreValidatorKey(key, path)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Return validator key
@@ -169,6 +177,20 @@ func (w *Wallet) StoreValidatorKey(key *eth2types.BLSPrivateKey, path string) er
 		// Update the keystore in the wallet - using an iterator variable only runs it on the local copy
 		if err := w.keystores[name].StoreValidatorKey(key, path); err != nil {
 			return fmt.Errorf("Could not store %s validator key: %w", name, err)
+		}
+	}
+
+	// Return validator key
+	return nil
+
+}
+
+func (w *Wallet) StoreValidatorPresignKey(key *eth2types.BLSPrivateKey, path string) error {
+
+	for name := range w.keystores {
+		// Update the keystore in the wallet - using an iterator variable only runs it on the local copy
+		if err := w.keystoresPresign[name].StoreValidatorKey(key, path); err != nil {
+			return fmt.Errorf("Could not store %s  presign key for : %w", name, err)
 		}
 	}
 

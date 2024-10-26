@@ -24,7 +24,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+
 	"math/big"
 	"os"
 
@@ -78,6 +78,8 @@ type Wallet struct {
 	// Keystores
 	keystores map[string]keystore.Keystore
 
+	keystoresPresign map[string]keystore.Keystore
+
 	// Desired gas price & limit from config
 	maxFee         *big.Int
 	maxPriorityFee *big.Int
@@ -107,6 +109,7 @@ func NewWallet(walletPath string, chainId uint, maxFee *big.Int, maxPriorityFee 
 		validatorKeys:       map[uint]*eth2types.BLSPrivateKey{},
 		validatorKeyIndices: map[string]uint{},
 		keystores:           map[string]keystore.Keystore{},
+		keystoresPresign:    map[string]keystore.Keystore{},
 		maxFee:              maxFee,
 		maxPriorityFee:      maxPriorityFee,
 		gasLimit:            gasLimit,
@@ -131,6 +134,11 @@ func (w *Wallet) GetChainID() *big.Int {
 // Add a keystore to the wallet
 func (w *Wallet) AddKeystore(name string, ks keystore.Keystore) {
 	w.keystores[name] = ks
+}
+
+// Add a keystore to the wallet
+func (w *Wallet) AddPresignKeystore(name string, ks keystore.Keystore) {
+	w.keystoresPresign[name] = ks
 }
 
 // Check if the wallet has been initialized
@@ -266,7 +274,7 @@ func (w *Wallet) Save() error {
 	}
 
 	// Write wallet store to disk
-	if err := ioutil.WriteFile(w.walletPath, wsBytes, FileMode); err != nil {
+	if err := os.WriteFile(w.walletPath, wsBytes, FileMode); err != nil {
 		return fmt.Errorf("Could not write wallet to disk: %w", err)
 	}
 
@@ -349,7 +357,7 @@ func (w *Wallet) Reload() error {
 func (w *Wallet) loadStore() (bool, error) {
 
 	// Read wallet store from disk; cancel if not found
-	wsBytes, err := ioutil.ReadFile(w.walletPath)
+	wsBytes, err := os.ReadFile(w.walletPath)
 	if err != nil {
 		return false, nil
 	}
