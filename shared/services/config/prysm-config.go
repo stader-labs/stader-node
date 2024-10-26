@@ -35,7 +35,7 @@ const (
 
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
-	defaultPrysmMaxPeers    uint16 = 45
+	defaultPrysmMaxPeers    uint16 = 70
 )
 
 // Configuration for Prysm
