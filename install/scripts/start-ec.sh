@@ -268,7 +268,6 @@ if [ "$CLIENT" = "besu" ]; then
         --rpc-ws-port=${EC_WS_PORT:-8546} \
         --host-allowlist=* \
         --rpc-http-max-active-connections=1024 \
-        --data-storage-format=bonsai \
         --nat-method=docker \
         --p2p-host=$EXTERNAL_IP \
         --engine-rpc-enabled \
