@@ -508,7 +508,8 @@ func getWallet(c *cli.Context, cfg *config.StaderConfig, pm *passwords.PasswordM
 
 		chainId := cfg.StaderNode.GetChainID()
 
-		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.StaderNode.GetWalletPath()), chainId, maxFee, maxPriorityFee, 0, pm)
+		gasLimit := c.GlobalUint64("gasLimit")
+		nodeWallet, err = wallet.NewWallet(os.ExpandEnv(cfg.StaderNode.GetWalletPath()), chainId, maxFee, maxPriorityFee, gasLimit, pm)
 		if err != nil {
 			return
 		}

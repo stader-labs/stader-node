@@ -37,7 +37,7 @@ import (
 // Transaction settings
 const (
 	GasLimitMultiplier float64 = 1.5
-	MaxGasLimit        uint64  = 50000000
+	MaxGasLimit        uint64  = 30000000
 )
 
 // Contract type wraps go-ethereum bound contract
