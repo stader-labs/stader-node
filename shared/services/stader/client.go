@@ -1715,7 +1715,7 @@ func (c *Client) getGasOpts() string {
 	var opts string
 	opts += fmt.Sprintf("--maxFee %f ", c.maxFee)
 	opts += fmt.Sprintf("--maxPrioFee %f ", c.maxPrioFee)
-	opts += fmt.Sprintf("--gasLimit %d ", 100000)
+	opts += fmt.Sprintf("--gasLimit %d ", c.gasLimit)
 	return opts
 }
 

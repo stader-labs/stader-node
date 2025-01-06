@@ -756,6 +756,10 @@ Public License instead of this License. But first, please read
 			Name:  "maxPrioFee, i",
 			Usage: "The max priority fee you want a transaction to use, in gwei",
 		},
+		cli.Uint64Flag{
+			Name:  "gasLimit",
+			Usage: "Custom gas limit, using gas estimate if not specified",
+		},
 		cli.StringFlag{
 			Name:  "nonce",
 			Usage: "Use this flag to explicitly specify the nonce that this transaction should use, so it can override an existing 'stuck' transaction",
