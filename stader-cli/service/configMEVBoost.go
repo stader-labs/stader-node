@@ -62,6 +62,12 @@ func setUIMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{}) 
 	enableAgnostic, _ := cfg.MevBoost.AgnosticRelay.Value.(bool)
 	newSettings[keys.Mev_boost_rm_enable_agnostic] = enableAgnostic
 
+	enableTitanRegulated, _ := cfg.MevBoost.TitanRegulatedRelay.Value.(bool)
+	newSettings[keys.Mev_boost_rm_enable_titan_regulated] = enableTitanRegulated
+
+	enableTitanUnRegulated, _ := cfg.MevBoost.TitanUnRegulatedRelay.Value.(bool)
+	newSettings[keys.Mev_boost_rm_enable_titan_unRegulated] = enableTitanUnRegulated
+
 	newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated] = cfg.MevBoost.BloxRouteRegulatedRelay.Value.(bool)
 
 	return nil
@@ -90,6 +96,9 @@ func updateMEVBoost(cfg *stdCf.StaderConfig, newSettings map[string]interface{})
 
 	cfg.MevBoost.BloxRouteRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_bloXroute_regulated]
 	cfg.MevBoost.AestusRelay.Value = newSettings[keys.Mev_boost_rm_enable_aestus]
+
+	cfg.MevBoost.TitanRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_titan_regulated]
+	cfg.MevBoost.TitanUnRegulatedRelay.Value = newSettings[keys.Mev_boost_rm_enable_titan_unRegulated]
 
 	cfg.MevBoost.AgnosticRelay.Value = newSettings[keys.Mev_boost_rm_enable_agnostic]
 

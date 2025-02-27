@@ -83,6 +83,12 @@ type MevBoostConfig struct {
 	// Agnostic relay
 	AgnosticRelay config.Parameter `yaml:"AgnoticEnabled,omitempty"`
 
+	// Titan regulated relay
+	TitanRegulatedRelay config.Parameter `yaml:"TitanRegulatedEnable,omitempty"`
+
+	// Titan unregulated relay
+	TitanUnRegulatedRelay config.Parameter `yaml:"TitanUnRegulatedEnable,omitempty"`
+
 	// The RPC port
 	Port config.Parameter `yaml:"port,omitempty"`
 
@@ -176,6 +182,8 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		UltrasoundRelay:         generateRelayParameter("ultrasoundEnabled", relayMap[config.MevRelayID_Ultrasound]),
 		AestusRelay:             generateRelayParameter("aestusEnabled", relayMap[config.MevRelayID_Aestus]),
 		AgnosticRelay:           generateRelayParameter("agnosticEnabled", relayMap[config.MevRelayID_Agnostic]),
+		TitanRegulatedRelay:     generateRelayParameter("titanRegulatedEnabled", relayMap[config.MevRelayID_TitanRegulated]),
+		TitanUnRegulatedRelay:   generateRelayParameter("titanUnRegulatedEnabled", relayMap[config.MevRelayID_TitanUnRegulated]),
 
 		Port: config.Parameter{
 			ID:                   "port",
@@ -258,6 +266,8 @@ func (cfg *MevBoostConfig) GetParameters() []*config.Parameter {
 		&cfg.UltrasoundRelay,
 		&cfg.AestusRelay,
 		&cfg.AgnosticRelay,
+		&cfg.TitanRegulatedRelay,
+		&cfg.TitanUnRegulatedRelay,
 		&cfg.Port,
 		&cfg.OpenRpcPort,
 		&cfg.ContainerTag,
@@ -390,6 +400,20 @@ func (cfg *MevBoostConfig) GetEnabledMevRelays() []config.MevRelay {
 				relays = append(relays, cfg.relayMap[config.MevRelayID_Agnostic])
 			}
 		}
+
+		if cfg.TitanRegulatedRelay.Value == true {
+			_, exists := cfg.relayMap[config.MevRelayID_TitanRegulated].Urls[currentNetwork]
+			if exists {
+				relays = append(relays, cfg.relayMap[config.MevRelayID_TitanRegulated])
+			}
+		}
+
+		if cfg.TitanUnRegulatedRelay.Value == true {
+			_, exists := cfg.relayMap[config.MevRelayID_TitanUnRegulated].Urls[currentNetwork]
+			if exists {
+				relays = append(relays, cfg.relayMap[config.MevRelayID_TitanUnRegulated])
+			}
+		}
 	}
 
 	return relays
@@ -494,6 +518,32 @@ func createDefaultRelays() []config.MevRelay {
 				config.Network_Mainnet: "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net?id=staderlabs",
 			},
 			Regulated:     true,
+			NoSandwiching: false,
+		},
+
+		// Titan Regulated
+		{
+			ID:          config.MevRelayID_TitanRegulated,
+			Name:        "Titan Regulated (filtering)",
+			Description: "Titan Relay is a neutral, Rust-based MEV-Boost Relay optimized for low latency throughput, geographical distribution, and robustness. Select this to enable the \"filtering\" relay from Titan.",
+			Urls: map[config.Network]string{
+				config.Network_Mainnet: "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@regional.titanrelay.xyz",
+				config.Network_Holesky: "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
+			},
+			Regulated:     true,
+			NoSandwiching: false,
+		},
+
+		// Titan UnRegulated
+		{
+			ID:          config.MevRelayID_TitanUnRegulated,
+			Name:        "Titan UnRegulated (non-filtering)",
+			Description: "Titan Relay is a neutral, Rust-based MEV-Boost Relay optimized for low latency throughput, geographical distribution, and robustness. Select this to enable the \"non-filtering\" relay from Titan.",
+			Urls: map[config.Network]string{
+				config.Network_Mainnet: "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@global.titanrelay.xyz",
+				config.Network_Holesky: "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
+			},
+			Regulated:     false,
 			NoSandwiching: false,
 		},
 	}
