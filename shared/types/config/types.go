@@ -113,6 +113,8 @@ const (
 	MevRelayID_Ultrasound         MevRelayID = "ultrasound"
 	MevRelayID_Aestus             MevRelayID = "aestus"
 	MevRelayID_Agnostic           MevRelayID = "agnostic"
+	MevRelayID_TitanRegulated     MevRelayID = "titanRegulated"
+	MevRelayID_TitanUnRegulated   MevRelayID = "titanUnRegulated"
 )
 
 // Enum to describe MEV-Boost relay selection mode
