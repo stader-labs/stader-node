@@ -24,13 +24,12 @@ import (
 	"strings"
 
 	"github.com/stader-labs/stader-node/shared/types/config"
-	"github.com/stader-labs/stader-node/shared/utils/sys"
 )
 
 // Constants
 const (
-	mevBoostPortableTag         string = "flashbots/mev-boost:1.8"
-	mevBoostModernTag           string = "flashbots/mev-boost:1.8"
+	mevBoostTagProd             string = "flashbots/mev-boost:1.8"
+	mevBoostTagTest             string = "flashbots/mev-boost:1.9rc2"
 	mevBoostUrlEnvVar           string = "MEV_BOOST_URL"
 	mevBoostRelaysEnvVar        string = "MEV_BOOST_RELAYS"
 	mevDocsUrl                  string = "#"
@@ -210,11 +209,14 @@ func NewMevBoostConfig(cfg *StaderConfig) *MevBoostConfig {
 		},
 
 		ContainerTag: config.Parameter{
-			ID:                   "containerTag",
-			Name:                 "Container Tag",
-			Description:          "The tag name of the MEV-Boost container you want to use on Docker Hub.",
-			Type:                 config.ParameterType_String,
-			Default:              map[config.Network]interface{}{config.Network_All: getMevBoostTag()},
+			ID:          "containerTag",
+			Name:        "Container Tag",
+			Description: "The tag name of the MEV-Boost container you want to use on Docker Hub.",
+			Type:        config.ParameterType_String,
+			Default: map[config.Network]interface{}{
+				config.Network_Mainnet: mevBoostTagProd,
+				config.Network_Holesky: mevBoostTagTest,
+			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_MevBoost},
 			EnvironmentVariables: []string{"MEV_BOOST_CONTAINER_TAG"},
 			CanBeBlank:           false,
@@ -645,13 +647,4 @@ func generateRelayParameter(id string, relay config.MevRelay) config.Parameter {
 		CanBeBlank:           false,
 		OverwriteOnUpgrade:   false,
 	}
-}
-
-// Get the appropriate MEV-Boost default tag
-func getMevBoostTag() string {
-	missingFeatures := sys.GetMissingModernCpuFeatures()
-	if len(missingFeatures) > 0 {
-		return mevBoostPortableTag
-	}
-	return mevBoostModernTag
 }
