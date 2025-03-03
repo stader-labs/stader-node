@@ -81,7 +81,6 @@ if [ "$CC_CLIENT" = "lighthouse" ]; then
         --eth1-blocks-per-log-query 150 \
         --disable-upnp \
         --staking \
-        --http-allow-sync-stalled \
         --execution-jwt=/secrets/jwtsecret \
         --historic-state-cache-size 2 \
         $BN_ADDITIONAL_FLAGS"
@@ -89,7 +88,7 @@ if [ "$CC_CLIENT" = "lighthouse" ]; then
     # Performance tuning for ARM systems
     UNAME_VAL=$(uname -m)
     if [ "$UNAME_VAL" = "arm64" ] || [ "$UNAME_VAL" = "aarch64" ]; then
-        CMD="$CMD --execution-timeout-multiplier 2 --disable-lock-timeouts"
+        CMD="$CMD --execution-timeout-multiplier 2"
     fi
 
     if [ ! -z "$MEV_BOOST_URL" ]; then
@@ -216,7 +215,7 @@ if [ "$CC_CLIENT" = "prysm" ]; then
         echo "Prysm has been configured to employ Holesky, with the genesis state being a prerequisite."
         if [ ! -f "/ethclient/holesky-genesis.ssz" ]; then
             echo "Downloading genesis..."
-            wget https://github.com/eth-clients/holesky/raw/main/custom_config_data/genesis.ssz -O /ethclient/holesky-genesis.ssz
+            wget https://github.com/eth-clients/holesky/blob/main/metadata/genesis.ssz -O /ethclient/holesky-genesis.ssz
             echo "Download complete."
         else
             echo "The genesis state has already been downloaded, and the process will proceed accordingly."
