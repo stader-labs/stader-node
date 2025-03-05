@@ -25,8 +25,8 @@ require (
 	github.com/prysmaticlabs/prysm/v5 v5.0.3
 	github.com/sethvargo/go-password v0.2.0
 	github.com/shirou/gopsutil/v3 v3.23.1
-	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250227120156-75f672823ee8
-	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250227120156-75f672823ee8
+	github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250305061959-e344175bf95d
+	github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250305061959-e344175bf95d
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.10
 	github.com/wealdtech/go-eth2-types/v2 v2.7.0

@@ -319,10 +319,10 @@ github.com/shurcooL/sanitized_anchor_name v1.0.0/go.mod h1:1NzhyTcUVG4SuEtjjoZeV
 github.com/sirupsen/logrus v1.9.0 h1:trlNQbNUG3OdDrDil03MCb1H2o9nJ1x4/5LYw7byDE0=
 github.com/sirupsen/logrus v1.9.0/go.mod h1:naHLuLoDiP4jHNo9R0sCBMtWGeIprob74mVsIT4qYEQ=
 github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
-github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250227120156-75f672823ee8 h1:FtP0WTFPu80nJ3SGJ90R8xxDWrPp/OCFXg5zzh5NjMM=
-github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250227120156-75f672823ee8/go.mod h1:cZXmAbD7pFlFRFpplBAvs0aZQQpn1mqrOFXvk1eG5GE=
-github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250227120156-75f672823ee8 h1:Vq90lRwWK1FcQEll7W/ijvpuabMnIxRRNlhE439oniM=
-github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250227120156-75f672823ee8/go.mod h1:foAYtd7iN9Dw69NtRaYaSw1x77IufSTxG5XMFfhPNCg=
+github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250305061959-e344175bf95d h1:M/oBOR62OHJ4yZrmriGLUtSxnUI/nZduNGvQDelvk8s=
+github.com/stader-labs/ethcli-ui/configuration v0.0.0-20250305061959-e344175bf95d/go.mod h1:cZXmAbD7pFlFRFpplBAvs0aZQQpn1mqrOFXvk1eG5GE=
+github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250305061959-e344175bf95d h1:f8CIcwgnnLgfMYZPv35CpkwLFmz1udKJpulrXt+8C1Q=
+github.com/stader-labs/ethcli-ui/wizard v0.0.0-20250305061959-e344175bf95d/go.mod h1:foAYtd7iN9Dw69NtRaYaSw1x77IufSTxG5XMFfhPNCg=
 github.com/status-im/keycard-go v0.2.0 h1:QDLFswOQu1r5jsycloeQh3bVU8n/NatHHaZobtDnDzA=
 github.com/status-im/keycard-go v0.2.0/go.mod h1:wlp8ZLbsmrF6g6WjugPAx+IzoLrkdf9+mHxBEeo3Hbg=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
