@@ -79,6 +79,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
+	v170, err := parseVersion("1.7.0")
+	if err != nil {
+		return nil, nil, err
+	}
+
 	// Create the collection of upgraders
 	upgraders := []ConfigUpgrader{
 		{
@@ -127,6 +132,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		},
 		{
 			version:     v164,
+			upgradeFunc: func(_ *cli.Context) error { return nil },
+			needInstall: true,
+		},
+		{
+			version:     v170,
 			upgradeFunc: func(_ *cli.Context) error { return nil },
 			needInstall: true,
 		},

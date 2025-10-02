@@ -231,7 +231,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
         $VC_ADDITIONAL_FLAGS"
 
     if [ "$ENABLE_MEV_BOOST" = "true" ]; then
-        CMD="$CMD --validators-builder-registration-default-enabled=true --validators-proposer-blinded-blocks-enabled"
+        CMD="$CMD --validators-builder-registration-default-enabled=true"
     fi
 
     if [ "$ENABLE_METRICS" = "true" ]; then

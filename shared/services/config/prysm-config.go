@@ -20,17 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package config
 
 import (
-	"fmt"
-	"runtime"
-
 	"github.com/stader-labs/stader-node/shared/types/config"
 )
 
 const (
-	prysmBnTagTest string = "staderlabs/prysm:v6.0.1"
-	prysmVcTagTest string = "staderlabs/prysm:v6.0.1"
-	prysmBnTagProd string = "staderlabs/prysm:v6.0.1"
-	prysmVcTagProd string = "staderlabs/prysm:v6.0.1"
+	prysmBnTest string = "gcr.io/offchainlabs/prysm/beacon-chain:v6.1.1"
+	prysmBnProd string = "gcr.io/offchainlabs/prysm/beacon-chain:v6.1.1"
+	prysmVcTest string = "gcr.io/offchainlabs/prysm/validator:v6.1.1"
+	prysmVcProd string = "gcr.io/offchainlabs/prysm/validator:v6.1.1"
 
 	defaultPrysmRpcPort     uint16 = 5053
 	defaultPrysmOpenRpcPort bool   = false
@@ -115,8 +112,8 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Description: "The tag name of the Prysm Beacon Node container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmBnProdTag(),
-				config.Network_Holesky: getPrysmBnTestTag(),
+				config.Network_Mainnet: prysmVcProd,
+				config.Network_Holesky: prysmVcTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG"},
@@ -130,8 +127,8 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Description: "The tag name of the Prysm Validator Client container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Holesky: getPrysmVcTestTag(),
+				config.Network_Mainnet: prysmVcProd,
+				config.Network_Holesky: prysmVcTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},
@@ -163,38 +160,6 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			OverwriteOnUpgrade:   false,
 		},
 	}
-}
-
-// Get the container tag for the Prysm BN based on the current architecture
-func getPrysmBnProdTag() string {
-	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
-		return prysmBnTagProd
-	}
-	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
-}
-
-// Get the container tag for the Prysm BN based on the current architecture
-func getPrysmBnTestTag() string {
-	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
-		return prysmBnTagTest
-	}
-	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
-}
-
-// Get the container tag for the Prysm VC based on the current architecture
-func getPrysmVcProdTag() string {
-	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
-		return prysmVcTagProd
-	}
-	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
-}
-
-// Get the container tag for the Prysm VC based on the current architecture
-func getPrysmVcTestTag() string {
-	if runtime.GOARCH == "arm64" || runtime.GOARCH == "amd64" {
-		return prysmVcTagTest
-	}
-	panic(fmt.Sprintf("Prysm doesn't support architecture %s", runtime.GOARCH))
 }
 
 // Get the parameters for this config
