@@ -183,8 +183,10 @@ if [ "$CLIENT" = "nethermind" ]; then
         --JsonRpc.EnginePort ${EC_ENGINE_PORT:-8551} \
         --JsonRpc.GasCap ${TX_FEE_CAP_IN_GWEI}
         --JsonRpc.EngineHost 0.0.0.0 \
-        --Sync.AncientBodiesBarrier 1 \
-        --Sync.AncientReceiptsBarrier 1 \
+        --Sync.AncientBodiesBarrier 0 \
+        --Sync.AncientReceiptsBarrier 0 \
+        --Pruning.FullPruningTrigger=VolumeFreeSpace \
+        --Pruning.FullPruningCompletionBehavior AlwaysShutdown \
         --Merge.Enabled true \
         --JsonRpc.JwtSecretFile=/secrets/jwtsecret \
         $EC_ADDITIONAL_FLAGS"
@@ -221,11 +223,6 @@ if [ "$CLIENT" = "nethermind" ]; then
         CMD="$CMD --Network.DiscoveryPort $EC_P2P_PORT --Network.P2PPort $EC_P2P_PORT"
     fi
 
-    if [ ! -z "$STADER_NETHERMIND_PRUNE" ]; then
-        CMD="$CMD --Pruning.Mode Full --Pruning.FullPruningCompletionBehavior AlwaysShutdown"
-    else
-        CMD="$CMD --Pruning.Mode Memory"
-    fi
 
     if [ ! -z "$STADER_NETHERMIND_PRUNE_MEM_SIZE" ]; then
         CMD="$CMD --Pruning.CacheMb $STADER_NETHERMIND_PRUNE_MEM_SIZE"
@@ -294,7 +291,7 @@ if [ "$CLIENT" = "besu" ]; then
     fi
 
     if [ ! -z "$BESU_MAX_BACK_LAYERS" ]; then
-        CMD="$CMD --bonsai-maximum-back-layers-to-load=$BESU_MAX_BACK_LAYERS"
+        CMD="$CMD --bonsai-historical-block-limit=$BESU_MAX_BACK_LAYERS"
     fi
 
     
