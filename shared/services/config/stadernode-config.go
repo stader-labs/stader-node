@@ -42,7 +42,7 @@ const (
 	ecMigratorTag                      = shared.DockerAccount + "/ec-migrator:v1.2.0"
 	NetworkID                   string = "network"
 	ProjectNameID               string = "projectName"
-	DaemonDataPath              string = "/Users/batphonghan/.stader/data" //".stader/data"
+	DaemonDataPath              string = "/.stader/data"
 	GuardianFolder              string = "guardian"
 	SpRewardsMerkleProofsFolder string = "sp-rewards-merkle-proofs"
 	MerkleProofsFormat          string = "cycle-%s-%d.json"
