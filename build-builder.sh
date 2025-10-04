@@ -41,7 +41,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 echo -n "Building Docker image... "
-docker build -t staderdev/stader-node-builder:$VERSION -f docker/stader-node-builder .
+docker build --platform linux/amd64 -t staderdev/stader-node-builder:$VERSION -f docker/stader-node-builder .
 docker tag staderdev/stader-node-builder:$VERSION staderdev/stader-node-builder:latest
 docker push staderdev/stader-node-builder:$VERSION
 docker push staderdev/stader-node-builder:latest
