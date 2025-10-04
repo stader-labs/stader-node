@@ -112,8 +112,8 @@ func NewPrysmConfig(cfg *StaderConfig) *PrysmConfig {
 			Description: "The tag name of the Prysm Beacon Node container you want to use on Docker Hub.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: prysmVcProd,
-				config.Network_Holesky: prysmVcTest,
+				config.Network_Mainnet: prysmBnProd,
+				config.Network_Holesky: prysmBnTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Eth2},
 			EnvironmentVariables: []string{"BN_CONTAINER_TAG"},
