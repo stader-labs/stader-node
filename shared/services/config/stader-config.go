@@ -900,7 +900,6 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			bnOpenPorts += fmt.Sprintf(", \"%d:%d/tcp\"", prysmRpcPort, prysmRpcPort)
 		}
 		envVars["BN_OPEN_PORTS"] = bnOpenPorts
-
 		// Common params
 		config.AddParametersToEnvVars(cfg.ConsensusCommon.GetParameters(), envVars)
 
@@ -912,7 +911,7 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 			config.AddParametersToEnvVars(cfg.Nimbus.GetParameters(), envVars)
 		case config.ConsensusClient_Prysm:
 			config.AddParametersToEnvVars(cfg.Prysm.GetParameters(), envVars)
-			envVars["CC_RPC_ENDPOINT"] = fmt.Sprintf("http://%s:%d", Eth2ContainerName, cfg.Prysm.RpcPort.Value)
+			envVars["CC_RPC_ENDPOINT"] = fmt.Sprintf("%s:%d", Eth2ContainerName, cfg.Prysm.RpcPort.Value)
 		case config.ConsensusClient_Teku:
 			config.AddParametersToEnvVars(cfg.Teku.GetParameters(), envVars)
 		case config.ConsensusClient_Lodestar:
@@ -1014,13 +1013,6 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 
 	return envVars
 
-}
-
-func (cfg *StaderConfig) Eth2Shell() string {
-	if client, _ := cfg.GetSelectedConsensusClient(); client == config.ConsensusClient_Prysm {
-		return "bash"
-	}
-	return "sh"
 }
 
 // The the title for the config
