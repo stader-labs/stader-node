@@ -210,18 +210,6 @@ fi
 # Prysm startup
 if [ "$CC_CLIENT" = "prysm" ]; then
 
-    # Grab the Holesky genesis state if needed
-    if [ "$NETWORK" = "holesky" ]; then
-        echo "Prysm has been configured to employ Holesky, with the genesis state being a prerequisite."
-        if [ ! -f "/ethclient/holesky-genesis.ssz" ]; then
-            echo "Downloading genesis..."
-            wget https://github.com/eth-clients/holesky/blob/main/metadata/genesis.ssz -O /ethclient/holesky-genesis.ssz
-            echo "Download complete."
-        else
-            echo "The genesis state has already been downloaded, and the process will proceed accordingly."
-        fi
-    fi
-
     CMD="$PERF_PREFIX /app/cmd/beacon-chain/beacon-chain \
         --accept-terms-of-use \
         $PRYSM_NETWORK \
@@ -254,9 +242,6 @@ if [ "$CC_CLIENT" = "prysm" ]; then
         CMD="$CMD --disable-monitoring"
     fi
 
-    if [ "$NETWORK" = "holesky" ]; then
-        CMD="$CMD --genesis-state /ethclient/holesky-genesis.ssz"
-    fi
 
     if [ ! -z "$CHECKPOINT_SYNC_URL" ]; then
         CMD="$CMD --checkpoint-sync-url=$CHECKPOINT_SYNC_URL --genesis-beacon-api-url=$CHECKPOINT_SYNC_URL"
