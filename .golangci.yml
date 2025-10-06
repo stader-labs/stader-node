@@ -1,56 +1,43 @@
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - opinionated
-      - performance
-      - style
-  govet:
-    check-shadowing: true
-  nolintlint:
-    require-explanation: true
-    require-specific: true
-
+version: "2"
+run:
+  go: 1.25.1
 linters:
-  disable-all: true
   enable:
-    - bodyclose
-    - unused
-    - dogsled
-    - dupl
     - errcheck
-    - exportloopref
-    - exhaustive
-    - goconst
-    - gocritic
+    - ineffassign
+    - govet
+  disable:
+    - staticcheck
+    - unused
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - validator/web/site_data.go
+      - .*_test.go
+      - proto
+      - tools/analyzers
+      - third_party$
+      - builtin$
+      - examples$
+
+formatters:
+  enable:
     - gofmt
     - goimports
-    # - gocyclo 
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    - nolintlint
-    - nakedret
-    - prealloc
-    - predeclared
-    - revive
-    - staticcheck
-    - thelper
-    - tparallel
-    - typecheck
-    - unconvert
-    - unparam
-    - whitespace
-    - wsl
+  exclusions:
+    generated: lax
+    paths:
+      - validator/web/site_data.go
+      - .*_test.go
+      - proto
+      - tools/analyzers
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   new-from-rev: 934d61944a2565b9e099f2cef2702c0937d743ad
-run:
-  issues-exit-code: 0

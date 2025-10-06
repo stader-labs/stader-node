@@ -298,8 +298,8 @@ func NewExternalPrysmConfig(cfg *StaderConfig) *ExternalPrysmConfig {
 			Description: "The tag name of the Prysm validator container you want to use from Docker Hub. This will be used for the Validator Client that Stader manages with your validator keys.",
 			Type:        config.ParameterType_String,
 			Default: map[config.Network]interface{}{
-				config.Network_Mainnet: getPrysmVcProdTag(),
-				config.Network_Holesky: getPrysmVcTestTag(),
+				config.Network_Mainnet: prysmVcProd,
+				config.Network_Holesky: prysmVcTest,
 			},
 			AffectsContainers:    []config.ContainerID{config.ContainerID_Validator},
 			EnvironmentVariables: []string{"VC_CONTAINER_TAG"},

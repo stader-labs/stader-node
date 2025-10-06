@@ -149,7 +149,6 @@ if [ "$CC_CLIENT" = "nimbus" ]; then
     if [ "$ENABLE_METRICS" = "true" ]; then
         CMD="$CMD --metrics --metrics-address=0.0.0.0 --metrics-port=$VC_METRICS_PORT"
     fi
-
     # Graffiti breaks if it's in the CMD string instead of here because of spaces
     exec ${CMD} --graffiti="$GRAFFITI"
 
@@ -161,12 +160,6 @@ if [ "$CC_CLIENT" = "prysm" ]; then
 
     # Make the Prysm dir
     mkdir -p /validators/prysm-non-hd/
-
-    # Get rid of the protocol prefix
-    CC_RPC_ENDPOINT=$(echo $CC_RPC_ENDPOINT | sed -E 's/.*\:\/\/(.*)/\1/')
-    if [ ! -z "$FALLBACK_CC_RPC_ENDPOINT" ]; then
-        FALLBACK_CC_RPC_ENDPOINT=$(echo $FALLBACK_CC_RPC_ENDPOINT | sed -E 's/.*\:\/\/(.*)/\1/')
-    fi
 
     # Set up the CC + fallback string
     CC_URL_STRING=$CC_RPC_ENDPOINT
@@ -231,7 +224,7 @@ if [ "$CC_CLIENT" = "teku" ]; then
         $VC_ADDITIONAL_FLAGS"
 
     if [ "$ENABLE_MEV_BOOST" = "true" ]; then
-        CMD="$CMD --validators-builder-registration-default-enabled=true --validators-proposer-blinded-blocks-enabled"
+        CMD="$CMD --validators-builder-registration-default-enabled=true"
     fi
 
     if [ "$ENABLE_METRICS" = "true" ]; then
