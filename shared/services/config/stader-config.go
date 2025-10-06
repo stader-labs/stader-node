@@ -1016,6 +1016,13 @@ func (cfg *StaderConfig) GenerateEnvironmentVariables() map[string]string {
 
 }
 
+func (cfg *StaderConfig) Eth2Shell() string {
+	if client, _ := cfg.GetSelectedConsensusClient(); client == config.ConsensusClient_Prysm {
+		return "bash"
+	}
+	return "sh"
+}
+
 // The the title for the config
 func (cfg *StaderConfig) GetConfigTitle() string {
 	return cfg.Title
