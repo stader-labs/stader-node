@@ -170,11 +170,13 @@ if [ "$CC_CLIENT" = "prysm" ]; then
     CMD="/app/cmd/validator/validator \
         --accept-terms-of-use \
         $PRYSM_NETWORK \
+        --datadir /validators/prysm-non-hd/direct \
         --wallet-dir /validators/prysm-non-hd \
         --wallet-password-file /validators/prysm-non-hd/direct/accounts/secret \
         --beacon-rpc-provider $CC_URL_STRING \
         --suggested-fee-recipient $(cat /validators/$FEE_RECIPIENT_FILE) \
         $VC_ADDITIONAL_FLAGS"
+
 
     if [ "$ENABLE_MEV_BOOST" = "true" ]; then
         CMD="$CMD --enable-builder"
