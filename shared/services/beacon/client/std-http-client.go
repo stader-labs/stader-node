@@ -31,8 +31,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/OffchainLabs/prysm/v6/crypto/bls"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/prysmaticlabs/prysm/v5/crypto/bls"
 	"github.com/stader-labs/stader-node/shared/types/config"
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	eth2types "github.com/wealdtech/go-eth2-types/v2"
