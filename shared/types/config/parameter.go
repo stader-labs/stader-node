@@ -183,7 +183,7 @@ func (param *Parameter) UpdateDescription(network Network) {
 	}
 }
 
-// Add the parameters to the collection of environment variabes
+// Add the parameters to the collection of environment variables
 func AddParametersToEnvVars(params []*Parameter, envVars map[string]string) {
 	for _, param := range params {
 		for _, envVar := range param.EnvironmentVariables {
