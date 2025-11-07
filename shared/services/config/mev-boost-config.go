@@ -28,8 +28,8 @@ import (
 
 // Constants
 const (
-	mevBoostTagProd             string = "flashbots/mev-boost:1.9"
-	mevBoostTagTest             string = "flashbots/mev-boost:1.9"
+	mevBoostTagProd             string = "flashbots/mev-boost:1.10"
+	mevBoostTagTest             string = "flashbots/mev-boost:1.10"
 	mevBoostUrlEnvVar           string = "MEV_BOOST_URL"
 	mevBoostRelaysEnvVar        string = "MEV_BOOST_RELAYS"
 	mevDocsUrl                  string = "#"
