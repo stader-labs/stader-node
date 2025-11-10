@@ -354,7 +354,7 @@ func NewPenaltyTracker(client ExecutionClient, penaltyAddress common.Address) (*
 
 }
 
-// implement simliar bindings as above for stake pool manager
+// implement similar bindings as above for stake pool manager
 
 type StakePoolManagerContractManager struct {
 	Client                   ExecutionClient
