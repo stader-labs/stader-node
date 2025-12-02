@@ -157,7 +157,7 @@ func getStatus(c *cli.Context) (*api.NodeStatusResponse, error) {
 		response.OperatorRewardAddress = operatorRegistry.OperatorRewardAddress
 		response.OptedInForSocializingPool = operatorRegistry.OptedForSocializingPool
 
-		// non socializing pool fee recepient
+		// non socializing pool fee recipient
 		operatorElRewardAddress, err := node.GetNodeElRewardAddress(pnr, 1, operatorId, nil)
 		if err != nil {
 			return nil, err
