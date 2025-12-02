@@ -140,6 +140,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 			upgradeFunc: func(_ *cli.Context) error { return nil },
 			needInstall: true,
 		},
+		{
+			version:     v171,
+			upgradeFunc: func(_ *cli.Context) error { return nil },
+			needInstall: true,
+		},
 	}
 
 	staderClient, err := stader.NewClientFromCtx(c)
