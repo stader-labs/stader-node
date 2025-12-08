@@ -226,6 +226,10 @@ if [ "$CC_CLIENT" = "prysm" ]; then
         --api-timeout 20s \
         --enable-experimental-backfill \
         --blob-storage-layout=by-epoch \
+        --disable-last-epoch-targets  \
+        --slots-per-archive-point=1048576 \
+        --force-clear-db  \
+        --verbosity=debug \
         $BN_ADDITIONAL_FLAGS"
 
     if [ ! -z "$MEV_BOOST_URL" ]; then
