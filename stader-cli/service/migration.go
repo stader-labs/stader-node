@@ -89,6 +89,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 		return nil, nil, err
 	}
 
+	v172, err := parseVersion("1.7.2")
+	if err != nil {
+		return nil, nil, err
+	}
+
 	// Create the collection of upgraders
 	upgraders := []ConfigUpgrader{
 		{
@@ -150,6 +155,11 @@ func migrate(c *cli.Context) (runBeforeUpgrades, rundAfterUpgrades []ConfigUpgra
 			upgradeFunc: func(_ *cli.Context) error { return nil },
 			needInstall: true,
 		},
+		{
+			version:     v172,
+			upgradeFunc: func(_ *cli.Context) error { return nil },
+			needInstall: true,
+		}
 	}
 
 	staderClient, err := stader.NewClientFromCtx(c)
