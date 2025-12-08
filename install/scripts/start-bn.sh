@@ -225,6 +225,8 @@ if [ "$CC_CLIENT" = "prysm" ]; then
         --jwt-secret=/secrets/jwtsecret \
         --api-timeout 20s \
         --enable-experimental-backfill \
+        --blob-storage-layout=by-epoch \
+        --disable-last-epoch-targets  \
         $BN_ADDITIONAL_FLAGS"
 
     if [ ! -z "$MEV_BOOST_URL" ]; then
