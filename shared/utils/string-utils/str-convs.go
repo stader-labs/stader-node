@@ -14,7 +14,7 @@ func StringifyArray(arr []*big.Int) string {
 	return strings.Join(strArr, ",")
 }
 
-// write a method given a comma seperated value of string numbers, get the big Ints back
+// write a method given a comma separated value of string numbers, get the big Ints back
 func DestringifyArray(arr string) ([]*big.Int, error) {
 	var intArr []*big.Int
 	for _, v := range strings.Split(arr, ",") {
