@@ -3,12 +3,13 @@ package stader
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services"
 	stader_backend "github.com/stader-labs/stader-node/shared/types/stader-backend"
 	"github.com/stader-labs/stader-node/shared/utils/net"
 	"github.com/urfave/cli"
-	"net/http"
 )
 
 func GetAllMerkleProofsForOperator(c *cli.Context, operator common.Address) ([]*stader_backend.CycleMerkleProofs, error) {

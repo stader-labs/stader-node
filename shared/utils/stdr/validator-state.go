@@ -1,6 +1,9 @@
 package stdr
 
 import (
+	"math/big"
+	"time"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/shared/services/beacon"
@@ -8,8 +11,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
-	"time"
 )
 
 var ValidatorState = map[uint8]string{
