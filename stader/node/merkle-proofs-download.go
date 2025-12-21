@@ -3,6 +3,8 @@ package node
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/services/config"
@@ -10,7 +12,6 @@ import (
 	"github.com/stader-labs/stader-node/shared/utils/log"
 	"github.com/stader-labs/stader-node/shared/utils/stader"
 	"github.com/urfave/cli"
-	"os"
 )
 
 type MerkleProofsDownloader struct {
