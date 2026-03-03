@@ -26,7 +26,6 @@ import (
 
 	"github.com/stader-labs/stader-node/shared/utils/log"
 
-	"github.com/stader-labs/stader-node/shared/services/gas/etherchain"
 	"github.com/stader-labs/stader-node/shared/services/gas/etherscan"
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
@@ -90,22 +89,16 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 			}
 			maxFeeGwei = eth.WeiToGwei(maxFeeWei)
 		} else {
-			// Try to get the latest gas prices from Etherchain
-			etherchainData, err := etherchain.GetGasPrices()
+			// Try to get the latest gas prices from Etherscan
+			etherscanData, err := etherscan.GetGasPrices()
 			if err == nil {
-				// Print the Etherchain data and ask for an amount
-				maxFeeGwei = handleEtherchainGasPrices(etherchainData, maxPriorityFeeGwei)
-
+				// Print the Etherscan data and ask for an amount
+				maxFeeGwei = handleEtherscanGasPrices(etherscanData, maxPriorityFeeGwei)
 			} else {
-				// Fallback to Etherscan
-				fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", log.ColorYellow, err.Error(), log.ColorReset)
-				etherscanData, err := etherscan.GetGasPrices()
-				if err == nil {
-					// Print the Etherscan data and ask for an amount
-					maxFeeGwei = handleEtherscanGasPrices(etherscanData, maxPriorityFeeGwei)
-				} else {
-					return fmt.Errorf("Error getting gas price suggestions: %w", err)
-				}
+				// Fallback to manual entry
+				fmt.Printf("%sWarning: couldn't get gas estimates from Etherscan - %s\n", log.ColorYellow, err.Error())
+				fmt.Printf("This may be due to Etherscan's free API rate limit (1 request per 5 seconds). Please try again in a few seconds or enter a max fee manually.%s\n", log.ColorReset)
+				maxFeeGwei = handleManualGasEntry(maxPriorityFeeGwei)
 			}
 		}
 		fmt.Printf("%sUsing a max fee of %.2f gwei and a priority fee of %.2f gwei.\n%s", log.ColorBlue, maxFeeGwei, maxPriorityFeeGwei, log.ColorReset)
@@ -126,46 +119,12 @@ func AssignMaxFeeAndLimit(gasInfo staderCore.GasInfo, staderClient *stader.Clien
 
 // Get the suggested max fee for service operations
 func GetHeadlessMaxFeeWei() (*big.Int, error) {
-	etherchainData, err := etherchain.GetGasPrices()
-	if err == nil {
-		return etherchainData.RapidWei, nil
-	}
-
-	fmt.Printf("%sWarning: couldn't get gas estimates from Etherchain - %s\nFalling back to Etherscan%s\n", log.ColorYellow, err.Error(), log.ColorReset)
 	etherscanData, err := etherscan.GetGasPrices()
 	if err == nil {
 		return eth.GweiToWei(etherscanData.FastGwei), nil
 	}
 
 	return nil, fmt.Errorf("Error getting gas price suggestions: %w", err)
-}
-
-func handleEtherchainGasPrices(gasSuggestion etherchain.GasFeeSuggestion, priorityFee float64) float64 {
-	fastGwei := math.RoundUp(eth.WeiToGwei(gasSuggestion.FastWei)+priorityFee, 0)
-
-	for {
-		desiredPrice := cliutils.Prompt(
-			fmt.Sprintf("Please enter your max fee (including the priority fee) or leave blank for the default of %d gwei:", int(fastGwei)),
-			"^(?:[1-9]\\d*|0)?(?:\\.\\d+)?$",
-			"Not a valid gas price, try again:")
-
-		if desiredPrice == "" {
-			return fastGwei
-		}
-
-		desiredPriceFloat, err := strconv.ParseFloat(desiredPrice, 64)
-		if err != nil {
-			fmt.Printf("Not a valid gas price (%s), try again.", err.Error())
-			continue
-		}
-		if desiredPriceFloat <= 0 {
-			fmt.Println("Max fee must be greater than zero.")
-			continue
-		}
-
-		return desiredPriceFloat
-	}
-
 }
 
 func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, priorityFee float64) float64 {
@@ -180,6 +139,34 @@ func handleEtherscanGasPrices(gasSuggestion etherscan.GasFeeSuggestion, priority
 
 		if desiredPrice == "" {
 			return fastGwei
+		}
+
+		desiredPriceFloat, err := strconv.ParseFloat(desiredPrice, 64)
+		if err != nil {
+			fmt.Printf("Not a valid gas price (%s), try again.\n", err.Error())
+			continue
+		}
+		if desiredPriceFloat <= 0 {
+			fmt.Println("Max fee must be greater than zero.")
+			continue
+		}
+
+		return desiredPriceFloat
+	}
+
+}
+
+func handleManualGasEntry(priorityFee float64) float64 {
+
+	for {
+		desiredPrice := cliutils.Prompt(
+			"Please enter your max fee (including the priority fee) in gwei (e.g. 2):",
+			"^(?:[1-9]\\d*|0)?(?:\\.\\d+)?$",
+			"Not a valid gas price, try again:")
+
+		if desiredPrice == "" {
+			fmt.Println("Max fee is required, please enter a value.")
+			continue
 		}
 
 		desiredPriceFloat, err := strconv.ParseFloat(desiredPrice, 64)

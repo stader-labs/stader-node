@@ -28,16 +28,16 @@ import (
 	"strconv"
 )
 
-const gasOracleUrl string = "https://api.etherscan.io/api?module=gastracker&action=gasoracle"
+const gasOracleUrl string = "https://api.etherscan.io/v2/api?module=gastracker&action=gasoracle&chainId=1"
 
 // Standard response
 type gasOracleResponse struct {
 	Status  uinteger `json:"status"`
 	Message string   `json:"message"`
 	Result  struct {
-		SafeGasPrice    uinteger `json:"SafeGasPrice"`
-		ProposeGasPrice uinteger `json:"ProposeGasPrice"`
-		FastGasPrice    uinteger `json:"FastGasPrice"`
+		SafeGasPrice    gasfloat `json:"SafeGasPrice"`
+		ProposeGasPrice gasfloat `json:"ProposeGasPrice"`
+		FastGasPrice    gasfloat `json:"FastGasPrice"`
 	} `json:"result"`
 }
 
@@ -113,5 +113,31 @@ func (i *uinteger) UnmarshalJSON(data []byte) error {
 
 	// Set value and return
 	*i = uinteger(value)
+	return nil
+}
+
+// Float type for gas prices (v2 API returns fractional gwei values like "0.13866663")
+type gasfloat float64
+
+func (f gasfloat) MarshalJSON() ([]byte, error) {
+	return json.Marshal(strconv.FormatFloat(float64(f), 'f', -1, 64))
+}
+
+func (f *gasfloat) UnmarshalJSON(data []byte) error {
+
+	// Unmarshal string
+	var dataStr string
+	if err := json.Unmarshal(data, &dataStr); err != nil {
+		return err
+	}
+
+	// Parse float value
+	value, err := strconv.ParseFloat(dataStr, 64)
+	if err != nil {
+		return err
+	}
+
+	// Set value and return
+	*f = gasfloat(value)
 	return nil
 }
