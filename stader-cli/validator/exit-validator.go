@@ -2,6 +2,7 @@ package validator
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/stader-lib/types"

@@ -2,6 +2,7 @@ package node
 
 import (
 	"fmt"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/shared/utils/eth1"

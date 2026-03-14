@@ -2,10 +2,11 @@ package tokens
 
 import (
 	"context"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
-	"math/big"
 )
 
 func GetEthBalance(client stader.ExecutionClient, address common.Address, opts *bind.CallOpts) (*big.Int, error) {

@@ -3,6 +3,8 @@ package validator
 import (
 	"encoding/csv"
 	"fmt"
+	"os"
+
 	"github.com/stader-labs/stader-node/shared/services/stader"
 	cliutils "github.com/stader-labs/stader-node/shared/utils/cli"
 	"github.com/stader-labs/stader-node/shared/utils/log"
@@ -10,7 +12,6 @@ import (
 	"github.com/stader-labs/stader-node/stader-lib/types"
 	"github.com/stader-labs/stader-node/stader-lib/utils/eth"
 	"github.com/urfave/cli"
-	"os"
 )
 
 func exportValidatorStatus(c *cli.Context) error {

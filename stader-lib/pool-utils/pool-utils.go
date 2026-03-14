@@ -1,11 +1,12 @@
 package pool_utils
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stader-labs/stader-node/stader-lib/stader"
 	"github.com/stader-labs/stader-node/stader-lib/types"
-	"math/big"
 )
 
 func CalculateRewardShare(pool_utils *stader.PoolUtilsContractManager, poolId uint8, totalRewards *big.Int, opts *bind.CallOpts) (types.RewardShare, error) {

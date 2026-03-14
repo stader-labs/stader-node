@@ -1,13 +1,14 @@
 package node
 
 import (
+	"math/big"
+
 	"github.com/stader-labs/stader-node/shared/services"
 	"github.com/stader-labs/stader-node/shared/types/api"
 	"github.com/stader-labs/stader-node/stader-lib/node"
 	pool_utils "github.com/stader-labs/stader-node/stader-lib/pool-utils"
 	"github.com/stader-labs/stader-node/stader-lib/tokens"
 	"github.com/urfave/cli"
-	"math/big"
 )
 
 func CanSendElRewards(c *cli.Context) (*api.CanSendElRewardsResponse, error) {
